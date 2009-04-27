@@ -1,0 +1,19 @@
+!!! Strict
+%html
+  %head
+    %title
+      = h(yield(:title) || "Untitled")
+    %meta{"http-equiv"=>"Content-Type", :content=>"text/html; charset=utf-8"}/
+    %meta{"name"=>"viewport", "content"=>"width=240"}
+    = stylesheet_link_tag 'application'
+  %body
+    - flash.each do |name, msg|
+      = content_tag :div, msg, :id => "flash_#{name}"
+
+    = yield
+
+    #footer
+      = link_to "Home", root_path
+      = link_to "Store", new_store_path
+
+

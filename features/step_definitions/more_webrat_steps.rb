@@ -1,0 +1,11 @@
+When /^I select "([^\"]*)"$/ do |value|
+  select(value)
+end
+
+Then /^I should see "([^\"]*)" in "([^\"]*)"$/ do |text, css|
+  response.should have_selector(css, :content => text)
+end
+
+Then /^I should not see "([^\"]*)" in "([^\"]*)"$/ do |text, css|
+  response.should_not have_selector(css, :content => text)
+end

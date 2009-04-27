@@ -6,33 +6,37 @@ Create an archive of pages saved from the web, or uploaded, to read on your mobi
 
 Released under the MIT license. See LICENSE.
 
-This application has no authentication or user models, nor was it designed with security in mind. It is intended for personal use only and should be run only on a private network, or behind web server authentication. 
-
-Any use other than an individual saving content for personal viewing probably runs the risk of copyright infringement.
+This application has no authentication or user models, nor was it designed with security in mind. It is intended for personal use only and should be run only on a private network, or behind web server authentication. Any use other than an individual saving content for personal viewing runs the risk of copyright infringement.
 
 == Overview of features
 
 What?: Why?
 
-Store web pages: the dreaded 404
-Scrub: easy reading on a mobile web browser
+Store web pages: combat link rot
+Scrub: clean html for better reading on a mobile web browser
 Download: offline reading
 Search: find a specific page to read
-Filter: find something in a specif genre
-Suggestion: find something to read
+Suggestion: what should I read next?
 Rate: influence when a page will be suggested again
+Filter: find something in a specific genre
 
 == Setup
 
 Copy config/database.example to config/database.yml and modify as needed
+
+Copy config/initializers/curb.example to config/initializers/curb.rb and modify as desired. Modify features/basic_store.feature to match
+
+Copy config/initializers/session_store.example to config/initializers/session_store.rb and modify as desired.
+
+Configure public/stylesheets/application.css as desired
+
+Configure lib/tasks/cucumber.rake as desired
 
 Run
   gem install haml
   rake gems:install RAILS_ENV=test
   rake db:create:all
   rake db:schema:load
-
-You will want to configure public/stylesheets/application.css
 
 == Testing
 

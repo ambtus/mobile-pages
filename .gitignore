@@ -3,3 +3,8 @@ log/*.log
 tmp/**/*
 config/database.yml
 db/*.sqlite3
+public/test
+public/development
+public/files
+config/initializers/session_store.rb
+config/initializers/curb.rb

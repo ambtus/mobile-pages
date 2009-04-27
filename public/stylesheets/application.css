@@ -1,0 +1,25 @@
+#flash_notice   {
+    border-width: 1px;
+    background-color: #FF0;
+    }
+#flash_error   {
+    border-width: 1px;
+    background-color: #F00;
+    }
+#footer    {
+    border-width: 1px;
+    background-color: #CCF;
+    }
+.form    {
+    border-width: 1px;
+    background-color: #CFF;
+    }
+.title    {
+    border-width: 1px;
+    background-color: #C9F;
+    font-weight: bold;
+    }
+.content    {
+    border-width: 1px;
+    background-color: #EEE;
+    }
