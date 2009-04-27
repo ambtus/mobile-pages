@@ -1,0 +1,14 @@
+login: &login
+  adapter: mysql
+  host: localhost
+  encoding: utf8
+  username: root
+development:
+  <<: *login
+  database: mobile_dev
+production:
+  <<: *login
+  database: mobile_prod
+test:
+  <<: *login
+  database: mobile_test
