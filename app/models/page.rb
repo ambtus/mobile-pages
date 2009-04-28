@@ -11,10 +11,12 @@ class Page < ActiveRecord::Base
   def after_create
     pwd = Curl::External.getpwd(self.url)
     url = Curl::External.geturl(self.url)
-    html = Curl::Easy.perform(url) {|c| c.userpwd = pwd}.body_str
-    parsed = Nokogiri::HTML(html)
-    body = parsed.xpath('//body').first.inner_html
-    File.open(self.original_file, 'w') { |f| f.write(body) }
+    html = Curl::Easy.perform(url) {|c| c.userpwd = pwd}.body_str.gsub('&nbsp;', " ").squish
+    self.original_html=Nokogiri::HTML(html).xpath('//body').first.inner_html
+  end
+
+  def original_html=(content)
+    File.open(self.original_file, 'w') { |f| f.write(content) }
   end
 
   def original_html
@@ -23,6 +25,18 @@ class Page < ActiveRecord::Base
 
   def original_file
     self.path + "original.html"
+  end
+
+  def nodes
+    Nokogiri::HTML(self.original_html).xpath('//body').first.children
+  end
+
+  def remove_nodes(ids)
+    scrubbed = []
+    self.nodes.each_with_index do |node,index|
+      scrubbed << node unless ids.include?(index.to_s)
+    end
+    self.original_html=scrubbed
   end
 
   def path

@@ -8,4 +8,9 @@ class PagesController < ApplicationController
   def show
     @page = Page.find(params[:id])
   end
+  def update
+    @page = Page.find(params[:id])
+    @page.remove_nodes(params[:nodes])
+    redirect_to @page
+  end
 end

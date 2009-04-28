@@ -22,3 +22,4 @@ Scenario Outline: title and url
   | "http://sid.livejournal.com/122409.html" | "Auth Digest Test" | "this is a test" |
   | "http://www.rawbw.com/~alice/utf8.html"  | "utf8 Test"        | "“Hello…”" |
   | "http://www.rawbw.com/~alice/1252.html"  | "winlatin1 Test"   | "“Hello…”" |
+  | "http://www.rawbw.com/~alice/nbsp.html"  | "space Test"       | "Retrieved from the web" |

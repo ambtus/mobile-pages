@@ -6,7 +6,7 @@
     border-width: 1px;
     background-color: #F00;
     }
-#footer    {
+.links    {
     border-width: 1px;
     background-color: #CCF;
     }
@@ -22,4 +22,12 @@
 .content    {
     border-width: 1px;
     background-color: #EEE;
+    }
+.node    {
+    border-width: 1px;
+    background-color: #990;
+    }
+.checkbox    {
+    border-width: 1px;
+    background-color: #FF9;
     }

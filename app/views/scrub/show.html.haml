@@ -1,0 +1,10 @@
+- content_for :title do
+  = "Scrub " + @page.title
+
+.title= @page.title
+.form
+  - form_for @page do |f|
+    - @page.nodes.each_with_index do |node,index|
+      .checkbox= check_box_tag "nodes[]", index, false, :id => index
+      .node= node
+    .button= f.submit "Scrub"

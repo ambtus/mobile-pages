@@ -7,13 +7,17 @@
     %meta{"name"=>"viewport", "content"=>"width=240"}
     = stylesheet_link_tag 'application'
   %body
+    .links
+      = link_to "Home", root_path
+      = yield(:extra_links)
+
     - flash.each do |name, msg|
       = content_tag :div, msg, :id => "flash_#{name}"
 
     = yield
 
-    #footer
+    .links
       = link_to "Home", root_path
-      = link_to "Store", new_store_path
+      = yield(:extra_links)
 
 

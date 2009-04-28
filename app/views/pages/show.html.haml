@@ -1,5 +1,8 @@
 - content_for :title do
   = @page.title
+- content_for :extra_links do
+  = link_to "Scrub", scrub_path(@page)
 
 .title= @page.title
 .content= render :text => @page.original_html
+
