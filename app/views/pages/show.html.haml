@@ -2,7 +2,12 @@
   = @page.title
 - content_for :extra_links do
   = link_to "Scrub", scrub_path(@page)
-
+.form
+  - form_for @page do
+    = submit_tag "Next"
 .title= @page.title
 .content= render :text => @page.original_html
+.form
+  - form_for @page do
+    = submit_tag "Next"
 

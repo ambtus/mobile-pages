@@ -7,9 +7,12 @@ class Page < ActiveRecord::Base
     Page.find(:first, :conditions => ["title LIKE ?", "%" + string + "%"])
   end
 
+  default_scope :order => 'read_after ASC'
+
   def before_validation
     self.url = nil if self.url == URL_PLACEHOLDER
     self.title = nil if self.title == TITLE_PLACEHOLDER
+    self.read_after = Time.now if self.read_after.blank?
   end
 
   def after_create
@@ -17,6 +20,11 @@ class Page < ActiveRecord::Base
     url = Curl::External.geturl(self.url)
     html = Curl::Easy.perform(url) {|c| c.userpwd = pwd}.body_str.gsub('&nbsp;', " ").squish
     self.original_html=Nokogiri::HTML(html).xpath('//body').first.inner_html
+  end
+
+  def next
+    self.update_attribute(:read_after, Page.last.read_after + 1.minute)
+    return Page.first
   end
 
   def original_html=(content)
