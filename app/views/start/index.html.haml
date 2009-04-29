@@ -1,7 +1,6 @@
 - content_for :title do
   "Mobile Pages"
 - content_for :extra_links do
-  = link_to "Store", new_store_path
   = link_to "Read", page_path(@page) if @page
 - if @page
   .title
@@ -14,3 +13,8 @@
   - form_tag search_index_path do
     = text_field_tag :search, params[:search]
     = submit_tag "Search", :name => nil
+.form
+  - form_for @new_page do |f|
+    = f.text_field :url, :maxlength => 255, :size => 80, :value => Page::URL_PLACEHOLDER, :onfocus=>"this.value=''"
+    = f.text_field :title, :maxlength => 255, :size => 80, :value => Page::TITLE_PLACEHOLDER, :onfocus=>"this.value=''"
+    .button= f.submit "Store"

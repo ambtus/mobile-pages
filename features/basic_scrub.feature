@@ -6,7 +6,6 @@ Feature: Basic Scrub
  Scenario Outline: nodes
   Given I have no pages
     And I am on the homepage
-    And I follow "Store"
     And I fill in "page_url" with <url>
     And I fill in "page_title" with "Title"
     And I press "Store"

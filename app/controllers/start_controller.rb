@@ -1,6 +1,7 @@
 class StartController < ApplicationController
  def index
    @page = Page.first
+   @new_page = Page.new
  end
  def create
    @page = Page.find(params[:page_id])

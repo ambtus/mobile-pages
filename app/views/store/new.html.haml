@@ -1,8 +1,0 @@
-- content_for :title do
-  "Store Page"
-
-.form
-  - form_for @page do |f|
-    = f.text_field :url, :maxlength => 255, :size => 80, :value => Page::URL_PLACEHOLDER, :onfocus=>"this.value=''"
-    = f.text_field :title, :maxlength => 255, :size => 80, :value => Page::TITLE_PLACEHOLDER, :onfocus=>"this.value=''"
-    .button= f.submit "Store"

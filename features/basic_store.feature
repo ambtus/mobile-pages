@@ -6,7 +6,6 @@ Feature: Basic Store
 Scenario Outline: title and url
   Given I have no pages
     And I am on the homepage
-    And I follow "Store"
   When I fill in "page_url" with <url>
     And I fill in "page_title" with <title>
     And I press "Store"
