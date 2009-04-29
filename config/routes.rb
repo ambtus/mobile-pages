@@ -3,5 +3,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :store
   map.resources :pages
   map.resources :scrub
+  map.resources :search
   map.root :controller => "start"
 end

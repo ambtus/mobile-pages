@@ -3,6 +3,10 @@ class Page < ActiveRecord::Base
   URL_PLACEHOLDER = "Enter a URL"
   TITLE_PLACEHOLDER = "Enter a Title"
 
+  def self.search(string)
+    Page.find(:first, :conditions => ["title LIKE ?", "%" + string + "%"])
+  end
+
   def before_validation
     self.url = nil if self.url == URL_PLACEHOLDER
     self.title = nil if self.title == TITLE_PLACEHOLDER

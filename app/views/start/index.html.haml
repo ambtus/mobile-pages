@@ -2,3 +2,8 @@
   "Mobile Pages"
 - content_for :extra_links do
   = link_to "Store", new_store_path
+
+.search
+  - form_tag search_index_path do
+    = text_field_tag :search, params[:search]
+    = submit_tag "Search", :name => nil
