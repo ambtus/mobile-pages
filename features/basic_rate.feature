@@ -1,0 +1,59 @@
+Feature: change the read order
+  What: be able to say how long to wait before presenting a page again
+  Why: some pages I like more and want to read more often than others
+  Result: Order should reflect prefence
+
+  Background:
+
+  Scenario: Changing read after orders
+    Given the following pages
+      | title                            | url                                   | read_after |
+      | Grimm's Fairy Tales              | http://www.rawbw.com/~alice/gft.html  | 2009-01-01 |
+      | Dracula                          | http://www.rawbw.com/~alice/drac.html | 2009-01-05 |
+      | Alice's Adventures In Wonderland | http://www.rawbw.com/~alice/aa.html   | 2009-01-10 |
+      | Pride and Prejudice              | http://www.rawbw.com/~alice/pp.html   | 2009-01-15 |
+      | The Mysterious Affair at Styles  | http://www.rawbw.com/~alice/maas.html | 2009-01-20 |
+      | The Call of the Wild             | http://www.rawbw.com/~alice/cotw.html | 2009-01-25 |
+      | A Christmas Carol                | http://www.rawbw.com/~alice/cc.html   | 2009-01-30 |
+    When I am on the homepage
+    Then I should see "Grimm's Fairy Tales"
+    When I press "Next"
+    Then I should see "Dracula"
+    When I follow "Rate"
+    Then I should see "Please rate (converted to years for next suggested read date)"
+      And I press "5"
+    Then I should see "Page set for reading again on 2014-01-05"
+      And I should see "Alice's Adventures In Wonderland"
+    When I follow "Rate"
+    And I press "3"
+    Then I should see "Page set for reading again on 2012-01-10"
+      And I should see "Pride and Prejudice"
+    When I press "Next"
+    Then I should see "The Mysterious Affair at Styles"
+    When I follow "Rate"
+    And I press "4"
+    Then I should see "Page set for reading again on 2013-01-20"
+      And I should see "The Call of the Wild"
+    When I press "Next"
+    Then I should see "A Christmas Carol"
+    When I follow "Rate"
+      And I press "1"
+    Then I should see "Page set for reading again on 2010-01-30"
+      And I should see "Grimm's Fairy Tales"
+    When I follow "Rate"
+      And I press "5"
+    Then I should see "Pride and Prejudice"
+    When I follow "Rate"
+      And I press "2"
+    Then I should see "The Call of the Wild"
+    When I follow "Rate"
+      And I press "100"
+    Then I should see "Page set for reading again on 2109-04-25"
+    Then I should see "A Christmas Carol"
+    When I follow "Rate"
+      And I press "2"
+    Then I should see "Pride and Prejudice"
+    When I follow "Rate"
+      And I press "100"
+    Then I should see "Page set for reading again on 2111-04-15"
+      And I should see "Alice's Adventures In Wonderland"

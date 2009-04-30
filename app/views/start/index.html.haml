@@ -2,6 +2,7 @@
   "Mobile Pages"
 - content_for :extra_links do
   = link_to "Read", page_path(@page) if @page
+  = link_to "Rate", rate_path(@page) if @page
 - if @page
   .title= link_to @page.title, @page.mobile_url
   .form

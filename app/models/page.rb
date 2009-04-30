@@ -2,6 +2,7 @@ class Page < ActiveRecord::Base
   MODULO = 300  # files in a single directory
   URL_PLACEHOLDER = "Enter a URL"
   TITLE_PLACEHOLDER = "Enter a Title"
+  DURATION = "years"
 
   def self.search(string)
     Page.find(:first, :conditions => ["title LIKE ?", "%" + string + "%"])
@@ -24,8 +25,13 @@ class Page < ActiveRecord::Base
   end
 
   def next
-    self.update_attribute(:read_after, Page.last.read_after + 1.minute)
+    self.update_attribute(:read_after, self.read_after + 3.months)
     return Page.first
+  end
+
+  def add_to_read_after(string)
+    self.update_attribute(:read_after, self.read_after + string.to_i.send(DURATION))
+    return self.read_after
   end
 
   def clean_title
