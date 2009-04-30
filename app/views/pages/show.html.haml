@@ -5,7 +5,7 @@
 .form
   - form_for @page do
     = submit_tag "Next"
-.title= link_to @page.title, downloads_path(@page)
+.title= link_to @page.title, @page.mobile_url
 .content= render :text => @page.original_html
 .form
   - form_for @page do

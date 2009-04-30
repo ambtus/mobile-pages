@@ -3,8 +3,7 @@
 - content_for :extra_links do
   = link_to "Read", page_path(@page) if @page
 - if @page
-  .title
-    = @page.title
+  .title= link_to @page.title, @page.mobile_url
   .form
     - form_tag start_index_path do
       = hidden_field_tag(:page_id, @page.id)
