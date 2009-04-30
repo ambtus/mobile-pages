@@ -16,3 +16,6 @@ When /^I check boxes "([^\"]*)"$/ do |fields|
   end
 end
 
+When /^I follow "([^\"]*)" in "([^\"]*)"$/ do |text, css|
+  click_link_within(css, text)
+end

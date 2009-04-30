@@ -19,6 +19,7 @@ class Page < ActiveRecord::Base
     pwd = Curl::External.getpwd(self.url)
     url = Curl::External.geturl(self.url)
     html = Curl::Easy.perform(url) {|c| c.userpwd = pwd}.body_str.gsub('&nbsp;', " ").squish
+    FileUtils.mkdir_p(self.mypath)
     self.original_html=Nokogiri::HTML(html).xpath('//body').first.inner_html
   end
 
@@ -36,7 +37,20 @@ class Page < ActiveRecord::Base
   end
 
   def original_file
-    self.path + "original.html"
+    self.mypath + "original.html"
+  end
+
+  def mobile_file
+    self.mypath + CGI::escape(self.title).gsub('+', '%20') + ".txt"
+  end
+
+  def mypath
+    env = case Rails.env
+      when "test": "test/"
+      when "development": "development/"
+      when "production": "files/"
+    end
+    Rails.root +  Pathname.new("public/" + env + (self.id/MODULO).to_s + "/" + self.id.to_s)
   end
 
   def nodes
@@ -49,16 +63,6 @@ class Page < ActiveRecord::Base
       scrubbed << node unless ids.include?(index.to_s)
     end
     self.original_html=scrubbed
-  end
-
-  def path
-    subdir = case Rails.env
-               when "test": "test"
-               when "development": "development"
-               when "production": "files"
-             end
-    path = (Rails.root + "public" + subdir + (self.id/MODULO).to_s + self.id.to_s).to_s + "/"
-    FileUtils.mkdir_p(path)
   end
 
 end
