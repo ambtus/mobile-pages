@@ -2,8 +2,8 @@
   = @title
 .form
   - form_for @new_page do |f|
-    = f.text_field :base_url, :maxlength => 255, :size => 80, :value => Page::BASE_URL_PLACEHOLDER, :onfocus=>"this.value=''"
-    = f.text_field :url_substitutions, :maxlength => 255, :size => 80, :value => Page::URL_SUBSTITUTIONS_PLACEHOLDER, :onfocus=>"this.value=''"
-    = f.text_area :urls, :rows => 10, :cols => 80, :value => Page::URLS_PLACEHOLDER, :onfocus=>"this.value=''"
-    = f.text_field :title, :maxlength => 255, :size => 80, :value => Page::TITLE_PLACEHOLDER, :onfocus=>"this.value=''"
+    = f.text_field :base_url, :maxlength => 255, :size => 80, :value => Page::BASE_URL_PLACEHOLDER, :onblur=>"if(this.value == '') { this.value='#{Page::BASE_URL_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::BASE_URL_PLACEHOLDER}') {this.value=''}"
+    = f.text_field :url_substitutions, :maxlength => 255, :size => 80, :value => Page::URL_SUBSTITUTIONS_PLACEHOLDER, :onblur=>"if(this.value == '') { this.value='#{Page::URL_SUBSTITUTIONS_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::URL_SUBSTITUTIONS_PLACEHOLDER}') {this.value=''}"
+    = f.text_area :urls, :rows => 10, :cols => 80, :value => Page::URLS_PLACEHOLDER, :onblur=>"if(this.value == '') { this.value='#{Page::URLS_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::URLS_PLACEHOLDER}') {this.value=''}"
+    = f.text_field :title, :maxlength => 255, :size => 80, :value => Page::TITLE_PLACEHOLDER, :onblur=>"if(this.value == '') { this.value='#{Page::TITLE_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::TITLE_PLACEHOLDER}') {this.value=''}"
     .button= f.submit "Create"
