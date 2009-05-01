@@ -3,8 +3,6 @@ Feature: change the read order
   Why: some pages I like more and want to read more often than others
   Result: Order should reflect prefence
 
-  Background:
-
   Scenario: Changing read after orders
     Given the following pages
       | title                            | url                                   | read_after |

@@ -18,5 +18,11 @@ ActiveRecord::Schema.define(:version => 1) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
+  create_table "genres", :force => true do |t|
+    t.string   "name"
+  end
+  create_table :genres_pages, :id => false, :force =>true do |t|
+    t.integer :page_id
+    t.integer :genre_id
+  end
 end

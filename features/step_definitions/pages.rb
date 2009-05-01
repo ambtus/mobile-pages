@@ -2,10 +2,9 @@ Given /^I have no pages$/ do
   Page.delete_all
 end
 
-Given /^the following pages$/ do |table|
-  Page.delete_all
+Given /^the following pages?$/ do |table|
   # table is a Cucumber::Ast::Table
-  table.hashes.each {|hash| Page.create!(hash)}
+  table.hashes.each {|hash| Page.create(hash)}
 end
 
 # can't use "should see" because the mobile file is downloaded, not displayed

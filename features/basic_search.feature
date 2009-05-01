@@ -22,7 +22,10 @@ Feature: Basic Search
       | Styles                               | The Mysterious Affair at Styles  | The intense interest aroused in the public |
 
   Scenario: No matching page
-    Given I am on the homepage
+    Given the following page
+      | title            | url                                   |
+      | War              | http://www.rawbw.com/~alice/test.html   |
+      And I am on the homepage
     When I fill in "search" with "War and Peace"
       And I press "Search"
     Then I should see "Not found" in "#flash_error"

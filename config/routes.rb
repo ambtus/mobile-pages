@@ -1,7 +1,8 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :pages
+  map.resources :genres
   map.resources :start
   map.resources :store
-  map.resources :pages
   map.resources :scrub
   map.resources :rate
   map.resources :search

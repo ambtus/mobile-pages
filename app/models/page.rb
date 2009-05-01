@@ -4,11 +4,13 @@ class Page < ActiveRecord::Base
   TITLE_PLACEHOLDER = "Enter a Title"
   DURATION = "years"
 
+  has_and_belongs_to_many :genres, :uniq => true
+  default_scope :order => 'read_after ASC'
+  validates_presence_of :title
+
   def self.search(string)
     Page.find(:first, :conditions => ["title LIKE ?", "%" + string + "%"])
   end
-
-  default_scope :order => 'read_after ASC'
 
   def before_validation
     self.url = nil if self.url == URL_PLACEHOLDER
@@ -36,6 +38,19 @@ class Page < ActiveRecord::Base
 
   def clean_title
     CGI::escape(self.title).gsub('+', '%20') + ".txt"
+  end
+
+  def genre_string
+    self.genres.map(&:name).join(", ")
+  end
+
+  def add_genre_string=(string)
+    return if string.blank?
+    string.split(",").each do |genre|
+      new = Genre.find_or_create_by_name(genre.squish)
+      self.genres << new
+    end
+    self.genres
   end
 
   def original_html=(content)

@@ -3,10 +3,12 @@
 - content_for :extra_links do
   = link_to "Scrub", scrub_path(@page)
   = link_to "Rate", rate_path(@page)
+  = link_to "Genres", genre_path(@page)
 .form
   - form_for @page do
     = submit_tag "Next"
 .title= link_to @page.title, @page.mobile_url
+.genres= @page.genre_string
 .content= render :text => @page.original_html
 .form
   - form_for @page do
