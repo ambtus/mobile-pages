@@ -1,10 +1,11 @@
 - content_for :title do
   = @title
+- content_for :extra_links do
+  = link_to "Read", page_path(@page) if @page
+  = link_to "Rate", rate_path(@page) if @page
+  = link_to "Genres", genre_path(@page) if @page
+  = link_to "Store Multiple", start_index_path(:multiple => true)
 - if @page
-  - content_for :extra_links do
-    = link_to "Read", page_path(@page)
-    = link_to "Rate", rate_path(@page)
-    = link_to "Genres", genre_path(@page)
   .title= link_to @page.title, @page.mobile_url
   .genres= @page.genre_string
   .form
@@ -20,6 +21,7 @@
     - form_tag start_index_path do
       = select_tag :genre, "<option></option>" + options_for_select(@genres)
       = submit_tag "Filter", :name => nil
+
 .form
   - form_for @new_page do |f|
     = f.text_field :url, :maxlength => 255, :size => 80, :value => Page::URL_PLACEHOLDER, :onfocus=>"this.value=''"

@@ -2,11 +2,20 @@ class Page < ActiveRecord::Base
   MODULO = 300  # files in a single directory
   URL_PLACEHOLDER = "Enter a URL"
   TITLE_PLACEHOLDER = "Enter a Title"
+  BASE_URL_PLACEHOLDER = "Base URL: use * as replacement placeholder"
+  URL_SUBSTITUTIONS_PLACEHOLDER = "URL substitutions, space separated replacements for base URL"
+  URLS_PLACEHOLDER = "Alternatively: full URLs for parts, one per line"
   DURATION = "years"
 
   has_and_belongs_to_many :genres, :uniq => true
+  belongs_to :parent, :class_name => "Page"
   default_scope :order => 'read_after ASC'
+  named_scope :parents, :conditions => {:parent_id => nil}
   validates_presence_of :title
+
+  attr_accessor :base_url
+  attr_accessor :url_substitutions
+  attr_accessor :urls
 
   def self.search(string)
     Page.find(:first, :conditions => ["title LIKE ?", "%" + string + "%"])
@@ -15,15 +24,51 @@ class Page < ActiveRecord::Base
   def before_validation
     self.url = nil if self.url == URL_PLACEHOLDER
     self.title = nil if self.title == TITLE_PLACEHOLDER
+    self.base_url = nil if self.base_url == BASE_URL_PLACEHOLDER
+    self.url_substitutions = nil if self.url_substitutions == URL_SUBSTITUTIONS_PLACEHOLDER
+    self.urls = nil if self.urls == URLS_PLACEHOLDER
     self.read_after = Time.now if self.read_after.blank?
   end
 
   def after_create
-    pwd = Curl::External.getpwd(self.url)
-    url = Curl::External.geturl(self.url)
-    html = Curl::Easy.perform(url) {|c| c.userpwd = pwd}.body_str.gsub('&nbsp;', " ").squish
     FileUtils.mkdir_p(Rails.public_path +  self.mypath)
-    self.original_html=Nokogiri::HTML(html).xpath('//body').first.inner_html
+    if self.url
+      pwd = Curl::External.getpwd(self.url)
+      url = Curl::External.geturl(self.url)
+      html = Curl::Easy.perform(url) {|c| c.userpwd = pwd}.body_str.gsub('&nbsp;', " ").squish
+      self.original_html=Nokogiri::HTML(html).xpath('//body').first.inner_html
+    else
+      create_parts
+    end
+  end
+
+  def create_parts
+    File.open(self.original_file, 'w') do |file|
+      count = 1
+      if self.base_url
+        self.url_substitutions.split.each do |sub|
+          file << "<h1>Part #{count.to_s}</h1>"
+          file << create_child(self.base_url.gsub(/\*/, sub), count).original_html
+          count = count.next
+        end
+      else
+        self.urls.each do |url|
+          url.chomp!
+          file << "<h1>Part #{count.to_s}</h1>"
+          file << create_child(url, count).original_html
+          count = count.next
+        end
+      end
+    end
+  end
+
+  def create_child(url, position)
+    title = "Part " + position.to_s
+    Page.create(:title => title, :url => url, :position => position, :parent_id => self.id)
+  end
+
+  def parts
+    Page.find(:all, :order => :position, :conditions => ["parent_id = ?", id])
   end
 
   def next

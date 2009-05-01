@@ -1,4 +1,4 @@
-# This file is auto-generated from the current state of the database. Instead of editing this file,
+# This file is auto-generated from the current state of the database. Instead of editing this file, 
 # please use the migrations feature of Active Record to incrementally modify your database, and
 # then regenerate this schema definition.
 #
@@ -11,18 +11,23 @@
 
 ActiveRecord::Schema.define(:version => 1) do
 
+  create_table "genres", :force => true do |t|
+    t.string "name"
+  end
+
+  create_table "genres_pages", :id => false, :force => true do |t|
+    t.integer "page_id"
+    t.integer "genre_id"
+  end
+
   create_table "pages", :force => true do |t|
     t.string   "url"
     t.string   "title"
+    t.integer  "parent_id"
+    t.integer  "position"
     t.datetime "read_after"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-  create_table "genres", :force => true do |t|
-    t.string   "name"
-  end
-  create_table :genres_pages, :id => false, :force =>true do |t|
-    t.integer :page_id
-    t.integer :genre_id
-  end
+
 end

@@ -19,3 +19,8 @@ end
 When /^I follow "([^\"]*)" in "([^\"]*)"$/ do |text, css|
   click_link_within(css, text)
 end
+
+# can't figure out how to enter a newline without it getting escaped
+When /^I fill in "([^\"]*)" with line1: "([^\"]*)" and line2: "([^\"]*)"$/ do |field, line1, line2|
+  fill_in(field, :with => [line1, line2].join("\n"))
+end
