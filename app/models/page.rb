@@ -99,6 +99,7 @@ class Page < ActiveRecord::Base
   end
 
   def original_html=(content)
+    File.unlink(self.mobile_file_name) rescue Errno::ENOENT
     File.open(self.original_file, 'w') { |f| f.write(content) }
   end
 
@@ -119,11 +120,14 @@ class Page < ActiveRecord::Base
   end
 
   def mobile_file
-    file = Rails.public_path +  self.mypath + self.clean_title
-    unless File.exists?(file)
+    unless File.exists?(self.mobile_file_name)
       self.mobile_content=self.remove_html
     end
-    file
+    self.mobile_file_name
+  end
+
+  def mobile_file_name
+    Rails.public_path +  self.mypath + self.clean_title
   end
 
   def mypath
