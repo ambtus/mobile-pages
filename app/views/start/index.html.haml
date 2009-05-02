@@ -1,12 +1,12 @@
 - content_for :title do
   = @title
-- content_for :extra_links do
-  = link_to "Read", page_path(@page) if @page
-  = link_to "Rate", rate_path(@page) if @page
-  = link_to "Genres", genre_path(@page) if @page
-  = link_to "Store Multiple", start_index_path(:multiple => true)
 - if @page
-  .title= link_to @page.title, @page.mobile_url
+  .title
+    =h @page.title
+    = link_to "Download", @page.mobile_url
+    = link_to "Read", page_path(@page)
+    = link_to "Rate", rate_path(@page) if @page
+    = link_to "Genres", genre_path(@page) if @page
   .genres= @page.genre_string
   .form
     - form_tag start_index_path do
@@ -17,13 +17,14 @@
     - form_tag search_index_path do
       = text_field_tag :search, params[:search]
       = submit_tag "Search", :name => nil
-  .genre
-    - form_tag start_index_path do
-      = select_tag :genre, "<option></option>" + options_for_select(@genres)
-      = submit_tag "Filter", :name => nil
-
+  - unless @genres.blank?
+    .genre
+      - form_tag start_index_path do
+        = select_tag :genre, "<option></option>" + options_for_select(@genres)
+        = submit_tag "Filter", :name => nil
 .form
   - form_for @new_page do |f|
     = f.text_field :url, :maxlength => 255, :size => 80, :value => Page::URL_PLACEHOLDER, :onblur=>"if(this.value == '') { this.value='#{Page::URL_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::URL_PLACEHOLDER}') {this.value=''}"
     = f.text_field :title, :maxlength => 255, :size => 80, :value => Page::TITLE_PLACEHOLDER,  :onblur=>"if(this.value == '') { this.value='#{Page::TITLE_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::TITLE_PLACEHOLDER}') {this.value=''}"
     .button= f.submit "Store"
+= link_to "Store Multiple", start_index_path(:multiple => true)

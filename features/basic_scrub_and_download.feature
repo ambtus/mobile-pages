@@ -8,7 +8,7 @@ Feature: Basic Scrub and download
       And I fill in "page_url" with "http://www.rawbw.com/~alice/styled.html"
       And I fill in "page_title" with "Styled text test"
       And I press "Store"
-      And I follow "Styled text test" in ".title"
+      And I follow "Download" in ".title"
       And My document should contain "#This is a header#"
     When I am on the homepage
       And I follow "Read"
@@ -16,7 +16,7 @@ Feature: Basic Scrub and download
       And I check boxes "0 3 4"
       And I press "Scrub"
       And I should not see "This is a header"
-    When I follow "Styled text test" in ".title"
+    When I follow "Download" in ".title"
     Then My document should not contain "#This is a header#"
       And My document should not contain "_________"
       And My document should contain "This sentence"

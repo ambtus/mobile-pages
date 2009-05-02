@@ -1,7 +1,7 @@
 class Page < ActiveRecord::Base
   MODULO = 300  # files in a single directory
-  URL_PLACEHOLDER = "Enter a URL"
-  TITLE_PLACEHOLDER = "Enter a Title"
+  URL_PLACEHOLDER = "Enter a URL for a new page"
+  TITLE_PLACEHOLDER = "Enter a Title for the new page"
   BASE_URL_PLACEHOLDER = "Base URL: use * as replacement placeholder"
   URL_SUBSTITUTIONS_PLACEHOLDER = "URL substitutions, space separated replacements for base URL"
   URLS_PLACEHOLDER = "Alternatively: full URLs for parts, one per line"

@@ -1,10 +1,8 @@
 - content_for :title do
-  = @page.title
+  = "Parts for #{@page.title}"
 .form
   - form_for @page do
     = submit_tag "Next"
-- if @page.parent
-  .parent= link_to @page.parent.title, page_path(@page.parent)
 .title
   =h @page.title
   = link_to "Read", page_path(@page, :show_parts=>true)
@@ -13,8 +11,8 @@
   = link_to "Rate", rate_path(@page)
   = link_to "Genres", genre_path(@page)
 .genres= @page.genre_string
-.content= render :text => @page.original_html
-.form
-  - form_for @page do
-    = submit_tag "Next"
-
+.parts
+  - @page.parts.each do |part|
+    .part
+      = link_to "Read #{part.title}", page_path(part)
+      = link_to "Download #{part.title}", part.mobile_url

@@ -1,8 +1,5 @@
 - content_for :title do
   = "Select genres for " + @page.title
-- content_for :extra_links do
-  = link_to "Add Genres", genre_path(@page, :add => true)
-
 .title= @page.title
 .genres
   - form_tag genres_path do
@@ -10,3 +7,4 @@
     .filters
       = select_tag("page[genre_ids][]", options_from_collection_for_select(Genre.all, 'id', 'name', selected = @page.genres.map(&:id)), :multiple => true)
     .button= submit_tag "Update Genres"
+  = link_to "Add Genres", genre_path(@page, :add => true)

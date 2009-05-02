@@ -8,7 +8,7 @@ Feature: basic download
       And I fill in "page_url" with "http://www.rawbw.com/~alice/styled.html"
       And I fill in "page_title" with "Styled text test"
       And I press "Store"
-    When I follow "Styled text test" in ".title"
+    When I follow "Download" in ".title"
     Then My document should contain "#This is a header#"
       And My document should contain "*Bold*"
       And My document should contain "_Italic_"
