@@ -47,28 +47,38 @@ class Page < ActiveRecord::Base
       count = 1
       if self.base_url
         self.url_substitutions.split.each do |sub|
-          file << "<h1>Part #{count.to_s}</h1>"
-          file << create_child(self.base_url.gsub(/\*/, sub), count).original_html
+          title = "Part " + count.to_s
+          file << "<h1>#{title}</h1>\n"
+          file << create_child(self.base_url.gsub(/\*/, sub), count, title).original_html
           count = count.next
         end
       else
         self.urls.each do |url|
           url.chomp!
-          file << "<h1>Part #{count.to_s}</h1>"
-          file << create_child(url, count).original_html
+          title = "Part " + count.to_s
+          file << "<h1>#{title}</h1>\n"
+          file << create_child(url, count, title).original_html
           count = count.next
         end
       end
     end
   end
 
-  def create_child(url, position)
-    title = "Part " + position.to_s
+  def create_child(url, position, title)
     Page.create(:title => title, :url => url, :position => position, :parent_id => self.id)
   end
 
   def parts
     Page.find(:all, :order => :position, :conditions => ["parent_id = ?", id])
+  end
+
+  def rebuild_html_from_parts
+    File.open(self.original_file, 'w') do |file|
+      self.parts.each do |part|
+        file << "<h1>#{part.title}</h1>\n"
+        file << part.original_html
+      end
+    end
   end
 
   def next
@@ -101,6 +111,10 @@ class Page < ActiveRecord::Base
   def original_html=(content)
     File.unlink(self.mobile_file_name) rescue Errno::ENOENT
     File.open(self.original_file, 'w') { |f| f.write(content) }
+    if self.parent
+      File.unlink(self.parent.mobile_file_name) rescue Errno::ENOENT
+      self.parent.rebuild_html_from_parts
+    end
   end
 
   def original_html

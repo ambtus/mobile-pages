@@ -12,6 +12,7 @@ class PagesController < ApplicationController
     @page = Page.find(params[:id])
     @page.remove_nodes(params[:nodes]) if params[:nodes]
     @page = @page.next if (params[:commit] == "Next")
+    @page = @page.parent if @page.parent
     redirect_to @page
   end
 end
