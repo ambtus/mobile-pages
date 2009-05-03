@@ -9,7 +9,7 @@ Feature: manage parent
       And I fill in "page_base_url" with "http://www.rawbw.com/~alice/parts/*.html"
       And I fill in "page_url_substitutions" with "1"
       And I fill in "page_title" with "Parent Page"
-      And I press "Create"
+      And I press "Store"
     When I follow "Manage Parts"
       And I fill in "url_list" with line1: "http://www.rawbw.com/~alice/parts/1.html" and line2: "http://www.rawbw.com/~alice/parts/2.html"
       And I press "Update"
@@ -25,7 +25,7 @@ Feature: manage parent
       And I fill in "page_base_url" with "http://www.rawbw.com/~alice/parts/*.html"
      And I fill in "page_url_substitutions" with "1 2 3"
      And I fill in "page_title" with "Parent with too many parts"
-     And I press "Create"
+     And I press "Store"
     When I am on the homepage
       And I follow "Manage Parts"
       And I fill in "url_list" with line1: "http://www.rawbw.com/~alice/parts/2.html" and line2: "http://www.rawbw.com/~alice/parts/3.html"
@@ -42,7 +42,7 @@ Feature: manage parent
       And I fill in "page_base_url" with "http://www.rawbw.com/~alice/parts/*.html"
      And I fill in "page_url_substitutions" with "1 2"
      And I fill in "page_title" with "Parent with part in wrong order"
-     And I press "Create"
+     And I press "Store"
     When I am on the homepage
       And I follow "Manage Parts"
       And I fill in "url_list" with line1: "http://www.rawbw.com/~alice/parts/2.html" and line2: "http://www.rawbw.com/~alice/parts/1.html"

@@ -9,7 +9,7 @@ Feature: find a part
     When I fill in "page_base_url" with "http://www.rawbw.com/~alice/parts/*.html"
       And I fill in "page_url_substitutions" with "1 2"
       And I fill in "page_title" with "Parent Doc"
-      And I press "Create"
+      And I press "Store"
       And I am on the homepage
       And I fill in "search" with "Part 2"
       And I press "Search"

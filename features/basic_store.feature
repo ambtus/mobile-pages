@@ -4,8 +4,7 @@ Feature: Basic Store
   Result: view the document
 
 Scenario Outline: title and url
-  Given I have no pages
-    And I am on the homepage
+  Given I am on the homepage
   When I fill in "page_url" with "<url>"
     And I fill in "page_title" with "<title>"
     And I press "Store"

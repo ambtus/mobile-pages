@@ -9,7 +9,7 @@ Feature: Basic scrubbing of parent
       And I fill in "page_base_url" with "http://www.rawbw.com/~alice/parts/*.html"
       And I fill in "page_url_substitutions" with "1 2"
       And I fill in "page_title" with "Parent of crufty Page"
-      And I press "Create"
+      And I press "Store"
      Then I should see "Parent of crufty Page"
        And I should see "Part 1"
        And I should see "top cruft in part 1"

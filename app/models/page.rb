@@ -39,8 +39,10 @@ class Page < ActiveRecord::Base
       self.original_html=Nokogiri::HTML(html).xpath('//body').first.inner_html
     elsif self.base_url
       self.create_from_base
-    else
+    elsif self.urls
       self.parts_from_urls(self.urls)
+    else
+      self.build_html_from_parts
     end
   end
 
@@ -95,6 +97,22 @@ class Page < ActiveRecord::Base
 
   def url_list
     self.parts.map(&:url).join("\n")
+  end
+
+  def add_parent(title)
+    pages=Page.find(:all, :conditions => ["title LIKE ?", "%" + title + "%"])
+    return false if pages.size > 1
+    parent = nil
+    if pages.size == 0
+      parent = Page.create(:title => title)
+    else
+      parent = pages.first
+      return false if parent.parts.blank?
+    end
+    count = parent.parts.size + 1
+    self.update_attributes(:parent_id => parent.id, :position => count)
+    parent.build_html_from_parts
+    return parent
   end
 
   def next

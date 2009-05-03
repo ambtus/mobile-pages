@@ -9,7 +9,7 @@ Feature: different format for a parent page
       And I fill in "page_base_url" with "http://www.rawbw.com/~alice/parts/*.html"
      And I fill in "page_url_substitutions" with "1 2"
      And I fill in "page_title" with "Parent Page"
-     And I press "Create"
+     And I press "Store"
    When I am on the homepage
      And I follow "Read"
    Then I should see "Download" in "#position_1"

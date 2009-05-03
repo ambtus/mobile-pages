@@ -10,7 +10,7 @@
     = link_to "Download", @page.mobile_url
     = link_to "Rate", rate_path(@page) if @page
     = link_to "Genres", genre_path(@page) if @page
-    = link_to "Manage Parts", edit_part_path(@page) unless @page.parts.empty?
+    = link_to "Manage Parts", edit_part_path(@page)
   .genres= @page.genre_string
   .form
     - form_tag start_index_path do

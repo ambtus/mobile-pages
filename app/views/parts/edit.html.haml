@@ -3,5 +3,7 @@
 .form
   - form_tag parts_path do
     = hidden_field_tag(:page_id, @page.id)
-    = text_area_tag :url_list, @page.urls, :rows => @page.parts.size + 2, :cols => 80
+    .parent= text_field_tag :add_parent, @parent_title, { :onblur=>"if(this.value == '') { this.value='#{@parent_title }'}", :onfocus=>"if (this.value == '#{@parent_title }') {this.value=''}", :size => 80}
+    - unless @page.parts.blank?
+      .parts= text_area_tag :url_list, @page.url_list, :rows => @page.parts.size + 2, :cols => 80
     .button= submit_tag "Update"
