@@ -37,29 +37,50 @@ class Page < ActiveRecord::Base
       url = Curl::External.geturl(self.url)
       html = Curl::Easy.perform(url) {|c| c.userpwd = pwd}.body_str.gsub('&nbsp;', " ").squish
       self.original_html=Nokogiri::HTML(html).xpath('//body').first.inner_html
+    elsif self.base_url
+      self.create_from_base
     else
-      create_parts
+      self.parts_from_urls(self.urls)
     end
   end
 
-  def create_parts
-    File.open(self.original_file, 'w') do |file|
-      count = 1
-      if self.base_url
-        self.url_substitutions.split.each do |sub|
-          title = "Part " + count.to_s
-          file << "<h1>#{title}</h1>\n"
-          file << create_child(self.base_url.gsub(/\*/, sub), count, title).original_html
-          count = count.next
-        end
+  def create_from_base
+    count = 1
+    self.url_substitutions.split.each do |sub|
+      title = "Part " + count.to_s
+      create_child(self.base_url.gsub(/\*/, sub), count, title)
+      count = count.next
+    end
+    self.build_html_from_parts
+  end
+
+  def parts_from_urls(new_urls)
+    old_part_ids = self.parts.map(&:id)
+    count = 1
+    new_part_ids = []
+    new_urls.each do |url|
+      url.chomp!
+      part = Page.find_by_url_and_parent_id(url, self.id)
+      if part
+        part.title = "Part #{count.to_s}" if part.title.match(/^Part /)
+        part.position = count
+        part.save
       else
-        self.urls.each do |url|
-          url.chomp!
-          title = "Part " + count.to_s
-          file << "<h1>#{title}</h1>\n"
-          file << create_child(url, count, title).original_html
-          count = count.next
-        end
+        title = "Part " + count.to_s
+        part = create_child(url, count, title)
+      end
+      new_part_ids << part.id
+      count = count.next
+    end
+    (old_part_ids - new_part_ids).each {|i| Page.find(i).destroy}
+    self.build_html_from_parts
+  end
+
+  def build_html_from_parts
+    File.open(self.original_file, 'w') do |file|
+      self.parts.each do |part|
+        file << "<h1>#{part.title}</h1>\n"
+        file << part.original_html
       end
     end
   end
@@ -72,13 +93,8 @@ class Page < ActiveRecord::Base
     Page.find(:all, :order => :position, :conditions => ["parent_id = ?", id])
   end
 
-  def rebuild_html_from_parts
-    File.open(self.original_file, 'w') do |file|
-      self.parts.each do |part|
-        file << "<h1>#{part.title}</h1>\n"
-        file << part.original_html
-      end
-    end
+  def url_list
+    self.parts.map(&:url).join("\n")
   end
 
   def next
@@ -113,7 +129,7 @@ class Page < ActiveRecord::Base
     File.open(self.original_file, 'w') { |f| f.write(content) }
     if self.parent
       File.unlink(self.parent.mobile_file_name) rescue Errno::ENOENT
-      self.parent.rebuild_html_from_parts
+      self.parent.build_html_from_parts
     end
   end
 

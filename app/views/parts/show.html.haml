@@ -5,14 +5,15 @@
     = submit_tag "Next"
 .title
   =h @page.title
-  = link_to "Read", page_path(@page, :show_parts=>true)
+  = link_to "Read", page_path(@page)
   = link_to "Download", @page.mobile_url
-  = link_to "Scrub", scrub_path(@page)
   = link_to "Rate", rate_path(@page)
   = link_to "Genres", genre_path(@page)
+  = link_to "Manage Parts", edit_part_path(@page)
 .genres= @page.genre_string
 .parts
   - @page.parts.each do |part|
-    .part
-      = link_to "Read #{part.title}", page_path(part)
-      = link_to "Download #{part.title}", part.mobile_url
+    .part{:id => "position_#{part.position}"}
+      =h part.title
+      = link_to "Read", page_path(part)
+      = link_to "Download", part.mobile_url

@@ -1,10 +1,6 @@
 class StartController < ApplicationController
  def index
    @new_page = Page.new
-   if params[:multiple]
-     @title = "Mobile pages (new multiple)"
-     render :multiple and return
-   end
    @genre = Genre.find_by_name(params[:genre]) if params[:genre]
    if @genre
      @page = @genre.pages.parents.first

@@ -4,14 +4,15 @@
   - form_for @page do
     = submit_tag "Next"
 - if @page.parent
-  .parent= link_to @page.parent.title, page_path(@page.parent)
+  .parent= link_to @page.parent.title, part_path(@page.parent)
 .title
   =h @page.title
-  = link_to "Read", page_path(@page, :show_parts=>true)
+  = link_to "Read", part_path(@page)
   = link_to "Download", @page.mobile_url
   = link_to "Scrub", scrub_path(@page)
   = link_to "Rate", rate_path(@page)
   = link_to "Genres", genre_path(@page)
+  = link_to "Manage Parts", edit_part_path(@page) unless @page.parts.empty?
 .genres= @page.genre_string
 .content= render :text => @page.original_html
 .form
