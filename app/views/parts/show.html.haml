@@ -9,8 +9,10 @@
   = link_to "Download", @page.mobile_url
   = link_to "Rate", rate_path(@page)
   = link_to "Genres", genre_path(@page)
+  = link_to "Notes", edit_note_path(@page)
   = link_to "Manage Parts", edit_part_path(@page)
 .genres= @page.genre_string
+.notes=simple_format @page.notes
 .parts
   - @page.parts.each do |part|
     .part{:id => "position_#{part.position}"}
