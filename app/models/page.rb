@@ -1,7 +1,8 @@
 class Page < ActiveRecord::Base
   MODULO = 300  # files in a single directory
-  URL_PLACEHOLDER = "Enter a URL for a new page"
   TITLE_PLACEHOLDER = "Enter a Title for the new page"
+  URL_PLACEHOLDER = "Enter a URL for a new page"
+  PASTED_PLACEHOLDER = "If you paste html here, it will override fetching from the url"
   BASE_URL_PLACEHOLDER = "Base URL: use * as replacement placeholder"
   URL_SUBSTITUTIONS_PLACEHOLDER = "URL substitutions, space separated replacements for base URL"
   URLS_PLACEHOLDER = "Alternatively: full URLs for parts, one per line"
@@ -16,6 +17,7 @@ class Page < ActiveRecord::Base
   attr_accessor :base_url
   attr_accessor :url_substitutions
   attr_accessor :urls
+  attr_accessor :pasted
 
   def self.search(string)
     Page.find(:first, :conditions => ["title LIKE ?", "%" + string + "%"])
@@ -24,6 +26,7 @@ class Page < ActiveRecord::Base
   def before_validation
     self.url = nil if self.url == URL_PLACEHOLDER
     self.title = nil if self.title == TITLE_PLACEHOLDER
+    self.pasted = nil if self.pasted == PASTED_PLACEHOLDER
     self.base_url = nil if self.base_url == BASE_URL_PLACEHOLDER
     self.url_substitutions = nil if self.url_substitutions == URL_SUBSTITUTIONS_PLACEHOLDER
     self.urls = nil if self.urls == URLS_PLACEHOLDER
@@ -32,7 +35,9 @@ class Page < ActiveRecord::Base
 
   def after_create
     FileUtils.mkdir_p(Rails.public_path +  self.mypath)
-    if self.url
+    if self.pasted
+      self.original_html=self.pasted
+    elsif self.url
       pwd = Curl::External.getpwd(self.url)
       url = Curl::External.geturl(self.url)
       html = Curl::Easy.perform(url) {|c| c.userpwd = pwd}.body_str.gsub('&nbsp;', " ").squish
