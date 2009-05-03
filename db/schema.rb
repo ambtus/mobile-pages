@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(:version => 1) do
     t.text     "notes"
     t.integer  "parent_id"
     t.integer  "position"
+    t.datetime "last_read"
     t.datetime "read_after"
     t.datetime "created_at"
     t.datetime "updated_at"
