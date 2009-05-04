@@ -40,8 +40,11 @@ class Page < ActiveRecord::Base
     elsif self.url
       pwd = Curl::External.getpwd(self.url)
       url = Curl::External.geturl(self.url)
-      html = Curl::Easy.perform(url) {|c| c.userpwd = pwd}.body_str.gsub('&nbsp;', " ").squish
-      self.original_html=Nokogiri::HTML(html).xpath('//body').first.inner_html
+      Curl::Easy.download(url, self.raw_file_name) {|c| c.userpwd = pwd}
+      lines = File.readlines(self.raw_file_name).map{|line| line.chomp}
+      html = lines.join(" ").gsub(/<\/?span.*?>/, "").gsub(/> /, ">").gsub(/ </, "<")
+      html = html.gsub(/<br ?\/?><br ?\/?>/, "<p>").gsub('&nbsp;', " ").squish
+      self.original_html = Nokogiri::HTML(html).xpath('//body').first.inner_html
     elsif self.base_url
       self.create_from_base
     elsif self.urls
@@ -182,6 +185,10 @@ class Page < ActiveRecord::Base
 
   def mobile_file_name
     Rails.public_path +  self.mypath + self.clean_title
+  end
+
+  def raw_file_name
+    Rails.public_path + self.mypath + "raw.html"
   end
 
   def mypath
