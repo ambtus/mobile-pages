@@ -20,7 +20,7 @@ Feature: basic download
       And My document should not contain "p>"
       And My document should contain "…"
 
-  Scenario: download stripping
+  Scenario: download stripping of javascript and comments
     Given I am on the homepage
       And I fill in "page_url" with "http://www.rawbw.com/~alice/entities.html"
       And I fill in "page_title" with "Javascript test"
@@ -30,3 +30,15 @@ Feature: basic download
       And My document should not contain "FILE ARCHIVED"
       And My document should contain "link_to: "
       And My document should contain "Chris was antsy"
+
+  Scenario: download stripping of tables
+    Given I am on the homepage
+      And I fill in "page_url" with "http://www.rawbw.com/~alice/tablecontent.html"
+      And I fill in "page_title" with "table test"
+      And I press "Store"
+    When I follow "Download" in ".title"
+    Then My document should not contain "<table"
+      And My document should not contain "<td"
+      And My document should not contain "<tr>"
+      And My document should contain "Irony"
+      And My document should contain "I remembered waking up"

@@ -72,6 +72,10 @@ class Page < ActiveRecord::Base
     html = html.gsub(/<x-claris.*?>/i, "")
     html = html.gsub(/<script language=.*?>/i, "")
     html = html.gsub(/<!-- .*?>/i, "")
+    html = html.gsub(/<\/?table.*?>/, "")
+    html = html.gsub(/<\/?tr.*?>/, "")
+    html = html.gsub(/<td.*?>/, "<div>")
+    html = html.gsub(/<\/td.*?>/, "</div>")
     input = html.match(/charset=utf-8/) ? "utf8" : "latin1"
     Tidy.open do |tidy|
       tidy.options.input_encoding = input
