@@ -69,12 +69,12 @@ class Page < ActiveRecord::Base
     lines = File.readlines(filename).map{|line| line.chomp}
     html = lines.join(" ").gsub(/<\/?span.*?>/, "").gsub(/> /, ">").gsub(/ </, "<")
     html = html.gsub(/<br ?\/?><br ?\/?>/, "<p>").gsub('&nbsp;', " ").squish
+    html = html.gsub(/<x-claris.*?>/, "")
     input = html.match(/charset=utf-8/) ? "utf8" : "latin1"
     Tidy.open do |tidy|
       tidy.options.input_encoding = input
       tidy.options.output_encoding = "utf8"
       tidy.options.drop_proprietary_attributes = true
-      tidy.options.new_blocklevel_tags = "x-claris-window, x-claris-tagview"
       tidy.options.logical_emphasis = true
       tidy.options.show_body_only = true
       tidy.options.word_2000 = true
@@ -254,7 +254,6 @@ class Page < ActiveRecord::Base
 
   def remove_html
     text = self.original_html
-    text = text.gsub(/<x-claris.*?>/, "")
     text = text.gsub(/<\/?font.*?>/, "")
     text = text.gsub(/<\/?center>/, "")
     text = text.gsub(/<\/?h1>/, "\#")
