@@ -280,7 +280,7 @@ class Page < ActiveRecord::Base
     text = text.gsub(/<\/?div.*?>/, "")
     text = text.gsub(/<\/?p.*?>/, "")
     text = text.gsub(/<\/?br.*?>/, "")
-    text = text.gsub(/<a href.*?>(.*?)<\/a>/) {|s| "link_to: #{$1}"}
+    text = text.gsub(/<a.*?>(.*?)<\/a>/) {|s| "link_to: #{$1}"}
     text.gsub(/ +/, ' ').gsub(/\n+ */, "\n\n").strip
   end
 
