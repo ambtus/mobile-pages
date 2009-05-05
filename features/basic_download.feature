@@ -19,3 +19,14 @@ Feature: basic download
       And My document should not contain "div>"
       And My document should not contain "p>"
       And My document should contain "…"
+
+  Scenario: download stripping
+    Given I am on the homepage
+      And I fill in "page_url" with "http://www.rawbw.com/~alice/entities.html"
+      And I fill in "page_title" with "Javascript test"
+      And I press "Store"
+    When I follow "Download" in ".title"
+    Then My document should not contain "script language="
+      And My document should not contain "FILE ARCHIVED"
+      And My document should contain "link_to: "
+      And My document should contain "Chris was antsy"

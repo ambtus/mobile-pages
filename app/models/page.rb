@@ -69,7 +69,9 @@ class Page < ActiveRecord::Base
     lines = File.readlines(filename).map{|line| line.chomp}
     html = lines.join(" ").gsub(/<\/?span.*?>/, "").gsub(/> /, ">").gsub(/ </, "<")
     html = html.gsub(/<br ?\/?><br ?\/?>/, "<p>").gsub('&nbsp;', " ").squish
-    html = html.gsub(/<x-claris.*?>/, "")
+    html = html.gsub(/<x-claris.*?>/i, "")
+    html = html.gsub(/<script language=.*?>/i, "")
+    html = html.gsub(/<!-- .*?>/i, "")
     input = html.match(/charset=utf-8/) ? "utf8" : "latin1"
     Tidy.open do |tidy|
       tidy.options.input_encoding = input
