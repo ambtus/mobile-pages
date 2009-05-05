@@ -56,6 +56,20 @@ class Page < ActiveRecord::Base
     lines = File.readlines(self.raw_file_name).map{|line| line.chomp}
     html = lines.join(" ").gsub(/<\/?span.*?>/, "").gsub(/> /, ">").gsub(/ </, "<")
     html = html.gsub(/<br ?\/?><br ?\/?>/, "<p>").gsub('&nbsp;', " ").squish
+    input = html.match(/charset=utf-8/) ? "utf8" : "latin1"
+    Tidy.open do |tidy|
+      tidy.options.input_encoding = input
+      tidy.options.output_encoding = "utf8"
+      tidy.options.drop_proprietary_attributes = true
+      tidy.options.new_blocklevel_tags = "x-claris-window, x-claris-tagview"
+      tidy.options.logical_emphasis = true
+      tidy.options.show_body_only = true
+      tidy.options.word_2000 = true
+      tidy.options.break_before_br = true
+      tidy.options.indent = "auto"
+      tidy.options.wrap = 0
+      html = tidy.clean(html)
+    end
     self.original_html = Nokogiri::HTML(html).xpath('//body').first.inner_html
   end
 
@@ -223,18 +237,6 @@ class Page < ActiveRecord::Base
 
   def remove_html
     text = original_html
-    Tidy.open do |tidy|
-      tidy.options.char_encoding = "utf8"
-      tidy.options.drop_proprietary_attributes = true
-      tidy.options.new_blocklevel_tags = "x-claris-window, x-claris-tagview"
-      tidy.options.logical_emphasis = true
-      tidy.options.show_body_only = true
-      tidy.options.word_2000 = true
-      tidy.options.break_before_br = true
-      tidy.options.indent = "auto"
-      tidy.options.wrap = 0
-      text = tidy.clean(text)
-    end
     text = text.gsub(/<\/?h1>/, "\#")
     text = text.gsub(/<\/?strong>/, "\*")
     text = text.gsub(/<\/?em>/, "_")
