@@ -21,9 +21,8 @@ Feature: Basic scrubbing of parent
      Then My document should contain "top cruft in part 1"
      When I am on the homepage
      When I follow "Read"
-     Then I should not see "Scrub"
-     When I follow "Read" in "#position_1"
-      And I follow "Scrub"
+     Then I should not see "Scrub" in ".title"
+     When I follow "Scrub" in "#position_1"
       And I check boxes "0 2"
       And I press "Scrub"
      Then I should not see "top cruft in part 1"
