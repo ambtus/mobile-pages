@@ -38,7 +38,7 @@ class Page < ActiveRecord::Base
     FileUtils.mkdir_p(Rails.public_path +  self.mypath)
     if !self.pasted.blank?
       self.raw_content = self.pasted
-      self.pre_process
+      self.original_html = self.pre_process(self.raw_file_name)
     elsif self.url
       pwd = Curl::External.getpwd(self.url)
       url = Curl::External.geturl(self.url)
@@ -55,7 +55,7 @@ class Page < ActiveRecord::Base
           self.raw_content = "Timed out"
         end
       end
-      self.pre_process
+      self.original_html = self.pre_process(self.raw_file_name)
     elsif self.base_url
       self.create_from_base
     elsif self.urls
@@ -65,8 +65,8 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def pre_process
-    lines = File.readlines(self.raw_file_name).map{|line| line.chomp}
+  def pre_process(filename)
+    lines = File.readlines(filename).map{|line| line.chomp}
     html = lines.join(" ").gsub(/<\/?span.*?>/, "").gsub(/> /, ">").gsub(/ </, "<")
     html = html.gsub(/<br ?\/?><br ?\/?>/, "<p>").gsub('&nbsp;', " ").squish
     input = html.match(/charset=utf-8/) ? "utf8" : "latin1"
@@ -84,9 +84,9 @@ class Page < ActiveRecord::Base
       html = tidy.clean(html)
     end
     begin
-      self.original_html = Nokogiri::HTML(html).xpath('//body').first.inner_html
+      Nokogiri::HTML(html).xpath('//body').first.inner_html
     rescue NoMethodError
-      self.original_html = ""
+      ""
     end
   end
 
@@ -253,18 +253,24 @@ class Page < ActiveRecord::Base
   end
 
   def remove_html
-    text = original_html
+    text = self.original_html
+    text = text.gsub(/<x-claris.*?>/, "")
+    text = text.gsub(/<\/?font.*?>/, "")
+    text = text.gsub(/<\/?center>/, "")
     text = text.gsub(/<\/?h1>/, "\#")
     text = text.gsub(/<\/?strong>/, "\*")
     text = text.gsub(/<\/?em>/, "_")
+    text = text.gsub(/<\/?u>/, "_")
     text = text.gsub(/<\/?strike>/, "==")
     text = text.gsub(/<sup>/, "^")
     text = text.gsub(/<\/sup>/, "")
     text = text.gsub(/<sub>/, "(")
     text = text.gsub(/<\/sub>/, ")")
-    text = text.gsub(/<hr>/, "______________________________")
+    text = text.gsub(/<hr.*?>/, "______________________________")
     text = text.gsub(/<\/?div.*?>/, "")
     text = text.gsub(/<\/?p.*?>/, "")
+    text = text.gsub(/<\/?br.*?>/, "")
+    text = text.gsub(/<a href.*?>(.*?)<\/a>/) {|s| "link_to: #{$1}"}
     text.gsub(/ +/, ' ').gsub(/\n+ */, "\n\n").strip
   end
 
