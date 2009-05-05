@@ -3,7 +3,11 @@ class SearchController < ApplicationController
     @page = Page.search(params[:search])
     if @page
       @page = @page.parent if @page.parent
-      redirect_to @page
+      if @page.parts.blank?
+        redirect_to @page
+      else
+        redirect_to part_path(@page)
+      end
     else
       flash[:error] = "Not found"
       redirect_to root_url
