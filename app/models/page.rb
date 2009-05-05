@@ -13,6 +13,7 @@ class Page < ActiveRecord::Base
   default_scope :order => 'read_after ASC'
   named_scope :parents, :conditions => {:parent_id => nil}
   validates_presence_of :title
+  validates_format_of :url, :with => URI.regexp, :allow_blank => true
 
   attr_accessor :base_url
   attr_accessor :url_substitutions
@@ -35,13 +36,25 @@ class Page < ActiveRecord::Base
 
   def after_create
     FileUtils.mkdir_p(Rails.public_path +  self.mypath)
-    if self.pasted
+    if !self.pasted.blank?
       self.raw_content = self.pasted
       self.pre_process
     elsif self.url
       pwd = Curl::External.getpwd(self.url)
       url = Curl::External.geturl(self.url)
-      Curl::Easy.download(url, self.raw_file_name) {|c| c.userpwd = pwd}
+      begin
+        Curl::Easy.download(url, self.raw_file_name) {|c| c.userpwd = pwd}
+      rescue Curl::Err::HostResolutionError # ignore
+        self.raw_content = "Couldn't resolve host name"
+      rescue Curl::Err::ConnectionFailedError #ignore
+        self.raw_content = "Server down"
+      rescue Curl::Err::GotNothingError # retry
+        begin
+          Curl::Easy.download(url, self.raw_file_name) {|c| c.userpwd = pwd}
+        rescue Curl::Err::GotNothingError
+          self.raw_content = "Timed out"
+        end
+      end
       self.pre_process
     elsif self.base_url
       self.create_from_base
@@ -70,7 +83,11 @@ class Page < ActiveRecord::Base
       tidy.options.wrap = 0
       html = tidy.clean(html)
     end
-    self.original_html = Nokogiri::HTML(html).xpath('//body').first.inner_html
+    begin
+      self.original_html = Nokogiri::HTML(html).xpath('//body').first.inner_html
+    rescue NoMethodError
+      self.original_html = ""
+    end
   end
 
   def create_from_base

@@ -1,9 +1,10 @@
 class PagesController < ApplicationController
   def create
     @page = Page.new(params[:page])
-    @page.save
-    flash[:notice] = "Page created."
-    redirect_to @page
+    if @page.save
+      flash[:notice] = "Page created."
+      redirect_to @page and return
+    end
   end
   def show
     @page = Page.find(params[:id])
