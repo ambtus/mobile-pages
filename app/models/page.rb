@@ -86,7 +86,12 @@ class Page < ActiveRecord::Base
       html = tidy.clean(html)
     end
     begin
-      Nokogiri::HTML(html).xpath('//body').first.inner_html
+      n = Nokogiri::HTML(html).xpath('//body').first
+      if n.children.size == 1 && n.xpath('//div').first
+        n.xpath('//div').first.inner_html
+      else
+        n.inner_html
+      end
     rescue NoMethodError
       ""
     end
