@@ -4,8 +4,6 @@ module Curl
   module External
     def self.getpwd(original_url)
       case original_url
-        when /livejournal/
-          "yourljname:yourljpassword"
         when /sidrasue.com/
           "alice:nothingtosee"
       end
@@ -13,7 +11,7 @@ module Curl
     def self.geturl(original_url)
       case original_url
         when /livejournal/
-          original_url + "?format=light&mode=reply&auth=digest"
+          original_url + "?format=light&mode=reply"
         else original_url
       end
     end
