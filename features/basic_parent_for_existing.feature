@@ -1,4 +1,4 @@
-Feature: give an existing page a parent
+Feature: basic parent for existing pages
   What: given an existing part, create a new parent for it
   Why: if the page was a singleton, but a new page needs to be added as a sibling, then a parent page needs to be created to hold them
   Result: a new page with the original part as a child

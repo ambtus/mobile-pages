@@ -4,7 +4,8 @@ Feature: Basic Scrub and download
   Result: new download should remove scrubbed content
 
   Scenario: download, scrub and download
-    Given I am on the homepage
+    Given I have no pages
+      And I am on the homepage
       And I fill in "page_url" with "http://www.rawbw.com/~alice/styled.html"
       And I fill in "page_title" with "Styled text test"
       And I press "Store"

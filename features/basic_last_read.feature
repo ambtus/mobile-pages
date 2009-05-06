@@ -1,11 +1,12 @@
-Feature: last read date
+Feature: basic last read date
   What: store and display a last read date
   Why: because i want to know :)
   Result: after rating a page, it will display a last read date
 
   Scenario: after rate a page, display it's last read date
     # note - the date that you should see will change every year
-        Given the following pages
+    Given I have no pages
+      And the following pages
       | title                            | url                                   | last_read |
       | Grimm's Fairy Tales              | http://www.rawbw.com/~alice/gft.html  | 2008-01-01 |
     When I am on the homepage

@@ -1,4 +1,4 @@
-Feature: errors with storing
+Feature: error checking during store
 
   Scenario: fill title in url box by mistake is not okay
     Given I am on the homepage

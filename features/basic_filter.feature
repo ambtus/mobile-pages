@@ -1,4 +1,4 @@
-Feature: filter pages by genres
+Feature: basic filters
   What: be able filter on a genre
   Why: sometimes I am in the mood for something specific, but not a particular page
   Result: be offered the next page of a specific genre

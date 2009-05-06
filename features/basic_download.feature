@@ -5,6 +5,7 @@ Feature: basic download
 
   Scenario: download a text version
     Given I am on the homepage
+      And I have no pages
       And I fill in "page_url" with "http://www.rawbw.com/~alice/styled.html"
       And I fill in "page_title" with "Styled text test"
       And I press "Store"
@@ -22,6 +23,7 @@ Feature: basic download
 
   Scenario: download stripping links and images
     Given I am on the homepage
+      And I have no pages
       And I fill in "page_url" with "http://www.rawbw.com/~alice/href.html"
       And I fill in "page_title" with "link test"
       And I press "Store"
@@ -35,6 +37,7 @@ Feature: basic download
 
   Scenario: download stripping of javascript and comments
     Given I am on the homepage
+      And I have no pages
       And I fill in "page_url" with "http://www.rawbw.com/~alice/entities.html"
       And I fill in "page_title" with "Javascript test"
       And I press "Store"
@@ -45,6 +48,7 @@ Feature: basic download
 
   Scenario: download stripping of tables
     Given I am on the homepage
+      And I have no pages
       And I fill in "page_url" with "http://www.rawbw.com/~alice/tablecontent.html"
       And I fill in "page_title" with "table test"
       And I press "Store"
@@ -57,6 +61,7 @@ Feature: basic download
 
   Scenario: download livejournal page with forms and javascript
     Given I am on the homepage
+      And I have no pages
       And I fill in "page_url" with "http://sid.livejournal.com/119818.html"
       And I fill in "page_title" with "livejournal test"
       And I press "Store"

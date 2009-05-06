@@ -1,7 +1,8 @@
-Feature: genre error checking
+Feature: error checking with genres
 
   Scenario: genres with extraneous whitespace
-    Given the following page
+    Given I have no filters
+      And the following page
      | title | url |
      | Alice's Adventures | http://www.rawbw.com/~alice/aa.html |
       And I am on the homepage

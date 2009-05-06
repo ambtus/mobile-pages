@@ -1,10 +1,11 @@
-Feature: Basic scrubbing of parent
+Feature: Basic scrub with parts
   What: scrub a parent page by scrubbing the parts
   Why: in order to be able to recreate the parent html from parts
   Result: when go to scrub a parent, should scrub the parts. also, scrubbing a part should re-make the parent's download
 
   Scenario: scrub a parent page
-    Given I am on the homepage
+    Given I have no pages
+      And I am on the homepage
       And I follow "Store Multiple"
       And I fill in "page_base_url" with "http://www.rawbw.com/~alice/parts/*.html"
       And I fill in "page_url_substitutions" with "1 2"

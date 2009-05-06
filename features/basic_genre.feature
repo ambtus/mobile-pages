@@ -1,10 +1,11 @@
-Feature: add genres to pages
+Feature: basic genres
   What: be able to add a genre to a page
   Why: so I will be able to filter on it later
   Result: see what filter has been applied to a page
 
   Scenario: add a genre to a page when there are no genres
-    Given the following page
+    Given I have no filters
+      And the following page
      | title | url |
      | Alice's Adventures | http://www.rawbw.com/~alice/aa.html |
       And I am on the homepage

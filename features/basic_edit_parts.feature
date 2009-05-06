@@ -1,4 +1,4 @@
-Feature: manage parent
+Feature: basic edit of parts
   What: edit the parts of an existing page
   Why: to add, remove or rearrange the order of parts
   result: an updated page with the changed parts
@@ -21,6 +21,7 @@ Feature: manage parent
 
   Scenario: remove a part from an existing page with parts
     Given I am on the homepage
+      And I have no pages
       And I follow "Store Multiple"
       And I fill in "page_base_url" with "http://www.rawbw.com/~alice/parts/*.html"
      And I fill in "page_url_substitutions" with "1 2 3"
@@ -38,6 +39,7 @@ Feature: manage parent
 
   Scenario: reorder the parts on an existing page with parts
     Given I am on the homepage
+      And I have no pages
       And I follow "Store Multiple"
       And I fill in "page_base_url" with "http://www.rawbw.com/~alice/parts/*.html"
      And I fill in "page_url_substitutions" with "1 2"

@@ -1,10 +1,11 @@
-Feature: change the read order
+Feature: basic rate
   What: be able to say how long to wait before presenting a page again
   Why: some pages I like more and want to read more often than others
   Result: Order should reflect prefence
 
   Scenario: Changing read after orders
-    Given the following pages
+    Given I have no pages
+      And the following pages
       | title                            | url                                   | read_after |
       | Grimm's Fairy Tales              | http://www.rawbw.com/~alice/gft.html  | 2009-01-01 |
       | Dracula                          | http://www.rawbw.com/~alice/drac.html | 2009-01-05 |

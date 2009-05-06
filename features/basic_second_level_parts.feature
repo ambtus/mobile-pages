@@ -1,10 +1,11 @@
-Feature: 2nd layer heirarchy
+Feature: basic second level parts
   What: would like to be able to have a part of a part
   Why: a series of pages, grouped together as a single page, each of which has parts
   Result: 2nd level heirarchy
 
   Scenario: second layer heirarchy
-    Given I am on the homepage
+    Given I have no pages
+      And I am on the homepage
       And I follow "Store Multiple"
       And I fill in "page_urls" with "http://www.rawbw.com/~alice/parts/1.html"
       And I fill in "page_title" with "Grandparent"

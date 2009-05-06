@@ -31,7 +31,8 @@ Feature: basic parts
      And I should see "stuff for part 2"
 
   Scenario: children should not show up on front page by themselves
-    Given I am on the homepage
+    Given I have no pages
+      And I am on the homepage
       And I follow "Store Multiple"
     When I fill in "page_urls" with line1: "http://www.rawbw.com/~alice/parts/1.html" and line2: "http://www.rawbw.com/~alice/parts/2.html"
      And I fill in "page_title" with "Multiple pages from urls"

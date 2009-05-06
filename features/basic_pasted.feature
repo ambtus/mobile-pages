@@ -1,4 +1,4 @@
-Feature: create a page from pasted html
+Feature: basic pasted
   What: when storing a page can paste html as well as give the reference url
   Why: sometimes the page is protected in such a way as making access via curl difficult
   Result: acts just as if the html was retrieved.
@@ -14,7 +14,8 @@ Feature: create a page from pasted html
       And I should not see "Retrieved from the web"
 
   Scenario: pasted html file needing pre-processing
-    Given I am on the homepage
+    Given I have no pages
+      And I am on the homepage
       And I fill in "page_url" with "http://www.rawbw.com/~alice/test.html"
       And I fill in "page_title" with "Test pasted html"
     When I fill in "page_pasted" with "<span class='first'>The</span> beginning<br><br>new paragraph"

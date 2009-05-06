@@ -1,10 +1,11 @@
-Feature: Basic Suggestion for Next page
-  what: be presented with the next page
+Feature: basic next
+  what: be presented with the next page for suggested reading
   why: If I just want to read something
   result: read them in order of creation
 
   Scenario: Read pages in order
-    Given the following pages
+    Given I have no pages
+      And the following pages
       | title                           | url                                   |
       | A Christmas Carol               | http://www.rawbw.com/~alice/cc.html   |
       | The Call of the Wild            | http://www.rawbw.com/~alice/cotw.html |

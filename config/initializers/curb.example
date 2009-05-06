@@ -4,6 +4,8 @@ module Curl
   module External
     def self.getpwd(original_url)
       case original_url
+        when /livejournal/
+          "yourljname:yourljpassword"
         when /sidrasue.com/
           "alice:nothingtosee"
       end
@@ -16,9 +18,10 @@ module Curl
       end
     end
     def self.getnode(original_url, html)
+      body = Nokogiri::HTML(html).xpath('//body')
       case original_url
         when /livejournal/
-          Nokogiri::HTML(html).xpath('//body').first.xpath('//div').first.inner_html
+          body.at('//blockquote').next.inner_html
         else html
       end
     end
