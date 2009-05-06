@@ -55,6 +55,7 @@ class Page < ActiveRecord::Base
           self.raw_content = "Timed out"
         end
       end
+      self.raw_content = Curl::External.getnode(self.url, self.raw_content)
       self.original_html = self.pre_process(self.raw_file_name)
     elsif self.base_url
       self.create_from_base
@@ -70,7 +71,8 @@ class Page < ActiveRecord::Base
     html = lines.join(" ").gsub(/<\/?span.*?>/, "").gsub(/> /, ">").gsub(/ </, "<")
     html = html.gsub(/<br ?\/?><br ?\/?>/, "<p>").gsub('&nbsp;', " ").squish
     html = html.gsub(/<x-claris.*?>/i, "")
-    html = html.gsub(/<script language=.*?>/i, "")
+    html = html.gsub(/<script.*?>.*?<\/script>/i, "")
+    html = html.gsub(/<form.*?>.*?<\/form>/i, "")
     html = html.gsub(/<!-- .*?>/i, "")
     html = html.gsub(/<\/?table.*?>/, "")
     html = html.gsub(/<\/?tr.*?>/, "")
@@ -238,6 +240,10 @@ class Page < ActiveRecord::Base
     File.open(self.raw_file_name, 'w') { |f| f.write(content) }
   end
 
+  def raw_content
+    File.open(self.raw_file_name, 'r') { |f| f.read }
+  end
+
   def raw_file_name
     Rails.public_path + self.mypath + "raw.html"
   end
@@ -278,9 +284,11 @@ class Page < ActiveRecord::Base
     text = text.gsub(/<\/sub>/, ")")
     text = text.gsub(/<hr.*?>/, "______________________________")
     text = text.gsub(/<\/?div.*?>/, "")
+    text = text.gsub(/<\/?blockquote.*?>/, "")
     text = text.gsub(/<\/?p.*?>/, "")
     text = text.gsub(/<\/?br.*?>/, "")
-    text = text.gsub(/<a.*?>(.*?)<\/a>/) {|s| "link_to: #{$1}"}
+    text = text.gsub(/<a.*?>(.*?)<\/a>/) {|s| " [#{$1}] "}
+    text = text.gsub(/<img.*?alt="(.*?)".*?>/) {|s| " [#{$1}] " unless $1.blank?}
     text.gsub(/ +/, ' ').gsub(/\n+ */, "\n\n").strip
   end
 

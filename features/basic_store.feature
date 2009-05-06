@@ -16,7 +16,6 @@ Scenario Outline: title and url
   | url                                        | title            | result                 |
   | http://www.rawbw.com/~alice/test.html      | Simple Test      | Retrieved from the web |
   | https://sidrasue.com/test/test.html        | Basic Auth Test  | password example       |
-  | http://sid.livejournal.com/119818.html     | Url munging Test | Read comments          |
   | http://sid.livejournal.com/122409.html     | Auth Digest Test | this is a test         |
   | http://www.rawbw.com/~alice/utf8.html      | utf8 Test        | “Hello…”               |
   | http://www.rawbw.com/~alice/1252.html      | winlatin1 Test   | “Hello…”               |

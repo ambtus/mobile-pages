@@ -26,10 +26,10 @@ Feature: basic download
       And I fill in "page_title" with "link test"
       And I press "Store"
     When I follow "Download" in ".title"
-    Then My document should contain "link_to: top link"
-    Then My document should contain "link_to: middle link"
-    Then My document should contain "link_to: bottom link"
-    
+    Then My document should contain "[top link]"
+    Then My document should contain "[middle link]"
+    Then My document should contain "[bottom link]"
+
   Scenario: download stripping of javascript and comments
     Given I am on the homepage
       And I fill in "page_url" with "http://www.rawbw.com/~alice/entities.html"
@@ -51,3 +51,17 @@ Feature: basic download
       And My document should not contain "<tr>"
       And My document should contain "Irony"
       And My document should contain "I remembered waking up"
+
+  Scenario: download livejournal page with forms and javascript
+    Given I am on the homepage
+      And I fill in "page_url" with "http://sid.livejournal.com/119818.html"
+      And I fill in "page_title" with "livejournal test"
+      And I press "Store"
+    When I follow "Download" in ".title"
+    Then My document should not contain "input type="
+      And My document should not contain "form method="
+      And My document should not contain "select name="
+      And My document should not contain "img src="
+      And My document should not contain "blockquote"
+      And My document should not contain "Reply"
+      And My document should contain "is mesmerizing"

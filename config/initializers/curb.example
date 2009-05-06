@@ -15,6 +15,13 @@ module Curl
         else original_url
       end
     end
+    def self.getnode(original_url, html)
+      case original_url
+        when /livejournal/
+          Nokogiri::HTML(html).xpath('//body').first.xpath('//div').first.inner_html
+        else html
+      end
+    end
   end
 end
 
