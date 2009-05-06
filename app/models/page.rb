@@ -289,6 +289,7 @@ class Page < ActiveRecord::Base
     text = text.gsub(/<\/?br.*?>/, "")
     text = text.gsub(/<a.*?>(.*?)<\/a>/) {|s| " [#{$1}] "}
     text = text.gsub(/<img.*?alt="(.*?)".*?>/) {|s| " [#{$1}] " unless $1.blank?}
+    text = text.gsub(/<img.*?>/, "")
     text.gsub(/ +/, ' ').gsub(/\n+ */, "\n\n").strip
   end
 

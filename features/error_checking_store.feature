@@ -37,6 +37,15 @@ Feature: errors with storing
     Then I should see "Page created" in "#flash_notice"
       And I should see "Retrieved from the web" in ".content"
 
+  Scenario: pasted html with pre-processing url
+    Given I am on the homepage
+    When I fill in "page_title" with "pasted, url exists"
+      And I fill in "page_url" with "http://sid.livejournal.com/119818.html"
+      And I fill in "page_pasted" with "override url"
+      And I press "Store"
+    Then I should see "Page created" in "#flash_notice"
+      And I should see "override url" in ".content"
+
   Scenario: pasted blank is okay
     Given I am on the homepage
     When I fill in "page_title" with "blank pasted no url"

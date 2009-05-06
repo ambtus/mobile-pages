@@ -20,15 +20,18 @@ Feature: basic download
       And My document should not contain "p>"
       And My document should contain "…"
 
-  Scenario: download stripping links
+  Scenario: download stripping links and images
     Given I am on the homepage
       And I fill in "page_url" with "http://www.rawbw.com/~alice/href.html"
       And I fill in "page_title" with "link test"
       And I press "Store"
     When I follow "Download" in ".title"
     Then My document should contain "[top link]"
-    Then My document should contain "[middle link]"
-    Then My document should contain "[bottom link]"
+      And My document should contain "[middle link]"
+      And My document should contain "[bottom link]"
+      And My document should contain "[image with alt]"
+      And My document should not contain "img"
+
 
   Scenario: download stripping of javascript and comments
     Given I am on the homepage
