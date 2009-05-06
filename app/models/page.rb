@@ -55,8 +55,8 @@ class Page < ActiveRecord::Base
           self.raw_content = "Timed out"
         end
       end
-      self.raw_content = Curl::External.getnode(self.url, self.raw_content)
       self.original_html = self.pre_process(self.raw_file_name)
+      self.original_html = Curl::External.getnode(self.url, self.original_html)
     elsif self.base_url
       self.create_from_base
     elsif self.urls
@@ -78,7 +78,7 @@ class Page < ActiveRecord::Base
     html = html.gsub(/<\/?tr.*?>/, "")
     html = html.gsub(/<td.*?>/, "<div>")
     html = html.gsub(/<\/td.*?>/, "</div>")
-    input = html.match(/charset=utf-8/) ? "utf8" : "latin1"
+    input = html.match(/charset ?= ?"?utf-8/i) ? "utf8" : "latin1"
     Tidy.open do |tidy|
       tidy.options.input_encoding = input
       tidy.options.output_encoding = "utf8"
@@ -91,16 +91,7 @@ class Page < ActiveRecord::Base
       tidy.options.wrap = 0
       html = tidy.clean(html)
     end
-    begin
-      n = Nokogiri::HTML(html).xpath('//body').first
-      if n.children.size == 1 && n.xpath('//div').first
-        n.xpath('//div').first.inner_html
-      else
-        n.inner_html
-      end
-    rescue NoMethodError
-      ""
-    end
+    return html
   end
 
   def create_from_base
@@ -275,6 +266,7 @@ class Page < ActiveRecord::Base
     text = text.gsub(/<\/?center>/, "")
     text = text.gsub(/<\/?h1>/, "\#")
     text = text.gsub(/<\/?strong>/, "\*")
+    text = text.gsub(/<\/?big>/, "\*")
     text = text.gsub(/<\/?em>/, "_")
     text = text.gsub(/<\/?u>/, "_")
     text = text.gsub(/<\/?strike>/, "==")

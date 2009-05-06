@@ -16,11 +16,20 @@ module Curl
       end
     end
     def self.getnode(original_url, html)
-      body = Nokogiri::HTML(html).xpath('//body')
+      body = Nokogiri::HTML(html).xpath('//body').first
       case original_url
-        when /livejournal/
+        when /ejournal/, /dreamwidth/
           body.at('//blockquote').next.inner_html
-        else html
+        when /fanfiction.net/
+          body.at('div#storytext').inner_html
+        when /archiveofourown/
+          body.at('div.work-show').inner_html
+        else
+          if body.children.to_s == body.at('div').to_s
+            body.at('div').inner_html
+          else
+            body.inner_html
+          end
       end
     end
   end

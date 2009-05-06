@@ -56,10 +56,11 @@ Feature: basic download
     Then My document should not contain "<table"
       And My document should not contain "<td"
       And My document should not contain "<tr>"
+      And My document should not contain "<big>"
       And My document should contain "Irony"
       And My document should contain "I remembered waking up"
 
-  Scenario: download livejournal page with forms and javascript
+  Scenario: download livejournal page content only
     Given I am on the homepage
       And I have no pages
       And I fill in "page_url" with "http://sid.livejournal.com/119818.html"
@@ -73,3 +74,24 @@ Feature: basic download
       And My document should not contain "blockquote"
       And My document should not contain "Reply"
       And My document should contain "is mesmerizing"
+
+  Scenario: download fanfiction page content only
+    Given I am on the homepage
+      And I have no pages
+      And I fill in "page_url" with "http://www.fanfiction.net/s/638499/1/"
+      And I fill in "page_title" with "Study Group"
+      And I press "Store"
+    When I follow "Download" in ".title"
+    Then My document should not contain "Rated: "
+      And My document should contain "This is rabbit’s fault"
+
+  Scenario: download archive of our own page content only
+    Given I am on the homepage
+      And I have no pages
+      And I fill in "page_url" with "http://archiveofourown.org/works/3412"
+      And I fill in "page_title" with "Ezra Meets"
+      And I press "Store"
+    When I follow "Download" in ".title"
+    Then My document should not contain "Add Comment"
+      And My document should contain "Summary"
+      And My document should contain "Mister Larabee"
