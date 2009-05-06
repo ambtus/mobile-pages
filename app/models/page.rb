@@ -46,17 +46,23 @@ class Page < ActiveRecord::Base
         Curl::Easy.download(url, self.raw_file_name) {|c| c.userpwd = pwd}
       rescue Curl::Err::HostResolutionError # ignore
         self.raw_content = "Couldn't resolve host name"
+        url = "failed"
       rescue Curl::Err::ConnectionFailedError #ignore
         self.raw_content = "Server down"
+        url = "failed"
       rescue Curl::Err::GotNothingError # retry
         begin
           Curl::Easy.download(url, self.raw_file_name) {|c| c.userpwd = pwd}
         rescue Curl::Err::GotNothingError
           self.raw_content = "Timed out"
+          url = "failed"
+        rescue Curl::Err::ConnectionFailedError #ignore
+          self.raw_content = "Server down"
+          url = "failed"
         end
       end
       self.original_html = self.pre_process(self.raw_file_name)
-      self.original_html = Curl::External.getnode(self.url, self.original_html)
+      self.original_html = Curl::External.getnode(url, self.original_html)
     elsif self.base_url
       self.create_from_base
     elsif self.urls
