@@ -1,0 +1,7 @@
+- content_for :title do
+  = "Refetch " + @page.title
+.form
+  - form_tag refetch_index_path do
+    = hidden_field_tag(:page_id, @page.id)
+    = text_field_tag :url, (@page.url || Page::URL_PLACEHOLDER), :maxlength => 255, :size => 80, :onblur=>"if(this.value == '') { this.value='#{Page::URL_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::URL_PLACEHOLDER}') {this.value=''}"
+    = submit_tag "Refetch"

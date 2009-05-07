@@ -24,3 +24,7 @@ end
 When /^I fill in "([^\"]*)" with line1: "([^\"]*)" and line2: "([^\"]*)"$/ do |field, line1, line2|
   fill_in(field, :with => [line1, line2].join("\n"))
 end
+
+Then /^the field with id "([^\"]*)" should contain "([^\"]*)"$/ do |field_id, value|
+      field_with_id(field_id).value.should =~ /#{value}/
+  end

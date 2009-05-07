@@ -40,29 +40,7 @@ class Page < ActiveRecord::Base
       self.raw_content = self.pasted
       self.original_html = self.pre_process(self.raw_file_name)
     elsif self.url
-      pwd = Curl::External.getpwd(self.url)
-      url = Curl::External.geturl(self.url)
-      begin
-        Curl::Easy.download(url, self.raw_file_name) {|c| c.userpwd = pwd}
-      rescue Curl::Err::HostResolutionError # ignore
-        self.raw_content = "Couldn't resolve host name"
-        url = "failed"
-      rescue Curl::Err::ConnectionFailedError #ignore
-        self.raw_content = "Server down"
-        url = "failed"
-      rescue Curl::Err::GotNothingError # retry
-        begin
-          Curl::Easy.download(url, self.raw_file_name) {|c| c.userpwd = pwd}
-        rescue Curl::Err::GotNothingError
-          self.raw_content = "Timed out"
-          url = "failed"
-        rescue Curl::Err::ConnectionFailedError #ignore
-          self.raw_content = "Server down"
-          url = "failed"
-        end
-      end
-      self.original_html = self.pre_process(self.raw_file_name)
-      self.original_html = Curl::External.getnode(url, self.original_html)
+      fetch
     elsif self.base_url
       self.create_from_base
     elsif self.urls
@@ -70,6 +48,33 @@ class Page < ActiveRecord::Base
     else
       self.build_html_from_parts
     end
+  end
+
+  def fetch(url=self.url)
+    self.update_attribute(:url, url) if url != self.url
+    pwd = Curl::External.getpwd(url)
+    url = Curl::External.geturl(url)
+    begin
+      Curl::Easy.download(url, self.raw_file_name) {|c| c.userpwd = pwd}
+    rescue Curl::Err::HostResolutionError # ignore
+      self.raw_content = "Couldn't resolve host name"
+      url = "failed"
+    rescue Curl::Err::ConnectionFailedError #ignore
+      self.raw_content = "Server down"
+      url = "failed"
+    rescue Curl::Err::GotNothingError # retry
+      begin
+        Curl::Easy.download(url, self.raw_file_name) {|c| c.userpwd = pwd}
+      rescue Curl::Err::GotNothingError
+        self.raw_content = "Timed out"
+        url = "failed"
+      rescue Curl::Err::ConnectionFailedError #ignore
+        self.raw_content = "Server down"
+        url = "failed"
+      end
+    end
+    self.original_html = self.pre_process(self.raw_file_name)
+    self.original_html = Curl::External.getnode(url, self.original_html)
   end
 
   def pre_process(filename)
