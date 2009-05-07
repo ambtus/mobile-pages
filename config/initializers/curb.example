@@ -4,14 +4,18 @@ module Curl
   module External
     def self.getpwd(original_url)
       case original_url
-        when /sidrasue.com/
+        when "http://www.rawbw.com/~alice/basic/test.html"
           "alice:nothingtosee"
+        when "http://www.rawbw.com/~alice/digest/test.html"
+          "alice:nothinghere"
       end
     end
     def self.geturl(original_url)
       case original_url
         when /livejournal/
           original_url + "?format=light&mode=reply"
+        when /digest/
+          original_url + "?auth=digest"
         else original_url
       end
     end
