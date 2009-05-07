@@ -10,7 +10,7 @@ Feature: basic download
       And I fill in "page_title" with "Styled text test"
       And I press "Store"
     When I follow "Download" in ".title"
-    Then My document should contain "#This is a header#"
+    Then My document should contain "# This is a header #"
       And My document should contain "*Bold*"
       And My document should contain "_Italic_"
       And My document should contain "==strike-through=="
@@ -47,6 +47,8 @@ Feature: basic download
     When I follow "Download" in ".title"
     Then My document should not contain "script language="
       And My document should not contain "FILE ARCHIVED"
+      And My document should not contain "This script will not work without javascript enabled."
+      And My document should not contain "noscript"
       And My document should contain "Chris was antsy"
 
   Scenario: download stripping of tables

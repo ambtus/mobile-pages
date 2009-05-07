@@ -10,7 +10,7 @@ Feature: Basic Scrub and download
       And I fill in "page_title" with "Styled text test"
       And I press "Store"
       And I follow "Download" in ".title"
-      And My document should contain "#This is a header#"
+      And My document should contain "# This is a header #"
     When I am on the homepage
       And I follow "Read"
       And I follow "Scrub"

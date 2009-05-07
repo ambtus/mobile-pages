@@ -29,5 +29,5 @@ Feature: basic second level parts
     When I follow "Download" in ".title"
     Then My document should contain "stuff for part 2"
       And My document should contain "stuff for part 2"
-      And My document should contain "#Parent#"
+      And My document should contain "# Parent #"
 

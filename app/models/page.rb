@@ -21,7 +21,9 @@ class Page < ActiveRecord::Base
   attr_accessor :pasted
 
   def self.search(string)
-    Page.find(:first, :conditions => ["title LIKE ?", "%" + string + "%"])
+    d= Page.find(:first, :conditions => ["title LIKE ?", "%" + string + "%"])
+    return d if d
+    Page.find(:first, :conditions => ["notes LIKE ?", "%" + string + "%"])
   end
 
   def before_validation
@@ -83,6 +85,7 @@ class Page < ActiveRecord::Base
     html = html.gsub(/<br ?\/?>\s*?<br ?\/?>/, "<p>").gsub('&nbsp;', " ").squish
     html = html.gsub(/<x-claris.*?>/i, "")
     html = html.gsub(/<script.*?>.*?<\/script>/i, "")
+    html = html.gsub(/<noscript.*?>.*?<\/noscript>/i, "")
     html = html.gsub(/<form.*?>.*?<\/form>/i, "")
     html = html.gsub(/<!-- .*?>/i, "")
     html = html.gsub(/<\/?table.*?>/, "")
@@ -275,8 +278,8 @@ class Page < ActiveRecord::Base
     text = self.original_html
     text = text.gsub(/<\/?font.*?>/, "")
     text = text.gsub(/<\/?center>/, "")
-    text = text.gsub(/<\/?h1>/, "\#")
-    text = text.gsub(/<\/?h\d>/, "\*")
+    text = text.gsub(/<h1>(.*?)<\/h1>/) {|s| "\# #{$1} \#" unless $1.blank?}
+    text = text.gsub(/<\/?h\d.*?>/, "\*")
     text = text.gsub(/<\/?strong>/, "\*")
     text = text.gsub(/<\/?big>/, "\*")
     text = text.gsub(/<\/?em>/, "_")
