@@ -20,6 +20,9 @@ Feature: basic download
       And My document should not contain "div>"
       And My document should not contain "p>"
       And My document should contain "…"
+      And My document should contain "*This is a another header*"
+      And My document should contain "*One Two, Three*"
+      And My document should contain "_One, Two? Three_"
 
   Scenario: download stripping links and images
     Given I am on the homepage

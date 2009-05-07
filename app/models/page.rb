@@ -276,10 +276,13 @@ class Page < ActiveRecord::Base
     text = text.gsub(/<\/?font.*?>/, "")
     text = text.gsub(/<\/?center>/, "")
     text = text.gsub(/<\/?h1>/, "\#")
+    text = text.gsub(/<\/?h\d>/, "\*")
     text = text.gsub(/<\/?strong>/, "\*")
     text = text.gsub(/<\/?big>/, "\*")
     text = text.gsub(/<\/?em>/, "_")
     text = text.gsub(/<\/?u>/, "_")
+    text = text.gsub(/_([ ,.?]+)_/) {|s| $1}
+    text = text.gsub(/\*([ ,.?]+)\*/) {|s| $1}
     text = text.gsub(/<\/?strike>/, "==")
     text = text.gsub(/<sup>/, "^")
     text = text.gsub(/<\/sup>/, "")
