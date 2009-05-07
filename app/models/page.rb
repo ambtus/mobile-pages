@@ -79,8 +79,8 @@ class Page < ActiveRecord::Base
 
   def pre_process(filename)
     lines = File.readlines(filename).map{|line| line.chomp}
-    html = lines.join(" ").gsub(/<\/?span.*?>/, "").gsub(/> /, ">").gsub(/ </, "<")
-    html = html.gsub(/<br ?\/?><br ?\/?>/, "<p>").gsub('&nbsp;', " ").squish
+    html = lines.join(" ").gsub(/<\/?span.*?>/, "")
+    html = html.gsub(/<br ?\/?>\s*?<br ?\/?>/, "<p>").gsub('&nbsp;', " ").squish
     html = html.gsub(/<x-claris.*?>/i, "")
     html = html.gsub(/<script.*?>.*?<\/script>/i, "")
     html = html.gsub(/<form.*?>.*?<\/form>/i, "")

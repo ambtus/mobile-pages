@@ -20,3 +20,4 @@ Scenario Outline: title and url
   | http://www.rawbw.com/~alice/1252.html      | winlatin1 Test   | “Hello…”               |
   | http://www.rawbw.com/~alice/nbsp.html      | space Test       | Retrieved from the web |
   | http://www.rawbw.com/~alice/entities.html  | entities         | antsy—boggart          |
+  | http://www.rawbw.com/~alice/mso.html       | <st1:place>      | in on Clark            |
