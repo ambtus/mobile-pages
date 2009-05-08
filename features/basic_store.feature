@@ -15,7 +15,8 @@ Scenario Outline: title and url
   Examples:
   | url                                        | title            | result                 |
   | http://www.rawbw.com/~alice/test.html      | Simple Test      | Retrieved from the web |
-  | https://sidrasue.com/test/test.html        | Basic Auth Test  | password example       |
+  | http://www.rawbw.com/~alice/basic/test.html| Basic Auth Test  | password example       |
+  | http://www.rawbw.com/~alice/digest/test.html| Auth Digest Test  | digest example       |
   | http://www.rawbw.com/~alice/utf8.html      | utf8 Test        | “Hello…”               |
   | http://www.rawbw.com/~alice/1252.html      | winlatin1 Test   | “Hello…”               |
   | http://www.rawbw.com/~alice/nbsp.html      | space Test       | Retrieved from the web |
