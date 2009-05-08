@@ -123,3 +123,4 @@ Feature: basic download
       And I press "Store"
     When I follow "Download" in ".title"
     Then My document should not contain "<em"
+      And My document should contain "he _had_ to"
