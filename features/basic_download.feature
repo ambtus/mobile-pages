@@ -114,3 +114,12 @@ Feature: basic download
     Then My document should not contain "Add Comment"
       And My document should contain "Summary"
       And My document should contain "Mister Larabee"
+
+  Scenario: download crappy Microsoft Office "html"
+    Given I am on the homepage
+      And I have no pages
+      And I fill in "page_url" with "http://www.rawbw.com/~alice/mso.html"
+      And I fill in "page_title" with "Microsoft"
+      And I press "Store"
+    When I follow "Download" in ".title"
+    Then My document should not contain "<em"
