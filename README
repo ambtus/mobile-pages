@@ -33,7 +33,7 @@ Configure public/stylesheets/application.css as desired
 Configure lib/tasks/cucumber.rake as desired
 
 Run
-  gem install haml
+  gem install haml tidy
   rake gems:install RAILS_ENV=test
   rake db:create:all
   rake db:schema:load

@@ -9,6 +9,7 @@ end
 
 # can't use "should see" because the mobile file is downloaded, not displayed
 Then /^My document should contain "([^\"]*)"$/ do |string|
+  string = string.gsub("\\n", "\n")
   assert_match string, File.open(Page.first.mobile_file) {|f| f.read}
 end
 Then /^My document should not contain "([^\"]*)"$/ do |string|

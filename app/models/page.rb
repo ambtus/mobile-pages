@@ -143,7 +143,7 @@ class Page < ActiveRecord::Base
   def build_html_from_parts
     File.open(self.original_file, 'w') do |file|
       self.parts.each do |part|
-        file << "<h1>#{part.title}</h1>\n"
+        file << "\n\n<h1>#{part.title}</h1>\n"
         file << part.original_html
       end
     end
