@@ -4,6 +4,7 @@
 .title= @page.title
 .form
   - form_for @page do |f|
+    .button= f.submit "Scrub"
     - @page.nodes.each_with_index do |node,index|
       .checkbox= check_box_tag "nodes[]", index, false, :id => index
       .node= node
