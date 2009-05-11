@@ -124,3 +124,5 @@ Feature: basic download
     When I follow "Download" in ".title"
     Then My document should not contain "<em"
       And My document should contain "he _had_ to"
+      And My document should not contain "<wbr>"
+      And My document should contain "so-I-am-God"

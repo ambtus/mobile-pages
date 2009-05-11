@@ -278,6 +278,7 @@ class Page < ActiveRecord::Base
     text = self.original_html
     text = text.gsub(/<\/?font.*?>/, "")
     text = text.gsub(/<\/?center>/, "")
+    text = text.gsub(/<\/?wbr>/, "")
     text = text.gsub(/<h1>(.*?)<\/h1>/) {|s| "\# #{$1} \#" unless $1.blank?}
     text = text.gsub(/<\/?h\d.*?>/, "\*")
     text = text.gsub(/<\/?strong>/, "\*")
