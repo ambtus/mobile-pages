@@ -126,3 +126,4 @@ Feature: basic download
       And My document should contain "he _had_ to"
       And My document should not contain "<wbr>"
       And My document should contain "so-I-am-God"
+      And My document should not contain "\n\n\n\n"
