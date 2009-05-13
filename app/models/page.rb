@@ -122,7 +122,7 @@ class Page < ActiveRecord::Base
     self.build_html_from_parts
   end
 
-  def parts_from_urls(new_urls)
+  def parts_from_urls(new_urls, refetch=false)
     old_part_ids = self.parts.map(&:id)
     count = 1
     new_part_ids = []
@@ -133,6 +133,7 @@ class Page < ActiveRecord::Base
         part.title = "Part #{count.to_s}" if part.title.match(/^Part /)
         part.position = count
         part.save
+        part.fetch if refetch
       else
         title = "Part " + count.to_s
         part = create_child(url, count, title)

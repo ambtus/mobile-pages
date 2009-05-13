@@ -4,7 +4,11 @@ class RefetchController < ApplicationController
   end
   def create
     @page = Page.find(params[:page_id])
-    @page.fetch(params[:url])
+    if @page.parts.blank?
+      @page.fetch(params[:url])
+    else
+      @page.parts_from_urls(params[:url_list], true)
+    end
     redirect_to @page
   end
 end
