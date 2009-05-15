@@ -115,6 +115,16 @@ Feature: basic download
       And My document should contain "Summary"
       And My document should contain "Mister Larabee"
 
+  Scenario: download google groops content only
+    Given I am on the homepage
+      And I have no pages
+      And I fill in "page_url" with "http://www.rawbw.com/~alice/google.html"
+      And I fill in "page_title" with "google group"
+      And I press "Store"
+    When I follow "Download" in ".title"
+    Then My document should contain "Author: Ster Julie"
+      And My document should not contain "This is a Usenet group"
+
   Scenario: download crappy Microsoft Office "html"
     Given I am on the homepage
       And I have no pages

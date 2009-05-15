@@ -28,6 +28,8 @@ module Curl
           body.at('div#storytext').inner_html
         when /archiveofourown/
           body.at('div.work-show').inner_html
+        when /google/
+          body.at('div#inbdy').inner_html
         else
           if body.children.to_s == body.at('div').to_s
             body.at('div').inner_html
