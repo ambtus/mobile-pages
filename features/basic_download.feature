@@ -127,3 +127,5 @@ Feature: basic download
       And My document should not contain "<wbr>"
       And My document should contain "so-I-am-God"
       And My document should not contain "\n\n\n\n"
+      And My document should contain "*My boyfriend"
+      And My document should not contain "<strong"
