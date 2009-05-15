@@ -40,7 +40,8 @@ class Page < ActiveRecord::Base
     FileUtils.mkdir_p(Rails.public_path +  self.mypath)
     if !self.pasted.blank?
       self.raw_content = self.pasted
-      self.original_html = self.pre_process(self.raw_file_name)
+      input = self.pasted.match(/charset ?= ?"?utf-8/i) ? "utf8" : "latin1"
+      self.original_html = self.pre_process(self.raw_file_name, input)
     elsif self.url
       fetch
     elsif self.base_url
@@ -75,11 +76,12 @@ class Page < ActiveRecord::Base
         url = "failed"
       end
     end
-    self.original_html = self.pre_process(self.raw_file_name)
+    input = self.raw_content.match(/charset ?= ?"?utf-8/i) ? "utf8" : "latin1"
+    self.original_html = self.pre_process(self.raw_file_name, input)
     self.original_html = Curl::External.getnode(url, self.original_html)
   end
 
-  def pre_process(filename)
+  def pre_process(filename, input)
     lines = File.readlines(filename).map{|line| line.chomp}
     html = lines.join(" ").gsub(/<\/?span.*?>/, "")
     html = html.gsub(' ', " ")
@@ -96,7 +98,6 @@ class Page < ActiveRecord::Base
     html = html.gsub(/<\/?tr.*?>/, "")
     html = html.gsub(/<td.*?>/, "<div>")
     html = html.gsub(/<\/td.*?>/, "</div>")
-    input = html.match(/charset ?= ?"?utf-8/i) ? "utf8" : "latin1"
     Tidy.open do |tidy|
       tidy.options.input_encoding = input
       tidy.options.output_encoding = "utf8"
