@@ -21,7 +21,7 @@ Feature: basic parts
   Scenario: create and read a page from a list of urls
     Given I am on the homepage
       And I follow "Store Multiple"
-    When I fill in "page_urls" with line1: "http://www.rawbw.com/~alice/parts/1.html" and line2: "http://www.rawbw.com/~alice/parts/2.html"
+    When I fill in "page_urls" with "http://www.rawbw.com/~alice/parts/1.html\nhttp://www.rawbw.com/~alice/parts/2.html"
      And I fill in "page_title" with "Multiple pages from urls"
      And I press "Store"
    Then I should see "Multiple pages from urls"
@@ -34,7 +34,7 @@ Feature: basic parts
     Given I have no pages
       And I am on the homepage
       And I follow "Store Multiple"
-    When I fill in "page_urls" with line1: "http://www.rawbw.com/~alice/parts/1.html" and line2: "http://www.rawbw.com/~alice/parts/2.html"
+    When I fill in "page_urls" with "http://www.rawbw.com/~alice/parts/1.html\nhttp://www.rawbw.com/~alice/parts/2.html"
      And I fill in "page_title" with "Multiple pages from urls"
      And I press "Store"
      And I am on the homepage

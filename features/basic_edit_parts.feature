@@ -11,7 +11,7 @@ Feature: basic edit of parts
       And I fill in "page_title" with "Parent Page"
       And I press "Store"
     When I follow "Manage Parts"
-      And I fill in "url_list" with line1: "http://www.rawbw.com/~alice/parts/1.html" and line2: "http://www.rawbw.com/~alice/parts/2.html"
+      And I fill in "url_list" with "http://www.rawbw.com/~alice/parts/1.html\nhttp://www.rawbw.com/~alice/parts/2.html"
       And I press "Update"
     Then I should see "Part 2"
       And I should see "Part 1"
@@ -29,7 +29,7 @@ Feature: basic edit of parts
      And I press "Store"
     When I am on the homepage
       And I follow "Manage Parts"
-      And I fill in "url_list" with line1: "http://www.rawbw.com/~alice/parts/2.html" and line2: "http://www.rawbw.com/~alice/parts/3.html"
+      And I fill in "url_list" with "http://www.rawbw.com/~alice/parts/2.html\nhttp://www.rawbw.com/~alice/parts/3.html"
       And I press "Update"
       And I should not see "Part 3"
       And I follow "Read"
@@ -47,7 +47,7 @@ Feature: basic edit of parts
      And I press "Store"
     When I am on the homepage
       And I follow "Manage Parts"
-      And I fill in "url_list" with line1: "http://www.rawbw.com/~alice/parts/2.html" and line2: "http://www.rawbw.com/~alice/parts/1.html"
+      And I fill in "url_list" with "http://www.rawbw.com/~alice/parts/2.html\nhttp://www.rawbw.com/~alice/parts/1.html"
       And I press "Update"
       And I follow "Read" in "#position_1"
     Then I should see "stuff for part 2"

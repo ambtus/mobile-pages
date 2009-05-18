@@ -19,8 +19,8 @@ Feature: extended store
       And I fill in "page_title" with "Multiple pages from base"
       And I press "Store"
     When I follow "Refetch" in ".title"
-    Then the field with id "url_list" should contain "http://www.rawbw.com/~alice/parts/1.html" 
-    When I fill in "url_list" with line1: "http://www.rawbw.com/~alice/parts/2.html" and line2: "http://www.rawbw.com/~alice/parts/1.html"
+    Then the field with id "url_list" should contain "http://www.rawbw.com/~alice/parts/1.html"
+    When I fill in "url_list" with "http://www.rawbw.com/~alice/parts/2.html\nhttp://www.rawbw.com/~alice/parts/1.html"
       And I press "Refetch"
     Then I should see "stuff for part 2"
 
