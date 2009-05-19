@@ -139,3 +139,12 @@ Feature: basic download
       And My document should not contain "\n\n\n\n"
       And My document should contain "*My boyfriend"
       And My document should not contain "<strong"
+
+  Scenario: download weird empty divs
+    Given I am on the homepage
+      And I have no pages
+      And I fill in "page_url" with "http://www.rawbw.com/~alice/ejournal_div.html"
+      And I fill in "page_title" with "empty divs"
+      And I press "Store"
+    When I follow "Download" in ".title"
+    Then My document should not contain "\n\n\n\n"
