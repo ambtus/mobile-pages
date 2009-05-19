@@ -148,3 +148,4 @@ Feature: basic download
       And I press "Store"
     When I follow "Download" in ".title"
     Then My document should not contain "\n\n\n\n"
+      And My document should contain "Rodney muttered imprecations"
