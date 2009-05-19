@@ -76,6 +76,10 @@ class Page < ActiveRecord::Base
         url = "failed"
       end
     end
+    self.build_me
+  end
+
+  def build_me
     input = self.raw_content.match(/charset ?= ?"?utf-8/i) ? "utf8" : "latin1"
     self.original_html = self.pre_process(self.raw_file_name, input)
     self.original_html = Curl::External.getnode(url, self.original_html)
