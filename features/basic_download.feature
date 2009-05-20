@@ -37,6 +37,7 @@ Feature: basic download
       And My document should contain "[image with alt]"
       And My document should not contain "img"
       And My document should not contain "\[\]"
+      And My document should not contain "href"
 
   Scenario: download stripping of javascript and comments
     Given I am on the homepage

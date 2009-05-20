@@ -313,7 +313,7 @@ class Page < ActiveRecord::Base
     text = text.gsub(/<\/?blockquote.*?>/, "")
     text = text.gsub(/<\/?p.*?>/, "")
     text = text.gsub(/<\/?br.*?>/, "")
-    text = text.gsub(/<a.*?>(.*?)<\/a>/) {|s| " [#{$1}] " unless $1.blank?}
+    text = text.gsub(/<a .*?>(.*?)<\/a>/m) {|s| " [#{$1}] " unless $1.blank?}
     text = text.gsub(/<img.*?alt="(.*?)".*?>/) {|s| " [#{$1}] " unless $1.blank?}
     text = text.gsub(/<img.*?>/, "")
     text.gsub(/ +/, ' ').gsub(/\n+ */, "\n\n").gsub(/\n\n\n\n+/, "\n\n").strip
