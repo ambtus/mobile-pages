@@ -16,6 +16,8 @@ Feature: basic download
       And My document should contain "==strike-through=="
       And My document should contain "1^st"
       And My document should contain "2(nd)"
+      And My document should contain "&"
+      And My document should not contain "&amp;"
       And My document should contain "________________"
       And My document should not contain "div>"
       And My document should not contain "p>"
