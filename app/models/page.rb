@@ -298,6 +298,8 @@ class Page < ActiveRecord::Base
     text = text.gsub(/_([ ,.?]+)_/) {|s| $1}
     text = text.gsub(/\*([ ,.?]+)\*/) {|s| $1}
     text = text.gsub(/<\/?strike>/, "==")
+    text = text.gsub(/<small>/, '(')
+    text = text.gsub(/<\/small>/, ')')
     text = text.gsub(/<sup>/, "^")
     text = text.gsub(/<\/sup>/, "")
     text = text.gsub(/<sub>/, "(")
