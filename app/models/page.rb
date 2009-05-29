@@ -51,6 +51,25 @@ class Page < ActiveRecord::Base
     else
       self.build_html_from_parts
     end
+    self.genres << Genre.find_or_create_by_name(Genre::UNREAD)
+    self.set_wordcount_genre
+  end
+
+  def wordcount
+    wordcount = self.remove_html.scan(/(\w|-)+/).size
+  end
+
+  def set_wordcount_genre
+    short = Genre.find_or_create_by_name(Genre::SHORT) 
+    long = Genre.find_or_create_by_name(Genre::LONG) 
+    if self.wordcount < 1000
+      self.genres << short
+      self.genres.delete(long)
+    end
+    if self.wordcount > 10000
+      self.genres << long
+      self.genres.delete(short)
+    end
   end
 
   def fetch(url=self.url)
@@ -83,6 +102,7 @@ class Page < ActiveRecord::Base
     input = self.raw_content.match(/charset ?= ?"?utf-8/i) ? "utf8" : "latin1"
     self.original_html = self.pre_process(self.raw_file_name, input)
     self.original_html = Curl::External.getnode(url, self.original_html)
+    self.set_wordcount_genre
   end
 
   def pre_process(filename, input)
@@ -196,6 +216,8 @@ class Page < ActiveRecord::Base
     now = Time.now
     after = now + string.to_i.send(DURATION)
     self.update_attributes(:read_after => after, :last_read => now)
+    self.genres << Genre.find_or_create_by_name(Genre::FAVORITE) if string == "1"
+    self.genres.delete(Genre.find_or_create_by_name(Genre::UNREAD)) 
     return self.read_after
   end
 
@@ -223,6 +245,7 @@ class Page < ActiveRecord::Base
       File.unlink(self.parent.mobile_file_name) rescue Errno::ENOENT
       self.parent.build_html_from_parts
     end
+    self.set_wordcount_genre
   end
 
   def original_html
@@ -283,6 +306,7 @@ class Page < ActiveRecord::Base
       scrubbed << node unless ids.include?(index.to_s)
     end
     self.original_html=scrubbed
+    self.set_wordcount_genre
   end
 
   def remove_html

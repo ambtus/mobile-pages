@@ -4,10 +4,10 @@ Feature: basic genres
   Result: see what filter has been applied to a page
 
   Scenario: add a genre to a page when there are no genres
-    Given I have no filters
-      And the following page
+    Given the following page
      | title | url |
      | Alice's Adventures | http://www.rawbw.com/~alice/aa.html |
+    And I have no filters
       And I am on the homepage
       And I follow "Genres"
     When I fill in "genres" with "classic, children's"

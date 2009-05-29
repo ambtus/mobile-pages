@@ -1,5 +1,9 @@
 class Genre < ActiveRecord::Base
   NEW_PLACEHOLDER = "Enter Filters to add (comma separated)"
+  UNREAD = "status: unread"
+  FAVORITE = "status: favorite"
+  SHORT = "genre: short"
+  LONG = "genre: long"
 
   has_and_belongs_to_many :pages, :uniq => true
   default_scope :order => 'genres.name asc'
