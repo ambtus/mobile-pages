@@ -192,9 +192,10 @@ class Page < ActiveRecord::Base
     return Page.first
   end
 
-  def add_to_read_after(string)
-    after = self.read_after + string.to_i.send(DURATION)
-    self.update_attributes(:read_after => after, :last_read => Time.now)
+  def set_read_after(string)
+    now = Time.now
+    after = now + string.to_i.send(DURATION)
+    self.update_attributes(:read_after => after, :last_read => now)
     return self.read_after
   end
 
