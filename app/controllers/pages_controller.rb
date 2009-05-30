@@ -12,6 +12,7 @@ class PagesController < ApplicationController
   def update
     @page = Page.find(params[:id])
     @page = @page.next if (params[:commit] == "Next")
+    @page = @page.make_utf8 if (params[:commit] == "Make UTF8")
     @page.remove_nodes(params[:nodes]) if params[:nodes]
     @page.update_attributes(params[:page])
     redirect_to @page

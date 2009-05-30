@@ -98,8 +98,8 @@ class Page < ActiveRecord::Base
     self.build_me
   end
 
-  def build_me
-    input = self.raw_content.match(/charset ?= ?"?utf-8/i) ? "utf8" : "latin1"
+  def build_me(input="latin1")
+    input = "utf8" if self.raw_content.match(/charset ?= ?"?utf-8/i) 
     self.original_html = self.pre_process(self.raw_file_name, input)
     self.original_html = Curl::External.getnode(url, self.original_html)
     self.set_wordcount_genre
@@ -210,6 +210,15 @@ class Page < ActiveRecord::Base
   def next
     self.update_attribute(:read_after, self.read_after + 3.months)
     return Page.first
+  end
+
+  def make_utf8
+    if self.parts.empty?
+      self.build_me("utf8")
+    else
+      self.parts.each {|p| p.build_me("utf8")}
+    end
+    self
   end
 
   def set_read_after(string)
