@@ -209,7 +209,7 @@ class Page < ActiveRecord::Base
 
   def next
     self.update_attribute(:read_after, self.read_after + 3.months)
-    return Page.first
+    return Page.parents.first
   end
 
   def make_utf8
