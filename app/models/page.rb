@@ -62,13 +62,21 @@ class Page < ActiveRecord::Base
   def set_wordcount_genre
     short = Genre.find_or_create_by_name(Genre::SHORT) 
     long = Genre.find_or_create_by_name(Genre::LONG) 
-    if self.wordcount < 1000
+    epic = Genre.find_or_create_by_name(Genre::EPIC) 
+    if self.wordcount < Genre::SHORT_WC
       self.genres << short
       self.genres.delete(long)
+      self.genres.delete(epic)
     end
-    if self.wordcount > 10000
+    if self.wordcount > Genre::LONG_WC
       self.genres << long
       self.genres.delete(short)
+      self.genres.delete(epic)
+    end
+    if self.wordcount > Genre::EPIC_WC
+      self.genres << epic
+      self.genres.delete(short)
+      self.genres.delete(long)
     end
   end
 
@@ -177,6 +185,7 @@ class Page < ActiveRecord::Base
         file << part.original_html
       end
     end
+    self.set_wordcount_genre
   end
 
   def create_child(url, position, title)
@@ -253,8 +262,9 @@ class Page < ActiveRecord::Base
     if self.parent
       File.unlink(self.parent.mobile_file_name) rescue Errno::ENOENT
       self.parent.build_html_from_parts
+    else
+      self.set_wordcount_genre
     end
-    self.set_wordcount_genre
   end
 
   def original_html
