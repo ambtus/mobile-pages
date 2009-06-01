@@ -4,7 +4,8 @@ Feature: Basic Search
   result: be offered the page I ask for
 
   Scenario Outline: Find page by title
-    Given the following pages
+    Given I have no pages
+      And the following pages
       | title                                              | url                                   |
       | A Christmas Carol by Charles Dickens               | http://www.rawbw.com/~alice/cc.html   |
       | The Call of the Wild by Jack London                | http://www.rawbw.com/~alice/cotw.html |
@@ -22,10 +23,11 @@ Feature: Basic Search
       | Styles                               | The Mysterious Affair at Styles  | The intense interest aroused in the public |
 
   Scenario: No matching page
-    Given the following page
+    Given I have no pages
+      And the following page
       | title            | url                                   |
       | War              | http://www.rawbw.com/~alice/test.html   |
       And I am on the homepage
     When I fill in "search" with "War and Peace"
       And I press "Search"
-    Then I should see "Not found" in "#flash_error"
+    Then I should see "War and Peace not found" in "#flash_error"

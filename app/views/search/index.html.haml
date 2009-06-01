@@ -1,0 +1,17 @@
+- content_for :title do
+  = "Pages found for: " + @search_string 
+- @pages.each do |page|
+  .title
+    =h page.title
+    - if page.parts.empty?
+      = link_to "Read", page_path(page)
+    -else
+      = link_to "Read", part_path(page)
+    = link_to "Download", page.mobile_url
+  .genres= page.genre_string
+  .last_read= page.last_read.to_date if page.last_read
+  .notes=simple_format page.notes
+.search
+  - form_tag search_index_path do
+    = text_field_tag :search, @search_string
+    = submit_tag "Search", :name => nil

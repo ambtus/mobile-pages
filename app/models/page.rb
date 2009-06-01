@@ -21,9 +21,9 @@ class Page < ActiveRecord::Base
   attr_accessor :pasted
 
   def self.search(string)
-    d= Page.find(:first, :conditions => ["title LIKE ?", "%" + string + "%"])
-    return d if d
-    Page.find(:first, :conditions => ["notes LIKE ?", "%" + string + "%"])
+    pages = Page.find(:all, :conditions => ["title LIKE ?", "%" + string + "%"])
+    return pages unless pages.blank?
+    Page.find(:all, :conditions => ["notes LIKE ?", "%" + string + "%"])
   end
 
   def before_validation

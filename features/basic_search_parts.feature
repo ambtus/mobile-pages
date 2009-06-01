@@ -20,7 +20,8 @@ Feature: basic search with parts
       And I should not see "stuff for part 2"
 
   Scenario: find a page with parts
-    Given I am on the homepage
+    Given I have no pages
+      And I am on the homepage
       And I follow "Store Multiple"
     When I fill in "page_base_url" with "http://www.rawbw.com/~alice/parts/*.html"
       And I fill in "page_url_substitutions" with "1 2"

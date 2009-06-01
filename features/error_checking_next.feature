@@ -1,7 +1,8 @@
 Feature: next bugs
 
   Scenario: create and read a page from base url plus pattern
-    Given the following page
+    Given I have no pages
+      And the following page
       | title         | url                                    |
       | Single Text   | http://www.rawbw.com/~alice/test.html  |
       | First Part |  http://www.rawbw.com/~alice/parts/1.html |
