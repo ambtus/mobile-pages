@@ -60,9 +60,9 @@ class Page < ActiveRecord::Base
   end
 
   def set_wordcount_genre
-    short = Genre.find_or_create_by_name(Genre::SHORT) 
-    long = Genre.find_or_create_by_name(Genre::LONG) 
-    epic = Genre.find_or_create_by_name(Genre::EPIC) 
+    short = Genre.find_or_create_by_name(Genre::SHORT)
+    long = Genre.find_or_create_by_name(Genre::LONG)
+    epic = Genre.find_or_create_by_name(Genre::EPIC)
     if self.wordcount < Genre::SHORT_WC
       self.genres << short
       self.genres.delete(long)
@@ -81,6 +81,7 @@ class Page < ActiveRecord::Base
   end
 
   def fetch(url=self.url)
+    return if url.blank?
     self.update_attribute(:url, url) if url != self.url
     pwd = Curl::External.getpwd(url)
     url = Curl::External.geturl(url)
@@ -107,7 +108,7 @@ class Page < ActiveRecord::Base
   end
 
   def build_me(input="latin1")
-    input = "utf8" if self.raw_content.match(/charset ?= ?"?utf-8/i) 
+    input = "utf8" if self.raw_content.match(/charset ?= ?"?utf-8/i)
     self.original_html = self.pre_process(self.raw_file_name, input)
     self.original_html = Curl::External.getnode(url, self.original_html)
     self.set_wordcount_genre
@@ -155,24 +156,64 @@ class Page < ActiveRecord::Base
     self.build_html_from_parts
   end
 
-  def parts_from_urls(new_urls, refetch=false)
+  def parts_from_urls(url_title_list, refetch=false)
     old_part_ids = self.parts.map(&:id)
     count = 1
+    subcount = 1
     new_part_ids = []
-    new_urls.each do |url|
-      url.chomp!
-      part = Page.find_by_url_and_parent_id(url, self.id)
-      if part
-        part.title = "Part #{count.to_s}" if part.title.match(/^Part /)
-        part.position = count
-        part.save
-        part.fetch if refetch
+    title = ""
+    part = nil
+    subpart = nil
+    url_title_list.each do |line|
+      line.chomp!
+      if line.match("##")
+        title = line.gsub("##", "")
+        subpart = Page.find_by_title_and_parent_id(title, part.id)
+        subpart = Page.create(:title => title, :parent_id => part.id) unless subpart
+        subpart.update_attribute(:position, subcount)
+      elsif line.match("#")
+        title = line.sub("#", "")
+        part = Page.find_by_title_and_parent_id(title, self.id)
+        part = Page.create(:title => title, :parent_id => self.id) unless part
+        part.update_attribute(:position, count)
+        subpart = nil
+        subcount = 1
       else
-        title = "Part " + count.to_s
-        part = create_child(url, count, title)
+        if subpart
+          if subpart.url != line
+            subpart.update_attribute(:url, line)
+            subpart.fetch
+          elsif refetch
+            subpart.fetch
+          end
+        elsif part
+          if part.url != line
+            part.update_attribute(:url, line)
+            part.fetch
+          elsif refetch
+            part.fetch
+          end
+        else
+          part = Page.find_by_url(line)
+          if part
+            part.title = title.blank? ? "Part #{count.to_s}" : title
+            part.position = subpart ? subcount : count
+            part.save
+            part.fetch if refetch
+          else
+            title = title.blank? ? "Part #{count.to_s}" : title
+            position = subpart ? subcount : count
+            page = subpart ? subpart : self
+            part = page.create_child(line, position, title)
+          end
+        end
+        new_part_ids << part.id
+        if subpart
+          subcount = subcount.next
+        else
+          count = count.next
+        end
       end
-      new_part_ids << part.id
-      count = count.next
     end
     (old_part_ids - new_part_ids).each {|i| Page.find(i).destroy}
     self.build_html_from_parts
@@ -181,7 +222,8 @@ class Page < ActiveRecord::Base
   def build_html_from_parts
     File.open(self.original_file, 'w') do |file|
       self.parts.each do |part|
-        file << "\n\n<h1>#{part.title}</h1>\n"
+        level = part.parent.parent ? "h2" : "h1"
+        file << "\n\n<#{level}>#{part.title}</#{level}>\n"
         file << part.original_html
       end
     end
@@ -197,7 +239,19 @@ class Page < ActiveRecord::Base
   end
 
   def url_list
-    self.parts.map(&:url).join("\n")
+    list = []
+    self.parts.each do |part|
+      list << "#" + part.title unless part.title.match("Part ")
+      if part.parts.blank?
+        list << part.url
+      else
+        part.parts.each do |subpart|
+          list << "##" + subpart.title unless part.title.match("Part ")
+          list << subpart.url
+        end
+      end
+    end
+    list.join("\n")
   end
 
   def add_parent(title)
@@ -235,7 +289,7 @@ class Page < ActiveRecord::Base
     after = now + string.to_i.send(DURATION)
     self.update_attributes(:read_after => after, :last_read => now)
     self.genres << Genre.find_or_create_by_name(Genre::FAVORITE) if string == "1"
-    self.genres.delete(Genre.find_or_create_by_name(Genre::UNREAD)) 
+    self.genres.delete(Genre.find_or_create_by_name(Genre::UNREAD))
     return self.read_after
   end
 
@@ -334,6 +388,7 @@ class Page < ActiveRecord::Base
     text = text.gsub(/<\/?center>/, "")
     text = text.gsub(/<\/?wbr>/, "")
     text = text.gsub(/<h1>(.*?)<\/h1>/) {|s| "\# #{$1} \#" unless $1.blank?}
+    text = text.gsub(/<h2>(.*?)<\/h2>/) {|s| "\## #{$1} \#\#" unless $1.blank?}
     text = text.gsub(/<\/?h\d.*?>/, "\*")
     text = text.gsub(/<\/?strong.*?>/, "\*")
     text = text.gsub(/<\/?big>/, "\*")
