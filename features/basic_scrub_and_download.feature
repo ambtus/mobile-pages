@@ -14,12 +14,11 @@ Feature: Basic Scrub and download
     When I am on the homepage
       And I follow "Read"
       And I follow "Scrub"
-      And I check boxes "0 3 4"
+      And I check boxes "0 3 4 5"
       And I press "Scrub"
       And I should not see "This is a header"
     When I follow "Download" in ".title"
-    Then My document should not contain "#This is a header#"
+    Then My document should not contain "# This is a header #"
+      And My document should not contain "This sentence"
       And My document should not contain "_________"
-      And My document should contain "This sentence"
       And My document should contain "& some utf…"
-

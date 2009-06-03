@@ -22,8 +22,14 @@ class Page < ActiveRecord::Base
 
   def self.search(string)
     pages = Page.find(:all, :conditions => ["title LIKE ?", "%" + string + "%"])
-    return pages unless pages.blank?
-    Page.find(:all, :conditions => ["notes LIKE ?", "%" + string + "%"])
+    if pages.blank?
+      pages = Page.find(:all, :conditions => ["notes LIKE ?", "%" + string + "%"])
+    end
+    parents = []
+    pages.each do |page|
+      parents << (page.parent ? page.parent : page)
+    end
+    parents.compact.uniq
   end
 
   def before_validation
@@ -158,61 +164,70 @@ class Page < ActiveRecord::Base
 
   def parts_from_urls(url_title_list, refetch=false)
     old_part_ids = self.parts.map(&:id)
-    count = 1
-    subcount = 1
     new_part_ids = []
-    title = ""
-    part = nil
-    subpart = nil
+    url = title = part = nil
+    count = subcount = level = switch = 0
     url_title_list.each do |line|
       line.chomp!
-      if line.match("##")
-        title = line.gsub("##", "")
-        subpart = Page.find_by_title_and_parent_id(title, part.id)
-        subpart = Page.create(:title => title, :parent_id => part.id) unless subpart
-        subpart.update_attribute(:position, subcount)
+      if line.match("###")
+        subcount = 0 if level == 2
+        subcount = subcount.next
+        level = 3
+        url, title = line.split("###")
+        title = "Part " + subcount.to_s if title.blank? 
+      elsif line.match("##")
+        count = count.next
+        subcount = 0 
+        level = 2
+        url, title = line.split("##")
+        title = "Part " + count.to_s if title.blank? 
       elsif line.match("#")
+        level = 1
         title = line.sub("#", "")
-        part = Page.find_by_title_and_parent_id(title, self.id)
-        part = Page.create(:title => title, :parent_id => self.id) unless part
-        part.update_attribute(:position, count)
-        subpart = nil
-        subcount = 1
       else
-        if subpart
-          if subpart.url != line
-            subpart.update_attribute(:url, line)
-            subpart.fetch
-          elsif refetch
-            subpart.fetch
-          end
-        elsif part
-          if part.url != line
-            part.update_attribute(:url, line)
-            part.fetch
-          elsif refetch
-            part.fetch
-          end
-        else
-          part = Page.find_by_url(line)
-          if part
-            part.title = title.blank? ? "Part #{count.to_s}" : title
-            part.position = subpart ? subcount : count
-            part.save
-            part.fetch if refetch
+        if switch == 0
+          if level == 0
+            level = 2
           else
-            title = title.blank? ? "Part #{count.to_s}" : title
-            position = subpart ? subcount : count
-            page = subpart ? subpart : self
-            part = page.create_child(line, position, title)
+            level = level + 1
           end
+          switch = 1
         end
-        new_part_ids << part.id
-        if subpart
-          subcount = subcount.next
-        else
-          count = count.next
+        title = case level
+          when 1
+            self.title
+          when 2
+            count = count.next
+            "Part " + count.to_s
+          when 3
+            subcount = subcount.next
+            "Part " + subcount.to_s
+          end
+        url = line
+      end
+      if level == 1
+        self.update_attribute(:title, title) unless title.blank?
+      else
+        page = Page.find_by_url(url) unless url.blank?
+        unless page 
+          page = Page.create
+          page.url = url
+          refetch = true
         end
+        page.title = title
+        case level 
+        when 2
+          page.position = count
+          page.parent_id = self.id
+          part = page
+          page.save
+          new_part_ids << page.id
+        when 3
+          page.position = subcount 
+          page.parent_id = part.id
+          page.save
+        end
+        page.fetch if refetch 
       end
     end
     (old_part_ids - new_part_ids).each {|i| Page.find(i).destroy}
@@ -239,15 +254,24 @@ class Page < ActiveRecord::Base
   end
 
   def url_list
+    partregexp = /\APart \d+\Z/
     list = []
+    list << "#" + self.title
     self.parts.each do |part|
-      list << "#" + part.title unless part.title.match("Part ")
       if part.parts.blank?
-        list << part.url
+        line = part.url
+        unless part.title.match(partregexp)
+          line = line + "##" + part.title 
+        end
+        list << line
       else
+        list << "##" + part.title
         part.parts.each do |subpart|
-          list << "##" + subpart.title unless part.title.match("Part ")
-          list << subpart.url
+          line = subpart.url
+          unless subpart.title.match(partregexp)
+            line = line + "###" + subpart.title 
+          end
+          list << line
         end
       end
     end
@@ -322,7 +346,11 @@ class Page < ActiveRecord::Base
   end
 
   def original_html
-    File.open(self.original_file, 'r') { |f| f.read }
+    begin
+      File.open(self.original_file, 'r') { |f| f.read }
+    rescue Errno::ENOENT
+      ""
+    end
   end
 
   def original_file
@@ -388,7 +416,7 @@ class Page < ActiveRecord::Base
     text = text.gsub(/<\/?center>/, "")
     text = text.gsub(/<\/?wbr>/, "")
     text = text.gsub(/<h1>(.*?)<\/h1>/) {|s| "\# #{$1} \#" unless $1.blank?}
-    text = text.gsub(/<h2>(.*?)<\/h2>/) {|s| "\## #{$1} \#\#" unless $1.blank?}
+    text = text.gsub(/<h2>(.*?)<\/h2>/) {|s| "\#\# #{$1} \#\#" unless $1.blank?}
     text = text.gsub(/<\/?h\d.*?>/, "\*")
     text = text.gsub(/<\/?strong.*?>/, "\*")
     text = text.gsub(/<\/?big>/, "\*")
