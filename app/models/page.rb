@@ -235,6 +235,7 @@ class Page < ActiveRecord::Base
   end
 
   def build_html_from_parts
+    File.unlink(self.mobile_file_name) rescue Errno::ENOENT
     File.open(self.original_file, 'w') do |file|
       self.parts.each do |part|
         level = part.parent.parent ? "h2" : "h1"
