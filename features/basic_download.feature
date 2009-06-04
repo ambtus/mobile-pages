@@ -29,6 +29,7 @@ Feature: basic download
       And My document should contain "*One Two, Three*"
       And My document should contain "_One, Two? Three_"
       And My document should contain "_One-TwoThree_"
+      And My document should contain "<>end<>"
 
   Scenario: download stripping links and images
     Given I am on the homepage
