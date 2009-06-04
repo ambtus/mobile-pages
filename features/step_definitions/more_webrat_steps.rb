@@ -23,3 +23,8 @@ end
 Then /^the field with id "([^\"]*)" should contain "([^\"]*)"$/ do |field_id, value|
       field_with_id(field_id).value.should =~ /#{value}/
   end
+
+Then /^"([^"]*)" should be selected in "([^"]*)"$/ do |value, field_id|
+  field_with_id(field_id).element.search(".//option[@selected = 'selected']").inner_html.should =~ /#{value}/
+end
+

@@ -18,7 +18,7 @@
   .form
     - form_tag start_index_path do
       = hidden_field_tag(:page_id, @page.id)
-      = hidden_field_tag(:genre, @genre.name) if @genre
+      = hidden_field_tag(:old_genre, @genre.name) if @genre
       = submit_tag "Next"
   .search
     - form_tag search_index_path do
@@ -27,7 +27,7 @@
   - unless @genres.blank?
     .genre
       - form_tag start_index_path do
-        = select_tag :genre, "<option></option>" + options_for_select(@genres)
+        = select_tag :genre, "<option></option>" + options_for_select(@genres, @genre_name)
         = submit_tag "Filter", :name => nil
 .form
   - form_for @new_page do |f|
