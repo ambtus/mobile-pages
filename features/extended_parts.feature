@@ -21,3 +21,27 @@ Feature: complex parts with titles from url list
      And I should see "stuff for part 5"
      And I should see "Grandchild 2" in "h2"
      And I should see "stuff for part 6"
+
+
+  Scenario: add a part updates the parent's read_after
+    Given I have no pages
+      And the following pages
+     | title | urls                                     |
+     | Test1 | http://www.rawbw.com/~alice/parts/1.html |
+     | Test2 | http://www.rawbw.com/~alice/parts/3.html |
+    When I am on the homepage
+    Then I should see "Test1" in ".title"
+    When I press "Next"
+    And I am on the homepage
+    Then I should see "Test2" in ".title"
+    When I press "Next"
+    And I am on the homepage
+    Then I should see "Test1" in ".title"
+    When I fill in "search" with "Test2"
+      And I press "Search"
+    Then I should see "Test2" in ".title"
+    When I follow "Manage Parts"
+      And I fill in "url_list" with "http://www.rawbw.com/~alice/parts/3.html\nhttp://www.rawbw.com/~alice/parts/4.html"
+      And I press "Update"
+    When I am on the homepage
+    Then I should see "Test2" in ".title"

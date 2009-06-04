@@ -174,13 +174,13 @@ class Page < ActiveRecord::Base
         subcount = subcount.next
         level = 3
         url, title = line.split("###")
-        title = "Part " + subcount.to_s if title.blank? 
+        title = "Part " + subcount.to_s if title.blank?
       elsif line.match("##")
         count = count.next
-        subcount = 0 
+        subcount = 0
         level = 2
         url, title = line.split("##")
-        title = "Part " + count.to_s if title.blank? 
+        title = "Part " + count.to_s if title.blank?
       elsif line.match("#")
         level = 1
         title = line.sub("#", "")
@@ -209,13 +209,13 @@ class Page < ActiveRecord::Base
         self.update_attribute(:title, title) unless title.blank?
       else
         page = Page.find_by_url(url) unless url.blank?
-        unless page 
+        unless page
           page = Page.create
           page.url = url
           refetch = true
         end
         page.title = title
-        case level 
+        case level
         when 2
           page.position = count
           page.parent_id = self.id
@@ -223,14 +223,17 @@ class Page < ActiveRecord::Base
           page.save
           new_part_ids << page.id
         when 3
-          page.position = subcount 
+          page.position = subcount
           page.parent_id = part.id
           page.save
         end
-        page.fetch if refetch 
+        page.fetch if refetch
       end
     end
-    (old_part_ids - new_part_ids).each {|i| Page.find(i).destroy}
+    remove = old_part_ids - new_part_ids
+    remove.each {|i| Page.find(i).destroy}
+    added = new_part_ids - old_part_ids
+    self.update_attribute(:read_after, Time.now) unless added.blank?
     self.build_html_from_parts
   end
 
@@ -262,7 +265,7 @@ class Page < ActiveRecord::Base
       if part.parts.blank?
         line = part.url
         unless part.title.match(partregexp)
-          line = line + "##" + part.title 
+          line = line + "##" + part.title
         end
         list << line
       else
@@ -270,7 +273,7 @@ class Page < ActiveRecord::Base
         part.parts.each do |subpart|
           line = subpart.url
           unless subpart.title.match(partregexp)
-            line = line + "###" + subpart.title 
+            line = line + "###" + subpart.title
           end
           list << line
         end
