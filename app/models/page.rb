@@ -169,7 +169,8 @@ class Page < ActiveRecord::Base
     count = subcount = level = switch = 0
     url_title_list.each do |line|
       line.chomp!
-      if line.match("###")
+      if line.empty?
+      elsif line.match("###")
         subcount = 0 if level == 2
         subcount = subcount.next
         level = 3

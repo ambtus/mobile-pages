@@ -43,3 +43,15 @@ Feature: error checking with parts
       And I press "Update"
     Then I should see "Couldn't find or create parent"
       And I should not see "Single Part" in ".title"
+
+  Scenario: ignore empty lines
+    Given I have no pages
+    And I am on the homepage
+      And I follow "Store Multiple"
+    When I fill in "page_urls" with "#Parent\n\n##Child 1\nhttp://www.rawbw.com/~alice/parts/1.html\nhttp://www.rawbw.com/~alice/parts/2.html\n\nhttp://www.rawbw.com/~alice/parts/3.html##Child 2\n\n"
+     And I fill in "page_title" with "Pages from urls with empty lines"
+     And I press "Store"
+   Then I should see "Parent" in ".title"
+     And I should see "Child 1" in "h1"
+     And I should see "Child 2" in "h1"
+     And I should not see "Part 3"
