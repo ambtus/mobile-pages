@@ -26,4 +26,4 @@ Feature: Basic Scrub
   | "http://www.rawbw.com/~alice/br.html"           | "0 2" | "all on"       | "top line"        | "bottom line" |
   | "http://www.rawbw.com/~alice/entities.html"     | "2 5" | "As the stags" | "Content Removed" | "Next"        |
   | "http://www.rawbw.com/~alice/container.html"    | "0 1" | "content"      | "first div"       | "second div"  |
-  | "http://www.rawbw.com/~alice/tablecontent.html" | "1 3" | "I remembered" | "Tall"            | "Return"      |
+  | "http://www.rawbw.com/~alice/tablecontent.html" | "1 2" | "I remembered" | "Jump"            | "Tall"      |

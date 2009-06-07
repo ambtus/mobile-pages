@@ -21,8 +21,9 @@ Rails::Initializer.run do |config|
   # config.gem "aws-s3", :lib => "aws/s3"
   config.gem 'haml'
   config.gem 'curb'
-  config.gem 'nokogiri'
+  config.gem 'nokogiri', :version => ">=1.3.0"
   config.gem 'tidy'
+  config.gem 'sanitize'
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named

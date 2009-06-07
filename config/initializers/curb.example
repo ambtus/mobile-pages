@@ -21,22 +21,27 @@ module Curl
     end
     def self.getnode(original_url, html)
       body = Nokogiri::HTML(html).xpath('//body').first
-      case original_url
+      keep = case original_url
         when /ejournal/, /dreamwidth/
-          body.at('//blockquote').next.inner_html
+          if body.at('//blockquote')
+            body.at('//blockquote').next
+          else
+            body
+          end
         when /fanfiction.net/
-          body.at('div#storytext').inner_html
+          body.at('div#storytext')
         when /archiveofourown/
-          body.at('div.work-show').inner_html
+          body.at('div.work-show')
         when /google/
-          body.at('div#inbdy').inner_html
+          body.at('div#inbdy')
         else
           if body.children.to_s == body.at('div').to_s
-            body.at('div').inner_html
+            body.at('div')
           else
-            body.inner_html
+            body
           end
       end
+      keep.children.map{|x| x.to_html.chomp}.join
     end
   end
 end

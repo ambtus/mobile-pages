@@ -121,22 +121,14 @@ class Page < ActiveRecord::Base
   end
 
   def pre_process(filename, input)
-    lines = File.readlines(filename).map{|line| line.chomp}
-    html = lines.join(" ").gsub(/<\/?span.*?>/, "")
-    html = html.gsub(' ', " ")
-    html = html.gsub(/<o:p>&nbsp;<\/o:p>/i, "")
-    html = html.gsub('&nbsp;', " ").squish
-    html = html.gsub(/<p class=Mso.*?>/, "<p>")
-    html = html.gsub(/<br ?\/?>\s*?<br ?\/?>/, "<p>")
+    lines = File.readlines(filename).map do |line|
+      line = line.chomp
+      line = line + " " unless line.match(/>$/)
+      line
+    end
+    html = lines.join
     html = html.gsub(/<x-claris.*?>/i, "")
-    html = html.gsub(/<script.*?>.*?<\/script>/i, "")
     html = html.gsub(/<noscript.*?>.*?<\/noscript>/i, "")
-    html = html.gsub(/<form.*?>.*?<\/form>/i, "")
-    html = html.gsub(/<!-- .*?>/i, "")
-    html = html.gsub(/<\/?table.*?>/, "")
-    html = html.gsub(/<\/?tr.*?>/, "")
-    html = html.gsub(/<td.*?>/, "<div>")
-    html = html.gsub(/<\/td.*?>/, "</div>")
     Tidy.open do |tidy|
       tidy.options.input_encoding = input
       tidy.options.output_encoding = "utf8"
@@ -144,12 +136,16 @@ class Page < ActiveRecord::Base
       tidy.options.logical_emphasis = true
       tidy.options.show_body_only = true
       tidy.options.word_2000 = true
-      tidy.options.break_before_br = true
-      tidy.options.indent = "auto"
+      tidy.options.indent = "no"
       tidy.options.wrap = 0
       html = tidy.clean(html)
     end
-    return html
+    html = Sanitize.clean(html, :elements => [ 'a', 'big', 'blockquote', 'br', 'center', 'div', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'img', 'li', 'p', 'small', 'strike', 'strong', 'sub', 'sup', 'u'], :attributes => { 'a' => ['href'], 'div' => ['id', 'class'], 'img' => ['align', 'alt', 'height', 'src', 'title', 'width'] })
+    html = html.gsub(/&nbsp;/, " ")
+    html = html.gsub(/\n/, "")
+    html = html.gsub(/ +/, ' ')
+    html = html.gsub(/<br \/><br \/>/, "<p>")
+    html = html.gsub(/<p> ?<\/p>/, "")
   end
 
   def create_from_base
@@ -417,40 +413,38 @@ class Page < ActiveRecord::Base
 
   def remove_html
     text = self.original_html
-    text = text.gsub(/<\/?font.*?>/, "")
+    text = text.gsub(/<a .*?>(.*?)<\/a>/m) {|s| " [#{$1}] " unless $1.blank?}
+    text = text.gsub(/<\/?big>/, "\*")
+    text = text.gsub(/<\/?blockquote>/, "")
+    text = text.gsub(/<\/?br.*?>/, "")
     text = text.gsub(/<\/?center>/, "")
-    text = text.gsub(/<\/?wbr>/, "")
+    text = text.gsub(/<\/?div>/, "")
+    text = text.gsub(/<dt>/, "")
+    text = text.gsub(/<\/dt>/, ": ")
+    text = text.gsub(/<\/?em.*?>/, "_")
     text = text.gsub(/<h1>(.*?)<\/h1>/) {|s| "\# #{$1} \#" unless $1.blank?}
     text = text.gsub(/<h2>(.*?)<\/h2>/) {|s| "\#\# #{$1} \#\#" unless $1.blank?}
     text = text.gsub(/<\/?h\d.*?>/, "\*")
-    text = text.gsub(/<\/?strong.*?>/, "\*")
-    text = text.gsub(/<\/?big>/, "\*")
-    text = text.gsub(/<\/?em.*?>/, "_")
-    text = text.gsub(/<\/?u>/, "_")
-    text = text.gsub(/_([ ,.?-]+)_/) {|s| $1}
-    text = text.gsub(/\*([ ,.?-]+)\*/) {|s| $1}
-    text = text.gsub(/<\/?strike>/, "==")
+    text = text.gsub(/<hr>/, "______________________________")
+    text = text.gsub(/<img.*?alt="(.*?)".*?>/) {|s| " [#{$1}] " unless $1.blank?}
+    text = text.gsub(/<img.*?>/, "")
+    text = text.gsub(/<li>/, "* ")
+    text = text.gsub(/<\/?li>/, "")
+    text = text.gsub(/<\/?p>/, "")
     text = text.gsub(/<small>/, '(')
     text = text.gsub(/<\/small>/, ')')
+    text = text.gsub(/<\/?strike>/, "==")
+    text = text.gsub(/<\/?strong.*?>/, "\*")
     text = text.gsub(/<sup>/, "^")
     text = text.gsub(/<\/sup>/, "")
     text = text.gsub(/<sub>/, "(")
     text = text.gsub(/<\/sub>/, ")")
-    text = text.gsub(/<hr.*?>/, "______________________________")
-    text = text.gsub(/<\/?div.*?>/, "")
-    text = text.gsub(/<\/?[uod]l.*?>/, "")
-    text = text.gsub(/<\/?dd.*?>/, "")
-    text = text.gsub(/<li.*?>/, "* ")
-    text = text.gsub(/<\/?li.*?>/, "")
-    text = text.gsub(/<dt.*?>/, "")
-    text = text.gsub(/<\/?dt.*?>/, ": ")
-    text = text.gsub(/<\/?blockquote.*?>/, "")
-    text = text.gsub(/<\/?p.*?>/, "")
-    text = text.gsub(/<\/?br.*?>/, "")
-    text = text.gsub(/<a .*?>(.*?)<\/a>/m) {|s| " [#{$1}] " unless $1.blank?}
-    text = text.gsub(/<img.*?alt="(.*?)".*?>/) {|s| " [#{$1}] " unless $1.blank?}
-    text = text.gsub(/<img.*?>/, "")
+    text = text.gsub(/<\/?u>/, "_")
+    text = text.gsub(/_([ ,.?-]+)_/) {|s| $1}
+    text = text.gsub(/\*([ ,.?-]+)\*/) {|s| $1}
+    text = text.gsub(/&.squo;/, "'")
     text = text.gsub(/&amp;/, "&")
+    text = text.gsub(/&hellip;/, "...")
     text = text.gsub(/&lt;/, "<")
     text = text.gsub(/&gt;/, ">")
     text.gsub(/ +/, ' ').gsub(/\n+ */, "\n\n").gsub(/\n\n\n\n+/, "\n\n").strip
