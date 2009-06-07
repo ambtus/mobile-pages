@@ -442,9 +442,11 @@ class Page < ActiveRecord::Base
     text = text.gsub(/<\/?u>/, "_")
     text = text.gsub(/_([ ,.?-]+)_/) {|s| $1}
     text = text.gsub(/\*([ ,.?-]+)\*/) {|s| $1}
-    text = text.gsub(/&.squo;/, "'")
+    text = text.gsub(/&[lr]squo;/, "'")
+    text = text.gsub(/&[lr]dquo;/, '"')
     text = text.gsub(/&amp;/, "&")
     text = text.gsub(/&hellip;/, "...")
+    text = text.gsub(/&mdash;/, "--")
     text = text.gsub(/&lt;/, "<")
     text = text.gsub(/&gt;/, ">")
     text.gsub(/ +/, ' ').gsub(/\n+ */, "\n\n").gsub(/\n\n\n\n+/, "\n\n").strip

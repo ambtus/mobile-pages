@@ -21,4 +21,4 @@ Feature: Basic Scrub and download
     Then My document should not contain "# This is a header #"
       And My document should not contain "This sentence"
       And My document should not contain "_________"
-      And My document should contain "& some utf..."
+      And My document should contain "& 'some' utf... --"
