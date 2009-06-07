@@ -161,3 +161,13 @@ Feature: basic download
     When I follow "Download" in ".title"
     Then My document should not contain "\n\n\n\n"
       And My document should contain "Rodney muttered imprecations"
+
+  Scenario: download page with and without linefeeds
+    Given I am on the homepage
+      And I have no pages
+      And I fill in "page_url" with "http://www.rawbw.com/~alice/linefeeds.html"
+      And I fill in "page_title" with "line feeds"
+      And I press "Store"
+    When I follow "Download" in ".title"
+    Then My document should contain "first\n\nsecond\n\nthird\n\nfourth\n\nfifth\n\nsixth\n\nseventh\n\neighth"
+
