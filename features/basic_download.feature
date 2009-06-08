@@ -171,3 +171,12 @@ Feature: basic download
     When I follow "Download" in ".title"
     Then My document should contain "first\n\nsecond\n\nthird\n\nfourth\n\nfifth\n\nsixth\n\nseventh\n\neighth"
 
+  Scenario: divs with attributes
+    Given I am on the homepage
+      And I have no pages
+      And I fill in "page_url" with "http://www.rawbw.com/~alice/div.html"
+      And I fill in "page_title" with "divs"
+      And I press "Store"
+    When I follow "Download" in ".title"
+    Then My document should contain "first div\n\nsecond div\n\ncontent"
+

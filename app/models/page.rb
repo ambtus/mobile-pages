@@ -416,9 +416,9 @@ class Page < ActiveRecord::Base
     text = text.gsub(/<a .*?>(.*?)<\/a>/m) {|s| " [#{$1}] " unless $1.blank?}
     text = text.gsub(/<\/?big>/, "\*")
     text = text.gsub(/<\/?blockquote>/, "")
-    text = text.gsub(/<\/?br.*?>/, "")
+    text = text.gsub(/<\/?br>/, "")
     text = text.gsub(/<\/?center>/, "")
-    text = text.gsub(/<\/?div>/, "\n")
+    text = text.gsub(/<\/?div.*?>/, "\n")
     text = text.gsub(/<dt>/, "")
     text = text.gsub(/<\/dt>/, ": ")
     text = text.gsub(/<\/?em.*?>/, "_")
