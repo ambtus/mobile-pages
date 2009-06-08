@@ -446,6 +446,7 @@ class Page < ActiveRecord::Base
     text = text.gsub(/&[lr]dquo;/, '"')
     text = text.gsub(/&amp;/, "&")
     text = text.gsub(/&hellip;/, "...")
+    text = text.gsub(/&iuml;/, "i")
     text = text.gsub(/&[mn]dash;/, "--")
     text = text.gsub(/&lt;/, "<")
     text = text.gsub(/&gt;/, ">")
