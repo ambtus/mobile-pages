@@ -35,13 +35,13 @@ module Curl
         when /google/
           body.at('div#inbdy')
         else
-          if body.children.to_s == body.at('div').to_s
+          if body && (body.children.to_s == body.at('div').to_s)
             body.at('div')
           else
             body
           end
       end
-      keep.children.map{|x| x.to_html.chomp}.join
+      keep.children.map{|x| x.to_html.chomp}.join if keep
     end
   end
 end

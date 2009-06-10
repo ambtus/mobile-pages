@@ -5,6 +5,5 @@
     .errors= f.error_messages
     = f.text_field :url, :maxlength => 255, :size => 80, :value => @page.url || Page::URL_PLACEHOLDER, :onblur=>"if(this.value == '') { this.value='#{Page::URL_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::URL_PLACEHOLDER}') {this.value=''}"
     = f.text_field :title, :maxlength => 255, :size => 80, :value => @page.title || Page::TITLE_PLACEHOLDER,  :onblur=>"if(this.value == '') { this.value='#{Page::TITLE_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::TITLE_PLACEHOLDER}') {this.value=''}"
-    = f.text_area :pasted, :rows => 3, :cols => 80, :value => @page.pasted || Page::PASTED_PLACEHOLDER, :onblur=>"if(this.value == '') { this.value='#{Page::PASTED_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::PASTED_PLACEHOLDER}') {this.value=''}"
     .button= f.submit "Store"
 = link_to "Store Multiple", new_part_path

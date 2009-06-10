@@ -2,7 +2,6 @@ class Page < ActiveRecord::Base
   MODULO = 300  # files in a single directory
   TITLE_PLACEHOLDER = "Enter a Title for the new page"
   URL_PLACEHOLDER = "Enter a URL for a new page"
-  PASTED_PLACEHOLDER = "If you paste html here, it will override fetching from the url"
   BASE_URL_PLACEHOLDER = "Base URL: use * as replacement placeholder"
   URL_SUBSTITUTIONS_PLACEHOLDER = "URL substitutions, space separated replacements for base URL"
   URLS_PLACEHOLDER = "Alternatively: full URLs for parts, one per line"
@@ -18,7 +17,6 @@ class Page < ActiveRecord::Base
   attr_accessor :base_url
   attr_accessor :url_substitutions
   attr_accessor :urls
-  attr_accessor :pasted
 
   def self.search(string)
     pages = Page.find(:all, :conditions => ["title LIKE ?", "%" + string + "%"])
@@ -35,20 +33,15 @@ class Page < ActiveRecord::Base
   def before_validation
     self.url = nil if self.url == URL_PLACEHOLDER
     self.title = nil if self.title == TITLE_PLACEHOLDER
-    self.pasted = nil if self.pasted == PASTED_PLACEHOLDER
     self.base_url = nil if self.base_url == BASE_URL_PLACEHOLDER
     self.url_substitutions = nil if self.url_substitutions == URL_SUBSTITUTIONS_PLACEHOLDER
     self.urls = nil if self.urls == URLS_PLACEHOLDER
     self.read_after = Time.now if self.read_after.blank?
   end
-
+ 
   def after_create
     FileUtils.mkdir_p(Rails.public_path +  self.mypath)
-    if !self.pasted.blank?
-      self.raw_content = self.pasted
-      input = self.pasted.match(/charset ?= ?"?utf-8/i) ? "utf8" : "latin1"
-      self.original_html = self.pre_process(self.raw_file_name, input)
-    elsif self.url
+    if self.url
       fetch
     elsif self.base_url
       self.create_from_base
@@ -60,7 +53,7 @@ class Page < ActiveRecord::Base
     self.genres << Genre.find_or_create_by_name(Genre::UNREAD)
     self.set_wordcount_genre
   end
-
+  
   def wordcount
     wordcount = self.remove_html.scan(/(\w|-)+/).size
   end
@@ -84,6 +77,11 @@ class Page < ActiveRecord::Base
       self.genres.delete(short)
       self.genres.delete(long)
     end
+  end
+
+  def pasted=(html)
+    self.raw_content = html
+    self.build_me
   end
 
   def fetch(url=self.url)
@@ -114,6 +112,7 @@ class Page < ActiveRecord::Base
   end
 
   def build_me(input="latin1")
+    File.unlink(self.mobile_file_name) rescue Errno::ENOENT
     input = "utf8" if self.raw_content.match(/charset ?= ?"?utf-8/i)
     self.original_html = self.pre_process(self.raw_file_name, input)
     self.original_html = Curl::External.getnode(url, self.original_html)
@@ -298,15 +297,6 @@ class Page < ActiveRecord::Base
   def next
     self.update_attribute(:read_after, self.read_after + 3.months)
     return Page.parents.first
-  end
-
-  def make_utf8
-    if self.parts.empty?
-      self.build_me("utf8")
-    else
-      self.parts.each {|p| p.build_me("utf8")}
-    end
-    self
   end
 
   def set_read_after(string)

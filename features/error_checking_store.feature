@@ -22,36 +22,24 @@ Feature: error checking during store
 
   Scenario: pasted is not html is okay
     Given I am on the homepage
+    And I have no pages
     When I fill in "page_title" with "invalid html"
-      And I fill in "page_pasted" with "plain text"
       And I press "Store"
-    Then I should see "Page created" in "#flash_notice"
+      And I follow "Edit Raw HTML"
+    When I fill in "pasted" with "plain text"
+      And I press "Update Raw HTML"
+    Then I should see "Raw HTML updated" in "#flash_notice"
       And I should see "plain text"
-
-  Scenario: pasted blank is ignored if url
-    Given I am on the homepage
-    When I fill in "page_title" with "blank pasted, url exists"
-      And I fill in "page_url" with "http://www.rawbw.com/~alice/test.html"
-      And I fill in "page_pasted" with ""
-      And I press "Store"
-    Then I should see "Page created" in "#flash_notice"
-      And I should see "Retrieved from the web" in ".content"
-
-  Scenario: pasted html with pre-processing url
-    Given I am on the homepage
-    When I fill in "page_title" with "pasted, url exists"
-      And I fill in "page_url" with "http://sid.livejournal.com/119818.html"
-      And I fill in "page_pasted" with "override url"
-      And I press "Store"
-    Then I should see "Page created" in "#flash_notice"
-      And I should see "override url" in ".content"
 
   Scenario: pasted blank is okay
     Given I am on the homepage
+    And I have no pages
     When I fill in "page_title" with "blank pasted no url"
-      And I fill in "page_pasted" with ""
       And I press "Store"
-    Then I should see "Page created" in "#flash_notice"
+      And I follow "Edit Raw HTML"
+      And I fill in "pasted" with ""
+      And I press "Update Raw HTML"
+    Then I should see "Raw HTML updated" in "#flash_notice"
       And I should see "" in ".content"
 
   Scenario: holder page for parts is okay

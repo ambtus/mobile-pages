@@ -1,0 +1,8 @@
+- content_for :title do
+  = "Edit raw html for " + @page.title
+
+.title= @page.title
+.content
+  - form_for @page do |f|
+    = text_area_tag :pasted, @page.raw_content, :rows => 10, :cols => 80
+    .button= f.submit "Update Raw HTML"
