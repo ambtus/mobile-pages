@@ -4,7 +4,7 @@ class StartController < ApplicationController
    @genre = Genre.find_by_name(params[:genre]) if params[:genre]
    if @genre
      @genre_name = @genre.name
-     @page = @genre.pages.parents.first
+     @page = @genre.pages.first
      @title = "Mobile pages filtered by #{@genre.name}"
    else
      @page = Page.parents.first

@@ -1,6 +1,8 @@
 - content_for :title do
   = @title
 - if @page
+  - if @page.parent
+    .parent= link_to @page.parent.title, part_path(@page.parent)
   .title
     =h @page.title
     - if @page.parts.empty?

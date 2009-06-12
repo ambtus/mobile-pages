@@ -229,7 +229,9 @@ class Page < ActiveRecord::Base
     remove = old_part_ids - new_part_ids
     remove.each {|i| Page.find(i).destroy}
     added = new_part_ids - old_part_ids
-    self.update_attribute(:read_after, Time.now) unless added.blank?
+    if !added.blank? || self.read_after > Time.now
+      self.update_attribute(:read_after, Time.now)
+    end
     self.build_html_from_parts
   end
 
@@ -304,7 +306,9 @@ class Page < ActiveRecord::Base
     after = now + string.to_i.send(DURATION)
     self.update_attributes(:read_after => after, :last_read => now)
     self.genres << Genre.find_or_create_by_name(Genre::FAVORITE) if string == "1"
-    self.genres.delete(Genre.find_or_create_by_name(Genre::UNREAD))
+    unread = Genre.find_or_create_by_name(Genre::UNREAD)
+    self.genres.delete(unread)
+    self.parts.each {|p| p.genres.delete(unread)}
     return self.read_after
   end
 
@@ -368,11 +372,15 @@ class Page < ActiveRecord::Base
   end
 
   def raw_content=(content)
-    File.open(self.raw_file_name, 'w') { |f| f.write(content) }
+    File.open(self.raw_file_name, 'w') { |f| f.write(content) } 
   end
 
   def raw_content
-    File.open(self.raw_file_name, 'r') { |f| f.read }
+    begin
+      File.open(self.raw_file_name, 'r') { |f| f.read } 
+    rescue Errno::ENOENT
+      ""
+    end
   end
 
   def raw_file_name
@@ -406,7 +414,7 @@ class Page < ActiveRecord::Base
     text = text.gsub(/<a .*?>(.*?)<\/a>/m) {|s| " [#{$1}] " unless $1.blank?}
     text = text.gsub(/<\/?big>/, "\*")
     text = text.gsub(/<\/?blockquote>/, "")
-    text = text.gsub(/<\/?br>/, "")
+    text = text.gsub(/<\/?br>/, "\n")
     text = text.gsub(/<\/?center>/, "")
     text = text.gsub(/<\/?div.*?>/, "\n")
     text = text.gsub(/<dt>/, "")
@@ -436,6 +444,7 @@ class Page < ActiveRecord::Base
     text = text.gsub(/&[lr]dquo;/, '"')
     text = text.gsub(/&amp;/, "&")
     text = text.gsub(/&hellip;/, "...")
+    text = text.gsub(/&ccedil;/, "c")
     text = text.gsub(/&iuml;/, "i")
     text = text.gsub(/&[mn]dash;/, "--")
     text = text.gsub(/&lt;/, "<")

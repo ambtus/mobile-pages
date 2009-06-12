@@ -33,6 +33,7 @@ Feature: basic download
       And My document should contain "_One, Two? Three_"
       And My document should contain "_One-TwoThree_"
       And My document should contain "<>end<>"
+      And My document should contain "facade"
 
   Scenario: download stripping links and images
     Given I am on the homepage
