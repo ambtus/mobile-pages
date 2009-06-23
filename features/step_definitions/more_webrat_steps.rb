@@ -28,3 +28,7 @@ Then /^"([^"]*)" should be selected in "([^"]*)"$/ do |value, field_id|
   field_with_id(field_id).element.search(".//option[@selected = 'selected']").inner_html.should =~ /#{value}/
 end
 
+Given /^I wait a second.*$/ do
+  Kernel::sleep 1
+end
+

@@ -23,13 +23,13 @@ Feature: error checking during store
   Scenario: pasted is not html is okay
     Given I am on the homepage
     And I have no pages
-    When I fill in "page_title" with "invalid html"
+    When I fill in "page_title" with "plain text"
       And I press "Store"
       And I follow "Edit Raw HTML"
     When I fill in "pasted" with "plain text"
       And I press "Update Raw HTML"
     Then I should see "Raw HTML updated" in "#flash_notice"
-      And I should see "plain text"
+      And I should see "plain text" in ".content"
 
   Scenario: pasted blank is okay
     Given I am on the homepage

@@ -22,23 +22,33 @@ Filter: find something in a specific genre
 
 == Setup
 
-Copy config/database.example to config/database.yml and modify as needed
+=== operating system requirements
 
-Copy config/initializers/curb.example to config/initializers/curb.rb and modify as desired. Modify features/basic_store.feature to match
+tidy libcurl libxml2 libxslt
 
-Copy config/initializers/session_store.example to config/initializers/session_store.rb and modify as desired.
+utf-8 encoding
 
-Configure public/stylesheets/application.css as desired
+=== required configuration
 
-Configure lib/tasks/cucumber.rake as desired
+cp config/database.example config/database.yml #modify as needed
 
-Run
-  gem install haml tidy
-  rake gems:install RAILS_ENV=test
-  rake db:create:all
-  rake db:schema:load
+cp config/initializers/curb.example config/initializers/curb.rb  #modify as needed
+
+cp config/initializers/session_store.example config/initializers/session_store.rb #modify as desired.
+
+=== optional configuration
+
+edit public/stylesheets/application.css
+
+edit lib/tasks/cucumber.rake
+
+=== gem installation
+
+gem install haml tidy  # rake fails without
+rake gems:install RAILS_ENV=test
+rake db:create:all
+rake db:schema:load
 
 == Testing
 
-Run
-  rake features
+rake features

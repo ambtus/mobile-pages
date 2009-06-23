@@ -38,7 +38,7 @@ class Page < ActiveRecord::Base
     self.urls = nil if self.urls == URLS_PLACEHOLDER
     self.read_after = Time.now if self.read_after.blank?
   end
- 
+
   def after_create
     FileUtils.mkdir_p(Rails.public_path +  self.mypath)
     if self.url
@@ -53,7 +53,7 @@ class Page < ActiveRecord::Base
     self.genres << Genre.find_or_create_by_name(Genre::UNREAD)
     self.set_wordcount_genre
   end
-  
+
   def wordcount
     wordcount = self.remove_html.scan(/(\w|-)+/).size
   end
@@ -126,6 +126,7 @@ class Page < ActiveRecord::Base
       line
     end
     html = lines.join
+    html = html.gsub(/&nbsp;/, " ")
     html = html.gsub(/<x-claris.*?>/i, "")
     html = html.gsub(/<noscript.*?>.*?<\/noscript>/i, "")
     Tidy.open do |tidy|
@@ -140,7 +141,6 @@ class Page < ActiveRecord::Base
       html = tidy.clean(html)
     end
     html = Sanitize.clean(html, :elements => [ 'a', 'big', 'blockquote', 'br', 'center', 'div', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'img', 'li', 'p', 'small', 'strike', 'strong', 'sub', 'sup', 'u'], :attributes => { 'a' => ['href'], 'div' => ['id', 'class'], 'img' => ['align', 'alt', 'height', 'src', 'title', 'width'] })
-    html = html.gsub(/&nbsp;/, " ")
     html = html.gsub(/\n/, "")
     html = html.gsub(/ +/, ' ')
     html = html.gsub(/<br \/><br \/>/, "<p>")
@@ -162,7 +162,7 @@ class Page < ActiveRecord::Base
     new_part_ids = []
     url = title = part = nil
     count = subcount = level = switch = 0
-    url_title_list.each do |line|
+    url_title_list.split("\n").each do |line|
       line.chomp!
       if line.empty?
       elsif line.match("###")
@@ -372,12 +372,12 @@ class Page < ActiveRecord::Base
   end
 
   def raw_content=(content)
-    File.open(self.raw_file_name, 'w') { |f| f.write(content) } 
+    File.open(self.raw_file_name, 'w') { |f| f.write(content) }
   end
 
   def raw_content
     begin
-      File.open(self.raw_file_name, 'r') { |f| f.read } 
+      File.open(self.raw_file_name, 'r') { |f| f.read }
     rescue Errno::ENOENT
       ""
     end
@@ -389,9 +389,9 @@ class Page < ActiveRecord::Base
 
   def mypath
     env = case Rails.env
-      when "test": "/test/"
-      when "development": "/development/"
-      when "production": "/files/"
+      when "test"; "/test/"
+      when "development"; "/development/"
+      when "production"; "/files/"
     end
     env + (self.id/MODULO).to_s + "/" + self.id.to_s + "/"
   end

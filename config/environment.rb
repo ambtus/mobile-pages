@@ -50,5 +50,5 @@ if File.exists?('/usr/lib/libtidy.dylib')
 elsif File.exists?('/usr/lib/libtidy.so')
   Tidy.path = '/usr/lib/libtidy.so'
 else
-  puts "Please install libtidy and set Tidy.path in environment.rb"
+  puts "Please install libtidy or set Tidy.path in environment.rb"
 end
