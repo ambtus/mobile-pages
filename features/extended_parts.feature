@@ -31,10 +31,10 @@ Feature: complex parts with titles from url list
      | Test2 | http://www.rawbw.com/~alice/parts/3.html |
     When I am on the homepage
     Then I should see "Test1" in ".title"
-    When I press "Next"
+    When I press "Read Later"
     And I am on the homepage
     Then I should see "Test2" in ".title"
-    When I press "Next"
+    When I press "Read Later"
     And I am on the homepage
     Then I should see "Test1" in ".title"
     When I fill in "search" with "Test2"

@@ -2,7 +2,7 @@
   = @page.title
 .form
   - form_for @page do
-    = submit_tag "Next"
+    = submit_tag "Read Later"
 - if @page.parent
   .parent= link_to @page.parent.title, part_path(@page.parent)
 .title

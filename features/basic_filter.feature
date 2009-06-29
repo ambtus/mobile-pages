@@ -45,11 +45,11 @@ Feature: basic filters
     When I select "favorite"
       And I press "Filter"
     Then I should see "The Mysterious Affair at Styles"
-    When I press "Next"
+    When I press "Read Later"
     Then I should see "Alice's Adventures In Wonderland"
-    When I press "Next"
+    When I press "Read Later"
     Then I should see "A Christmas Carol"
-    When I press "Next"
+    When I press "Read Later"
     Then I should see "The Mysterious Affair at Styles"
 
 

@@ -39,6 +39,6 @@ Feature: basic parts
      And I press "Store"
      And I am on the homepage
      And I should see "Multiple pages from urls"
-   When I press "Next"
+   When I press "Read Later"
    Then I should see "Multiple pages from urls"
 

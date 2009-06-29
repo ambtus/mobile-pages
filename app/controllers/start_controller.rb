@@ -13,7 +13,7 @@ class StartController < ApplicationController
    @genres = Genre.all.map(&:name)
  end
  def create
-   if params[:commit] == "Next"
+   if params[:commit] == "Read Later"
      Page.find(params[:page_id]).next
    end
    if params[:genre]
