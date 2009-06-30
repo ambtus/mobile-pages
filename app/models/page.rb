@@ -297,7 +297,8 @@ class Page < ActiveRecord::Base
   end
 
   def next
-    self.update_attribute(:read_after, self.read_after + 3.months)
+    was = self.read_after || Time.now
+    self.update_attribute(:read_after, was + 3.months)
     return Page.parents.first
   end
 
