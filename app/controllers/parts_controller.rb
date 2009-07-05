@@ -18,7 +18,9 @@ class PartsController < ApplicationController
   end
   def create
     @page = Page.find(params[:page_id])
-    @page.parts_from_urls(params[:url_list]) if params[:url_list]
+    if params[:url_list] && params[:url_list] != ( "#" + @page.title )
+      @page.parts_from_urls(params[:url_list]) 
+    end
     if params[:add_parent] && params[:add_parent] != NEW_PARENT_TITLE
       @page = @page.add_parent(params[:add_parent])
       if @page == false

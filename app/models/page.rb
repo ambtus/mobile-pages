@@ -191,7 +191,7 @@ class Page < ActiveRecord::Base
         end
         title = case level
           when 1
-            self.title
+            title || self.title
           when 2
             count = count.next
             "Part " + count.to_s
@@ -258,7 +258,7 @@ class Page < ActiveRecord::Base
   def url_list
     partregexp = /\APart \d+\Z/
     list = []
-    list << "#" + self.title
+    list << "#" + self.title 
     self.parts.each do |part|
       if part.parts.blank?
         line = part.url
