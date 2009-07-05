@@ -140,6 +140,7 @@ class Page < ActiveRecord::Base
       tidy.options.wrap = 0
       html = tidy.clean(html)
     end
+    html = html.gsub(/&nbsp;/, " ")
     html = Sanitize.clean(html, :elements => [ 'a', 'big', 'blockquote', 'br', 'center', 'div', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'img', 'li', 'p', 'small', 'strike', 'strong', 'sub', 'sup', 'u'], :attributes => { 'a' => ['href'], 'div' => ['id', 'class'], 'img' => ['align', 'alt', 'height', 'src', 'title', 'width'] })
     html = html.gsub(/\n/, "")
     html = html.gsub(/ +/, ' ')
@@ -258,7 +259,7 @@ class Page < ActiveRecord::Base
   def url_list
     partregexp = /\APart \d+\Z/
     list = []
-    list << "#" + self.title 
+    list << "#" + self.title
     self.parts.each do |part|
       if part.parts.blank?
         line = part.url
