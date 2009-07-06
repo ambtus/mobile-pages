@@ -5,6 +5,7 @@ Feature: basic parts
 
   Scenario: create and read a page from base url plus pattern
     Given I am on the homepage
+      And I have no pages
       And I follow "Store Multiple"
     When I fill in "page_base_url" with "http://www.rawbw.com/~alice/parts/*.html"
      And I fill in "page_url_substitutions" with "1 2 3"
@@ -20,6 +21,7 @@ Feature: basic parts
 
   Scenario: create and read a page from a list of urls
     Given I am on the homepage
+      And I have no pages
       And I follow "Store Multiple"
     When I fill in "page_urls" with "http://www.rawbw.com/~alice/parts/1.html\nhttp://www.rawbw.com/~alice/parts/2.html"
      And I fill in "page_title" with "Multiple pages from urls"

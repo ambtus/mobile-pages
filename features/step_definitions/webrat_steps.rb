@@ -21,6 +21,7 @@ end
 
 When /^I fill in "([^\"]*)" with "([^\"]*)"$/ do |field, value|
   value = value.gsub("\\n", "\n")
+  value = value.gsub("\\r", "\r")
   fill_in(field, :with => value)
 end
 
