@@ -308,6 +308,12 @@ class Page < ActiveRecord::Base
     return Page.parents.first
   end
 
+  def first
+    earliest = Page.first.read_after
+    self.update_attribute(:read_after, earliest - 1.day)
+    return self
+  end
+
   def set_read_after(string)
     now = Time.now
     after = now + string.to_i.send(DURATION)

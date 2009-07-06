@@ -12,6 +12,7 @@ class PagesController < ApplicationController
   def update
     @page = Page.find(params[:id])
     @page = @page.next if (params[:commit] == "Read Later")
+    @page = @page.first if (params[:commit] == "Read First")
     if params[:commit] == "Make UTF8"
       if @page.parts.empty?
         @page.build_me("utf8")
