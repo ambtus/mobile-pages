@@ -340,8 +340,13 @@ class Page < ActiveRecord::Base
     File.unlink(self.mobile_file_name) rescue Errno::ENOENT
     File.open(self.original_file, 'w') { |f| f.write(content) }
     if self.parent
-      File.unlink(self.parent.mobile_file_name) rescue Errno::ENOENT
-      self.parent.build_html_from_parts
+      if self.parent.parent
+        File.unlink(self.parent.parent.mobile_file_name) rescue Errno::ENOENT
+        self.parent.parent.build_html_from_parts
+      else
+        File.unlink(self.parent.mobile_file_name) rescue Errno::ENOENT
+        self.parent.build_html_from_parts
+      end
     else
       self.set_wordcount_genre
     end
