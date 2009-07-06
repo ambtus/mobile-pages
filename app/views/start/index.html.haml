@@ -1,6 +1,11 @@
 - content_for :title do
   = @title
 - if @page
+  .form
+    - form_tag start_index_path do
+      = hidden_field_tag(:page_id, @page.id)
+      = hidden_field_tag(:old_genre, @genre.name) if @genre
+      = submit_tag "Read Later"
   - if @page.parent
     .parent= link_to @page.parent.title, part_path(@page.parent)
   .title
@@ -17,11 +22,6 @@
   .genres= @page.genre_string
   .last_read= @page.last_read.to_date if @page && @page.last_read
   .notes=simple_format @page.notes
-  .form
-    - form_tag start_index_path do
-      = hidden_field_tag(:page_id, @page.id)
-      = hidden_field_tag(:old_genre, @genre.name) if @genre
-      = submit_tag "Read Later"
   .search
     - form_tag search_index_path do
       = text_field_tag :search, params[:search]

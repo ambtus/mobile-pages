@@ -4,6 +4,7 @@
   - form_for @page do
     = submit_tag "Read First"
     = submit_tag "Read Later"
+    = submit_tag "Make UTF8"
 - if @page.parent
   .parent= link_to @page.parent.title, part_path(@page.parent)
 .title

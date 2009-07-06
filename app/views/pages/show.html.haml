@@ -4,6 +4,7 @@
   - form_for @page do
     = submit_tag "Read First"
     = submit_tag "Read Later"
+    = submit_tag "Make UTF8"
 - if @page.parent
   .parent= link_to @page.parent.title, part_path(@page.parent)
 .title
@@ -17,9 +18,6 @@
   = link_to "Edit Raw HTML", edit_html_path(@page)
   = link_to "Scrub", scrub_path(@page)
   = link_to "Refetch", refetch_path(@page)
-  .form
-    - form_for @page do
-      = submit_tag "Make UTF8"
 .genres= @page.genre_string
 .last_read= @page.last_read.to_date if @page.last_read
 .notes=simple_format @page.notes
