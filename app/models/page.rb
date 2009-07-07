@@ -8,6 +8,7 @@ class Page < ActiveRecord::Base
   DURATION = "years"
 
   has_and_belongs_to_many :genres, :uniq => true
+  has_and_belongs_to_many :authors, :uniq => true
   belongs_to :parent, :class_name => "Page"
   default_scope :order => 'read_after ASC'
   named_scope :parents, :conditions => {:parent_id => nil}
@@ -28,6 +29,12 @@ class Page < ActiveRecord::Base
       parents << (page.parent ? page.parent : page)
     end
     parents.compact.uniq
+  end
+
+  def self.by_author_and_genre(author, genre)
+    by_author = author.pages
+    by_genre = genre.pages
+    by_author & by_genre
   end
 
   def before_validation
@@ -327,6 +334,19 @@ class Page < ActiveRecord::Base
 
   def clean_title
     CGI::escape(self.title).gsub('+', '%20') + ".txt"
+  end
+
+  def author_string
+    self.authors.map(&:name).join(", ")
+  end
+
+  def add_author_string=(string)
+    return if string.blank?
+    string.split(",").each do |genre|
+      new = Author.find_or_create_by_name(genre.squish)
+      self.authors << new
+    end
+    self.authors
   end
 
   def genre_string

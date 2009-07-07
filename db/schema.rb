@@ -1,4 +1,4 @@
-# This file is auto-generated from the current state of the database. Instead of editing this file,
+# This file is auto-generated from the current state of the database. Instead of editing this file, 
 # please use the migrations feature of Active Record to incrementally modify your database, and
 # then regenerate this schema definition.
 #
@@ -10,6 +10,15 @@
 # It's strongly recommended to check this file into your version control system.
 
 ActiveRecord::Schema.define(:version => 1) do
+
+  create_table "authors", :force => true do |t|
+    t.string "name"
+  end
+
+  create_table "authors_pages", :id => false, :force => true do |t|
+    t.integer "page_id"
+    t.integer "author_id"
+  end
 
   create_table "genres", :force => true do |t|
     t.string "name"
