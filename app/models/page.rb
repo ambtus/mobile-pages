@@ -420,8 +420,9 @@ class Page < ActiveRecord::Base
     Nokogiri::HTML(self.original_html).xpath('//body').first.children
   end
 
-  def remove_nodes(ids)
+  def remove_nodes(ids, inclusive=false)
     scrubbed = []
+    ids = (ids.first..ids.last).to_a if inclusive
     self.nodes.each_with_index do |node,index|
       scrubbed << node unless ids.include?(index.to_s)
     end

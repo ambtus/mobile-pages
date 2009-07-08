@@ -5,6 +5,8 @@
 .form
   - form_for @page do |f|
     .button= f.submit "Scrub"
+    = check_box_tag "inclusive", "inclusive", false
+    = label_tag "inclusive", "select everything between first and last checked"
     - @page.nodes.each_with_index do |node,index|
       .node
         = check_box_tag "nodes[]", index, false, :id => index
