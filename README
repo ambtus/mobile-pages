@@ -44,7 +44,7 @@ edit lib/tasks/cucumber.rake
 
 === gem installation
 
-gem install haml tidy  # rake fails without
+gem install haml # rake fails without
 rake gems:install RAILS_ENV=test
 rake db:create:all
 rake db:schema:load

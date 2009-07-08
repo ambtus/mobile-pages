@@ -22,7 +22,6 @@ Rails::Initializer.run do |config|
   config.gem 'haml'
   config.gem 'curb'
   config.gem 'nokogiri', :version => ">=1.3.0"
-  config.gem 'tidy'
   config.gem 'sanitize'
 
   # Only load the plugins named here, in the order given (default is alphabetical).
@@ -45,10 +44,5 @@ Rails::Initializer.run do |config|
   # config.i18n.default_locale = :de
 end
 
-if File.exists?('/usr/lib/libtidy.dylib')
-  Tidy.path = '/usr/lib/libtidy.dylib'
-elsif File.exists?('/usr/lib/libtidy.so')
-  Tidy.path = '/usr/lib/libtidy.so'
-else
-  puts "Please install libtidy or set Tidy.path in environment.rb"
-end
+# will need for ruby 1.9
+# Encoding.default_external = 'UTF-8' 

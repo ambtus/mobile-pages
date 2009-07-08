@@ -127,27 +127,9 @@ class Page < ActiveRecord::Base
   end
 
   def pre_process(filename, input)
-    lines = File.readlines(filename).map do |line|
-      line = line.chomp
-      line = line + " " unless line.match(/>$/)
-      line
-    end
-    html = lines.join
+    html = `tidy -config #{Rails.root.to_s + "/config/tidy.conf"} --input-encoding #{input} #{filename}`
     html = html.gsub(/&nbsp;/, " ")
-    html = html.gsub(/<x-claris.*?>/i, "")
     html = html.gsub(/<noscript.*?>.*?<\/noscript>/i, "")
-    Tidy.open do |tidy|
-      tidy.options.input_encoding = input
-      tidy.options.output_encoding = "utf8"
-      tidy.options.drop_proprietary_attributes = true
-      tidy.options.logical_emphasis = true
-      tidy.options.show_body_only = true
-      tidy.options.word_2000 = true
-      tidy.options.indent = "no"
-      tidy.options.wrap = 0
-      html = tidy.clean(html)
-    end
-    html = html.gsub(/&nbsp;/, " ")
     html = Sanitize.clean(html, :elements => [ 'a', 'big', 'blockquote', 'br', 'center', 'div', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'img', 'li', 'p', 'small', 'strike', 'strong', 'sub', 'sup', 'u'], :attributes => { 'a' => ['href'], 'div' => ['id', 'class'], 'img' => ['align', 'alt', 'height', 'src', 'title', 'width'] })
     html = html.gsub(/\n/, "")
     html = html.gsub(/ +/, ' ')
