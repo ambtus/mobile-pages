@@ -21,7 +21,7 @@ Feature: Basic scrub with parts
      When I follow "Download" in ".title"
      Then My document should contain "top cruft in part 1"
      When I am on the homepage
-     When I follow "Read"
+     When I follow "Parts"
      Then I should not see "Scrub" in ".title"
      When I follow "Scrub" in "#position_1"
       And I check boxes "0 2"

@@ -14,7 +14,7 @@
     - if @page.parts.empty?
       = link_to "Read", page_path(@page)
     -else
-      = link_to "Read", part_path(@page)
+      = link_to "Parts", part_path(@page)
     = link_to "Download", @page.mobile_url
     = link_to "Rate", rate_path(@page) 
     = link_to "Genres", genre_path(@page) 

@@ -20,7 +20,7 @@ Feature: error checking add parts titles
     When I follow "Read" in "#position_1"
       Then I should see "stuff for part 1"
     When I am on the homepage 
-      And I follow "Read"
+      And I follow "Parts"
       And I follow "Read" in "#position_2"
       Then I should see "Part 1"
       And I should see "Part 2"

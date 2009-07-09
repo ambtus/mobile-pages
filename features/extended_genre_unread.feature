@@ -28,7 +28,7 @@ Feature: unread genres
      And I follow "Read" in "#position_1"
    Then I should not see "unread" in ".genres"
    When I am on the homepage
-     And I follow "Read" 
+     And I follow "Parts" 
      And I follow "Read" in "#position_3"
    Then I should see "unread" in ".genres"
    When I am on the homepage

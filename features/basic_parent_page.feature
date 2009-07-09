@@ -12,7 +12,7 @@ Feature: basic parent page
      And I fill in "page_title" with "Parent Page"
      And I press "Store"
    When I am on the homepage
-     And I follow "Read"
+     And I follow "Parts"
    Then I should see "Download" in "#position_1"
      And I should see "Read" in "#position_1"
      And I should see "Download" in "#position_2"

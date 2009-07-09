@@ -32,12 +32,12 @@ Feature: basic second level parts
     Then My document should contain "stuff for part 2"
       And My document should contain "# Parent #"
     When I am on the homepage
-      And I follow "Read" in ".title"
+      And I follow "Parts" in ".title"
       And I follow "Read" in "#position_1"
       Then I should see "stuff for part 1"
       And I should not see "stuff for part 2"
     When I am on the homepage
-      And I follow "Read" in ".title"
+      And I follow "Parts" in ".title"
       And I follow "Read" in "#position_2"
     Then I should not see "stuff for part 2"
     When I follow "Read" in "#position_1"
