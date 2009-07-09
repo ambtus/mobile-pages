@@ -281,12 +281,16 @@ class Page < ActiveRecord::Base
     parent = nil
     if pages.size == 0
       parent = Page.create(:title => title)
+      parent.update_attribute(:last_read, self.last_read)
+      parent.update_attribute(:read_after, self.read_after)
     else
       parent = pages.first
       return false if parent.parts.blank?
     end
     count = parent.parts.size + 1
     self.update_attributes(:parent_id => parent.id, :position => count)
+    parent.genres << self.genres
+    parent.authors << self.authors
     parent.build_html_from_parts
     return parent
   end
