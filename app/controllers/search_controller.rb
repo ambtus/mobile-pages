@@ -4,7 +4,7 @@ class SearchController < ApplicationController
     @pages = Page.search(@search_string)
     if @pages.empty?
       flash[:error] = @search_string + " not found"
-      redirect_to root_url
+      redirect_to start_index_url
     else 
       if @pages.size == 1
         @page = @pages.first
