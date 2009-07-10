@@ -57,7 +57,7 @@ class Page < ActiveRecord::Base
     else
       self.build_html_from_parts
     end
-    self.genres << Genre.find_or_create_by_name(Genre::UNREAD)
+    self.genres << Genre.find_or_create_by_name(Genre::UNREAD) unless self.last_read
     self.set_wordcount_genre
   end
 
@@ -226,8 +226,14 @@ class Page < ActiveRecord::Base
       old_part.destroy if old_part.parent == parent
     end
     added = new_part_ids - old_part_ids
-    if !added.blank? || parent.read_after > Time.now
-      parent.update_attribute(:read_after, Time.now)
+    unread = Genre.find_or_create_by_name(Genre::UNREAD)
+    if !added.blank?
+      added.each do |id|
+        parent.genres << unread if Page.find(id).genres.include?(unread)
+      end
+      if parent.read_after > Time.now
+        parent.update_attribute(:read_after, Time.now)
+      end
     end
     parent.build_html_from_parts
   end
@@ -286,9 +292,7 @@ class Page < ActiveRecord::Base
     return false if pages.size > 1
     parent = nil
     if pages.size == 0
-      parent = Page.create(:title => title)
-      parent.update_attribute(:last_read, self.last_read)
-      parent.update_attribute(:read_after, self.read_after)
+      parent = Page.create(:title => title, :last_read => self.last_read, :read_after => self.read_after)
     else
       parent = pages.first
       return false if parent.parts.blank?
@@ -317,7 +321,11 @@ class Page < ActiveRecord::Base
     now = Time.now
     after = now + string.to_i.send(DURATION)
     self.update_attributes(:read_after => after, :last_read => now)
-    self.genres << Genre.find_or_create_by_name(Genre::FAVORITE) if string == "1"
+    if string == "1"
+      favorite = Genre.find_or_create_by_name(Genre::FAVORITE)
+      self.genres << favorite
+      self.parts.each {|p| p.genres.delete(favorite)}
+    end
     unread = Genre.find_or_create_by_name(Genre::UNREAD)
     self.genres.delete(unread)
     self.parts.each {|p| p.genres.delete(unread)}

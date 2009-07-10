@@ -4,7 +4,8 @@ Feature: basic genres
   Result: see what filter has been applied to a page
 
   Scenario: add a genre to a page when there are no genres
-    Given the following page
+    Given I have no pages
+    And the following page
      | title | url |
      | Alice's Adventures | http://www.rawbw.com/~alice/aa.html |
     And I have no filters
@@ -18,7 +19,8 @@ Feature: basic genres
     Then I should see "children's" in ".genres"
 
   Scenario: select a genre for a page when there are genres
-    Given the following pages
+    Given I have no pages
+    And the following pages
       | title | url | read_after | add_genre_string |
       | Grimm's Fairy Tales              | http://www.rawbw.com/~alice/gft.html  | 2009-01-02 |                             |
       | Alice's Adventures In Wonderland | http://www.rawbw.com/~alice/aa.html   | 2009-01-03 | fantasy, favorite, children's |
@@ -31,7 +33,8 @@ Feature: basic genres
       And I should see "children's" in ".genres"
 
   Scenario: add a genre to a page which has genres
-    Given the following page
+    Given I have no pages
+    And the following page
       | title               | url                                  | add_genre_string |
       | Grimm's Fairy Tales | http://www.rawbw.com/~alice/gft.html | children's       |
       And I am on the homepage
