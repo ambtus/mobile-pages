@@ -335,7 +335,7 @@ class Page < ActiveRecord::Base
   end
 
   def clean_title
-    CGI::escape(self.title).gsub('+', '%20') + ".txt"
+    CGI::escape(self.title).gsub('+', '%20').gsub('.', '%46') + ".txt"
   end
 
   def state_string
