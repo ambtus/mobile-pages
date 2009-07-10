@@ -6,20 +6,20 @@ Feature: basic filters
   Scenario: filter on a genre
     Given the following pages
       | title                            | url                                   | read_after | add_genre_string            |
-      | The Mysterious Affair at Styles  | http://www.rawbw.com/~alice/maas.html | 2009-01-01 | mystery, favorite           |
+      | The Mysterious Affair at Styles  | http://www.rawbw.com/~alice/maas.html | 2009-01-01 | mystery, great           |
       | Grimm's Fairy Tales              | http://www.rawbw.com/~alice/gft.html  | 2009-01-02 | children, short stories     |
-      | Alice's Adventures In Wonderland | http://www.rawbw.com/~alice/aa.html   | 2009-01-03 | fantasy, favorite, children |
+      | Alice's Adventures In Wonderland | http://www.rawbw.com/~alice/aa.html   | 2009-01-03 | fantasy, great, children |
       | Dracula                          | http://www.rawbw.com/~alice/drac.html | 2009-01-04 | horror, unread              |
-      | A Christmas Carol                | http://www.rawbw.com/~alice/cc.html   | 2009-01-05 | holiday, favorite           |
+      | A Christmas Carol                | http://www.rawbw.com/~alice/cc.html   | 2009-01-05 | holiday, great           |
       And I am on the homepage
     Then I should see "The Mysterious Affair at Styles"
     When I select "mystery"
       And I press "Filter"
     Then "mystery" should be selected in "genre"
       And I should see "The Mysterious Affair at Styles" in ".title"
-    When I select "favorite"
+    When I select "great"
       And I press "Filter"
-    Then "favorite" should be selected in "genre"
+    Then "great" should be selected in "genre"
       And I should see "The Mysterious Affair at Styles" in ".title"
     When I select "short stories"
       And I press "Filter"
@@ -42,7 +42,7 @@ Feature: basic filters
     Then I should see "A Christmas Carol"
     When I follow "Home"
     Then I should see "The Mysterious Affair at Styles"
-    When I select "favorite"
+    When I select "great"
       And I press "Filter"
     Then I should see "The Mysterious Affair at Styles"
     When I press "Read Later"

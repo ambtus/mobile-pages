@@ -4,8 +4,9 @@
   .form
     - form_tag start_index_path do
       = hidden_field_tag(:page_id, @page.id)
-      = hidden_field_tag(:old_genre, @genre.name) if @genre
-      = hidden_field_tag(:old_author, @author.name) if @author
+      = hidden_field_tag(:old_genre, @genre_name)
+      = hidden_field_tag(:old_author, @author_name) 
+      = hidden_field_tag(:old_state, @state_name)
       = submit_tag "Read Later"
   - if @page.parent
     .parent= link_to @page.parent.title, part_path(@page.parent)
@@ -21,6 +22,7 @@
     = link_to "Authors", author_path(@page) 
     = link_to "Notes", edit_note_path(@page) 
     = link_to "Manage Parts", edit_part_path(@page)
+  .states= @page.state_string
   .authors= @page.author_string
   .genres= @page.genre_string
   .last_read= @page.last_read.to_date if @page.last_read
@@ -30,13 +32,16 @@
     = text_field_tag :search, params[:search]
     = submit_tag "Search", :name => nil
 - form_tag start_index_path do
+  - unless @states.blank?
+    .state
+      = select_tag :state, "<option></option>" + options_for_select(@states, @state_name)
   - unless @authors.blank?
     .author
       = select_tag :author, "<option></option>" + options_for_select(@authors, @author_name)
   - unless @genres.blank?
     .genre
       = select_tag :genre, "<option></option>" + options_for_select(@genres, @genre_name)
-    = submit_tag "Filter", :name => nil
+  = submit_tag "Filter", :name => nil
 .form
   - form_for @new_page do |f|
     = f.text_field :url, :maxlength => 255, :size => 30, :value => Page::URL_PLACEHOLDER, :onblur=>"if(this.value == '') { this.value='#{Page::URL_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::URL_PLACEHOLDER}') {this.value=''}"

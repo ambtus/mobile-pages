@@ -41,4 +41,13 @@ ActiveRecord::Schema.define(:version => 1) do
     t.datetime "updated_at"
   end
 
+  create_table "pages_states", :id => false, :force => true do |t|
+    t.integer "page_id"
+    t.integer "state_id"
+  end
+
+  create_table "states", :force => true do |t|
+    t.string "name"
+  end
+
 end

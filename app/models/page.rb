@@ -9,6 +9,7 @@ class Page < ActiveRecord::Base
 
   has_and_belongs_to_many :genres, :uniq => true
   has_and_belongs_to_many :authors, :uniq => true
+  has_and_belongs_to_many :states, :uniq => true
   belongs_to :parent, :class_name => "Page"
   default_scope :order => 'read_after ASC'
   named_scope :parents, :conditions => {:parent_id => nil}
@@ -31,10 +32,11 @@ class Page < ActiveRecord::Base
     parents.compact.uniq
   end
 
-  def self.by_author_and_genre(author, genre)
-    by_author = author.pages
-    by_genre = genre.pages
-    by_author & by_genre
+  def self.filter(state, genre, author)
+    by_state = state.is_a?(State) ? state.pages.parents : Page.parents
+    by_genre = genre.is_a?(Genre) ? genre.pages.parents : Page.parents
+    by_author = author.is_a?(Author) ? author.pages.parents : Page.parents
+    by_author & by_genre & by_state
   end
 
   def before_validation
@@ -57,32 +59,32 @@ class Page < ActiveRecord::Base
     else
       self.build_html_from_parts
     end
-    self.genres << Genre.find_or_create_by_name(Genre::UNREAD) unless self.last_read
-    self.set_wordcount_genre
+    self.states << State.find_or_create_by_name(State::UNREAD) unless self.last_read
+    self.set_wordcount
   end
 
   def wordcount
     wordcount = self.remove_html.scan(/(\w|-)+/).size
   end
 
-  def set_wordcount_genre
-    short = Genre.find_or_create_by_name(Genre::SHORT)
-    long = Genre.find_or_create_by_name(Genre::LONG)
-    epic = Genre.find_or_create_by_name(Genre::EPIC)
-    if self.wordcount < Genre::SHORT_WC
-      self.genres << short
-      self.genres.delete(long)
-      self.genres.delete(epic)
+  def set_wordcount
+    short = State.find_or_create_by_name(State::SHORT)
+    long = State.find_or_create_by_name(State::LONG)
+    epic = State.find_or_create_by_name(State::EPIC)
+    if self.wordcount < State::SHORT_WC
+      self.states << short
+      self.states.delete(long)
+      self.states.delete(epic)
     end
-    if self.wordcount > Genre::LONG_WC
-      self.genres << long
-      self.genres.delete(short)
-      self.genres.delete(epic)
+    if self.wordcount > State::LONG_WC
+      self.states << long
+      self.states.delete(short)
+      self.states.delete(epic)
     end
-    if self.wordcount > Genre::EPIC_WC
-      self.genres << epic
-      self.genres.delete(short)
-      self.genres.delete(long)
+    if self.wordcount > State::EPIC_WC
+      self.states << epic
+      self.states.delete(short)
+      self.states.delete(long)
     end
   end
 
@@ -123,7 +125,7 @@ class Page < ActiveRecord::Base
     input = "utf8" if self.raw_content.match(/charset ?= ?"?utf-8/i)
     self.original_html = self.pre_process(self.raw_file_name, input)
     self.original_html = Curl::External.getnode(url, self.original_html)
-    self.set_wordcount_genre
+    self.set_wordcount
   end
 
   def pre_process(filename, input)
@@ -226,10 +228,10 @@ class Page < ActiveRecord::Base
       old_part.destroy if old_part.parent == parent
     end
     added = new_part_ids - old_part_ids
-    unread = Genre.find_or_create_by_name(Genre::UNREAD)
+    unread = State.find_or_create_by_name(State::UNREAD)
     if !added.blank?
       added.each do |id|
-        parent.genres << unread if Page.find(id).genres.include?(unread)
+        parent.states << unread if Page.find(id).states.include?(unread)
       end
       if parent.read_after > Time.now
         parent.update_attribute(:read_after, Time.now)
@@ -251,7 +253,7 @@ class Page < ActiveRecord::Base
         file << part.original_html
       end
     end
-    self.set_wordcount_genre
+    self.set_wordcount
   end
 
   def create_child(url, position, title)
@@ -322,18 +324,22 @@ class Page < ActiveRecord::Base
     after = now + string.to_i.send(DURATION)
     self.update_attributes(:read_after => after, :last_read => now)
     if string == "1"
-      favorite = Genre.find_or_create_by_name(Genre::FAVORITE)
-      self.genres << favorite
-      self.parts.each {|p| p.genres.delete(favorite)}
+      favorite = State.find_or_create_by_name(State::FAVORITE)
+      self.states << favorite
+      self.parts.each {|p| p.states.delete(favorite)}
     end
-    unread = Genre.find_or_create_by_name(Genre::UNREAD)
-    self.genres.delete(unread)
-    self.parts.each {|p| p.genres.delete(unread)}
+    unread = State.find_or_create_by_name(State::UNREAD)
+    self.states.delete(unread)
+    self.parts.each {|p| p.states.delete(unread)}
     return self.read_after
   end
 
   def clean_title
     CGI::escape(self.title).gsub('+', '%20') + ".txt"
+  end
+
+  def state_string
+    self.states.map(&:name).join(", ")
   end
 
   def author_string
@@ -342,8 +348,8 @@ class Page < ActiveRecord::Base
 
   def add_author_string=(string)
     return if string.blank?
-    string.split(",").each do |genre|
-      new = Author.find_or_create_by_name(genre.squish)
+    string.split(",").each do |author|
+      new = Author.find_or_create_by_name(author.squish)
       self.authors << new
     end
     self.authors
@@ -374,7 +380,7 @@ class Page < ActiveRecord::Base
         self.parent.build_html_from_parts
       end
     else
-      self.set_wordcount_genre
+      self.set_wordcount
     end
   end
 
@@ -445,7 +451,7 @@ class Page < ActiveRecord::Base
       scrubbed << node unless ids.include?(index.to_s)
     end
     self.original_html=scrubbed
-    self.set_wordcount_genre
+    self.set_wordcount
   end
 
   def remove_html

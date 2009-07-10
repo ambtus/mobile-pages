@@ -19,6 +19,10 @@
     background-color: #C9F;
     font-weight: bold;
     }
+.states    {
+    border-width: 1px;
+    background-color: #FFC;
+    }
 .authors    {
     border-width: 1px;
     background-color: #0CF;
