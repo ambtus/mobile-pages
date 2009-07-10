@@ -55,3 +55,20 @@ Feature: error checking with parts
      And I should see "Child 1" in "h1"
      And I should see "Child 2" in "h1"
      And I should not see "Part 3"
+
+  Scenario: add a part to a page with content (second way)
+    Given I have no pages
+      And I am on the homepage
+      And I fill in "page_url" with "http://www.rawbw.com/~alice/test.html"
+      And I fill in "page_title" with "Single Part"
+      And I press "Store"
+    When I am on the homepage
+    And I follow "Manage Parts"
+      And I fill in "url_list" with "http://www.rawbw.com/~alice/test.html\nhttp://www.rawbw.com/~alice/styled.html"
+      And I press "Update"
+    Then I should see "Single Part" in ".parent"
+    When I am on the homepage
+      And I follow "Parts"
+    Then I should see "Part 1" in "#position_1"
+      And I should see "Part 2" in "#position_2"
+

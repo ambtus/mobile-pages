@@ -166,15 +166,21 @@ class Page < ActiveRecord::Base
       subparts = lines.select {|l| l.match("###") || !l.match("#")}
     end
 
+    if parts.include?(self.url)
+      parent = Page.create(:title => self.title)
+    else
+      parent = self
+    end
+
     parts.each do |part|
       url = part.sub(/#.*/, "")
       title = part.sub(/.*#/, "") if part.match("#")
       position = parts.index(part) + 1
       title = "Part " + position.to_s unless title
       page = Page.find_by_url(url) unless url.blank?
-      page = Page.find_by_title_and_parent_id(title, self.id) unless page
+      page = Page.find_by_title_and_parent_id(title, parent.id) unless page
       if page.blank?
-        page = Page.create(:url=>url, :title=>title, :parent_id=>self.id, :position => position)
+        page = Page.create(:url=>url, :title=>title, :parent_id=>parent.id, :position => position)
       else
         if page.url == url
 	        page.fetch if refetch
@@ -184,7 +190,7 @@ class Page < ActiveRecord::Base
 	      end
         page.update_attribute(:position, position)
         page.update_attribute(:title, title)
-        page.update_attribute(:parent_id, self.id)
+        page.update_attribute(:parent_id, parent.id)
       end
       new_part_ids << page.id
     end
@@ -193,7 +199,7 @@ class Page < ActiveRecord::Base
       url = title = position = nil
       part_string = (lines[0..lines.index(subpart)] & parts).last
       part_title = part_string.split("#").last
-      part = Page.find_by_title_and_parent_id(part_title, self.id)
+      part = Page.find_by_title_and_parent_id(part_title, parent.id)
       url = subpart.sub(/#.*/, "")
       title = subpart.sub(/.*#/, "") if subpart.match("#")
       position = lines.index(subpart) - lines.index(part_string)
@@ -217,13 +223,13 @@ class Page < ActiveRecord::Base
     remove = old_part_ids - new_part_ids
     remove.each do |old_part_id|
       old_part = Page.find(old_part_id)
-      old_part.destroy if old_part.parent == self
+      old_part.destroy if old_part.parent == parent
     end
     added = new_part_ids - old_part_ids
-    if !added.blank? || self.read_after > Time.now
-      self.update_attribute(:read_after, Time.now)
+    if !added.blank? || parent.read_after > Time.now
+      parent.update_attribute(:read_after, Time.now)
     end
-    self.build_html_from_parts
+    parent.build_html_from_parts
   end
 
   def build_html_from_parts
