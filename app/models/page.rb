@@ -136,6 +136,7 @@ class Page < ActiveRecord::Base
     html = html.gsub(/\n/, "")
     html = html.gsub(/ +/, ' ')
     html = html.gsub(/<br \/><br \/>/, "<p>")
+    html = html.gsub(/<a><\/a>/, "")
     html = html.gsub(/<p> ?<\/p>/, "")
   end
 
