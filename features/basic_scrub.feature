@@ -25,6 +25,7 @@ Feature: Basic Scrub
   | "http://www.rawbw.com/~alice/img.html"          | "1 3" | "content"      | "top para"        | "bottom par"  |
   | "http://www.rawbw.com/~alice/tablecontent.html" | "3 5" | "I remembered" | "Jump"            | "Content"     |
   | "http://www.rawbw.com/~alice/href.html"         | "1 3" | "content"      | "top link"        | "bottom link" |
+  | "http://www.rawbw.com/~alice/styled.html"       | "10 15" | "One"      | "horizontal"        | "end" |
 
  Scenario Outline: strip top or bottom only
   Given I have no pages

@@ -447,21 +447,22 @@ class Page < ActiveRecord::Base
   end
 
   def remove_nodes(ids)
-    all = self.nodes.size - 1
+    node_array = self.nodes.to_a
+    all = node_array.size - 1
     first = ids[0].to_i
     if ids[1]
       first = first + 1
       last = ids[1].to_i - 1
       if first == last
-        self.original_html=self.nodes[first]
+        self.original_html=node_array[first]
       else
-        self.original_html=self.nodes[first,last]
+        self.original_html=node_array[first..last]
       end
     else
       if first > all/2
-        self.original_html=self.nodes[0,first]
+        self.original_html=node_array[0..first-1]
       else
-        self.original_html=self.nodes[first + 1, all]
+        self.original_html=node_array[first + 1..all]
       end
     end
     self.set_wordcount
