@@ -24,7 +24,7 @@ class PagesController < ApplicationController
       @page.pasted = params[:pasted]
       flash[:notice] = "Raw HTML updated."
     end
-    @page.remove_nodes(params[:nodes], params[:inclusive]) if params[:nodes]
+    @page.remove_nodes(params[:nodes]) if params[:nodes]
     @page.update_attributes(params[:page])
     redirect_to @page
   end

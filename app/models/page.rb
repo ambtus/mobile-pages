@@ -442,16 +442,28 @@ class Page < ActiveRecord::Base
   end
 
   def nodes
+    return if self.original_html.blank?
     Nokogiri::HTML(self.original_html).xpath('//body').first.children
   end
 
-  def remove_nodes(ids, inclusive=false)
-    scrubbed = []
-    ids = (ids.first..ids.last).to_a if inclusive
-    self.nodes.each_with_index do |node,index|
-      scrubbed << node unless ids.include?(index.to_s)
+  def remove_nodes(ids)
+    all = self.nodes.size - 1
+    first = ids[0].to_i
+    if ids[1]
+      first = first + 1
+      last = ids[1].to_i - 1
+      if first == last
+        self.original_html=self.nodes[first]
+      else
+        self.original_html=self.nodes[first,last]
+      end
+    else
+      if first > all/2
+        self.original_html=self.nodes[0,first]
+      else
+        self.original_html=self.nodes[first + 1, all]
+      end
     end
-    self.original_html=scrubbed
     self.set_wordcount
   end
 

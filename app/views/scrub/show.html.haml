@@ -2,11 +2,10 @@
   = "Scrub " + @page.title
 
 .title= @page.title
+.info= "everything through the first check and everything including and after the second check is removed. If there is only one check, it is treated as the first check if in the first half, and the second check if it's in the second half"
 .form
   - form_for @page do |f|
     .button= f.submit "Scrub"
-    = check_box_tag "inclusive", "inclusive", false
-    = label_tag "inclusive", "select everything between first and last checked"
     - @page.nodes.each_with_index do |node,index|
       .node
         = check_box_tag "nodes[]", index, false, :id => index
