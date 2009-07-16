@@ -324,11 +324,13 @@ class Page < ActiveRecord::Base
     now = Time.now
     after = now + string.to_i.send(DURATION)
     self.update_attributes(:read_after => after, :last_read => now)
+    favorite = State.find_or_create_by_name(State::FAVORITE)
     if string == "1"
-      favorite = State.find_or_create_by_name(State::FAVORITE)
       self.states << favorite
-      self.parts.each {|p| p.states.delete(favorite)}
+    else
+      self.states.delete(favorite)
     end
+    self.parts.each {|p| p.states.delete(favorite)}
     unread = State.find_or_create_by_name(State::UNREAD)
     self.states.delete(unread)
     self.parts.each {|p| p.states.delete(unread)}

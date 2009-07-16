@@ -11,7 +11,7 @@ Feature: basic states
       And I press "Store"
    Then I should see "unread" in ".states"
 
-  Scenario: add favorite state
+  Scenario: add and remove favorite state
     Given I have no pages
       And I am on the homepage
       And I fill in "page_url" with "http://www.rawbw.com/~alice/test.html"
@@ -21,6 +21,9 @@ Feature: basic states
       And I press "1"
    Then I should see "favorite" in ".states"
      And I should not see "unread" in ".states"
+    When I follow "Rate"
+      And I press "2"
+   Then I should not see "favorite" in ".states"
 
    Scenario: add short state
     Given I have no pages
