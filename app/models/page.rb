@@ -71,20 +71,15 @@ class Page < ActiveRecord::Base
     short = State.find_or_create_by_name(State::SHORT)
     long = State.find_or_create_by_name(State::LONG)
     epic = State.find_or_create_by_name(State::EPIC)
+    self.states.delete(short)
+    self.states.delete(long)
+    self.states.delete(epic)
     if self.wordcount < State::SHORT_WC
       self.states << short
-      self.states.delete(long)
-      self.states.delete(epic)
-    end
-    if self.wordcount > State::LONG_WC
-      self.states << long
-      self.states.delete(short)
-      self.states.delete(epic)
-    end
-    if self.wordcount > State::EPIC_WC
+    elsif self.wordcount > State::EPIC_WC
       self.states << epic
-      self.states.delete(short)
-      self.states.delete(long)
+    elsif self.wordcount > State::LONG_WC
+      self.states << long
     end
   end
 
