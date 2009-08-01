@@ -6,9 +6,9 @@ Feature: Multiple Search
   Scenario: Find pages by title
     Given the following pages
       | title                                              | url                                   |
-      | A Christmas Carol by Charles Dickens               | http://www.rawbw.com/~alice/cc.html   |
-      | The Call of the Wild by Jack London                | http://www.rawbw.com/~alice/cotw.html |
-      | The Mysterious Affair at Styles by Agatha Christie | http://www.rawbw.com/~alice/maas.html |
+      | A Christmas Carol by Charles Dickens               | http://sidrasue.com/tests/cc.html   |
+      | The Call of the Wild by Jack London                | http://sidrasue.com/tests/cotw.html |
+      | The Mysterious Affair at Styles by Agatha Christie | http://sidrasue.com/tests/maas.html |
       And I am on the homepage
      When I fill in "search" with "by"
       And I press "Search"
@@ -28,9 +28,9 @@ Feature: Multiple Search
     Given I have no pages
       And the following pages
       | title                           | notes                       | url                                   |
-      | A Christmas Carol               | by Charles Dickens, classic | http://www.rawbw.com/~alice/cc.html   |
-      | The Call of the Wild            | by Jack London, classic     | http://www.rawbw.com/~alice/cotw.html |
-      | The Mysterious Affair at Styles | by Agatha Christie, mystery | http://www.rawbw.com/~alice/maas.html |
+      | A Christmas Carol               | by Charles Dickens, classic | http://sidrasue.com/tests/cc.html   |
+      | The Call of the Wild            | by Jack London, classic     | http://sidrasue.com/tests/cotw.html |
+      | The Mysterious Affair at Styles | by Agatha Christie, mystery | http://sidrasue.com/tests/maas.html |
       And I am on the homepage
      When I fill in "search" with "by"
       And I press "Search"

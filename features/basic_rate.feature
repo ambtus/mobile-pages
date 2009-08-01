@@ -7,13 +7,13 @@ Feature: basic rate
     Given I have no pages
       And the following pages
       | title                            | url                                   | read_after |
-      | Grimm's Fairy Tales              | http://www.rawbw.com/~alice/gft.html  | 2009-01-01 |
-      | Dracula                          | http://www.rawbw.com/~alice/drac.html | 2009-01-05 |
-      | Alice's Adventures In Wonderland | http://www.rawbw.com/~alice/aa.html   | 2009-01-10 |
-      | Pride and Prejudice              | http://www.rawbw.com/~alice/pp.html   | 2009-01-15 |
-      | The Mysterious Affair at Styles  | http://www.rawbw.com/~alice/maas.html | 2009-01-20 |
-      | The Call of the Wild             | http://www.rawbw.com/~alice/cotw.html | 2009-01-25 |
-      | A Christmas Carol                | http://www.rawbw.com/~alice/cc.html   | 2009-01-30 |
+      | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  | 2009-01-01 |
+      | Dracula                          | http://sidrasue.com/tests/drac.html | 2009-01-05 |
+      | Alice's Adventures In Wonderland | http://sidrasue.com/tests/aa.html   | 2009-01-10 |
+      | Pride and Prejudice              | http://sidrasue.com/tests/pp.html   | 2009-01-15 |
+      | The Mysterious Affair at Styles  | http://sidrasue.com/tests/maas.html | 2009-01-20 |
+      | The Call of the Wild             | http://sidrasue.com/tests/cotw.html | 2009-01-25 |
+      | A Christmas Carol                | http://sidrasue.com/tests/cc.html   | 2009-01-30 |
     When I am on the homepage
     Then I should see "Grimm's Fairy Tales"
     When I press "Read Later"

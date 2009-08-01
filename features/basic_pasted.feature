@@ -5,7 +5,7 @@ Feature: basic pasted
 
   Scenario: store using a pasted html file
     Given I am on the homepage
-      And I fill in "page_url" with "http://www.rawbw.com/~alice/test.html"
+      And I fill in "page_url" with "http://sidrasue.com/tests/test.html"
       And I fill in "page_title" with "Test pasted html"
       And I press "Store"
       And I follow "Edit Raw HTML"
@@ -18,7 +18,7 @@ Feature: basic pasted
   Scenario: pasted html file needing pre-processing
     Given I have no pages
       And I am on the homepage
-      And I fill in "page_url" with "http://www.rawbw.com/~alice/test.html"
+      And I fill in "page_url" with "http://sidrasue.com/tests/test.html"
       And I fill in "page_title" with "Test pasted html"
       And I press "Store"
       And I follow "Edit Raw HTML"

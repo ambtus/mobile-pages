@@ -5,7 +5,7 @@ Feature: basic parent for existing pages
 
   Scenario: create a new parent for an existing page
     Given I am on the homepage
-    When I fill in "page_url" with "http://www.rawbw.com/~alice/test.html"
+    When I fill in "page_url" with "http://sidrasue.com/tests/test.html"
     And I fill in "page_title" with "Single Part"
     And I press "Store"
       And I follow "Manage Parts"
@@ -23,12 +23,12 @@ Feature: basic parent for existing pages
   Scenario: add an existing page to a page with parts
     Given I am on the homepage
       And I follow "Store Multiple"
-    When I fill in "page_base_url" with "http://www.rawbw.com/~alice/parts/*.html"
+    When I fill in "page_base_url" with "http://sidrasue.com/tests/parts/*.html"
      And I fill in "page_url_substitutions" with "1 2"
      And I fill in "page_title" with "Existing Parts One and Two"
      And I press "Store"
     When I am on the homepage
-      And I fill in "page_url" with "http://www.rawbw.com/~alice/parts/3.html"
+      And I fill in "page_url" with "http://sidrasue.com/tests/parts/3.html"
     And I fill in "page_title" with "Special Part Three"
     And I press "Store"
       And I follow "Manage Parts"

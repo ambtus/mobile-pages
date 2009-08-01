@@ -7,9 +7,9 @@ Feature: Basic Search
     Given I have no pages
       And the following pages
       | title                                              | url                                   |
-      | A Christmas Carol by Charles Dickens               | http://www.rawbw.com/~alice/cc.html   |
-      | The Call of the Wild by Jack London                | http://www.rawbw.com/~alice/cotw.html |
-      | The Mysterious Affair at Styles by Agatha Christie | http://www.rawbw.com/~alice/maas.html |
+      | A Christmas Carol by Charles Dickens               | http://sidrasue.com/tests/cc.html   |
+      | The Call of the Wild by Jack London                | http://sidrasue.com/tests/cotw.html |
+      | The Mysterious Affair at Styles by Agatha Christie | http://sidrasue.com/tests/maas.html |
       And I am on the homepage
      When I fill in "search" with "<search>"
       And I press "Search"
@@ -26,7 +26,7 @@ Feature: Basic Search
     Given I have no pages
       And the following page
       | title            | url                                   |
-      | War              | http://www.rawbw.com/~alice/test.html   |
+      | War              | http://sidrasue.com/tests/test.html   |
       And I am on the homepage
     When I fill in "search" with "War and Peace"
       And I press "Search"

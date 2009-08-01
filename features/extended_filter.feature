@@ -4,9 +4,9 @@ Feature: filter on multiple criteria
     Given I have no pages
     And the following pages
       | title                            | url                                   | last_read | add_author_string              | add_genre_string            |
-      | The Mysterious Affair at Styles  | http://www.rawbw.com/~alice/maas.html | 2009-01-01 | agatha christie                | mystery           |
-      | Alice's Adventures In Wonderland | http://www.rawbw.com/~alice/aa.html   | 2009-02-01 | lewis carroll, charles dodgson | fantasy, children |
-      | Grimm's Fairy Tales              | http://www.rawbw.com/~alice/gft.html  |  | grimm                          | children, short stories     |
+      | The Mysterious Affair at Styles  | http://sidrasue.com/tests/maas.html | 2009-01-01 | agatha christie                | mystery           |
+      | Alice's Adventures In Wonderland | http://sidrasue.com/tests/aa.html   | 2009-02-01 | lewis carroll, charles dodgson | fantasy, children |
+      | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  |  | grimm                          | children, short stories     |
     When I am on the homepage
       And I select "agatha christie"
       And I select "mystery"

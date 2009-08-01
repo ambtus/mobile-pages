@@ -14,11 +14,11 @@ Scenario Outline: title and url
 
   Examples:
   | url                                        | title            | result                 |
-  | http://www.rawbw.com/~alice/test.html      | Simple Test      | Retrieved from the web |
-  | http://www.rawbw.com/~alice/basic/test.html| Basic Auth Test  | password example       |
-  | http://www.rawbw.com/~alice/digest/test.html| Auth Digest Test  | digest example       |
-  | http://www.rawbw.com/~alice/utf8.html      | utf8 Test        | “Hello…”               |
-  | http://www.rawbw.com/~alice/1252.html      | winlatin1 Test   | “Hello…”               |
-  | http://www.rawbw.com/~alice/nbsp.html      | space Test       | Retrieved from the web |
-  | http://www.rawbw.com/~alice/entities.html  | entities         | antsy—boggart          |
-  | http://www.rawbw.com/~alice/mso.html       | <st1:place>      | in on Clark            |
+  | http://sidrasue.com/tests/test.html      | Simple Test      | Retrieved from the web |
+  | http://sidrasue.com/tests/basic/test.html| Basic Auth Test  | password example       |
+  | http://sidrasue.com/tests/digest/test.html| Auth Digest Test  | digest example       |
+  | http://sidrasue.com/tests/utf8.html      | utf8 Test        | “Hello…”               |
+  | http://sidrasue.com/tests/1252.html      | winlatin1 Test   | “Hello…”               |
+  | http://sidrasue.com/tests/nbsp.html      | space Test       | Retrieved from the web |
+  | http://sidrasue.com/tests/entities.html  | entities         | antsy—boggart          |
+  | http://sidrasue.com/tests/mso.html       | <st1:place>      | in on Clark            |

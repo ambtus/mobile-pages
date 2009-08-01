@@ -7,7 +7,7 @@ Feature: basic genres
     Given I have no pages
     And the following page
      | title | url |
-     | Alice's Adventures | http://www.rawbw.com/~alice/aa.html |
+     | Alice's Adventures | http://sidrasue.com/tests/aa.html |
     And I have no filters
       And I am on the homepage
       And I follow "Genres"
@@ -22,8 +22,8 @@ Feature: basic genres
     Given I have no pages
     And the following pages
       | title | url | read_after | add_genre_string |
-      | Grimm's Fairy Tales              | http://www.rawbw.com/~alice/gft.html  | 2009-01-02 |                             |
-      | Alice's Adventures In Wonderland | http://www.rawbw.com/~alice/aa.html   | 2009-01-03 | fantasy, favorite, children's |
+      | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  | 2009-01-02 |                             |
+      | Alice's Adventures In Wonderland | http://sidrasue.com/tests/aa.html   | 2009-01-03 | fantasy, favorite, children's |
       And I am on the homepage
     Then I should see "Grimm's Fairy Tales"
     When I follow "Genres"
@@ -36,7 +36,7 @@ Feature: basic genres
     Given I have no pages
     And the following page
       | title               | url                                  | add_genre_string |
-      | Grimm's Fairy Tales | http://www.rawbw.com/~alice/gft.html | children's       |
+      | Grimm's Fairy Tales | http://sidrasue.com/tests/gft.html | children's       |
       And I am on the homepage
     Then I should see "Grimm's Fairy Tales"
       And I should see "children's" in ".genres"

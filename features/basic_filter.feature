@@ -6,11 +6,11 @@ Feature: basic filters
   Scenario: filter on a genre
     Given the following pages
       | title                            | url                                   | read_after | add_genre_string            |
-      | The Mysterious Affair at Styles  | http://www.rawbw.com/~alice/maas.html | 2009-01-01 | mystery, great           |
-      | Grimm's Fairy Tales              | http://www.rawbw.com/~alice/gft.html  | 2009-01-02 | children, short stories     |
-      | Alice's Adventures In Wonderland | http://www.rawbw.com/~alice/aa.html   | 2009-01-03 | fantasy, great, children |
-      | Dracula                          | http://www.rawbw.com/~alice/drac.html | 2009-01-04 | horror, unread              |
-      | A Christmas Carol                | http://www.rawbw.com/~alice/cc.html   | 2009-01-05 | holiday, great           |
+      | The Mysterious Affair at Styles  | http://sidrasue.com/tests/maas.html | 2009-01-01 | mystery, great           |
+      | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  | 2009-01-02 | children, short stories     |
+      | Alice's Adventures In Wonderland | http://sidrasue.com/tests/aa.html   | 2009-01-03 | fantasy, great, children |
+      | Dracula                          | http://sidrasue.com/tests/drac.html | 2009-01-04 | horror, unread              |
+      | A Christmas Carol                | http://sidrasue.com/tests/cc.html   | 2009-01-05 | holiday, great           |
       And I am on the homepage
     Then I should see "The Mysterious Affair at Styles"
     When I select "mystery"

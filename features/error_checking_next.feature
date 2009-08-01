@@ -4,8 +4,8 @@ Feature: next bugs
     Given I have no pages
       And the following page
       | title         | url                                    |
-      | Single Text   | http://www.rawbw.com/~alice/test.html  |
-      | First Part |  http://www.rawbw.com/~alice/parts/1.html |
+      | Single Text   | http://sidrasue.com/tests/test.html  |
+      | First Part |  http://sidrasue.com/tests/parts/1.html |
       And I am on the homepage
     Then I should see "Single Text" in ".title"
      When I press "Read Later"

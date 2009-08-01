@@ -3,7 +3,7 @@ Feature: error checking with genres
   Scenario: genres with extraneous whitespace
     Given the following page
      | title | url |
-     | Alice's Adventures | http://www.rawbw.com/~alice/aa.html |
+     | Alice's Adventures | http://sidrasue.com/tests/aa.html |
       And I have no filters
       And I am on the homepage
       And I follow "Genres"

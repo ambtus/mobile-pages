@@ -4,7 +4,7 @@ Feature: extended parent for existing pages
     Given I have no pages
       And the following page
       | title | url | last_read |
-      | Single | http://www.rawbw.com/~alice/test.html" | 2008-01-01 |
+      | Single | http://sidrasue.com/tests/test.html" | 2008-01-01 |
     When I am on the homepage
     Then I should see "2008-01-01" in ".last_read"
     When I follow "Manage Parts"
@@ -18,8 +18,8 @@ Feature: extended parent for existing pages
     Given I have no pages
       And the following pages
       | title | url | read_after |
-      | Single | http://www.rawbw.com/~alice/test.html" | 2008-01-01 |
-      | Another | http://www.rawbw.com/~alice/entities.html" | 2008-02-01 |
+      | Single | http://sidrasue.com/tests/test.html" | 2008-01-01 |
+      | Another | http://sidrasue.com/tests/entities.html" | 2008-02-01 |
     When I am on the homepage
     Then I should see "Single" in ".title"
     When I follow "Manage Parts"
@@ -32,7 +32,7 @@ Feature: extended parent for existing pages
     Given I have no pages
       And the following page
       | title | url | add_genre_string |
-      | Single | http://www.rawbw.com/~alice/test.html" | my genre |
+      | Single | http://sidrasue.com/tests/test.html" | my genre |
     When I am on the homepage
     When I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
@@ -45,7 +45,7 @@ Feature: extended parent for existing pages
     Given I have no pages
       And the following page
       | title | url | add_author_string |
-      | Single | http://www.rawbw.com/~alice/test.html" | my author |
+      | Single | http://sidrasue.com/tests/test.html" | my author |
     When I am on the homepage
     When I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"

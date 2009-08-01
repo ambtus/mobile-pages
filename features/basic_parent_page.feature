@@ -7,7 +7,7 @@ Feature: basic parent page
     Given I have no pages
       And I am on the homepage
       And I follow "Store Multiple"
-      And I fill in "page_base_url" with "http://www.rawbw.com/~alice/parts/*.html"
+      And I fill in "page_base_url" with "http://sidrasue.com/tests/parts/*.html"
      And I fill in "page_url_substitutions" with "1 2"
      And I fill in "page_title" with "Parent Page"
      And I press "Store"

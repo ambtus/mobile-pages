@@ -3,7 +3,7 @@ Feature: complex parts with titles from url list
   Scenario: create parts from a list of urls with titles
     Given I am on the homepage
       And I follow "Store Multiple"
-    When I fill in "page_urls" with "#my title\r\nhttp://www.rawbw.com/~alice/parts/1.html\r\nhttp://www.rawbw.com/~alice/parts/2.html##part title" 
+    When I fill in "page_urls" with "#my title\r\nhttp://sidrasue.com/tests/parts/1.html\r\nhttp://sidrasue.com/tests/parts/2.html##part title" 
       And I fill in "page_title" with "Will be overwritten"
      And I press "Store"
    Then I should see "my title" in ".title"
@@ -15,7 +15,7 @@ Feature: complex parts with titles from url list
   Scenario: create subparts from a list of urls with titles
     Given I am on the homepage
       And I follow "Store Multiple"
-    When I fill in "page_urls" with "#Title\n##Part the first\nhttp://www.rawbw.com/~alice/parts/1.html###subpart title\nhttp://www.rawbw.com/~alice/parts/2.html\n\nhttp://www.rawbw.com/~alice/parts/3.html##Part 2\n\n##Third Part\nhttp://www.rawbw.com/~alice/parts/4.html\nhttp://www.rawbw.com/~alice/parts/5.html"
+    When I fill in "page_urls" with "#Title\n##Part the first\nhttp://sidrasue.com/tests/parts/1.html###subpart title\nhttp://sidrasue.com/tests/parts/2.html\n\nhttp://sidrasue.com/tests/parts/3.html##Part 2\n\n##Third Part\nhttp://sidrasue.com/tests/parts/4.html\nhttp://sidrasue.com/tests/parts/5.html"
       And I fill in "page_title" with "Will be overwritten"
      And I press "Store"
    Then I should see "Title" in ".title"
@@ -34,8 +34,8 @@ Feature: complex parts with titles from url list
     Given I have no pages
       And the following pages
      | title | urls                                     |
-     | Test1 | http://www.rawbw.com/~alice/parts/1.html |
-     | Test2 | http://www.rawbw.com/~alice/parts/3.html |
+     | Test1 | http://sidrasue.com/tests/parts/1.html |
+     | Test2 | http://sidrasue.com/tests/parts/3.html |
     When I am on the homepage
     Then I should see "Test1" in ".title"
     When I press "Read Later"
@@ -48,7 +48,7 @@ Feature: complex parts with titles from url list
       And I press "Search"
     Then I should see "Test2" in ".title"
     When I follow "Manage Parts"
-      And I fill in "url_list" with "http://www.rawbw.com/~alice/parts/3.html\nhttp://www.rawbw.com/~alice/parts/4.html"
+      And I fill in "url_list" with "http://sidrasue.com/tests/parts/3.html\nhttp://sidrasue.com/tests/parts/4.html"
       And I press "Update"
     When I am on the homepage
     Then I should see "Test2" in ".title"

@@ -9,14 +9,14 @@ Feature: error checking during store
   Scenario: switch title for url by mistake is not okay
     Given I am on the homepage
     When I fill in "page_url" with "Title of the Fic"
-      And I fill in "page_title" with "http://www.rawbw.com/~alice/test.html"
+      And I fill in "page_title" with "http://sidrasue.com/tests/test.html"
       And I press "Store"
     Then I should see "Url is invalid"
 
   Scenario: url can't be resolved shouldn't throw error
     Given I am on the homepage
     When I fill in "page_title" with "bad url"
-      And I fill in "page_url" with "http://wwww.rawbw.com/~alice/test.html"
+      And I fill in "page_url" with "http://wsidrasue.com/tests/test.html"
       And I press "Store"
     Then I should see "Couldn't resolve host name" in ".content"
 

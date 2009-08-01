@@ -7,9 +7,9 @@ Feature: basic next
     Given I have no pages
       And the following pages
       | title                           | url                                   |
-      | A Christmas Carol               | http://www.rawbw.com/~alice/cc.html   |
-      | The Call of the Wild            | http://www.rawbw.com/~alice/cotw.html |
-      | The Mysterious Affair at Styles | http://www.rawbw.com/~alice/maas.html |
+      | A Christmas Carol               | http://sidrasue.com/tests/cc.html   |
+      | The Call of the Wild            | http://sidrasue.com/tests/cotw.html |
+      | The Mysterious Affair at Styles | http://sidrasue.com/tests/maas.html |
      When I am on the homepage
      Then I should see "A Christmas Carol" in ".title"
        And I should not see "Marley was dead: to begin with." in ".content"

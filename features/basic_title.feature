@@ -4,7 +4,7 @@ Feature: basic title
     Given I have no pages
       And the following page
       | title                  | url                                   |
-      | Old Title              | http://www.rawbw.com/~alice/test.html |
+      | Old Title              | http://sidrasue.com/tests/test.html |
       And I am on the homepage
     When I follow "Manage Parts"
       And I fill in "url_list" with "#New Title"

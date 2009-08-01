@@ -4,9 +4,9 @@ Feature: basic authors
     Given I have no pages
     And the following pages
       | title                            | url                                   | read_after | add_author_string            |
-      | The Mysterious Affair at Styles  | http://www.rawbw.com/~alice/maas.html | 2009-01-01 | agatha christie          |
-      | Grimm's Fairy Tales              | http://www.rawbw.com/~alice/gft.html  | 2009-01-02 | grimm     |
-      | Alice's Adventures In Wonderland | http://www.rawbw.com/~alice/aa.html   | 2009-01-03 | lewis carroll, charles dodgson |
+      | The Mysterious Affair at Styles  | http://sidrasue.com/tests/maas.html | 2009-01-01 | agatha christie          |
+      | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  | 2009-01-02 | grimm     |
+      | Alice's Adventures In Wonderland | http://sidrasue.com/tests/aa.html   | 2009-01-03 | lewis carroll, charles dodgson |
       And I am on the homepage
     Then I should see "The Mysterious Affair at Styles"
     When I select "agatha christie"
@@ -28,7 +28,7 @@ Feature: basic authors
     Given I have no pages
     And the following page
      | title | url |
-     | Alice's Adventures | http://www.rawbw.com/~alice/aa.html |
+     | Alice's Adventures | http://sidrasue.com/tests/aa.html |
     And I have no filters
       And I am on the homepage
       And I follow "Authors"
@@ -43,8 +43,8 @@ Feature: basic authors
     Given I have no pages
     And the following pages
       | title | url | read_after | add_author_string |
-      | Through the Looking Glass    | http://www.rawbw.com/~alice/test.html     | 2009-01-02 |               |
-      | Alice's Adventures In Wonderland | http://www.rawbw.com/~alice/aa.html   | 2009-01-03 | lewis carroll |
+      | Through the Looking Glass    | http://sidrasue.com/tests/test.html     | 2009-01-02 |               |
+      | Alice's Adventures In Wonderland | http://sidrasue.com/tests/aa.html   | 2009-01-03 | lewis carroll |
       And I am on the homepage
     Then I should see "Through the Looking Glass"
     When I follow "Authors"
@@ -57,7 +57,7 @@ Feature: basic authors
     Given I have no pages
     And the following page
       | title                            | url                                   | add_author_string |
-      | Alice's Adventures In Wonderland | http://www.rawbw.com/~alice/aa.html   | lewis carroll    |
+      | Alice's Adventures In Wonderland | http://sidrasue.com/tests/aa.html   | lewis carroll    |
       And I am on the homepage
     Then I should see "Alice's Adventures In Wonderland"
       And I should see "lewis carroll" in ".authors"

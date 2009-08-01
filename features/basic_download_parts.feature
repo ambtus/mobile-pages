@@ -4,7 +4,7 @@ Feature: download page with parts
     Given I am on the homepage
       And I have no pages
       And I follow "Store Multiple"
-    When I fill in "page_base_url" with "http://www.rawbw.com/~alice/parts/*.html"
+    When I fill in "page_base_url" with "http://sidrasue.com/tests/parts/*.html"
      And I fill in "page_url_substitutions" with "1 2 3"
      And I fill in "page_title" with "Multiple pages from base"
      And I press "Store"

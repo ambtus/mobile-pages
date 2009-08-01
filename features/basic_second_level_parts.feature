@@ -7,12 +7,12 @@ Feature: basic second level parts
     Given I have no pages
       And I am on the homepage
       And I follow "Store Multiple"
-      And I fill in "page_urls" with "http://www.rawbw.com/~alice/parts/1.html"
+      And I fill in "page_urls" with "http://sidrasue.com/tests/parts/1.html"
       And I fill in "page_title" with "Grandparent"
       And I press "Store"
       And I am on the homepage
       And I follow "Store Multiple"
-      And I fill in "page_urls" with "http://www.rawbw.com/~alice/parts/2.html"
+      And I fill in "page_urls" with "http://sidrasue.com/tests/parts/2.html"
       And I fill in "page_title" with "Parent"
       And I press "Store"
     When I follow "Manage Parts"

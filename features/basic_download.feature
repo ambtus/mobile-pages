@@ -6,7 +6,7 @@ Feature: basic download
   Scenario: download a text version
     Given I am on the homepage
       And I have no pages
-      And I fill in "page_url" with "http://www.rawbw.com/~alice/styled.html"
+      And I fill in "page_url" with "http://sidrasue.com/tests/styled.html"
       And I fill in "page_title" with "Styled text test"
       And I press "Store"
     When I follow "Download" in ".title"
@@ -38,7 +38,7 @@ Feature: basic download
   Scenario: download stripping links and images
     Given I am on the homepage
       And I have no pages
-      And I fill in "page_url" with "http://www.rawbw.com/~alice/href.html"
+      And I fill in "page_url" with "http://sidrasue.com/tests/href.html"
       And I fill in "page_title" with "link test"
       And I press "Store"
     When I follow "Download" in ".title"
@@ -53,7 +53,7 @@ Feature: basic download
   Scenario: download stripping of javascript and comments
     Given I am on the homepage
       And I have no pages
-      And I fill in "page_url" with "http://www.rawbw.com/~alice/entities.html"
+      And I fill in "page_url" with "http://sidrasue.com/tests/entities.html"
       And I fill in "page_title" with "Javascript test"
       And I press "Store"
     When I follow "Download" in ".title"
@@ -66,7 +66,7 @@ Feature: basic download
   Scenario: download stripping of tables
     Given I am on the homepage
       And I have no pages
-      And I fill in "page_url" with "http://www.rawbw.com/~alice/tablecontent.html"
+      And I fill in "page_url" with "http://sidrasue.com/tests/tablecontent.html"
       And I fill in "page_title" with "table test"
       And I press "Store"
     When I follow "Download" in ".title"
@@ -80,7 +80,7 @@ Feature: basic download
   Scenario: download stripping of lists
     Given I am on the homepage
       And I have no pages
-      And I fill in "page_url" with "http://www.rawbw.com/~alice/list.html"
+      And I fill in "page_url" with "http://sidrasue.com/tests/list.html"
       And I fill in "page_title" with "list test"
       And I press "Store"
     When I follow "Download" in ".title"
@@ -130,7 +130,7 @@ Feature: basic download
   Scenario: download google groops content only
     Given I am on the homepage
       And I have no pages
-      And I fill in "page_url" with "http://www.rawbw.com/~alice/google.html"
+      And I fill in "page_url" with "http://sidrasue.com/tests/google.html"
       And I fill in "page_title" with "google group"
       And I press "Store"
     When I follow "Download" in ".title"
@@ -140,7 +140,7 @@ Feature: basic download
   Scenario: download crappy Microsoft Office "html"
     Given I am on the homepage
       And I have no pages
-      And I fill in "page_url" with "http://www.rawbw.com/~alice/mso.html"
+      And I fill in "page_url" with "http://sidrasue.com/tests/mso.html"
       And I fill in "page_title" with "Microsoft"
       And I press "Store"
     When I follow "Download" in ".title"
@@ -156,7 +156,7 @@ Feature: basic download
   Scenario: download weird empty divs
     Given I am on the homepage
       And I have no pages
-      And I fill in "page_url" with "http://www.rawbw.com/~alice/ejournal_div.html"
+      And I fill in "page_url" with "http://sidrasue.com/tests/ejournal_div.html"
       And I fill in "page_title" with "empty divs"
       And I press "Store"
     When I follow "Download" in ".title"
@@ -166,7 +166,7 @@ Feature: basic download
   Scenario: download page with and without linefeeds
     Given I am on the homepage
       And I have no pages
-      And I fill in "page_url" with "http://www.rawbw.com/~alice/linefeeds.html"
+      And I fill in "page_url" with "http://sidrasue.com/tests/linefeeds.html"
       And I fill in "page_title" with "line feeds"
       And I press "Store"
     When I follow "Download" in ".title"
@@ -175,7 +175,7 @@ Feature: basic download
   Scenario: divs with attributes
     Given I am on the homepage
       And I have no pages
-      And I fill in "page_url" with "http://www.rawbw.com/~alice/div.html"
+      And I fill in "page_url" with "http://sidrasue.com/tests/div.html"
       And I fill in "page_title" with "divs"
       And I press "Store"
     When I follow "Download" in ".title"

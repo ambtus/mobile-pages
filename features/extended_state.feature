@@ -4,7 +4,7 @@ Feature: unread states
     Given I have no pages
     And the following page
       | title | urls | 
-      | Multi | http://www.rawbw.com/~alice/parts/1.html | 
+      | Multi | http://sidrasue.com/tests/parts/1.html | 
       And I am on the homepage
    Then I should see "Multi" in ".title"
    Then I should see "unread" in ".states"
@@ -12,7 +12,7 @@ Feature: unread states
      And I press "1"
    Then I should not see "unread" in ".states"
    When I follow "Manage Parts"
-     And I fill in "url_list" with "http://www.rawbw.com/~alice/parts/1.html\nhttp://www.rawbw.com/~alice/parts/2.html"
+     And I fill in "url_list" with "http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html"
      And I press "Update"
    When I am on the homepage
    Then I should see "Multi" in ".title"
@@ -30,7 +30,7 @@ Feature: unread states
     Given I have no pages
     And the following page
       | title | url | last_read |
-      | Part | http://www.rawbw.com/~alice/parts/1.html | 2009-01-01 |
+      | Part | http://sidrasue.com/tests/parts/1.html | 2009-01-01 |
       And I am on the homepage
    Then I should not see "unread" in ".states"
    When I follow "Manage Parts"
@@ -44,7 +44,7 @@ Feature: unread states
     Given I have no pages
     And the following page
       | title | url | 
-      | Part | http://www.rawbw.com/~alice/parts/1.html | 
+      | Part | http://sidrasue.com/tests/parts/1.html | 
       And I am on the homepage
    Then I should see "unread" in ".states"
    When I follow "Manage Parts"
@@ -58,7 +58,7 @@ Feature: unread states
     Given I have no pages
     And the following page
       | title | base_url | url_substitutions |
-      | Read Separately | http://www.rawbw.com/~alice/parts/*.html | 1 2 |
+      | Read Separately | http://sidrasue.com/tests/parts/*.html | 1 2 |
       And I am on the homepage
    Then I should see "Read Separately" in ".title"
    Then I should see "unread" in ".states"

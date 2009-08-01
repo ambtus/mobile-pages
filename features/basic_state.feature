@@ -6,7 +6,7 @@ Feature: basic states
   Scenario: add unread state
     Given I have no pages
       And I am on the homepage
-    When I fill in "page_url" with "http://www.rawbw.com/~alice/test.html"
+    When I fill in "page_url" with "http://sidrasue.com/tests/test.html"
       And I fill in "page_title" with "Test"
       And I press "Store"
    Then I should see "unread" in ".states"
@@ -14,7 +14,7 @@ Feature: basic states
   Scenario: add and remove favorite state
     Given I have no pages
       And I am on the homepage
-      And I fill in "page_url" with "http://www.rawbw.com/~alice/test.html"
+      And I fill in "page_url" with "http://sidrasue.com/tests/test.html"
       And I fill in "page_title" with "Test"
       And I press "Store"
     When I follow "Rate"
@@ -28,13 +28,13 @@ Feature: basic states
    Scenario: add short state
     Given I have no pages
       And I am on the homepage
-    When I fill in "page_url" with "http://www.rawbw.com/~alice/short.html"
+    When I fill in "page_url" with "http://sidrasue.com/tests/short.html"
       And I fill in "page_title" with "Short"
       And I press "Store"
    Then I should see "short" in ".states"
      And I should not see "long" in ".states"
    When I follow "Refetch"
-     When I fill in "url" with "http://www.rawbw.com/~alice/long.html"
+     When I fill in "url" with "http://sidrasue.com/tests/long.html"
      And I press "Refetch"
    Then I should not see "short" in ".states"
      And I should see "long" in ".states"
@@ -42,7 +42,7 @@ Feature: basic states
    Scenario: add long state
     Given I have no pages
       And I am on the homepage
-    When I fill in "page_url" with "http://www.rawbw.com/~alice/long.html"
+    When I fill in "page_url" with "http://sidrasue.com/tests/long.html"
       And I fill in "page_title" with "Long"
       And I press "Store"
    Then I should not see "short" in ".states"
@@ -51,7 +51,7 @@ Feature: basic states
    Scenario: add epic state
     Given I have no pages
       And I am on the homepage
-    When I fill in "page_url" with "http://www.rawbw.com/~alice/long.html"
+    When I fill in "page_url" with "http://sidrasue.com/tests/long.html"
       And I fill in "page_title" with "Long"
       And I press "Store"
       And I follow "Manage Parts"
@@ -59,7 +59,7 @@ Feature: basic states
       And I press "Update"
       And I should see "long" in ".states"
       And I follow "Manage Parts"
-    When I fill in "url_list" with "http://www.rawbw.com/~alice/long.html\nhttp://www.rawbw.com/~alice/long2.html\nhttp://www.rawbw.com/~alice/long3.html\nhttp://www.rawbw.com/~alice/long4.html\nhttp://www.rawbw.com/~alice/long5.html\nhttp://www.rawbw.com/~alice/long6.html\nhttp://www.rawbw.com/~alice/long7.html\nhttp://www.rawbw.com/~alice/long8.html"
+    When I fill in "url_list" with "http://sidrasue.com/tests/long.html\nhttp://sidrasue.com/tests/long2.html\nhttp://sidrasue.com/tests/long3.html\nhttp://sidrasue.com/tests/long4.html\nhttp://sidrasue.com/tests/long5.html\nhttp://sidrasue.com/tests/long6.html\nhttp://sidrasue.com/tests/long7.html\nhttp://sidrasue.com/tests/long8.html"
     And I press "Update"
     Then I should see "epic" in ".states"
       And I should not see "long" in ".states"

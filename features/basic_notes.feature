@@ -7,7 +7,7 @@ Feature: basic notes
     Given I have no pages
       And the following page
       | title                            | url                                   |
-      | Grimm's Fairy Tales              | http://www.rawbw.com/~alice/gft.html  |
+      | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  |
       And I am on the homepage
     When I follow "Notes"
       And I fill in "page_notes" with "testing notes"
@@ -18,7 +18,7 @@ Feature: basic notes
     Given I have no pages
       And the following page
       | title                            | url                                   | notes |
-      | Grimm's Fairy Tales              | http://www.rawbw.com/~alice/gft.html  | "some basic notes" |
+      | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  | "some basic notes" |
       And I am on the homepage
     Then I should see "some basic notes" in ".notes"
     When I follow "Read"
