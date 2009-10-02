@@ -3,7 +3,7 @@ Feature: complex parts with titles from url list
   Scenario: create parts from a list of urls with titles
     Given I am on the homepage
       And I follow "Store Multiple"
-    When I fill in "page_urls" with "#my title\r\nhttp://sidrasue.com/tests/parts/1.html\r\nhttp://sidrasue.com/tests/parts/2.html##part title" 
+    When I fill in "page_urls" with "#my title\n\nhttp://sidrasue.com/tests/parts/1.html\n\nhttp://sidrasue.com/tests/parts/2.html##part title" 
       And I fill in "page_title" with "Will be overwritten"
      And I press "Store"
    Then I should see "my title" in ".title"

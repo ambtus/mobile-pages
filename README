@@ -51,4 +51,4 @@ rake db:schema:load
 
 == Testing
 
-rake features
+rake cucumber

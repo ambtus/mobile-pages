@@ -9,6 +9,11 @@ development:
 production:
   <<: *login
   database: mobile_prod
-test:
+test: &TEST
   <<: *login
   database: mobile_test
+cucumber:
+  <<: *TEST
+
+cucumber:
+  <<: *TEST

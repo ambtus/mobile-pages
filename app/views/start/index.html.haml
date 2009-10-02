@@ -41,7 +41,7 @@
   - unless @genres.blank?
     .genre
       = select_tag :genre, "<option></option>" + options_for_select(@genres, @genre_name)
-  = submit_tag "Filter", :name => nil
+  = submit_tag "Filter", :name => "Filter"
 .form
   - form_for @new_page do |f|
     = f.text_field :url, :maxlength => 255, :size => 30, :value => Page::URL_PLACEHOLDER, :onblur=>"if(this.value == '') { this.value='#{Page::URL_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::URL_PLACEHOLDER}') {this.value=''}"

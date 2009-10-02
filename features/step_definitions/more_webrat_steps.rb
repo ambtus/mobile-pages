@@ -31,4 +31,3 @@ end
 Given /^I wait a second.*$/ do
   Kernel::sleep 1
 end
-

@@ -17,6 +17,7 @@ Feature: basic second level parts
       And I press "Store"
     When I follow "Manage Parts"
       And I fill in "add_parent" with "Grandparent"
+      And I fill in "url_list" with "#Parent\nhttp://sidrasue.com/tests/parts/2.html"
       And I press "Update"
     Then I should see "Grandparent"
       And I should see "Part 1" in "#position_1"

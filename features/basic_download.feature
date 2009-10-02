@@ -24,16 +24,16 @@ Feature: basic download
       And My document should not contain "p>"
       And My document should not contain "small>"
       And My document should contain "(something little)"
-      And My document should contain "..."
-      And My document should contain "--"
-      And My document should contain "'"
+      And My document should contain "…"
+      And My document should contain "—"
+      And My document should contain "’"
       And My document should not contain ";"
       And My document should contain "*This is another header*"
       And My document should contain "*One Two, Three*"
       And My document should contain "_One, Two? Three_"
       And My document should contain "_One-TwoThree_"
       And My document should contain "<>end<>"
-      And My document should contain "facade"
+      And My document should contain "façade"
 
   Scenario: download stripping links and images
     Given I am on the homepage
@@ -114,7 +114,7 @@ Feature: basic download
       And I press "Store"
     When I follow "Download" in ".title"
     Then My document should not contain "Rated: "
-      And My document should contain "This is rabbit's fault"
+      And My document should contain "This is rabbit’s fault"
 
   Scenario: download archive of our own page content only
     Given I am on the homepage

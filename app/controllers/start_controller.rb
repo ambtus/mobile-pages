@@ -23,7 +23,7 @@ class StartController < ApplicationController
    if params[:commit] == "Read Later"
      Page.find(params[:page_id]).next
    end
-   if params[:genre]
+   if params[:Filter]
      redirect_to :action => "index", :genre => params[:genre], :author => params[:author], :state => params[:state]
    else
      redirect_to :action => "index", :genre => params[:old_genre], :author => params[:old_author], :state => params[:old_state]
