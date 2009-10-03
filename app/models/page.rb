@@ -446,8 +446,8 @@ class Page < ActiveRecord::Base
   end
 
   def nodes
-    return if self.original_html.blank?
-    Nokogiri::HTML(self.original_html).xpath('//body').first.children
+    html = self.original_html + "<div></div>"
+    Nokogiri::HTML(html).xpath('//body').first.children
   end
 
   def remove_nodes(ids)

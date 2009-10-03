@@ -29,4 +29,16 @@ Feature: error checking scrub
      But My document should not contain "top cruft"
      And My document should not contain "bottom cruft"
 
-
+  Scenario: scrub when many headers and short fic
+    Given I have no pages
+      And I am on the homepage
+      And I fill in "page_url" with "http://sidrasue.com/tests/headers.html"
+      And I fill in "page_title" with "header test"
+      And I press "Store"
+    When I follow "Scrub"
+      And I check boxes "2 4"
+      And I press "Scrub"
+    When I am on the homepage
+      And I follow "Download" in ".title"
+    Then My document should contain "actual content"
+      And My document should not contain "header"

@@ -45,4 +45,4 @@ Feature: Basic Scrub
   | "http://sidrasue.com/tests/div.html"          | "1"   | "content"      | "last div"        | "second div"  |
   | "http://sidrasue.com/tests/container.html"    | "1"   | "content"      | "content2"        | "second div"  |
   | "http://sidrasue.com/tests/p.html"            | "2"   | "content"      | "top para"        | "bottom para" |
-  | "http://sidrasue.com/tests/tablecontent.html" | "5"   | "I remembered" | "Jump"            | "Content"     |
+  | "http://sidrasue.com/tests/tablecontent.html" | "6"   | "I remembered" | "Jump"            | "Keep on"     |
