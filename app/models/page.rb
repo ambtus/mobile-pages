@@ -312,6 +312,12 @@ class Page < ActiveRecord::Base
   def first
     earliest = Page.first.read_after
     self.update_attribute(:read_after, earliest - 1.day)
+    if self.parent
+      parent = self.parent
+      parent.update_attribute(:read_after, earliest - 1.day) if parent
+      grandparent = parent.parent
+      grandparent.update_attribute(:read_after, earliest - 1.day) if grandparent
+    end
     return self
   end
 

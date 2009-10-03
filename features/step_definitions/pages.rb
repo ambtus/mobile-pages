@@ -4,7 +4,15 @@ end
 
 Given /^the following pages?$/ do |table|
   # table is a Cucumber::Ast::Table
-  table.hashes.each {|hash| Page.create(hash)}
+  table.hashes.each do |hash|
+    if hash['urls']
+      newhash = hash.dup
+      newhash['urls'] =  newhash['urls'].split('\\n').join("\r")
+      Page.create(newhash)
+    else
+      Page.create(hash)
+    end
+  end
 end
 
 # can't use "should see" because the mobile file is downloaded, not displayed
