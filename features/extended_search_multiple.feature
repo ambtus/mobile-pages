@@ -22,11 +22,10 @@ Feature: Multiple Search
        And I should not see "The Call of the Wild" in ".title"
        And I should see "The Mysterious Affair" in ".title"
      When I follow "Read"
-     Then I should see "Marley was dead: to begin with." 
+     Then I should see "Marley was dead: to begin with."
 
   Scenario: Find pages by notes
-    Given I have no pages
-      And the following pages
+    Given the following pages
       | title                           | notes                       | url                                   |
       | A Christmas Carol               | by Charles Dickens, classic | http://sidrasue.com/tests/cc.html   |
       | The Call of the Wild            | by Jack London, classic     | http://sidrasue.com/tests/cotw.html |

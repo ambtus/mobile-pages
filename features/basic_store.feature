@@ -13,12 +13,12 @@ Scenario Outline: title and url
     And I should see "<result>" in ".content"
 
   Examples:
-  | url                                        | title            | result                 |
-  | http://sidrasue.com/tests/test.html      | Simple Test      | Retrieved from the web |
-  | http://sidrasue.com/tests/basic/test.html| Basic Auth Test  | password example       |
-  | http://sidrasue.com/tests/digest/test.html| Auth Digest Test  | digest example       |
-  | http://sidrasue.com/tests/utf8.html      | utf8 Test        | “Hello…”               |
-  | http://sidrasue.com/tests/1252.html      | winlatin1 Test   | “Hello…”               |
-  | http://sidrasue.com/tests/nbsp.html      | space Test       | Retrieved from the web |
-  | http://sidrasue.com/tests/entities.html  | entities         | antsy—boggart          |
-  | http://sidrasue.com/tests/mso.html       | <st1:place>      | in on Clark            |
+  | url                                       | title            | result                 |
+  | http://sidrasue.com/tests/test.html       | Simple Test      | Retrieved from the web |
+  | http://sidrasue.com/tests/basic/test.html | Basic Auth Test  | password example       |
+  | http://sidrasue.com/tests/digest/test.html| Auth Digest Test | digest example         |
+  | http://sidrasue.com/tests/utf8.html       | utf8 Test        | “Hello…”               |
+  | http://sidrasue.com/tests/1252.html       | winlatin1 Test   | “Hello…”               |
+  | http://sidrasue.com/tests/nbsp.html       | space Test       | Retrieved from the web |
+  | http://sidrasue.com/tests/entities.html   | entities         | antsy—boggart          |
+  | http://sidrasue.com/tests/mso.html        | <st1:place>      | in on Clark            |

@@ -1,25 +1,27 @@
 Feature: extended store
 
   Scenario: refetch original html
-    Given I am on the homepage
-    When I fill in "page_title" with "test refetch"
-      And I fill in "page_url" with "http://sidrasue.com/tests/test.html"
-      And I press "Store"
+    Given the following page
+      |title | url |
+      | test | http://sidrasue.com/tests/test.html |
+    When I am on the homepage
+      And I follow "Read"
       And I follow "Edit Raw HTML"
       And I fill in "pasted" with "system down"
       And I press "Update Raw HTML"
+    Then I should see "system down" in ".content"
     When I follow "Refetch"
     Then the field with id "url" should contain "http://sidrasue.com/tests/test.html"
     When I press "Refetch"
-    Then I should see "Retrieved from the web"
+    Then I should see "Retrieved from the web" in ".content"
 
   Scenario: refetch original html for parts
-    Given I am on the homepage
-      And I follow "Store Multiple"
-    When I fill in "page_base_url" with "http://sidrasue.com/tests/parts/*.html"
-      And I fill in "page_url_substitutions" with "1"
-      And I fill in "page_title" with "Multiple pages from base"
-      And I press "Store"
+    Given the following page
+      |title | urls |
+      | test | http://sidrasue.com/tests/parts/1.html |
+    When I am on the homepage
+      And I follow "Parts"
+      And I follow "Read"
     When I follow "Refetch" in ".title"
     Then the field with id "url_list" should contain "http://sidrasue.com/tests/parts/1.html"
     When I fill in "url_list" with "http://sidrasue.com/tests/parts/2.html\nhttp://sidrasue.com/tests/parts/1.html"
@@ -27,23 +29,22 @@ Feature: extended store
     Then I should see "stuff for part 2"
 
   Scenario: add utf8
-    Given I have no pages
-      And I am on the homepage
-    When I fill in "page_title" with "test add utf8"
-      And I fill in "page_url" with "http://sidrasue.com/tests/sbutf8.html"
-      And I press "Store"
+    Given the following page
+      |title | url |
+      | test | http://sidrasue.com/tests/sbutf8.html |
+    When I am on the homepage
+      And I follow "Read"
     Then I should see "â€œ"
     When I press "Make UTF8"
     Then I should see "“H"
 
   Scenario: add utf8 to parts
-    Given I am on the homepage
-      And I have no pages
-      And I follow "Store Multiple"
-    When I fill in "page_base_url" with "http://sidrasue.com/tests/*.html"
-      And I fill in "page_url_substitutions" with "sbutf8"
-      And I fill in "page_title" with "Multiple should be utf8 pages"
-      And I press "Store"
+    Given the following page
+      |title | urls |
+      | test | http://sidrasue.com/tests/sbutf8.html |
+    When I am on the homepage
+      And I follow "Parts"
+      And I follow "Read"
     Then I should see "â€œ"
     When I press "Make UTF8"
     Then I should see "“H"

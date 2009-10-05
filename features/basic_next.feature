@@ -4,26 +4,16 @@ Feature: basic next
   result: read them in order of creation
 
   Scenario: Read pages in order
-    Given I have no pages
-      And the following pages
-      | title                           | url                                   |
+    Given the following pages
+      | title                           | url                                 |
       | A Christmas Carol               | http://sidrasue.com/tests/cc.html   |
       | The Call of the Wild            | http://sidrasue.com/tests/cotw.html |
       | The Mysterious Affair at Styles | http://sidrasue.com/tests/maas.html |
      When I am on the homepage
      Then I should see "A Christmas Carol" in ".title"
-       And I should not see "Marley was dead: to begin with." in ".content"
-     When I follow "Read"
-     Then I should see "Marley was dead: to begin with." in ".content"
      When I press "Read Later"
      Then I should see "The Call of the Wild" in ".title"
-       And I should see "Buck did not read the newspapers" in ".content"
-     When I am on the homepage
-     Then I should see "The Call of the Wild" in ".title"
-       And I should not see "Buck did not read the newspapers" in ".content"
      When I press "Read Later"
      Then I should see "The Mysterious Affair at Styles" in ".title"
-       And I should not see "The intense interest aroused in the public" in ".content"
-      When I follow "Read"
-     Then I should see "The Mysterious Affair at Styles" in ".title"
-       And I should see "The intense interest aroused in the public" in ".content"
+     When I press "Read Later"
+     Then I should see "A Christmas Carol" in ".title"

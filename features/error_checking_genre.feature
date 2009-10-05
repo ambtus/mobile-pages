@@ -1,17 +1,12 @@
 Feature: error checking with genres
 
   Scenario: genres with extraneous whitespace
-    Given the following page
-     | title | url |
-     | Alice's Adventures | http://sidrasue.com/tests/aa.html |
-      And I have no filters
-      And I am on the homepage
+    Given I have no filters
+      And the following page
+       | title | url |
+       | Alice's Adventures | http://sidrasue.com/tests/aa.html |
+    When I am on the homepage
       And I follow "Genres"
-    When I fill in "genres" with "  funny,happy happy  , joy "
+      And I fill in "genres" with "  funny,  joy  joy,happy happy  "
       And I press "Add genres"
-    Then I should see "funny" in ".genres"
-      And I should not see "  funny" in ".genres"
-      And I should see "happy happy" in ".genres"
-      And I should not see "happy happy  " in ".genres"
-      And I should see "joy" in ".genres"
-      And I should not see " joy " in ".genres"
+    Then I should see "funny, happy happy, joy joy" in ".genres"

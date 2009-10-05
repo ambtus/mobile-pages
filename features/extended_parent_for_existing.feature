@@ -1,8 +1,7 @@
 Feature: extended parent for existing pages
 
   Scenario: new parent for an existing page should have last read date
-    Given I have no pages
-      And the following page
+    Given the following page
       | title | url | last_read |
       | Single | http://sidrasue.com/tests/test.html" | 2008-01-01 |
     When I am on the homepage
@@ -15,8 +14,7 @@ Feature: extended parent for existing pages
       And I should see "2008-01-01" in ".last_read"
 
   Scenario: new parent for an existing page should have read after date
-    Given I have no pages
-      And the following pages
+    Given the following pages
       | title | url | read_after |
       | Single | http://sidrasue.com/tests/test.html" | 2008-01-01 |
       | Another | http://sidrasue.com/tests/entities.html" | 2008-02-01 |
@@ -29,8 +27,7 @@ Feature: extended parent for existing pages
     Then I should see "New Parent" in ".title"
 
   Scenario: new parent for an existing page should have genre
-    Given I have no pages
-      And the following page
+    Given the following page
       | title | url | add_genre_string |
       | Single | http://sidrasue.com/tests/test.html" | my genre |
     When I am on the homepage
@@ -42,8 +39,7 @@ Feature: extended parent for existing pages
     And I should see "my genre" in ".genres"
 
   Scenario: new parent for an existing page should have author
-    Given I have no pages
-      And the following page
+    Given the following page
       | title | url | add_author_string |
       | Single | http://sidrasue.com/tests/test.html" | my author |
     When I am on the homepage

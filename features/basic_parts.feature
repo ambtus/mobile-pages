@@ -4,10 +4,10 @@ Feature: basic parts
   Result: be able to treat a collection of pages as one page
 
   Scenario: create and read a page from base url plus pattern
-    Given I am on the homepage
-      And I have no pages
-      And I follow "Store Multiple"
-    When I fill in "page_base_url" with "http://sidrasue.com/tests/parts/*.html"
+    Given I have no pages
+      And I am on the homepage
+    When I follow "Store Multiple"
+      And I fill in "page_base_url" with "http://sidrasue.com/tests/parts/*.html"
      And I fill in "page_url_substitutions" with "1 2 3"
      And I fill in "page_title" with "Multiple pages from base"
      And I press "Store"
@@ -20,10 +20,10 @@ Feature: basic parts
      And I should see "stuff for part 3"
 
   Scenario: create and read a page from a list of urls
-    Given I am on the homepage
-      And I have no pages
-      And I follow "Store Multiple"
-    When I fill in "page_urls" with "http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html"
+    Given I have no pages
+      And I am on the homepage
+    When I follow "Store Multiple"
+      And I fill in "page_urls" with "http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html"
      And I fill in "page_title" with "Multiple pages from urls"
      And I press "Store"
    Then I should see "Multiple pages from urls"
@@ -33,14 +33,11 @@ Feature: basic parts
      And I should see "stuff for part 2"
 
   Scenario: children should not show up on front page by themselves
-    Given I have no pages
-      And I am on the homepage
-      And I follow "Store Multiple"
-    When I fill in "page_urls" with "http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html"
-     And I fill in "page_title" with "Multiple pages from urls"
-     And I press "Store"
-     And I am on the homepage
-     And I should see "Multiple pages from urls"
-   When I press "Read Later"
-   Then I should see "Multiple pages from urls"
+    Given the following page
+      |title   | urls |
+      | Parent | http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html |
+    When I am on the homepage
+    Then I should see "Parent" in ".title"
+    When I press "Read Later"
+    Then I should see "Parent" in ".title"
 

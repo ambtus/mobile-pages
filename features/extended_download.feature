@@ -7,4 +7,4 @@ Feature: extended download
       And I fill in "page_title" with "multi line breaks test"
       And I press "Store"
       And I follow "Download" in ".title"
-      And My document should contain "__________"
+      And my document should contain "__________"

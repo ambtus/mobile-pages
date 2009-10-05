@@ -1,12 +1,14 @@
 Feature: download page with parts
 
-  Scenario: create and read a page from base url plus pattern
-    Given I am on the homepage
-      And I have no pages
-      And I follow "Store Multiple"
-    When I fill in "page_base_url" with "http://sidrasue.com/tests/parts/*.html"
-     And I fill in "page_url_substitutions" with "1 2 3"
-     And I fill in "page_title" with "Multiple pages from base"
-     And I press "Store"
+  Scenario: download a multi-part doc
+    Given the following page
+      | title  | base_url                               | url_substitutions |
+      | multi  | http://sidrasue.com/tests/parts/*.html | 1 2 3   |
+    When I am on the homepage
     When I follow "Download" in ".title"
-    Then My document should contain "cruft in part 1\n\n# Part 2 #"
+    Then my document should contain "stuff for part 1"
+      And my document should contain "stuff for part 2"
+      And my document should contain "stuff for part 3"
+      And my document should contain "# Part 1 #"
+      And my document should contain "# Part 2 #"
+      And my document should contain "# Part 3 #"

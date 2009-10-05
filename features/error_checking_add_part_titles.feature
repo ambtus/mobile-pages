@@ -1,14 +1,10 @@
 Feature: error checking add parts titles
 
   Scenario: add subpart headings
-    Given I am on the homepage
-      And I have no pages
-      And I follow "Store Multiple"
-      And I fill in "page_base_url" with "http://sidrasue.com/tests/parts/*.html"
-      And I fill in "page_url_substitutions" with "1 2 3"
-      And I fill in "page_title" with "Will Add Part Headings"
-      And I press "Store"
-      And I am on the homepage
+    Given the following page
+      |title | base_url | url_substitutions |
+      | Multi | http://sidrasue.com/tests/parts/*.html | 1 2 3 |
+    When I am on the homepage
     When I follow "Manage Parts"
       And I fill in "url_list" with "#Added Part Headings\n##part1\nhttp://sidrasue.com/tests/parts/1.html\n##part2\nhttp://sidrasue.com/tests/parts/2.html\nhttp://sidrasue.com/tests/parts/3.html"
       And I press "Update"
@@ -19,7 +15,7 @@ Feature: error checking add parts titles
       Then I should see "Part 1"
     When I follow "Read" in "#position_1"
       Then I should see "stuff for part 1"
-    When I am on the homepage 
+    When I am on the homepage
       And I follow "Parts"
       And I follow "Read" in "#position_2"
       Then I should see "Part 1"

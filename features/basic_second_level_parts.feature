@@ -4,45 +4,37 @@ Feature: basic second level parts
   Result: 2nd level heirarchy
 
   Scenario: second layer heirarchy
-    Given I have no pages
-      And I am on the homepage
-      And I follow "Store Multiple"
-      And I fill in "page_urls" with "http://sidrasue.com/tests/parts/1.html"
-      And I fill in "page_title" with "Grandparent"
-      And I press "Store"
-      And I am on the homepage
-      And I follow "Store Multiple"
-      And I fill in "page_urls" with "http://sidrasue.com/tests/parts/2.html"
-      And I fill in "page_title" with "Parent"
-      And I press "Store"
+    Given the following page
+      | title  | urls |
+      | Parent | http://sidrasue.com/tests/parts/2.html\nhttp://sidrasue.com/tests/parts/3.html |
+    And the page
+      | title   | url |
+      | Single | http://sidrasue.com/tests/parts/1.html |
+    When I am on the homepage
+    Then I should see "Parent" in ".title"
     When I follow "Manage Parts"
       And I fill in "add_parent" with "Grandparent"
-      And I fill in "url_list" with "#Parent\nhttp://sidrasue.com/tests/parts/2.html"
+      And I fill in "url_list" with "http://sidrasue.com/tests/parts/2.html\nhttp://sidrasue.com/tests/parts/3.html"
       And I press "Update"
     Then I should see "Grandparent"
-      And I should see "Part 1" in "#position_1"
-      And I should see "Parent" in "#position_2"
-    When I follow "Read" in ".title"
-    Then I should see "Part 1"
-      And I should see "stuff for part 1"
-      And I should see "Parent"
-      And I should see "stuff for part 2"
+      And I should see "Parent" in "#position_1"
+    When I am on the homepage
+      And I fill in "search" with "Single"
+      And I press "Search"
+      Then I should see "Single" in ".title"
+     When I follow "Manage Parts"
+      And I fill in "add_parent" with "Grandparent"
+      And I press "Update"
+    Then I should see "Parent" in "#position_1"
+      And I should see "Single" in "#position_2"
     When I follow "Download" in ".title"
-    Then My document should contain "stuff for part 1"
-      And My document should contain "# Part 1 #"
-    Then My document should contain "stuff for part 2"
-      And My document should contain "# Parent #"
-    When I am on the homepage
-      And I follow "Parts" in ".title"
-      And I follow "Read" in "#position_1"
-      Then I should see "stuff for part 1"
-      And I should not see "stuff for part 2"
-    When I am on the homepage
-      And I follow "Parts" in ".title"
-      And I follow "Read" in "#position_2"
-    Then I should not see "stuff for part 2"
-    When I follow "Read" in "#position_1"
-    Then I should see "stuff for part 2"
+    Then my document named "Grandparent" should contain "# Single #"
+      And my document named "Grandparent" should contain "# Parent #"
+      And my document named "Grandparent" should contain "## Part 1 ##"
+      And my document named "Grandparent" should contain "## Part 2 ##"
+      And my document named "Grandparent" should contain "stuff for part 1"
+      And my document named "Grandparent" should contain "stuff for part 2"
+      And my document named "Grandparent" should contain "stuff for part 3"
 
 
 

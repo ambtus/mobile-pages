@@ -17,7 +17,7 @@ Feature: Basic Scrub
     And I should not see <unwanted2>
 
   Examples:
-  | url                                             | nodes | wanted         | unwanted1         | unwanted2     |
+  | url                                           | nodes | wanted         | unwanted1         | unwanted2     |
   | "http://sidrasue.com/tests/p.html"            | "0 2" | "content"      | "top para"        | "bottom para" |
   | "http://sidrasue.com/tests/table.html"        | "0 2" | "content"      | "top para"        | "Row_1_Cell_1"|
   | "http://sidrasue.com/tests/br.html"           | "0 2" | "all on"       | "top line"        | "bottom line" |
@@ -25,7 +25,7 @@ Feature: Basic Scrub
   | "http://sidrasue.com/tests/img.html"          | "1 3" | "content"      | "top para"        | "bottom par"  |
   | "http://sidrasue.com/tests/tablecontent.html" | "3 5" | "I remembered" | "Jump"            | "Content"     |
   | "http://sidrasue.com/tests/href.html"         | "1 3" | "content"      | "top link"        | "bottom link" |
-  | "http://sidrasue.com/tests/styled.html"       | "10 15" | "One"      | "horizontal"        | "end" |
+  | "http://sidrasue.com/tests/styled.html"       | "10 15" | "One"        | "horizontal"      | "end"         |
 
  Scenario Outline: strip top or bottom only
   Given I have no pages
@@ -41,7 +41,7 @@ Feature: Basic Scrub
     And I should not see <unwanted>
 
   Examples:
-  | url                                             | nodes | wanted1        | wanted2           | unwanted     |
+  | url                                           | nodes | wanted1        | wanted2           | unwanted      |
   | "http://sidrasue.com/tests/div.html"          | "1"   | "content"      | "last div"        | "second div"  |
   | "http://sidrasue.com/tests/container.html"    | "1"   | "content"      | "content2"        | "second div"  |
   | "http://sidrasue.com/tests/p.html"            | "2"   | "content"      | "top para"        | "bottom para" |

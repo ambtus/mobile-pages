@@ -4,8 +4,7 @@ Feature: basic rate
   Result: Order should reflect prefence
 
   Scenario: Changing read after orders
-    Given I have no pages
-      And the following pages
+    Given the following pages
       | title                            | url                                   | read_after |
       | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  | 2009-01-01 |
       | Dracula                          | http://sidrasue.com/tests/drac.html | 2009-01-05 |

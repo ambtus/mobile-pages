@@ -1,8 +1,7 @@
 Feature: filter on multiple criteria
 
   Scenario: filter on mix of author, genre, and state
-    Given I have no pages
-    And the following pages
+    Given the following pages
       | title                            | url                                   | last_read | add_author_string              | add_genre_string            |
       | The Mysterious Affair at Styles  | http://sidrasue.com/tests/maas.html | 2009-01-01 | agatha christie                | mystery           |
       | Alice's Adventures In Wonderland | http://sidrasue.com/tests/aa.html   | 2009-02-01 | lewis carroll, charles dodgson | fantasy, children |

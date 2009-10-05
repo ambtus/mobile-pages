@@ -4,33 +4,22 @@ Feature: basic search with parts
   result: be shown the parts page
 
   Scenario: find the parent of a part
-    Given I have no pages
-      And I am on the homepage
-      And I follow "Store Multiple"
-    When I fill in "page_base_url" with "http://sidrasue.com/tests/parts/*.html"
-      And I fill in "page_url_substitutions" with "1 2"
-      And I fill in "page_title" with "Parent Doc"
-      And I press "Store"
-      And I am on the homepage
+    Given the following pages
+      |title    | base_url                 | url_substitutions |
+      | Parent1 | http://sidrasue.com/tests/parts/*.html | 1   |
+      | Parent2 | http://sidrasue.com/tests/parts/*.html | 2 3 |
+     When I am on the homepage
+     Then I should see "Parent1" in ".title"
       And I fill in "search" with "Part 2"
       And I press "Search"
-      And I should see "Part 2"
-      And I should see "Parent Doc"
-      And I should see "Part 1"
-      And I should not see "stuff for part 2"
+     Then I should see "Parent2" in ".title"
 
   Scenario: find a page with parts
-    Given I have no pages
-      And I am on the homepage
-      And I follow "Store Multiple"
-    When I fill in "page_base_url" with "http://sidrasue.com/tests/parts/*.html"
-      And I fill in "page_url_substitutions" with "1 2"
-      And I fill in "page_title" with "Parent Doc"
-      And I press "Store"
-      And I am on the homepage
-      And I fill in "search" with "Parent Doc"
+    Given the following pages
+      |title    | base_url                 | url_substitutions |
+      | Parent1 | http://sidrasue.com/tests/parts/*.html | 1   |
+      | Parent2 | http://sidrasue.com/tests/parts/*.html | 2 3 |
+     When I am on the homepage
+      And I fill in "search" with "Parent2"
       And I press "Search"
-      And I should see "Part 2"
-      And I should see "Parent Doc"
-      And I should see "Part 1"
-      And I should not see "stuff for part 2"
+     Then I should see "Part 2" in "#position_2"

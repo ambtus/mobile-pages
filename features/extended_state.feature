@@ -1,10 +1,9 @@
 Feature: unread states
 
   Scenario: add unread part to read parent
-    Given I have no pages
-    And the following page
-      | title | urls | 
-      | Multi | http://sidrasue.com/tests/parts/1.html | 
+    Given the following page
+      | title | urls |
+      | Multi | http://sidrasue.com/tests/parts/1.html |
       And I am on the homepage
    Then I should see "Multi" in ".title"
    Then I should see "unread" in ".states"
@@ -27,8 +26,7 @@ Feature: unread states
    Then I should see "unread" in ".states"
 
    Scenario: add parent to read part
-    Given I have no pages
-    And the following page
+    Given the following page
       | title | url | last_read |
       | Part | http://sidrasue.com/tests/parts/1.html | 2009-01-01 |
       And I am on the homepage
@@ -41,10 +39,9 @@ Feature: unread states
    Then I should not see "unread" in ".states"
 
    Scenario: add parent to unread part
-    Given I have no pages
-    And the following page
-      | title | url | 
-      | Part | http://sidrasue.com/tests/parts/1.html | 
+    Given the following page
+      | title | url |
+      | Part | http://sidrasue.com/tests/parts/1.html |
       And I am on the homepage
    Then I should see "unread" in ".states"
    When I follow "Manage Parts"
@@ -55,8 +52,7 @@ Feature: unread states
    Then I should see "unread" in ".states"
 
    Scenario: rate a part
-    Given I have no pages
-    And the following page
+    Given the following page
       | title | base_url | url_substitutions |
       | Read Separately | http://sidrasue.com/tests/parts/*.html | 1 2 |
       And I am on the homepage

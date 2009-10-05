@@ -4,13 +4,9 @@ Feature: basic parent page
   Result: if a page is a parent, the show (initial read) page should have the option to read or download it en mass, or to read or download each individual page
 
   Scenario: parent read page
-    Given I have no pages
-      And I am on the homepage
-      And I follow "Store Multiple"
-      And I fill in "page_base_url" with "http://sidrasue.com/tests/parts/*.html"
-     And I fill in "page_url_substitutions" with "1 2"
-     And I fill in "page_title" with "Parent Page"
-     And I press "Store"
+    Given the following page
+      |title | base_url | url_substitutions |
+      | Multi | http://sidrasue.com/tests/parts/*.html | 1 2 |
    When I am on the homepage
      And I follow "Parts"
    Then I should see "Download" in "#position_1"
@@ -22,7 +18,7 @@ Feature: basic parent page
    When I follow "Read" in "#position_1"
    Then I should see "stuff for part 1"
      And I should not see "stuff for part 2"
-   When I follow "Parent Page"
+   When I follow "Multi"
      And I follow "Read"
    Then I should see "stuff for part 1"
      And I should see "stuff for part 2"
