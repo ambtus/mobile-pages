@@ -61,7 +61,17 @@ Feature: error checking with parts
       And I press "Update"
     Then I should see "Single" in ".parent"
     When I am on the homepage
-      And I follow "Parts"
+      And I follow "List Parts"
     Then I should see "Part 1" in "#position_1"
       And I should see "Part 2" in "#position_2"
+
+  Scenario: single part stories shouldn't have parts link
+    Given the following page
+      | title  | url |
+      | Single | http://sidrasue.com/tests/test.html |
+    When I am on the homepage
+    Then I should not see "List Parts" in ".title"
+    When I follow "Read"
+    Then I should not see "List Parts" in ".title"
+    
 

@@ -8,7 +8,6 @@ Feature: Basic scrub with parts
       | title | base_url | url_substitutions |
       | Parent | http://sidrasue.com/tests/parts/*.html | 1 2 |
     When I am on the homepage
-      And I follow "Parts"
       And I follow "Read"
       And I should see "cruft"
     When I follow "Download" in ".title"

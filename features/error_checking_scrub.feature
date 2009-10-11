@@ -13,8 +13,7 @@ Feature: error checking scrub
       |title | urls |
       | test | #Title\n##First Part\nhttp://sidrasue.com/tests/parts/1.html###SubPart |
       And I am on the homepage
-    When I follow "Parts"
-      And I follow "Read"
+    When I follow "Read"
       And I follow "Scrub"
       And I follow "Scrub First Part"
       And I follow "Scrub SubPart"

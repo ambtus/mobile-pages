@@ -17,7 +17,7 @@ Feature: unread states
    Then I should see "Multi" in ".title"
      And I should see "unread" in ".states"
    When I am on the homepage
-     And I follow "Parts"
+     And I follow "List Parts"
      And I follow "Read" in "#position_1"
    Then I should not see "unread" in ".states"
    When I am on the homepage

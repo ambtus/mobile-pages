@@ -20,7 +20,6 @@ Feature: extended store
       |title | urls |
       | test | http://sidrasue.com/tests/parts/1.html |
     When I am on the homepage
-      And I follow "Parts"
       And I follow "Read"
     When I follow "Refetch" in ".title"
     Then the field with id "url_list" should contain "http://sidrasue.com/tests/parts/1.html"
@@ -43,7 +42,6 @@ Feature: extended store
       |title | urls |
       | test | http://sidrasue.com/tests/sbutf8.html |
     When I am on the homepage
-      And I follow "Parts"
       And I follow "Read"
     Then I should see "â€œ"
     When I press "Make UTF8"

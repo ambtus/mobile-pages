@@ -49,7 +49,7 @@ Feature: basic first
     When I fill in "search" with "Subpart2"
       And I press "Search"
     Then I should see "Grandparent" in ".title"
-    When I follow "Read" in "#position_2"
+    When I follow "List Parts" in "#position_2"
       And I follow "Read" in "#position_2"
     Then I should see "stuff for part 6" in ".content"
     When I press "Read First"

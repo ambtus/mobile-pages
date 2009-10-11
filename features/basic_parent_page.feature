@@ -8,7 +8,7 @@ Feature: basic parent page
       |title | base_url | url_substitutions |
       | Multi | http://sidrasue.com/tests/parts/*.html | 1 2 |
    When I am on the homepage
-     And I follow "Parts"
+     And I follow "List Parts"
    Then I should see "Download" in "#position_1"
      And I should see "Read" in "#position_1"
      And I should see "Download" in "#position_2"

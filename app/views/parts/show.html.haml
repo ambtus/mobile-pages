@@ -25,9 +25,7 @@
   - @page.parts.each do |part|
     .part{:id => "position_#{part.position}"}
       =h part.title
-      - if part.parts.blank?
-        = link_to "Read", page_path(part)
-      - else
-        = link_to "Read", part_path(part)
+      = link_to "Read", page_path(part)
+      = link_to "List Parts", part_path(part) unless part.parts.blank?
       = link_to "Download", part.mobile_url
       = link_to "Scrub", scrub_path(part)
