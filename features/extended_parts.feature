@@ -3,8 +3,8 @@ Feature: complex parts with titles from url list
   Scenario: create parts from a list of urls with titles
     Given I am on the homepage
       And I follow "Store Multiple"
-    When I fill in "page_urls" with "#my title\n\nhttp://sidrasue.com/tests/parts/1.html\n\nhttp://sidrasue.com/tests/parts/2.html##part title"
-      And I fill in "page_title" with "Will be overwritten"
+    When I fill in "page_urls" with "http://sidrasue.com/tests/parts/1.html\n\nhttp://sidrasue.com/tests/parts/2.html##part title"
+      And I fill in "page_title" with "my title"
      And I press "Store"
    Then I should see "my title" in ".title"
      And I should see "Part 1" in "h1"
@@ -15,8 +15,8 @@ Feature: complex parts with titles from url list
   Scenario: create subparts from a list of urls with titles
     Given I am on the homepage
       And I follow "Store Multiple"
-    When I fill in "page_urls" with "#Title\n##Part the first\nhttp://sidrasue.com/tests/parts/1.html###subpart title\nhttp://sidrasue.com/tests/parts/2.html\n\nhttp://sidrasue.com/tests/parts/3.html##Part 2\n\n##Third Part\nhttp://sidrasue.com/tests/parts/4.html\nhttp://sidrasue.com/tests/parts/5.html"
-      And I fill in "page_title" with "Will be overwritten"
+    When I fill in "page_urls" with "##Part the first\nhttp://sidrasue.com/tests/parts/1.html###subpart title\nhttp://sidrasue.com/tests/parts/2.html\n\nhttp://sidrasue.com/tests/parts/3.html##Part 2\n\n##Third Part\nhttp://sidrasue.com/tests/parts/4.html\nhttp://sidrasue.com/tests/parts/5.html"
+      And I fill in "page_title" with "Title"
      And I press "Store"
    Then I should see "Title" in ".title"
      And I should see "Part the first" in "h1"

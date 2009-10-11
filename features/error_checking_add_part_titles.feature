@@ -6,7 +6,8 @@ Feature: error checking add parts titles
       | Multi | http://sidrasue.com/tests/parts/*.html | 1 2 3 |
     When I am on the homepage
     When I follow "Manage Parts"
-      And I fill in "url_list" with "#Added Part Headings\n##part1\nhttp://sidrasue.com/tests/parts/1.html\n##part2\nhttp://sidrasue.com/tests/parts/2.html\nhttp://sidrasue.com/tests/parts/3.html"
+      And I fill in "title" with "Added Part Headings"
+      And I fill in "url_list" with "##part1\nhttp://sidrasue.com/tests/parts/1.html\n##part2\nhttp://sidrasue.com/tests/parts/2.html\nhttp://sidrasue.com/tests/parts/3.html"
       And I press "Update"
     Then I should see "Added Part Headings" in ".title"
       And I should see "part1" in "#position_1"

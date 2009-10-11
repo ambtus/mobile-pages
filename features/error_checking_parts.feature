@@ -40,8 +40,8 @@ Feature: error checking with parts
     Given I have no pages
       And I am on the homepage
     When I follow "Store Multiple"
-      And I fill in "page_urls" with "#Parent\n\n##Child 1\n\nhttp://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html\n\nhttp://sidrasue.com/tests/parts/3.html##Child 2\n\n"
-     And I fill in "page_title" with "Pages from urls with empty lines"
+      And I fill in "page_urls" with "##Child 1\n\nhttp://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html\n\nhttp://sidrasue.com/tests/parts/3.html##Child 2\n\n"
+     And I fill in "page_title" with "Parent"
      And I press "Store"
    Then I should see "Parent" in ".title"
      And I should see "Child 1" in "h1"

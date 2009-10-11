@@ -152,9 +152,6 @@ class Page < ActiveRecord::Base
 
     lines = url_title_list.split(/[\r\n]/).select {|l| l.chomp} - [""]
 
-    my_title = lines.first.sub("#", "") if lines.first.match "^#"
-    self.update_attribute(:title, my_title) unless my_title.blank?
-
     parts_with_subparts = lines.select {|l| l.match("^##") && !l.match("###")}
 
     if parts_with_subparts.blank?
@@ -264,7 +261,6 @@ class Page < ActiveRecord::Base
   def url_list
     partregexp = /\APart \d+\Z/
     list = []
-    list << "#" + self.title
     self.parts.each do |part|
       if part.parts.blank?
         line = part.url
