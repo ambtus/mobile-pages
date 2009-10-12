@@ -5,9 +5,13 @@ Feature: Basic Scrub
 
  Scenario Outline: strip beginning and end
   Given I have no pages
-    And I am on the homepage
+    And the following genre
+      | name |
+      | my genre |
+   When I am on the homepage
     And I fill in "page_url" with <url>
     And I fill in "page_title" with "Title"
+    And I select "my genre"
     And I press "Store"
     And I follow "Scrub"
   When I check boxes <nodes>
@@ -29,9 +33,13 @@ Feature: Basic Scrub
 
  Scenario Outline: strip top or bottom only
   Given I have no pages
-    And I am on the homepage
+    And the following genre
+      | name |
+      | my genre |
+   When I am on the homepage
     And I fill in "page_url" with <url>
     And I fill in "page_title" with "Title"
+    And I select "my genre"
     And I press "Store"
     And I follow "Scrub"
   When I check <nodes>

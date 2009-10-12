@@ -5,11 +5,15 @@ Feature: basic parts
 
   Scenario: create and read a page from base url plus pattern
     Given I have no pages
+      And the following genre
+        | name |
+        | my genre |
       And I am on the homepage
     When I follow "Store Multiple"
       And I fill in "page_base_url" with "http://sidrasue.com/tests/parts/*.html"
      And I fill in "page_url_substitutions" with "1 2 3"
      And I fill in "page_title" with "Multiple pages from base"
+     And I select "my genre"
      And I press "Store"
    Then I should see "Multiple pages from base"
      And I should see "Part 1"
@@ -21,10 +25,14 @@ Feature: basic parts
 
   Scenario: create and read a page from a list of urls
     Given I have no pages
+      And the following genre
+        | name |
+        | my genre |
       And I am on the homepage
     When I follow "Store Multiple"
       And I fill in "page_urls" with "http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html"
      And I fill in "page_title" with "Multiple pages from urls"
+     And I select "my genre"
      And I press "Store"
    Then I should see "Multiple pages from urls"
      And I should see "Part 1"

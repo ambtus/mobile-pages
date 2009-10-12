@@ -1,9 +1,19 @@
 class PagesController < ApplicationController
   def create
+    if params[:Filter]
+      redirect_to (:action => "index" , :controller => "start", :author => params[:author], :genre => params[:genre], :state => params[:state]) and return
+    end
     @page = Page.new(params[:page])
+    @genre = Genre.find_by_name(params[:genre])
     if @page.save
-      flash[:notice] = "Page created."
-      redirect_to @page and return
+      if @genre.blank?
+        flash[:notice] = "Page created. Please select genre(s)"
+        redirect_to genre_path(@page) and return
+      else
+        flash[:notice] = "Page created."
+        @page.genres << @genre
+        redirect_to @page and return
+      end
     end
   end
   def show

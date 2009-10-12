@@ -1,34 +1,42 @@
 Feature: complex parts with titles from url list
 
   Scenario: create parts from a list of urls with titles
-    Given I am on the homepage
+    Given the following genre
+      | name |
+      | my genre |
+    When I am on the homepage
       And I follow "Store Multiple"
     When I fill in "page_urls" with "http://sidrasue.com/tests/parts/1.html\n\nhttp://sidrasue.com/tests/parts/2.html##part title"
       And I fill in "page_title" with "my title"
-     And I press "Store"
-   Then I should see "my title" in ".title"
-     And I should see "Part 1" in "h1"
-     And I should see "part title" in "h1"
-     And I should see "stuff for part 1"
-     And I should see "stuff for part 2"
+      And I select "my genre"
+      And I press "Store"
+    Then I should see "my title" in ".title"
+      And I should see "Part 1" in "h1"
+      And I should see "part title" in "h1"
+      And I should see "stuff for part 1"
+      And I should see "stuff for part 2"
 
   Scenario: create subparts from a list of urls with titles
-    Given I am on the homepage
+    Given the following genre
+      | name |
+      | my genre |
+    When I am on the homepage
       And I follow "Store Multiple"
     When I fill in "page_urls" with "##Part the first\nhttp://sidrasue.com/tests/parts/1.html###subpart title\nhttp://sidrasue.com/tests/parts/2.html\n\nhttp://sidrasue.com/tests/parts/3.html##Part 2\n\n##Third Part\nhttp://sidrasue.com/tests/parts/4.html\nhttp://sidrasue.com/tests/parts/5.html"
       And I fill in "page_title" with "Title"
-     And I press "Store"
-   Then I should see "Title" in ".title"
-     And I should see "Part the first" in "h1"
-     And I should see "subpart title" in "h2"
-     And I should see "stuff for part 1"
-     And I should see "Part 2" in "h2"
-     And I should see "stuff for part 2"
-     And I should see "Part 2" in "h1"
-     And I should see "stuff for part 3"
-     And I should see "Third Part" in "h1"
-     And I should see "stuff for part 4"
-     And I should see "stuff for part 5"
+      And I select "my genre"
+      And I press "Store"
+    Then I should see "Title" in ".title"
+      And I should see "Part the first" in "h1"
+      And I should see "subpart title" in "h2"
+      And I should see "stuff for part 1"
+      And I should see "Part 2" in "h2"
+      And I should see "stuff for part 2"
+      And I should see "Part 2" in "h1"
+      And I should see "stuff for part 3"
+      And I should see "Third Part" in "h1"
+      And I should see "stuff for part 4"
+      And I should see "stuff for part 5"
 
   Scenario: add a part updates the parent's read_after
     Given the following pages

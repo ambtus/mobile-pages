@@ -3,6 +3,9 @@
 .form
   - form_for @page do |f|
     .errors= f.error_messages
+    - unless Genre.all.blank?
+      .genre
+        = select_tag :genre, "<option></option>" +   options_from_collection_for_select(Genre.all, 'name', 'name')
     = f.text_field :url, :maxlength => 255, :size => 80, :value => @page.url || Page::URL_PLACEHOLDER, :onblur=>"if(this.value == '') { this.value='#{Page::URL_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::URL_PLACEHOLDER}') {this.value=''}"
     = f.text_field :title, :maxlength => 255, :size => 80, :value => @page.title || Page::TITLE_PLACEHOLDER,  :onblur=>"if(this.value == '') { this.value='#{Page::TITLE_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::TITLE_PLACEHOLDER}') {this.value=''}"
     .button= f.submit "Store"

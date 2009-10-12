@@ -4,12 +4,13 @@ Feature: basic first
 
   Scenario: Add a page and make it first
     Given the following pages
-        | title | url | read_after |
-        | One   | http://sidrasue.com/tests/parts/1.html | 2009-01-01 |
+        | title | url | read_after | add_genre_string |
+        | One   | http://sidrasue.com/tests/parts/1.html | 2009-01-01 | my genre |
       And I am on the homepage
     Then I should see "One" in ".title"
     When I fill in "page_url" with "http://sidrasue.com/tests/parts/2.html"
       And I fill in "page_title" with "Two"
+      And I select "my genre"
       And I press "Store"
       And I press "Read First"
     When I am on the homepage

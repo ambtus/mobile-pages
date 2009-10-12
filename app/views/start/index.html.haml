@@ -5,7 +5,7 @@
     - form_tag start_index_path do
       = hidden_field_tag(:page_id, @page.id)
       = hidden_field_tag(:old_genre, @genre_name)
-      = hidden_field_tag(:old_author, @author_name) 
+      = hidden_field_tag(:old_author, @author_name)
       = hidden_field_tag(:old_state, @state_name)
       = submit_tag "Read Later"
   - if @page.parent
@@ -15,10 +15,10 @@
     = link_to "Read", page_path(@page)
     = link_to "List Parts", part_path(@page) unless @page.parts.blank?
     = link_to "Download", @page.mobile_url
-    = link_to "Rate", rate_path(@page) 
-    = link_to "Genres", genre_path(@page) 
-    = link_to "Authors", author_path(@page) 
-    = link_to "Notes", edit_note_path(@page) 
+    = link_to "Rate", rate_path(@page)
+    = link_to "Genres", genre_path(@page)
+    = link_to "Authors", author_path(@page)
+    = link_to "Notes", edit_note_path(@page)
     = link_to "Manage Parts", edit_part_path(@page)
   .states= @page.state_string
   .authors= @page.author_string
@@ -29,22 +29,22 @@
   - form_tag search_index_path do
     = text_field_tag :search, params[:search]
     = submit_tag "Search", :name => nil
-- form_tag start_index_path do
-  - unless @states.blank?
-    .state
-      = select_tag :state, "<option></option>" + options_for_select(@states, @state_name)
-  - unless @authors.blank?
-    .author
-      = select_tag :author, "<option></option>" + options_for_select(@authors, @author_name)
-  - unless @genres.blank?
-    .genre
-      = select_tag :genre, "<option></option>" + options_for_select(@genres, @genre_name)
-  = submit_tag "Filter", :name => "Filter"
 .form
   - form_for @new_page do |f|
+    - unless @states.blank?
+      .state
+        = select_tag :state, "<option></option>" + options_for_select(@states, @state_name)
+    - unless @authors.blank?
+      .author
+        = select_tag :author, "<option></option>" + options_for_select(@authors, @author_name)
+    - unless @genres.blank?
+      .genre
+        = select_tag :genre, "<option></option>" + options_for_select(@genres, @genre_name)
     = f.text_field :url, :maxlength => 255, :size => 30, :value => Page::URL_PLACEHOLDER, :onblur=>"if(this.value == '') { this.value='#{Page::URL_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::URL_PLACEHOLDER}') {this.value=''}"
     %br
     = f.text_field :title, :maxlength => 255, :size => 30, :value => Page::TITLE_PLACEHOLDER,  :onblur=>"if(this.value == '') { this.value='#{Page::TITLE_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::TITLE_PLACEHOLDER}') {this.value=''}"
     %br
-    .button= f.submit "Store"
+    .button
+      = f.submit "Filter", :name => "Filter"
+      = f.submit "Store", :name => "Store"
 = link_to "Store Multiple", new_part_path
