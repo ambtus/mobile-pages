@@ -32,6 +32,8 @@ module Curl
           body.at('div#storytext')
         when /archiveofourown/
           body.at('div.work-show')
+        when /wraithbait/
+          body.at('div#mainpage') || body
         when /google/
           body.at('div#inbdy')
         else

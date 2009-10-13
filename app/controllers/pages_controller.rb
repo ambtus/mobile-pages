@@ -1,7 +1,7 @@
 class PagesController < ApplicationController
   def create
     if params[:Filter]
-      redirect_to (:action => "index" , :controller => "start", :author => params[:author], :genre => params[:genre], :state => params[:state]) and return
+      redirect_to(:action => "index" , :controller => "start", :author => params[:author], :genre => params[:genre], :state => params[:state]) and return
     end
     @page = Page.new(params[:page])
     @genre = Genre.find_by_name(params[:genre])

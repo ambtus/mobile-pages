@@ -140,6 +140,29 @@ Feature: basic download
       And my document should not contain "Reply"
       And my document should contain "is mesmerizing"
 
+  Scenario: download wraithbait page content only
+    Given the following page
+      | title  | url |
+      | multi  | http://www.wraithbait.com/viewstory.php?sid=15331 |
+    When I am on the homepage
+      And I follow "Download" in ".title"
+    Then my document should not contain "recent stories"
+      And my document should not contain "Stargate SG-1 and Stargate: Atlantis,"
+      And my document should contain "Summary:"
+      And my document should contain "Story Notes:"
+      And my document should contain "I swear to God, Mer, I know what I'm doing!"
+
+  Scenario: download wraithbait story content only
+    Given the following page
+      | title  | url |
+      | multi  | http://www.wraithbait.com/viewstory.php?action=printable&textsize=0&sid=15133&chapter=all |
+    When I am on the homepage
+      And I follow "Download" in ".title"
+    Then my document should contain "Summary:"
+      And my document should contain "Story Notes:"
+      And my document should contain "There was a time of day in Atlantis"
+
+
   Scenario: download fanfiction page content only
     Given the following page
       | title  | url |
