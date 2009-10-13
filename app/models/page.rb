@@ -39,6 +39,15 @@ class Page < ActiveRecord::Base
     by_author & by_genre & by_state
   end
 
+  def to_param
+    "#{self.id}-#{self.clean_title}"
+  end
+
+  def clean_title
+    clean = self.title.gsub('/', '')
+    CGI::escape(clean).gsub('+', '%20').gsub('.', '%46')
+  end
+
   def before_validation
     self.url = nil if self.url == URL_PLACEHOLDER
     self.title = nil if self.title == TITLE_PLACEHOLDER
@@ -116,7 +125,6 @@ class Page < ActiveRecord::Base
   end
 
   def build_me(input="latin1")
-    File.unlink(self.mobile_file_name) rescue Errno::ENOENT
     input = "utf8" if self.raw_content.match(/charset ?= ?"?utf-8/i)
     self.original_html = self.pre_process(self.raw_file_name, input)
     self.original_html = Curl::External.getnode(url, self.original_html)
@@ -235,11 +243,9 @@ class Page < ActiveRecord::Base
   end
 
   def build_html_from_parts
-    File.unlink(self.mobile_file_name) rescue Errno::ENOENT
     File.open(self.original_file, 'w') do |file|
       self.parts.each do |part|
         unless part.parts.blank?
-          File.unlink(part.mobile_file_name) rescue Errno::ENOENT
 	  part.build_html_from_parts
 	end
         level = part.parent.parent ? "h2" : "h1"
@@ -335,11 +341,6 @@ class Page < ActiveRecord::Base
     return self.read_after
   end
 
-  def clean_title
-    clean = self.title.gsub('/', '')
-    CGI::escape(clean).gsub('+', '%20').gsub('.', '%46') + ".txt"
-  end
-
   def state_string
     self.states.map(&:name).join(", ")
   end
@@ -371,14 +372,11 @@ class Page < ActiveRecord::Base
   end
 
   def original_html=(content)
-    File.unlink(self.mobile_file_name) rescue Errno::ENOENT
     File.open(self.original_file, 'w') { |f| f.write(content) }
     if self.parent
       if self.parent.parent
-        File.unlink(self.parent.parent.mobile_file_name) rescue Errno::ENOENT
         self.parent.parent.build_html_from_parts
       else
-        File.unlink(self.parent.mobile_file_name) rescue Errno::ENOENT
         self.parent.build_html_from_parts
       end
     else
@@ -396,25 +394,6 @@ class Page < ActiveRecord::Base
 
   def original_file
     Rails.public_path +  self.mypath + "original.html"
-  end
-
-  def mobile_url
-    self.mypath + self.clean_title
-  end
-
-  def mobile_content=(content)
-    File.open(self.mobile_file_name, 'w') { |f| f.write(content) }
-  end
-
-  def mobile_file
-    unless File.exists?(self.mobile_file_name)
-      self.mobile_content=self.remove_html
-    end
-    self.mobile_file_name
-  end
-
-  def mobile_file_name
-    Rails.public_path +  self.mypath + self.clean_title
   end
 
   def raw_content=(content)

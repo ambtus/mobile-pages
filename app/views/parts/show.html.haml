@@ -10,7 +10,7 @@
 .title
   =h @page.title
   = link_to "Read", page_path(@page)
-  = link_to "Download", @page.mobile_url
+  = link_to "Download", page_path(@page, :format => 'txt')
   = link_to "Rate", rate_path(@page)
   = link_to "Authors", author_path(@page)
   = link_to "Genres", genre_path(@page)
@@ -27,5 +27,5 @@
       =h part.title
       = link_to "Read", page_path(part)
       = link_to "List Parts", part_path(part) unless part.parts.blank?
-      = link_to "Download", part.mobile_url
+      = link_to "Download", page_path(@page, :format => 'txt')
       = link_to "Scrub", scrub_path(part)

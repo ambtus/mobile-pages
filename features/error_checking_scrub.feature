@@ -6,7 +6,7 @@ Feature: error checking scrub
       | test | http://sidrasue.com/tests/tidy.html |
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should not contain "nbsp"
+    Then I should not see "nbsp"
 
   Scenario: scrub a sub-part
     Given the following page
@@ -21,11 +21,11 @@ Feature: error checking scrub
       And I press "Scrub"
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should contain "# First Part #"
-      And my document should contain "## SubPart ##"
-      And my document should contain "stuff for part 1"
-    But my document should not contain "top cruft"
-    And my document should not contain "bottom cruft"
+    Then I should see "First Part #"
+      And I should see "## SubPart ##"
+      And I should see "stuff for part 1"
+    But I should not see "top cruft"
+    And I should not see "bottom cruft"
 
   Scenario: scrub when many headers and short fic
     Given the following page
@@ -38,5 +38,5 @@ Feature: error checking scrub
       And I press "Scrub"
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should contain "actual content"
-      And my document should not contain "header"
+    Then I should see "actual content"
+      And I should not see "header"

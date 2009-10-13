@@ -5,7 +5,7 @@
     =h page.title
     = link_to "Read", page_path(page)
     = link_to "List Parts", part_path(page) unless page.parts.blank?
-    = link_to "Download", page.mobile_url
+    = link_to "Download", page_path(page, :format => 'txt')
   .genres= page.genre_string
   .last_read= page.last_read.to_date if page.last_read
   .notes=simple_format page.notes

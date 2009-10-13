@@ -28,13 +28,13 @@ Feature: basic second level parts
     Then I should see "Parent" in "#position_1"
       And I should see "Single" in "#position_2"
     When I follow "Download" in ".title"
-    Then my document named "Grandparent" should contain "# Single #"
-      And my document named "Grandparent" should contain "# Parent #"
-      And my document named "Grandparent" should contain "## Part 1 ##"
-      And my document named "Grandparent" should contain "## Part 2 ##"
-      And my document named "Grandparent" should contain "stuff for part 1"
-      And my document named "Grandparent" should contain "stuff for part 2"
-      And my document named "Grandparent" should contain "stuff for part 3"
+    Then I should see "# Single #"
+      And I should see "# Parent #"
+      And I should see "## Part 1 ##"
+      And I should see "## Part 2 ##"
+      And I should see "stuff for part 1"
+      And I should see "stuff for part 2"
+      And I should see "stuff for part 3"
 
 
 

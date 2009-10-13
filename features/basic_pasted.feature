@@ -26,5 +26,5 @@ Feature: basic pasted
     When I fill in "pasted" with "<span class='first'>The</span> beginning<br><br>new paragraph"
       And I press "Update Raw HTML"
       And I follow "Download"
-     Then my document should contain "The beginning"
-       And my document should not contain "<br>"
+     Then I should see "The beginning"
+       And I should not see "<br>"

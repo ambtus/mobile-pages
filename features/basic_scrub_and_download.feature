@@ -6,9 +6,9 @@ Feature: Basic Scrub and download
       | multi  | http://sidrasue.com/tests/p.html |
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should contain "top para"
-      And my document should contain "content"
-      And my document should contain "bottom para"
+    Then I should see "top para"
+      And I should see "content"
+      And I should see "bottom para"
     When I am on the homepage
       And I follow "Read"
       And I follow "Scrub"
@@ -18,6 +18,6 @@ Feature: Basic Scrub and download
       And I should not see "bottom para"
       And I should see "content"
     When I follow "Download" in ".title"
-    Then my document should not contain "top para"
-      And my document should not contain "bottom para"
-      And my document should contain "content"
+    Then I should not see "top para"
+      And I should not see "bottom para"
+      And I should see "content"

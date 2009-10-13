@@ -6,4 +6,4 @@ Feature: extended download
       | title | http://sidrasue.com/tests/breaks.html | 
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should contain "__________"
+    Then I should see "__________"

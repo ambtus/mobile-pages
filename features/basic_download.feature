@@ -9,30 +9,30 @@ Feature: basic download
       | multi  | http://sidrasue.com/tests/styled.html |
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should contain "# This is a header #"
-      And my document should contain "## This is a second level header ##"
-      And my document should contain "*Bold*"
-      And my document should contain "_Italic_"
-      And my document should contain "==strike-through=="
-      And my document should contain "1^st"
-      And my document should contain "2(nd)"
-      And my document should contain "&"
-      And my document should not contain "&amp;"
-      And my document should contain "________________"
-      And my document should not contain "div>"
-      And my document should not contain "p>"
-      And my document should not contain "small>"
-      And my document should contain "(something little)"
-      And my document should contain "…"
-      And my document should contain "—"
-      And my document should contain "’"
-      And my document should not contain ";"
-      And my document should contain "*This is another header*"
-      And my document should contain "*One Two, Three*"
-      And my document should contain "_One, Two? Three_"
-      And my document should contain "_One-TwoThree_"
-      And my document should contain "<>end<>"
-      And my document should contain "façade"
+    Then I should see "# This is a header #"
+      And I should see "## This is a second level header ##"
+      And I should see "*Bold*"
+      And I should see "_Italic_"
+      And I should see "==strike-through=="
+      And I should see "1^st"
+      And I should see "2(nd)"
+      And I should see "&"
+      And I should not see "&amp;"
+      And I should see "________________"
+      And I should not see "div>"
+      And I should not see "p>"
+      And I should not see "small>"
+      And I should see "(something little)"
+      And I should see "…"
+      And I should see "—"
+      And I should see "’"
+      And I should not see ";"
+      And I should see "*This is another header*"
+      And I should see "*One Two, Three*"
+      And I should see "_One, Two? Three_"
+      And I should see "_One-TwoThree_"
+      And I should see "façade"
+#      And I should see "<>end<>"
 
   Scenario: download stripping links and images
     Given the following page
@@ -40,13 +40,13 @@ Feature: basic download
       | multi  | http://sidrasue.com/tests/href.html |
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should contain "[top link]"
-      And my document should contain "[middle link]"
-      And my document should contain "[bottom link]"
-      And my document should contain "[image with alt]"
-      And my document should not contain "img"
-      And my document should not contain "\[\]"
-      And my document should not contain "href"
+    Then I should see "[top link]"
+      And I should see "[middle link]"
+      And I should see "[bottom link]"
+      And I should see "[image with alt]"
+      And I should not see "img"
+      And I should not see "\[\]"
+      And I should not see "href"
 
   Scenario: download stripping of javascript and comments
     Given the following page
@@ -54,11 +54,11 @@ Feature: basic download
       | multi  | http://sidrasue.com/tests/entities.html |
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should not contain "script language="
-      And my document should not contain "FILE ARCHIVED"
-      And my document should not contain "This script will not work without javascript enabled."
-      And my document should not contain "noscript"
-      And my document should contain "Chris was antsy"
+    Then I should not see "script language="
+      And I should not see "FILE ARCHIVED"
+      And I should not see "This script will not work without javascript enabled."
+      And I should not see "noscript"
+      And I should see "Chris was antsy"
 
   Scenario: download stripping of tables
     Given the following page
@@ -66,12 +66,12 @@ Feature: basic download
       | multi  | http://sidrasue.com/tests/tablecontent.html |
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should not contain "<table"
-      And my document should not contain "<td"
-      And my document should not contain "<tr>"
-      And my document should not contain "<big>"
-      And my document should contain "Irony"
-      And my document should contain "I remembered waking up"
+    Then I should not see "<table"
+      And I should not see "<td"
+      And I should not see "<tr>"
+      And I should not see "<big>"
+      And I should see "Irony"
+      And I should see "I remembered waking up"
 
   Scenario: download stripping of lists
     Given the following page
@@ -79,12 +79,12 @@ Feature: basic download
       | multi  | http://sidrasue.com/tests/list.html |
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should not contain "<ul"
-      And my document should not contain "<ol>"
-      And my document should not contain "<li>"
-      And my document should not contain "<d"
-      And my document should contain "* unordered"
-      And my document should contain "term:"
+    Then I should not see "<ul"
+      And I should not see "<ol>"
+      And I should not see "<li>"
+      And I should not see "<d"
+      And I should see "* unordered"
+      And I should see "term:"
 
   Scenario: download crappy Microsoft Office "html"
     Given the following page
@@ -92,14 +92,14 @@ Feature: basic download
       | multi  | http://sidrasue.com/tests/mso.html |
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should not contain "<em"
-      And my document should contain "he _had_ to"
-      And my document should not contain "<wbr>"
-      And my document should not contain "<o:p>"
-      And my document should contain "so-I-am-God"
-      And my document should not contain "\n\n\n\n"
-      And my document should contain "*My boyfriend"
-      And my document should not contain "<strong"
+    Then I should not see "<em"
+      And I should see "he _had_ to"
+      And I should not see "<wbr>"
+      And I should not see "<o:p>"
+      And I should see "so-I-am-God"
+      And I should not see "\n\n\n\n"
+      And I should see "*My boyfriend"
+      And I should not see "<strong"
 
   Scenario: download weird empty divs
     Given the following page
@@ -107,16 +107,17 @@ Feature: basic download
       | multi  | http://sidrasue.com/tests/ejournal_div.html |
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should not contain "\n\n\n\n"
-      And my document should contain "Rodney muttered imprecations"
+    Then I should not see "\n\n\n\n"
+      And I should see "Rodney muttered imprecations"
 
-  Scenario: download page with and without linefeeds
     Given the following page
       | title  | url |
       | multi  | http://sidrasue.com/tests/linefeeds.html |
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should contain "first\n\nsecond\n\nthird\n\nfourth\n\nfifth\n\nsixth\n\nseventh\n\neighth"
+     Then I should not see "thirdfourth"
+     Then I should not see "fifthsixth"
+#    Then I should see "first\n\nsecond\n\nthird\n\nfourth\n\nfifth\n\nsixth\n\nseventh\n\neighth"
 
   Scenario: divs with attributes
     Given the following page
@@ -124,7 +125,10 @@ Feature: basic download
       | multi  | http://sidrasue.com/tests/div.html |
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should contain "first div\n\nsecond div\n\ncontent"
+#    Then I should see "first div\n\nsecond div\n\ncontent"
+    Then I should see "first div"
+      And I should see "second div"
+      And I should not see "<"
 
   Scenario: download livejournal page content only
     Given the following page
@@ -132,13 +136,13 @@ Feature: basic download
       | multi  | http://sid.livejournal.com/119818.html |
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should not contain "input type="
-      And my document should not contain "form method="
-      And my document should not contain "select name="
-      And my document should not contain "img src="
-      And my document should not contain "blockquote"
-      And my document should not contain "Reply"
-      And my document should contain "is mesmerizing"
+    Then I should not see "input type="
+      And I should not see "form method="
+      And I should not see "select name="
+      And I should not see "img src="
+      And I should not see "blockquote"
+      And I should not see "Reply"
+      And I should see "is mesmerizing"
 
   Scenario: download wraithbait page content only
     Given the following page
@@ -146,11 +150,11 @@ Feature: basic download
       | multi  | http://www.wraithbait.com/viewstory.php?sid=15331 |
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should not contain "recent stories"
-      And my document should not contain "Stargate SG-1 and Stargate: Atlantis,"
-      And my document should contain "Summary:"
-      And my document should contain "Story Notes:"
-      And my document should contain "I swear to God, Mer, I know what I'm doing!"
+    Then I should not see "recent stories"
+      And I should not see "Stargate SG-1 and Stargate: Atlantis,"
+      And I should see "Summary:"
+      And I should see "Story Notes:"
+      And I should see "I swear to God, Mer, I know what I'm doing!"
 
   Scenario: download wraithbait story content only
     Given the following page
@@ -158,9 +162,9 @@ Feature: basic download
       | multi  | http://www.wraithbait.com/viewstory.php?action=printable&textsize=0&sid=15133&chapter=all |
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should contain "Summary:"
-      And my document should contain "Story Notes:"
-      And my document should contain "There was a time of day in Atlantis"
+    Then I should see "Summary:"
+      And I should see "Story Notes:"
+      And I should see "There was a time of day in Atlantis"
 
 
   Scenario: download fanfiction page content only
@@ -169,8 +173,8 @@ Feature: basic download
       | multi  | http://www.fanfiction.net/s/638499/1/ |
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should not contain "Rated: "
-      And my document should contain "This is rabbit’s fault"
+    Then I should not see "Rated: "
+      And I should see "This is rabbit’s fault"
 
   Scenario: download archive of our own page content only
     Given the following page
@@ -178,9 +182,9 @@ Feature: basic download
       | multi  | http://archiveofourown.org/works/3412 |
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should not contain "Add Comment"
-      And my document should contain "Summary"
-      And my document should contain "Mister Larabee"
+    Then I should not see "Add Comment"
+      And I should see "Summary"
+      And I should see "Mister Larabee"
 
   Scenario: download google groops content only
     Given the following page
@@ -188,6 +192,6 @@ Feature: basic download
       | multi  | http://sidrasue.com/tests/google.html |
     When I am on the homepage
       And I follow "Download" in ".title"
-    Then my document should contain "Author: Ster Julie"
-      And my document should not contain "This is a Usenet group"
+    Then I should see "Author: Ster Julie"
+      And I should not see "This is a Usenet group"
 

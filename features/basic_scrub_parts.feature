@@ -11,7 +11,7 @@ Feature: Basic scrub with parts
       And I follow "Read"
       And I should see "cruft"
     When I follow "Download" in ".title"
-    Then my document should contain "cruft"
+    Then I should see "cruft"
     When I am on the homepage
     When I follow "Parts"
       And I follow "Scrub" in "#position_1"
@@ -21,6 +21,6 @@ Feature: Basic scrub with parts
       And I should see "stuff for part 1"
     When I follow "Parent" in ".parent"
       And I follow "Download" in ".title"
-    Then my document should not contain "cruft"
-      And my document should contain "stuff for part 1"
-      And my document should contain "stuff for part 2"
+    Then I should not see "cruft"
+      And I should see "stuff for part 1"
+      And I should see "stuff for part 2"
