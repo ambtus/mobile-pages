@@ -127,10 +127,12 @@ class Page < ActiveRecord::Base
   def build_me(input="latin1")
     input = "utf8" if self.raw_content.match(/charset ?= ?"?utf-8/i)
     self.original_html = self.pre_process(self.raw_file_name, input)
-    self.clean_me
+    self.original_html = Curl::External.getnode(url, self.original_html)
+    self.set_wordcount
   end
 
-  def clean_me
+  def clean_me(input="utf8")
+    self.original_html = self.pre_process(self.original_file, input)
     self.original_html = Curl::External.getnode(url, self.original_html)
     self.set_wordcount
   end
