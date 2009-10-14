@@ -34,7 +34,7 @@ Feature: extended store
     When I am on the homepage
       And I follow "Read"
     Then I should see "â€œ"
-    When I press "Make UTF8"
+    When I press "Raw HTML to UTF8"
     Then I should see "“H"
 
   Scenario: add utf8 to parts
@@ -44,5 +44,33 @@ Feature: extended store
     When I am on the homepage
       And I follow "Read"
     Then I should see "â€œ"
-    When I press "Make UTF8"
+    When I press "Raw HTML to UTF8"
     Then I should see "“H"
+
+  Scenario: rebuild from latin1
+    Given the following page
+      |title | url |
+      | test | http://sidrasue.com/tests/1252.html |
+    When I am on the homepage
+      And I follow "Read"
+      And I follow "Scrub"
+      And I check boxes "0"
+      And I press "Scrub"
+    Then I should not see "“H"
+    When I press "Raw HTML to Latin1"
+    Then I should see "“H"
+
+  Scenario: rebuild from original (not raw) html
+    Given the following page
+      |title | url |
+      | test | http://sidrasue.com/tests/1252.html |
+    When I am on the homepage
+      And I follow "Read"
+      And I follow "Scrub"
+      And I check boxes "0"
+      And I press "Scrub"
+    Then I should not see "“H"
+      And I should see "Don’t—"
+    When I press "Clean HTML"
+    Then I should not see "“H"
+      And I should see "Don’t—"

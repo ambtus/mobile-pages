@@ -23,16 +23,19 @@ class PagesController < ApplicationController
     @page = Page.find(params[:id])
     @page = @page.next if (params[:commit] == "Read Later")
     @page = @page.first if (params[:commit] == "Read First")
-    if params[:commit] == "Make UTF8"
-      if @page.parts.empty?
-        @page.build_me("utf8")
-      else
-        @page.parts.each {|p| p.build_me("utf8")}
-      end
-    end
-    if params[:commit] == "Update Raw HTML"
-      @page.pasted = params[:pasted]
-      flash[:notice] = "Raw HTML updated."
+    case params[:commit]
+      when "Raw HTML to UTF8"
+        @page.parts.empty? ? @page.build_me("utf8") : @page.parts.each {|p| p.build_me("utf8")}
+        flash[:notice] = "HTML converted to utf8"
+      when "Raw HTML to Latin1"
+        @page.parts.empty? ? @page.build_me("latin1") : @page.parts.each {|p| p.build_me("latin1")}
+        flash[:notice] = "HTML converted to latin1"
+      when "Clean HTML"
+        @page.parts.empty? ? @page.clean_me : @page.parts.each {|p| p.clean_me }
+        flash[:notice] = "HTML cleaned"
+      when "Update Raw HTML"
+        @page.pasted = params[:pasted]
+        flash[:notice] = "Raw HTML updated."
     end
     @page.remove_nodes(params[:nodes]) if params[:nodes]
     @page.update_attributes(params[:page])
