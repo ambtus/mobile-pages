@@ -12,7 +12,8 @@ Feature: basic second level parts
       | Single | http://sidrasue.com/tests/parts/1.html |
     When I am on the homepage
     Then I should see "Parent" in ".title"
-    When I follow "Manage Parts"
+    When I follow "Read"
+      And I follow "Manage Parts"
       And I fill in "add_parent" with "Grandparent"
       And I fill in "url_list" with "http://sidrasue.com/tests/parts/2.html\nhttp://sidrasue.com/tests/parts/3.html"
       And I press "Update"

@@ -5,7 +5,8 @@ Feature: basic title
       | title                  | url |
       | Old Title              | http://sidrasue.com/tests/test.html |
       And I am on the homepage
-    When I follow "Manage Parts"
+    When I follow "Read"
+      And I follow "Manage Parts"
       And I fill in "title" with "New Title"
       And I press "Update"
     Then I should see "New Title" in ".title"

@@ -8,6 +8,7 @@ Feature: basic edit of parts
       | title  | base_url               | url_substitutions |
       | multi  | http://sidrasue.com/tests/parts/*.html | 1 |
     When I am on the homepage
+      And I follow "Read"
       And I follow "Manage Parts"
       And I fill in "url_list" with "http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html"
       And I press "Update"
@@ -22,6 +23,7 @@ Feature: basic edit of parts
       | title  | base_url               | url_substitutions |
       | multi  | http://sidrasue.com/tests/parts/*.html | 1 2 3 |
     When I am on the homepage
+      And I follow "Read"
       And I follow "Manage Parts"
       And I fill in "url_list" with "http://sidrasue.com/tests/parts/2.html\nhttp://sidrasue.com/tests/parts/3.html"
       And I press "Update"
@@ -36,6 +38,7 @@ Feature: basic edit of parts
       | title  | base_url               | url_substitutions |
       | multi  | http://sidrasue.com/tests/parts/*.html | 1 2 |
     When I am on the homepage
+      And I follow "Read"
       And I follow "Manage Parts"
       And I fill in "url_list" with "http://sidrasue.com/tests/parts/2.html\nhttp://sidrasue.com/tests/parts/1.html"
       And I press "Update"

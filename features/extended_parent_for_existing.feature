@@ -6,7 +6,8 @@ Feature: extended parent for existing pages
       | Single | http://sidrasue.com/tests/test.html" | 2008-01-01 |
     When I am on the homepage
     Then I should see "2008-01-01" in ".last_read"
-    When I follow "Manage Parts"
+    When I follow "Read"
+      And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
       And I press "Update"
     Then I should see "New Parent" in ".title"
@@ -20,7 +21,8 @@ Feature: extended parent for existing pages
       | Another | http://sidrasue.com/tests/entities.html" | 2008-02-01 |
     When I am on the homepage
     Then I should see "Single" in ".title"
-    When I follow "Manage Parts"
+    When I follow "Read"
+      And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
       And I press "Update"
     When I am on the homepage
@@ -31,7 +33,8 @@ Feature: extended parent for existing pages
       | title | url | add_genre_string |
       | Single | http://sidrasue.com/tests/test.html" | my genre |
     When I am on the homepage
-    When I follow "Manage Parts"
+      And I follow "Read"
+      And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
       And I press "Update"
     When I am on the homepage
@@ -43,7 +46,8 @@ Feature: extended parent for existing pages
       | title | url | add_author_string |
       | Single | http://sidrasue.com/tests/test.html" | my author |
     When I am on the homepage
-    When I follow "Manage Parts"
+      And I follow "Read"
+      And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
       And I press "Update"
     When I am on the homepage

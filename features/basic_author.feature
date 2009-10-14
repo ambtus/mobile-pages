@@ -30,6 +30,7 @@ Feature: basic authors
      | title | url |
      | Alice's Adventures | http://sidrasue.com/tests/aa.html |
     When I am on the homepage
+      And I follow "Read"
       And I follow "Authors"
     When I fill in "authors" with "lewis carroll, charles dodgson"
       And I press "Add authors"
@@ -48,7 +49,8 @@ Feature: basic authors
     When I am on the homepage
     Then I should not see "lewis carroll" in ".authors"
       But I should see "lewis carroll" in ".author"
-    When I follow "Authors"
+    When I follow "Read"
+      And I follow "Authors"
       And I select "lewis carroll"
       And I press "Update authors"
     Then I should see "lewis carroll" in ".authors"
@@ -59,7 +61,8 @@ Feature: basic authors
         | Alice's Adventures | http://sidrasue.com/tests/aa.html   | lewis carroll     |
     When I am on the homepage
     Then I should see "lewis carroll" in ".authors"
-    When I follow "Authors"
+    When I follow "Read"
+      And I follow "Authors"
       And I follow "Add Authors"
       And I fill in "authors" with "charles dodgson"
       And I press "Add authors"

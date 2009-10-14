@@ -8,6 +8,7 @@ Feature: basic parent for existing pages
       | title  | url |
       | Single | http://sidrasue.com/tests/test.html |
     When I am on the homepage
+      And I follow "Read"
       And I follow "Manage Parts"
       And I fill in "add_parent" with "Parent"
       And I press "Update"
@@ -26,7 +27,8 @@ Feature: basic parent for existing pages
       | Multi | http://sidrasue.com/tests/parts/*.html | 1 2 |
     When I am on the homepage
     Then I should see "Single" in ".title"
-    When I follow "Manage Parts"
+    When I follow "Read"
+      And I follow "Manage Parts"
       And I fill in "add_parent" with "Multi"
       And I press "Update"
     Then I should see "Multi" in ".title"

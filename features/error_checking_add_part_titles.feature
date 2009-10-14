@@ -5,7 +5,8 @@ Feature: error checking add parts titles
       |title | base_url | url_substitutions |
       | Multi | http://sidrasue.com/tests/parts/*.html | 1 2 3 |
     When I am on the homepage
-    When I follow "Manage Parts"
+    When I follow "Read"
+      And I follow "Manage Parts"
       And I fill in "title" with "Added Part Headings"
       And I fill in "url_list" with "##part1\nhttp://sidrasue.com/tests/parts/1.html\n##part2\nhttp://sidrasue.com/tests/parts/2.html\nhttp://sidrasue.com/tests/parts/3.html"
       And I press "Update"

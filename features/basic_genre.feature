@@ -9,6 +9,7 @@ Feature: basic genres
      | title | url |
      | Alice's Adventures | http://sidrasue.com/tests/aa.html |
     When I am on the homepage
+      And I follow "Read"
       And I follow "Genres"
     When I fill in "genres" with "classic, children's"
       And I press "Add genres"
@@ -25,6 +26,7 @@ Feature: basic genres
         | title | url |
         | Alice's Adventures In Wonderland | http://sidrasue.com/tests/aa.html   |
     When I am on the homepage
+      And I follow "Read"
     When I follow "Genres"
       And I select "fantasy"
       And I press "Update genres"
@@ -37,7 +39,8 @@ Feature: basic genres
     When I am on the homepage
     Then I should see "Grimm's Fairy Tales"
       And I should see "classic" in ".genres"
-    When I follow "Genres"
+    When I follow "Read"
+      And I follow "Genres"
       And I follow "Add Genres"
       And I fill in "genres" with "favorite, children's"
       And I press "Add genres"

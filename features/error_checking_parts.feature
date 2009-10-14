@@ -30,7 +30,8 @@ Feature: error checking with parts
       | Styled | http://sidrasue.com/tests/style.html |
     When I am on the homepage
     Then I should see "Single" in ".title"
-    When I follow "Manage Parts"
+    When I follow "Read"
+      And I follow "Manage Parts"
       And I fill in "add_parent" with "Styled"
       And I press "Update"
     Then I should see "Couldn't find or create parent"
@@ -60,7 +61,8 @@ Feature: error checking with parts
       | title  | url |
       | Single | http://sidrasue.com/tests/test.html |
     When I am on the homepage
-    And I follow "Manage Parts"
+      And I follow "Read"
+      And I follow "Manage Parts"
       And I fill in "url_list" with "http://sidrasue.com/tests/test.html\nhttp://sidrasue.com/tests/styled.html"
       And I press "Update"
     Then I should see "Single" in ".parent"

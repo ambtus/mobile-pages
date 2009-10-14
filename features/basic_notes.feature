@@ -8,6 +8,7 @@ Feature: basic notes
       | title                            | url                                 |
       | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  |
     When I am on the homepage
+      And I follow "Read"
       And I follow "Notes"
       And I fill in "page_notes" with "testing notes"
       And I press "Update"

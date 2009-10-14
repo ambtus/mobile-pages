@@ -8,23 +8,8 @@
       = hidden_field_tag(:old_author, @author_name)
       = hidden_field_tag(:old_state, @state_name)
       = submit_tag "Read Later"
-  - if @page.parent
-    .parent= link_to @page.parent.title, part_path(@page.parent)
-  .title
-    =h @page.title
-    = link_to "Read", page_path(@page)
-    = link_to "List Parts", part_path(@page) unless @page.parts.blank?
-    = link_to "Download", page_path(@page, :format => 'txt')
-    = link_to "Rate", rate_path(@page)
-    = link_to "Genres", genre_path(@page)
-    = link_to "Authors", author_path(@page)
-    = link_to "Notes", edit_note_path(@page)
-    = link_to "Manage Parts", edit_part_path(@page)
-  .states= @page.state_string
-  .authors= @page.author_string
-  .genres= @page.genre_string
-  .last_read= @page.last_read.to_date if @page.last_read
-  .notes=simple_format @page.notes
+  = render :partial => "pages/links", :locals => {:page => @page, :called_by => "start" }
+  = render :partial => "pages/headers", :locals => {:page => @page }
 .search
   - form_tag search_index_path do
     = text_field_tag :search, params[:search]

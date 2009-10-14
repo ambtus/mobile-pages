@@ -14,7 +14,8 @@ Feature: Basic scrub with parts
     Then I should see "cruft"
     When I am on the homepage
     When I follow "Parts"
-      And I follow "Scrub" in "#position_1"
+      And I follow "Read" in "#position_1"
+      And I follow "Scrub"
       And I check boxes "0 2"
       And I press "Scrub"
     Then I should not see "cruft"
