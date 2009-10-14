@@ -29,7 +29,7 @@ class Page < ActiveRecord::Base
     pages.each do |page|
       parents << (page.parent ? page.parent : page)
     end
-    parents.compact.uniq
+    parents.compact.uniq[0...20]
   end
 
   def self.filter(state, genre, author)
