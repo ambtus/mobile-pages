@@ -65,8 +65,6 @@ class Page < ActiveRecord::Base
       self.create_from_base
     elsif self.urls
       self.parts_from_urls(self.urls)
-    else
-      self.build_html_from_parts
     end
     self.states << State.find_or_create_by_name(State::UNREAD) unless self.last_read
     self.set_wordcount
@@ -157,7 +155,6 @@ class Page < ActiveRecord::Base
       create_child(self.base_url.gsub(/\*/, sub), count, title)
       count = count.next
     end
-    self.build_html_from_parts
   end
 
   def parts_from_urls(url_title_list, refetch=false)
@@ -245,21 +242,21 @@ class Page < ActiveRecord::Base
         parent.update_attribute(:read_after, Time.now)
       end
     end
-    parent.build_html_from_parts
+    parent.set_wordcount
   end
 
   def build_html_from_parts
-    File.open(self.original_file, 'w') do |file|
-      self.parts.each do |part|
-        unless part.parts.blank?
-	  part.build_html_from_parts
-	end
-        level = part.parent.parent ? "h2" : "h1"
-        file << "\n\n<#{level}>#{part.title}</#{level}>\n"
-        file << part.original_html
+    html = ""
+    self.parts.each do |part|
+      level = part.parent.parent ? "h2" : "h1"
+      html << "\n\n<#{level}>#{part.title}</#{level}>\n"
+      if part.parts.blank?
+        html << part.original_html
+      else
+        html << part.build_html_from_parts
       end
     end
-    self.set_wordcount
+    html
   end
 
   def create_child(url, position, title)
@@ -308,7 +305,7 @@ class Page < ActiveRecord::Base
     self.update_attributes(:parent_id => parent.id, :position => count)
     parent.genres << self.genres
     parent.authors << self.authors
-    parent.build_html_from_parts
+    parent.set_wordcount
     return parent
   end
 
@@ -379,22 +376,18 @@ class Page < ActiveRecord::Base
 
   def original_html=(content)
     File.open(self.original_file, 'w') { |f| f.write(content) }
-    if self.parent
-      if self.parent.parent
-        self.parent.parent.build_html_from_parts
-      else
-        self.parent.build_html_from_parts
-      end
-    else
-      self.set_wordcount
-    end
+    self.set_wordcount
   end
 
   def original_html
-    begin
-      File.open(self.original_file, 'r') { |f| f.read }
-    rescue Errno::ENOENT
-      ""
+    if parts.blank?
+      begin
+        File.open(self.original_file, 'r') { |f| f.read }
+      rescue Errno::ENOENT
+        ""
+      end
+    else
+      self.build_html_from_parts
     end
   end
 
