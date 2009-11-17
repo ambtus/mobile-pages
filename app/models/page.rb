@@ -375,6 +375,7 @@ class Page < ActiveRecord::Base
   end
 
   def original_html=(content)
+    content = content.gsub(/\n/, "") unless content.blank?
     File.open(self.original_file, 'w') { |f| f.write(content) }
     self.set_wordcount
   end
@@ -425,6 +426,11 @@ class Page < ActiveRecord::Base
     Nokogiri::HTML(html).xpath('//body').first.children
   end
 
+  def remove_surrounding_div!
+    html = self.original_html
+    self.original_html = Nokogiri::HTML(html).xpath('//div').first.children.to_html
+  end
+
   def remove_nodes(ids)
     node_array = self.nodes.to_a
     all = node_array.size - 1
@@ -433,15 +439,15 @@ class Page < ActiveRecord::Base
       first = first + 1
       last = ids[1].to_i - 1
       if first == last
-        self.original_html=node_array[first]
+        self.original_html=node_array[first].to_s
       else
-        self.original_html=node_array[first..last]
+        self.original_html=node_array[first..last].to_s
       end
     else
       if first > all/2
-        self.original_html=node_array[0..first-1]
+        self.original_html=node_array[0..first-1].to_s
       else
-        self.original_html=node_array[first + 1..all]
+        self.original_html=node_array[first + 1..all].to_s
       end
     end
     self.set_wordcount

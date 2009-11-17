@@ -36,6 +36,10 @@ class PagesController < ApplicationController
       when "Update Raw HTML"
         @page.pasted = params[:pasted]
         flash[:notice] = "Raw HTML updated."
+      when "Remove surrounding Div"
+        @page.remove_surrounding_div!
+        flash[:notice] = "Surrounding div removed"
+        redirect_to scrub_path(@page) and return
     end
     @page.remove_nodes(params[:nodes]) if params[:nodes]
     @page.update_attributes(params[:page])

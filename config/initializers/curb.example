@@ -43,7 +43,7 @@ module Curl
             body
           end
       end
-      keep.children.map{|x| x.to_html.chomp}.join if keep
+      keep.children.to_html.gsub(/\n/, "") if keep
     end
   end
 end

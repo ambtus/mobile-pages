@@ -7,6 +7,7 @@
 .form
   - form_for @page do |f|
     .button= f.submit "Scrub"
+    .button= f.submit "Remove surrounding Div"
     - @page.nodes.each_with_index do |node,index|
       .node
         = check_box_tag "nodes[]", index, false, :id => index
