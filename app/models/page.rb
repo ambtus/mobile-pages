@@ -427,8 +427,7 @@ class Page < ActiveRecord::Base
   end
 
   def remove_surrounding_div!
-    html = self.original_html
-    self.original_html = Nokogiri::HTML(html).xpath('//div').first.children.to_html
+    self.original_html = self.nodes.first.children.to_html
   end
 
   def remove_nodes(ids)
