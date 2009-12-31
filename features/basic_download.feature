@@ -23,16 +23,15 @@ Feature: basic download
       And I should not see "p>"
       And I should not see "small>"
       And I should see "(something little)"
-      And I should see "…"
-      And I should see "—"
-      And I should see "’"
+      And I should see "..."
+      And I should see "--"
+      And I should see "'"
       And I should not see ";"
       And I should see "*This is another header*"
       And I should see "*One Two, Three*"
       And I should see "_One, Two? Three_"
       And I should see "_One-TwoThree_"
-      And I should see "façade"
-#      And I should see "<>end<>"
+      And I should see "facade"
 
   Scenario: download stripping links and images
     Given the following page
@@ -174,7 +173,7 @@ Feature: basic download
     When I am on the homepage
       And I follow "Download" in ".title"
     Then I should not see "Rated: "
-      And I should see "This is rabbit’s fault"
+      And I should see "This is rabbit's fault"
 
   Scenario: download archive of our own page content only
     Given the following page

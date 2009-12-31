@@ -23,7 +23,7 @@ Feature: extended store
       And I follow "Read"
     When I follow "Refetch" in ".title"
     Then the field with id "url_list" should contain "http://sidrasue.com/tests/parts/1.html"
-    When I fill in "url_list" with "http://sidrasue.com/tests/parts/2.html\nhttp://sidrasue.com/tests/parts/1.html"
+    When I fill in "url_list" with lines "http://sidrasue.com/tests/parts/2.html\nhttp://sidrasue.com/tests/parts/1.html"
       And I press "Refetch"
     Then I should see "stuff for part 2"
 

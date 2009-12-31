@@ -12,7 +12,7 @@ Feature: unread states
    Then I should not see "unread" in ".states"
    When I follow "Read"
      And I follow "Manage Parts"
-     And I fill in "url_list" with "http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html"
+     And I fill in "url_list" with lines "http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html"
      And I press "Update"
    When I am on the homepage
    Then I should see "Multi" in ".title"

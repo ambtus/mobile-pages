@@ -31,3 +31,9 @@ end
 Given /^I wait a second.*$/ do
   Kernel::sleep 1
 end
+
+When /^(?:|I )fill in "([^\"]*)" with lines "([^\"]*)"$/ do |field, value|
+  value = value.split('\\n').join("\r")
+  fill_in(field, :with => value)
+end
+

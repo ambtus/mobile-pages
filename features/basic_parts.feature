@@ -30,7 +30,7 @@ Feature: basic parts
         | my genre |
       And I am on the homepage
     When I follow "Store Multiple"
-      And I fill in "page_urls" with "http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html"
+      And I fill in "page_urls" with lines "http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html"
      And I fill in "page_title" with "Multiple pages from urls"
      And I select "my genre"
      And I press "Store"

@@ -142,8 +142,8 @@ class Page < ActiveRecord::Base
     html = Sanitize.clean(html, :elements => [ 'a', 'big', 'blockquote', 'br', 'center', 'div', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'img', 'li', 'p', 'small', 'strike', 'strong', 'sub', 'sup', 'u'], :attributes => { 'a' => ['href'], 'div' => ['id', 'class'], 'img' => ['align', 'alt', 'height', 'src', 'title', 'width'] })
     html = html.gsub(/\n/, "")
     html = html.gsub(/ +/, ' ')
-    html = html.gsub(/<br><br><br>/, "<hr>")
-    html = html.gsub(/<br><br>/, "<p>")
+    html = html.gsub(/<br \/><br \/><br \/>/, "<hr>")
+    html = html.gsub(/<br \/><br \/>/, "<p>")
     html = html.gsub(/<a><\/a>/, "")
     html = html.gsub(/<p> ?<\/p>/, "")
   end

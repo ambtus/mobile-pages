@@ -6,7 +6,7 @@ Feature: complex parts with titles from url list
       | my genre |
     When I am on the homepage
       And I follow "Store Multiple"
-    When I fill in "page_urls" with "http://sidrasue.com/tests/parts/1.html\n\nhttp://sidrasue.com/tests/parts/2.html##part title"
+    When I fill in "page_urls" with lines "http://sidrasue.com/tests/parts/1.html\n\nhttp://sidrasue.com/tests/parts/2.html##part title"
       And I fill in "page_title" with "my title"
       And I select "my genre"
       And I press "Store"
@@ -22,7 +22,7 @@ Feature: complex parts with titles from url list
       | my genre |
     When I am on the homepage
       And I follow "Store Multiple"
-    When I fill in "page_urls" with "##Part the first\nhttp://sidrasue.com/tests/parts/1.html###subpart title\nhttp://sidrasue.com/tests/parts/2.html\n\nhttp://sidrasue.com/tests/parts/3.html##Part 2\n\n##Third Part\nhttp://sidrasue.com/tests/parts/4.html\nhttp://sidrasue.com/tests/parts/5.html"
+    When I fill in "page_urls" with lines "##Part the first\nhttp://sidrasue.com/tests/parts/1.html###subpart title\nhttp://sidrasue.com/tests/parts/2.html\n\nhttp://sidrasue.com/tests/parts/3.html##Part 2\n\n##Third Part\nhttp://sidrasue.com/tests/parts/4.html\nhttp://sidrasue.com/tests/parts/5.html"
       And I fill in "page_title" with "Title"
       And I select "my genre"
       And I press "Store"
@@ -55,7 +55,7 @@ Feature: complex parts with titles from url list
       And I press "Search"
     Then I should see "Test2" in ".title"
     When I follow "Manage Parts"
-      And I fill in "url_list" with "http://sidrasue.com/tests/parts/3.html\nhttp://sidrasue.com/tests/parts/4.html"
+      And I fill in "url_list" with lines "http://sidrasue.com/tests/parts/3.html\nhttp://sidrasue.com/tests/parts/4.html"
       And I press "Update"
     When I am on the homepage
     Then I should see "Test2" in ".title"

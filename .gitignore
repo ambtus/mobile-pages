@@ -9,3 +9,4 @@ public/development
 public/files
 config/initializers/session_store.rb
 config/initializers/curb.rb
+rerun.txt

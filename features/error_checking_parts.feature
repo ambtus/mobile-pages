@@ -44,7 +44,7 @@ Feature: error checking with parts
         | my genre |
       And I am on the homepage
     When I follow "Store Multiple"
-      And I fill in "page_urls" with "##Child 1\n\nhttp://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html\n\nhttp://sidrasue.com/tests/parts/3.html##Child 2\n\n"
+      And I fill in "page_urls" with lines "##Child 1\n\nhttp://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html\n\nhttp://sidrasue.com/tests/parts/3.html##Child 2\n\n"
      And I fill in "page_title" with "Parent"
      And I select "my genre"
      And I press "Store"
@@ -63,7 +63,7 @@ Feature: error checking with parts
     When I am on the homepage
       And I follow "Read"
       And I follow "Manage Parts"
-      And I fill in "url_list" with "http://sidrasue.com/tests/test.html\nhttp://sidrasue.com/tests/styled.html"
+      And I fill in "url_list" with lines "http://sidrasue.com/tests/test.html\nhttp://sidrasue.com/tests/styled.html"
       And I press "Update"
     Then I should see "Single" in ".parent"
     When I am on the homepage
