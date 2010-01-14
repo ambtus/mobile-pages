@@ -12,5 +12,4 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :html
   map.resources :notes
   map.root :controller => "start"
-  map.file '/:environment/:modulo/:id/:filename.txt', :controller => "files", :action => 'show'
 end
