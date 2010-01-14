@@ -13,7 +13,7 @@ Feature: basic last read date
     When I follow "Rate"
       And I press "5"
     # note - this will change every year - test will need updating
-    Then I should see "2009" in ".last_read"
+    Then I should see "2010" in ".last_read"
 
   Scenario: after rate a read page, change it's last read date
     Given the following pages
@@ -26,5 +26,5 @@ Feature: basic last read date
       And I press "5"
     Then I should not see "2008-01-01" in ".last_read"
     # note - this will change every year - test will need updating
-      And I should see "2009" in ".last_read"
+      And I should see "2010" in ".last_read"
 

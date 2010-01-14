@@ -20,23 +20,27 @@ Feature: basic rate
     When I follow "Rate"
     Then I should see "Please rate (converted to years for next suggested read date)"
       And I press "5"
-    Then I should see "Dracula set for reading again on 2014"
+    # note - this will change every year - test will need updating
+    Then I should see "Dracula set for reading again on 2015"
       And I should see "Alice's Adventures In Wonderland"
     When I follow "Rate"
     And I press "3"
-    Then I should see "Alice's Adventures In Wonderland set for reading again on 2012"
+    # note - this will change every year - test will need updating
+    Then I should see "Alice's Adventures In Wonderland set for reading again on 2013"
       And I should see "Pride and Prejudice"
     When I press "Read Later"
     Then I should see "The Mysterious Affair at Styles"
     When I follow "Rate"
     And I press "4"
-    Then I should see "The Mysterious Affair at Styles set for reading again on 2013"
+    # note - this will change every year - test will need updating
+    Then I should see "The Mysterious Affair at Styles set for reading again on 2014"
       And I should see "The Call of the Wild"
     When I press "Read Later"
     Then I should see "A Christmas Carol"
     When I follow "Rate"
       And I press "1"
-    Then I should see "A Christmas Carol set for reading again on 2010"
+    # note - this will change every year - test will need updating
+    Then I should see "A Christmas Carol set for reading again on 2011"
       And I should see "Grimm's Fairy Tales"
     When I follow "Rate"
       And I press "5"
@@ -46,4 +50,5 @@ Feature: basic rate
     Then I should see "The Call of the Wild"
     When I follow "Rate"
       And I press "100"
-    Then I should see "The Call of the Wild set for reading again on 2109"
+    # note - this will change every year - test will need updating
+    Then I should see "The Call of the Wild set for reading again on 2110"
