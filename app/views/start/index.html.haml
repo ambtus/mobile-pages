@@ -4,9 +4,9 @@
   .form
     - form_tag start_index_path do
       = hidden_field_tag(:page_id, @page.id)
-      = hidden_field_tag(:old_genre, @genre_name)
-      = hidden_field_tag(:old_author, @author_name)
-      = hidden_field_tag(:old_state, @state_name)
+      = hidden_field_tag(:old_genre, @genre.try(:name))
+      = hidden_field_tag(:old_author, @author.try(:name))
+      = hidden_field_tag(:old_state, @state.try(:name))
       = submit_tag "Read Later"
   = render :partial => "pages/links", :locals => {:page => @page, :called_by => "start" }
   = render :partial => "pages/headers", :locals => {:page => @page }
@@ -15,19 +15,19 @@
     = text_field_tag :search, params[:search]
     = submit_tag "Search", :name => nil
 .form
-  - form_for @new_page do |f|
+  - form_for @new_page, :builder => DefaultFormBuilder do |f|
     - unless @states.blank?
       .state
-        = select_tag :state, "<option></option>" + options_for_select(@states, @state_name)
+        = select_tag :state, "<option></option>" + options_for_select(@states, @state.try(:name))
     - unless @authors.blank?
       .author
-        = select_tag :author, "<option></option>" + options_for_select(@authors, @author_name)
+        = select_tag :author, "<option></option>" + options_for_select(@authors, @author.try(:name))
     - unless @genres.blank?
       .genre
-        = select_tag :genre, "<option></option>" + options_for_select(@genres, @genre_name)
-    = f.text_field :url, :maxlength => 255, :size => 30, :value => Page::URL_PLACEHOLDER, :onblur=>"if(this.value == '') { this.value='#{Page::URL_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::URL_PLACEHOLDER}') {this.value=''}"
+        = select_tag :genre, "<option></option>" + options_for_select(@genres, @genre.try(:name))
+    = f.text_field :url, Page::URL_PLACEHOLDER, :maxlength => 255, :size => 30
     %br
-    = f.text_field :title, :maxlength => 255, :size => 30, :value => Page::TITLE_PLACEHOLDER,  :onblur=>"if(this.value == '') { this.value='#{Page::TITLE_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Page::TITLE_PLACEHOLDER}') {this.value=''}"
+    = f.text_field :title, Page::TITLE_PLACEHOLDER, :maxlength => 255, :size => 30
     %br
     .button
       = f.submit "Filter", :name => "Filter"

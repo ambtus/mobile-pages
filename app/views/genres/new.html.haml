@@ -5,5 +5,5 @@
 .genres
   - form_tag genres_path do
     = hidden_field_tag(:page_id, @page.id)
-    = text_field_tag :genres, Genre::NEW_PLACEHOLDER, :onblur=>"if(this.value == '') { this.value='#{Genre::NEW_PLACEHOLDER}'}", :onfocus=>"if (this.value == '#{Genre::NEW_PLACEHOLDER}') {this.value=''}", :maxlength => 255, :size => 70
+    = onblur_text_tag :genres, Genre::NEW_PLACEHOLDER, :maxlength => 255, :size => 70
     .button= submit_tag "Add Genres"
