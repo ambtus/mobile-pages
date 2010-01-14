@@ -5,7 +5,9 @@ class PagesController < ApplicationController
     end
     @page = Page.new(params[:page])
     @genre = Genre.find_by_name(params[:genre])
+    author = Author.find_by_name(params[:author])
     if @page.save
+      @page.authors << author if author
       if @genre.blank?
         flash[:notice] = "Page created. Please select genre(s)"
         redirect_to genre_path(@page) and return

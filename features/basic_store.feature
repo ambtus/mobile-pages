@@ -29,31 +29,37 @@ Scenario: no genre selected
     And I press "Update genres"
   Then I should see "first" in ".genres"
 
-
-Scenario Outline: title and url
+Scenario Outline: genres and authors
   Given I have no pages
     And the following genres
       | name |
       | first genre |
       | second genre |
       | third genre |
+    And the following authors
+      | name |
+      | first author |
+      | second author |
+      | third author |
   When I am on the homepage
     And I fill in "page_url" with "<url>"
     And I fill in "page_title" with "<title>"
     And I select "<genre>" 
+    And I select "<author>" 
     And I press "Store"
   Then I should see "Page created" in "#flash_notice"
     And I should see "<title>" in ".title"
     And I should see "<result>" in ".content"
     And I should see "<genre>" in ".genres"
+    And I should see "<author>" in ".authors"
 
   Examples:
-  | url                                       | title            | result                 | genre |
-  | http://sidrasue.com/tests/test.html       | Simple Test      | Retrieved from the web | first genre |
-  | http://sidrasue.com/tests/basic/test.html | Basic Auth Test  | password example       | second genre |
-  | http://sidrasue.com/tests/digest/test.html| Auth Digest Test | digest example         | third genre |
-  | http://sidrasue.com/tests/utf8.html       | utf8 Test        | “Hello…”               | first genre |
-  | http://sidrasue.com/tests/1252.html       | winlatin1 Test   | “Hello…”               | second genre |
-  | http://sidrasue.com/tests/nbsp.html       | space Test       | Retrieved from the web | third genre |
-  | http://sidrasue.com/tests/entities.html   | entities         | antsy—boggart          | second genre |
-  | http://sidrasue.com/tests/mso.html        | <st1:place>      | in on Clark            | first genre |
+  | url                                       | title            | result                 | genre        | author        |
+  | http://sidrasue.com/tests/test.html       | Simple Test      | Retrieved from the web | first genre  |               |
+  | http://sidrasue.com/tests/basic/test.html | Basic Auth Test  | password example       | second genre |               |
+  | http://sidrasue.com/tests/digest/test.html| Auth Digest Test | digest example         | third genre  |               |
+  | http://sidrasue.com/tests/utf8.html       | utf8 Test        | “Hello…”               | first genre  | first author  |
+  | http://sidrasue.com/tests/1252.html       | winlatin1 Test   | “Hello…”               | second genre | second author |
+  | http://sidrasue.com/tests/nbsp.html       | space Test       | Retrieved from the web | third genre  | third author  |
+  | http://sidrasue.com/tests/entities.html   | entities         | antsy—boggart          | second genre | first author  |
+  | http://sidrasue.com/tests/mso.html        | <st1:place>      | in on Clark            | first genre  |               |
