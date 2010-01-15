@@ -7,7 +7,7 @@ Scenario: no genres
   Given I am on the homepage
     And I have no pages
     And I have no filters
-  When I fill in "page_url" with "http://sidrasue.com/tests/test.html"
+  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I fill in "page_title" with "Title"
     And I press "Store"
   Then I should see "Please select genre"
@@ -21,7 +21,7 @@ Scenario: no genre selected
     And the following genre
       | name |
       | first |
-  When I fill in "page_url" with "http://sidrasue.com/tests/test.html"
+  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I fill in "page_title" with "Title"
     And I press "Store"
   Then I should see "Please select genre"
@@ -55,11 +55,11 @@ Scenario Outline: genres and authors
 
   Examples:
   | url                                       | title            | result                 | genre        | author        |
-  | http://sidrasue.com/tests/test.html       | Simple Test      | Retrieved from the web | first genre  |               |
-  | http://sidrasue.com/tests/basic/test.html | Basic Auth Test  | password example       | second genre |               |
-  | http://sidrasue.com/tests/digest/test.html| Auth Digest Test | digest example         | third genre  |               |
-  | http://sidrasue.com/tests/utf8.html       | utf8 Test        | “Hello…”               | first genre  | first author  |
-  | http://sidrasue.com/tests/1252.html       | winlatin1 Test   | “Hello…”               | second genre | second author |
-  | http://sidrasue.com/tests/nbsp.html       | space Test       | Retrieved from the web | third genre  | third author  |
-  | http://sidrasue.com/tests/entities.html   | entities         | antsy—boggart          | second genre | first author  |
-  | http://sidrasue.com/tests/mso.html        | <st1:place>      | in on Clark            | first genre  |               |
+  | http://test.sidrasue.com/test.html       | Simple Test      | Retrieved from the web | first genre  |               |
+  | http://test.sidrasue.com/basic/test.html | Basic Auth Test  | password example       | second genre |               |
+  | http://test.sidrasue.com/digest/test.html| Auth Digest Test | digest example         | third genre  |               |
+  | http://test.sidrasue.com/utf8.html       | utf8 Test        | “Hello…”               | first genre  | first author  |
+  | http://test.sidrasue.com/1252.html       | winlatin1 Test   | “Hello…”               | second genre | second author |
+  | http://test.sidrasue.com/nbsp.html       | space Test       | Retrieved from the web | third genre  | third author  |
+  | http://test.sidrasue.com/entities.html   | entities         | antsy—boggart          | second genre | first author  |
+  | http://test.sidrasue.com/mso.html        | <st1:place>      | in on Clark            | first genre  |               |

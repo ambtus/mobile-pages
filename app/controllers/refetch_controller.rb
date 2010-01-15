@@ -9,6 +9,7 @@ class RefetchController < ApplicationController
     else
       @page.parts_from_urls(params[:url_list], true)
     end
+    flash[:error] = @page.errors[:url]
     redirect_to @page
   end
 end

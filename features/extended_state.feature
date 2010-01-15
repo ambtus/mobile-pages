@@ -3,7 +3,7 @@ Feature: unread states
   Scenario: add unread part to read parent
     Given the following page
       | title | urls |
-      | Multi | http://sidrasue.com/tests/parts/1.html |
+      | Multi | http://test.sidrasue.com/parts/1.html |
       And I am on the homepage
    Then I should see "Multi" in ".title"
    Then I should see "unread" in ".states"
@@ -12,7 +12,7 @@ Feature: unread states
    Then I should not see "unread" in ".states"
    When I follow "Read"
      And I follow "Manage Parts"
-     And I fill in "url_list" with lines "http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html"
+     And I fill in "url_list" with lines "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
      And I press "Update"
    When I am on the homepage
    Then I should see "Multi" in ".title"
@@ -29,7 +29,7 @@ Feature: unread states
    Scenario: add parent to read part
     Given the following page
       | title | url | last_read |
-      | Part | http://sidrasue.com/tests/parts/1.html | 2009-01-01 |
+      | Part | http://test.sidrasue.com/parts/1.html | 2009-01-01 |
       And I am on the homepage
    Then I should not see "unread" in ".states"
    When I follow "Read"
@@ -43,7 +43,7 @@ Feature: unread states
    Scenario: add parent to unread part
     Given the following page
       | title | url |
-      | Part | http://sidrasue.com/tests/parts/1.html |
+      | Part | http://test.sidrasue.com/parts/1.html |
       And I am on the homepage
    Then I should see "unread" in ".states"
    When I follow "Read"
@@ -57,7 +57,7 @@ Feature: unread states
    Scenario: rate a part
     Given the following page
       | title | base_url | url_substitutions |
-      | Read Separately | http://sidrasue.com/tests/parts/*.html | 1 2 |
+      | Read Separately | http://test.sidrasue.com/parts/*.html | 1 2 |
       And I am on the homepage
    Then I should see "Read Separately" in ".title"
    Then I should see "unread" in ".states"

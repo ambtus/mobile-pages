@@ -3,7 +3,7 @@ Feature: Extended Scrub
  Scenario: jump to end
   Given the following page
     |title | url |
-    | Title | http://sidrasue.com/tests/p.html |
+    | Title | http://test.sidrasue.com/p.html |
   When I am on the homepage
     And I follow "Read"
     And I follow "Scrub"
@@ -12,7 +12,7 @@ Feature: Extended Scrub
  Scenario: remove surrounding div
   Given the following page
     |title | url |
-    | Title | http://sidrasue.com/tests/divs.html |
+    | Title | http://test.sidrasue.com/divs.html |
   When I am on the homepage
     And I follow "Read"
     And I follow "Scrub"
@@ -25,7 +25,7 @@ Feature: Extended Scrub
  Scenario: remove surrounding blockquote
   Given the following page
     |title | url |
-    | Title | http://sidrasue.com/tests/blockquote.html |
+    | Title | http://test.sidrasue.com/blockquote.html |
   When I am on the homepage
     And I follow "Read"
     And I follow "Scrub"

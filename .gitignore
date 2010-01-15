@@ -8,5 +8,6 @@ public/test
 public/development
 public/files
 config/initializers/session_store.rb
-config/initializers/curb.rb
+config/initializers/websites.rb
 rerun.txt
+vendor/gems

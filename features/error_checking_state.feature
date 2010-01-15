@@ -3,13 +3,13 @@ Feature: state errors
    Scenario: remove short state
     Given the following page
       | title | url |
-      | Short | http://sidrasue.com/tests/short.html |
+      | Short | http://test.sidrasue.com/short.html |
       And I am on the homepage
    Then I should see "short" in ".states"
      And I should not see "long" in ".states"
    When I follow "Read"
      And I follow "Refetch"
-     When I fill in "url" with "http://sidrasue.com/tests/medium.html"
+     When I fill in "url" with "http://test.sidrasue.com/medium.html"
      And I press "Refetch"
    Then I should not see "short" in ".states"
      And I should not see "long" in ".states"
@@ -17,12 +17,12 @@ Feature: state errors
    Scenario: remove long state
     Given the following page
       | title | url |
-      | Short | http://sidrasue.com/tests/long.html |
+      | Short | http://test.sidrasue.com/long.html |
       And I am on the homepage
    Then I should see "long" in ".states"
    When I follow "Read"
      And I follow "Refetch"
-     When I fill in "url" with "http://sidrasue.com/tests/medium.html"
+     When I fill in "url" with "http://test.sidrasue.com/medium.html"
      And I press "Refetch"
    Then I should not see "short" in ".states"
      And I should not see "long" in ".states"

@@ -6,13 +6,13 @@ Feature: basic rate
   Scenario: Changing read after orders
     Given the following pages
       | title                            | url                                   | read_after |
-      | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  | 2009-01-01 |
-      | Dracula                          | http://sidrasue.com/tests/drac.html | 2009-01-05 |
-      | Alice's Adventures In Wonderland | http://sidrasue.com/tests/aa.html   | 2009-01-10 |
-      | Pride and Prejudice              | http://sidrasue.com/tests/pp.html   | 2009-01-15 |
-      | The Mysterious Affair at Styles  | http://sidrasue.com/tests/maas.html | 2009-01-20 |
-      | The Call of the Wild             | http://sidrasue.com/tests/cotw.html | 2009-01-25 |
-      | A Christmas Carol                | http://sidrasue.com/tests/cc.html   | 2009-01-30 |
+      | Grimm's Fairy Tales              | http://test.sidrasue.com/gft.html  | 2009-01-01 |
+      | Dracula                          | http://test.sidrasue.com/drac.html | 2009-01-05 |
+      | Alice's Adventures In Wonderland | http://test.sidrasue.com/aa.html   | 2009-01-10 |
+      | Pride and Prejudice              | http://test.sidrasue.com/pp.html   | 2009-01-15 |
+      | The Mysterious Affair at Styles  | http://test.sidrasue.com/maas.html | 2009-01-20 |
+      | The Call of the Wild             | http://test.sidrasue.com/cotw.html | 2009-01-25 |
+      | A Christmas Carol                | http://test.sidrasue.com/cc.html   | 2009-01-30 |
     When I am on the homepage
     Then I should see "Grimm's Fairy Tales"
     When I press "Read Later"

@@ -6,9 +6,9 @@ Feature: Multiple Search
   Scenario: Find pages by title
     Given the following pages
       | title                                              | url                                   |
-      | A Christmas Carol by Charles Dickens               | http://sidrasue.com/tests/cc.html   |
-      | The Call of the Wild by Jack London                | http://sidrasue.com/tests/cotw.html |
-      | The Mysterious Affair at Styles by Agatha Christie | http://sidrasue.com/tests/maas.html |
+      | A Christmas Carol by Charles Dickens               | http://test.sidrasue.com/cc.html   |
+      | The Call of the Wild by Jack London                | http://test.sidrasue.com/cotw.html |
+      | The Mysterious Affair at Styles by Agatha Christie | http://test.sidrasue.com/maas.html |
       And I am on the homepage
      When I fill in "search" with "by"
       And I press "Search"
@@ -27,9 +27,9 @@ Feature: Multiple Search
   Scenario: Find pages by notes
     Given the following pages
       | title                           | notes                       | url                                   |
-      | A Christmas Carol               | by Charles Dickens, classic | http://sidrasue.com/tests/cc.html   |
-      | The Call of the Wild            | by Jack London, classic     | http://sidrasue.com/tests/cotw.html |
-      | The Mysterious Affair at Styles | by Agatha Christie, mystery | http://sidrasue.com/tests/maas.html |
+      | A Christmas Carol               | by Charles Dickens, classic | http://test.sidrasue.com/cc.html   |
+      | The Call of the Wild            | by Jack London, classic     | http://test.sidrasue.com/cotw.html |
+      | The Mysterious Affair at Styles | by Agatha Christie, mystery | http://test.sidrasue.com/maas.html |
       And I am on the homepage
      When I fill in "search" with "by"
       And I press "Search"

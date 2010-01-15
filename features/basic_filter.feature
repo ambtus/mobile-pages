@@ -6,9 +6,9 @@ Feature: basic filters
   Scenario: filter on a genre
     Given the following pages
       | title                            | url                                 | add_genre_string          |
-      | The Mysterious Affair at Styles  | http://sidrasue.com/tests/maas.html | mystery                   |
-      | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  | children, short stories   |
-      | Alice's Adventures In Wonderland | http://sidrasue.com/tests/aa.html   | fantasy                   |
+      | The Mysterious Affair at Styles  | http://test.sidrasue.com/maas.html | mystery                   |
+      | Grimm's Fairy Tales              | http://test.sidrasue.com/gft.html  | children, short stories   |
+      | Alice's Adventures In Wonderland | http://test.sidrasue.com/aa.html   | fantasy                   |
     When I am on the homepage
     When I select "children"
       And I press "Filter"
@@ -26,10 +26,10 @@ Feature: basic filters
   Scenario: continue to filter on the same genre
     Given the following pages
       | title                            | url                                 | read_after | add_genre_string|
-      | The Mysterious Affair at Styles  | http://sidrasue.com/tests/maas.html | 2009-01-01 | mystery         |
-      | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  | 2009-01-02 | children, great |
-      | Dracula                          | http://sidrasue.com/tests/drac.html | 2009-01-03 | horror          |
-      | A Christmas Carol                | http://sidrasue.com/tests/cc.html   | 2009-01-04 | great           |
+      | The Mysterious Affair at Styles  | http://test.sidrasue.com/maas.html | 2009-01-01 | mystery         |
+      | Grimm's Fairy Tales              | http://test.sidrasue.com/gft.html  | 2009-01-02 | children, great |
+      | Dracula                          | http://test.sidrasue.com/drac.html | 2009-01-03 | horror          |
+      | A Christmas Carol                | http://test.sidrasue.com/cc.html   | 2009-01-04 | great           |
     When I am on the homepage
     Then I should see "The Mysterious Affair at Styles" in ".title"
     When I select "great"

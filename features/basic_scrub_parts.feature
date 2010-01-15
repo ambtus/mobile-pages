@@ -6,7 +6,7 @@ Feature: Basic scrub with parts
   Scenario: scrub a parent page
     Given the following page
       | title | base_url | url_substitutions |
-      | Parent | http://sidrasue.com/tests/parts/*.html | 1 2 |
+      | Parent | http://test.sidrasue.com/parts/*.html | 1 2 |
     When I am on the homepage
       And I follow "Read"
       And I should see "cruft"

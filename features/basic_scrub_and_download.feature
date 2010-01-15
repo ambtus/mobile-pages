@@ -3,7 +3,7 @@ Feature: Basic Scrub and download
   Scenario: download, scrub and download
     Given the following page
       | title  | url |
-      | multi  | http://sidrasue.com/tests/p.html |
+      | multi  | http://test.sidrasue.com/p.html |
     When I am on the homepage
       And I follow "Download" in ".title"
     Then I should see "top para"

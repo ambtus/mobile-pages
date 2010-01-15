@@ -6,11 +6,11 @@ Feature: basic edit of parts
   Scenario: add a new part to an existing page with parts
     Given the following page
       | title  | base_url               | url_substitutions |
-      | multi  | http://sidrasue.com/tests/parts/*.html | 1 |
+      | multi  | http://test.sidrasue.com/parts/*.html | 1 |
     When I am on the homepage
       And I follow "Read"
       And I follow "Manage Parts"
-      And I fill in "url_list" with lines "http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html"
+      And I fill in "url_list" with lines "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
       And I press "Update"
     Then I should see "Part 2"
       And I should see "Part 1"
@@ -21,11 +21,11 @@ Feature: basic edit of parts
   Scenario: remove a part from an existing page with parts
     Given the following page
       | title  | base_url               | url_substitutions |
-      | multi  | http://sidrasue.com/tests/parts/*.html | 1 2 3 |
+      | multi  | http://test.sidrasue.com/parts/*.html | 1 2 3 |
     When I am on the homepage
       And I follow "Read"
       And I follow "Manage Parts"
-      And I fill in "url_list" with lines "http://sidrasue.com/tests/parts/2.html\nhttp://sidrasue.com/tests/parts/3.html"
+      And I fill in "url_list" with lines "http://test.sidrasue.com/parts/2.html\nhttp://test.sidrasue.com/parts/3.html"
       And I press "Update"
       And I should not see "Part 3"
       And I follow "Read"
@@ -36,11 +36,11 @@ Feature: basic edit of parts
   Scenario: reorder the parts on an existing page with parts
     Given the following page
       | title  | base_url               | url_substitutions |
-      | multi  | http://sidrasue.com/tests/parts/*.html | 1 2 |
+      | multi  | http://test.sidrasue.com/parts/*.html | 1 2 |
     When I am on the homepage
       And I follow "Read"
       And I follow "Manage Parts"
-      And I fill in "url_list" with lines "http://sidrasue.com/tests/parts/2.html\nhttp://sidrasue.com/tests/parts/1.html"
+      And I fill in "url_list" with lines "http://test.sidrasue.com/parts/2.html\nhttp://test.sidrasue.com/parts/1.html"
       And I press "Update"
       And I follow "Read" in "#position_1"
     Then I should see "stuff for part 2"

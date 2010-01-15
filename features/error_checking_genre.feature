@@ -4,7 +4,7 @@ Feature: error checking with genres
     Given I have no filters
       And the following page
        | title | url |
-       | Alice's Adventures | http://sidrasue.com/tests/aa.html |
+       | Alice's Adventures | http://test.sidrasue.com/aa.html |
     When I am on the homepage
       And I follow "Read"
       And I follow "Genres"

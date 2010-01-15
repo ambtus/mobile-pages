@@ -9,7 +9,7 @@ Feature: error checking during store
   Scenario: switch title for url by mistake is not okay
     Given I am on the homepage
     When I fill in "page_url" with "Title of the Fic"
-      And I fill in "page_title" with "http://sidrasue.com/tests/test.html"
+      And I fill in "page_title" with "http://test.sidrasue.com/test.html"
       And I press "Store"
     Then I should see "Url is invalid"
 
@@ -22,7 +22,8 @@ Feature: error checking during store
       And I fill in "page_url" with "http://w.sidrasue.com/tests/test.html"
       And I select "my genre"
       And I press "Store"
-    Then I should see "Couldn't resolve host name" in ".content"
+    Then I should see "couldn't resolve host name" in ".content"
+      And I should see "couldn't resolve host name" in "#flash_error"
 
   Scenario: pasted is not html is okay
     Given the following page
@@ -57,6 +58,18 @@ Feature: error checking during store
   Scenario: url with surrounding whitespace okay
     Given I am on the homepage
     When I fill in "page_title" with "bad url"
-      And I fill in "page_url" with " http://sidrasue.com/tests/test.html"
+      And I fill in "page_url" with " http://test.sidrasue.com/test.html"
       And I press "Store"
     Then I should see "Page created" in "#flash_notice"
+
+  Scenario: 404 shouldn't 500, but should display error
+    Given the following genre
+      | name |
+      | my genre |
+    When I am on the homepage
+      And I fill in "page_title" with "bad url"
+      And I fill in "page_url" with "http://test.sidrasue.com/style.html"
+      And I select "my genre"
+      And I press "Store"
+    Then I should see "error retrieving content" in ".content"
+      And I should see "error retrieving content" in "#flash_error"

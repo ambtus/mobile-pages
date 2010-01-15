@@ -6,9 +6,9 @@ Feature: Basic Search
   Scenario: Find page by title (first, middle, last, and whole)
     Given the following pages
       | title                                              | url                                 |
-      | A Christmas Carol by Charles Dickens               | http://sidrasue.com/tests/cc.html   |
-      | The Call of the Wild by Jack London                | http://sidrasue.com/tests/cotw.html |
-      | The Mysterious Affair at Styles by Agatha Christie | http://sidrasue.com/tests/maas.html |
+      | A Christmas Carol by Charles Dickens               | http://test.sidrasue.com/cc.html   |
+      | The Call of the Wild by Jack London                | http://test.sidrasue.com/cotw.html |
+      | The Mysterious Affair at Styles by Agatha Christie | http://test.sidrasue.com/maas.html |
      When I am on the homepage
        And I fill in "search" with "The Call"
        And I press "Search"
@@ -29,7 +29,7 @@ Feature: Basic Search
   Scenario: No matching page
     Given the following page
       | title            | url                                   |
-      | War              | http://sidrasue.com/tests/test.html   |
+      | War              | http://test.sidrasue.com/test.html   |
       And I am on the homepage
     When I fill in "search" with "War and Peace"
       And I press "Search"

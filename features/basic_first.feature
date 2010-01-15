@@ -5,10 +5,10 @@ Feature: basic first
   Scenario: Add a page and make it first
     Given the following pages
         | title | url | read_after | add_genre_string |
-        | One   | http://sidrasue.com/tests/parts/1.html | 2009-01-01 | my genre |
+        | One   | http://test.sidrasue.com/parts/1.html | 2009-01-01 | my genre |
       And I am on the homepage
     Then I should see "One" in ".title"
-    When I fill in "page_url" with "http://sidrasue.com/tests/parts/2.html"
+    When I fill in "page_url" with "http://test.sidrasue.com/parts/2.html"
       And I fill in "page_title" with "Two"
       And I select "my genre"
       And I press "Store"
@@ -20,8 +20,8 @@ Feature: basic first
     Given I have no pages
       And the following pages
         | title | url | read_after |
-        | One  | http://sidrasue.com/tests/parts/1.html  | 2009-01-01 |
-        | Four  | http://sidrasue.com/tests/parts/4.html | 2009-01-02 |
+        | One  | http://test.sidrasue.com/parts/1.html  | 2009-01-01 |
+        | Four  | http://test.sidrasue.com/parts/4.html | 2009-01-02 |
       And I am on the homepage
     Then I should see "One" in ".title"
     When I fill in "search" with "Four"
@@ -34,9 +34,9 @@ Feature: basic first
     Given I have no pages
       And the following pages
         | title | urls | read_after |
-        | Single  | http://sidrasue.com/tests/test.html | 2001-01-01 |
-        | Parent | http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html\nhttp://sidrasue.com/tests/parts/3.html | 2009-01-02 |
-        | Grandparent | #Grandparent\n##Parent1\nhttp://sidrasue.com/tests/parts/4.html\n##Parent2\nhttp://sidrasue.com/tests/parts/5.html###Subpart1\nhttp://sidrasue.com/tests/parts/6.html###Subpart2 | 2009-01-03 |
+        | Single  | http://test.sidrasue.com/test.html | 2001-01-01 |
+        | Parent | http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html\nhttp://test.sidrasue.com/parts/3.html | 2009-01-02 |
+        | Grandparent | #Grandparent\n##Parent1\nhttp://test.sidrasue.com/parts/4.html\n##Parent2\nhttp://test.sidrasue.com/parts/5.html###Subpart1\nhttp://test.sidrasue.com/parts/6.html###Subpart2 | 2009-01-03 |
       And I am on the homepage
     Then I should see "Single" in ".title"
     When I fill in "search" with "part 3"

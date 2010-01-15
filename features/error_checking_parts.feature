@@ -3,11 +3,11 @@ Feature: error checking with parts
   Scenario: can't add a page to an ambiguous parent
     Given the following pages
       | title     | urls |
-      | Ambiguous | http://sidrasue.com/tests/parts/1.html |
-      | Another Ambiguous | http://sidrasue.com/tests/parts/2.html |
+      | Ambiguous | http://test.sidrasue.com/parts/1.html |
+      | Another Ambiguous | http://test.sidrasue.com/parts/2.html |
     And the page
       | title  | url |
-      | Single | http://sidrasue.com/tests/test.html |
+      | Single | http://test.sidrasue.com/test.html |
     When I am on the homepage
       And I fill in "search" with "Single"
       And I press "Search"
@@ -26,8 +26,8 @@ Feature: error checking with parts
   Scenario: can't add a part to a page with content
     Given the following pages
       | title  | url |
-      | Single | http://sidrasue.com/tests/test.html |
-      | Styled | http://sidrasue.com/tests/style.html |
+      | Single | http://test.sidrasue.com/test.html |
+      | Styled | http://test.sidrasue.com/styled.html |
     When I am on the homepage
     Then I should see "Single" in ".title"
     When I follow "Read"
@@ -44,7 +44,7 @@ Feature: error checking with parts
         | my genre |
       And I am on the homepage
     When I follow "Store Multiple"
-      And I fill in "page_urls" with lines "##Child 1\n\nhttp://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html\n\nhttp://sidrasue.com/tests/parts/3.html##Child 2\n\n"
+      And I fill in "page_urls" with lines "##Child 1\n\nhttp://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html\n\nhttp://test.sidrasue.com/parts/3.html##Child 2\n\n"
      And I fill in "page_title" with "Parent"
      And I select "my genre"
      And I press "Store"
@@ -59,11 +59,11 @@ Feature: error checking with parts
   Scenario: add a part to a page with content (second way)
     Given the following pages
       | title  | url |
-      | Single | http://sidrasue.com/tests/test.html |
+      | Single | http://test.sidrasue.com/test.html |
     When I am on the homepage
       And I follow "Read"
       And I follow "Manage Parts"
-      And I fill in "url_list" with lines "http://sidrasue.com/tests/test.html\nhttp://sidrasue.com/tests/styled.html"
+      And I fill in "url_list" with lines "http://test.sidrasue.com/test.html\nhttp://test.sidrasue.com/styled.html"
       And I press "Update"
     Then I should see "Single" in ".parent"
     When I am on the homepage
@@ -74,7 +74,7 @@ Feature: error checking with parts
   Scenario: single part stories shouldn't have parts link
     Given the following page
       | title  | url |
-      | Single | http://sidrasue.com/tests/test.html |
+      | Single | http://test.sidrasue.com/test.html |
     When I am on the homepage
     Then I should not see "List Parts" in ".title"
     When I follow "Read"
@@ -84,7 +84,7 @@ Feature: error checking with parts
     Given I have no pages
       And the following page
       | title | urls |
-      | Parent | http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html |
+      | Parent | http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html |
     When I am on the homepage
       And I follow "List Parts"
       And I follow "Download" in "#position_1"

@@ -3,7 +3,7 @@ Feature: error checking scrub
   Scenario: tidy ocassionally re-adds &nbsp;
     Given the following page
       |title | url |
-      | test | http://sidrasue.com/tests/tidy.html |
+      | test | http://test.sidrasue.com/tidy.html |
     When I am on the homepage
       And I follow "Download" in ".title"
     Then I should not see "nbsp"
@@ -11,7 +11,7 @@ Feature: error checking scrub
   Scenario: scrub a sub-part
     Given the following page
       |title | urls |
-      | test | #Title\n##First Part\nhttp://sidrasue.com/tests/parts/1.html###SubPart |
+      | test | #Title\n##First Part\nhttp://test.sidrasue.com/parts/1.html###SubPart |
       And I am on the homepage
     When I follow "Read"
       And I follow "Scrub"
@@ -30,7 +30,7 @@ Feature: error checking scrub
   Scenario: scrub when many headers and short fic
     Given the following page
       |title | url |
-      | test | http://sidrasue.com/tests/headers.html |
+      | test | http://test.sidrasue.com/headers.html |
       And I am on the homepage
     When I follow "Read"
       And I follow "Scrub"

@@ -1,0 +1,46 @@
+# Be sure to restart your server when you modify this file.
+
+module MyWebsites
+  def self.getpwd(original_url)
+    case original_url
+      when "http://test.sidrasue.com/basic/test.html"
+        { :username => "alice", :password => "nothingtosee" }
+      when "http://test.sidrasue.com/digest/test.html"
+        { :username => "alice", :password => "nothinghere" }
+    end
+  end
+  def self.geturl(original_url)
+    case original_url
+      when /livejournal/
+        original_url + "?format=light&mode=reply"
+      else original_url
+    end
+  end
+  def self.getnode(original_url, html)
+    body = Nokogiri::HTML(html).xpath('//body').first
+    keep = case original_url
+      when /ejournal/, /dreamwidth/
+        if body.at('//blockquote')
+          body.at('//blockquote').next
+        else
+          body
+        end
+      when /fanfiction.net/
+        body.at('div#storytext')
+      when /archiveofourown/
+        body.at('div.work-show')
+      when /wraithbait/
+        body.at('div#mainpage') || body
+      when /google/
+        body.at('div#inbdy')
+      else
+        if body && (body.children.to_s == body.at('div').to_s)
+          body.at('div')
+        else
+          body
+        end
+    end
+    keep.children.to_html.gsub(/\n/, "") if keep
+  end
+end
+

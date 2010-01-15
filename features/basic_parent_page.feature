@@ -6,7 +6,7 @@ Feature: basic parent page
   Scenario: parent read page
     Given the following page
       |title | base_url | url_substitutions |
-      | Multi | http://sidrasue.com/tests/parts/*.html | 1 2 |
+      | Multi | http://test.sidrasue.com/parts/*.html | 1 2 |
    When I am on the homepage
      And I follow "List Parts"
    Then I should see "Download" in "#position_1"
