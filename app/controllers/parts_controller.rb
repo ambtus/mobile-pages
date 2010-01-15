@@ -27,7 +27,7 @@ class PartsController < ApplicationController
     if params[:add_parent] && params[:add_parent] != NEW_PARENT_TITLE && params[:add_parent] != @page.parent.try(:title)
       @page = @page.add_parent(params[:add_parent])
       if @page == false
-        flash[:error] = "Couldn't find or create parent"
+        flash[:error] = "Could not find or create parent"
         @page = Page.find(params[:page_id])
       end
     end

@@ -11,6 +11,7 @@ Feature: error checking second level parts
     When I fill in "url_list" with lines "http://sidrasue.com/tests/parts/3.html\nhttp://sidrasue.com/tests/parts/4.html2\nhttp://sidrasue.com/tests/parts/5.html"
       And I press "Update"
     Then I should see "Parent2" in ".title"
+      And I should not see "Could not find or create parent"
       When I follow "Grandparent"
     Then I should see "Parent1" in "#position_1"
       And I should see "Parent2" in "#position_2"

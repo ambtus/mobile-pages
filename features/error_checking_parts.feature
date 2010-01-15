@@ -14,12 +14,12 @@ Feature: error checking with parts
     When I follow "Manage Parts"
       And I fill in "add_parent" with "Ambiguous"
       And I press "Update"
-    Then I should see "Couldn't find or create parent"
+    Then I should see "Could not find or create parent"
       And I should not see "Another Ambiguous" in ".title"
     When I follow "Manage Parts"
       And I fill in "add_parent" with "Another Ambiguous"
       And I press "Update"
-    Then I should not see "Couldn't find or create parent"
+    Then I should not see "Could not find or create parent"
       And I should see "Another Ambiguous" in ".title"
       And I should see "Single" in "#position_2"
 
@@ -34,7 +34,7 @@ Feature: error checking with parts
       And I follow "Manage Parts"
       And I fill in "add_parent" with "Styled"
       And I press "Update"
-    Then I should see "Couldn't find or create parent"
+    Then I should see "Could not find or create parent"
       And I should not see "Styled" in ".title"
 
   Scenario: ignore empty lines
