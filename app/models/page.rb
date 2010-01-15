@@ -49,7 +49,7 @@ class Page < ActiveRecord::Base
   end
 
   def before_validation
-    self.url = nil if self.url == URL_PLACEHOLDER
+    self.url = self.url == URL_PLACEHOLDER ? nil : self.url.try(:strip)
     self.title = nil if self.title == TITLE_PLACEHOLDER
     self.base_url = nil if self.base_url == BASE_URL_PLACEHOLDER
     self.url_substitutions = nil if self.url_substitutions == URL_SUBSTITUTIONS_PLACEHOLDER

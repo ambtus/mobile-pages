@@ -53,3 +53,10 @@ Feature: error checking during store
     When I fill in "page_title" with "Only entered Title"
       And I press "Store"
     Then I should see "Page created" in "#flash_notice"
+
+  Scenario: url with surrounding whitespace okay
+    Given I am on the homepage
+    When I fill in "page_title" with "bad url"
+      And I fill in "page_url" with " http://sidrasue.com/tests/test.html"
+      And I press "Store"
+    Then I should see "Page created" in "#flash_notice"
