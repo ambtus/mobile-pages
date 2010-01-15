@@ -9,4 +9,4 @@
       =h part.title
       = link_to "Read", page_path(part)
       = link_to "List Parts", part_path(part) unless part.parts.blank?
-      = link_to "Download", page_path(@page, :format => 'txt')
+      = link_to "Download", page_path(part, :format => 'txt')

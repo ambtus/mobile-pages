@@ -80,4 +80,13 @@ Feature: error checking with parts
     When I follow "Read"
     Then I should not see "List Parts" in ".title"
     
-
+  Scenario: download part
+    Given I have no pages
+      And the following page
+      | title | urls |
+      | Parent | http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html |
+    When I am on the homepage
+      And I follow "List Parts"
+      And I follow "Download" in "#position_1"
+    Then I should see "stuff for part 1"
+    And I should not see "stuff for part 2"
