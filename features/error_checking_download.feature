@@ -32,3 +32,13 @@ Feature: errors on download
     When I am on the homepage
       And I follow "Download" in ".title"
     Then I should see "Retrieved from the web"
+
+  Scenario: download livejournal adult content
+    Given the following page
+      | title           | url |
+      | page with cutid | http://sidra.livejournal.com/3265.html |
+    When I am on the homepage
+      And I follow "Download" in ".title"
+    Then I should not see "Adult Content"
+      And I should see "alien"
+
