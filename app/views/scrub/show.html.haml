@@ -10,7 +10,7 @@
     .button= f.submit "Remove surrounding Div"
     - @page.nodes.each_with_index do |node,index|
       .node
-        = check_box_tag "nodes[]", index, false, :id => index
+        = check_box_tag "nodes[]", index, index==@page.nodes.size-1 ? true : false, :id => index
         = label_tag index, node
     .button= f.submit "Scrub"
 %a{:name => "end"}
