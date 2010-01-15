@@ -45,7 +45,7 @@ class Page < ActiveRecord::Base
 
   def clean_title
     clean = self.title.gsub('/', '')
-    CGI::escape(clean).gsub('+', '%20').gsub('.', '%46')
+    CGI::escape(clean).gsub('+', ' ').gsub('.', ' ')
   end
 
   def before_validation

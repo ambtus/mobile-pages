@@ -24,3 +24,11 @@ Feature: errors on download
       And I follow "Download" in ".title"
     Then I should see "Ron crouched"
       And I should not see "<a"
+
+  Scenario: download with spaces in title
+    Given the following page
+      | title | url |
+      | This title has spaces | http://sidrasue.com/tests/test.html |
+    When I am on the homepage
+      And I follow "Download" in ".title"
+    Then I should see "Retrieved from the web"
