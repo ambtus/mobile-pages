@@ -119,6 +119,12 @@ class Page < ActiveRecord::Base
         url = "failed"
       end
     end
+    if url.match(/livejournal/) && self.raw_content.match(/adult_check/)
+       agent = WWW::Mechanize.new
+       form = agent.get(url).forms.first
+       page = agent.submit(form, form.buttons.first)
+       self.raw_content = page.body
+    end
     self.build_me
   end
 
