@@ -3,7 +3,7 @@ Feature: basic title
   Scenario: change title
     Given the following page
       | title                  | url |
-      | Old Title              | http://sidrasue.com/tests/test.html |
+      | Old Title              | http://test.sidrasue.com/test.html |
       And I am on the homepage
     When I follow "Read"
       And I follow "Manage Parts"

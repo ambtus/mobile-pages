@@ -6,7 +6,7 @@ Feature: basic last read date
   Scenario: after rate an unread page, display it's last read date
         Given the following pages
       | title                            | url                                 |
-      | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  |
+      | Grimm's Fairy Tales              | http://test.sidrasue.com/gft.html  |
     When I am on the homepage
     Then I should see "Grimm's Fairy Tales"
       And I should not see ".last_read"
@@ -18,7 +18,7 @@ Feature: basic last read date
   Scenario: after rate a read page, change it's last read date
     Given the following pages
       | title                            | url                                 | last_read  |
-      | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  | 2008-01-01 |
+      | Grimm's Fairy Tales              | http://test.sidrasue.com/gft.html  | 2008-01-01 |
     When I am on the homepage
     Then I should see "Grimm's Fairy Tales"
       And I should see "2008-01-01" in ".last_read"

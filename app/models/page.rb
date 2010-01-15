@@ -98,32 +98,22 @@ class Page < ActiveRecord::Base
   def fetch(url=self.url)
     return if url.blank?
     self.update_attribute(:url, url) if url != self.url
-    pwd = Curl::External.getpwd(url)
-    url = Curl::External.geturl(url)
+    agent = WWW::Mechanize.new
+    auth = MyWebsites.getpwd(url)
+    agent.auth(auth[:username], auth[:password]) if auth
     begin
-      Curl::Easy.download(url, self.raw_file_name) {|c| c.userpwd = pwd}
-    rescue Curl::Err::HostResolutionError # ignore
-      self.raw_content = "Couldn't resolve host name"
-      url = "failed"
-    rescue Curl::Err::ConnectionFailedError #ignore
-      self.raw_content = "Server down"
-      url = "failed"
-    rescue Curl::Err::GotNothingError # retry
-      begin
-        Curl::Easy.download(url, self.raw_file_name) {|c| c.userpwd = pwd}
-      rescue Curl::Err::GotNothingError
-        self.raw_content = "Timed out"
-        url = "failed"
-      rescue Curl::Err::ConnectionFailedError #ignore
-        self.raw_content = "Server down"
-        url = "failed"
+      page = agent.get(MyWebsites.geturl(url))
+      if url.match(/livejournal/) && page.forms.first.try(:button).try(:name) == "adult_check"
+         form = page.forms.first
+         page = agent.submit(form, form.buttons.first)
       end
-    end
-    if url.match(/livejournal/) && self.raw_content.match(/adult_check/)
-       agent = WWW::Mechanize.new
-       form = agent.get(url).forms.first
-       page = agent.submit(form, form.buttons.first)
-       self.raw_content = page.body
+      self.raw_content = page.body
+    rescue WWW::Mechanize::ResponseCodeError
+      self.raw_content = "error retrieving content"
+      self.errors.add(:url, "error retrieving content")
+    rescue SocketError
+      self.raw_content = "couldn't resolve host name"
+      self.errors.add(:url, "couldn't resolve host name")
     end
     self.build_me
   end
@@ -131,13 +121,13 @@ class Page < ActiveRecord::Base
   def build_me(input="latin1")
     input = "utf8" if self.raw_content.match(/charset ?= ?"?utf-8/i)
     self.original_html = self.pre_process(self.raw_file_name, input)
-    self.original_html = Curl::External.getnode(url, self.original_html)
+    self.original_html = MyWebsites.getnode(url, self.original_html)
     self.set_wordcount
   end
 
   def clean_me(input="utf8")
     self.original_html = self.pre_process(self.original_file, input)
-    self.original_html = Curl::External.getnode(url, self.original_html)
+    self.original_html = MyWebsites.getnode(url, self.original_html)
     self.set_wordcount
   end
 

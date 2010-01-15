@@ -3,9 +3,9 @@ Feature: filter on multiple criteria
   Scenario: filter on mix of author, genre, and state
     Given the following pages
       | title                            | url                                   | last_read | add_author_string              | add_genre_string            |
-      | The Mysterious Affair at Styles  | http://sidrasue.com/tests/maas.html | 2009-01-01 | agatha christie                | mystery           |
-      | Alice's Adventures In Wonderland | http://sidrasue.com/tests/aa.html   | 2009-02-01 | lewis carroll, charles dodgson | fantasy, children |
-      | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  |  | grimm                          | children, short stories     |
+      | The Mysterious Affair at Styles  | http://test.sidrasue.com/maas.html | 2009-01-01 | agatha christie                | mystery           |
+      | Alice's Adventures In Wonderland | http://test.sidrasue.com/aa.html   | 2009-02-01 | lewis carroll, charles dodgson | fantasy, children |
+      | Grimm's Fairy Tales              | http://test.sidrasue.com/gft.html  |  | grimm                          | children, short stories     |
     When I am on the homepage
       And I select "agatha christie"
       And I select "mystery"

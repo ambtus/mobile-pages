@@ -7,7 +7,7 @@ Feature: basic genres
     Given I have no filters
       And the following page
      | title | url |
-     | Alice's Adventures | http://sidrasue.com/tests/aa.html |
+     | Alice's Adventures | http://test.sidrasue.com/aa.html |
     When I am on the homepage
       And I follow "Read"
       And I follow "Genres"
@@ -24,7 +24,7 @@ Feature: basic genres
       | fantasy |
       And the following page
         | title | url |
-        | Alice's Adventures In Wonderland | http://sidrasue.com/tests/aa.html   |
+        | Alice's Adventures In Wonderland | http://test.sidrasue.com/aa.html   |
     When I am on the homepage
       And I follow "Read"
     When I follow "Genres"
@@ -35,7 +35,7 @@ Feature: basic genres
   Scenario: add a genre to a page which has genres
     Given the following page
       | title               | url                                | add_genre_string |
-      | Grimm's Fairy Tales | http://sidrasue.com/tests/gft.html | classic          |
+      | Grimm's Fairy Tales | http://test.sidrasue.com/gft.html | classic          |
     When I am on the homepage
     Then I should see "Grimm's Fairy Tales"
       And I should see "classic" in ".genres"

@@ -28,13 +28,11 @@ tidy libcurl libxml2 libxslt
 
 utf-8 encoding
 
-=== required configuration
+=== required configuration (will likely require modification)
 
-cp config/database.example config/database.yml #modify as needed
-
-cp config/initializers/curb.example config/initializers/curb.rb  #modify as needed
-
-cp config/initializers/session_store.example config/initializers/session_store.rb #modify as desired.
+cp config/database.example config/database.yml 
+cp config/initializers/websites.example config/initializers/websites.rb
+cp config/initializers/session_store.example config/initializers/session_store.rb
 
 === optional configuration
 
@@ -48,6 +46,15 @@ gem install haml # rake fails without
 rake gems:install RAILS_ENV=cucumber
 rake db:create:all
 rake db:schema:load
+
+==== digest auth fix for mechanize
+
+rake gems:unpack GEM=mechanize
+in vendor/gems/mechanize-0.9.3/lib/www/mechanize/chain/auth_headers.rb
+change line 71
+
+-          header << "nc=#{'%08x' % @@nonce_count[params['nonce']]}, "
++          header << ", nc=#{'%08x' % @@nonce_count[params['nonce']]}, "
 
 == Testing
 

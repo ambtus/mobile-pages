@@ -6,9 +6,9 @@ Feature: basic next
   Scenario: Read pages in order
     Given the following pages
       | title                           | url                                 |
-      | A Christmas Carol               | http://sidrasue.com/tests/cc.html   |
-      | The Call of the Wild            | http://sidrasue.com/tests/cotw.html |
-      | The Mysterious Affair at Styles | http://sidrasue.com/tests/maas.html |
+      | A Christmas Carol               | http://test.sidrasue.com/cc.html   |
+      | The Call of the Wild            | http://test.sidrasue.com/cotw.html |
+      | The Mysterious Affair at Styles | http://test.sidrasue.com/maas.html |
      When I am on the homepage
        Then I should see "A Christmas Carol" in ".title"
      When I press "Read Later"

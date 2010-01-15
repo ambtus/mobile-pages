@@ -6,7 +6,7 @@ Feature: basic download
   Scenario: download a text version of styled html
     Given the following page
       | title  | url |
-      | multi  | http://sidrasue.com/tests/styled.html |
+      | multi  | http://test.sidrasue.com/styled.html |
     When I am on the homepage
       And I follow "Download" in ".title"
     Then I should see "# This is a header #"
@@ -36,7 +36,7 @@ Feature: basic download
   Scenario: download stripping links and images
     Given the following page
       | title  | url |
-      | multi  | http://sidrasue.com/tests/href.html |
+      | multi  | http://test.sidrasue.com/href.html |
     When I am on the homepage
       And I follow "Download" in ".title"
     Then I should see "[top link]"
@@ -50,7 +50,7 @@ Feature: basic download
   Scenario: download stripping of javascript and comments
     Given the following page
       | title  | url |
-      | multi  | http://sidrasue.com/tests/entities.html |
+      | multi  | http://test.sidrasue.com/entities.html |
     When I am on the homepage
       And I follow "Download" in ".title"
     Then I should not see "script language="
@@ -62,7 +62,7 @@ Feature: basic download
   Scenario: download stripping of tables
     Given the following page
       | title  | url |
-      | multi  | http://sidrasue.com/tests/tablecontent.html |
+      | multi  | http://test.sidrasue.com/tablecontent.html |
     When I am on the homepage
       And I follow "Download" in ".title"
     Then I should not see "<table"
@@ -75,7 +75,7 @@ Feature: basic download
   Scenario: download stripping of lists
     Given the following page
       | title  | url |
-      | multi  | http://sidrasue.com/tests/list.html |
+      | multi  | http://test.sidrasue.com/list.html |
     When I am on the homepage
       And I follow "Download" in ".title"
     Then I should not see "<ul"
@@ -88,7 +88,7 @@ Feature: basic download
   Scenario: download crappy Microsoft Office "html"
     Given the following page
       | title  | url |
-      | multi  | http://sidrasue.com/tests/mso.html |
+      | multi  | http://test.sidrasue.com/mso.html |
     When I am on the homepage
       And I follow "Download" in ".title"
     Then I should not see "<em"
@@ -103,7 +103,7 @@ Feature: basic download
   Scenario: download weird empty divs
     Given the following page
       | title  | url |
-      | multi  | http://sidrasue.com/tests/ejournal_div.html |
+      | multi  | http://test.sidrasue.com/ejournal_div.html |
     When I am on the homepage
       And I follow "Download" in ".title"
     Then I should not see "\n\n\n\n"
@@ -111,7 +111,7 @@ Feature: basic download
 
     Given the following page
       | title  | url |
-      | multi  | http://sidrasue.com/tests/linefeeds.html |
+      | multi  | http://test.sidrasue.com/linefeeds.html |
     When I am on the homepage
       And I follow "Download" in ".title"
      Then I should not see "thirdfourth"
@@ -121,7 +121,7 @@ Feature: basic download
   Scenario: divs with attributes
     Given the following page
       | title  | url |
-      | multi  | http://sidrasue.com/tests/div.html |
+      | multi  | http://test.sidrasue.com/div.html |
     When I am on the homepage
       And I follow "Download" in ".title"
 #    Then I should see "first div\n\nsecond div\n\ncontent"
@@ -188,7 +188,7 @@ Feature: basic download
   Scenario: download google groops content only
     Given the following page
       | title  | url |
-      | multi  | http://sidrasue.com/tests/google.html |
+      | multi  | http://test.sidrasue.com/google.html |
     When I am on the homepage
       And I follow "Download" in ".title"
     Then I should see "Author: Ster Julie"

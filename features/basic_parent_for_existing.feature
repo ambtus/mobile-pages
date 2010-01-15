@@ -6,7 +6,7 @@ Feature: basic parent for existing pages
   Scenario: create a new parent for an existing page
     Given the following page
       | title  | url |
-      | Single | http://sidrasue.com/tests/test.html |
+      | Single | http://test.sidrasue.com/test.html |
     When I am on the homepage
       And I follow "Read"
       And I follow "Manage Parts"
@@ -21,10 +21,10 @@ Feature: basic parent for existing pages
   Scenario: add an existing page to an existing page with parts
     Given the following page
       | title  | url |
-      | Single | http://sidrasue.com/tests/parts/3.html |
+      | Single | http://test.sidrasue.com/parts/3.html |
     And the page
       | title | base_url| url_substitutions |
-      | Multi | http://sidrasue.com/tests/parts/*.html | 1 2 |
+      | Multi | http://test.sidrasue.com/parts/*.html | 1 2 |
     When I am on the homepage
     Then I should see "Single" in ".title"
     When I follow "Read"

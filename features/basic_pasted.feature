@@ -6,7 +6,7 @@ Feature: basic pasted
   Scenario: store using a pasted html file
     Given the following page
       | title | url |
-      | Test  | http://sidrasue.com/tests/test.html |
+      | Test  | http://test.sidrasue.com/test.html |
     When I am on the homepage
     And I follow "Read"
      And I follow "Edit Raw HTML"
@@ -19,7 +19,7 @@ Feature: basic pasted
   Scenario: pasted html file needing pre-processing
     Given the following page
       | title | url |
-      | Test  | http://sidrasue.com/tests/test.html |
+      | Test  | http://test.sidrasue.com/test.html |
     When I am on the homepage
     And I follow "Read"
      And I follow "Edit Raw HTML"

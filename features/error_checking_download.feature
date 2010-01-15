@@ -3,7 +3,7 @@ Feature: errors on download
   Scenario: download with slashes in title
     Given the following page
       | title | url |
-      | This title 1/2 | http://sidrasue.com/tests/test.html |
+      | This title 1/2 | http://test.sidrasue.com/test.html |
     When I am on the homepage
       And I follow "Download" in ".title"
     Then I should see "Retrieved from the web"
@@ -11,7 +11,7 @@ Feature: errors on download
   Scenario: download with periods in title
     Given the following page
       | title | url |
-      | This.title.has.periods | http://sidrasue.com/tests/test.html |
+      | This.title.has.periods | http://test.sidrasue.com/test.html |
     When I am on the homepage
       And I follow "Download" in ".title"
     Then I should see "Retrieved from the web"
@@ -28,7 +28,7 @@ Feature: errors on download
   Scenario: download with spaces in title
     Given the following page
       | title | url |
-      | This title has spaces | http://sidrasue.com/tests/test.html |
+      | This title has spaces | http://test.sidrasue.com/test.html |
     When I am on the homepage
       And I follow "Download" in ".title"
     Then I should see "Retrieved from the web"

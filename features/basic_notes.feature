@@ -6,7 +6,7 @@ Feature: basic notes
   Scenario: add notes to a page from start
     Given the following page
       | title                            | url                                 |
-      | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  |
+      | Grimm's Fairy Tales              | http://test.sidrasue.com/gft.html  |
     When I am on the homepage
       And I follow "Read"
       And I follow "Notes"
@@ -17,7 +17,7 @@ Feature: basic notes
   Scenario: edit notes on a page from show
     Given the following page
       | title                            | url                                 | notes |
-      | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  | "some basic notes" |
+      | Grimm's Fairy Tales              | http://test.sidrasue.com/gft.html  | "some basic notes" |
       And I am on the homepage
     Then I should see "some basic notes" in ".notes"
     When I follow "Read"

@@ -3,9 +3,9 @@ Feature: basic authors
   Scenario: filter on an author
     Given the following pages
       | title                            | url                                 | add_author_string |
-      | The Mysterious Affair at Styles  | http://sidrasue.com/tests/maas.html | agatha christie   |
-      | Grimm's Fairy Tales              | http://sidrasue.com/tests/gft.html  | grimm             |
-      | Alice's Adventures In Wonderland | http://sidrasue.com/tests/aa.html   | lewis carroll, charles dodgson |
+      | The Mysterious Affair at Styles  | http://test.sidrasue.com/maas.html | agatha christie   |
+      | Grimm's Fairy Tales              | http://test.sidrasue.com/gft.html  | grimm             |
+      | Alice's Adventures In Wonderland | http://test.sidrasue.com/aa.html   | lewis carroll, charles dodgson |
     When I am on the homepage
     When I select "grimm"
       And I press "Filter"
@@ -28,7 +28,7 @@ Feature: basic authors
     Given I have no filters
       And the following page
      | title | url |
-     | Alice's Adventures | http://sidrasue.com/tests/aa.html |
+     | Alice's Adventures | http://test.sidrasue.com/aa.html |
     When I am on the homepage
       And I follow "Read"
       And I follow "Authors"
@@ -42,7 +42,7 @@ Feature: basic authors
   Scenario: add an author for a page when there are authors
     Given the following page
         | title              | url                                 |
-        | Alice's Adventures | http://sidrasue.com/tests/aa.html   |
+        | Alice's Adventures | http://test.sidrasue.com/aa.html   |
       And the following author
         | name          |
         | lewis carroll |
@@ -58,7 +58,7 @@ Feature: basic authors
   Scenario: add an author to a page which has authors
     Given the following page
         | title              | url                                 | add_author_string |
-        | Alice's Adventures | http://sidrasue.com/tests/aa.html   | lewis carroll     |
+        | Alice's Adventures | http://test.sidrasue.com/aa.html   | lewis carroll     |
     When I am on the homepage
     Then I should see "lewis carroll" in ".authors"
     When I follow "Read"

@@ -10,7 +10,7 @@ Feature: basic parts
         | my genre |
       And I am on the homepage
     When I follow "Store Multiple"
-      And I fill in "page_base_url" with "http://sidrasue.com/tests/parts/*.html"
+      And I fill in "page_base_url" with "http://test.sidrasue.com/parts/*.html"
      And I fill in "page_url_substitutions" with "1 2 3"
      And I fill in "page_title" with "Multiple pages from base"
      And I select "my genre"
@@ -30,7 +30,7 @@ Feature: basic parts
         | my genre |
       And I am on the homepage
     When I follow "Store Multiple"
-      And I fill in "page_urls" with lines "http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html"
+      And I fill in "page_urls" with lines "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
      And I fill in "page_title" with "Multiple pages from urls"
      And I select "my genre"
      And I press "Store"
@@ -43,7 +43,7 @@ Feature: basic parts
   Scenario: children should not show up on front page by themselves
     Given the following page
       |title   | urls |
-      | Parent | http://sidrasue.com/tests/parts/1.html\nhttp://sidrasue.com/tests/parts/2.html |
+      | Parent | http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html |
     When I am on the homepage
     Then I should see "Parent" in ".title"
     When I press "Read Later"

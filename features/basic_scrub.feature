@@ -22,14 +22,14 @@ Feature: Basic Scrub
 
   Examples:
   | url                                         | nodes | wanted       | unwanted1       | unwanted2   |
-  | http://sidrasue.com/tests/p.html            | 0 2   | content      | top para        | bottom para |
-  | http://sidrasue.com/tests/table.html        | 0 2   | content      | top para        | Row_1_Cell_1|
-  | http://sidrasue.com/tests/br.html           | 0 2   | all on       | top line        | bottom line |
-  | http://sidrasue.com/tests/entities.html     | 0 2   | Chris was    | Content Removed | Next        |
-  | http://sidrasue.com/tests/img.html          | 1 3   | content      | top para        | bottom par  |
-  | http://sidrasue.com/tests/tablecontent.html | 3 5   | I remembered | Jump            | Content     |
-  | http://sidrasue.com/tests/href.html         | 1 3   | content      | top link        | bottom link |
-  | http://sidrasue.com/tests/styled.html       | 10 15 | One          | horizontal      | end         |
+  | http://test.sidrasue.com/p.html            | 0 2   | content      | top para        | bottom para |
+  | http://test.sidrasue.com/table.html        | 0 2   | content      | top para        | Row_1_Cell_1|
+  | http://test.sidrasue.com/br.html           | 0 2   | all on       | top line        | bottom line |
+  | http://test.sidrasue.com/entities.html     | 0 2   | Chris was    | Content Removed | Next        |
+  | http://test.sidrasue.com/img.html          | 1 3   | content      | top para        | bottom par  |
+  | http://test.sidrasue.com/tablecontent.html | 3 5   | I remembered | Jump            | Content     |
+  | http://test.sidrasue.com/href.html         | 1 3   | content      | top link        | bottom link |
+  | http://test.sidrasue.com/styled.html       | 10 15 | One          | horizontal      | end         |
 
  Scenario Outline: strip top or bottom only
   Given I have no pages
@@ -51,8 +51,8 @@ Feature: Basic Scrub
 
   Examples:
   | url                                         | nodes | wanted1      | wanted2         | unwanted     | uncheck |
-  | http://sidrasue.com/tests/div.html          | 1     | content      | last div        | second div   |    |
-  | http://sidrasue.com/tests/container.html    | 1     | content      | content2        | second div   |    |
-  | http://sidrasue.com/tests/p.html            | 2     | content      | top para        | bottom para  | 3  |
-  | http://sidrasue.com/tests/tablecontent.html | 6     | I remembered | Jump            | Keep on      | 10 |
-  | http://sidrasue.com/tests/tablecontent.html | 4     | for testing  | Keep on         | I remembered |    |
+  | http://test.sidrasue.com/div.html          | 1     | content      | last div        | second div   |    |
+  | http://test.sidrasue.com/container.html    | 1     | content      | content2        | second div   |    |
+  | http://test.sidrasue.com/p.html            | 2     | content      | top para        | bottom para  | 3  |
+  | http://test.sidrasue.com/tablecontent.html | 6     | I remembered | Jump            | Keep on      | 10 |
+  | http://test.sidrasue.com/tablecontent.html | 4     | for testing  | Keep on         | I remembered |    |

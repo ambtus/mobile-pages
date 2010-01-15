@@ -6,8 +6,8 @@ Feature: basic search with parts
   Scenario: find the parent of a part
     Given the following pages
       |title    | base_url                 | url_substitutions |
-      | Parent1 | http://sidrasue.com/tests/parts/*.html | 1   |
-      | Parent2 | http://sidrasue.com/tests/parts/*.html | 2 3 |
+      | Parent1 | http://test.sidrasue.com/parts/*.html | 1   |
+      | Parent2 | http://test.sidrasue.com/parts/*.html | 2 3 |
      When I am on the homepage
      Then I should see "Parent1" in ".title"
       And I fill in "search" with "Part 2"
@@ -17,8 +17,8 @@ Feature: basic search with parts
   Scenario: find a page with parts
     Given the following pages
       |title    | base_url                 | url_substitutions |
-      | Parent1 | http://sidrasue.com/tests/parts/*.html | 1   |
-      | Parent2 | http://sidrasue.com/tests/parts/*.html | 2 3 |
+      | Parent1 | http://test.sidrasue.com/parts/*.html | 1   |
+      | Parent2 | http://test.sidrasue.com/parts/*.html | 2 3 |
      When I am on the homepage
       And I fill in "search" with "Parent2"
       And I press "Search"
