@@ -24,7 +24,7 @@ class PartsController < ApplicationController
     if url_list != @page.url_list
       @page.parts_from_urls(params[:url_list]) 
     end
-    if params[:add_parent] && params[:add_parent] != NEW_PARENT_TITLE
+    if params[:add_parent] && params[:add_parent] != NEW_PARENT_TITLE && params[:add_parent] != @page.parent.try(:title)
       @page = @page.add_parent(params[:add_parent])
       if @page == false
         flash[:error] = "Couldn't find or create parent"
