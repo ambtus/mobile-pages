@@ -7,6 +7,8 @@
   - @page.parts.each do |part|
     .part{:id => "position_#{part.position}"}
       =h part.title
+      - unless part.tag_string.blank?
+        = "(#{part.tag_string})"
       = link_to "Read", page_path(part)
       = link_to "List Parts", part_path(part) unless part.parts.blank?
       = link_to "Download", page_path(part, :format => 'txt')

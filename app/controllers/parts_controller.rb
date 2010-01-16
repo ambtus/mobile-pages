@@ -26,9 +26,15 @@ class PartsController < ApplicationController
     end
     if params[:add_parent] && params[:add_parent] != NEW_PARENT_TITLE && params[:add_parent] != @page.parent.try(:title)
       @page = @page.add_parent(params[:add_parent])
-      if @page == false
-        flash[:error] = "Could not find or create parent"
-        @page = Page.find(params[:page_id])
+      case @page
+        when "ambiguous"
+           flash[:error] = "More than one page with that title"
+           @page = Page.find(params[:page_id])
+        when Page
+           flash[:notice] = "Page added to this parent"
+        else
+           flash[:error] = "Parent with that title has content"
+           @page = Page.find(params[:page_id])
       end
     end
     redirect_to part_path(@page)

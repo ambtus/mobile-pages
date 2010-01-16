@@ -13,5 +13,28 @@ class State < ActiveRecord::Base
   default_scope :order => 'states.name asc'
   validates_presence_of :name
   validates_uniqueness_of :name
+  
+  def self.unread
+    self.find_or_create_by_name(UNREAD)
+  end
+  def self.short
+    self.find_or_create_by_name(SHORT)
+  end
+  def self.long
+    self.find_or_create_by_name(LONG)
+  end
+  def self.epic
+    self.find_or_create_by_name(EPIC)
+  end
+  def self.favorite
+    self.find_or_create_by_name(FAVORITE)
+  end
+  
+  def self.by_wordcount(wordcount)
+    return self.short if wordcount < SHORT_WC
+    return self.long if wordcount > LONG_WC && wordcount < EPIC_WC    
+    return self.epic if wordcount > EPIC_WC
+    return nil
+  end
 
 end
