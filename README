@@ -58,4 +58,4 @@ change line 71
 
 == Testing
 
-rake cucumber
+rake
