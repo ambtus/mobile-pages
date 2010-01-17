@@ -34,3 +34,12 @@ Feature: Basic Search
     When I fill in "search" with "War and Peace"
       And I press "Search"
     Then I should see "War and Peace not found" in "#flash_error"
+
+  Scenario: No search criteria
+    Given the following page
+      | title            | url                                   |
+      | War              | http://test.sidrasue.com/test.html   |
+      And I am on the homepage
+    When I fill in "search" with ""
+      And I press "Search"
+    Then I should see "Please enter search criteria" in "#flash_error"

@@ -19,6 +19,10 @@
     background-color: #C9F;
     font-weight: bold;
     }
+.size    {
+    border-width: 1px;
+    background-color: #FFF;
+    }
 .states    {
     border-width: 1px;
     background-color: #FFC;

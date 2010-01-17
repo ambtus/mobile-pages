@@ -1,35 +1,34 @@
 - content_for :title do
   = @title
-- if @page
-  .form
-    - form_tag start_index_path do
-      = hidden_field_tag(:page_id, @page.id)
-      = hidden_field_tag(:old_genre, @genre.try(:name))
-      = hidden_field_tag(:old_author, @author.try(:name))
-      = hidden_field_tag(:old_state, @state.try(:name))
-      = submit_tag "Read Later"
-  = render :partial => "pages/links", :locals => {:page => @page, :called_by => "start" }
-  = render :partial => "pages/headers", :locals => {:page => @page }
 .search
   - form_tag search_index_path do
-    = text_field_tag :search, params[:search]
+    = onblur_text_tag :search, @search, :maxlength => 255, :size => 30
     = submit_tag "Search", :name => nil
 .form
   - form_for @new_page, :builder => DefaultFormBuilder do |f|
-    - unless @states.blank?
-      .state
-        = select_tag :state, "<option></option>" + options_for_select(@states, @state.try(:name))
     - unless @authors.blank?
-      .author
-        = select_tag :author, "<option></option>" + options_for_select(@authors, @author.try(:name))
+      = select_tag :author, "<option></option>" + options_for_select(@authors, @author.try(:name))
+    %br
     - unless @genres.blank?
-      .genre
-        = select_tag :genre, "<option></option>" + options_for_select(@genres, @genre.try(:name))
+      = select_tag :genre, "<option></option>" + options_for_select(@genres, @genre.try(:name))
+    %br
+    = select_tag :size, "<option></option>" + options_for_select(Page::SIZES, @size)
+    %br
+    = check_box_tag :favorite, Page::FAVORITE, @favorite == Page::FAVORITE
+    = label_tag Page::FAVORITE, Page::FAVORITE
+    = check_box_tag :unread, Page::UNREAD, @unread == Page::UNREAD
+    = label_tag Page::UNREAD, Page::UNREAD
+    %br
+    = f.submit "Filter", :name => "Filter"
+    %br
     = f.text_field :url, Page::URL_PLACEHOLDER, :maxlength => 255, :size => 30
     %br
     = f.text_field :title, Page::TITLE_PLACEHOLDER, :maxlength => 255, :size => 30
     %br
-    .button
-      = f.submit "Filter", :name => "Filter"
-      = f.submit "Store", :name => "Store"
-= link_to "Store Multiple", new_part_path
+    = f.submit "Store", :name => "Store"
+    = link_to "Store Multiple", new_part_path
+    - if @page
+      = render :partial => "pages/links", :locals => {:page => @page, :called_by => "start" }
+      = render :partial => "pages/headers", :locals => {:page => @page }
+      = hidden_field_tag(:page_id, @page.id)
+      = f.submit "Read Later", :name => "Later"

@@ -1,4 +1,4 @@
-Feature: errors on download
+Feature: bugs on download
 
   Scenario: download with slashes in title
     Given the following page

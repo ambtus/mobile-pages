@@ -1,19 +1,39 @@
 class Page < ActiveRecord::Base
   MODULO = 300  # files in a single directory
+  DURATION = "years"
+
+  UNREAD = "unread"
+  FAVORITE = "favorite"
+
+  SHORT = "short"
+  LONG = "long"
+  EPIC = "epic"
+  SIZES = [SHORT, LONG, EPIC]
+  SHORT_WC = 1000
+  LONG_WC = 10000
+  EPIC_WC = 80000
+
+  SEARCH_PLACEHOLDER = "Enter title or note search criteria"
   TITLE_PLACEHOLDER = "Enter a Title for the new page"
   URL_PLACEHOLDER = "Enter a URL for a new page"
   BASE_URL_PLACEHOLDER = "Base URL: use * as replacement placeholder"
   URL_SUBSTITUTIONS_PLACEHOLDER = "URL substitutions, space separated replacements for base URL"
   URLS_PLACEHOLDER = "Alternatively: full URLs for parts, one per line"
-  DURATION = "years"
+
 
   has_and_belongs_to_many :genres, :uniq => true
   has_and_belongs_to_many :authors, :uniq => true
-  has_and_belongs_to_many :states, :uniq => true
   belongs_to :parent, :class_name => "Page"
+    
   default_scope :order => 'read_after ASC'
-  named_scope :parents, :conditions => {:parent_id => nil}
+  named_scope :ultimate_parents, :conditions => {:parent_id => nil}
   named_scope :limited, :limit => 20
+  named_scope :short, :conditions => {:size => SHORT}
+  named_scope :long, :conditions => {:size => LONG}
+  named_scope :epic, :conditions => {:size => EPIC} 
+  named_scope :unread, :conditions => {:last_read => nil }
+  named_scope :favorite, :conditions => {:favorite => true }
+  
   validates_presence_of :title
   validates_format_of :url, :with => URI.regexp, :allow_blank => true
 
@@ -33,11 +53,22 @@ class Page < ActiveRecord::Base
     parents.compact.uniq[0...20]
   end
 
-  def self.filter(state, genre, author)
-    by_state = state.is_a?(State) ? state.pages.limited.map(&:ultimate_parent) : Page.parents
-    by_genre = genre.is_a?(Genre) ? genre.pages.limited.map(&:ultimate_parent) : Page.parents
-    by_author = author.is_a?(Author) ? author.pages.limited.map(&:ultimate_parent) : Page.parents
-    by_author & by_genre & by_state
+  def self.filter(size, unread, favorite, genre, author)
+    by_size = case size
+      when SHORT
+        Page.short.ultimate_parents
+      when LONG
+        Page.long.ultimate_parents
+      when EPIC
+        Page.epic.ultimate_parents
+      else
+        Page.ultimate_parents
+    end
+    by_unread = unread ? Page.unread.limited.map(&:ultimate_parent) : Page.ultimate_parents
+    by_favorite = favorite ? Page.favorite.limited.map(&:ultimate_parent) : Page.ultimate_parents
+    by_genre = genre.is_a?(Genre) ? genre.pages.limited.map(&:ultimate_parent) : Page.ultimate_parents
+    by_author = author.is_a?(Author) ? author.pages.limited.map(&:ultimate_parent) : Page.ultimate_parents
+    by_size & by_unread & by_favorite & by_genre & by_author
   end
 
   def to_param
@@ -60,6 +91,7 @@ class Page < ActiveRecord::Base
 
   def after_create
     FileUtils.mkdir_p(Rails.public_path +  self.mypath)
+    self.raw_content = ""
     if self.url
       fetch
     elsif self.base_url
@@ -67,8 +99,6 @@ class Page < ActiveRecord::Base
     elsif self.urls
       self.parts_from_urls(self.urls)
     end
-    self.states << State.unread unless self.last_read
-    self.set_wordcount
   end
 
   def wordcount
@@ -76,9 +106,11 @@ class Page < ActiveRecord::Base
   end
 
   def set_wordcount
-    self.states.delete(State.short, State.long, State.epic)
-    state = State.by_wordcount(self.wordcount) 
-    self.states << state if state
+    self.size = nil
+    self.size = SHORT if wordcount < SHORT_WC
+    self.size = LONG if wordcount > LONG_WC
+    self.size = EPIC if wordcount > EPIC_WC
+    self.save
   end
 
   def pasted=(html)
@@ -99,14 +131,14 @@ class Page < ActiveRecord::Base
          page = agent.submit(form, form.buttons.first)
       end
       self.raw_content = page.body
+      self.build_me
     rescue WWW::Mechanize::ResponseCodeError
-      self.raw_content = "error retrieving content"
+      self.original_html = "error retrieving content"
       self.errors.add(:url, "error retrieving content")
     rescue SocketError
-      self.raw_content = "couldn't resolve host name"
+      self.original_html = "couldn't resolve host name"
       self.errors.add(:url, "couldn't resolve host name")
     end
-    self.build_me
   end
 
   def build_me(input="latin1")
@@ -142,6 +174,7 @@ class Page < ActiveRecord::Base
       create_child(self.base_url.gsub(/\*/, sub), count, title)
       count = count.next
     end
+    self.set_wordcount
   end
 
   def parts_from_urls(url_title_list, refetch=false)
@@ -221,9 +254,6 @@ class Page < ActiveRecord::Base
     end
     added = new_part_ids - old_part_ids
     if !added.blank?
-      added.each do |id|
-        parent.states << State.unread if Page.find(id).states.include?(State.unread)
-      end
       if parent.read_after > Time.now
         parent.update_attribute(:read_after, Time.now)
       end
@@ -296,18 +326,20 @@ class Page < ActiveRecord::Base
     end
     count = parent.parts.size + 1
     self.update_attributes(:parent_id => parent.id, :position => count)
-    parent.set_wordcount
     if new
       parent.genres << self.genres
       parent.authors << self.authors
+      parent.update_attribute(:last_read, self.last_read)
+      parent.update_attribute(:favorite, self.favorite)
     end
+    parent.set_wordcount
     return parent
   end
 
   def next
     was = self.read_after || Time.now
     self.update_attribute(:read_after, was + 3.months)
-    return Page.parents.first
+    return Page.ultimate_parents.first
   end
 
   def first
@@ -326,30 +358,12 @@ class Page < ActiveRecord::Base
     now = Time.now
     after = now + string.to_i.send(DURATION)
     self.update_attributes(:read_after => after, :last_read => now)
-    if string == "1"
-      self.states << State.favorite
-    else
-      self.states.delete(State.favorite)
-    end
-    self.parts.each {|p| p.states.delete(State.favorite)}
-    self.states.delete(State.unread)
-    self.parts.each {|p| p.states.delete(State.unread)}
+    string == "1" ? self.update_attribute(:favorite, true) : self.update_attribute(:favorite, false)
+    self.parent.update_attribute(:last_read, now) if self.parent
+    self.parts.each {|p| p.update_attribute(:last_read, now)}
     return self.read_after
   end
-
-  def state_string
-    self.states.map(&:name).join(", ")
-  end
-
-  def add_state_string=(string)
-    return if string.blank?
-    string.split(",").each do |state|
-      new = State.find_or_create_by_name(state.squish)
-      self.states << new
-    end
-    self.states
-  end
-
+  
   def author_string
     self.authors.map(&:name).join(", ")
   end
@@ -376,16 +390,21 @@ class Page < ActiveRecord::Base
     self.genres
   end
   
-  def tags
-    self.states + self.authors + self.genres
+  def tag_names
+    names = self.authors.map(&:name) + self.genres.map(&:name) + [self.size]
+    names = names + [FAVORITE] if self.favorite
+    names = names + [UNREAD] unless self.last_read
+    names.compact
   end
   
   def tag_string
-    mine = self.tags
-    parents = self.parent.try(:tags)
-    (mine - parents).map(&:name).join(", ")
+    mine = self.tag_names
+    if self.parent
+      mine = mine - self.parent.tag_names
+    end
+    mine.join(", ")
   end
-
+  
   def original_html=(content)
     content = content.gsub(/\n/, "") unless content.blank?
     File.open(self.original_file, 'w') { |f| f.write(content) }

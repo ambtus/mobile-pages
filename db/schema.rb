@@ -9,11 +9,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 1) do
+ActiveRecord::Schema.define(:version => 20100116030626) do
 
   create_table "authors", :force => true do |t|
     t.string "name"
   end
+
+  add_index "authors", ["name"], :name => "author_name", :unique => true
 
   create_table "authors_pages", :id => false, :force => true do |t|
     t.integer "page_id"
@@ -23,6 +25,8 @@ ActiveRecord::Schema.define(:version => 1) do
   create_table "genres", :force => true do |t|
     t.string "name"
   end
+
+  add_index "genres", ["name"], :name => "genre_name", :unique => true
 
   create_table "genres_pages", :id => false, :force => true do |t|
     t.integer "page_id"
@@ -39,15 +43,12 @@ ActiveRecord::Schema.define(:version => 1) do
     t.datetime "read_after"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "size"
+    t.boolean  "favorite",   :default => false
   end
 
-  create_table "pages_states", :id => false, :force => true do |t|
-    t.integer "page_id"
-    t.integer "state_id"
-  end
-
-  create_table "states", :force => true do |t|
-    t.string "name"
-  end
+  add_index "pages", ["favorite"], :name => "index_pages_on_favorite"
+  add_index "pages", ["parent_id"], :name => "index_pages_on_parent_id"
+  add_index "pages", ["size"], :name => "index_pages_on_size"
 
 end
