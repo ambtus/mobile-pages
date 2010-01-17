@@ -1,4 +1,4 @@
-Feature: error checking second level parts
+Feature: bugs with second level parts
 
   Scenario: second layer heirarchy
     Given the following page

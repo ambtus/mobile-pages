@@ -1,4 +1,4 @@
-Feature: error checking add parts titles
+Feature: bugs found on add parts titles
 
   Scenario: add subpart headings
     Given the following page

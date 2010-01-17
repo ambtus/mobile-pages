@@ -1,6 +1,10 @@
 class SearchController < ApplicationController
   def create
-    @search_string = params[:search]
+    @search_string = params[:search] unless params[:search] == Page::SEARCH_PLACEHOLDER
+    if @search_string.blank?
+      flash[:error] = "Please enter search criteria"
+      redirect_to start_index_url and return
+    end
     @pages = Page.search(@search_string)
     if @pages.empty?
       flash[:error] = @search_string + " not found"

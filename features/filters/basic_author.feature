@@ -48,7 +48,6 @@ Feature: basic authors
         | lewis carroll |
     When I am on the homepage
     Then I should not see "lewis carroll" in ".authors"
-      But I should see "lewis carroll" in ".author"
     When I follow "Read"
       And I follow "Authors"
       And I select "lewis carroll"

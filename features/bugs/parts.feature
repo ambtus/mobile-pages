@@ -1,4 +1,4 @@
-Feature: error checking with parts
+Feature: bugs with parts
 
   Scenario: can't add a page to an ambiguous parent
     Given the following pages

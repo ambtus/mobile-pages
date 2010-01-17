@@ -22,7 +22,7 @@ Feature: filter on multiple criteria
       And I press "Filter"
     Then I should see "Alice's Adventures In Wonderland"
       And I should see "pages filtered by lewis carroll, children"
-    When I select "unread"
+    When I check "unread"
       And I press "Filter"
     Then I should not see "Alice's Adventures In Wonderland"
       And I should see "No page"

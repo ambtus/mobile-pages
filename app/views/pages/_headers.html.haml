@@ -1,5 +1,12 @@
-.states= page.state_string
+.size= page.size
+.favorite
+  - if page.favorite
+    = Page::FAVORITE
 .authors= page.author_string
 .genres= page.genre_string
-.last_read= page.last_read.to_date if page.last_read
+.last_read
+  - if page.last_read
+    = page.last_read.to_date 
+  - else
+    = Page::UNREAD
 .notes=simple_format page.notes

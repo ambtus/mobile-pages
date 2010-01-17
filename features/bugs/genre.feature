@@ -1,4 +1,4 @@
-Feature: error checking with genres
+Feature: bugs with genres
 
   Scenario: genres with extraneous whitespace
     Given I have no filters

@@ -1,4 +1,4 @@
-Feature: error checking scrub
+Feature: bugs with scrub
 
   Scenario: tidy ocassionally re-adds &nbsp;
     Given the following page

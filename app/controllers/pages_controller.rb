@@ -1,14 +1,22 @@
 class PagesController < ApplicationController
   def create
-    if params[:Filter]
-      redirect_to(:action => "index" , :controller => "start", :author => params[:author], :genre => params[:genre], :state => params[:state]) and return
+    if params[:Filter] || params[:Later]
+      build_route = {:action => "index" , :controller => "start"}
+      build_route[:author] = params[:author] unless params[:author].blank?
+      build_route[:genre] = params[:genre] unless params[:genre].blank?
+      build_route[:size] = params[:size] unless params[:size].blank?
+      build_route[:favorite] = params[:favorite] unless params[:favorite].blank?
+      build_route[:unread] = params[:unread] unless params[:unread].blank?
+      Page.find_by_id(params[:page_id]).next if params[:Later]
+      redirect_to(build_route) and return
     end
     @page = Page.new(params[:page])
     @genre = Genre.find_by_name(params[:genre])
     author = Author.find_by_name(params[:author])
+    @page.favorite = true if params[:favorite] == Page::FAVORITE
     if @page.save
-      @page.authors << author if author
       flash[:error] = @page.errors[:url]
+      @page.authors << author if author
       if @genre.blank?
         flash[:notice] = "Page created. Please select genre(s)"
         redirect_to genre_path(@page) and return
