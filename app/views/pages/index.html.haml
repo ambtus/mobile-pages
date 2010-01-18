@@ -28,7 +28,7 @@
     = f.submit "Store", :name => "Store"
     = link_to "Store Multiple", new_part_path
     - if @page
-      = render :partial => "pages/links", :locals => {:page => @page, :called_by => "start" }
+      = render :partial => "pages/links", :locals => {:page => @page, :called_by => "index" }
       = render :partial => "pages/headers", :locals => {:page => @page }
       = hidden_field_tag(:page_id, @page.id)
       = f.submit "Read Later", :name => "Later"
