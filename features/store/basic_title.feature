@@ -1,12 +1,9 @@
 Feature: basic title
 
   Scenario: change title
-    Given the following page
-      | title                  | url |
-      | Old Title              | http://test.sidrasue.com/test.html |
-      And I am on the homepage
-    When I follow "Read"
-      And I follow "Manage Parts"
+    Given a page exists with title: "Old Title", url: "http://test.sidrasue.com/test.html"
+      And I am on the page's page
+    When I follow "Manage Parts"
       And I fill in "title" with "New Title"
       And I press "Update"
     Then I should see "New Title" in ".title"

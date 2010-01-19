@@ -4,12 +4,8 @@ Feature: basic second level parts
   Result: 2nd level heirarchy
 
   Scenario: second layer heirarchy
-    Given the following page
-      | title  | urls |
-      | Parent | http://test.sidrasue.com/parts/2.html\nhttp://test.sidrasue.com/parts/3.html |
-    And the page
-      | title   | url |
-      | Single | http://test.sidrasue.com/parts/1.html |
+    Given a page exists with title: "Parent", urls: "http://test.sidrasue.com/parts/2.html\nhttp://test.sidrasue.com/parts/3.html"
+    And a page exists with title: "Single", url: "http://test.sidrasue.com/parts/1.html"
     When I am on the homepage
     Then I should see "Parent" in ".title"
     When I follow "Read"

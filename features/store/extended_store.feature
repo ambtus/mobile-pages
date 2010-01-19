@@ -1,11 +1,8 @@
 Feature: extended store
 
   Scenario: refetch original html
-    Given the following page
-      |title | url |
-      | test | http://test.sidrasue.com/test.html |
-    When I am on the homepage
-      And I follow "Read"
+    Given a titled page exists with url: "http://test.sidrasue.com/test.html"
+    When I am on the page's page
       And I follow "Edit Raw HTML"
       And I fill in "pasted" with "system down"
       And I press "Update Raw HTML"
@@ -16,43 +13,32 @@ Feature: extended store
     Then I should see "Retrieved from the web" in ".content"
 
   Scenario: refetch original html for parts
-    Given the following page
-      |title | urls |
-      | test | http://test.sidrasue.com/parts/1.html |
-    When I am on the homepage
-      And I follow "Read"
+    Given a titled page exists with urls: "http://test.sidrasue.com/parts/1.html"
+    When I am on the page's page
     When I follow "Refetch" in ".title"
     Then the field with id "url_list" should contain "http://test.sidrasue.com/parts/1.html"
     When I fill in "url_list" with lines "http://test.sidrasue.com/parts/2.html\nhttp://test.sidrasue.com/parts/1.html"
       And I press "Refetch"
     Then I should see "stuff for part 2"
+    And I should see "stuff for part 1"
 
   Scenario: add utf8
-    Given the following page
-      |title | url |
-      | test | http://test.sidrasue.com/sbutf8.html |
-    When I am on the homepage
-      And I follow "Read"
+    Given a titled page exists with url: "http://test.sidrasue.com/sbutf8.html"
+    When I am on the page's page
     Then I should see "â€œ"
     When I press "Raw HTML to UTF8"
     Then I should see "“H"
 
   Scenario: add utf8 to parts
-    Given the following page
-      |title | urls |
-      | test | http://test.sidrasue.com/sbutf8.html |
-    When I am on the homepage
-      And I follow "Read"
+    Given a titled page exists with urls: "http://test.sidrasue.com/sbutf8.html"
+    When I am on the page's page
     Then I should see "â€œ"
     When I press "Raw HTML to UTF8"
     Then I should see "“H"
 
   Scenario: rebuild from latin1
-    Given the following page
-      |title | url |
-      | test | http://test.sidrasue.com/1252.html |
-    When I am on the homepage
-      And I follow "Read"
+    Given a titled page exists with url: "http://test.sidrasue.com/1252.html"
+    When I am on the page's page
       And I follow "Scrub"
       And I check boxes "0"
       And I press "Scrub"
@@ -61,11 +47,8 @@ Feature: extended store
     Then I should see "“H"
 
   Scenario: rebuild from original (not raw) html
-    Given the following page
-      |title | url |
-      | test | http://test.sidrasue.com/1252.html |
-    When I am on the homepage
-      And I follow "Read"
+    Given a titled page exists with url: "http://test.sidrasue.com/1252.html"
+    When I am on the page's page
       And I follow "Scrub"
       And I check boxes "0"
       And I press "Scrub"

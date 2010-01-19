@@ -4,12 +4,8 @@ Feature: basic genres
   Result: see what filter has been applied to a page
 
   Scenario: add a genre to a page when there are no genres
-    Given I have no filters
-      And the following page
-     | title | url |
-     | Alice's Adventures | http://test.sidrasue.com/aa.html |
-    When I am on the homepage
-      And I follow "Read"
+    Given a titled page exists
+    When I am on the page's page
       And I follow "Genres"
     When I fill in "genres" with "classic, children's"
       And I press "Add genres"
@@ -17,34 +13,25 @@ Feature: basic genres
       And I should see "children's" in ".genres"
     When I am on the homepage
     Then I select "classic"
+    Then I select "children's"
 
   Scenario: select a genre for a page when there are genres
-    Given the following genres
-      | name |
-      | fantasy |
-      And the following page
-        | title | url |
-        | Alice's Adventures In Wonderland | http://test.sidrasue.com/aa.html   |
-    When I am on the homepage
-      And I follow "Read"
+    Given a genre exists with name: "fantasy"
+    And a titled page exists
+    When I am on the page's page
     When I follow "Genres"
       And I select "fantasy"
       And I press "Update genres"
     Then I should see "fantasy" in ".genres"
 
   Scenario: add a genre to a page which has genres
-    Given the following page
-      | title               | url                                | add_genre_string |
-      | Grimm's Fairy Tales | http://test.sidrasue.com/gft.html | classic          |
-    When I am on the homepage
-    Then I should see "Grimm's Fairy Tales"
-      And I should see "classic" in ".genres"
-    When I follow "Read"
-      And I follow "Genres"
+    Given a titled page exists with add_genre_string: "classic"
+    When I am on the page's page
+    Then I should see "classic" in ".genres"
+    When I follow "Genres"
       And I follow "Add Genres"
       And I fill in "genres" with "favorite, children's"
       And I press "Add genres"
-      And I should see "Grimm's Fairy Tales"
     Then I should see "children's, classic, favorite" in ".genres"
     When I am on the homepage
     Then I select "classic"

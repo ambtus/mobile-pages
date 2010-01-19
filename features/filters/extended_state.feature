@@ -1,9 +1,7 @@
 Feature: unread states
 
   Scenario: add unread part to read parent
-    Given the following page
-      | title | urls |
-      | Multi | http://test.sidrasue.com/parts/1.html |
+    Given a page exists with title: "Multi", urls: "http://test.sidrasue.com/parts/1.html"
       And I am on the homepage
    Then I should see "Multi" in ".title"
    Then I should see "unread" in ".last_read"
@@ -27,13 +25,10 @@ Feature: unread states
    Then I should see "unread" in ".last_read"
 
    Scenario: add parent to read part
-    Given the following page
-      | title | url | last_read |
-      | Part | http://test.sidrasue.com/parts/1.html | 2009-01-01 |
-      And I am on the homepage
+    Given a page exists with title: "Part", last_read: "2009-01-01"
+      And I am on the page's page
    Then I should not see "unread" in ".last_read"
-   When I follow "Read"
-     And I follow "Manage Parts"
+   When I follow "Manage Parts"
      And I fill in "add_parent" with "Parent"
      And I press "Update"
    When I am on the homepage
@@ -41,13 +36,10 @@ Feature: unread states
    Then I should not see "unread" in ".last_read"
 
    Scenario: add parent to unread part
-    Given the following page
-      | title | url |
-      | Part | http://test.sidrasue.com/parts/1.html |
-      And I am on the homepage
+    Given a titled page exists
+      And I am on the page's page
    Then I should see "unread" in ".last_read"
-   When I follow "Read"
-     And I follow "Manage Parts"
+   When I follow "Manage Parts"
      And I fill in "add_parent" with "Parent"
      And I press "Update"
    When I am on the homepage
@@ -56,8 +48,8 @@ Feature: unread states
 
    Scenario: rate a part makes the parent read, but not siblings
     Given the following page
-      | title | base_url | url_substitutions |
-      | Read Separately | http://test.sidrasue.com/parts/*.html | 1 2 |
+      | title           | base_url                              | url_substitutions |
+      | Read Separately | http://test.sidrasue.com/parts/*.html | 1 2               |
       And I am on the homepage
    Then I should see "Read Separately" in ".title"
    Then I should see "unread" in ".last_read"

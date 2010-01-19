@@ -23,6 +23,7 @@ Rails::Initializer.run do |config|
   config.gem 'nokogiri', :version => ">=1.4.1"
   config.gem 'sanitize', :version => ">=1.1.0"
   config.gem 'mechanize'
+  config.gem 'pickle'
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named

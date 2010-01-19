@@ -4,10 +4,8 @@ Feature: basic download
   Result: link to text page
 
   Scenario: download a text version of styled html
-    Given the following page
-      | title  | url |
-      | multi  | http://test.sidrasue.com/styled.html |
-    When I am on the homepage
+    Given a titled page exists with url: "http://test.sidrasue.com/styled.html"
+    When I am on the page's page
       And I follow "Download" in ".title"
     Then I should see "# This is a header #"
       And I should see "## This is a second level header ##"
@@ -34,10 +32,8 @@ Feature: basic download
       And I should see "facade"
 
   Scenario: download stripping links and images
-    Given the following page
-      | title  | url |
-      | multi  | http://test.sidrasue.com/href.html |
-    When I am on the homepage
+    Given a titled page exists with url: "http://test.sidrasue.com/href.html"
+    When I am on the page's page
       And I follow "Download" in ".title"
     Then I should see "[top link]"
       And I should see "[middle link]"
@@ -48,10 +44,8 @@ Feature: basic download
       And I should not see "href"
 
   Scenario: download stripping of javascript and comments
-    Given the following page
-      | title  | url |
-      | multi  | http://test.sidrasue.com/entities.html |
-    When I am on the homepage
+    Given a titled page exists with url: "http://test.sidrasue.com/entities.html"
+    When I am on the page's page
       And I follow "Download" in ".title"
     Then I should not see "script language="
       And I should not see "FILE ARCHIVED"
@@ -60,10 +54,8 @@ Feature: basic download
       And I should see "Chris was antsy"
 
   Scenario: download stripping of tables
-    Given the following page
-      | title  | url |
-      | multi  | http://test.sidrasue.com/tablecontent.html |
-    When I am on the homepage
+    Given a titled page exists with url: "http://test.sidrasue.com/tablecontent.html"
+    When I am on the page's page
       And I follow "Download" in ".title"
     Then I should not see "<table"
       And I should not see "<td"
@@ -73,10 +65,8 @@ Feature: basic download
       And I should see "I remembered waking up"
 
   Scenario: download stripping of lists
-    Given the following page
-      | title  | url |
-      | multi  | http://test.sidrasue.com/list.html |
-    When I am on the homepage
+    Given a titled page exists with url: "http://test.sidrasue.com/list.html"
+    When I am on the page's page
       And I follow "Download" in ".title"
     Then I should not see "<ul"
       And I should not see "<ol>"
@@ -86,10 +76,8 @@ Feature: basic download
       And I should see "term:"
 
   Scenario: download crappy Microsoft Office "html"
-    Given the following page
-      | title  | url |
-      | multi  | http://test.sidrasue.com/mso.html |
-    When I am on the homepage
+    Given a titled page exists with url: "http://test.sidrasue.com/mso.html"
+    When I am on the page's page
       And I follow "Download" in ".title"
     Then I should not see "<em"
       And I should see "he _had_ to"
@@ -101,39 +89,30 @@ Feature: basic download
       And I should not see "<strong"
 
   Scenario: download weird empty divs
-    Given the following page
-      | title  | url |
-      | multi  | http://test.sidrasue.com/ejournal_div.html |
-    When I am on the homepage
+    Given a titled page exists with url: "http://test.sidrasue.com/ejournal_div.html"
+    When I am on the page's page
       And I follow "Download" in ".title"
     Then I should not see "\n\n\n\n"
       And I should see "Rodney muttered imprecations"
 
-    Given the following page
-      | title  | url |
-      | multi  | http://test.sidrasue.com/linefeeds.html |
-    When I am on the homepage
+  Scenario: stripping linefeeds
+    Given a titled page exists with url: "http://test.sidrasue.com/linefeeds.html"
+    When I am on the page's page
       And I follow "Download" in ".title"
      Then I should not see "thirdfourth"
      Then I should not see "fifthsixth"
-#    Then I should see "first\n\nsecond\n\nthird\n\nfourth\n\nfifth\n\nsixth\n\nseventh\n\neighth"
 
   Scenario: divs with attributes
-    Given the following page
-      | title  | url |
-      | multi  | http://test.sidrasue.com/div.html |
-    When I am on the homepage
+    Given a titled page exists with url: "http://test.sidrasue.com/div.html"
+    When I am on the page's page
       And I follow "Download" in ".title"
-#    Then I should see "first div\n\nsecond div\n\ncontent"
     Then I should see "first div"
       And I should see "second div"
       And I should not see "<"
 
   Scenario: download livejournal page content only
-    Given the following page
-      | title  | url |
-      | multi  | http://sid.livejournal.com/119818.html |
-    When I am on the homepage
+    Given a titled page exists with url: "http://sid.livejournal.com/119818.html"
+    When I am on the page's page
       And I follow "Download" in ".title"
     Then I should not see "input type="
       And I should not see "form method="
@@ -144,10 +123,8 @@ Feature: basic download
       And I should see "is mesmerizing"
 
   Scenario: download wraithbait page content only
-    Given the following page
-      | title  | url |
-      | multi  | http://www.wraithbait.com/viewstory.php?sid=15331 |
-    When I am on the homepage
+    Given a titled page exists with url: "http://www.wraithbait.com/viewstory.php?sid=15331"
+    When I am on the page's page
       And I follow "Download" in ".title"
     Then I should not see "recent stories"
       And I should not see "Stargate SG-1 and Stargate: Atlantis,"
@@ -156,10 +133,8 @@ Feature: basic download
       And I should see "I swear to God, Mer, I know what I'm doing!"
 
   Scenario: download wraithbait story content only
-    Given the following page
-      | title  | url |
-      | multi  | http://www.wraithbait.com/viewstory.php?action=printable&textsize=0&sid=15133&chapter=all |
-    When I am on the homepage
+    Given a titled page exists with url: "http://www.wraithbait.com/viewstory.php?action=printable&textsize=0&sid=15133&chapter=all"
+    When I am on the page's page
       And I follow "Download" in ".title"
     Then I should see "Summary:"
       And I should see "Story Notes:"
@@ -167,29 +142,23 @@ Feature: basic download
 
 
   Scenario: download fanfiction page content only
-    Given the following page
-      | title  | url |
-      | multi  | http://www.fanfiction.net/s/638499/1/ |
-    When I am on the homepage
+    Given a titled page exists with url: "http://www.fanfiction.net/s/638499/1/"
+    When I am on the page's page
       And I follow "Download" in ".title"
     Then I should not see "Rated: "
       And I should see "This is rabbit's fault"
 
   Scenario: download archive of our own page content only
-    Given the following page
-      | title  | url |
-      | multi  | http://archiveofourown.org/works/3412 |
-    When I am on the homepage
+    Given a titled page exists with url: "http://test.archiveofourown.org/works/3412"
+    When I am on the page's page
       And I follow "Download" in ".title"
     Then I should not see "Add Comment"
       And I should see "Summary"
       And I should see "Mister Larabee"
 
   Scenario: download google groops content only
-    Given the following page
-      | title  | url |
-      | multi  | http://test.sidrasue.com/google.html |
-    When I am on the homepage
+    Given a titled page exists with url: "http://test.sidrasue.com/google.html"
+    When I am on the page's page
       And I follow "Download" in ".title"
     Then I should see "Author: Ster Julie"
       And I should not see "This is a Usenet group"
