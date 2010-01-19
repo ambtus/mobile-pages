@@ -4,11 +4,8 @@ Feature: basic parent for existing pages
   Result: a new page with the original part as a child
 
   Scenario: create a new parent for an existing page
-    Given the following page
-      | title  | url |
-      | Single | http://test.sidrasue.com/test.html |
-    When I am on the homepage
-      And I follow "Read"
+    Given a page exists with title: "Single", url: "http://test.sidrasue.com/test.html" 
+    When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "add_parent" with "Parent"
       And I press "Update"
@@ -19,12 +16,8 @@ Feature: basic parent for existing pages
     Then I follow "Parent" in ".parent"
 
   Scenario: add an existing page to an existing page with parts
-    Given the following page
-      | title  | url |
-      | Single | http://test.sidrasue.com/parts/3.html |
-    And the page
-      | title | base_url| url_substitutions |
-      | Multi | http://test.sidrasue.com/parts/*.html | 1 2 |
+    Given a page exists with title: "Single", url: "http://test.sidrasue.com/parts/3.html"
+    And a page exists with title: "Multi", base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
     When I am on the homepage
     Then I should see "Single" in ".title"
     When I follow "Read"

@@ -1,20 +1,19 @@
 Feature: next bugs
 
-  Scenario: read later after adding parent
-    Given the following pages
-      | title       | url                                    |
-      | Single Text | http://test.sidrasue.com/test.html    |
-      | First Part  |  http://test.sidrasue.com/parts/1.html|
-      And I am on the homepage
-    Then I should see "Single Text" in ".title"
+  Scenario: after adding parent next should not show part
+    Given 2 titled pages exist
+    When I go to the homepage
+    Then I should see "1" in ".title"
       When I press "Read Later"
-    Then I should see "First Part" in ".title"
+    Then I should see "2" in ".title"
     When I follow "Read"
       And I follow "Manage Parts"
-      And I fill in "add_parent" with "New Parent"
+      And I fill in "add_parent" with "Parent"
       And I press "Update"
-    Then I should see "New Parent" in ".title"
+    Then I should see "Parent" in ".title"
       When I press "Read Later"
-    Then I should see "Single Text" in ".title"
+    Then I should see "1" in ".title"
       When I press "Read Later"
-    Then I should see "New Parent" in ".title"
+    Then I should see "Parent" in ".title"
+      When I press "Read Later"
+    Then I should see "1" in ".title"

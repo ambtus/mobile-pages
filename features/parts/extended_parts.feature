@@ -1,14 +1,12 @@
 Feature: complex parts with titles from url list
 
   Scenario: create parts from a list of urls with titles
-    Given the following genre
-      | name |
-      | my genre |
+    Given a genre exists with name: "genre"
     When I am on the homepage
       And I follow "Store Multiple"
     When I fill in "page_urls" with lines "http://test.sidrasue.com/parts/1.html\n\nhttp://test.sidrasue.com/parts/2.html##part title"
       And I fill in "page_title" with "my title"
-      And I select "my genre"
+      And I select "genre"
       And I press "Store"
     Then I should see "my title" in ".title"
       And I should see "Part 1" in "h1"
@@ -17,14 +15,12 @@ Feature: complex parts with titles from url list
       And I should see "stuff for part 2"
 
   Scenario: create subparts from a list of urls with titles
-    Given the following genre
-      | name |
-      | my genre |
+    Given a genre exists with name: "genre"
     When I am on the homepage
       And I follow "Store Multiple"
     When I fill in "page_urls" with lines "##Part the first\nhttp://test.sidrasue.com/parts/1.html###subpart title\nhttp://test.sidrasue.com/parts/2.html\n\nhttp://test.sidrasue.com/parts/3.html##Part 2\n\n##Third Part\nhttp://test.sidrasue.com/parts/4.html\nhttp://test.sidrasue.com/parts/5.html"
       And I fill in "page_title" with "Title"
-      And I select "my genre"
+      And I select "genre"
       And I press "Store"
     Then I should see "Title" in ".title"
       And I should see "Part the first" in "h1"
@@ -40,7 +36,7 @@ Feature: complex parts with titles from url list
 
   Scenario: add a part updates the parent's read_after
     Given the following pages
-     | title | urls                                     |
+     | title | urls                                  |
      | Test1 | http://test.sidrasue.com/parts/1.html |
      | Test2 | http://test.sidrasue.com/parts/3.html |
     When I am on the homepage

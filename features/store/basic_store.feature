@@ -16,11 +16,8 @@ Scenario: no genres
   Then I should see "my genre" in ".genres"
 
 Scenario: no genre selected
-  Given I am on the homepage
-    And I have no pages
-    And the following genre
-      | name |
-      | first |
+  Given a genre exists with name: "first"
+    And I am on the homepage
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I fill in "page_title" with "Title"
     And I press "Store"
@@ -54,7 +51,7 @@ Scenario Outline: genres and authors
     And I should see "<author>" in ".authors"
 
   Examples:
-  | url                                       | title            | result                 | genre        | author        |
+  | url                                      | title            | result                 | genre        | author        |
   | http://test.sidrasue.com/test.html       | Simple Test      | Retrieved from the web | first genre  |               |
   | http://test.sidrasue.com/basic/test.html | Basic Auth Test  | password example       | second genre |               |
   | http://test.sidrasue.com/digest/test.html| Auth Digest Test | digest example         | third genre  |               |

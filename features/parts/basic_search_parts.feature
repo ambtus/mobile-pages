@@ -5,7 +5,7 @@ Feature: basic search with parts
 
   Scenario: find the parent of a part
     Given the following pages
-      |title    | base_url                 | url_substitutions |
+      | title   | base_url                              | url_substitutions |
       | Parent1 | http://test.sidrasue.com/parts/*.html | 1   |
       | Parent2 | http://test.sidrasue.com/parts/*.html | 2 3 |
      When I am on the homepage

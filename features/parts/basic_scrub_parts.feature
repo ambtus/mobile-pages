@@ -4,18 +4,14 @@ Feature: Basic scrub with parts
   Result: when go to scrub a parent, should scrub the parts. also, scrubbing a part should re-make the parent's download
 
   Scenario: scrub a parent page
-    Given the following page
-      | title | base_url | url_substitutions |
-      | Parent | http://test.sidrasue.com/parts/*.html | 1 2 |
-    When I am on the homepage
-      And I follow "Read"
-      And I should see "cruft"
+    Given a page exists with title: "Parent", base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
+    And I am on the page's page
+      Then I should see "cruft"
     When I follow "Download" in ".title"
     Then I should see "cruft"
-    When I am on the homepage
-    When I follow "Parts"
-      And I follow "Read" in "#position_1"
-      And I follow "Scrub"
+    When I am on the page's page
+    And I follow "Scrub" in ".title"
+      And I follow "Scrub Part 1"
       And I check boxes "0 2"
       And I press "Scrub"
     Then I should not see "cruft"

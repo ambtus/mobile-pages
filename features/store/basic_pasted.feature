@@ -4,11 +4,8 @@ Feature: basic pasted
   Result: acts just as if the html was retrieved.
 
   Scenario: store using a pasted html file
-    Given the following page
-      | title | url |
-      | Test  | http://test.sidrasue.com/test.html |
-    When I am on the homepage
-    And I follow "Read"
+    Given a titled page exists with url: "http://test.sidrasue.com/test.html"
+    When I am on the page's page
      And I follow "Edit Raw HTML"
     When I fill in "pasted" with "<p>This is a test</p>"
       And I press "Update Raw HTML"
@@ -17,11 +14,8 @@ Feature: basic pasted
       And I should not see "Retrieved from the web"
 
   Scenario: pasted html file needing pre-processing
-    Given the following page
-      | title | url |
-      | Test  | http://test.sidrasue.com/test.html |
-    When I am on the homepage
-    And I follow "Read"
+    Given a titled page exists with url: "http://test.sidrasue.com/test.html"
+    When I am on the page's page
      And I follow "Edit Raw HTML"
     When I fill in "pasted" with "<span class='first'>The</span> beginning<br><br>new paragraph"
       And I press "Update Raw HTML"

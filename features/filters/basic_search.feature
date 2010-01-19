@@ -5,10 +5,10 @@ Feature: Basic Search
 
   Scenario: Find page by title (first, middle, last, and whole)
     Given the following pages
-      | title                                              | url                                 |
-      | A Christmas Carol by Charles Dickens               | http://test.sidrasue.com/cc.html   |
-      | The Call of the Wild by Jack London                | http://test.sidrasue.com/cotw.html |
-      | The Mysterious Affair at Styles by Agatha Christie | http://test.sidrasue.com/maas.html |
+      | title                                              | 
+      | A Christmas Carol by Charles Dickens               |
+      | The Call of the Wild by Jack London                |
+      | The Mysterious Affair at Styles by Agatha Christie |
      When I am on the homepage
        And I fill in "search" with "The Call"
        And I press "Search"
@@ -27,19 +27,15 @@ Feature: Basic Search
      Then I should see "A Christmas Carol by Charles Dickens" in ".title"
 
   Scenario: No matching page
-    Given the following page
-      | title            | url                                   |
-      | War              | http://test.sidrasue.com/test.html   |
-      And I am on the homepage
-    When I fill in "search" with "War and Peace"
+    Given a titled page exists
+    When I am on the homepage
+    And I fill in "search" with "10"
       And I press "Search"
-    Then I should see "War and Peace not found" in "#flash_error"
+    Then I should see "10 not found" in "#flash_error"
 
   Scenario: No search criteria
-    Given the following page
-      | title            | url                                   |
-      | War              | http://test.sidrasue.com/test.html   |
-      And I am on the homepage
-    When I fill in "search" with ""
+    Given a titled page exists
+    When I am on the homepage
+      And I fill in "search" with ""
       And I press "Search"
     Then I should see "Please enter search criteria" in "#flash_error"

@@ -2,10 +2,10 @@ Feature: basic authors
 
   Scenario: filter on an author
     Given the following pages
-      | title                            | url                                 | add_author_string |
-      | The Mysterious Affair at Styles  | http://test.sidrasue.com/maas.html | agatha christie   |
-      | Grimm's Fairy Tales              | http://test.sidrasue.com/gft.html  | grimm             |
-      | Alice's Adventures In Wonderland | http://test.sidrasue.com/aa.html   | lewis carroll, charles dodgson |
+      | title                            | add_author_string |
+      | The Mysterious Affair at Styles  | agatha christie   |
+      | Grimm's Fairy Tales              | grimm             |
+      | Alice's Adventures In Wonderland | lewis carroll, charles dodgson |
     When I am on the homepage
     When I select "grimm"
       And I press "Filter"
@@ -25,47 +25,35 @@ Feature: basic authors
       And "lewis carroll" should be selected in "author"
 
   Scenario: add authors to a page when there are no authors
-    Given I have no filters
-      And the following page
-     | title | url |
-     | Alice's Adventures | http://test.sidrasue.com/aa.html |
-    When I am on the homepage
-      And I follow "Read"
-      And I follow "Authors"
-    When I fill in "authors" with "lewis carroll, charles dodgson"
+    Given a page exists with title: "Alice"
+      And I am on the page's page
+    When I follow "Authors"
+      And I fill in "authors" with "lewis carroll, charles dodgson"
       And I press "Add authors"
     Then I should see "lewis carroll" in ".authors"
       And I should see "charles dodgson" in ".authors"
     When I am on the homepage
-    Then I select "charles dodgson"
+      And I select "charles dodgson"
+      And I select "lewis carroll"
 
   Scenario: add an author for a page when there are authors
-    Given the following page
-        | title              | url                                 |
-        | Alice's Adventures | http://test.sidrasue.com/aa.html   |
-      And the following author
-        | name          |
-        | lewis carroll |
-    When I am on the homepage
+    Given a page exists with title: "Alice"
+      And an author exists with name: "lewis carroll"
+    When I am on the page's page
     Then I should not see "lewis carroll" in ".authors"
-    When I follow "Read"
-      And I follow "Authors"
+    When I follow "Authors"
       And I select "lewis carroll"
       And I press "Update authors"
     Then I should see "lewis carroll" in ".authors"
 
   Scenario: add an author to a page which has authors
-    Given the following page
-        | title              | url                                 | add_author_string |
-        | Alice's Adventures | http://test.sidrasue.com/aa.html   | lewis carroll     |
-    When I am on the homepage
+    Given a page exists with title: "Alice", add_author_string: "lewis carroll"
+    When I am on the page's page
     Then I should see "lewis carroll" in ".authors"
-    When I follow "Read"
-      And I follow "Authors"
+    When I follow "Authors"
       And I follow "Add Authors"
       And I fill in "authors" with "charles dodgson"
       And I press "Add authors"
-      And I should see "Alice's Adventures"
     Then I should see "lewis carroll" in ".authors"
       And I should see "charles dodgson" in ".authors"
     When I am on the homepage

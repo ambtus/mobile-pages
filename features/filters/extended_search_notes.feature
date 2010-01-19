@@ -2,10 +2,10 @@ Feature: extended search on notes
 
   Scenario: Find page by notes only after title fails
     Given the following pages
-      | title                                              | url                                 | notes                   |
-      | A Christmas Carol by Charles Dickens               | http://test.sidrasue.com/cc.html   | ghosts (not mysterious) |
-      | The Call of the Wild by Jack London                | http://test.sidrasue.com/cotw.html | dogs (no christmas)     |
-      | The Mysterious Affair at Styles by Agatha Christie | http://test.sidrasue.com/maas.html | poirot (wild!)          |
+      | title                                              | notes                   |
+      | A Christmas Carol by Charles Dickens               | ghosts (not mysterious) |
+      | The Call of the Wild by Jack London                | dogs (no christmas)     |
+      | The Mysterious Affair at Styles by Agatha Christie | poirot (wild!)          |
     When I am on the homepage
       And I fill in "search" with "christmas"
       And I press "Search"

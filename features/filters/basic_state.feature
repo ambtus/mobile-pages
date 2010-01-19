@@ -4,10 +4,8 @@ Feature: basic states
   Result: see what filter has been applied to a page
 
   Scenario: unread and favorite states
-    Given the following page
-      |title | url |
-      | Test | http://test.sidrasue.com/test.html |
-    When I am on the homepage
+    Given a titled page exists
+    When I am on the page's page
     Then I should see "unread" in ".last_read"
     When I follow "Rate"
       And I press "1"
