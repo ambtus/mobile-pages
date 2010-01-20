@@ -372,13 +372,13 @@ class Page < ActiveRecord::Base
     return parent
   end
 
-  def next
+  def make_later
     was = self.read_after || Time.now
     self.update_attribute(:read_after, was + 3.months)
     return Page.no_children.first
   end
 
-  def first
+  def make_first
     earliest = Page.no_children.first.read_after
     self.update_attribute(:read_after, earliest - 1.day)
     if self.parent

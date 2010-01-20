@@ -54,8 +54,8 @@ class PagesController < ApplicationController
 
   def update
     @page = Page.find(params[:id])
-    @page = @page.next if (params[:commit] == "Read Later")
-    @page = @page.first if (params[:commit] == "Read First")
+    @page = @page.make_later if (params[:commit] == "Read Later")
+    @page = @page.make_first if (params[:commit] == "Read First")
     case params[:commit]
       when "Raw HTML to UTF8"
         @page.parts.empty? ? @page.build_me("utf8") : @page.parts.each {|p| p.build_me("utf8")}
