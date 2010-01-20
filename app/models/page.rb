@@ -49,7 +49,6 @@ class Page < ActiveRecord::Base
   # searches on page title, notes or url are never combined with other limitations
   # unread and favorite never appear together
   # if filtering on genre and author, don't limit the results
-  # size is only ever used on its own with unread or favorite, never with genre and/or author
   def self.filter(hash={"unread" => true})
     hash.delete("action")
     hash.delete("controller")
@@ -57,8 +56,8 @@ class Page < ActiveRecord::Base
     if hash.size == 1
       return Page.limited.unread.map(&:ultimate_parent).uniq if hash.has_key?("unread")
       return Page.limited.favorite.map(&:ultimate_parent).uniq if hash.has_key?("favorite")
-      return Genre.find_by_name(hash["genre"]).pages.no_children if hash.has_key?("genre")
-      return Author.find_by_name(hash["author"]).pages.no_children if hash.has_key?("author")
+      return Genre.find_by_name(hash["genre"]).pages.limited.no_children.uniq if hash.has_key?("genre")
+      return Author.find_by_name(hash["author"]).pages.limited.no_children.uniq if hash.has_key?("author")
       return Page.limited.search_title(hash["title"]).map(&:ultimate_parent).uniq if hash.has_key?("title")
       return Page.limited.search_notes(hash["notes"]).map(&:ultimate_parent).uniq if hash.has_key?("notes")
       return Page.limited.search_url(hash["url"]).map(&:ultimate_parent).uniq if hash.has_key?("url")
@@ -372,13 +371,13 @@ class Page < ActiveRecord::Base
     return parent
   end
 
-  def next
+  def make_later
     was = self.read_after || Time.now
     self.update_attribute(:read_after, was + 3.months)
     return Page.no_children.first
   end
 
-  def first
+  def make_first
     earliest = Page.no_children.first.read_after
     self.update_attribute(:read_after, earliest - 1.day)
     if self.parent
