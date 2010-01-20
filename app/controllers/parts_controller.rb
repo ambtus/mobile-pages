@@ -13,9 +13,6 @@ class PartsController < ApplicationController
       @parent_title = NEW_PARENT_TITLE
     end
   end
-  def show
-    @page = Page.find(params[:id])
-  end
   def create
     @page = Page.find(params[:page_id])
     title = params[:title]
@@ -37,6 +34,6 @@ class PartsController < ApplicationController
            @page = Page.find(params[:page_id])
       end
     end
-    redirect_to part_path(@page)
+    redirect_to page_path(@page)
   end
 end

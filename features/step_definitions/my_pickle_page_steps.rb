@@ -3,7 +3,7 @@ Given /a titled page exists(?: with #{capture_fields})?$/ do |fields|
   if fields.blank?
     fields = 'title: "page 1"'
   elsif !fields.match("title")
-    fields = fields + ', title: "default"' 
+    fields = fields + ', title: "page 1"' 
   end
   create_model("page", fields)
 end

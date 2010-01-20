@@ -56,6 +56,7 @@ Feature: bugs during store
   Scenario: url with surrounding whitespace okay
     Given a titled page exists with url: " http://test.sidrasue.com/test.html"
     When I am on the page's page
+      And I follow "Read"
     Then I should see "Retrieved from the web"
 
   Scenario: 404 shouldn't 500, but should display error
@@ -65,5 +66,5 @@ Feature: bugs during store
       And I fill in "page_title" with "bad url"
       And I fill in "page_url" with "http://test.sidrasue.com/style.html"
       And I press "Store"
-    Then I should see "error retrieving content" in ".content"
-      And I should see "error retrieving content" in "#flash_error"
+    Then I should see "error retrieving content" in "#flash_error"
+      And I should see "error retrieving content" in ".content"

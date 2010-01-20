@@ -36,6 +36,6 @@ Feature: basic edit of parts
       And I follow "Read" in "#position_1"
     Then I should see "stuff for part 2"
     When I am on the homepage
-      And I follow "List Parts"
+      And I follow "page 1" in "#position_1"
       And I follow "Read" in "#position_2"
     Then I should see "stuff for part 1"

@@ -15,12 +15,10 @@ Feature: unread states
    When I am on the homepage
    Then I should see "Multi" in "#position_1"
      And I should not see "unread" in ".last_read"
-   When I am on the homepage
-     And I follow "List Parts" in "#position_1"
+   When I follow "Multi" in "#position_1"
      And I follow "Read" in "#position_1"
    Then I should not see "unread" in ".last_read"
-   When I am on the homepage
-     And I follow "List Parts" in "#position_1"
+   When I follow "Multi" in ".parent"
      And I follow "Read" in "#position_2"
    Then I should see "unread" in ".last_read"
 
@@ -47,32 +45,27 @@ Feature: unread states
    Then I should see "unread" in "#position_1"
 
    Scenario: rate a part makes the parent read, but not siblings
-    Given the following page
-      | title           | base_url                              | url_substitutions |
-      | Read Separately | http://test.sidrasue.com/parts/*.html | 1 2               |
-      And I am on the homepage
-   Then I should see "Read Separately" in "#position_1"
-   Then I should see "unread" in "#position_1"
-   When I follow "Parts"
-     And I follow "Read" in "#position_1"
+    Given a titled page exists with base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
+   When I am on the page's page
+   Then I should see "unread" in ".last_read"
+     And I should not see "favorite" in ".favorite"
+   When I follow "Read" in "#position_1"
      And I follow "Rate"
      And I press "1"
-   When I am on the homepage
-   Then I should not see "unread" in "#position_1"
-   Then I should not see "favorite" in "#position_1"
-   When I follow "Parts"
-     Then I should not see "unread" in "#position_1"
+   When I am on the page's page
+   Then I should not see "unread" in ".last_read"
+     And I should not see "favorite" in ".favorite"
+     And I should not see "unread" in "#position_1"
      And I should see "favorite" in "#position_1"
      And I should see "unread" in "#position_2"
      And I should not see "favorite" in "#position_2"
-   When I am on the homepage
+   When I am on the page's page
      And I follow "Rate"
      And I press "1"
-   When I am on the homepage
-   Then I should not see "unread" in "#position_1"
-     And I should see "favorite" in "#position_1"
-   When I follow "Parts"
-     Then I should not see "unread" in "#position_1"
+   When I am on the page's page
+   Then I should not see "unread" in ".last_read"
+     And I should see "favorite" in ".favorite"
+     And I should not see "unread" in "#position_1"
      And I should not see "favorite" in "#position_1"
      And I should not see "unread" in "#position_2"
      And I should not see "favorite" in "#position_2"
