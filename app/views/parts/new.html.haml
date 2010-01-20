@@ -8,5 +8,5 @@
     = f.text_field :base_url, Page::BASE_URL_PLACEHOLDER, :maxlength => 255, :size => 80
     = f.text_field :url_substitutions, Page::URL_SUBSTITUTIONS_PLACEHOLDER, :maxlength => 255, :size => 80
     = f.text_area :urls, Page::URLS_PLACEHOLDER, :rows => 10, :cols => 80
-    = f.text_field :title, Page::TITLE_PLACEHOLDER, :maxlength => 255, :size => 80
+    = f.text_field :title
     .button= f.submit "Store"

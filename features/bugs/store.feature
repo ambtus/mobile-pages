@@ -6,6 +6,12 @@ Feature: bugs during store
       And I press "Store"
     Then I should see "Title can't be blank"
 
+  Scenario: fill title in url box with Title not okay
+    Given I am on the homepage
+    When I fill in "page_title" with "Title"
+      And I press "Store"
+    Then I should see "Title can't be blank or 'Title'"
+
   Scenario: switch title for url by mistake is not okay
     Given I am on the homepage
     When I fill in "page_url" with "Title of the Fic"

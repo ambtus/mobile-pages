@@ -1,34 +1,34 @@
 - content_for :title do
   = @title
-.search
-  - form_tag search_index_path do
-    = onblur_text_tag :search, @search, :maxlength => 255, :size => 30
-    = submit_tag "Search", :name => nil
 .form
-  - form_for @new_page, :builder => DefaultFormBuilder do |f|
-    - unless @authors.blank?
-      = select_tag :author, "<option></option>" + options_for_select(@authors, @author.try(:name))
+  - form_for @page, :builder => DefaultFormBuilder do |f|
+    = select_tag :size, "<option></option>" + options_for_select(Page::SIZES, @size)
+    = label_tag :size, "Size (find only)"
     %br
     - unless @genres.blank?
       = select_tag :genre, "<option></option>" + options_for_select(@genres, @genre.try(:name))
+    = label_tag :genre, "Genre"
     %br
-    = select_tag :size, "<option></option>" + options_for_select(Page::SIZES, @size)
+    - unless @authors.blank?
+      = select_tag :author, "<option></option>" + options_for_select(@authors, @author.try(:name))
+    = label_tag :author, "Author"
     %br
-    = check_box_tag :favorite, Page::FAVORITE, @favorite == Page::FAVORITE
-    = label_tag Page::FAVORITE, Page::FAVORITE
-    = check_box_tag :unread, Page::UNREAD, @unread == Page::UNREAD
-    = label_tag Page::UNREAD, Page::UNREAD
+    = check_box_tag :favorite, "favorite", @favorite
+    = label_tag :favorite, "favorite"
+    = check_box_tag :unread, "unread", @unread
+    = label_tag :unread, "unread"
     %br
-    = f.submit "Filter", :name => "Filter"
+    = f.text_field :title
     %br
-    = f.text_field :url, Page::URL_PLACEHOLDER, :maxlength => 255, :size => 30
+    = f.text_field :notes
     %br
-    = f.text_field :title, Page::TITLE_PLACEHOLDER, :maxlength => 255, :size => 30
+    = f.text_field :url
     %br
+    = f.submit "Find", :name => "Find"
     = f.submit "Store", :name => "Store"
     = link_to "Store Multiple", new_part_path
-    - if @page
-      = render :partial => "pages/links", :locals => {:page => @page, :called_by => "index" }
-      = render :partial => "pages/headers", :locals => {:page => @page }
-      = hidden_field_tag(:page_id, @page.id)
-      = f.submit "Read Later", :name => "Later"
+- if @pages
+  - @pages.each_with_index do |page, index|
+    .page{:id => "position_#{index+1}"}
+      = render :partial => "pages/links", :locals => {:page => page, :called_by => "index" }
+      = render :partial => "pages/headers", :locals => {:page => page, :called_by => "index"}

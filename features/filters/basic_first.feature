@@ -6,44 +6,49 @@ Feature: basic first
     Given a genre exists with name: "genre"
     Given a titled page exists
     When I am on the homepage
-    Then I should see "1" in ".title"
-    When I fill in "page_title" with "2"
+    Then I should see "page 1" in "#position_1"
+    When I fill in "page_title" with "page 2"
       And I select "genre"
       And I press "Store"
       And I press "Read First"
     When I am on the homepage
-    Then I should see "2" in ".title"
+    Then I should see "page 2" in "#position_1"
+      And I should see "page 1" in "#position_2"
 
-  Scenario: Find a page and make it first
+  Scenario: Read a page and make it first
     Given 2 titled pages exist
     When I am on the homepage
-    Then I should see "1" in ".title"
-    When I fill in "search" with "2"
-      And I press "Search"
+    Then I should see "page 1" in "#position_1"
+      And I should see "page 2" in "#position_2"
+    When I follow "Read" in "#position_2"
       And I press "Read First"
     When I am on the homepage
-    Then I should see "2" in ".title"
+    Then I should see "page 2" in "#position_1"
+      And I should see "page 1" in "#position_2"
 
-  Scenario: Find a part and make it first
+  Scenario: Find a part or subpart and make it first
     Given I have no pages
       And the following pages
         | title  | urls | read_after |
-        | Single |      | 2001-01-01 |
+        | Single |      | 2009-01-01 |
         | Parent | http://test.sidrasue.com/parts/1.html | 2009-01-02 |
         | Grandparent | ##Parent1\n##Parent2\nhttp://test.sidrasue.com/parts/5.html###Subpart | 2009-01-03 |
     When I am on the homepage
-    Then I should see "Single" in ".title"
-    When I fill in "search" with "Parent"
-      And I press "Search"
-      And I follow "List Parts" in ".title"
+    Then I should see "Single" in "#position_1"
+      And I should see "Parent" in "#position_2"
+      And I should see "Grandparent" in "#position_3"
+    When I follow "List Parts" in "#position_2"
       And I follow "Read" in "#position_1"
       And I press "Read First"
     When I am on the homepage
-    Then I should see "Parent" in ".title"
-    When I fill in "search" with "Grandparent"
-      And I press "Search"
+    And I should see "Parent" in "#position_1"
+    Then I should see "Single" in "#position_2"
+    And I should see "Grandparent" in "#position_3"
+    When I follow "List Parts" in "#position_3"
       And I follow "List Parts" in "#position_2"
       And I follow "Read" in "#position_1"
     When I press "Read First"
       And I am on the homepage
-    Then I should see "Grandparent" in ".title"
+    Then I should see "Grandparent" in "#position_1"
+      And I should see "Parent" in "#position_2"
+      And I should see "Single" in "#position_3"

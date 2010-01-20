@@ -8,7 +8,7 @@ Scenario: no genres
     And I have no pages
     And I have no filters
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I fill in "page_title" with "Title"
+    And I fill in "page_title" with "New Title"
     And I press "Store"
   Then I should see "Please select genre"
   When I fill in "genres" with "my genre"
@@ -19,7 +19,7 @@ Scenario: no genre selected
   Given a genre exists with name: "first"
     And I am on the homepage
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I fill in "page_title" with "Title"
+    And I fill in "page_title" with "New Title"
     And I press "Store"
   Then I should see "Please select genre"
   When I select "first"

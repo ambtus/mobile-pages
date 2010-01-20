@@ -16,8 +16,10 @@ Feature: basic second level parts
     Then I should see "Grandparent"
       And I should see "Parent" in "#position_1"
     When I am on the homepage
-      And I fill in "search" with "Single"
-      And I press "Search"
+      And I fill in "page_title" with "Single"
+      And I press "Find"
+      Then I should see "Single" in ".title"
+     When I follow "Read" in "#position_1"
       Then I should see "Single" in ".title"
      When I follow "Manage Parts"
       And I fill in "add_parent" with "Grandparent"

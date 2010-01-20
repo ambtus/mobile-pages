@@ -4,7 +4,7 @@
   - form_tag refetch_index_path do
     = hidden_field_tag(:page_id, @page.id)
     - if @page.parts.blank?
-      = onblur_text_tag :url, (@page.url || Page::URL_PLACEHOLDER), :maxlength => 255, :size => 80
+      = text_field_tag :url, @page.url, :maxlength => 255, :size => 80
     - else
       .parts= text_area_tag :url_list, @page.url_list, :rows => @page.parts.size + 2, :cols => 80
     = submit_tag "Refetch"

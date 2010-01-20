@@ -8,7 +8,7 @@ class DefaultFormBuilder < ActionView::Helpers::FormBuilder
     #Check to see if default for this field has been supplied and humanize the field name if not.
     text = default || method.to_s.humanize
     #Finally hand off to super to deal with the display of the label
-    options = {:class => "gray-input", :value => text, :onblur=>"if(this.value == '') { this.value='#{text}';this.style.color = '';}", :onfocus=>"if (this.value == '#{text}') {this.value='';this.style.color = 'black';}"}.merge options
+    options = {:maxlength => 255, :size => 30, :class => "gray-input", :value => text, :onblur=>"if(this.value == '') { this.value='#{text}';this.style.color = '';}", :onfocus=>"if (this.value == '#{text}') {this.value='';this.style.color = 'black';}"}.merge options
     super(method, options)
   end
   def text_area(method, default = nil, options = {})

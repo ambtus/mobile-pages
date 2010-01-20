@@ -10,32 +10,27 @@ Feature: Basic Search
       | The Call of the Wild by Jack London                |
       | The Mysterious Affair at Styles by Agatha Christie |
      When I am on the homepage
-       And I fill in "search" with "The Call"
-       And I press "Search"
+       And I fill in "page_title" with "The Call"
+       And I press "Find"
      Then I should see "The Call of the Wild by Jack London" in ".title"
      When I am on the homepage
-       And I fill in "search" with "Carol"
-       And I press "Search"
+       And I fill in "page_title" with "Carol"
+       And I press "Find"
      Then I should see "A Christmas Carol by Charles Dickens" in ".title"
      When I am on the homepage
-       And I fill in "search" with "Styles"
-       And I press "Search"
+       And I fill in "page_title" with "Styles"
+       And I press "Find"
      Then I should see "The Mysterious Affair at Styles by Agatha Christie" in ".title"
      When I am on the homepage
-       And I fill in "search" with "A Christmas Carol by Charles Dickens"
-       And I press "Search"
+       And I fill in "page_title" with "A Christmas Carol by Charles Dickens"
+       And I press "Find"
      Then I should see "A Christmas Carol by Charles Dickens" in ".title"
 
   Scenario: No matching page
     Given a titled page exists
     When I am on the homepage
-    And I fill in "search" with "10"
-      And I press "Search"
-    Then I should see "10 not found" in "#flash_error"
-
-  Scenario: No search criteria
-    Given a titled page exists
-    When I am on the homepage
-      And I fill in "search" with ""
-      And I press "Search"
-    Then I should see "Please enter search criteria" in "#flash_error"
+    Then I should see "page 1"
+    And I fill in "page_title" with "10"
+      And I press "Find"
+    Then I should see "No pages found" in "#flash_error"
+      And I should not see "page 1"

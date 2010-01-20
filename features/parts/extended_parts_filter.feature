@@ -26,7 +26,7 @@ Feature: filter on parts
     When I am on the homepage
     Then I should see "Filler" in ".title"
     When I check "unread"
-      And I press "Filter"
+      And I press "Find"
     Then I should see "Parent" in ".title"
     When I fill in "page_url" with "http://test.sidrasue.com/long.html"
       And I fill in "page_title" with "Child2"

@@ -11,14 +11,20 @@ Feature: basic filters on size
       | Long   | http://test.sidrasue.com/long.html    | 
       | Long2  | http://test.sidrasue.com/long2.html   | 
     When I am on the homepage
-    Then I should see "Medium" in ".title"
+    Then I should see "Medium" in "#position_1"
+      And I should see "Short" in "#position_2"
+      And I should see "Long" in "#position_3"
+      And I should see "Long2" in "#position_4"
     When I select "short"
-      And I press "Filter"
-    Then I should see "Short" in ".title"
+      And I press "Find"
+    Then I should see "Short" in "#position_1"
+      And I should not see "Medium"
+      And I should not see "Long"
     When I select "long"
-      And I press "Filter"
-    Then I should see "Long" in ".title"
-    When I press "Read Later"
-    Then I should see "Long2" in ".title"
+      And I press "Find"
+    Then I should see "Long" in "#position_1"
+      And I should see "Long2" in "#position_2"
+      And I should not see "Medium"
+      And I should not see "Short"
 
 

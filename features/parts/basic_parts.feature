@@ -38,6 +38,5 @@ Feature: basic parts
     Given a page exists with title: "Parent", urls: "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
     When I am on the homepage
     Then I should see "Parent" in ".title"
-    When I press "Read Later"
-    Then I should see "Parent" in ".title"
+    Then I should not see "Part 1"
 

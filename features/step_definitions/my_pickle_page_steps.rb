@@ -1,7 +1,7 @@
 # create a page
 Given /a titled page exists(?: with #{capture_fields})?$/ do |fields|
   if fields.blank?
-    fields = 'title: "1"'
+    fields = 'title: "page 1"'
   elsif !fields.match("title")
     fields = fields + ', title: "default"' 
   end

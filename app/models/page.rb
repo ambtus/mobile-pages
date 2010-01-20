@@ -1,21 +1,16 @@
 class Page < ActiveRecord::Base
   MODULO = 300  # files in a single directory
   DURATION = "years"
+  MININOTE = 100 # keep first this many characters plus enough for full words in index headers
 
   UNREAD = "unread"
   FAVORITE = "favorite"
 
-  SHORT = "short"
-  LONG = "long"
-  EPIC = "epic"
-  SIZES = [SHORT, LONG, EPIC]
+  SIZES = ["short", "long", "epic"]
   SHORT_WC = 1000
   LONG_WC = 10000
   EPIC_WC = 80000
 
-  SEARCH_PLACEHOLDER = "Enter title or note search criteria"
-  TITLE_PLACEHOLDER = "Enter a Title for the new page"
-  URL_PLACEHOLDER = "Enter a URL for a new page"
   BASE_URL_PLACEHOLDER = "Base URL: use * as replacement placeholder"
   URL_SUBSTITUTIONS_PLACEHOLDER = "URL substitutions, space separated replacements for base URL"
   URLS_PLACEHOLDER = "Alternatively: full URLs for parts, one per line"
@@ -24,51 +19,94 @@ class Page < ActiveRecord::Base
   has_and_belongs_to_many :genres, :uniq => true
   has_and_belongs_to_many :authors, :uniq => true
   belongs_to :parent, :class_name => "Page"
-    
-  default_scope :order => 'read_after ASC'
-  named_scope :ultimate_parents, :conditions => {:parent_id => nil}
-  named_scope :limited, :limit => 20
-  named_scope :short, :conditions => {:size => SHORT}
-  named_scope :long, :conditions => {:size => LONG}
-  named_scope :epic, :conditions => {:size => EPIC} 
-  named_scope :unread, :conditions => {:last_read => nil }
-  named_scope :favorite, :conditions => {:favorite => true }
-  
-  validates_presence_of :title
+
+  validates_presence_of :title, :message => "can't be blank or 'Title'"
   validates_format_of :url, :with => URI.regexp, :allow_blank => true
 
   attr_accessor :base_url
   attr_accessor :url_substitutions
   attr_accessor :urls
-
-  def self.search(string)
-    pages = Page.find(:all, :conditions => ["title LIKE ?", "%" + string + "%"])
-    if pages.blank?
-      pages = Page.find(:all, :conditions => ["notes LIKE ?", "%" + string + "%"])
+    
+  default_scope :order => 'read_after ASC'
+  named_scope :limited, :limit => 10
+  named_scope :no_children, :conditions => {:parent_id => nil}
+  named_scope :short, :conditions => {:size => "short"}
+  named_scope :long, :conditions => {:size => "long"}
+  named_scope :epic, :conditions => {:size => "epic"} 
+  named_scope :unread, :conditions => {:last_read => nil }
+  named_scope :favorite, :conditions => {:favorite => true }
+  named_scope :search_title, lambda {|string| 
+    {:conditions => ["title LIKE ?", "%" + string + "%"]}
+  }
+  named_scope :search_notes, lambda {|string| 
+    {:conditions => ["notes LIKE ?", "%" + string + "%"]}
+  }
+  named_scope :search_url, lambda {|string| 
+    {:conditions => ["url LIKE ?", "%" + string + "%"]}
+  }
+  
+  # Assumptions:
+  # searches on page title, notes or url are never combined with other limitations
+  # unread and favorite never appear together
+  # if filtering on genre and author, don't limit the results
+  # size is only ever used on its own with unread or favorite, never with genre and/or author
+  def self.filter(hash={"unread" => true})
+    hash.delete("action")
+    hash.delete("controller")
+    pages = []
+    if hash.size == 1
+      return Page.limited.unread.map(&:ultimate_parent).uniq if hash.has_key?("unread")
+      return Page.limited.favorite.map(&:ultimate_parent).uniq if hash.has_key?("favorite")
+      return Genre.find_by_name(hash["genre"]).pages.no_children if hash.has_key?("genre")
+      return Author.find_by_name(hash["author"]).pages.no_children if hash.has_key?("author")
+      return Page.limited.search_title(hash["title"]).map(&:ultimate_parent).uniq if hash.has_key?("title")
+      return Page.limited.search_notes(hash["notes"]).map(&:ultimate_parent).uniq if hash.has_key?("notes")
+      return Page.limited.search_url(hash["url"]).map(&:ultimate_parent).uniq if hash.has_key?("url")
+      if hash.has_key?("size")
+        case hash["size"]
+          when "short"
+            return Page.limited.short.no_children
+          when "long"
+            return Page.limited.long.no_children
+          when "epic"
+            return Page.limited.epic.no_children
+        end
+      end
+    elsif hash.size == 2 && hash["unread"]
+      return Genre.find_by_name(hash["genre"]).pages.limited.unread.no_children if hash.has_key?("genre")
+      return Author.find_by_name(hash["author"]).pages.limited.unread.no_children if hash.has_key?("author")
+      if hash.has_key?("size")
+        case hash["size"]
+          when "short"
+            return Page.limited.unread.short.no_children
+          when "long"
+            return Page.limited.unread.long.no_children
+          when "epic"
+            return Page.limited.unread.epic.no_children
+        end
+      end
+    elsif hash.size == 2 && hash["favorite"]
+      return Genre.find_by_name(hash["genre"]).pages.limited.favorite.no_children if hash.has_key?("genre")
+      return Author.find_by_name(hash["author"]).pages.limited.favorite.no_children if hash.has_key?("author")
+      if hash.has_key?("size")
+        case hash["size"]
+          when "short"
+            return Page.limited.favorite.short.no_children
+          when "long"
+            return Page.limited.favorite.long.no_children
+          when "epic"
+            return Page.limited.favorite.epic.no_children
+        end
+      end
+    elsif hash["genre"] && hash["author"]
+      fics = Genre.find_by_name(hash["genre"]).pages.no_children && Author.find_by_name(hash["author"]).pages.no_children
+      restrict1 = Page.unread if hash.has_key?("unread")
+      restrict1 = Page.favorite if hash.has_key?("favorite")
+      fics = fics & restrict1 if restrict1
+      return fics
+    else
+      return Page.limited.no_children
     end
-    parents = []
-    pages.each do |page|
-      parents << (page.parent ? page.parent : page)
-    end
-    parents.compact.uniq[0...20]
-  end
-
-  def self.filter(size, unread, favorite, genre, author)
-    by_size = case size
-      when SHORT
-        Page.short.ultimate_parents
-      when LONG
-        Page.long.ultimate_parents
-      when EPIC
-        Page.epic.ultimate_parents
-      else
-        Page.ultimate_parents
-    end
-    by_unread = unread ? Page.unread.limited.map(&:ultimate_parent) : Page.ultimate_parents
-    by_favorite = favorite ? Page.favorite.limited.map(&:ultimate_parent) : Page.ultimate_parents
-    by_genre = genre.is_a?(Genre) ? genre.pages.limited.map(&:ultimate_parent) : Page.ultimate_parents
-    by_author = author.is_a?(Author) ? author.pages.limited.map(&:ultimate_parent) : Page.ultimate_parents
-    by_size & by_unread & by_favorite & by_genre & by_author
   end
 
   def to_param
@@ -81,8 +119,8 @@ class Page < ActiveRecord::Base
   end
 
   def before_validation
-    self.url = self.url == URL_PLACEHOLDER ? nil : self.url.try(:strip)
-    self.title = nil if self.title == TITLE_PLACEHOLDER
+    self.url = self.url == "Url" ? nil : self.url.try(:strip)
+    self.title = nil if self.title == "Title"
     self.base_url = nil if self.base_url == BASE_URL_PLACEHOLDER
     self.url_substitutions = nil if self.url_substitutions == URL_SUBSTITUTIONS_PLACEHOLDER
     self.urls = nil if self.urls == URLS_PLACEHOLDER
@@ -107,9 +145,9 @@ class Page < ActiveRecord::Base
 
   def set_wordcount
     self.size = nil
-    self.size = SHORT if wordcount < SHORT_WC
-    self.size = LONG if wordcount > LONG_WC
-    self.size = EPIC if wordcount > EPIC_WC
+    self.size = "short" if wordcount < SHORT_WC
+    self.size = "long" if wordcount > LONG_WC
+    self.size = "epic" if wordcount > EPIC_WC
     self.save
   end
 
@@ -200,6 +238,7 @@ class Page < ActiveRecord::Base
     end
 
     parts.each do |part|
+      url = title = position = nil
       url = part.sub(/#.*/, "")
       title = part.sub(/.*#/, "") if part.match("#")
       position = parts.index(part) + 1
@@ -208,6 +247,7 @@ class Page < ActiveRecord::Base
       page = Page.find_by_title_and_parent_id(title, parent.id) unless page
       if page.blank?
         page = Page.create(:url=>url, :title=>title, :parent_id=>parent.id, :position => position)
+        parent.update_attribute(:read_after, Time.now) if parent.read_after > Time.now
       else
         if page.url == url
 	        page.fetch if refetch
@@ -234,15 +274,17 @@ class Page < ActiveRecord::Base
       page = Page.find_by_url(url)
       if page.blank?
         page = Page.create(:url=>url, :title=>title, :parent_id=>part.id, :position => position)
+        part.update_attribute(:read_after, Time.now) if part.read_after > Time.now
+        parent.update_attribute(:read_after, Time.now) if parent.read_after > Time.now
       else
         if page.url == url
-	  page.fetch if refetch
-	else
+	        page.fetch if refetch
+      	else
           page.update_attribute(:url, url)
-	  page.fetch
-	end
-	page.update_attribute(:parent_id, part.id)
-	page.update_attribute(:title, title)
+	        page.fetch
+	      end
+        page.update_attribute(:parent_id, part.id)
+        page.update_attribute(:title, title)
         page.update_attribute(:position, position)
       end
     end
@@ -251,12 +293,6 @@ class Page < ActiveRecord::Base
     remove.each do |old_part_id|
       old_part = Page.find(old_part_id)
       old_part.destroy if old_part.parent == parent
-    end
-    added = new_part_ids - old_part_ids
-    if !added.blank?
-      if parent.read_after > Time.now
-        parent.update_attribute(:read_after, Time.now)
-      end
     end
     parent.set_wordcount
   end
@@ -339,11 +375,11 @@ class Page < ActiveRecord::Base
   def next
     was = self.read_after || Time.now
     self.update_attribute(:read_after, was + 3.months)
-    return Page.ultimate_parents.first
+    return Page.no_children.first
   end
 
   def first
-    earliest = Page.first.read_after
+    earliest = Page.no_children.first.read_after
     self.update_attribute(:read_after, earliest - 1.day)
     if self.parent
       parent = self.parent
@@ -527,4 +563,11 @@ class Page < ActiveRecord::Base
     text.gsub(/ +/, ' ').gsub(/\n+ */, "\n\n").gsub(/\n\n\n\n+/, "\n\n").strip
   end
 
+  def short_notes
+    return self.notes if self.notes.blank?
+    return self.notes if self.notes.size < MININOTE
+    snip_idx = self.notes.index(/\s/, MININOTE)
+    return self.notes unless snip_idx
+    self.notes[0, snip_idx] + "..."
+  end
 end

@@ -2,32 +2,48 @@ Feature: filter on multiple criteria
 
   Scenario: filter on mix of author, genre, and state
     Given the following pages
-      | title                            | last_read  | add_author_string              | add_genre_string        |
-      | The Mysterious Affair at Styles  | 2009-01-01 | agatha christie                | mystery                 |
-      | Alice's Adventures In Wonderland | 2009-02-01 | lewis carroll, charles dodgson | fantasy, children       |
-      | Grimm's Fairy Tales              |            | grimm                          | children, short stories |
+      | title                            | add_author_string        | add_genre_string  | favorite | last_read  | 
+      | The Mysterious Affair at Styles  | agatha christie          | mystery           | true     | 2009-01-01 | 
+      | Nancy Drew                       | Carolyn Keene            | mystery, children | false    | 2009-02-01 | 
+      | The Boxcar Children              | Gertrude Chandler Warner | mystery, children | true     |            | 
+      | Murder on the Orient Express     | agatha christie          | mystery           | false    |            | 
     When I am on the homepage
       And I select "agatha christie"
       And I select "mystery"
-      And I press "Filter"
-    Then I should see "The Mysterious Affair at Styles" in ".title"
-    When I select "lewis carroll"
-      And I press "Filter"
-    Then I should not see "Alice's Adventures In Wonderland"
-    And I should see "No page"
-    And I should see "pages filtered by lewis carroll, mystery"
+      And I press "Find"
+    Then I should see "The Mysterious Affair at Styles"
+      And I should see "Murder on the Orient Express"
+      And I should not see "Nancy Drew"
+      And I should not see "The Boxcar Children"
     When I am on the homepage
-      And I select "lewis carroll"
       And I select "children"
-      And I press "Filter"
-    Then I should see "Alice's Adventures In Wonderland"
-      And I should see "pages filtered by lewis carroll, children"
+      And I check "unread"
+      And I press "Find"
+    Then I should see "The Boxcar Children"
+      And I should not see "Nancy Drew"
+      And I should not see "The Mysterious Affair at Styles"
+      And I should not see "Murder on the Orient Express"
+    When I am on the homepage
     When I check "unread"
-      And I press "Filter"
-    Then I should not see "Alice's Adventures In Wonderland"
-      And I should see "No page"
-      And I should see "pages filtered by unread, lewis carroll, children"
-    When I select "grimm"
-      And I press "Filter"
-    Then I should see "Grimm's Fairy Tales"
-    And I should see "pages filtered by unread, grimm, children"
+      And I select "agatha christie"
+      And I press "Find"
+    Then I should see "Murder on the Orient Express"
+      And I should not see "The Mysterious Affair at Styles"
+      And I should not see "Nancy Drew"
+      And I should not see "The Boxcar Children"
+    When I am on the homepage
+      And I select "children"
+      And I check "favorite"
+      And I press "Find"
+    Then I should see "The Boxcar Children"
+      And I should not see "Nancy Drew"
+      And I should not see "The Mysterious Affair at Styles"
+      And I should not see "Murder on the Orient Express"
+    When I am on the homepage
+    When I check "favorite"
+      And I select "agatha christie"
+      And I press "Find"
+    Then I should see "The Mysterious Affair at Styles"
+      And I should not see "Murder on the Orient Express"
+      And I should not see "Nancy Drew"
+      And I should not see "The Boxcar Children"

@@ -13,5 +13,5 @@ Feature: basic states
      And I should not see "unread" in ".last_read"
     When I follow "Rate"
       And I press "2"
-   Then I should not see "favorite" in ".favorit"
+   Then I should not see "favorite" in ".favorite"
      And I should not see "unread" in ".last_read"
