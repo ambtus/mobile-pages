@@ -1,6 +1,16 @@
 - content_for :title do
   = @page.title
 = render :partial => "pages/buttons", :locals => {:page => @page }
-= render :partial => "pages/links", :locals => {:page => @page, :called_by => "single" }
-= render :partial => "pages/headers", :locals => {:page => @page, :called_by => "single" }
-.content= render :text => @page.original_html
+= render :partial => "pages/links", :locals => {:page => @page, :called_by => "show" }
+= render :partial => "pages/headers", :locals => {:page => @page, :called_by => "show" }
+.parts
+  - @page.parts.each do |part|
+    .part{:id => "position_#{part.position}"}
+      - if part.parts.blank?
+        =h part.title
+      - else
+        = link_to h(part.title), page_path(part)
+      - unless part.tag_string.blank?
+        = "(#{part.tag_string})"
+      = link_to "Read", read_path(part)
+      = link_to "Download", page_path(part, :format => 'txt')

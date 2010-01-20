@@ -6,7 +6,8 @@ Feature: Basic scrub with parts
   Scenario: scrub a parent page
     Given a page exists with title: "Parent", base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
     And I am on the page's page
-      Then I should see "cruft"
+    When I follow "Read"
+    Then I should see "cruft"
     When I follow "Download" in ".title"
     Then I should see "cruft"
     When I am on the page's page

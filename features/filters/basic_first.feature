@@ -37,15 +37,15 @@ Feature: basic first
     Then I should see "Single" in "#position_1"
       And I should see "Parent" in "#position_2"
       And I should see "Grandparent" in "#position_3"
-    When I follow "List Parts" in "#position_2"
+    When I follow "Parent" in "#position_2"
       And I follow "Read" in "#position_1"
       And I press "Read First"
     When I am on the homepage
     And I should see "Parent" in "#position_1"
     Then I should see "Single" in "#position_2"
     And I should see "Grandparent" in "#position_3"
-    When I follow "List Parts" in "#position_3"
-      And I follow "List Parts" in "#position_2"
+    When I follow "Grandparent" in "#position_3"
+      And I follow "Parent2" in "#position_2"
       And I follow "Read" in "#position_1"
     When I press "Read First"
       And I am on the homepage

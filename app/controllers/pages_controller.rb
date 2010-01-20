@@ -47,7 +47,7 @@ class PagesController < ApplicationController
       else
         flash[:notice] = "Page created."
         @page.genres << genre
-        redirect_to @page and return
+        redirect_to read_url(@page) and return
       end
     end
   end
@@ -60,22 +60,30 @@ class PagesController < ApplicationController
       when "Raw HTML to UTF8"
         @page.parts.empty? ? @page.build_me("utf8") : @page.parts.each {|p| p.build_me("utf8")}
         flash[:notice] = "HTML converted to utf8"
+        redirect_to read_url(@page) and return
       when "Raw HTML to Latin1"
         @page.parts.empty? ? @page.build_me("latin1") : @page.parts.each {|p| p.build_me("latin1")}
         flash[:notice] = "HTML converted to latin1"
+        redirect_to read_url(@page) and return
       when "Clean HTML"
         @page.parts.empty? ? @page.clean_me : @page.parts.each {|p| p.clean_me }
         flash[:notice] = "HTML cleaned"
+        redirect_to page_url(@page) and return
       when "Update Raw HTML"
         @page.pasted = params[:pasted]
         flash[:notice] = "Raw HTML updated."
+        redirect_to read_url(@page) and return
       when "Remove surrounding Div"
         @page.remove_surrounding_div!
         flash[:notice] = "Surrounding div removed"
         redirect_to scrub_path(@page) and return
+      when "Scrub"
+        @page.remove_nodes(params[:nodes]) if params[:nodes]
+        redirect_to read_url(@page) and return
+      when "Update"
+        @page.update_attributes(params[:page])
+        redirect_to page_url(@page) and return
     end
-    @page.remove_nodes(params[:nodes]) if params[:nodes]
-    @page.update_attributes(params[:page])
     redirect_to @page
   end
 end

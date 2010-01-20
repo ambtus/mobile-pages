@@ -52,24 +52,17 @@ Feature: bugs with parts
       And I press "Update"
     Then I should see "Single" in ".parent"
     When I am on the homepage
-    Then I should see "Single" in "#position_1"
-    When I follow "List Parts"
+      And I follow "Single" in "#position_1"
     Then I should see "Part 1" in "#position_1"
       And I should see "Part 2" in "#position_2"
 
-  Scenario: single part stories shouldn't have parts link
-    Given a titled page exists
-    When I am on the page's page
-    Then I should not see "List Parts"
-    When I am on the homepage
-    Then I should not see "List Parts"
-    
   Scenario: download part
     Given a titled page exists with urls: "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
     When I am on the page's page
+      And I follow "Read"
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
-    When I follow "List Parts"
+    When I follow "page 1"
       And I follow "Download" in "#position_1"
     Then I should see "stuff for part 1"
     And I should not see "stuff for part 2"

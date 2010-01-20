@@ -25,6 +25,7 @@ Feature: extended store
   Scenario: add utf8
     Given a titled page exists with url: "http://test.sidrasue.com/sbutf8.html"
     When I am on the page's page
+      And I follow "Read"
     Then I should see "â€œ"
     When I press "Raw HTML to UTF8"
     Then I should see "“H"
@@ -32,6 +33,7 @@ Feature: extended store
   Scenario: add utf8 to parts
     Given a titled page exists with urls: "http://test.sidrasue.com/sbutf8.html"
     When I am on the page's page
+      And I follow "Read"
     Then I should see "â€œ"
     When I press "Raw HTML to UTF8"
     Then I should see "“H"
@@ -55,5 +57,6 @@ Feature: extended store
     Then I should not see "“H"
       And I should see "Don’t—"
     When I press "Clean HTML"
+      And I follow "Read"
     Then I should not see "“H"
       And I should see "Don’t—"
