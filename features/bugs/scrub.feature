@@ -15,7 +15,7 @@ Feature: bugs with scrub
       And I check boxes "0 2"
       And I press "Scrub"
     When I am on the homepage
-      And I follow "Download" in ".title"
+      And I follow "Download" in "#position_1"
     Then I should see "First Part #"
       And I should see "## SubPart ##"
       And I should see "stuff for part 1"

@@ -1,12 +1,15 @@
-.size= page.size
+.genres= page.genre_string
+.authors= page.author_string
 .favorite
   - if page.favorite
-    = Page::FAVORITE
-.authors= page.author_string
-.genres= page.genre_string
+    = "favorite"
+.size= page.size
 .last_read
   - if page.last_read
     = page.last_read.to_date 
   - else
-    = Page::UNREAD
-.notes=simple_format page.notes
+    = "unread"
+- if called_by == "index"
+  .notes=simple_format page.short_notes
+- else
+  .notes=simple_format page.notes

@@ -7,7 +7,7 @@ Feature: Basic Scrub
   Given a genre exists with name: "genre"
    When I am on the homepage
     And I fill in "page_url" with "<url>"
-    And I fill in "page_title" with "Title"
+    And I fill in "page_title" with "New Title"
     And I select "genre"
     And I press "Store"
     And I follow "Scrub"
@@ -32,7 +32,7 @@ Feature: Basic Scrub
   Given a genre exists with name: "genre"
    When I am on the homepage
     And I fill in "page_url" with "<url>"
-    And I fill in "page_title" with "Title"
+    And I fill in "page_title" with "New Title"
     And I select "genre"
     And I press "Store"
     And I follow "Scrub"

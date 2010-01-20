@@ -6,7 +6,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :scrub
   map.resources :refetch
   map.resources :rate
-  map.resources :search
   map.resources :parts
   map.resources :html
   map.resources :notes

@@ -1,64 +1,54 @@
-#flash_notice   {
-    border-width: 1px;
+#flash_notice {
     background-color: #FF0;
     }
-#flash_error   {
-    border-width: 1px;
+#flash_error {
     background-color: #F00;
     }
-.links    {
-    border-width: 1px;
-    background-color: #CCF;
-    }
-.form    {
-    border-width: 1px;
-    background-color: #CFF;
-    }
-.title    {
-    border-width: 1px;
-    background-color: #C9F;
-    font-weight: bold;
-    }
-.size    {
-    border-width: 1px;
-    background-color: #FFF;
-    }
-.states    {
-    border-width: 1px;
-    background-color: #FFC;
-    }
-.authors    {
-    border-width: 1px;
-    background-color: #0CF;
-    }
-.genres    {
-    border-width: 1px;
-    background-color: #FCF;
-    }
-.last_read    {
-    border-width: 1px;
-    background-color: #9C9;
-    }
-.notes    {
-    border-width: 1px;
-    background-color: #FC9;
-    }
-.content    {
-    border-width: 1px;
-    background-color: #EEE;
-    }
-.node    {
-    border-width: 1px;
-    background-color: #990;
-    }
-.checkbox    {
-    border-width: 1px;
-    background-color: #FF9;
-    }
-.search    {
-    border-width: 1px;
-    background-color: #CFC;
-    }
-.gray-input     {
+.gray-input {
     color: #7a7a7a;
 }
+.links {
+    background-color: #CCF;
+    }
+.form {
+    background-color: #9FF;
+    }
+.page {
+    border-width: 1px;
+    border-style: solid;
+    background-color: #FC9;
+    }
+.title {
+    background-color: #CCF;
+    font-weight: bold;
+    }
+.size {
+    background-color: #A9F;
+    }
+.favorite {
+    background-color: #E9F;
+    }
+.authors {
+    background-color: #CFF;
+    }
+.genres {
+    background-color: #C9F;
+    }
+.last_read {
+    background-color: #F99;
+    }
+.notes {
+    background-color: #FC9;
+    }
+.content {
+    background-color: #EEE;
+    }
+.node {
+    background-color: #990;
+    }
+.checkbox {
+    background-color: #FF9;
+    }
+.part {
+    background-color: #CFC;
+    }

@@ -1,22 +1,18 @@
 class PagesController < ApplicationController
+  
   def index
-    @genres = Genre.all.map(&:name)
-    @authors = Author.all.map(&:name)
-    @new_page = Page.new
-    @genre = Genre.find_by_name(params[:genre]) if params[:genre]
-    @author = Author.find_by_name(params[:author]) if params[:author]
-    @unread = params[:unread]
-    @favorite = params[:favorite]
+    @title = "Mobile pages"
+    @page = Page.new(params[:page])
     @size = params[:size]
-    @search = params[:search] ? params[:search] : Page::SEARCH_PLACEHOLDER
-    @page = Page.filter(@size, @unread, @favorite, @genre, @author).first
-    if @genre || @author || @unread || @favorite || @size
-      filter_string = [@size, @unread, @favorite, @author.try(:name), @genre.try(:name)].compact.join(", ")
-      @title = "Mobile pages filtered by #{filter_string}"
-      flash.now[:error] = "No page with filters #{filter_string}" unless @page
-    else
-      @title = "Mobile pages"
-    end
+    @genres = Genre.all.map(&:name)
+    @genre = Genre.find_by_name(params[:genre]) if params[:genre]
+    @authors = Author.all.map(&:name)
+    @author = Author.find_by_name(params[:author]) if params[:author]
+    @favorite = params[:favorite] || false
+    @unread = params[:unread] || false
+    @pages = Page.filter(params)
+    flash.now[:error] = "Can only filter on one thing right now" if params.size > 3
+    flash.now[:error] = "No pages found" if @pages.blank?
   end
 
   def show
@@ -24,29 +20,33 @@ class PagesController < ApplicationController
   end
 
   def create
-    if params[:Filter] || params[:Later]
+    if params[:Find]
       build_route = {:action => "index" , :controller => "pages"}
       build_route[:author] = params[:author] unless params[:author].blank?
       build_route[:genre] = params[:genre] unless params[:genre].blank?
       build_route[:size] = params[:size] unless params[:size].blank?
-      build_route[:favorite] = params[:favorite] unless params[:favorite].blank?
-      build_route[:unread] = params[:unread] unless params[:unread].blank?
-      Page.find_by_id(params[:page_id]).next if params[:Later]
+      build_route[:favorite] = "favorite" if params[:favorite]
+      build_route[:unread] = "unread" if params[:unread]
+      if params[:page]
+        build_route[:title] = params[:page][:title] unless params[:page][:title] == "Title"
+        build_route[:notes] = params[:page][:notes] unless params[:page][:notes] == "Notes"
+        build_route[:url] = params[:page][:url] unless params[:page][:url] == "Url"
+      end
       redirect_to(build_route) and return
     end
     @page = Page.new(params[:page])
-    @genre = Genre.find_by_name(params[:genre])
+    genre = Genre.find_by_name(params[:genre])
     author = Author.find_by_name(params[:author])
     @page.favorite = true if params[:favorite] == Page::FAVORITE
     if @page.save
       flash[:error] = @page.errors[:url]
       @page.authors << author if author
-      if @genre.blank?
+      if genre.blank?
         flash[:notice] = "Page created. Please select genre(s)"
         redirect_to genre_path(@page) and return
       else
         flash[:notice] = "Page created."
-        @page.genres << @genre
+        @page.genres << genre
         redirect_to @page and return
       end
     end

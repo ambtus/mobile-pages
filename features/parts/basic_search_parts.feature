@@ -10,16 +10,6 @@ Feature: basic search with parts
       | Parent2 | http://test.sidrasue.com/parts/*.html | 2 3 |
      When I am on the homepage
      Then I should see "Parent1" in ".title"
-      And I fill in "search" with "Part 2"
-      And I press "Search"
+      And I fill in "page_title" with "Part 2"
+      And I press "Find"
      Then I should see "Parent2" in ".title"
-
-  Scenario: find a page with parts
-    Given the following pages
-      |title    | base_url                 | url_substitutions |
-      | Parent1 | http://test.sidrasue.com/parts/*.html | 1   |
-      | Parent2 | http://test.sidrasue.com/parts/*.html | 2 3 |
-     When I am on the homepage
-      And I fill in "search" with "Parent2"
-      And I press "Search"
-     Then I should see "Part 2" in "#position_2"

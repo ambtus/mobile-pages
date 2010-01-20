@@ -6,7 +6,7 @@
     - unless Genre.all.blank?
       .genre
         = select_tag :genre, "<option></option>" +   options_from_collection_for_select(Genre.all, 'name', 'name')
-    = f.text_field :url, Page::URL_PLACEHOLDER, :maxlength => 255, :size => 80
-    = f.text_field :title, Page::TITLE_PLACEHOLDER, :maxlength => 255, :size => 80
+    = f.text_field :url
+    = f.text_field :title
     .button= f.submit "Store"
 = link_to "Store Multiple", new_part_path

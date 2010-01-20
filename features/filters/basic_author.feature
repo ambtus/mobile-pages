@@ -8,20 +8,20 @@ Feature: basic authors
       | Alice's Adventures In Wonderland | lewis carroll, charles dodgson |
     When I am on the homepage
     When I select "grimm"
-      And I press "Filter"
-    Then I should see "Grimm's Fairy Tales" in ".title"
+      And I press "Find"
+    Then I should see "Grimm's Fairy Tales" in "#position_1"
       And "grimm" should be selected in "author"
     When I select "charles dodgson"
-      And I press "Filter"
+      And I press "Find"
     Then I should see "Alice's Adventures In Wonderland"
       And "charles dodgson" should be selected in "author"
     When I select "agatha christie"
-      And I press "Filter"
-    Then I should see "The Mysterious Affair at Styles" in ".title"
+      And I press "Find"
+    Then I should see "The Mysterious Affair at Styles" in "#position_1"
       And "agatha christie" should be selected in "author"
     When I select "lewis carroll"
-      And I press "Filter"
-    Then I should see "Alice's Adventures In Wonderland"
+      And I press "Find"
+    Then I should see "Alice's Adventures In Wonderland" in "#position_1"
       And "lewis carroll" should be selected in "author"
 
   Scenario: add authors to a page when there are no authors
