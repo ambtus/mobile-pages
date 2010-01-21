@@ -19,15 +19,16 @@ Feature: bugs during store
       And I press "Store"
     Then I should see "Url is invalid"
 
-  Scenario: url can't be resolved shouldn't throw error
+  Scenario: url can't be resolved should throw error
     Given a genre exists with name: "genre"
     When I am on the homepage
       And I select "genre"
       And I fill in "page_title" with "bad url"
       And I fill in "page_url" with "http://w.sidrasue.com/tests/test.html"
       And I press "Store"
-    Then I should see "couldn't resolve host name" in ".content"
-      And I should see "couldn't resolve host name" in "#flash_error"
+    Then I should see "couldn't resolve host name" in "#flash_error"
+      And I should not see "couldn't resolve host name" in ".content"
+      And I should not see "Page created" in "#flash_notice"
 
   Scenario: pasted plaintext is okay
     Given a titled page exists
@@ -67,4 +68,14 @@ Feature: bugs during store
       And I fill in "page_url" with "http://test.sidrasue.com/style.html"
       And I press "Store"
     Then I should see "error retrieving content" in "#flash_error"
-      And I should see "error retrieving content" in ".content"
+      And I should not see "error retrieving content" in ".content"
+      And I should not see "Page created" in "#flash_notice"
+
+  Scenario: not filling in notes shouldn't give "Notes"
+    Given a genre exists with name: "genre"
+    When I am on the homepage
+     And I select "genre"
+     And I fill in "page_title" with "no notes"
+     And I press "Store"
+   Then I should not see "Notes" in ".notes"
+   

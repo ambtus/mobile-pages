@@ -4,6 +4,9 @@
 #flash_error {
     background-color: #F00;
     }
+.fieldWithErrors {
+    background-color: #F00;
+    }
 .gray-input {
     color: #7a7a7a;
 }

@@ -1,0 +1,28 @@
+.form
+  - form_for page, :builder => DefaultFormBuilder do |f|
+    - if called_by == "index"
+      = select_tag :size, "<option></option>" + options_for_select(Page::SIZES, @size)
+      = label_tag :size, "Size (find only)"
+      %br
+    - unless Genre.names.blank?
+      = select_tag :genre, "<option></option>" + options_for_select(Genre.names, @genre.try(:name))
+    = label_tag :genre, "Genre"
+    %br
+    - unless Author.names.blank?
+      = select_tag :author, "<option></option>" + options_for_select(Author.names, @author.try(:name))
+    = label_tag :author, "Author"
+    %br
+    = check_box_tag :favorite, "favorite", @favorite
+    = label_tag :favorite, "favorite"
+    = check_box_tag :unread, "unread", @unread
+    = label_tag :unread, "unread"
+    %br
+    = f.text_field :title, page.title
+    %br
+    = f.text_field :notes, page.notes
+    %br
+    = f.text_field :url, page.url
+    %br
+    = f.submit "Find", :name => "Find" if called_by == "index"
+    = f.submit "Store", :name => "Store"
+    = link_to("Store Multiple", new_part_path) if called_by == "index"

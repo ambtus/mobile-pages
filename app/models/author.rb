@@ -16,4 +16,7 @@ class Author < ActiveRecord::Base
     self.name.squish!
   end
 
+  def self.names
+    self.all.map(&:name)
+  end
 end

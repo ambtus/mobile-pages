@@ -34,21 +34,31 @@ class PagesController < ApplicationController
       redirect_to(build_route) and return
     end
     @page = Page.new(params[:page])
-    genre = Genre.find_by_name(params[:genre])
-    author = Author.find_by_name(params[:author])
-    @page.favorite = true if params[:favorite] == Page::FAVORITE
+    @genre = Genre.find_by_name(params[:genre])
+    @author = Author.find_by_name(params[:author])
+    @favorite = params[:favorite]
     if @page.save
-      flash[:error] = @page.errors[:url]
-      @page.authors << author if author
-      if genre.blank?
-        flash[:notice] = "Page created. Please select genre(s)"
-        redirect_to genre_path(@page) and return
+      if @page.errors[:base]
+        @errors = @page.errors
+        @page.destroy
+        @page = Page.new(params[:page])        
+        @page.favorite = true if params[:favorite] == Page::FAVORITE
       else
-        flash[:notice] = "Page created."
-        @page.genres << genre
-        redirect_to read_url(@page) and return
+        @page.favorite = @favorite
+        @page.authors << @author if @author
+        if @genre.blank?
+          flash[:notice] = "Page created. Please select genre(s)"
+          redirect_to genre_path(@page) and return
+        else
+          flash[:notice] = "Page created."
+          @page.genres << @genre
+          redirect_to read_url(@page) and return
+        end
       end
+    else  
+      @errors = @page.errors
     end
+    flash[:error] = @errors.collect {|e, m| "#{e.humanize unless e == "base"} #{m}"}.join(" and  ")
   end
 
   def update
