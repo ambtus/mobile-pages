@@ -11,7 +11,6 @@ class PagesController < ApplicationController
     @favorite = params[:favorite] || false
     @unread = params[:unread] || false
     @pages = Page.filter(params)
-    flash.now[:error] = "Can only filter on one thing right now" if params.size > 3
     flash.now[:error] = "No pages found" if @pages.blank?
   end
 
