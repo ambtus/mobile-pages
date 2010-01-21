@@ -2,6 +2,7 @@ class Page < ActiveRecord::Base
   MODULO = 300  # files in a single directory
   DURATION = "years"
   MININOTE = 100 # keep first this many characters plus enough for full words in index headers
+  LIMIT = 10
 
   UNREAD = "unread"
   FAVORITE = "favorite"
@@ -28,13 +29,14 @@ class Page < ActiveRecord::Base
   attr_accessor :urls
     
   default_scope :order => 'read_after ASC'
-  named_scope :limited, :limit => 10
   named_scope :no_children, :conditions => {:parent_id => nil}
   named_scope :short, :conditions => {:size => "short"}
   named_scope :long, :conditions => {:size => "long"}
   named_scope :epic, :conditions => {:size => "epic"} 
   named_scope :unread, :conditions => {:last_read => nil }
-  named_scope :favorite, :conditions => {:favorite => true }
+  named_scope :favorite, :conditions => {:favorite => true }  
+  named_scope :limited, :limit => LIMIT, :select => 'DISTINCT *'
+
   named_scope :search_title, lambda {|string| 
     {:conditions => ["title LIKE ?", "%" + string + "%"]}
   }
@@ -44,68 +46,29 @@ class Page < ActiveRecord::Base
   named_scope :search_url, lambda {|string| 
     {:conditions => ["url LIKE ?", "%" + string + "%"]}
   }
-  
-  # Assumptions:
-  # searches on page title, notes or url are never combined with other limitations
-  # unread and favorite never appear together
-  # if filtering on genre and author, don't limit the results
-  def self.filter(hash={"unread" => true})
-    hash.delete("action")
-    hash.delete("controller")
-    pages = []
-    if hash.size == 1
-      return Page.limited.unread.map(&:ultimate_parent).uniq if hash.has_key?("unread")
-      return Page.limited.favorite.map(&:ultimate_parent).uniq if hash.has_key?("favorite")
-      return Genre.find_by_name(hash["genre"]).pages.limited.no_children.uniq if hash.has_key?("genre")
-      return Author.find_by_name(hash["author"]).pages.limited.no_children.uniq if hash.has_key?("author")
-      return Page.limited.search_title(hash["title"]).map(&:ultimate_parent).uniq if hash.has_key?("title")
-      return Page.limited.search_notes(hash["notes"]).map(&:ultimate_parent).uniq if hash.has_key?("notes")
-      return Page.limited.search_url(hash["url"]).map(&:ultimate_parent).uniq if hash.has_key?("url")
-      if hash.has_key?("size")
-        case hash["size"]
-          when "short"
-            return Page.limited.short.no_children
-          when "long"
-            return Page.limited.long.no_children
-          when "epic"
-            return Page.limited.epic.no_children
-        end
+
+
+  def self.filter(hash={})
+    unread = hash.has_key?("unread") ? Page.unread.map(&:ultimate_parent) : Page.no_children
+    favorite = hash.has_key?("favorite") ? Page.favorite.map(&:ultimate_parent) : Page.no_children
+    if hash.has_key?("size")
+     case hash["size"]
+       when "short"
+         size =  Page.short.no_children
+       when "long"
+         size =  Page.long.no_children
+       when "epic"
+         size =  Page.epic.no_children
       end
-    elsif hash.size == 2 && hash["unread"]
-      return Genre.find_by_name(hash["genre"]).pages.limited.unread.no_children if hash.has_key?("genre")
-      return Author.find_by_name(hash["author"]).pages.limited.unread.no_children if hash.has_key?("author")
-      if hash.has_key?("size")
-        case hash["size"]
-          when "short"
-            return Page.limited.unread.short.no_children
-          when "long"
-            return Page.limited.unread.long.no_children
-          when "epic"
-            return Page.limited.unread.epic.no_children
-        end
-      end
-    elsif hash.size == 2 && hash["favorite"]
-      return Genre.find_by_name(hash["genre"]).pages.limited.favorite.no_children if hash.has_key?("genre")
-      return Author.find_by_name(hash["author"]).pages.limited.favorite.no_children if hash.has_key?("author")
-      if hash.has_key?("size")
-        case hash["size"]
-          when "short"
-            return Page.limited.favorite.short.no_children
-          when "long"
-            return Page.limited.favorite.long.no_children
-          when "epic"
-            return Page.limited.favorite.epic.no_children
-        end
-      end
-    elsif hash["genre"] && hash["author"]
-      fics = Genre.find_by_name(hash["genre"]).pages.no_children && Author.find_by_name(hash["author"]).pages.no_children
-      restrict1 = Page.unread if hash.has_key?("unread")
-      restrict1 = Page.favorite if hash.has_key?("favorite")
-      fics = fics & restrict1 if restrict1
-      return fics
     else
-      return Page.limited.no_children
+      size = Page.no_children
     end
+    title = hash.has_key?("title") ? Page.search_title(hash["title"]).map(&:ultimate_parent) : Page.no_children
+    notes = hash.has_key?("notes") ? Page.search_notes(hash["notes"]).map(&:ultimate_parent) : Page.no_children
+    url = hash.has_key?("url") ? Page.search_url(hash["url"]).map(&:ultimate_parent) : Page.no_children
+    genre =  hash.has_key?("genre") ? Genre.find_by_name(hash["genre"]).pages.no_children : Page.no_children
+    author =  hash.has_key?("author") ? Author.find_by_name(hash["author"]).pages.no_children : Page.no_children
+    (unread & favorite & size & title & notes & url & genre & author).compact.uniq[0...LIMIT]
   end
 
   def to_param
