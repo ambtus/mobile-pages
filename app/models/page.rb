@@ -83,6 +83,7 @@ class Page < ActiveRecord::Base
   def before_validation
     self.url = self.url == "Url" ? nil : self.url.try(:strip)
     self.title = nil if self.title == "Title"
+    self.notes = nil if self.notes == "Notes"
     self.base_url = nil if self.base_url == BASE_URL_PLACEHOLDER
     self.url_substitutions = nil if self.url_substitutions == URL_SUBSTITUTIONS_PLACEHOLDER
     self.urls = nil if self.urls == URLS_PLACEHOLDER
@@ -133,11 +134,9 @@ class Page < ActiveRecord::Base
       self.raw_content = page.body
       self.build_me
     rescue WWW::Mechanize::ResponseCodeError
-      self.original_html = "error retrieving content"
-      self.errors.add(:url, "error retrieving content")
+      self.errors.add(:base, "error retrieving content")
     rescue SocketError
-      self.original_html = "couldn't resolve host name"
-      self.errors.add(:url, "couldn't resolve host name")
+      self.errors.add(:base, "couldn't resolve host name")
     end
   end
 

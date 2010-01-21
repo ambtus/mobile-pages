@@ -1,12 +1,4 @@
 - content_for :title do
   = "Page create error"
-.form
-  - form_for @page, :builder => DefaultFormBuilder do |f|
-    .errors= f.error_messages
-    - unless Genre.all.blank?
-      .genre
-        = select_tag :genre, "<option></option>" +   options_from_collection_for_select(Genre.all, 'name', 'name')
-    = f.text_field :url
-    = f.text_field :title
-    .button= f.submit "Store"
+= render :partial => "pages/create", :locals => {:page => @page, :called_by => "error", :genre => @genre, :author => @author }
 = link_to "Store Multiple", new_part_path

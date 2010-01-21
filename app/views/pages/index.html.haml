@@ -1,32 +1,6 @@
 - content_for :title do
   = @title
-.form
-  - form_for @page, :builder => DefaultFormBuilder do |f|
-    = select_tag :size, "<option></option>" + options_for_select(Page::SIZES, @size)
-    = label_tag :size, "Size (find only)"
-    %br
-    - unless @genres.blank?
-      = select_tag :genre, "<option></option>" + options_for_select(@genres, @genre.try(:name))
-    = label_tag :genre, "Genre"
-    %br
-    - unless @authors.blank?
-      = select_tag :author, "<option></option>" + options_for_select(@authors, @author.try(:name))
-    = label_tag :author, "Author"
-    %br
-    = check_box_tag :favorite, "favorite", @favorite
-    = label_tag :favorite, "favorite"
-    = check_box_tag :unread, "unread", @unread
-    = label_tag :unread, "unread"
-    %br
-    = f.text_field :title
-    %br
-    = f.text_field :notes
-    %br
-    = f.text_field :url
-    %br
-    = f.submit "Find", :name => "Find"
-    = f.submit "Store", :name => "Store"
-    = link_to "Store Multiple", new_part_path
+= render :partial => "pages/create", :locals => {:page => @page, :called_by => "index", :size => @size, :genre => @genre, :author => @author }
 - if @pages
   - @pages.each_with_index do |page, index|
     .page{:id => "position_#{index+1}"}
