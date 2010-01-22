@@ -356,7 +356,6 @@ class Page < ActiveRecord::Base
     after = now + string.to_i.send(DURATION)
     self.update_attributes(:read_after => after, :last_read => now)
     string == "1" ? self.update_attribute(:favorite, true) : self.update_attribute(:favorite, false)
-    self.parent.update_attribute(:last_read, now) if self.parent
     self.parts.each {|p| p.update_attribute(:last_read, now)}
     return self.read_after
   end
@@ -390,7 +389,7 @@ class Page < ActiveRecord::Base
   def tag_names
     names = self.authors.map(&:name) + self.genres.map(&:name) + [self.size]
     names = names + [FAVORITE] if self.favorite
-    names = names + [UNREAD] unless self.last_read
+    names = names + [(self.last_read ? self.last_read.to_date : UNREAD)]
     names.compact
   end
   
