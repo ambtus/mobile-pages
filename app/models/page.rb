@@ -442,6 +442,7 @@ class Page < ActiveRecord::Base
   def mypath
     env = case Rails.env
       when "test"; "/test/"
+      when "cucumber"; "/test/"
       when "development"; "/development/"
       when "production"; "/files/"
     end
