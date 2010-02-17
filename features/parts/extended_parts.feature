@@ -55,3 +55,16 @@ Feature: complex parts with titles from url list
     When I am on the homepage
     Then I should see "New Parent" in "#position_1"
       And I should see "page 1" in "#position_2"
+
+  Scenario: non-matching last reads
+    Given a titled page exists with urls: "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html", last_read: "2009-01-01"
+    When I am on the page's page
+      And I follow "Read" in "#position_2"
+      And I follow "Rate"
+      And I press "2"
+   When I am on the page's page
+# note - year will change every year
+   Then I should see "2009-" in ".last_read"
+     And I should not see "2010-" in ".last_read"
+     And I should not see "2009-" in "#position_1"
+     And I should see "2010-" in "#position_2"

@@ -152,9 +152,12 @@ Feature: basic download
     Given a titled page exists with url: "http://test.archiveofourown.org/works/3412"
     When I am on the page's page
       And I follow "Download" in ".title"
-    Then I should not see "Add Comment"
+    Then I should see "Work Header"
       And I should see "Summary"
+      And I should see "Work Text"
       And I should see "Mister Larabee"
+      And I should see "pilot episode!"
+    But I should not see "Add Comment"
 
   Scenario: download google groops content only
     Given a titled page exists with url: "http://test.sidrasue.com/google.html"

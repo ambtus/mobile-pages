@@ -44,7 +44,7 @@ Feature: unread states
    Then I should see "Parent" in "#position_1"
    Then I should see "unread" in "#position_1"
 
-   Scenario: rate a part makes the parent read, but not siblings
+   Scenario: rate a part doesn't mark relative read
     Given a titled page exists with base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
    When I am on the page's page
    Then I should see "unread" in ".last_read"
@@ -53,11 +53,14 @@ Feature: unread states
      And I follow "Rate"
      And I press "1"
    When I am on the page's page
-   Then I should not see "unread" in ".last_read"
+   Then I should see "unread" in ".last_read"
      And I should not see "favorite" in ".favorite"
-     And I should not see "unread" in "#position_1"
+#note: changes every year
+     And I should see "2010-" in "#position_1"
      And I should see "favorite" in "#position_1"
-     And I should see "unread" in "#position_2"
+     And I should not see "unread" in "#position_2"
+#note: changes every year
+     And I should not see "2010-" in "#position_2"
      And I should not see "favorite" in "#position_2"
    When I am on the page's page
      And I follow "Rate"
@@ -66,6 +69,7 @@ Feature: unread states
    Then I should not see "unread" in ".last_read"
      And I should see "favorite" in ".favorite"
      And I should not see "unread" in "#position_1"
+     And I should not see "2010-" in "#position_1"
      And I should not see "favorite" in "#position_1"
      And I should not see "unread" in "#position_2"
      And I should not see "favorite" in "#position_2"
