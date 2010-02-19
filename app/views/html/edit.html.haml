@@ -5,4 +5,4 @@
 .content
   - form_for @page do |f|
     .button= f.submit "Update Raw HTML"
-    = text_area_tag :pasted, @page.raw_content, :rows => 10, :cols => 80
+    = text_area_tag :pasted, @page.raw_html, :rows => 10, :cols => 80

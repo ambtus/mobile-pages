@@ -21,7 +21,7 @@ Rails::Initializer.run do |config|
   # config.gem "aws-s3", :lib => "aws/s3"
   config.gem 'haml', :version => ">=2.2.16"
   config.gem 'nokogiri', :version => ">=1.4.1"
-  config.gem 'sanitize', :version => ">=1.1.0"
+  config.gem 'sanitize', :version => ">=1.2.0"
   config.gem 'mechanize'
   config.gem 'pickle'
 

@@ -22,41 +22,20 @@ Feature: extended store
     Then I should see "stuff for part 2"
     And I should see "stuff for part 1"
 
-  Scenario: add utf8
+  Scenario: utf8
     Given a titled page exists with url: "http://test.sidrasue.com/sbutf8.html"
     When I am on the page's page
       And I follow "Read"
-    Then I should see "â€œ"
-    When I press "Raw HTML to UTF8"
     Then I should see "“H"
 
-  Scenario: add utf8 to parts
+  Scenario: utf8 in parts
     Given a titled page exists with urls: "http://test.sidrasue.com/sbutf8.html"
     When I am on the page's page
       And I follow "Read"
-    Then I should see "â€œ"
-    When I press "Raw HTML to UTF8"
     Then I should see "“H"
 
-  Scenario: rebuild from latin1
+  Scenario: latin1
     Given a titled page exists with url: "http://test.sidrasue.com/1252.html"
     When I am on the page's page
-      And I follow "Scrub"
-      And I check boxes "0"
-      And I press "Scrub"
-    Then I should not see "“H"
-    When I press "Raw HTML to Latin1"
-    Then I should see "“H"
-
-  Scenario: rebuild from original (not raw) html
-    Given a titled page exists with url: "http://test.sidrasue.com/1252.html"
-    When I am on the page's page
-      And I follow "Scrub"
-      And I check boxes "0"
-      And I press "Scrub"
-    Then I should not see "“H"
-      And I should see "Don’t—"
-    When I press "Clean HTML"
       And I follow "Read"
-    Then I should not see "“H"
-      And I should see "Don’t—"
+    Then I should see "“H"

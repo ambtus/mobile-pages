@@ -21,7 +21,7 @@ module MyWebsites
     keep = case original_url
       when /ejournal/, /dreamwidth/
         if body.at('//blockquote')
-          body.at('//blockquote').next
+          body.at('//blockquote').next.next
         else
           body
         end
@@ -35,13 +35,13 @@ module MyWebsites
       when /google/
         body.at('div#inbdy')
       else
-        if body && (body.children.to_s == body.at('div').to_s)
+        if body && (body.children.to_s.strip == body.at('div').to_s.strip)
           body.at('div')
         else
           body
         end
     end
-    keep.children.to_html.gsub(/\n/, "") if keep
+    keep.children.to_xhtml(:encoding => 'utf8') if keep
   end
 end
 
