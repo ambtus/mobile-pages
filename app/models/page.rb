@@ -92,7 +92,7 @@ class Page < ActiveRecord::Base
 
   def after_create
     FileUtils.mkdir_p(Rails.public_path +  self.mypath)
-    self.raw_content = ""
+    self.raw_html = ""
     if self.url
       fetch
     elsif self.base_url
@@ -115,7 +115,7 @@ class Page < ActiveRecord::Base
   end
 
   def pasted=(html)
-    self.raw_content = html
+    self.raw_html = html
     self.build_me
   end
 
@@ -131,7 +131,7 @@ class Page < ActiveRecord::Base
          form = page.forms.first
          page = agent.submit(form, form.buttons.first)
       end
-      self.raw_content = page.body
+      self.raw_html = page.body
       self.build_me
     rescue WWW::Mechanize::ResponseCodeError
       self.errors.add(:base, "error retrieving content")
@@ -140,30 +140,36 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def build_me(input="latin1")
-    input = "utf8" if self.raw_content.match(/charset ?= ?"?utf-8/i)
-    self.original_html = self.pre_process(self.raw_file_name, input)
-    self.original_html = MyWebsites.getnode(url, self.original_html)
+  def build_me
+    self.clean_html = self.replace_entities(self.raw_html)
+    self.clean_html = MyWebsites.getnode(self.url, self.clean_html)
+    self.clean_html = self.sanitize_me
     self.set_wordcount
   end
 
-  def clean_me(input="utf8")
-    self.original_html = self.pre_process(self.original_file, input)
-    self.original_html = MyWebsites.getnode(url, self.original_html)
-    self.set_wordcount
+  def replace_entities(html=self.raw_html)
+    replacements = [
+                   [ '&#151;', '&#8212;' ],
+                   [ '&#146;', '&#8217;' ],
+                   [ '&#145;', '&#8216;' ],
+                   [ '&#148;', '&#8221;' ],
+                   [ '&#147;', '&#8220;' ],
+                   [ '&nbsp;', ' ' ],
+                   ]
+    replacements.each do |replace|
+      html.gsub!(replace.first, replace.last)
+    end
+    html.gsub(/[\s]+/, " ")
   end
 
-  def pre_process(filename, input)
-    html = `tidy -config #{Rails.root.to_s + "/config/tidy.conf"} --input-encoding #{input} #{filename}`
-    html = html.gsub(/&nbsp;/, " ")
-    html = html.gsub(/<noscript.*?>.*?<\/noscript>/i, "")
-    html = Sanitize.clean(html, :elements => [ 'a', 'big', 'blockquote', 'br', 'center', 'div', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'img', 'li', 'p', 'small', 'strike', 'strong', 'sub', 'sup', 'u'], :attributes => { 'a' => ['href'], 'div' => ['id', 'class'], 'img' => ['align', 'alt', 'height', 'src', 'title', 'width'] })
-    html = html.gsub(/\n/, "")
-    html = html.gsub(/ +/, ' ')
-    html = html.gsub(/<br \/><br \/><br \/>/, "<hr>")
-    html = html.gsub(/<br \/><br \/>/, "<p>")
+  def sanitize_me
+    html = self.clean_html 
+    html = Sanitize.clean(html, :elements => [ 'a', 'b', 'big', 'blockquote', 'br', 'center', 'div', 'dt', 'em', 'i', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'img', 'li', 'p', 'small', 'strike', 'strong', 'sub', 'sup', 'u'], :attributes => { 'a' => ['href'], 'div' => ['id', 'class'], 'img' => ['align', 'alt', 'height', 'src', 'title', 'width'] })
+    html = html.gsub(/<p> ?<\/p>/, "<br />")
+    html = html.gsub(/(<br \/> ?){3,}/, "<hr />")
+    html = html.gsub(/<br \/> ?<br \/>/, "<p>")
     html = html.gsub(/<a><\/a>/, "")
-    html = html.gsub(/<p> ?<\/p>/, "")
+    html
   end
 
   def create_from_base
@@ -264,7 +270,7 @@ class Page < ActiveRecord::Base
       level = part.parent.parent ? "h2" : "h1"
       html << "\n\n<#{level}>#{part.title}</#{level}>\n"
       if part.parts.blank?
-        html << part.original_html
+        html << part.clean_html
       else
         html << part.build_html_from_parts
       end
@@ -319,7 +325,7 @@ class Page < ActiveRecord::Base
       new = true
     else
       parent = pages.first
-      return parent.raw_content unless parent.raw_content.blank?
+      return parent.raw_html unless parent.raw_html.blank?
     end
     count = parent.parts.size + 1
     self.update_attributes(:parent_id => parent.id, :position => count)
@@ -401,13 +407,11 @@ class Page < ActiveRecord::Base
     mine.join(", ")
   end
   
-  def original_html=(content)
-    content = content.gsub(/\n/, "") unless content.blank?
+  def clean_html=(content)
     File.open(self.original_file, 'w') { |f| f.write(content) }
-    self.set_wordcount
   end
 
-  def original_html
+  def clean_html
     if parts.blank?
       begin
         File.open(self.original_file, 'r') { |f| f.read }
@@ -423,11 +427,11 @@ class Page < ActiveRecord::Base
     Rails.public_path +  self.mypath + "original.html"
   end
 
-  def raw_content=(content)
+  def raw_html=(content)
     File.open(self.raw_file_name, 'w') { |f| f.write(content) }
   end
 
-  def raw_content
+  def raw_html
     begin
       File.open(self.raw_file_name, 'r') { |f| f.read }
     rescue Errno::ENOENT
@@ -450,12 +454,19 @@ class Page < ActiveRecord::Base
   end
 
   def nodes
-    html = self.original_html + "<div></div>"
-    Nokogiri::HTML(html).xpath('//body').first.children
+    html = self.clean_html + "<div></div>"
+    array = []
+    all = Nokogiri::HTML(html).xpath('//body').children
+    all.each do |node|
+      unless (node.is_a?(Nokogiri::XML::Text) && node.to_html.blank?)
+        array << node.to_xhtml 
+      end
+    end
+    array
   end
 
   def remove_surrounding_div!
-    self.original_html = self.nodes.first.children.to_html
+    self.clean_html = Nokogiri::HTML(self.clean_html).xpath('//body').children.first.children.to_xhtml
   end
 
   def remove_nodes(ids)
@@ -466,35 +477,40 @@ class Page < ActiveRecord::Base
       first = first + 1
       last = ids[1].to_i - 1
       if first == last
-        self.original_html=node_array[first].to_s
+        self.clean_html=node_array[first].to_s
       else
-        self.original_html=node_array[first..last].to_s
+        self.clean_html=node_array[first..last].to_s
       end
     else
       if first > all/2
-        self.original_html=node_array[0..first-1].to_s
+        self.clean_html=node_array[0..first-1].to_s
       else
-        self.original_html=node_array[first + 1..all].to_s
+        self.clean_html=node_array[first + 1..all].to_s
       end
     end
     self.set_wordcount
   end
 
   def remove_html
-    text = self.original_html
+    # can't assume clean_html is sanitized correctly, as it may have been created with an earlier version
+    self.clean_html = self.replace_entities(self.clean_html)
+    self.clean_html = self.sanitize_me
+    text = self.clean_html
     text = text.gsub(/<a .*?>(.*?)<\/a>/m) {|s| " [#{$1}] " unless $1.blank?}
+    text = text.gsub(/<\/?b>/, "\*")
     text = text.gsub(/<\/?big>/, "\*")
     text = text.gsub(/<\/?blockquote>/, "")
-    text = text.gsub(/<\/?br>/, "\n")
+    text = text.gsub(/<br \/>/, "\n")
     text = text.gsub(/<\/?center>/, "")
     text = text.gsub(/<\/?div.*?>/, "\n")
     text = text.gsub(/<dt>/, "")
     text = text.gsub(/<\/dt>/, ": ")
     text = text.gsub(/<\/?em.*?>/, "_")
+    text = text.gsub(/<\/?i>/, "_")
     text = text.gsub(/<h1>(.*?)<\/h1>/) {|s| "\# #{$1} \#" unless $1.blank?}
     text = text.gsub(/<h2>(.*?)<\/h2>/) {|s| "\#\# #{$1} \#\#" unless $1.blank?}
     text = text.gsub(/<\/?h\d.*?>/, "\*")
-    text = text.gsub(/<hr>/, "______________________________")
+    text = text.gsub(/<hr \/>/, "______________________________")
     text = text.gsub(/<img.*?alt="(.*?)".*?>/) {|s| " [#{$1}] " unless $1.blank?}
     text = text.gsub(/<img.*?>/, "")
     text = text.gsub(/<li>/, "* ")
@@ -503,7 +519,7 @@ class Page < ActiveRecord::Base
     text = text.gsub(/<small>/, '(')
     text = text.gsub(/<\/small>/, ')')
     text = text.gsub(/<\/?strike>/, "==")
-    text = text.gsub(/<\/?strong.*?>/, "\*")
+    text = text.gsub(/<\/?strong>/, "\*")
     text = text.gsub(/<sup>/, "^")
     text = text.gsub(/<\/sup>/, "")
     text = text.gsub(/<sub>/, "(")
@@ -511,17 +527,11 @@ class Page < ActiveRecord::Base
     text = text.gsub(/<\/?u>/, "_")
     text = text.gsub(/_([ ,.?-]+)_/) {|s| $1}
     text = text.gsub(/\*([ ,.?-]+)\*/) {|s| $1}
-    text = text.gsub(/&[lr]squo;/, "'")
-    text = text.gsub(/&[lr]dquo;/, '"')
     text = text.gsub(/&amp;/, "&")
-    text = text.gsub(/&hellip;/, "...")
-    text = text.gsub(/&ccedil;/, "c")
-    text = text.gsub(/&ordm;/, "o")
-    text = text.gsub(/&iuml;/, "i")
-    text = text.gsub(/&[mn]dash;/, "--")
     text = text.gsub(/&lt;/, "<")
     text = text.gsub(/&gt;/, ">")
-    text.gsub(/ +/, ' ').gsub(/\n+ */, "\n\n").gsub(/\n\n\n\n+/, "\n\n").strip
+    text = text.gsub(/ +/, ' ').gsub(/\n+ */, "\n\n").gsub(/(\n){4,}/, "\n\n")
+    text.strip
   end
 
   def short_notes
@@ -531,4 +541,5 @@ class Page < ActiveRecord::Base
     return self.notes unless snip_idx
     self.notes[0, snip_idx] + "..."
   end
+
 end

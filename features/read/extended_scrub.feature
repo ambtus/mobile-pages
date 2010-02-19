@@ -10,11 +10,15 @@ Feature: Extended Scrub
   Given a titled page exists with url: "http://test.sidrasue.com/divs.html"
   When I am on the page's page
     And I follow "Scrub"
+    And I uncheck "1"
   When I press "Remove surrounding div"
   Then I should see "Surrounding div removed"
-  When I check boxes "2"
+  When I check "2"
+  And I uncheck "3"
   And I press "Scrub"
-  Then I should not see "3"
+  Then I should see "1st"
+    And I should see "2nd"
+  But I should not see "3rd"
 
  Scenario: remove surrounding blockquote
   Given a titled page exists with url: "http://test.sidrasue.com/blockquote.html"
@@ -22,7 +26,10 @@ Feature: Extended Scrub
     And I follow "Scrub"
   When I press "Remove surrounding div"
   Then I should see "Surrounding div removed"
-  When I check boxes "2"
+  When I check "0"
+    And I check "2"
   And I press "Scrub"
-  Then I should not see "3"
+  Then I should not see "1st"
+    And I should not see "3rd"
+  But I should see "2nd"
 

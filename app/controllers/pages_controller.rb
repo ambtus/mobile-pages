@@ -66,18 +66,10 @@ class PagesController < ApplicationController
     @page = @page.make_later if (params[:commit] == "Read Later")
     @page = @page.make_first if (params[:commit] == "Read First")
     case params[:commit]
-      when "Raw HTML to UTF8"
-        @page.parts.empty? ? @page.build_me("utf8") : @page.parts.each {|p| p.build_me("utf8")}
-        flash[:notice] = "HTML converted to utf8"
+      when "Rebuild from Raw HTML"
+        @page.parts.empty? ? @page.build_me : @page.parts.each {|p| p.build_me}
+        flash[:notice] = "Rebuilt from Raw HTML"
         redirect_to read_url(@page) and return
-      when "Raw HTML to Latin1"
-        @page.parts.empty? ? @page.build_me("latin1") : @page.parts.each {|p| p.build_me("latin1")}
-        flash[:notice] = "HTML converted to latin1"
-        redirect_to read_url(@page) and return
-      when "Clean HTML"
-        @page.parts.empty? ? @page.clean_me : @page.parts.each {|p| p.clean_me }
-        flash[:notice] = "HTML cleaned"
-        redirect_to page_url(@page) and return
       when "Update Raw HTML"
         @page.pasted = params[:pasted]
         flash[:notice] = "Raw HTML updated."

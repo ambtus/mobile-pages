@@ -31,3 +31,13 @@ Feature: bugs with scrub
       And I follow "Download" in ".title"
     Then I should see "actual content"
       And I should not see "header"
+
+  Scenario: recover from scrub too much
+    Given a titled page exists with url: "http://test.sidrasue.com/headers.html"
+    When I am on the page's page
+      And I follow "Scrub"
+      And I check boxes "3 4"
+      And I press "Scrub"
+    Then I should not see "actual content"
+    When I press "Rebuild from Raw HTML"
+    Then I should see "actual content"

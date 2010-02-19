@@ -24,7 +24,7 @@ Filter: find something in a specific genre
 
 === operating system requirements
 
-tidy libcurl libxml2 libxslt
+libxml2 libxslt
 
 utf-8 encoding
 

@@ -21,15 +21,15 @@ Feature: basic download
       And I should not see "p>"
       And I should not see "small>"
       And I should see "(something little)"
-      And I should see "..."
-      And I should see "--"
-      And I should see "'"
+      And I should see "…"
+      And I should see "–"
+      And I should see "’"
       And I should not see ";"
       And I should see "*This is another header*"
       And I should see "*One Two, Three*"
       And I should see "_One, Two? Three_"
       And I should see "_One-TwoThree_"
-      And I should see "facade"
+      And I should see "façade"
 
   Scenario: download stripping links and images
     Given a titled page exists with url: "http://test.sidrasue.com/href.html"
@@ -79,14 +79,20 @@ Feature: basic download
     Given a titled page exists with url: "http://test.sidrasue.com/mso.html"
     When I am on the page's page
       And I follow "Download" in ".title"
-    Then I should not see "<em"
+    Then I should not see "<"
       And I should see "he _had_ to"
-      And I should not see "<wbr>"
-      And I should not see "<o:p>"
-      And I should see "so-I-am-God"
       And I should not see "\n\n\n\n"
-      And I should see "*My boyfriend"
+      And I should not see "<o:p>"
+
+  Scenario: download more crappy Microsoft Office "html"
+    Given a titled page exists with url: "http://test.sidrasue.com/mso2.html"
+    When I am on the page's page
+      And I follow "Download" in ".title"
+    Then I should not see "<wbr>"
+      And I should see "so-I-am-God"
       And I should not see "<strong"
+      And I should see "*My boyfriend"
+      And I should not see "<o:p>"
 
   Scenario: download weird empty divs
     Given a titled page exists with url: "http://test.sidrasue.com/ejournal_div.html"
@@ -145,8 +151,10 @@ Feature: basic download
     Given a titled page exists with url: "http://www.fanfiction.net/s/638499/1/"
     When I am on the page's page
       And I follow "Download" in ".title"
-    Then I should not see "Rated: "
-      And I should see "This is rabbit's fault"
+    Then I should see "This is rabbit’s fault"
+      And I should see "Stuck in the Muddle"
+    But I should not see "Rated: "
+      And I should not see "Review this Story"
 
   Scenario: download archive of our own page content only
     Given a titled page exists with url: "http://test.archiveofourown.org/works/3412"

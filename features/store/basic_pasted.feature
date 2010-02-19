@@ -1,6 +1,6 @@
 Feature: basic pasted
   What: after storing a page can paste html
-  Why: sometimes the page is protected in such a way as making access via curl difficult
+  Why: sometimes the page is protected in such a way as making automated access difficult
   Result: acts just as if the html was retrieved.
 
   Scenario: store using a pasted html file

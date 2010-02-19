@@ -58,5 +58,5 @@ Scenario Outline: genres and authors
   | http://test.sidrasue.com/utf8.html       | utf8 Test        | “Hello…”               | first genre  | first author  |
   | http://test.sidrasue.com/1252.html       | winlatin1 Test   | “Hello…”               | second genre | second author |
   | http://test.sidrasue.com/nbsp.html       | space Test       | Retrieved from the web | third genre  | third author  |
-  | http://test.sidrasue.com/entities.html   | entities         | antsy—boggart          | second genre | first author  |
   | http://test.sidrasue.com/mso.html        | <st1:place>      | in on Clark            | first genre  |               |
+  | http://test.sidrasue.com/entities.html   | entities         | antsy—boggart          | second genre | first author  |
