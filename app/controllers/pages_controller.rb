@@ -1,6 +1,14 @@
 class PagesController < ApplicationController
   
   def index
+    if params[:random] 
+      @page = Page.find_random
+      if @page
+        redirect_to page_url(@page) and return
+      else
+        flash.now[:error] = "No pages found" 
+      end
+    end
     @title = "Mobile pages"
     @page = Page.new(params[:page])
     @size = params[:size]

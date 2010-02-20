@@ -52,6 +52,13 @@ class Page < ActiveRecord::Base
     {:conditions => ["url LIKE ?", "%" + string + "%"]}
   }
 
+  def self.find_random
+    count = self.count
+    return nil if count == 0
+    offset = rand(count)
+    page = self.find(:first, :offset => offset)
+    page.ultimate_parent if page
+  end
 
   def self.filter(hash={})
     if hash.has_key?("state")
@@ -564,5 +571,6 @@ class Page < ActiveRecord::Base
     return self.notes unless snip_idx
     self.notes[0, snip_idx] + "..."
   end
+
 
 end

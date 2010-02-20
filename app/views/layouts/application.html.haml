@@ -7,13 +7,16 @@
     %meta{"name"=>"viewport", "content"=>"width=240"}
     = stylesheet_link_tag 'application'
   %body
-    .links= link_to "Home", pages_path
+    .links
+      = link_to "Home", pages_path
+      = link_to "Random", pages_path(:random => true)
 
     - flash.each do |name, msg|
       = content_tag :div, msg, :id => "flash_#{name}"
 
     = yield
 
-    .links= link_to "Home", pages_path
-
+    .links
+      = link_to "Home", pages_path
+      = link_to "Random", pages_path(:random => true)
 
