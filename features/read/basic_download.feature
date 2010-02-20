@@ -157,14 +157,14 @@ Feature: basic download
       And I should not see "Review this Story"
 
   Scenario: download archive of our own page content only
-    Given a titled page exists with url: "http://test.archiveofourown.org/works/3412"
+    Given a titled page exists with url: "http://test.archiveofourown.org/works/695"
     When I am on the page's page
       And I follow "Download" in ".title"
     Then I should see "Work Header"
       And I should see "Summary"
       And I should see "Work Text"
-      And I should see "Mister Larabee"
-      And I should see "pilot episode!"
+      And I should see "AJ had just started"
+      And I should see "I ever wrote"
     But I should not see "Add Comment"
 
   Scenario: download google groops content only

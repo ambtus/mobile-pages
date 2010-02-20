@@ -10,6 +10,7 @@ class PagesController < ApplicationController
     @author = Author.find_by_name(params[:author]) if params[:author]
     @favorite = params[:favorite] || false
     @unread = params[:unread] || false
+    @reread = params[:reread] || false
     @pages = Page.filter(params)
     flash.now[:error] = "No pages found" if @pages.blank?
   end
@@ -26,6 +27,7 @@ class PagesController < ApplicationController
       build_route[:size] = params[:size] unless params[:size].blank?
       build_route[:favorite] = "favorite" if params[:favorite]
       build_route[:unread] = "unread" if params[:unread]
+      build_route[:reread] = "reread" if params[:reread]
       if params[:page]
         build_route[:title] = params[:page][:title] unless params[:page][:title] == "Title"
         build_route[:notes] = params[:page][:notes] unless params[:page][:notes] == "Notes"
