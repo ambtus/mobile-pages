@@ -2,7 +2,10 @@
   - form_for page, :builder => DefaultFormBuilder do |f|
     - if called_by == "index"
       = select_tag :size, "<option></option>" + options_for_select(Page::SIZES, @size)
-      = label_tag :size, "Size (find only)"
+      = label_tag :size, "Size"
+      %br
+      = select_tag :state, "<option></option>" + options_for_select(Page::STATES, @state)
+      = label_tag :state, "State"
       %br
     - unless Genre.names.blank?
       = select_tag :genre, "<option></option>" + options_for_select(Genre.names, @genre.try(:name))
@@ -11,9 +14,6 @@
     - unless Author.names.blank?
       = select_tag :author, "<option></option>" + options_for_select(Author.names, @author.try(:name))
     = label_tag :author, "Author"
-    %br
-    = select_tag :state, "<option></option>" + options_for_select(Page::STATES, @state)
-    = label_tag :state, "State"
     %br
     = f.text_field :title, page.title
     %br
