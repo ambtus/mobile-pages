@@ -6,8 +6,10 @@ class Page < ActiveRecord::Base
 
   UNREAD = "unread"
   FAVORITE = "favorite"
+  REREAD = "reread"
 
   SIZES = ["short", "long", "epic"]
+  STATES = [UNREAD, FAVORITE, REREAD]
   SHORT_WC = 1000
   LONG_WC = 10000
   EPIC_WC = 80000
@@ -52,17 +54,26 @@ class Page < ActiveRecord::Base
 
 
   def self.filter(hash={})
-    unread = hash.has_key?("unread") ? Page.unread.include_root.map(&:ultimate_parent) : Page.no_children
-    reread = hash.has_key?("reread") ? Page.reread.no_children : Page.no_children
-    favorite = hash.has_key?("favorite") ? Page.favorite.include_root.map(&:ultimate_parent) : Page.no_children
+    if hash.has_key?("state")
+      case hash["state"]
+        when "unread"
+          state = Page.unread.include_root.map(&:ultimate_parent)
+        when "reread"  
+          state = Page.reread.no_children
+        when "favorite"
+          state = Page.favorite.include_root.map(&:ultimate_parent)
+      end
+    else
+      state = Page.no_children
+    end
     if hash.has_key?("size")
-     case hash["size"]
-       when "short"
-         size =  Page.short.no_children
-       when "long"
-         size =  Page.long.no_children
-       when "epic"
-         size =  Page.epic.no_children
+      case hash["size"]
+        when "short"
+          size =  Page.short.no_children
+        when "long"
+          size =  Page.long.no_children
+        when "epic"
+          size =  Page.epic.no_children
       end
     else
       size = Page.no_children
@@ -72,7 +83,7 @@ class Page < ActiveRecord::Base
     url = hash.has_key?("url") ? Page.search_url(hash["url"]).include_root.map(&:ultimate_parent) : Page.no_children
     genre =  hash.has_key?("genre") ? Genre.find_by_name(hash["genre"]).pages.no_children : Page.no_children
     author =  hash.has_key?("author") ? Author.find_by_name(hash["author"]).pages.no_children : Page.no_children
-    (unread & reread & favorite & size & title & notes & url & genre & author).compact.uniq[0...LIMIT]
+    (state & size & title & notes & url & genre & author).compact.uniq[0...LIMIT]
   end
 
   def to_param

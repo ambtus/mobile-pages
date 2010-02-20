@@ -4,13 +4,11 @@ class PagesController < ApplicationController
     @title = "Mobile pages"
     @page = Page.new(params[:page])
     @size = params[:size]
+    @state = params[:state]
     @genres = Genre.all.map(&:name)
     @genre = Genre.find_by_name(params[:genre]) if params[:genre]
     @authors = Author.all.map(&:name)
     @author = Author.find_by_name(params[:author]) if params[:author]
-    @favorite = params[:favorite] || false
-    @unread = params[:unread] || false
-    @reread = params[:reread] || false
     @pages = Page.filter(params)
     flash.now[:error] = "No pages found" if @pages.blank?
   end
@@ -25,9 +23,7 @@ class PagesController < ApplicationController
       build_route[:author] = params[:author] unless params[:author].blank?
       build_route[:genre] = params[:genre] unless params[:genre].blank?
       build_route[:size] = params[:size] unless params[:size].blank?
-      build_route[:favorite] = "favorite" if params[:favorite]
-      build_route[:unread] = "unread" if params[:unread]
-      build_route[:reread] = "reread" if params[:reread]
+      build_route[:state] = params[:state] unless params[:state].blank?
       if params[:page]
         build_route[:title] = params[:page][:title] unless params[:page][:title] == "Title"
         build_route[:notes] = params[:page][:notes] unless params[:page][:notes] == "Notes"

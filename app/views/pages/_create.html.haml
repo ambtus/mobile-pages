@@ -12,12 +12,8 @@
       = select_tag :author, "<option></option>" + options_for_select(Author.names, @author.try(:name))
     = label_tag :author, "Author"
     %br
-    = check_box_tag :favorite, "favorite", @favorite
-    = label_tag :favorite, "favorite"
-    = check_box_tag :reread, "reread", @reread
-    = label_tag :reread, "reread"
-    = check_box_tag :unread, "unread", @unread
-    = label_tag :unread, "unread"
+    = select_tag :state, "<option></option>" + options_for_select(Page::STATES, @state)
+    = label_tag :state, "State"
     %br
     = f.text_field :title, page.title
     %br
