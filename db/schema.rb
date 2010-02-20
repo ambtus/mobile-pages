@@ -53,21 +53,4 @@ ActiveRecord::Schema.define(:version => 20100219210135) do
   add_index "pages", ["size"], :name => "index_pages_on_size"
   add_index "pages", ["ultimate_parent_id"], :name => "index_pages_on_ultimate_parent_id"
 
-  create_table "pages_states", :id => false, :force => true do |t|
-    t.integer "page_id"
-    t.integer "state_id"
-  end
-
-  create_table "pages_tags", :id => false, :force => true do |t|
-    t.integer "page_id"
-    t.integer "genre_id"
-    t.integer "author_id"
-  end
-
-  create_table "states", :force => true do |t|
-    t.string "name"
-  end
-
-  add_index "states", ["name"], :name => "state_name", :unique => true
-
 end
