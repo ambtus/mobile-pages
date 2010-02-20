@@ -47,3 +47,18 @@ Feature: filter on multiple criteria
       And I should not see "Murder on the Orient Express"
       And I should not see "Nancy Drew"
       And I should not see "The Boxcar Children"
+    When I am on the homepage
+    When I check "reread"
+      And I press "Find"
+    Then I should not see "Murder on the Orient Express"
+      And I should see "The Mysterious Affair at Styles"
+      And I should see "Nancy Drew"
+      And I should not see "The Boxcar Children"
+    When I am on the homepage
+    When I check "reread"
+      And I select "agatha christie"
+      And I press "Find"
+    Then I should not see "Murder on the Orient Express"
+      And I should see "The Mysterious Affair at Styles"
+      And I should not see "Nancy Drew"
+      And I should not see "The Boxcar Children"

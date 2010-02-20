@@ -28,7 +28,7 @@ module MyWebsites
       when /fanfiction.net/
         body.at('div#storytext')
       when /archiveofourown/
-        body.at('div#feedback').remove
+        body.at('div#feedback').remove if body.at('div#feedback')
         body.at('div.works-show')
       when /wraithbait/
         body.at('div#mainpage') || body

@@ -20,6 +20,7 @@ class Page < ActiveRecord::Base
   has_and_belongs_to_many :genres, :uniq => true
   has_and_belongs_to_many :authors, :uniq => true
   belongs_to :parent, :class_name => "Page"
+  belongs_to :ultimate_parent, :class_name => "Page"
 
   validates_presence_of :title, :message => "can't be blank or 'Title'"
   validates_format_of :url, :with => URI.regexp, :allow_blank => true
@@ -34,8 +35,10 @@ class Page < ActiveRecord::Base
   named_scope :long, :conditions => {:size => "long"}
   named_scope :epic, :conditions => {:size => "epic"} 
   named_scope :unread, :conditions => {:last_read => nil }
+  named_scope :reread, :conditions => 'last_read is not null'
   named_scope :favorite, :conditions => {:favorite => true }  
   named_scope :limited, :limit => LIMIT, :select => 'DISTINCT *'
+  named_scope :include_root, :include => :ultimate_parent
 
   named_scope :search_title, lambda {|string| 
     {:conditions => ["title LIKE ?", "%" + string + "%"]}
@@ -49,8 +52,9 @@ class Page < ActiveRecord::Base
 
 
   def self.filter(hash={})
-    unread = hash.has_key?("unread") ? Page.unread.map(&:ultimate_parent) : Page.no_children
-    favorite = hash.has_key?("favorite") ? Page.favorite.map(&:ultimate_parent) : Page.no_children
+    unread = hash.has_key?("unread") ? Page.unread.include_root.map(&:ultimate_parent) : Page.no_children
+    reread = hash.has_key?("reread") ? Page.reread.no_children : Page.no_children
+    favorite = hash.has_key?("favorite") ? Page.favorite.include_root.map(&:ultimate_parent) : Page.no_children
     if hash.has_key?("size")
      case hash["size"]
        when "short"
@@ -63,12 +67,12 @@ class Page < ActiveRecord::Base
     else
       size = Page.no_children
     end
-    title = hash.has_key?("title") ? Page.search_title(hash["title"]).map(&:ultimate_parent) : Page.no_children
-    notes = hash.has_key?("notes") ? Page.search_notes(hash["notes"]).map(&:ultimate_parent) : Page.no_children
-    url = hash.has_key?("url") ? Page.search_url(hash["url"]).map(&:ultimate_parent) : Page.no_children
+    title = hash.has_key?("title") ? Page.search_title(hash["title"]).include_root.map(&:ultimate_parent) : Page.no_children
+    notes = hash.has_key?("notes") ? Page.search_notes(hash["notes"]).include_root.map(&:ultimate_parent) : Page.no_children
+    url = hash.has_key?("url") ? Page.search_url(hash["url"]).include_root.map(&:ultimate_parent) : Page.no_children
     genre =  hash.has_key?("genre") ? Genre.find_by_name(hash["genre"]).pages.no_children : Page.no_children
     author =  hash.has_key?("author") ? Author.find_by_name(hash["author"]).pages.no_children : Page.no_children
-    (unread & favorite & size & title & notes & url & genre & author).compact.uniq[0...LIMIT]
+    (unread & reread & favorite & size & title & notes & url & genre & author).compact.uniq[0...LIMIT]
   end
 
   def to_param
@@ -100,6 +104,13 @@ class Page < ActiveRecord::Base
     elsif self.urls
       self.parts_from_urls(self.urls)
     end
+    self.update_ultimate_parent
+  end
+  
+  before_update
+
+  def update_ultimate_parent
+    self.update_attribute(:ultimate_parent_id, self.find_ultimate_parent.id) 
   end
 
   def wordcount
@@ -286,9 +297,9 @@ class Page < ActiveRecord::Base
     Page.find(:all, :order => :position, :conditions => ["parent_id = ?", id])
   end
   
-  def ultimate_parent
+  def find_ultimate_parent
     return self unless self.parent
-    self.parent.ultimate_parent
+    self.parent.find_ultimate_parent
   end
 
   def url_list
@@ -336,6 +347,7 @@ class Page < ActiveRecord::Base
       parent.update_attribute(:favorite, self.favorite)
     end
     parent.set_wordcount
+    self.update_ultimate_parent
     return parent
   end
 
