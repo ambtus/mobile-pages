@@ -55,3 +55,10 @@
 .part {
     background-color: #CFC;
     }
+hr {
+    border: 0;
+    color: black;
+    background-color: black;
+    height: 3px;
+    width: 80%;
+}

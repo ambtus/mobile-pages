@@ -1,24 +1,25 @@
 # Be sure to restart your server when you modify this file.
 
 module MyWebsites
-  def self.getpwd(original_url)
-    case original_url
+  def self.getpwd(url)
+    case url
       when "http://test.sidrasue.com/basic/test.html"
         { :username => "alice", :password => "nothingtosee" }
       when "http://test.sidrasue.com/digest/test.html"
         { :username => "alice", :password => "nothinghere" }
     end
   end
-  def self.geturl(original_url)
-    case original_url
+  def self.geturl(url)
+    case url
       when /livejournal/
-        original_url + "?format=light&mode=reply"
-      else original_url
+        url = url + "?mode=reply" unless url.match("thread")
+        url + "&format=light"
+      else url
     end
   end
-  def self.getnode(original_url, html)
-    body = Nokogiri::HTML(html).xpath('//body').first
-    keep = case original_url
+  def self.getnode(url, body)
+    return nil unless body
+    case url
       when /ejournal/, /dreamwidth/
         if body.at('//blockquote')
           body.at('//blockquote').next.next
@@ -35,13 +36,8 @@ module MyWebsites
       when /google/
         body.at('div#inbdy')
       else
-        if body && (body.children.to_s.strip == body.at('div').to_s.strip)
-          body.at('div')
-        else
-          body
-        end
+        body
     end
-    keep.children.to_xhtml(:encoding => 'utf8') if keep
   end
 end
 

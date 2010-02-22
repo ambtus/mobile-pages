@@ -151,7 +151,7 @@ Feature: basic download
     Given a titled page exists with url: "http://www.fanfiction.net/s/638499/1/"
     When I am on the page's page
       And I follow "Download" in ".title"
-    Then I should see "This is rabbit’s fault"
+    Then I should see "This is rabbit"
       And I should see "Stuck in the Muddle"
     But I should not see "Rated: "
       And I should not see "Review this Story"

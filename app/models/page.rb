@@ -170,35 +170,15 @@ class Page < ActiveRecord::Base
   end
 
   def build_me
-    self.clean_html = self.replace_entities(self.raw_html)
-    self.clean_html = MyWebsites.getnode(self.url, self.clean_html)
-    self.clean_html = self.sanitize_me
-    self.set_wordcount
-  end
-
-  def replace_entities(html=self.raw_html)
-    replacements = [
-                   [ '&#151;', '&#8212;' ],
-                   [ '&#146;', '&#8217;' ],
-                   [ '&#145;', '&#8216;' ],
-                   [ '&#148;', '&#8221;' ],
-                   [ '&#147;', '&#8220;' ],
-                   [ '&nbsp;', ' ' ],
-                   ]
-    replacements.each do |replace|
-      html.gsub!(replace.first, replace.last)
+    body = Scrub.regularize_body(self.raw_html)
+    body = MyWebsites.getnode(self.url, body)
+    if body
+      html = Scrub.minimize(body.children).to_xhtml(:encoding => 'utf8')
+      self.clean_html = Scrub.sanitize_html(html)
+    else
+      self.clean_html = ""
     end
-    html.gsub(/[\s]+/, " ")
-  end
-
-  def sanitize_me
-    html = self.clean_html 
-    html = Sanitize.clean(html, :elements => [ 'a', 'b', 'big', 'blockquote', 'br', 'center', 'div', 'dt', 'em', 'i', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'img', 'li', 'p', 'small', 'strike', 'strong', 'sub', 'sup', 'u'], :attributes => { 'a' => ['href'], 'div' => ['id', 'class'], 'img' => ['align', 'alt', 'height', 'src', 'title', 'width'] })
-    html = html.gsub(/<p> ?<\/p>/, "<br />")
-    html = html.gsub(/(<br \/> ?){3,}/, "<hr />")
-    html = html.gsub(/<br \/> ?<br \/>/, "<p>")
-    html = html.gsub(/<a><\/a>/, "")
-    html
+    self.set_wordcount
   end
 
   def create_from_base
@@ -523,45 +503,11 @@ class Page < ActiveRecord::Base
 
   def remove_html
     # can't assume clean_html is sanitized correctly, as it may have been created with an earlier version
-    self.clean_html = self.replace_entities(self.clean_html)
-    self.clean_html = self.sanitize_me
-    text = self.clean_html
-    text = text.gsub(/<a .*?>(.*?)<\/a>/m) {|s| " [#{$1}] " unless $1.blank?}
-    text = text.gsub(/<\/?b>/, "\*")
-    text = text.gsub(/<\/?big>/, "\*")
-    text = text.gsub(/<\/?blockquote>/, "")
-    text = text.gsub(/<br \/>/, "\n")
-    text = text.gsub(/<\/?center>/, "")
-    text = text.gsub(/<\/?div.*?>/, "\n")
-    text = text.gsub(/<dt>/, "")
-    text = text.gsub(/<\/dt>/, ": ")
-    text = text.gsub(/<\/?em.*?>/, "_")
-    text = text.gsub(/<\/?i>/, "_")
-    text = text.gsub(/<h1>(.*?)<\/h1>/) {|s| "\# #{$1} \#" unless $1.blank?}
-    text = text.gsub(/<h2>(.*?)<\/h2>/) {|s| "\#\# #{$1} \#\#" unless $1.blank?}
-    text = text.gsub(/<\/?h\d.*?>/, "\*")
-    text = text.gsub(/<hr \/>/, "______________________________")
-    text = text.gsub(/<img.*?alt="(.*?)".*?>/) {|s| " [#{$1}] " unless $1.blank?}
-    text = text.gsub(/<img.*?>/, "")
-    text = text.gsub(/<li>/, "* ")
-    text = text.gsub(/<\/?li>/, "")
-    text = text.gsub(/<\/?p>/, "\n")
-    text = text.gsub(/<small>/, '(')
-    text = text.gsub(/<\/small>/, ')')
-    text = text.gsub(/<\/?strike>/, "==")
-    text = text.gsub(/<\/?strong>/, "\*")
-    text = text.gsub(/<sup>/, "^")
-    text = text.gsub(/<\/sup>/, "")
-    text = text.gsub(/<sub>/, "(")
-    text = text.gsub(/<\/sub>/, ")")
-    text = text.gsub(/<\/?u>/, "_")
-    text = text.gsub(/_([ ,.?-]+)_/) {|s| $1}
-    text = text.gsub(/\*([ ,.?-]+)\*/) {|s| $1}
-    text = text.gsub(/&amp;/, "&")
-    text = text.gsub(/&lt;/, "<")
-    text = text.gsub(/&gt;/, ">")
-    text = text.gsub(/ +/, ' ').gsub(/\n+ */, "\n\n").gsub(/(\n){4,}/, "\n\n")
-    text.strip
+    body = Scrub.regularize_body(self.clean_html)
+    return "" unless body
+    html = Scrub.minimize(body.children).to_xhtml(:encoding => 'utf8')
+    html = Scrub.sanitize_html(html)
+    Scrub.html_to_text(html)
   end
 
   def short_notes
