@@ -1,5 +1,9 @@
 module Scrub 
 
+  def self.to_xhtml(body)
+    Scrub.minimize(body.children).to_xhtml(:encoding => 'utf8').gsub("&#13;", '')
+  end
+
   def self.regularize_body(html)
     replacements = [
                    [ '&#151;', '&#8212;' ],
@@ -13,7 +17,9 @@ module Scrub
       html.gsub!(replace.first, replace.last)
     end
     html.gsub!(/[\s]+/, " ")
-    Nokogiri::HTML(html).xpath('//body').first
+    doc = Nokogiri::HTML(html)
+    body = doc.xpath('//body').first
+    Scrub.remove_scripts(body) if body
   end
 
   def self.minimize(nodeset)
@@ -86,5 +92,16 @@ module Scrub
       end
       nodeset
     end
+
+  def self.remove_scripts(body)
+    body.traverse do |node|
+      case node.name
+        when 'script'
+          node.children.each{|child| child.remove}
+          node.remove
+      end
+    end
+    body
+  end
 
 end

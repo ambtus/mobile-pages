@@ -173,7 +173,7 @@ class Page < ActiveRecord::Base
     body = Scrub.regularize_body(self.raw_html)
     body = MyWebsites.getnode(self.url, body)
     if body
-      html = Scrub.minimize(body.children).to_xhtml(:encoding => 'utf8')
+      html = Scrub.to_xhtml(body)
       self.clean_html = Scrub.sanitize_html(html)
     else
       self.clean_html = ""
@@ -505,7 +505,7 @@ class Page < ActiveRecord::Base
     # can't assume clean_html is sanitized correctly, as it may have been created with an earlier version
     body = Scrub.regularize_body(self.clean_html)
     return "" unless body
-    html = Scrub.minimize(body.children).to_xhtml(:encoding => 'utf8')
+    html = Scrub.to_xhtml(body)
     html = Scrub.sanitize_html(html)
     Scrub.html_to_text(html)
   end
