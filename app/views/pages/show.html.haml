@@ -14,3 +14,5 @@
         = "(#{part.tag_string})"
       = link_to "Read", read_path(part)
       = link_to "Download", page_path(part, :format => 'txt')
+      .notes
+        = part.short_notes
