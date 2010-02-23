@@ -88,7 +88,7 @@ class Page < ActiveRecord::Base
     title = hash.has_key?("title") ? Page.search_title(hash["title"]).include_root.map(&:ultimate_parent) : Page.no_children
     notes = hash.has_key?("notes") ? Page.search_notes(hash["notes"]).include_root.map(&:ultimate_parent) : Page.no_children
     url = hash.has_key?("url") ? Page.search_url(hash["url"]).include_root.map(&:ultimate_parent) : Page.no_children
-    genre =  hash.has_key?("genre") ? Genre.find_by_name(hash["genre"]).pages.no_children : Page.no_children
+    genre =  hash.has_key?("genre") ? Genre.find_by_name(hash["genre"]).pages.include_root.map(&:ultimate_parent) : Page.no_children
     author =  hash.has_key?("author") ? Author.find_by_name(hash["author"]).pages.no_children : Page.no_children
     (state & size & title & notes & url & genre & author).compact.uniq[0...LIMIT]
   end

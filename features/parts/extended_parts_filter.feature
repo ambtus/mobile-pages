@@ -40,3 +40,7 @@ Feature: filter on parts
       And I should not see "long" in "#position_2"
       And I should see "short" in "#position_1"
       And I should not see "two" in "#position_2"
+    When I am on the homepage
+      And I select "one"
+      And I press "Find"
+    Then I should see "Parent" in ".title"
