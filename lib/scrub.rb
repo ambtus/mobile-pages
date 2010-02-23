@@ -93,15 +93,15 @@ module Scrub
       nodeset
     end
 
-  def self.remove_scripts(body)
-    body.traverse do |node|
-      case node.name
-        when 'script'
-          node.children.each{|child| child.remove}
-          node.remove
+    def self.remove_scripts(body)
+      body.traverse do |node|
+        case node.name
+          when 'script'
+            node.children.each{|child| child.remove}
+            node.remove
+        end
       end
+      body
     end
-    body
-  end
 
 end

@@ -169,9 +169,10 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def build_me
-    body = Scrub.regularize_body(self.raw_html)
-    body = MyWebsites.getnode(self.url, body)
+  def build_me(reclean=false)
+    html = reclean ? self.clean_html : self.raw_html
+    body = Scrub.regularize_body(html)
+    body = MyWebsites.getnode(self.url, body) unless reclean
     if body
       html = Scrub.to_xhtml(body)
       self.clean_html = Scrub.sanitize_html(html)
@@ -418,13 +419,13 @@ class Page < ActiveRecord::Base
   end
   
   def clean_html=(content)
-    File.open(self.original_file, 'w') { |f| f.write(content) }
+    File.open(self.clean_html_file, 'w') { |f| f.write(content) }
   end
 
   def clean_html
     if parts.blank?
       begin
-        File.open(self.original_file, 'r') { |f| f.read }
+        File.open(self.clean_html_file, 'r') { |f| f.read }
       rescue Errno::ENOENT
         ""
       end
@@ -433,7 +434,7 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def original_file
+  def clean_html_file
     Rails.public_path +  self.mypath + "original.html"
   end
 
@@ -502,14 +503,15 @@ class Page < ActiveRecord::Base
   end
 
   def remove_html
-    # can't assume clean_html is sanitized correctly, as it may have been created with an earlier version
-    body = Scrub.regularize_body(self.clean_html)
-    return "" unless body
-    html = Scrub.to_xhtml(body)
-    html = Scrub.sanitize_html(html)
-    Scrub.html_to_text(html)
+    self.build_me(true) if self.needs_recleaning?
+    Scrub.html_to_text(self.clean_html)
   end
-
+  
+  def needs_recleaning?
+    return true unless File.exists?(self.clean_html_file)
+    File.mtime(self.clean_html_file) < File.mtime(Rails.root + "lib/scrub.rb")
+  end
+  
   def short_notes
     return self.notes if self.notes.blank?
     return self.notes if self.notes.size < MININOTE
