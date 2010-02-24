@@ -15,7 +15,7 @@ class Page < ActiveRecord::Base
   EPIC_WC = 80000
 
   BASE_URL_PLACEHOLDER = "Base URL: use * as replacement placeholder"
-  URL_SUBSTITUTIONS_PLACEHOLDER = "URL substitutions, space separated replacements for base URL"
+  URL_SUBSTITUTIONS_PLACEHOLDER = "URL substitutions, space separated replacements or inclusive integer range n-m"
   URLS_PLACEHOLDER = "Alternatively: full URLs for parts, one per line"
 
 
@@ -184,9 +184,15 @@ class Page < ActiveRecord::Base
 
   def create_from_base
     count = 1
-    self.url_substitutions.split.each do |sub|
+    match = self.url_substitutions.match("-")
+    if match
+      array = match.pre_match.to_i .. match.post_match.to_i
+    else
+      array = self.url_substitutions.split
+    end
+    array.each do |sub|
       title = "Part " + count.to_s
-      create_child(self.base_url.gsub(/\*/, sub), count, title)
+      create_child(self.base_url.gsub(/\*/, sub.to_s), count, title)
       count = count.next
     end
     self.set_wordcount

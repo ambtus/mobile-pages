@@ -8,7 +8,24 @@ Feature: basic parts
       And I am on the homepage
     When I follow "Store Multiple"
       And I fill in "page_base_url" with "http://test.sidrasue.com/parts/*.html"
-     And I fill in "page_url_substitutions" with "1 2 3"
+     And I fill in "page_url_substitutions" with "1 3"
+     And I fill in "page_title" with "Multiple pages from base"
+     And I select "genre"
+     And I press "Store"
+   Then I should see "Multiple pages from base"
+     And I should see "Part 1"
+     And I should see "stuff for part 1"
+     And I should see "Part 2"
+     And I should not see "stuff for part 2"
+     And I should not see "Part 3"
+     And I should see "stuff for part 3"
+
+  Scenario: create and read a page from base url plus pattern
+    Given a genre exists with name: "genre"
+      And I am on the homepage
+    When I follow "Store Multiple"
+      And I fill in "page_base_url" with "http://test.sidrasue.com/parts/*.html"
+     And I fill in "page_url_substitutions" with "1-3"
      And I fill in "page_title" with "Multiple pages from base"
      And I select "genre"
      And I press "Store"
