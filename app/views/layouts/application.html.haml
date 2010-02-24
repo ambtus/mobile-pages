@@ -9,7 +9,8 @@
   %body
     .links
       = link_to "Home", pages_path
-      = link_to "Random", pages_path(:random => true)
+      = link_to "Random", pages_path(:find => "random")
+      = link_to "Last", pages_path(:find => "last")
 
     - flash.each do |name, msg|
       = content_tag :div, msg, :id => "flash_#{name}"
@@ -18,5 +19,6 @@
 
     .links
       = link_to "Home", pages_path
-      = link_to "Random", pages_path(:random => true)
+      = link_to "Random", pages_path(:find => "random")
+      = link_to "Last", pages_path(:find => "last")
 
