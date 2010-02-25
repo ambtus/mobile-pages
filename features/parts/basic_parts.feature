@@ -57,3 +57,23 @@ Feature: basic parts
     Then I should see "Parent" in ".title"
     Then I should not see "Part 1"
 
+  Scenario: create a page from a list of urls with author and notes
+    Given a genre exists with name: "mygenre"
+    Given an author exists with name: "myauthor"
+      And I am on the homepage
+    When I follow "Store Multiple"
+      And I fill in "page_urls" with lines "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
+     And I fill in "page_title" with "Multiple pages from urls"
+     And I fill in "page_notes" with "some notes"
+     And I select "mygenre"
+     And I select "myauthor"
+     And I press "Store"
+   Then I should see "Multiple pages from urls"
+     And I should see "Part 1"
+     And I should see "stuff for part 1"
+     And I should see "Part 2"
+     And I should see "stuff for part 2"
+     And I should see "mygenre" in ".genres"
+     And I should see "some notes" in ".notes"
+     And I should see "myauthor" in ".authors"
+
