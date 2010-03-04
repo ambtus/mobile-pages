@@ -41,6 +41,7 @@ class Page < ActiveRecord::Base
   named_scope :favorite, :conditions => {:favorite => true }  
   named_scope :limited, :limit => LIMIT, :select => 'DISTINCT *'
   named_scope :include_root, :include => :ultimate_parent
+  named_scope :by_creation_date, :order => 'created_at ASC'
 
   named_scope :search_title, lambda {|string| 
     {:conditions => ["title LIKE ?", "%" + string + "%"]}
@@ -51,6 +52,10 @@ class Page < ActiveRecord::Base
   named_scope :search_url, lambda {|string| 
     {:conditions => ["url LIKE ?", "%" + string + "%"]}
   }
+
+  def self.last_created
+    self.by_creation_date.last
+  end
 
   def self.find_random
     count = self.count

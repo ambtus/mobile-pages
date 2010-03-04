@@ -19,7 +19,12 @@
     %br
     = f.text_area :notes, page.notes, :rows => 1, :cols => 30
     %br
-    = f.text_field :url, page.url
+    - if called_by == "multiple"
+      = f.text_field :base_url, Page::BASE_URL_PLACEHOLDER, :maxlength => 255, :size => 80
+      = f.text_field :url_substitutions, Page::URL_SUBSTITUTIONS_PLACEHOLDER, :maxlength => 255, :size => 80
+      = f.text_area :urls, Page::URLS_PLACEHOLDER, :rows => 10, :cols => 80
+    - else
+      = f.text_field :url, page.url
     %br
     = f.submit "Find", :name => "Find" if called_by == "index"
     = f.submit "Store", :name => "Store"
