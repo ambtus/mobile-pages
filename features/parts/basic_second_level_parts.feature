@@ -26,7 +26,7 @@ Feature: basic second level parts
       And I press "Update"
     Then I should see "Parent" in "#position_1"
       And I should see "Single" in "#position_2"
-    When I follow "Download" in ".title"
+    When I follow "Text" in ".title"
     Then I should see "# Single #"
       And I should see "# Parent #"
       And I should see "## Part 1 ##"

@@ -19,6 +19,6 @@ Feature: basic pasted
      And I follow "Edit Raw HTML"
     When I fill in "pasted" with "<span class='first'>The</span> beginning<br><br>new paragraph"
       And I press "Update Raw HTML"
-      And I follow "Download"
+      And I follow "Text"
      Then I should see "The beginning"
        And I should not see "<br>"

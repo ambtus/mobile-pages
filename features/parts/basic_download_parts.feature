@@ -5,7 +5,7 @@ Feature: download page with parts
       | title  | base_url                              | url_substitutions |
       | multi  | http://test.sidrasue.com/parts/*.html | 1 2 3   |
     When I am on the homepage
-    When I follow "Download" in ".title"
+    When I follow "Text" in ".title"
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
       And I should see "stuff for part 3"

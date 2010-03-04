@@ -6,9 +6,9 @@ Feature: basic parent page
   Scenario: parent read page
     Given a page exists with title: "Multi", base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
    When I am on the page's page
-   Then I should see "Download" in "#position_1"
+   Then I should see "Text" in "#position_1"
      And I should see "Read" in "#position_1"
-     And I should see "Download" in "#position_2"
+     And I should see "Text" in "#position_2"
      And I should see "Read" in "#position_2"
      And I should not see "stuff for part 1"
      And I should not see "stuff for part 2"

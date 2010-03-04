@@ -1,5 +1,5 @@
 - content_for :title do
-  = @page.title
+  =@page.title
 = render :partial => "pages/buttons", :locals => {:page => @page }
 = render :partial => "pages/links", :locals => {:page => @page, :called_by => "show" }
 = render :partial => "pages/headers", :locals => {:page => @page, :called_by => "show" }
@@ -13,6 +13,6 @@
       - unless part.tag_string.blank?
         = "(#{part.tag_string})"
       = link_to "Read", read_path(part)
-      = link_to "Download", page_path(part, :format => 'txt')
+      = link_to "Text", page_path(part, :format => 'txt')
       .notes
         = part.short_notes

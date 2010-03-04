@@ -20,10 +20,10 @@ Feature: basic next
        Then I should see "A Christmas Carol" in ".title"
      When I am on the homepage
        Then I should see "The Call of the Wild" in "#position_2"
-     When I follow "Download" in "#position_2"
+     When I follow "Text" in "#position_2"
      When I am on the homepage
      Then I should see "The Call of the Wild" in "#position_1"
        And I should see "The Mysterious Affair at Styles" in "#position_3"
-       And I follow "Download" in "#position_3"
+       And I follow "Text" in "#position_3"
      When I am on the homepage
        Then I should see "The Mysterious Affair at Styles" in "#position_1"

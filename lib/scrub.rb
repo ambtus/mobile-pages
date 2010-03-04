@@ -76,6 +76,52 @@ module Scrub
     text.strip
   end
 
+  def self.html_to_pml(html, title, author_string)
+    return "" unless html
+    doc = Nokogiri::HTML(html)
+    body = doc.xpath('//body').first
+    text = body.children.to_xhtml(:encoding => 'MacRoman')
+    text = text.gsub(/<a .*?>(.*?)<\/a>/m) {|s| " [#{$1}] " unless $1.blank?}
+    text = text.gsub(/<img.*?alt="(.*?)".*?>/) {|s| " [#{$1}] " unless $1.blank?}
+    text = text.gsub(/<img.*?>/, "")
+    text = text.gsub(/<h1>/, '\p\X0')
+    text = text.gsub(/<\/h1>/, '\X0')
+    text = text.gsub(/<h2>/, '\p\X1')
+    text = text.gsub(/<\/h2>/, '\X1')
+    text = text.gsub(/<\/?b>/, '\B')
+    text = text.gsub(/<\/?strong>/, '\B')
+    text = text.gsub(/<\/?big>/, '\l')
+    text = text.gsub(/<\/?blockquote>/, '')
+    text = text.gsub(/<br \/>/, "\n")
+    text = text.gsub("<center>", '\c')
+    text = text.gsub(/<\/center>/, "\n" + '\c' + "\n")
+    text = text.gsub(/<\/?div.*?>/, "\n")
+    text = text.gsub(/<dt>/, "")
+    text = text.gsub(/<\/dt>/, ": ")
+    text = text.gsub(/<\/?em.*?>/, '\i')
+    text = text.gsub(/<\/?i>/, '\i')
+    text = text.gsub(/<\/?h\d.*?>/, '\B')
+    text = text.gsub(/<hr \/>/, '\w="50%"')
+    text = text.gsub(/<li>/, "* ")
+    text = text.gsub(/<\/?li>/, "")
+    text = text.gsub(/<\/?p>/, "\n")
+    text = text.gsub(/<small>/, '\s')
+    text = text.gsub(/<\/small>/, '\s')
+    text = text.gsub(/<\/?strike>/, '\o')
+    text = text.gsub(/<sup>/, '\Sp')
+    text = text.gsub(/<\/sup>/, '\Sp')
+    text = text.gsub(/<sub>/, '\Sb')
+    text = text.gsub(/<\/sub>/, '\Sb')
+    text = text.gsub(/<\/?u>/, '\u')
+    text = text.gsub(/_([ ,.?-]+)_/) {|s| $1}
+    text = text.gsub(/\*([ ,.?-]+)\*/) {|s| $1}
+    text = text.gsub(/&amp;/, "&")
+    text = text.gsub(/&lt;/, "<")
+    text = text.gsub(/&gt;/, ">")
+    text = text.gsub(/ +/, ' ').gsub(/\n+ */, "\n\n").gsub(/(\n){4,}/, "\n\n")
+    text = '\vTITLE="' + title + '" AUTHOR="' + author_string +'"\v' + "\n" + text.strip
+  end
+
   private
   
     def self.remove_surrounding(nodeset)

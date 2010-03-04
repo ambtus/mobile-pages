@@ -63,6 +63,6 @@ Feature: bugs with parts
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
     When I follow "page 1"
-      And I follow "Download" in "#position_1"
+      And I follow "Text" in "#position_1"
     Then I should see "stuff for part 1"
     And I should not see "stuff for part 2"

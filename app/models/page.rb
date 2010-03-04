@@ -476,7 +476,7 @@ class Page < ActiveRecord::Base
     all = Nokogiri::HTML(html).xpath('//body').children
     all.each do |node|
       unless (node.is_a?(Nokogiri::XML::Text) && node.to_html.blank?)
-        array << node.to_xhtml 
+        array << node.to_xhtml(:encoding => 'utf8')
       end
     end
     array
@@ -511,6 +511,14 @@ class Page < ActiveRecord::Base
   def remove_html
     self.build_me(true) if self.needs_recleaning?
     Scrub.html_to_text(self.clean_html)
+  end
+  
+  def to_pml
+    self.build_me(true) if self.needs_recleaning?
+    html = "<p>" + self.tag_string + "</p>"
+    html = html + "<p>" + self.notes + "</p>" unless self.notes.blank?
+    html = html + self.clean_html
+    Scrub.html_to_pml(html, self.title, self.author_string)
   end
   
   def needs_recleaning?

@@ -8,7 +8,7 @@ Feature: Basic scrub with parts
     And I am on the page's page
     When I follow "Read"
     Then I should see "cruft"
-    When I follow "Download" in ".title"
+    When I follow "Text" in ".title"
     Then I should see "cruft"
     When I am on the page's page
     And I follow "Scrub" in ".title"
@@ -18,7 +18,7 @@ Feature: Basic scrub with parts
     Then I should not see "cruft"
       And I should see "stuff for part 1"
     When I follow "Parent" in ".parent"
-      And I follow "Download" in ".title"
+      And I follow "Text" in ".title"
     Then I should not see "cruft"
       And I should see "stuff for part 1"
       And I should see "stuff for part 2"
