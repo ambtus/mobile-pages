@@ -78,10 +78,7 @@ module Scrub
 
   def self.html_to_pml(html, title, author_string)
     return "" unless html
-    doc = Nokogiri::HTML(html)
-    body = doc.xpath('//body').first
-    text = body.children.to_xhtml(:encoding => 'MacRoman')
-    text = text.gsub(/<a .*?>(.*?)<\/a>/m) {|s| " [#{$1}] " unless $1.blank?}
+    text = html.gsub(/<a .*?>(.*?)<\/a>/m) {|s| " [#{$1}] " unless $1.blank?}
     text = text.gsub(/<img.*?alt="(.*?)".*?>/) {|s| " [#{$1}] " unless $1.blank?}
     text = text.gsub(/<img.*?>/, "")
     text = text.gsub(/<h1>/, '\p\X0')
