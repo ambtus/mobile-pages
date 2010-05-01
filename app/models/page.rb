@@ -528,6 +528,16 @@ class Page < ActiveRecord::Base
     Scrub.html_to_pml(html, self.title, self.author_string)
   end
   
+  def pdb_name
+    self.id.to_s + ".pdb"
+  end
+  def ereader_url
+    "ereader://pdbs.sidrasue.com/" + self.pdb_name
+  end
+  def ereader_exists?
+    File.exists?("/home/alice/pdbs/" + self.pdb_name)
+  end
+
   def needs_recleaning?
     return true unless File.exists?(self.clean_html_file)
     File.mtime(self.clean_html_file) < File.mtime(Rails.root + "lib/scrub.rb")

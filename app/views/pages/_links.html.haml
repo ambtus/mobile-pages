@@ -8,7 +8,7 @@
   = link_to "Read", read_path(page) unless called_by == "read"
   = link_to "Text", page_path(page, :format => 'txt')
   = link_to "PML", page_path(page, :format => 'pml')
-  = link_to "eReader", "ereader://pdbs.sidrasue.com/" + page.id.to_s + ".pdb"
+  = link_to "eReader", page.ereader_url if page.ereader_exists?
   = link_to "Rate", rate_path(page) 
   - unless called_by == "index"
     = link_to "Notes", edit_note_path(page)
