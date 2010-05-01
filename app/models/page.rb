@@ -27,6 +27,8 @@ class Page < ActiveRecord::Base
   validates_presence_of :title, :message => "can't be blank or 'Title'"
   validates_format_of :url, :with => URI.regexp, :allow_blank => true
 
+  validates_uniqueness_of :url, :allow_blank => true
+
   attr_accessor :base_url
   attr_accessor :url_substitutions
   attr_accessor :urls

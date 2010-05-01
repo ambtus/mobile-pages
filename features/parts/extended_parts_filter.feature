@@ -28,7 +28,7 @@ Feature: filter on parts
     When I select "unread"
       And I press "Find"
     Then I should see "Parent" in ".title"
-    When I fill in "page_url" with "http://test.sidrasue.com/long.html"
+    When I fill in "page_url" with "http://test.sidrasue.com/long2.html"
       And I fill in "page_title" with "Child2"
       And I select "one" from "genre"
       And I press "Store"

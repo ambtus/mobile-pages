@@ -79,3 +79,12 @@ Feature: bugs during store
      And I press "Store"
    Then I should not see "Notes" in ".notes"
    
+  Scenario: duplicate url
+    Given a page exists with title: "Original", url: "http://test.sidrasue.com/test.html", add_genre_string: "mygenre"
+    When I am on the homepage
+      And I fill in "page_title" with "duplicate"
+      And I fill in "page_url" with "http://test.sidrasue.com/test.html"
+      And I select "mygenre"
+      And I press "Store"
+    Then I should see "Url has already been taken" in "#flash_error"
+      And I should not see "duplicate" in ".title"
