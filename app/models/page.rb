@@ -17,7 +17,7 @@ class Page < ActiveRecord::Base
   BASE_URL_PLACEHOLDER = "Base URL: use * as replacement placeholder"
   URL_SUBSTITUTIONS_PLACEHOLDER = "URL substitutions, space separated replacements or inclusive integer range n-m"
   URLS_PLACEHOLDER = "Alternatively: full URLs for parts, one per line"
-
+  PARENT_PLACEHOLDER = "Enter name of existing or new (unique name) parent"
 
   has_and_belongs_to_many :genres, :uniq => true
   has_and_belongs_to_many :authors, :uniq => true
@@ -108,7 +108,7 @@ class Page < ActiveRecord::Base
   end
 
   def before_validation
-    self.url = self.url == "Url" ? nil : self.url.try(:strip)
+    self.url = self.url == "URL" ? nil : self.url.try(:strip)
     self.title = nil if self.title == "Title"
     self.notes = nil if self.notes == "Notes"
     self.base_url = nil if self.base_url == BASE_URL_PLACEHOLDER

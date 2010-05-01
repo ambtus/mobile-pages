@@ -5,5 +5,5 @@
 .authors
   - form_tag authors_path do
     = hidden_field_tag(:page_id, @page.id)
-    = onblur_text_tag :authors, Author::NEW_PLACEHOLDER, :maxlength => 255, :size => 70
+    = hinted_text_field_tag :authors, params[:author], Author::NEW_PLACEHOLDER, :maxlength => 255, :size => 70
     .button= submit_tag "Add Authors"

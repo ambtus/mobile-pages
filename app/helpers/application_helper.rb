@@ -1,9 +1,20 @@
 module ApplicationHelper
 
-  def onblur_text_tag(name, default = nil, options = {})
-    text = default || name.to_s.humanize
-    options = {:class => "gray-input", :onblur=>"if(this.value == '') { this.value='#{text}';this.style.color = '';}", :onfocus=>"if (this.value == '#{text}') {this.value='';this.style.color = 'black';}"}.merge options
-    text_field_tag name, default, options 
+
+  def hinted_text_field_tag(name, value = nil, hint = "Click and enter text", options={})
+    value = value.nil? ? hint : value
+    options = {:class => "gray-input", :onblur=>"if(this.value == '') { this.value='#{hint}';this.style.color = '';}", :onfocus=>"if (this.value == '#{hint}') {this.value='';this.style.color = 'black';}"}.merge(options.stringify_keys)
+    text_field_tag name, value, options 
+  end
+
+  # inside form_for example
+  #hinted_text_field_tag :search, params[:search], "Enter name, brand or mfg.", :size => 30
+  # => <input id="search" name="search" onblur="if($(this).value == ''){$(this).value = 'Enter name, brand or mfg.'}" onclick="if($(this).value == 'Enter name, brand or mfg.'){$(this).value = ''}" size="30" type="text" value="Enter name, brand or mfg." />
+
+  def hinted_text_area_tag(name, value = nil, hint = "Click and enter text", options={})
+    value = value.nil? ? hint : value
+    options = {:class => "gray-input", :onblur=>"if(this.value == '') { this.value='#{hint}';this.style.color = '';}", :onfocus=>"if (this.value == '#{hint}') {this.value='';this.style.color = 'black';}"}.merge(options.stringify_keys)
+    text_area_tag name, value, options 
   end
 
 end

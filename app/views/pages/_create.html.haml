@@ -1,5 +1,5 @@
 .form
-  - form_for page, :builder => DefaultFormBuilder do |f|
+  - form_for page do |f|
     - if called_by == "index"
       = select_tag :size, "<option></option>" + options_for_select(Page::SIZES, @size)
       = label_tag :size, "Size"
@@ -15,16 +15,16 @@
       = select_tag :author, "<option></option>" + options_for_select(Author.names, @author.try(:name))
     = label_tag :author, "Author"
     %br
-    = f.text_field :title, page.title
+    = hinted_text_field_tag 'page[title]', page.title, "Title"
     %br
-    = f.text_area :notes, page.notes, :rows => 1, :cols => 30
+    = hinted_text_area_tag 'page[notes]', page.notes, "Notes", :rows => 1, :cols => 30
     %br
     - if called_by == "multiple"
-      = f.text_field :base_url, Page::BASE_URL_PLACEHOLDER, :maxlength => 255, :size => 80
-      = f.text_field :url_substitutions, Page::URL_SUBSTITUTIONS_PLACEHOLDER, :maxlength => 255, :size => 80
-      = f.text_area :urls, Page::URLS_PLACEHOLDER, :rows => 10, :cols => 80
+      = hinted_text_field_tag 'page[base_url]', page.base_url, Page::BASE_URL_PLACEHOLDER, :maxlength => 255, :size => 80
+      = hinted_text_field_tag 'page[url_substitutions]', page.url_substitutions, Page::URL_SUBSTITUTIONS_PLACEHOLDER, :maxlength => 255, :size => 80
+      = hinted_text_area_tag 'page[urls]', page.urls, Page::URLS_PLACEHOLDER, :rows => 10, :cols => 80
     - else
-      = f.text_field :url, page.url
+      = hinted_text_field_tag 'page[url]', page.url, "URL"
     %br
     = f.submit "Find", :name => "Find" if called_by == "index"
     = f.submit "Store", :name => "Store"

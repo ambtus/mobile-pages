@@ -36,7 +36,7 @@ class PagesController < ApplicationController
       if params[:page]
         build_route[:title] = params[:page][:title] unless params[:page][:title] == "Title"
         build_route[:notes] = params[:page][:notes] unless params[:page][:notes] == "Notes"
-        build_route[:url] = params[:page][:url] unless params[:page][:url] == "Url"
+        build_route[:url] = params[:page][:url] unless params[:page][:url] == "URL"
       end
       redirect_to(build_route) and return
     end
