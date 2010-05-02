@@ -74,7 +74,7 @@ class PagesController < ApplicationController
     @page = @page.make_first if (params[:commit] == "Read First")
     case params[:commit]
       when "Rebuild from Raw HTML"
-        @page.parts.empty? ? @page.build_me : @page.parts.each {|p| p.build_me}
+        @page.build_me(false)
         flash[:notice] = "Rebuilt from Raw HTML"
         redirect_to read_url(@page) and return
       when "Update Raw HTML"

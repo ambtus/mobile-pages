@@ -152,7 +152,7 @@ class Page < ActiveRecord::Base
 
   def pasted=(html)
     self.raw_html = html
-    self.build_me
+    self.build_me(false)
   end
 
   def fetch(url=self.url)
@@ -168,7 +168,7 @@ class Page < ActiveRecord::Base
          page = agent.submit(form, form.buttons.first)
       end
       self.raw_html = page.body
-      self.build_me
+      self.build_me(false)
     rescue WWW::Mechanize::ResponseCodeError
       self.errors.add(:base, "error retrieving content")
     rescue SocketError
@@ -176,17 +176,21 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def build_me(reclean=false)
-    html = reclean ? self.clean_html : self.raw_html
-    body = Scrub.regularize_body(html)
-    body = MyWebsites.getnode(self.url, body) unless reclean
-    if body
-      html = Scrub.to_xhtml(body)
-      self.clean_html = Scrub.sanitize_html(html)
+  def build_me(reclean)
+    if !self.parts.blank?
+      self.parts.each {|p| p.build_me(reclean)} 
     else
-      self.clean_html = ""
+      html = reclean ? self.clean_html(false) : self.raw_html
+      body = Scrub.regularize_body(html)
+      body = MyWebsites.getnode(self.url, body) unless reclean
+      if body
+        html = Scrub.to_xhtml(body)
+        self.clean_html = Scrub.sanitize_html(html)
+      else
+        self.clean_html = ""
+      end
+      self.set_wordcount
     end
-    self.set_wordcount
   end
 
   def create_from_base
@@ -432,13 +436,14 @@ class Page < ActiveRecord::Base
   end
   
   def clean_html=(content)
-    File.open(self.clean_html_file, 'w') { |f| f.write(content) }
+    File.open(self.clean_html_file_name, 'w') { |f| f.write(content) }
   end
 
-  def clean_html
+  def clean_html(check=true)
+    self.build_me(true) if (check && self.needs_recleaning?) 
     if parts.blank?
       begin
-        File.open(self.clean_html_file, 'r') { |f| f.read }
+        File.open(self.clean_html_file_name, 'r') { |f| f.read }
       rescue Errno::ENOENT
         ""
       end
@@ -447,7 +452,7 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def clean_html_file
+  def clean_html_file_name
     Rails.public_path +  self.mypath + "original.html"
   end
 
@@ -516,7 +521,6 @@ class Page < ActiveRecord::Base
   end
 
   def remove_html
-    self.build_me(true) if self.needs_recleaning?
     Scrub.html_to_text(self.clean_html)
   end
   
@@ -539,8 +543,8 @@ class Page < ActiveRecord::Base
   end
 
   def needs_recleaning?
-    return true unless File.exists?(self.clean_html_file)
-    File.mtime(self.clean_html_file) < File.mtime(Rails.root + "lib/scrub.rb")
+    return true unless File.exists?(self.clean_html_file_name)
+    File.mtime(self.clean_html_file_name) < File.mtime(Rails.root + "lib/scrub.rb")
   end
   
   def short_notes
