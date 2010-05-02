@@ -64,7 +64,7 @@ Feature: complex parts with titles from url list
       And I press "2"
    When I am on the page's page
 # note - year will change every year
-   Then I should see "2009-" in ".last_read"
-     And I should not see "2010-" in ".last_read"
-     And I should not see "2009-" in "#position_1"
-     And I should see "2010-" in "#position_2"
+   Then I should see "2010-" in ".last_read"
+     And I should see "unread" in "#position_1"
+     And I should not see "2010-" in "#position_2"
+     And I should not see "unread" in "#position_2"

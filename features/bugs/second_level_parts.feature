@@ -18,3 +18,12 @@ Feature: bugs with second level parts
     Then I should see "Parent1" in "#position_1"
       And I should see "Parent2" in "#position_2"
       And I should see "Parent3" in "#position_3"
+    When I am on the homepage
+      And I follow "Rate"
+      And I press "1"
+   When I am on the homepage
+      And I follow "Grandparent" in "#position_1"
+      And I follow "Parent2" in "#position_2"
+   Then I should not see "unread"
+   When I follow "Read" in "#position_2"
+   Then I should not see "unread"

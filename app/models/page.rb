@@ -385,15 +385,16 @@ class Page < ActiveRecord::Base
     return self
   end
 
-  def set_read_after(string)
-    now = Time.now
-    after = now + string.to_i.send(DURATION)
-    self.update_attributes(:read_after => after, :last_read => now)
-    string == "1" ? self.update_attribute(:favorite, true) : self.update_attribute(:favorite, false)
-    self.parts.each {|p| p.update_attribute(:last_read, now)}
+  def update_rating(string, update_favorite=true)
+    self.last_read = Time.now
+    self.favorite = (string == "1" ? true : false) if update_favorite
+    self.read_after = Time.now + string.to_i.send(DURATION)
+    self.save
+    self.parent.update_rating(string, false) if self.parent
+    self.parts.each {|p| p.update_rating(string, true)} if update_favorite
     return self.read_after
   end
-  
+
   def author_string
     self.authors.map(&:name).join(", ")
   end

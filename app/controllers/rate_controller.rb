@@ -4,7 +4,7 @@ class RateController < ApplicationController
   end
   def create
     page = Page.find(params[:page_id])
-    page.set_read_after(params[:commit])
+    page.update_rating(params[:commit])
     flash[:notice] = "#{page.title} set for reading again on #{page.read_after}"
     redirect_to pages_url
   end
