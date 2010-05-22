@@ -24,6 +24,7 @@ Rails::Initializer.run do |config|
   config.gem 'sanitize', :version => ">=1.2.0"
   config.gem 'mechanize'
   config.gem 'pickle'
+  config.gem 'devise', :version => '1.0.7'
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
