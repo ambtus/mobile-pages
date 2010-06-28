@@ -7,7 +7,11 @@ Feature: basic edit of parts
     Given a titled page exists with urls: "http://test.sidrasue.com/parts/1.html"
     When I am on the page's page
       And I follow "Manage Parts"
-      And I fill in "url_list" with lines "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
+      And I fill in "url_list" with
+        """
+        http://test.sidrasue.com/parts/1.html
+        http://test.sidrasue.com/parts/2.html
+        """
       And I press "Update"
     Then I should see "Part 2"
       And I should see "Part 1"
@@ -19,7 +23,11 @@ Feature: basic edit of parts
     Given a titled page exists with base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2 3"
     When I am on the page's page
       And I follow "Manage Parts"
-      And I fill in "url_list" with lines "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/3.html"
+      And I fill in "url_list" with
+        """
+        http://test.sidrasue.com/parts/1.html
+        http://test.sidrasue.com/parts/3.html
+        """
       And I press "Update"
       And I should not see "Part 3"
       And I follow "Read"
@@ -31,7 +39,11 @@ Feature: basic edit of parts
     Given a titled page exists with base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
     When I am on the page's page
       And I follow "Manage Parts"
-      And I fill in "url_list" with lines "http://test.sidrasue.com/parts/2.html\nhttp://test.sidrasue.com/parts/1.html"
+      And I fill in "url_list" with
+        """
+        http://test.sidrasue.com/parts/2.html
+        http://test.sidrasue.com/parts/1.html
+        """
       And I press "Update"
       And I follow "Read" in "#position_1"
     Then I should see "stuff for part 2"

@@ -17,7 +17,11 @@ Feature: extended store
     When I am on the page's page
     When I follow "Refetch" in ".title"
     Then the field with id "url_list" should contain "http://test.sidrasue.com/parts/1.html"
-    When I fill in "url_list" with lines "http://test.sidrasue.com/parts/2.html\nhttp://test.sidrasue.com/parts/1.html"
+    When I fill in "url_list" with 
+      """
+      http://test.sidrasue.com/parts/2.html
+      http://test.sidrasue.com/parts/1.html
+      """
       And I press "Refetch"
     Then I should see "stuff for part 2"
     And I should see "stuff for part 1"

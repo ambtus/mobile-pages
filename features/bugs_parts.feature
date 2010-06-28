@@ -32,7 +32,14 @@ Feature: bugs with parts
     Given a genre exists with name: "genre"
     When I am on the homepage
     When I follow "Store Multiple"
-      And I fill in "page_urls" with lines "##Child 1\n\nhttp://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html\n\nhttp://test.sidrasue.com/parts/3.html##Child 2\n\n"
+      And I fill in "page_urls" with
+        """
+        ##Child 1
+        http://test.sidrasue.com/parts/1.html
+        http://test.sidrasue.com/parts/2.html
+        http://test.sidrasue.com/parts/3.html##Child 2
+        
+        """
      And I fill in "page_title" with "Parent"
      And I select "genre"
      And I press "Store"
@@ -48,7 +55,11 @@ Feature: bugs with parts
     Given a page exists with title: "Single", url: "http://test.sidrasue.com/test.html" 
     When I am on the page's page
       And I follow "Manage Parts"
-      And I fill in "url_list" with lines "http://test.sidrasue.com/test.html\nhttp://test.sidrasue.com/styled.html"
+      And I fill in "url_list" with
+        """
+        http://test.sidrasue.com/test.html
+        http://test.sidrasue.com/styled.html
+        """
       And I press "Update"
     Then I should see "Single" in ".parent"
     When I am on the homepage

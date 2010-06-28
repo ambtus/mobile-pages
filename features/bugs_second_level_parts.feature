@@ -8,7 +8,11 @@ Feature: bugs with second level parts
     Then I should see "Part 1" in "#position_1"
       And I should not see "Part 2" in "#position_2"
     When I follow "Manage Parts"
-      And I fill in "url_list" with lines "http://test.sidrasue.com/parts/3.html\nhttp://test.sidrasue.com/parts/4.html"
+      And I fill in "url_list" with
+        """
+        http://test.sidrasue.com/parts/3.html
+        http://test.sidrasue.com/parts/4.html
+        """
       And I press "Update"
     Then I should see "Parent2" in ".title"
       And I should not see "Could not find or create parent"

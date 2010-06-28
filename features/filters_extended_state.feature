@@ -10,7 +10,11 @@ Feature: unread states
    Then I should not see "unread" in ".last_read"
    When I follow "Read"
      And I follow "Manage Parts"
-     And I fill in "url_list" with lines "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
+     And I fill in "url_list" with
+       """
+       http://test.sidrasue.com/parts/1.html
+       http://test.sidrasue.com/parts/2.html
+       """
      And I press "Update"
    When I am on the homepage
    Then I should see "Multi" in "#position_1"

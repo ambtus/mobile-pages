@@ -4,7 +4,12 @@ Feature: complex parts with titles from url list
     Given a genre exists with name: "genre"
     When I am on the homepage
       And I follow "Store Multiple"
-    When I fill in "page_urls" with lines "http://test.sidrasue.com/parts/1.html\n\nhttp://test.sidrasue.com/parts/2.html##part title"
+    When I fill in "page_urls" with
+      """
+      http://test.sidrasue.com/parts/1.html
+      
+      http://test.sidrasue.com/parts/2.html##part title
+      """
       And I fill in "page_title" with "my title"
       And I select "genre"
       And I press "Store"
@@ -18,7 +23,18 @@ Feature: complex parts with titles from url list
     Given a genre exists with name: "genre"
     When I am on the homepage
       And I follow "Store Multiple"
-    When I fill in "page_urls" with lines "##Part the first\nhttp://test.sidrasue.com/parts/1.html###subpart title\nhttp://test.sidrasue.com/parts/2.html\n\nhttp://test.sidrasue.com/parts/3.html##Part 2\n\n##Third Part\nhttp://test.sidrasue.com/parts/4.html\nhttp://test.sidrasue.com/parts/5.html"
+    When I fill in "page_urls" with
+      """
+      ##Part the first
+      http://test.sidrasue.com/parts/1.html###subpart title
+      http://test.sidrasue.com/parts/2.html
+      
+      http://test.sidrasue.com/parts/3.html##Part 2
+      
+      ##Third Part
+      http://test.sidrasue.com/parts/4.html
+      http://test.sidrasue.com/parts/5.html
+      """
       And I fill in "page_title" with "New Title"
       And I select "genre"
       And I press "Store"
@@ -50,7 +66,11 @@ Feature: complex parts with titles from url list
       And I should not see "page 2"
     When I follow "Read" in "#position_2"
       And I follow "Manage Parts"
-      And I fill in "url_list" with lines "http://test.sidrasue.com/parts/3.html\nhttp://test.sidrasue.com/parts/4.html"
+      And I fill in "url_list" with
+        """
+        http://test.sidrasue.com/parts/3.html
+        http://test.sidrasue.com/parts/4.html
+        """
       And I press "Update"
     When I am on the homepage
     Then I should see "New Parent" in "#position_1"

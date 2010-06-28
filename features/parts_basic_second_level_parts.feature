@@ -11,7 +11,11 @@ Feature: basic second level parts
     When I follow "Read"
       And I follow "Manage Parts"
       And I fill in "add_parent" with "Grandparent"
-      And I fill in "url_list" with lines "http://test.sidrasue.com/parts/2.html\nhttp://test.sidrasue.com/parts/3.html"
+      And I fill in "url_list" with
+        """
+        http://test.sidrasue.com/parts/2.html
+        http://test.sidrasue.com/parts/3.html
+        """
       And I press "Update"
     Then I should see "Grandparent"
       And I should see "Parent" in "#position_1"

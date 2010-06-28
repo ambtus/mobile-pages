@@ -5,7 +5,14 @@ Feature: bugs found on add parts titles
       And I am on the page's page
     When I follow "Manage Parts"
       And I fill in "title" with "Added Part Headings"
-      And I fill in "url_list" with lines "##part1\nhttp://test.sidrasue.com/parts/1.html\n##part2\nhttp://test.sidrasue.com/parts/2.html\nhttp://test.sidrasue.com/parts/3.html"
+      And I fill in "url_list" with
+        """
+        ##part1
+        http://test.sidrasue.com/parts/1.html
+        ##part2
+        http://test.sidrasue.com/parts/2.html
+        http://test.sidrasue.com/parts/3.html
+        """
       And I press "Update"
     Then I should see "Added Part Headings" in ".title"
       And I should see "part1" in "#position_1"

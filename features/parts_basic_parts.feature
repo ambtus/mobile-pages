@@ -41,7 +41,11 @@ Feature: basic parts
     Given a genre exists with name: "genre"
       And I am on the homepage
     When I follow "Store Multiple"
-      And I fill in "page_urls" with lines "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
+      And I fill in "page_urls" with
+        """
+        http://test.sidrasue.com/parts/1.html
+        http://test.sidrasue.com/parts/2.html
+        """
      And I fill in "page_title" with "Multiple pages from urls"
      And I select "genre"
      And I press "Store"
@@ -62,7 +66,11 @@ Feature: basic parts
     Given an author exists with name: "myauthor"
       And I am on the homepage
     When I follow "Store Multiple"
-      And I fill in "page_urls" with lines "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
+      And I fill in "page_urls" with
+        """
+        http://test.sidrasue.com/parts/1.html
+        http://test.sidrasue.com/parts/2.html
+        """
      And I fill in "page_title" with "Multiple pages from urls"
      And I fill in "page_notes" with "some notes"
      And I select "mygenre"
