@@ -30,10 +30,10 @@ Feature: basic genres
     Then I should see "classic" within ".genres"
     When I follow "Genres"
       And I follow "Add Genres"
-      And I fill in "genres" with "favorite, children's"
+      And I fill in "genres" with "something, children's"
       And I press "Add Genres"
-    Then I should see "children's, classic, favorite" within ".genres"
+    Then I should see "children's, classic, something" within ".genres"
     When I am on the homepage
     Then I select "classic" from "Genre"
-      And I select "favorite" from "State"
+      And I select "something" from "Genre"
       And I select "children's" from "Genre"
