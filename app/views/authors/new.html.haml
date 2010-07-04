@@ -3,7 +3,7 @@
 
 .title= @page.title
 .authors
-  - form_tag authors_path do
+  = form_tag authors_path do
     = hidden_field_tag(:page_id, @page.id)
     = hinted_text_field_tag :authors, params[:author], Author::NEW_PLACEHOLDER, :maxlength => 255, :size => 70
     .button= submit_tag "Add Authors"

@@ -1,14 +1,34 @@
 class Page < ActiveRecord::Base
   MODULO = 300  # files in a single directory
+
+  def mypath
+    env = case Rails.env
+      when "test"; "/test/"
+      when "development"; "/development/"
+      when "production"; "/files/"
+    end
+    env + (self.id/MODULO).to_s + "/" + self.id.to_s + "/"
+  end
+
   DURATION = "years"
   MININOTE = 100 # keep first this many characters plus enough for full words in index headers
-  LIMIT = 10
+  LIMIT = 10 # number of pages to show in index
 
   UNREAD = "unread"
   FAVORITE = "favorite"
   REREAD = "reread"
 
   SIZES = ["short", "long", "epic"]
+
+  def set_wordcount
+    wordcount = self.remove_html.scan(/(\w|-)+/).size
+    self.size = nil
+    self.size = "short" if wordcount < SHORT_WC
+    self.size = "long" if wordcount > LONG_WC
+    self.size = "epic" if wordcount > EPIC_WC
+    self.save
+  end
+
   STATES = [UNREAD, FAVORITE, REREAD]
   SHORT_WC = 1000
   LONG_WC = 10000
@@ -24,130 +44,56 @@ class Page < ActiveRecord::Base
   belongs_to :parent, :class_name => "Page"
   belongs_to :ultimate_parent, :class_name => "Page"
 
-  validates_presence_of :title, :message => "can't be blank or 'Title'"
-  validates_format_of :url, :with => URI.regexp, :allow_blank => true
-
-  validates_uniqueness_of :url, :allow_blank => true
-
   attr_accessor :base_url
   attr_accessor :url_substitutions
   attr_accessor :urls
     
-  default_scope :order => 'read_after ASC'
-  named_scope :no_children, :conditions => {:parent_id => nil}
-  named_scope :short, :conditions => {:size => "short"}
-  named_scope :long, :conditions => {:size => "long"}
-  named_scope :epic, :conditions => {:size => "epic"} 
-  named_scope :unread, :conditions => {:last_read => nil }
-  named_scope :reread, :conditions => 'last_read is not null'
-  named_scope :favorite, :conditions => {:favorite => true }  
-  named_scope :limited, :limit => LIMIT, :select => 'DISTINCT *'
-  named_scope :include_root, :include => :ultimate_parent
-  named_scope :by_creation_date, :order => 'created_at ASC'
+  before_validation :remove_placeholders
 
-  named_scope :search_title, lambda {|string| 
-    {:conditions => ["title LIKE ?", "%" + string + "%"]}
-  }
-  named_scope :search_notes, lambda {|string| 
-    {:conditions => ["notes LIKE ?", "%" + string + "%"]}
-  }
-  named_scope :search_url, lambda {|string| 
-    {:conditions => ["url LIKE ?", "%" + string + "%"]}
-  }
+  validates_presence_of :title, :message => "can't be blank or 'Title'"
+  validates_format_of :url, :with => URI.regexp, :allow_blank => true
+  validates_uniqueness_of :url, :allow_blank => true
 
+  after_create :initial_fetch
+  
   def self.last_created
-    self.by_creation_date.last
+    self.order('created_at ASC').last
   end
 
   def self.find_random
     count = self.count
     return nil if count == 0
     offset = rand(count)
-    page = self.find(:first, :offset => offset)
-    page.ultimate_parent if page
+    page = self.where(:parent_id => nil).offset(offset).first
   end
 
   def self.filter(hash={})
-    if hash.has_key?("state")
-      case hash["state"]
-        when "unread"
-          state = Page.unread.include_root.map(&:ultimate_parent)
-        when "reread"  
-          state = Page.reread.no_children
-        when "favorite"
-          state = Page.favorite.include_root.map(&:ultimate_parent)
-      end
-    else
-      state = Page.no_children
+    pages = Page.scoped
+    case hash["state"]
+      when "unread"
+        pages = Page.where(:last_read => nil)
+      when "reread"  
+        pages = Page.where('pages.last_read is not null')
+      when "favorite"
+        pages = Page.where(:favorite => true)
     end
-    if hash.has_key?("size")
-      case hash["size"]
-        when "short"
-          size =  Page.short.no_children
-        when "long"
-          size =  Page.long.no_children
-        when "epic"
-          size =  Page.epic.no_children
-      end
-    else
-      size = Page.no_children
+    pages =  pages.where(:size => hash["size"]) if hash.has_key?("size")
+    ["title", "notes", "url"].each do |attrib|
+      pages = pages.search(attrib, hash[attrib]) if hash.has_key?(attrib)
     end
-    title = hash.has_key?("title") ? Page.search_title(hash["title"]).include_root.map(&:ultimate_parent) : Page.no_children
-    notes = hash.has_key?("notes") ? Page.search_notes(hash["notes"]).include_root.map(&:ultimate_parent) : Page.no_children
-    url = hash.has_key?("url") ? Page.search_url(hash["url"]).include_root.map(&:ultimate_parent) : Page.no_children
-    genre =  hash.has_key?("genre") ? Genre.find_by_name(hash["genre"]).pages.include_root.map(&:ultimate_parent) : Page.no_children
-    author =  hash.has_key?("author") ? Author.find_by_name(hash["author"]).pages.no_children : Page.no_children
-    (state & size & title & notes & url & genre & author).compact.uniq[0...LIMIT]
+    pages = pages.with_genre(hash["genre"]) if hash.has_key?("genre")
+    pages = pages.with_author(hash["author"]) if hash.has_key?("author")
+    # can only find parts by title, favorite, and unread. all other searches find parents only
+    unless hash["title"] || hash["state"] == ("unread" || "favorite" )
+      pages = pages.where(:parent_id => nil)
+    end
+    pages.order('read_after ASC').limit(LIMIT)
   end
 
   def to_param
-    "#{self.id}-#{self.clean_title}"
-  end
-
-  def clean_title
     clean = self.title.gsub('/', '')
-    CGI::escape(clean).gsub('+', ' ').gsub('.', ' ')
-  end
-
-  def before_validation
-    self.url = self.url == "URL" ? nil : self.url.try(:strip)
-    self.title = nil if self.title == "Title"
-    self.notes = nil if self.notes == "Notes"
-    self.base_url = nil if self.base_url == BASE_URL_PLACEHOLDER
-    self.url_substitutions = nil if self.url_substitutions == URL_SUBSTITUTIONS_PLACEHOLDER
-    self.urls = nil if self.urls == URLS_PLACEHOLDER
-    self.read_after = Time.now if self.read_after.blank?
-  end
-
-  def after_create
-    FileUtils.mkdir_p(Rails.public_path +  self.mypath)
-    self.raw_html = ""
-    if self.url
-      fetch
-    elsif self.base_url
-      self.create_from_base
-    elsif self.urls
-      self.parts_from_urls(self.urls)
-    end
-    self.update_ultimate_parent
-  end
-  
-  before_update
-
-  def update_ultimate_parent
-    self.update_attribute(:ultimate_parent_id, self.find_ultimate_parent.id) 
-  end
-
-  def wordcount
-    wordcount = self.remove_html.scan(/(\w|-)+/).size
-  end
-
-  def set_wordcount
-    self.size = nil
-    self.size = "short" if wordcount < SHORT_WC
-    self.size = "long" if wordcount > LONG_WC
-    self.size = "epic" if wordcount > EPIC_WC
-    self.save
+    clean_and_escaped = CGI::escape(clean).gsub('+', ' ').gsub('.', ' ')
+    "#{self.id}-#{clean_and_escaped}"
   end
 
   def pasted=(html)
@@ -158,7 +104,7 @@ class Page < ActiveRecord::Base
   def fetch(url=self.url)
     return if url.blank?
     self.update_attribute(:url, url) if url != self.url
-    agent = WWW::Mechanize.new
+    agent = Mechanize.new
     auth = MyWebsites.getpwd(url)
     agent.auth(auth[:username], auth[:password]) if auth
     begin
@@ -169,7 +115,7 @@ class Page < ActiveRecord::Base
       end
       self.raw_html = page.body
       self.build_me(false)
-    rescue WWW::Mechanize::ResponseCodeError
+    rescue Mechanize::ResponseCodeError
       self.errors.add(:base, "error retrieving content")
     rescue SocketError
       self.errors.add(:base, "couldn't resolve host name")
@@ -191,22 +137,6 @@ class Page < ActiveRecord::Base
       end
       self.set_wordcount
     end
-  end
-
-  def create_from_base
-    count = 1
-    match = self.url_substitutions.match("-")
-    if match
-      array = match.pre_match.to_i .. match.post_match.to_i
-    else
-      array = self.url_substitutions.split
-    end
-    array.each do |sub|
-      title = "Part " + count.to_s
-      create_child(self.base_url.gsub(/\*/, sub.to_s), count, title)
-      count = count.next
-    end
-    self.set_wordcount
   end
 
   def parts_from_urls(url_title_list, refetch=false)
@@ -291,33 +221,10 @@ class Page < ActiveRecord::Base
     parent.set_wordcount
   end
 
-  def build_html_from_parts
-    html = ""
-    self.parts.each do |part|
-      level = part.parent.parent ? "h2" : "h1"
-      html << "\n\n<#{level}>#{part.title}</#{level}>\n"
-      if part.parts.blank?
-        html << part.clean_html
-      else
-        html << part.build_html_from_parts
-      end
-    end
-    html
-  end
-
-  def create_child(url, position, title)
-    Page.create(:title => title, :url => url, :position => position, :parent_id => self.id)
-  end
-
   def parts
-    Page.find(:all, :order => :position, :conditions => ["parent_id = ?", id])
+    Page.order(:position).where(["parent_id = ?", id])
   end
   
-  def find_ultimate_parent
-    return self unless self.parent
-    self.parent.find_ultimate_parent
-  end
-
   def url_list
     partregexp = /\APart \d+\Z/
     list = []
@@ -343,7 +250,7 @@ class Page < ActiveRecord::Base
   end
 
   def add_parent(title)
-    pages=Page.find(:all, :conditions => ["title LIKE ?", "%" + title + "%"])
+    pages=Page.where(["title LIKE ?", "%" + title + "%"])
     return "ambiguous" if pages.size > 1
     parent = nil
     new = false
@@ -363,18 +270,17 @@ class Page < ActiveRecord::Base
       parent.update_attribute(:favorite, self.favorite)
     end
     parent.set_wordcount
-    self.update_ultimate_parent
     return parent
   end
-
+  
   def make_later
     was = self.read_after || Time.now
     self.update_attribute(:read_after, was + 3.months)
-    return Page.no_children.first
+    return Page.where(:parent_id => nil).order(:read_after).first
   end
 
   def make_first
-    earliest = Page.no_children.first.read_after
+    earliest = Page.where(:parent_id => nil).order(:read_after).first.read_after || Date.today
     self.update_attribute(:read_after, earliest - 1.day)
     if self.parent
       parent = self.parent
@@ -427,7 +333,7 @@ class Page < ActiveRecord::Base
     names = names + [(self.last_read ? self.last_read.to_date : UNREAD)]
     names.compact
   end
-  
+
   def tag_string
     mine = self.tag_names
     if self.parent
@@ -438,6 +344,20 @@ class Page < ActiveRecord::Base
   
   def clean_html=(content)
     File.open(self.clean_html_file_name, 'w') { |f| f.write(content) }
+  end
+  
+  def build_html_from_parts
+    html = ""
+    self.parts.each do |part|
+      level = part.parent.parent ? "h2" : "h1"
+      html << "\n\n<#{level}>#{part.title}</#{level}>\n"
+      if part.parts.blank?
+        html << part.clean_html
+      else
+        html << part.build_html_from_parts
+      end
+    end
+    html
   end
 
   def clean_html(check=true)
@@ -471,16 +391,6 @@ class Page < ActiveRecord::Base
 
   def raw_file_name
     Rails.public_path + self.mypath + "raw.html"
-  end
-
-  def mypath
-    env = case Rails.env
-      when "test"; "/test/"
-      when "cucumber"; "/test/"
-      when "development"; "/development/"
-      when "production"; "/files/"
-    end
-    env + (self.id/MODULO).to_s + "/" + self.id.to_s + "/"
   end
 
   def nodes
@@ -556,5 +466,56 @@ class Page < ActiveRecord::Base
     self.notes[0, snip_idx] + "..."
   end
 
+private
 
+  def self.search(attrib, string)
+    query = "%#{string}%"
+    where("pages.#{attrib} LIKE ?",query)
+  end
+
+  def self.with_genre(string)
+    joins(:genres).
+    where("genres.name = ?", string)
+  end
+  
+  def self.with_author(string)
+    joins(:authors).
+    where("authors.name = ?", string)
+  end
+  
+  def remove_placeholders
+    self.url = self.url == "URL" ? nil : self.url.try(:strip)
+    self.title = nil if self.title == "Title"
+    self.notes = nil if self.notes == "Notes"
+    self.base_url = nil if self.base_url == BASE_URL_PLACEHOLDER
+    self.url_substitutions = nil if self.url_substitutions == URL_SUBSTITUTIONS_PLACEHOLDER
+    self.urls = nil if self.urls == URLS_PLACEHOLDER
+    self.read_after = Time.now if self.read_after.blank?
+  end
+
+  def initial_fetch
+    FileUtils.mkdir_p(Rails.public_path +  self.mypath)
+    self.raw_html = ""
+    if self.url
+      fetch
+    elsif self.base_url
+      count = 1
+      match = self.url_substitutions.match("-")
+      if match
+        array = match.pre_match.to_i .. match.post_match.to_i
+      else
+        array = self.url_substitutions.split
+      end
+      array.each do |sub|
+        title = "Part " + count.to_s
+        url = self.base_url.gsub(/\*/, sub.to_s)
+        Page.create(:title => title, :url => url, :position => count, :parent_id => self.id)
+        count = count.next
+      end
+      self.set_wordcount
+    elsif self.urls
+      self.parts_from_urls(self.urls)
+    end
+  end
+  
 end

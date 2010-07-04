@@ -6,7 +6,9 @@ class Author < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
 
-  def before_validation
+  before_validation :remove_placeholder
+
+  def remove_placeholder
     self.name = nil if self.name == NEW_PLACEHOLDER
   end
 

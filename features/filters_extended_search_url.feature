@@ -9,18 +9,18 @@ Feature: search on url
     When I am on the homepage
       And I fill in "page_url" with "maas"
       And I press "Find"
-    Then I should see "The Mysterious Affair at Styles" in "#position_1"
+    Then I should see "The Mysterious Affair at Styles" within "#position_1"
     When I am on the homepage
       And I fill in "page_url" with "cc"
       And I press "Find"
-    Then I should see "A Christmas Carol" in "#position_1"
+    Then I should see "A Christmas Carol" within "#position_1"
     When I am on the homepage
       And I fill in "page_url" with "cotw"
       And I press "Find"
-    Then I should see "The Call of the Wild" in "#position_1"
+    Then I should see "The Call of the Wild" within "#position_1"
     When I am on the homepage
       And I fill in "page_url" with "test.sidrasue.com"
       And I press "Find"
-    Then I should see "The Mysterious Affair at Styles" in "#position_3"
-      And I should see "The Call of the Wild" in "#position_2"
-      And I should see "A Christmas Carol" in "#position_1"
+    Then I should see "The Mysterious Affair at Styles" within "#position_3"
+      And I should see "The Call of the Wild" within "#position_2"
+      And I should see "A Christmas Carol" within "#position_1"

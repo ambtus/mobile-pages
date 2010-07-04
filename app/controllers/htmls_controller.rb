@@ -1,4 +1,4 @@
-class HtmlController < ApplicationController
+class HtmlsController < ApplicationController
   def edit
     @page = Page.find(params[:id])
   end

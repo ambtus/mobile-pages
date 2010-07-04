@@ -25,12 +25,12 @@ class PartsController < ApplicationController
       @page = @page.add_parent(params[:add_parent])
       case @page
         when "ambiguous"
-           flash[:error] = "More than one page with that title"
+           flash[:alert] = "More than one page with that title"
            @page = Page.find(params[:page_id])
         when Page
            flash[:notice] = "Page added to this parent"
         else
-           flash[:error] = "Parent with that title has content"
+           flash[:alert] = "Parent with that title has content"
            @page = Page.find(params[:page_id])
       end
     end

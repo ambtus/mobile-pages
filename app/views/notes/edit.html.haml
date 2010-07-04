@@ -3,6 +3,6 @@
 
 .title= @page.title
 .notes
-  - form_for @page do |f|
+  = form_for @page do |f|
     = f.text_area :notes, :rows => 10, :cols => 80
     .button= f.submit "Update"

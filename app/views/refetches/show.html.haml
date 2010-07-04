@@ -1,7 +1,7 @@
 - content_for :title do
   = "Refetch " + @page.title
 .form
-  - form_tag refetch_index_path do
+  = form_tag refetches_path do
     = hidden_field_tag(:page_id, @page.id)
     - if @page.parts.blank?
       = text_field_tag :url, @page.url, :maxlength => 255, :size => 80

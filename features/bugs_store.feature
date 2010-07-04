@@ -22,13 +22,12 @@ Feature: bugs during store
   Scenario: url can't be resolved should throw error
     Given a genre exists with name: "genre"
     When I am on the homepage
-      And I select "genre"
+      And I select "genre" from "Genre"
       And I fill in "page_title" with "bad url"
       And I fill in "page_url" with "http://w.sidrasue.com/tests/test.html"
       And I press "Store"
-    Then I should see "couldn't resolve host name" in "#flash_error"
-      And I should not see "couldn't resolve host name" in ".content"
-      And I should not see "Page created" in "#flash_notice"
+    Then I should see "couldn't resolve host name" within "#flash_alert"
+      And I should not see "Page created" 
 
   Scenario: pasted plaintext is okay
     Given a titled page exists
@@ -36,8 +35,8 @@ Feature: bugs during store
     When I follow "Edit Raw HTML"
       And I fill in "pasted" with "plain text"
       And I press "Update Raw HTML"
-    Then I should see "Raw HTML updated" in "#flash_notice"
-      And I should see "plain text" in ".content"
+    Then I should see "Raw HTML updated" within "#flash_notice"
+      And I should see "plain text" within ".content"
 
   Scenario: pasted blank is okay
     Given a titled page exists
@@ -45,14 +44,14 @@ Feature: bugs during store
     When I follow "Edit Raw HTML"
       And I fill in "pasted" with ""
       And I press "Update Raw HTML"
-    Then I should see "Raw HTML updated" in "#flash_notice"
-      And I should see "" in ".content"
+    Then I should see "Raw HTML updated" within "#flash_notice"
+      And I should see "" within ".content"
 
   Scenario: holder page for parts is okay
     Given I am on the homepage
     When I fill in "page_title" with "Only entered Title"
       And I press "Store"
-    Then I should see "Page created" in "#flash_notice"
+    Then I should see "Page created" within "#flash_notice"
 
   Scenario: url with surrounding whitespace okay
     Given a titled page exists with url: " http://test.sidrasue.com/test.html"
@@ -63,28 +62,27 @@ Feature: bugs during store
   Scenario: 404 shouldn't 500, but should display error
     Given a genre exists with name: "genre"
     When I am on the homepage
-      And I select "genre"
+      And I select "genre" from "Genre"
       And I fill in "page_title" with "bad url"
       And I fill in "page_url" with "http://test.sidrasue.com/style.html"
       And I press "Store"
-    Then I should see "error retrieving content" in "#flash_error"
-      And I should not see "error retrieving content" in ".content"
-      And I should not see "Page created" in "#flash_notice"
+    Then I should see "error retrieving content" within "#flash_alert"
+      And I should not see "Page created" 
 
   Scenario: not filling in notes shouldn't give "Notes"
     Given a genre exists with name: "genre"
     When I am on the homepage
-     And I select "genre"
+     And I select "genre" from "Genre"
      And I fill in "page_title" with "no notes"
      And I press "Store"
-   Then I should not see "Notes" in ".notes"
+   Then I should not see "Notes" within ".notes"
    
   Scenario: duplicate url
     Given a page exists with title: "Original", url: "http://test.sidrasue.com/test.html", add_genre_string: "mygenre"
     When I am on the homepage
       And I fill in "page_title" with "duplicate"
       And I fill in "page_url" with "http://test.sidrasue.com/test.html"
-      And I select "mygenre"
+      And I select "mygenre" from "Genre"
       And I press "Store"
-    Then I should see "Url has already been taken" in "#flash_error"
-      And I should not see "duplicate" in ".title"
+    Then I should see "Url has already been taken" within "#flash_alert"
+      And I should not see "duplicate" 

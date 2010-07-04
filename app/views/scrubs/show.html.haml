@@ -5,7 +5,7 @@
 .info= "remove through the first check and the second check on (first if it's after the half-way mark." 
 %a{:href => "#end"} Jump to end
 .form
-  - form_for @page do |f|
+  = form_for @page do |f|
     .button= f.submit "Scrub"
     .button= f.submit "Remove surrounding Div"
     - @page.nodes.each_with_index do |node,index|

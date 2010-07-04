@@ -1,18 +1,18 @@
 .form
-  - form_for page do |f|
+  = form_for page do |f|
     - if called_by == "index"
-      = select_tag :size, "<option></option>" + options_for_select(Page::SIZES, @size)
+      = select_tag :size, options_for_select([nil] + Page::SIZES, @size)
       = label_tag :size, "Size"
       %br
-      = select_tag :state, "<option></option>" + options_for_select(Page::STATES, @state)
+      = select_tag :state, options_for_select([nil] + Page::STATES, @state)
       = label_tag :state, "State"
       %br
     - unless Genre.names.blank?
-      = select_tag :genre, "<option></option>" + options_for_select(Genre.names, @genre.try(:name))
+      = select_tag :genre, options_for_select([nil] + Genre.names, @genre.try(:name))
     = label_tag :genre, "Genre"
     %br
     - unless Author.names.blank?
-      = select_tag :author, "<option></option>" + options_for_select(Author.names, @author.try(:name))
+      = select_tag :author, options_for_select([nil] + Author.names, @author.try(:name))
     = label_tag :author, "Author"
     %br
     = hinted_text_field_tag 'page[title]', page.title, "Title"

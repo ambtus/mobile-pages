@@ -1,4 +1,4 @@
-class RefetchController < ApplicationController
+class RefetchesController < ApplicationController
   def show
     @page = Page.find(params[:id])
   end
@@ -9,7 +9,6 @@ class RefetchController < ApplicationController
     else
       @page.parts_from_urls(params[:url_list], true)
     end
-    flash[:error] = @page.errors[:url]
-    redirect_to read_url(@page)
+    redirect_to read_url(@page), :alert => @page.errors[:url]
   end
 end

@@ -9,5 +9,6 @@ Feature: basic random
     Given 2 titled pages exist
     When I am on the homepage
     When I follow "Random"
-    Then I should see "" in ".parts"
+    Then I should not see "No pages found"
+    Then I should see "" within ".parts"
     When I follow "Random"

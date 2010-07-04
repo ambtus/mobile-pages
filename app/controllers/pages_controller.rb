@@ -7,7 +7,7 @@ class PagesController < ApplicationController
       if @page
         redirect_to page_url(@page) and return
       else
-        flash.now[:error] = "No pages found" 
+        flash.now[:alert] = "No pages found" 
       end
     end
     @title = "Mobile pages"
@@ -19,7 +19,7 @@ class PagesController < ApplicationController
     @authors = Author.all.map(&:name)
     @author = Author.find_by_name(params[:author]) if params[:author]
     @pages = Page.filter(params)
-    flash.now[:error] = "No pages found" if @pages.blank?
+    flash.now[:alert] = "No pages found" if @pages.blank?
   end
 
   def show
@@ -45,7 +45,7 @@ class PagesController < ApplicationController
     @author = Author.find_by_name(params[:author])
     @favorite = params[:favorite]
     if @page.save
-      if @page.errors[:base]
+      if !@page.errors[:base].blank?
         @errors = @page.errors
         @page.destroy
         @page = Page.new(params[:page])        
@@ -65,7 +65,7 @@ class PagesController < ApplicationController
     else  
       @errors = @page.errors
     end
-    flash[:error] = @errors.collect {|e, m| "#{e.humanize unless e == "base"} #{m}"}.join(" and  ")
+    flash[:alert] = @errors.collect {|e, m| "#{e.to_s.humanize unless e == "Base"} #{m}"}.join(" and  ")
   end
 
   def update

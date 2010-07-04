@@ -33,6 +33,7 @@ utf-8 encoding
 cp config/database.example config/database.yml 
 cp config/initializers/websites.example config/initializers/websites.rb
 cp config/initializers/session_store.example config/initializers/session_store.rb
+cp config/initializers/secret_token.example config/initializers/secret_token.rb
 
 === optional configuration
 

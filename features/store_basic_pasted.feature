@@ -9,7 +9,7 @@ Feature: basic pasted
      And I follow "Edit Raw HTML"
     When I fill in "pasted" with "<p>This is a test</p>"
       And I press "Update Raw HTML"
-    Then I should see "Raw HTML updated" in "#flash_notice"
+    Then I should see "Raw HTML updated" within "#flash_notice"
       And I should see "This is a test"
       And I should not see "Retrieved from the web"
 

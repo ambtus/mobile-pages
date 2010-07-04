@@ -2,7 +2,7 @@
   = "Select genres for " + @page.title
 .title= @page.title
 .genres
-  - form_tag genres_path do
+  = form_tag genres_path do
     = hidden_field_tag(:page_id, @page.id)
     .filters
       = select_tag("page[genre_ids][]", options_from_collection_for_select(Genre.all, 'id', 'name', selected = @page.genres.map(&:id)), :multiple => true)

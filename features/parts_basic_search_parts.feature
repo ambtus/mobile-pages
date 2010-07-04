@@ -9,7 +9,7 @@ Feature: basic search with parts
       | Parent1 | http://test.sidrasue.com/parts/*.html | 1   |
       | Parent2 | http://test.sidrasue.com/parts/*.html | 2 3 |
      When I am on the homepage
-     Then I should see "Parent1" in ".title"
+     Then I should see "Parent1" within ".title"
       And I fill in "page_title" with "Part 2"
       And I press "Find"
-     Then I should see "Parent2" in ".title"
+     Then I should see "Part 2" within ".title"

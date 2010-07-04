@@ -1,4 +1,4 @@
-class RateController < ApplicationController
+class RatesController < ApplicationController
   def show
     @page = Page.find(params[:id])
   end

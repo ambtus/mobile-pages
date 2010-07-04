@@ -12,8 +12,8 @@ Scenario: no genres
     And I press "Store"
   Then I should see "Please select genre"
   When I fill in "genres" with "my genre"
-    And I press "Add genres"
-  Then I should see "my genre" in ".genres"
+    And I press "Add Genres"
+  Then I should see "my genre" within ".genres"
 
 Scenario: no genre selected
   Given a genre exists with name: "first"
@@ -22,9 +22,9 @@ Scenario: no genre selected
     And I fill in "page_title" with "New Title"
     And I press "Store"
   Then I should see "Please select genre"
-  When I select "first"
-    And I press "Update genres"
-  Then I should see "first" in ".genres"
+  When I select "first" from "page_genre_ids_"
+    And I press "Update Genres"
+  Then I should see "first" within ".genres"
 
 Scenario Outline: genres and authors
   Given I have no pages
@@ -41,14 +41,14 @@ Scenario Outline: genres and authors
   When I am on the homepage
     And I fill in "page_url" with "<url>"
     And I fill in "page_title" with "<title>"
-    And I select "<genre>" 
-    And I select "<author>" 
+    And I select "<genre>" from "Genre"
+    And I select "<author>" from "Author"
     And I press "Store"
-  Then I should see "Page created" in "#flash_notice"
-    And I should see "<title>" in ".title"
-    And I should see "<result>" in ".content"
-    And I should see "<genre>" in ".genres"
-    And I should see "<author>" in ".authors"
+  Then I should see "Page created" within "#flash_notice"
+    And I should see "<title>" within ".title"
+    And I should see "<result>" within ".content"
+    And I should see "<genre>" within ".genres"
+    And I should see "<author>" within ".authors"
 
   Examples:
   | url                                      | title            | result                 | genre        | author        |

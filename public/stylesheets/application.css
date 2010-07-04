@@ -1,7 +1,7 @@
 #flash_notice {
     background-color: #FF0;
     }
-#flash_error {
+#flash_alert {
     background-color: #F00;
     }
 .fieldWithErrors {

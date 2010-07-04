@@ -5,28 +5,28 @@ Feature: bugs with parts
       And a page exists with title: "Ambiguous2"
       And a page exists with title: "Single"
     When I am on the page's page
-      Then I should see "Single" in ".title"
+      Then I should see "Single" within ".title"
     When I follow "Manage Parts"
       And I fill in "add_parent" with "Ambiguous"
       And I press "Update"
     Then I should see "More than one page with that title"
-      And I should not see "Ambiguous" in ".title"
+      And I should not see "Ambiguous" within ".title"
     When I follow "Manage Parts"
       And I fill in "add_parent" with "Ambiguous1"
       And I press "Update"
-    Then I should see "Ambiguous1" in ".title"
-      And I should see "Single" in "#position_1"
+    Then I should see "Ambiguous1" within ".title"
+      And I should see "Single" within "#position_1"
 
   Scenario: can't add a part to a page with content
     Given a page exists with title: "Styled", url: "http://test.sidrasue.com/styled.html"
       And a page exists with title: "Single"
     When I am on the page's page
-      Then I should see "Single" in ".title"
+      Then I should see "Single" within ".title"
     When I follow "Manage Parts"
       And I fill in "add_parent" with "Styled"
       And I press "Update"
     Then I should see "Parent with that title has content"
-      And I should not see "Styled" in ".title"
+      And I should not see "Styled" within ".title"
 
   Scenario: ignore empty lines
     Given a genre exists with name: "genre"
@@ -41,11 +41,11 @@ Feature: bugs with parts
         
         """
      And I fill in "page_title" with "Parent"
-     And I select "genre"
+     And I select "genre" from "Genre"
      And I press "Store"
-   Then I should see "Parent" in ".title"
-     And I should see "Child 1" in "h1"
-     And I should see "Child 2" in "h1"
+   Then I should see "Parent" within ".title"
+     And I should see "Child 1" within "h1"
+     And I should see "Child 2" within "h1"
      And I should not see "Part 3"
      And I should see "stuff for part 1"
      And I should see "stuff for part 2"
@@ -61,11 +61,11 @@ Feature: bugs with parts
         http://test.sidrasue.com/styled.html
         """
       And I press "Update"
-    Then I should see "Single" in ".parent"
+    Then I should see "Single" within ".parent"
     When I am on the homepage
-      And I follow "Single" in "#position_1"
-    Then I should see "Part 1" in "#position_1"
-      And I should see "Part 2" in "#position_2"
+      And I follow "Single" within "#position_1"
+    Then I should see "Part 1" within "#position_1"
+      And I should see "Part 2" within "#position_2"
 
   Scenario: download part
     Given a titled page exists with urls: "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
@@ -74,6 +74,6 @@ Feature: bugs with parts
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
     When I follow "page 1"
-      And I follow "Text" in "#position_1"
+      And I follow "Text" within "#position_1"
     Then I should see "stuff for part 1"
     And I should not see "stuff for part 2"

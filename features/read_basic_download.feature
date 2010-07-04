@@ -6,7 +6,7 @@ Feature: basic download
   Scenario: download a text version of styled html
     Given a titled page exists with url: "http://test.sidrasue.com/styled.html"
     When I am on the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should see "# This is a header #"
       And I should see "## This is a second level header ##"
       And I should see "*Bold*"
@@ -34,7 +34,7 @@ Feature: basic download
   Scenario: download stripping links and images
     Given a titled page exists with url: "http://test.sidrasue.com/href.html"
     When I am on the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should see "[top link]"
       And I should see "[middle link]"
       And I should see "[bottom link]"
@@ -46,7 +46,7 @@ Feature: basic download
   Scenario: download stripping of javascript and comments
     Given a titled page exists with url: "http://test.sidrasue.com/entities.html"
     When I am on the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should not see "script language="
       And I should not see "FILE ARCHIVED"
       And I should not see "This script will not work without javascript enabled."
@@ -56,7 +56,7 @@ Feature: basic download
   Scenario: download stripping of tables
     Given a titled page exists with url: "http://test.sidrasue.com/tablecontent.html"
     When I am on the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should not see "<table"
       And I should not see "<td"
       And I should not see "<tr>"
@@ -67,7 +67,7 @@ Feature: basic download
   Scenario: download stripping of lists
     Given a titled page exists with url: "http://test.sidrasue.com/list.html"
     When I am on the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should not see "<ul"
       And I should not see "<ol>"
       And I should not see "<li>"
@@ -78,7 +78,7 @@ Feature: basic download
   Scenario: download crappy Microsoft Office "html"
     Given a titled page exists with url: "http://test.sidrasue.com/mso.html"
     When I am on the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should not see "<"
       And I should see "he _had_ to"
       And I should not see "\n\n\n\n"
@@ -87,7 +87,7 @@ Feature: basic download
   Scenario: download more crappy Microsoft Office "html"
     Given a titled page exists with url: "http://test.sidrasue.com/mso2.html"
     When I am on the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should not see "<wbr>"
       And I should see "so-I-am-God"
       And I should not see "<strong"
@@ -97,21 +97,21 @@ Feature: basic download
   Scenario: download weird empty divs
     Given a titled page exists with url: "http://test.sidrasue.com/ejournal_div.html"
     When I am on the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should not see "\n\n\n\n"
       And I should see "Rodney muttered imprecations"
 
   Scenario: stripping linefeeds
     Given a titled page exists with url: "http://test.sidrasue.com/linefeeds.html"
     When I am on the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
      Then I should not see "thirdfourth"
      Then I should not see "fifthsixth"
 
   Scenario: divs with attributes
     Given a titled page exists with url: "http://test.sidrasue.com/div.html"
     When I am on the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should see "first div"
       And I should see "second div"
       And I should not see "<"
@@ -119,7 +119,7 @@ Feature: basic download
   Scenario: download livejournal page content only
     Given a titled page exists with url: "http://sid.livejournal.com/119818.html"
     When I am on the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should not see "input type="
       And I should not see "form method="
       And I should not see "select name="
@@ -131,7 +131,7 @@ Feature: basic download
   Scenario: download wraithbait page content only
     Given a titled page exists with url: "http://www.wraithbait.com/viewstory.php?sid=15331"
     When I am on the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should not see "recent stories"
       And I should not see "Stargate SG-1 and Stargate: Atlantis,"
       And I should see "Summary:"
@@ -141,7 +141,7 @@ Feature: basic download
   Scenario: download wraithbait story content only
     Given a titled page exists with url: "http://www.wraithbait.com/viewstory.php?action=printable&textsize=0&sid=15133&chapter=all"
     When I am on the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should see "Summary:"
       And I should see "Story Notes:"
       And I should see "There was a time of day in Atlantis"
@@ -150,7 +150,7 @@ Feature: basic download
   Scenario: download fanfiction page content only
     Given a titled page exists with url: "http://www.fanfiction.net/s/638499/1/"
     When I am on the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should see "This is rabbit"
       And I should see "Stuck in the Muddle"
     But I should not see "Rated: "
@@ -159,7 +159,7 @@ Feature: basic download
   Scenario: download archive of our own page content only
     Given a titled page exists with url: "http://test.archiveofourown.org/works/695"
     When I am on the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should see "Work Header"
       And I should see "Summary"
       And I should see "Work Text"
@@ -170,7 +170,7 @@ Feature: basic download
   Scenario: download google groops content only
     Given a titled page exists with url: "http://test.sidrasue.com/google.html"
     When I am on the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should see "Author: Ster Julie"
       And I should not see "This is a Usenet group"
 
