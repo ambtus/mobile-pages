@@ -160,11 +160,8 @@ Feature: basic download
     Given a titled page exists with url: "http://test.archiveofourown.org/works/695"
     When I am on the page's page
       And I follow "Text" in ".title"
-    Then I should see "Work Header"
-      And I should see "Summary"
-      And I should see "Work Text"
-      And I should see "AJ had just started"
-      And I should see "I ever wrote"
+    Then I should see "AJ had just started his solo"
+      And I should see "both through running"
     But I should not see "Add Comment"
 
   Scenario: download google groops content only
