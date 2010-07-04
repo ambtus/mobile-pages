@@ -3,7 +3,7 @@ Feature: bugs with scrub
   Scenario: tidy ocassionally re-adds &nbsp;
     Given a titled page exists with url: "http://test.sidrasue.com/tidy.html"
     When I am on the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should not see "nbsp"
 
   Scenario: scrub a sub-part
@@ -15,7 +15,7 @@ Feature: bugs with scrub
       And I check boxes "0 2"
       And I press "Scrub"
     When I am on the homepage
-      And I follow "Text" in "#position_1"
+      And I follow "Text" within "#position_1"
     Then I should see "First Part #"
       And I should see "## SubPart ##"
       And I should see "stuff for part 1"
@@ -28,7 +28,7 @@ Feature: bugs with scrub
       And I follow "Scrub"
       And I check boxes "2 4"
       And I press "Scrub"
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should see "actual content"
       And I should not see "header"
 

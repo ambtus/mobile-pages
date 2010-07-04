@@ -3,36 +3,36 @@ Feature: bugs on download
   Scenario: download with slashes in title 
     Given a page exists with title: "This title 1/2"
     When I go to the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
 
   Scenario: download with periods in title
     Given a page exists with title: "This.title.has.periods"
     When I go to the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
 
   Scenario: download with blank named anchor
     Given a titled page exists with url: "http://sidra.livejournal.com/838.html"
     When I go to the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should see "Ron crouched"
       And I should not see "<a"
 
   Scenario: download with spaces in title
     Given a page exists with title: "This title has spaces"
     When I go to the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
 
   Scenario: download livejournal adult content
     Given a titled page exists with url: "http://sidra.livejournal.com/3265.html"
     When I go to the page's page
-      And I follow "Text" in ".title"
+      And I follow "Text" within ".title"
     Then I should not see "Adult Content"
       And I should see "alien"
 
   Scenario: download with CDATA
     Given a titled page exists with url: "http://test.sidrasue.com/112b.html"
     When I go to the page's page
-      And I follow "Read" in ".title"
+      And I follow "Read" within ".title"
     Then I should see "A Single Love"
     But I should not see "email Vera"
 

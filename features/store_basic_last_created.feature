@@ -13,5 +13,5 @@ Feature: find last created
       And I press "Store"
     When I am on the homepage
     When I follow "Last"
-    Then I should see "" in ".parts"
-      And I should see "New Title" in ".title"
+    Then I should see "" within ".parts"
+      And I should see "New Title" within ".title"

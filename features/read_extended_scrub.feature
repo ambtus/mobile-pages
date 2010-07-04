@@ -11,7 +11,7 @@ Feature: Extended Scrub
   When I am on the page's page
     And I follow "Scrub"
     And I uncheck "1"
-  When I press "Remove surrounding div"
+  When I press "Remove surrounding Div"
   Then I should see "Surrounding div removed"
   When I check "2"
   And I uncheck "3"
@@ -24,7 +24,7 @@ Feature: Extended Scrub
   Given a titled page exists with url: "http://test.sidrasue.com/blockquote.html"
   When I am on the page's page
     And I follow "Scrub"
-  When I press "Remove surrounding div"
+  When I press "Remove surrounding Div"
   Then I should see "Surrounding div removed"
   When I check "0"
     And I check "2"

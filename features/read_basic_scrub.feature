@@ -8,7 +8,7 @@ Feature: Basic Scrub
    When I am on the homepage
     And I fill in "page_url" with "<url>"
     And I fill in "page_title" with "New Title"
-    And I select "genre"
+    And I select "genre" from "Genre"
     And I press "Store"
     And I follow "Scrub"
   When I check boxes "<nodes>"
@@ -33,7 +33,7 @@ Feature: Basic Scrub
    When I am on the homepage
     And I fill in "page_url" with "<url>"
     And I fill in "page_title" with "New Title"
-    And I select "genre"
+    And I select "genre" from "Genre"
     And I press "Store"
     And I follow "Scrub"
   When I check "<nodes>"

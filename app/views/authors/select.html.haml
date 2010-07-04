@@ -2,7 +2,7 @@
   = "Select authors for " + @page.title
 .title= @page.title
 .authors
-  - form_tag authors_path do
+  = form_tag authors_path do
     = hidden_field_tag(:page_id, @page.id)
     .filters
       = select_tag("page[author_ids][]", options_from_collection_for_select(Author.all, 'id', 'name', selected = @page.authors.map(&:id)), :multiple => true)

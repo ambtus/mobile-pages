@@ -45,9 +45,9 @@ Feature: basic edit of parts
         http://test.sidrasue.com/parts/1.html
         """
       And I press "Update"
-      And I follow "Read" in "#position_1"
+      And I follow "Read" within "#position_1"
     Then I should see "stuff for part 2"
     When I am on the homepage
-      And I follow "page 1" in "#position_1"
-      And I follow "Read" in "#position_2"
+      And I follow "page 1" within "#position_1"
+      And I follow "Read" within "#position_2"
     Then I should see "stuff for part 1"

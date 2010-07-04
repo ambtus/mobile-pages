@@ -1,16 +1,16 @@
-ActionController::Routing::Routes.draw do |map|
-  map.devise_for :users
+MobilePages::Application.routes.draw do |map|
+  devise_for :users
 
-  map.resources :pages
-  map.resources :read
-  map.resources :authors
-  map.resources :genres
-  map.resources :store
-  map.resources :scrub
-  map.resources :refetch
-  map.resources :rate
-  map.resources :parts
-  map.resources :html
-  map.resources :notes
-  map.root :controller => "pages"
+  resources :authors, :only => ['show', 'create']
+  resources :genres, :only => ['show', 'create']
+  resources :htmls, :only => ['edit'] 
+  resources :notes, :only => ['edit']
+  resources :pages, :only => ['index', 'show', 'create', 'update']
+  resources :parts, :only => ['new', 'edit', 'create']
+  resources :rates, :only => ['show', 'create']
+  resources :reads, :only => ['show']
+  resources :refetches, :only => ['show', 'create']
+  resources :scrubs, :only => ['show']
+
+  root :to => 'pages#index'
 end

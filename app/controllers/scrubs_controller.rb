@@ -1,4 +1,4 @@
-class ScrubController < ApplicationController
+class ScrubsController < ApplicationController
   def show
     @page = Page.find(params[:id])
     if @page.parts.blank?

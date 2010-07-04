@@ -8,32 +8,32 @@ Feature: basic genres
     When I am on the page's page
       And I follow "Genres"
     When I fill in "genres" with "classic, children's"
-      And I press "Add genres"
-    Then I should see "classic" in ".genres"
-      And I should see "children's" in ".genres"
+      And I press "Add Genres"
+    Then I should see "classic" within ".genres"
+      And I should see "children's" within ".genres"
     When I am on the homepage
-    Then I select "classic"
-    Then I select "children's"
+    Then I select "classic" from "Genre"
+    Then I select "children's" from "Genre"
 
   Scenario: select a genre for a page when there are genres
     Given a genre exists with name: "fantasy"
     And a titled page exists
     When I am on the page's page
     When I follow "Genres"
-      And I select "fantasy"
-      And I press "Update genres"
-    Then I should see "fantasy" in ".genres"
+      And I select "fantasy" from "page_genre_ids_"
+      And I press "Update Genres"
+    Then I should see "fantasy" within ".genres"
 
   Scenario: add a genre to a page which has genres
     Given a titled page exists with add_genre_string: "classic"
     When I am on the page's page
-    Then I should see "classic" in ".genres"
+    Then I should see "classic" within ".genres"
     When I follow "Genres"
       And I follow "Add Genres"
       And I fill in "genres" with "favorite, children's"
-      And I press "Add genres"
-    Then I should see "children's, classic, favorite" in ".genres"
+      And I press "Add Genres"
+    Then I should see "children's, classic, favorite" within ".genres"
     When I am on the homepage
-    Then I select "classic"
-      And I select "favorite"
-      And I select "children's"
+    Then I select "classic" from "Genre"
+      And I select "favorite" from "State"
+      And I select "children's" from "Genre"

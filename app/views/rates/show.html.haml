@@ -4,7 +4,7 @@
 .title= @page.title
 .rate= "Please rate (converted to #{Page::DURATION} for next suggested read date)"
 .form
-  - form_tag rate_index_path do
+  = form_tag :rates do
     = hidden_field_tag(:page_id, @page.id)
     .button= submit_tag "1"
     .button= submit_tag "2"
