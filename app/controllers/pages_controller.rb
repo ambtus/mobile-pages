@@ -1,17 +1,20 @@
 class PagesController < ApplicationController
-  
+
   def index
-    if params[:find] 
+    if params[:find]
       @page = Page.find_random if params[:find] == "random"
       @page = Page.last_created if params[:find] == "last"
       if @page
         redirect_to page_url(@page) and return
       else
-        flash.now[:alert] = "No pages found" 
+        flash.now[:alert] = "No pages found"
       end
     end
     @title = "Mobile pages"
     @page = Page.new(params[:page])
+    @page.title = params[:title] if params[:title]
+    @page.notes = params[:notes] if params[:notes]
+    @page.url = params[:url] if params[:url]
     @size = params[:size]
     @state = params[:state]
     @genres = Genre.all.map(&:name)
@@ -48,7 +51,7 @@ class PagesController < ApplicationController
       if !@page.errors[:base].blank?
         @errors = @page.errors
         @page.destroy
-        @page = Page.new(params[:page])        
+        @page = Page.new(params[:page])
         @page.favorite = true if params[:favorite] == Page::FAVORITE
       else
         @page.favorite = @favorite
@@ -62,7 +65,7 @@ class PagesController < ApplicationController
           redirect_to read_url(@page) and return
         end
       end
-    else  
+    else
       @errors = @page.errors
     end
     flash[:alert] = @errors.collect {|e, m| "#{e.to_s.humanize unless e == "Base"} #{m}"}.join(" and  ")
