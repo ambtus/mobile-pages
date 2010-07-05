@@ -16,23 +16,21 @@ class Page < ActiveRecord::Base
 
   UNREAD = "unread"
   FAVORITE = "favorite"
-  REREAD = "reread"
 
-  SIZES = ["short", "long", "epic"]
+  SIZES = ["short", "medium", "long", "epic", "any"]
+
+  SHORT_WC = 1000
+  LONG_WC = 10000
+  EPIC_WC = 80000
 
   def set_wordcount
     wordcount = self.remove_html.scan(/(\w|-)+/).size
-    self.size = nil
+    self.size = "medium"
     self.size = "short" if wordcount < SHORT_WC
     self.size = "long" if wordcount > LONG_WC
     self.size = "epic" if wordcount > EPIC_WC
     self.save
   end
-
-  STATES = [UNREAD, FAVORITE, REREAD]
-  SHORT_WC = 1000
-  LONG_WC = 10000
-  EPIC_WC = 80000
 
   BASE_URL_PLACEHOLDER = "Base URL: use * as replacement placeholder"
   URL_SUBSTITUTIONS_PLACEHOLDER = "URL substitutions, space separated replacements or inclusive integer range n-m"
@@ -47,7 +45,7 @@ class Page < ActiveRecord::Base
   attr_accessor :base_url
   attr_accessor :url_substitutions
   attr_accessor :urls
-    
+
   before_validation :remove_placeholders
 
   validates_presence_of :title, :message => "can't be blank or 'Title'"
@@ -55,7 +53,7 @@ class Page < ActiveRecord::Base
   validates_uniqueness_of :url, :allow_blank => true
 
   after_create :initial_fetch
-  
+
   def self.last_created
     self.order('created_at ASC').last
   end
@@ -67,24 +65,20 @@ class Page < ActiveRecord::Base
     page = self.where(:parent_id => nil).offset(offset).first
   end
 
-  def self.filter(hash={})
+  def self.filter(params={})
     pages = Page.scoped
-    case hash["state"]
-      when "unread"
-        pages = Page.where(:last_read => nil)
-      when "reread"  
-        pages = Page.where('pages.last_read is not null')
-      when "favorite"
-        pages = Page.where(:favorite => true)
-    end
-    pages =  pages.where(:size => hash["size"]) if hash.has_key?("size")
+    pages = pages.where(:last_read => nil) if params[:unread] == "yes"
+    pages = pages.where('pages.last_read is not null') if params[:unread] == "no"
+    pages = pages.where(:favorite => true) if params[:favorite] == "yes"
+    pages = pages.where(:favorite => false) if params[:favorite] == "no"
+    pages =  pages.where(:size => params["size"]) if params.has_key?("size") unless params["size"] == "any"
     ["title", "notes", "url"].each do |attrib|
-      pages = pages.search(attrib, hash[attrib]) if hash.has_key?(attrib)
+      pages = pages.search(attrib, params[attrib]) if params.has_key?(attrib)
     end
-    pages = pages.with_genre(hash["genre"]) if hash.has_key?("genre")
-    pages = pages.with_author(hash["author"]) if hash.has_key?("author")
-    # can only find parts by title, favorite, and unread. all other searches find parents only
-    unless hash["title"] || hash["state"] == ("unread" || "favorite" )
+    pages = pages.with_genre(params["genre"]) if params.has_key?("genre")
+    pages = pages.with_author(params["author"]) if params.has_key?("author")
+    # can only find parts by title, favorite, or unread. all other searches find parents only
+    unless params["title"] || params["unread"] == "yes" || params["favorite"] == "yes"
       pages = pages.where(:parent_id => nil)
     end
     pages.order('read_after ASC').limit(LIMIT)
@@ -124,7 +118,7 @@ class Page < ActiveRecord::Base
 
   def build_me(reclean)
     if !self.parts.blank?
-      self.parts.each {|p| p.build_me(reclean)} 
+      self.parts.each {|p| p.build_me(reclean)}
     else
       html = reclean ? self.clean_html(false) : self.raw_html
       body = Scrub.regularize_body(html)
@@ -224,7 +218,7 @@ class Page < ActiveRecord::Base
   def parts
     Page.order(:position).where(["parent_id = ?", id])
   end
-  
+
   def url_list
     partregexp = /\APart \d+\Z/
     list = []
@@ -272,7 +266,7 @@ class Page < ActiveRecord::Base
     parent.set_wordcount
     return parent
   end
-  
+
   def make_later
     was = self.read_after || Time.now
     self.update_attribute(:read_after, was + 3.months)
@@ -326,7 +320,7 @@ class Page < ActiveRecord::Base
     end
     self.genres
   end
-  
+
   def tag_names
     names = self.authors.map(&:name) + self.genres.map(&:name) + [self.size]
     names = names + [FAVORITE] if self.favorite
@@ -341,11 +335,11 @@ class Page < ActiveRecord::Base
     end
     mine.join(", ")
   end
-  
+
   def clean_html=(content)
     File.open(self.clean_html_file_name, 'w') { |f| f.write(content) }
   end
-  
+
   def build_html_from_parts
     html = ""
     self.parts.each do |part|
@@ -361,7 +355,7 @@ class Page < ActiveRecord::Base
   end
 
   def clean_html(check=true)
-    self.build_me(true) if (check && self.needs_recleaning?) 
+    self.build_me(true) if (check && self.needs_recleaning?)
     if parts.blank?
       begin
         File.open(self.clean_html_file_name, 'r') { |f| f.read }
@@ -434,7 +428,7 @@ class Page < ActiveRecord::Base
   def remove_html
     Scrub.html_to_text(self.clean_html)
   end
-  
+
   def to_pml
     self.build_me(true) if self.needs_recleaning?
     html = "<p>" + self.tag_string + "</p>"
@@ -442,7 +436,7 @@ class Page < ActiveRecord::Base
     html = html + self.clean_html
     Scrub.html_to_pml(html, self.title, self.author_string)
   end
-  
+
   def pdb_name
     self.id.to_s + ".pdb"
   end
@@ -457,7 +451,7 @@ class Page < ActiveRecord::Base
     return true unless File.exists?(self.clean_html_file_name)
     File.mtime(self.clean_html_file_name) < File.mtime(Rails.root + "lib/scrub.rb")
   end
-  
+
   def short_notes
     return self.notes if self.notes.blank?
     return self.notes if self.notes.size < MININOTE
@@ -477,12 +471,12 @@ private
     joins(:genres).
     where("genres.name = ?", string)
   end
-  
+
   def self.with_author(string)
     joins(:authors).
     where("authors.name = ?", string)
   end
-  
+
   def remove_placeholders
     self.url = self.url == "URL" ? nil : self.url.try(:strip)
     self.title = nil if self.title == "Title"
@@ -517,5 +511,5 @@ private
       self.parts_from_urls(self.urls)
     end
   end
-  
+
 end

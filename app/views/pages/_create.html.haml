@@ -1,27 +1,38 @@
 .form
   = form_for page do |f|
     - if called_by == "index"
-      = select_tag :size, options_for_select([nil] + Page::SIZES, @size)
-      = label_tag :size, "Size"
+      = label_tag :unread, "Unread:"
+      - ['yes', 'no', 'either'].each do |choice|
+        = radio_button_tag :unread, choice, @unread == choice
+        = label_tag "unread_#{choice}", choice
       %br
-      = select_tag :state, options_for_select([nil] + Page::STATES, @state)
-      = label_tag :state, "State"
+      = label_tag :favorite, "Favorite:"
+      - ['yes', 'no', 'either'].each do |choice|
+        = radio_button_tag :favorite, choice, @favorite == choice
+        = label_tag "favorite_#{choice}", choice
+      %br
+      = label_tag :size, "Size:"
+      - Page::SIZES.each do |choice|
+        = radio_button_tag :size, choice, @size == choice
+        = label_tag "size_#{choice}", choice
       %br
     - unless Genre.names.blank?
+      = label_tag :genre, "Genre:"
       = select_tag :genre, options_for_select([nil] + Genre.names, @genre.try(:name))
-    = label_tag :genre, "Genre"
-    %br
+      %br
     - unless Author.names.blank?
+      = label_tag :author, "Author:"
       = select_tag :author, options_for_select([nil] + Author.names, @author.try(:name))
-    = label_tag :author, "Author"
-    %br
+      %br
     = hinted_text_field_tag 'page[title]', page.title, "Title"
     %br
     = hinted_text_area_tag 'page[notes]', page.notes, "Notes", :rows => 1, :cols => 30
     %br
     - if called_by == "multiple"
       = hinted_text_field_tag 'page[base_url]', page.base_url, Page::BASE_URL_PLACEHOLDER, :maxlength => 255, :size => 80
+      %br
       = hinted_text_field_tag 'page[url_substitutions]', page.url_substitutions, Page::URL_SUBSTITUTIONS_PLACEHOLDER, :maxlength => 255, :size => 80
+      %br
       = hinted_text_area_tag 'page[urls]', page.urls, Page::URLS_PLACEHOLDER, :rows => 10, :cols => 80
     - else
       = hinted_text_field_tag 'page[url]', page.url, "URL"
