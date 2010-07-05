@@ -15,8 +15,9 @@ class PagesController < ApplicationController
     @page.title = params[:title] if params[:title]
     @page.notes = params[:notes] if params[:notes]
     @page.url = params[:url] if params[:url]
-    @size = params[:size]
-    @state = params[:state]
+    @size = params[:size] || "any"
+    @unread = params[:unread] || "either"
+    @favorite = params[:favorite] || "either"
     @genres = Genre.all.map(&:name)
     @genre = Genre.find_by_name(params[:genre]) if params[:genre]
     @authors = Author.all.map(&:name)
@@ -34,8 +35,9 @@ class PagesController < ApplicationController
       build_route = {:action => "index" , :controller => "pages"}
       build_route[:author] = params[:author] unless params[:author].blank?
       build_route[:genre] = params[:genre] unless params[:genre].blank?
-      build_route[:size] = params[:size] unless params[:size].blank?
-      build_route[:state] = params[:state] unless params[:state].blank?
+      build_route[:size] = params[:size] unless (params[:size].blank? || params[:size] == "any")
+      build_route[:favorite] = params[:favorite] unless (params[:favorite].blank? || params[:favorite] == "either")
+      build_route[:unread] = params[:unread] unless (params[:unread].blank? || params[:unread] == "either")
       if params[:page]
         build_route[:title] = params[:page][:title] unless params[:page][:title] == "Title"
         build_route[:notes] = params[:page][:notes] unless params[:page][:notes] == "Notes"

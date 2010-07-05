@@ -25,7 +25,7 @@ Feature: filter on parts
       And I should see "one" within "#position_1"
     When I am on the homepage
     Then I should see "Filler" within ".title"
-    When I select "unread" from "State"
+    When I choose "unread_yes"
       And I press "Find"
     Then I should see "Parent" within ".parent"
     When I fill in "page_url" with "http://test.sidrasue.com/long2.html"
