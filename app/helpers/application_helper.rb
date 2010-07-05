@@ -3,8 +3,9 @@ module ApplicationHelper
 
   def hinted_text_field_tag(name, value = nil, hint = "Click and enter text", options={})
     value = value.nil? ? hint : value
-    options = {:class => "gray-input", :onblur=>"if(this.value == '') { this.value='#{hint}';this.style.color = '';}", :onfocus=>"if (this.value == '#{hint}') {this.value='';this.style.color = 'black';}"}.merge(options.stringify_keys)
-    text_field_tag name, value, options 
+    color = (value == hint) ? "gray-input" : "black-input"
+    options = {:class => "#{color}", :onblur=>"if(this.value == '') { this.value='#{hint}';this.style.color = '';}", :onfocus=>"if (this.value == '#{hint}') {this.value='';this.style.color = 'black';}"}.merge(options.stringify_keys)
+    text_field_tag name, value, options
   end
 
   # inside form_for example
@@ -13,8 +14,9 @@ module ApplicationHelper
 
   def hinted_text_area_tag(name, value = nil, hint = "Click and enter text", options={})
     value = value.nil? ? hint : value
-    options = {:class => "gray-input", :onblur=>"if(this.value == '') { this.value='#{hint}';this.style.color = '';}", :onfocus=>"if (this.value == '#{hint}') {this.value='';this.style.color = 'black';}"}.merge(options.stringify_keys)
-    text_area_tag name, value, options 
+    color = (value == hint) ? "gray-input" : "black-input"
+    options = {:class => "#{color}", :onblur=>"if(this.value == '') { this.value='#{hint}';this.style.color = '';}", :onfocus=>"if (this.value == '#{hint}') {this.value='';this.style.color = 'black';}"}.merge(options.stringify_keys)
+    text_area_tag name, value, options
   end
 
 end

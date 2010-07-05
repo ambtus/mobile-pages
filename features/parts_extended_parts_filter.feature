@@ -2,9 +2,9 @@ Feature: filter on parts
 
   Scenario: filter on unread part
     Given the following pages
-     | title  | favorite | last_read  | add_genre_string | url |
-     | Filler | false    | 2008-01-01 | one              | http://test.sidrasue.com/long.html |
-     | Parent | true     | 2009-01-01 | two              | |
+     | title  | last_read  | add_genre_string | url |
+     | Filler | 2008-01-01 | one              | http://test.sidrasue.com/long.html |
+     | Parent | 2009-01-01 | two              |     |
     When I am on the homepage
     Then I should see "Filler" within ".title"
       And I should not see "unread" within ".last_read"
