@@ -24,3 +24,11 @@ Feature: search on url
     Then I should see "The Mysterious Affair at Styles" within "#position_3"
       And I should see "The Call of the Wild" within "#position_2"
       And I should see "A Christmas Carol" within "#position_1"
+    When I follow "The Mysterious Affair at Styles"
+      And I follow "Manage Parts"
+      And I fill in "add_parent" with "Mysteries"
+      And I press "Update"
+    When I am on the homepage
+      And I fill in "page_url" with "maas"
+      And I press "Find"
+    Then I should see "The Mysterious Affair at Styles" within "#position_1"
