@@ -68,7 +68,7 @@ class Page < ActiveRecord::Base
   def self.filter(params={})
     pages = Page.scoped
     pages = pages.where(:last_read => nil) if params[:unread] == "yes"
-    pages = pages.where('pages.last_read is not null') if params[:unread] == "no"
+    pages = pages.where('pages.last_read is not null') if params[:unread] == "no" || params[:sort_by] == "last_read"
     pages = pages.where(:favorite => true) if params[:favorite] == "yes"
     pages = pages.where(:favorite => false) if params[:favorite] == "no"
     pages =  pages.where(:size => params["size"]) if params.has_key?("size") unless params["size"] == "any"
@@ -81,7 +81,8 @@ class Page < ActiveRecord::Base
     unless params["title"] || params["notes"] || params["url"] || params["unread"] == "yes" || params["favorite"] == "yes"
       pages = pages.where(:parent_id => nil)
     end
-    pages.order('read_after ASC').limit(LIMIT)
+    pages = (params[:sort_by] == "last_read") ? pages.order('last_read ASC') : pages.order('read_after ASC') 
+    pages.limit(LIMIT)
   end
 
   def to_param
