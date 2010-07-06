@@ -42,3 +42,10 @@ Feature: bugs on download
     Then my page named "Linefeed" should contain "fiancé"
     And my page named "Linefeed" should not contain "&#13;"
 
+  Scenario: download with quotes
+    Given a titled page exists with url: "http://test.sidrasue.com/quotes.html"
+    When I go to the page's page
+      And I follow "Text" within ".title"
+    Then I should see "Retrieved"
+#this doesn't actually fail when it's not working...
+      And I should not see "&quot;"
