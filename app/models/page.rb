@@ -77,8 +77,8 @@ class Page < ActiveRecord::Base
     end
     pages = pages.with_genre(params["genre"]) if params.has_key?("genre")
     pages = pages.with_author(params["author"]) if params.has_key?("author")
-    # can only find parts by title, favorite, or unread. all other searches find parents only
-    unless params["title"] || params["unread"] == "yes" || params["favorite"] == "yes"
+    # can only find parts by title, notes, favorite, or unread. all other searches find parents only
+    unless params["title"] || params["notes"] || params["unread"] == "yes" || params["favorite"] == "yes"
       pages = pages.where(:parent_id => nil)
     end
     pages.order('read_after ASC').limit(LIMIT)
