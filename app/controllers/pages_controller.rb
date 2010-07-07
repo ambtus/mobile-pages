@@ -2,7 +2,6 @@ class PagesController < ApplicationController
 
   def index
     if params[:find]
-      @page = Page.find_random if params[:find] == "random"
       @page = Page.last_created if params[:find] == "last"
       if @page
         redirect_to page_url(@page) and return

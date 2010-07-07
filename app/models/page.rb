@@ -81,7 +81,14 @@ class Page < ActiveRecord::Base
     unless params["title"] || params["notes"] || params["url"] || params["unread"] == "yes" || params["favorite"] == "yes"
       pages = pages.where(:parent_id => nil)
     end
-    pages = (params[:sort_by] == "last_read") ? pages.order('last_read ASC') : pages.order('read_after ASC') 
+    pages = case params[:sort_by]
+      when "last_read"
+        pages.order('last_read ASC')
+      when "random"
+        pages.order('RAND()')
+      else
+        pages.order('read_after ASC')
+    end
     pages.limit(LIMIT)
   end
 
