@@ -1,15 +1,6 @@
 class PagesController < ApplicationController
 
   def index
-    if params[:find]
-      @page = Page.find_random if params[:find] == "random"
-      @page = Page.last_created if params[:find] == "last"
-      if @page
-        redirect_to page_url(@page) and return
-      else
-        flash.now[:alert] = "No pages found"
-      end
-    end
     @title = "Mobile pages"
     @page = Page.new(params[:page])
     @page.title = params[:title] if params[:title]

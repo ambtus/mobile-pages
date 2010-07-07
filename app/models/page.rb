@@ -77,11 +77,23 @@ class Page < ActiveRecord::Base
     end
     pages = pages.with_genre(params["genre"]) if params.has_key?("genre")
     pages = pages.with_author(params["author"]) if params.has_key?("author")
-    # can only find parts by title, notes, url, favorite, or unread. all other searches find parents only
-    unless params["title"] || params["notes"] || params["url"] || params["unread"] == "yes" || params["favorite"] == "yes"
+    # can only find parts by title, notes, url, favorite, unread, or last_created.
+    unless params["title"] || params["notes"] || params["url"] ||
+           params["unread"] == "yes" || params["favorite"] == "yes" ||
+           params["sort_by"] == "last_created"
+      # all other searches find parents only
       pages = pages.where(:parent_id => nil)
     end
-    pages = (params[:sort_by] == "last_read") ? pages.order('last_read ASC') : pages.order('read_after ASC') 
+    pages = case params[:sort_by]
+      when "last_read"
+        pages.order('last_read ASC')
+      when "random"
+        pages.order('RAND()')
+      when "last_created"
+        pages.order('created_at DESC')
+      else
+        pages.order('read_after ASC')
+    end
     pages.limit(LIMIT)
   end
 
