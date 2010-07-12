@@ -16,7 +16,8 @@ Feature: find last created
       And I choose "sort_by_last_created"
       And I press "Find"
     Then I should see "New Title" within "#position_1"
-    When I follow "page 1 title"
+    When I wait a second
+      And I follow "page 1 title"
       And I follow "Manage Parts"
       And I fill in "url_list" with "http://test.sidrasue.com/short.html"
       And I press "Update"

@@ -71,16 +71,16 @@ class Page < ActiveRecord::Base
     pages = pages.where('pages.last_read is not null') if params[:unread] == "no" || params[:sort_by] == "last_read"
     pages = pages.where(:favorite => true) if params[:favorite] == "yes"
     pages = pages.where(:favorite => false) if params[:favorite] == "no"
-    pages =  pages.where(:size => params["size"]) if params.has_key?("size") unless params["size"] == "any"
-    ["title", "notes", "url"].each do |attrib|
+    pages =  pages.where(:size => params[:size]) if params.has_key?(:size) unless params[:size] == "any"
+    [:title, :notes, :url].each do |attrib|
       pages = pages.search(attrib, params[attrib]) if params.has_key?(attrib)
     end
-    pages = pages.with_genre(params["genre"]) if params.has_key?("genre")
-    pages = pages.with_author(params["author"]) if params.has_key?("author")
+    pages = pages.with_genre(params[:genre]) if params.has_key?(:genre)
+    pages = pages.with_author(params[:author]) if params.has_key?(:author)
     # can only find parts by title, notes, url, favorite, unread, or last_created.
-    unless params["title"] || params["notes"] || params["url"] ||
-           params["unread"] == "yes" || params["favorite"] == "yes" ||
-           params["sort_by"] == "last_created"
+    unless params[:title] || params[:notes] || params[:url] ||
+           params[:unread] == "yes" || params[:favorite] == "yes" ||
+           params[:sort_by] == "last_created"
       # all other searches find parents only
       pages = pages.where(:parent_id => nil)
     end
@@ -475,9 +475,9 @@ class Page < ActiveRecord::Base
 
 private
 
-  def self.search(attrib, string)
+  def self.search(symbol, string)
     query = "%#{string}%"
-    where("pages.#{attrib} LIKE ?",query)
+    where("pages.#{symbol.to_s} LIKE ?",query)
   end
 
   def self.with_genre(string)
