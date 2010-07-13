@@ -7,12 +7,19 @@ Feature: filter on multiple criteria
       | Nancy Drew                       | Carolyn Keene            | mystery, children | false    | 2009-02-01 |
       | The Boxcar Children              | Gertrude Chandler Warner | mystery, children | true     |            |
       | Murder on the Orient Express     | agatha christie          | mystery           | false    |            |
+      | Another Mystery                  | agatha christie          | mystery           | false    | 2009-01-02 |
+      | Yet Another Mystery              | agatha christie          | mystery           | false    | 2009-01-03 |
+      | Still More Mysteries             | agatha christie          | mystery, short stories | true| 2009-01-04 |
     When I am on the homepage
       And I select "agatha christie" from "Author"
       And I select "mystery" from "Genre"
       And I press "Find"
-    Then I should see "The Mysterious Affair at Styles"
-      And I should see "Murder on the Orient Express"
+    Then I should see "The Mysterious Affair at Styles" within "#position_1"
+      And I should see "Murder on the Orient Express" within "#position_2"
+      And I should see "Another Mystery" within "#position_3"
+      And I should see "Yet Another Mystery" within "#position_4"
+      And I should see "Still More Mysteries" within "#position_5"
+      And I should not have a "#position_6" field
       And I should not see "Nancy Drew"
       And I should not see "The Boxcar Children"
     When I am on the homepage
