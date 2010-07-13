@@ -16,3 +16,10 @@ When /^(?:|I )fill in "([^\"]*)" with$/ do |field, value|
   fill_in(field, :with => value)
 end
 
+Then /I should have a "([^"]*)" field$/ do |field|
+  assert has_css?(field)
+end
+
+Then /I should not have a "([^"]*)" field$/ do |field|
+  assert !has_css?(field)
+end

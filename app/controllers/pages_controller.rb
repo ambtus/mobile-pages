@@ -15,7 +15,7 @@ class PagesController < ApplicationController
     @authors = Author.all.map(&:name)
     @author = Author.find_by_name(params[:author]) if params[:author]
     @pages = Page.filter(params)
-    flash.now[:alert] = "No pages found" if @pages.blank?
+    flash.now[:alert] = "No pages found" if @pages.to_a.empty?
   end
 
   def show

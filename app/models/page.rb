@@ -94,7 +94,7 @@ class Page < ActiveRecord::Base
       else
         pages.order('read_after ASC')
     end
-    pages.limit(LIMIT)
+    pages.group(:id).limit(LIMIT)
   end
 
   def to_param
