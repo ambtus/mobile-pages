@@ -49,6 +49,8 @@ Scenario Outline: genres and authors
     And I should see "<result>" within ".content"
     And I should see "<genre>" within ".genres"
     And I should see "<author>" within ".authors"
+    And I follow "Original" within ".title"
+    Then I should be visiting "<url>"
 
   Examples:
   | url                                      | title            | result                 | genre        | author        |

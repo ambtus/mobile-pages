@@ -12,6 +12,8 @@ Feature: basic parent page
      And I should see "Read" within "#position_2"
      And I should not see "stuff for part 1"
      And I should not see "stuff for part 2"
+     And I should not see "Original" within ".title"
+     And I should see "Original" within "#position_1"
    When I follow "Read" within "#position_1"
    Then I should see "stuff for part 1"
      And I should not see "stuff for part 2"
