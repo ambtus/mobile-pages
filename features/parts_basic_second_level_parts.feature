@@ -38,6 +38,11 @@ Feature: basic second level parts
       And I should see "stuff for part 1"
       And I should see "stuff for part 2"
       And I should see "stuff for part 3"
-
-
-
+    When I am on the homepage
+      And I follow "Grandparent"
+    Then I should not see "Original" within ".title"
+      And I should not see "Original" within "#position_1"
+      And I should see "Original" within "#position_2"
+    When I follow "Parent"
+    Then I should not see "Original" within ".title"
+      And I should see "Original" within "#position_1"

@@ -23,3 +23,7 @@ end
 Then /I should not have a "([^"]*)" field$/ do |field|
   assert !has_css?(field)
 end
+
+Then /^I should be visiting "([^"]*)"$/ do |link|
+  current_url.should == link
+end
