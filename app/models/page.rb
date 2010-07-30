@@ -462,7 +462,7 @@ class Page < ActiveRecord::Base
 
   def needs_recleaning?
     return true unless File.exists?(self.clean_html_file_name)
-    File.mtime(self.clean_html_file_name) < File.mtime(Rails.root + "lib/scrub.rb")
+    File.mtime(self.clean_html_file_name) < File.mtime(Rails.root + "extras/scrub.rb")
   end
 
   def short_notes

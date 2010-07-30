@@ -54,9 +54,9 @@ Feature: basic rate
       And I should see "page 1" within "#position_5"
     When I follow "Read" within "#position_1"
       And I follow "Rate"
-      And I press "100"
+      And I press "20"
 # note - year will change every year
-    Then I should see "page 5 title set for reading again on 2110"
+    Then I should see "page 5 title set for reading again on 2030"
       And I should see "page 4" within "#position_1"
       And I should see "page 2" within "#position_2"
       And I should see "page 3" within "#position_3"

@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.0.beta4'
+gem 'rails', '3.0.0.rc'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -29,7 +29,7 @@ gem 'rails', '3.0.0.beta4'
 # end
 
 group :test do
-  gem 'pickle', :git => 'git://github.com/codegram/pickle.git'
+  gem 'pickle'
   gem 'capybara'
   gem 'database_cleaner'
   gem 'cucumber-rails'
@@ -42,7 +42,7 @@ gem 'haml', '>=3'
 gem 'nokogiri', '>=1.4.1'
 gem 'sanitize', '>=1.2.0'
 gem 'mechanize' 
-gem 'devise', '1.1.rc2'
-gem 'mysql', '2.8.1'
+gem 'devise'
+gem 'mysql2'
 
 gem 'mongrel'

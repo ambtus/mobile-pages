@@ -11,7 +11,7 @@ class GenresController < ApplicationController
     @page = Page.find(params[:page_id])
     if params[:commit] == "Update Genres"
       genre_ids = params[:page][:genre_ids] if params[:page]
-      @page.update_attribute(:genre_ids, genre_ids)
+      @page.genre_ids = genre_ids
     elsif params[:commit] == "Add Genres"
       @page.add_genre_string = params[:genres]
     end

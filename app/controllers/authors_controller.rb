@@ -11,7 +11,7 @@ class AuthorsController < ApplicationController
     @page = Page.find(params[:page_id])
     if params[:commit] == "Update Authors"
       author_ids = params[:page][:author_ids] if params[:page]
-      @page.update_attribute(:author_ids, author_ids)
+      @page.author_ids = author_ids
     elsif params[:commit] == "Add Authors"
       @page.add_author_string = params[:authors]
     end
