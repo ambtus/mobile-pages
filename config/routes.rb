@@ -1,4 +1,4 @@
-MobilePages::Application.routes.draw do |map|
+MobilePages::Application.routes.draw do
   devise_for :users
 
   resources :authors, :only => ['show', 'create']
