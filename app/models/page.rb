@@ -11,7 +11,7 @@ class Page < ActiveRecord::Base
   end
 
   DURATION = "years"
-  MININOTE = 100 # keep first this many characters plus enough for full words in index headers
+  MININOTE = 75 # keep first this many characters plus enough for full words 
   LIMIT = 10 # number of pages to show in index
 
   UNREAD = "unread"
