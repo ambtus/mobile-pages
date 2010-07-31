@@ -25,3 +25,7 @@ Feature: basic parent page
    When I follow "Read"
    Then I should see "stuff for part 1"
      And I should see "stuff for part 2"
+   When I am on the page's page
+     And I follow "Part 1" within "#position_1"
+   Then I should see "This is a note"
+     And I should not see "stuff for part 1"
