@@ -6,10 +6,7 @@
 .parts
   - @page.parts.each do |part|
     .part{:id => "position_#{part.position}"}
-      - if part.parts.blank?
-        =h part.title
-      - else
-        = link_to h(part.title), page_path(part)
+      = link_to h(part.title), page_path(part)
       - unless part.tag_string.blank?
         = "(#{part.tag_string})"
       = link_to "Read", read_path(part)
