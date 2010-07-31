@@ -12,5 +12,5 @@
       = link_to "Read", read_path(part)
       = link_to "Text", page_path(part, :format => 'txt')
       = link_to "Original", part.url unless part.url.blank?
-      .notes
+      %span.notes
         = part.short_notes
