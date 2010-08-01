@@ -8,6 +8,9 @@
   = link_to "Read", read_path(page) unless called_by == "read"
   = link_to "Text", page_path(page, :format => 'txt')
   = link_to "PML", page_path(page, :format => 'pml')
+  - page.pdf_sizes.each do |size|
+    = link_to "pdf(#{size})", page_pdf_path(page, size)
+  = link_to "new pdf", new_page_pdf_path(page)
   = link_to "eReader", page.ereader_url if page.ereader_exists?
   = link_to "Rate", rate_path(page) 
   - unless called_by == "index"

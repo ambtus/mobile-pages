@@ -23,6 +23,9 @@ class Page < ActiveRecord::Base
   LONG_WC = 10000
   EPIC_WC = 80000
 
+  DEFAULT_PDF_FONT_SIZE = 50 # large font for iPhone
+  PDF_FONT_SIZES = ["20", "50"]
+
   def set_wordcount
     wordcount = self.remove_html.scan(/(\w|-)+/).size
     self.size = "medium"
@@ -97,10 +100,13 @@ class Page < ActiveRecord::Base
     pages.group(:id).limit(LIMIT)
   end
 
-  def to_param
+  def clean_title
     clean = self.title.gsub('/', '')
-    clean_and_escaped = CGI::escape(clean).gsub('+', ' ').gsub('.', ' ')
-    "#{self.id}-#{clean_and_escaped}"
+    CGI::escape(clean).gsub('+', ' ').gsub('.', ' ')
+  end
+
+  def to_param
+    "#{self.id}-#{self.clean_title}"
   end
 
   def pasted=(html)
@@ -400,6 +406,26 @@ class Page < ActiveRecord::Base
     Rails.public_path + self.mypath + "raw.html"
   end
 
+  def pdf_file_name(font_size=DEFAULT_PDF_FONT_SIZE)
+    Rails.public_path + self.mypath + self.clean_title + "-#{font_size}.pdf"
+  end
+
+  def pdf_html_file_name
+    "/tmp/" + self.id.to_s + ".html"
+  end
+
+  def pdf_html=(content)
+    File.open(self.pdf_html_file_name, 'w') { |f| f.write(content) }
+  end
+
+  def pdf_sizes
+    sizes = []
+    PDF_FONT_SIZES.each do |size|
+      sizes << size if File.exists?(pdf_file_name(size))
+    end
+    sizes
+  end
+
   def nodes
     html = self.clean_html + "<div></div>"
     array = []
@@ -442,12 +468,23 @@ class Page < ActiveRecord::Base
     Scrub.html_to_text(self.clean_html)
   end
 
-  def to_pml
+  def build_html
     self.build_me(true) if self.needs_recleaning?
     html = "<p>" + self.tag_string + "</p>"
     html = html + "<p>" + self.notes + "</p>" unless self.notes.blank?
-    html = html + self.clean_html
-    Scrub.html_to_pml(html, self.title, self.author_string)
+    html + self.clean_html
+  end
+
+  def to_pdf(font_size=DEFAULT_PDF_FONT_SIZE)
+    style = '<style type="text/css">h1 { page-break-before: always; }</style>'
+    html = "<head><title>#{self.title}</title>#{style}</head><body>"
+    html = html + self.build_html + "</body>"
+    self.pdf_html = html
+    `/usr/local/bin/wkhtmltopdf --encoding UTF8 --minimum-font-size #{font_size} #{self.pdf_html_file_name} #{self.pdf_file_name(font_size)} 2>&1`
+  end
+
+  def to_pml
+    Scrub.html_to_pml(self.build_html, self.title, self.author_string)
   end
 
   def pdb_name
