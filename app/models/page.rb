@@ -23,7 +23,7 @@ class Page < ActiveRecord::Base
   LONG_WC = 10000
   EPIC_WC = 80000
 
-  PDF_FONT_SIZES = ["12", "20", "24", "32", "40"] 
+  PDF_FONT_SIZES = ["12", "20", "24", "32", "40", "60"] 
   DEFAULT_PDF_FONT_SIZE = "40" 
 
   def set_wordcount
