@@ -6,6 +6,8 @@ Feature: download pdf version
     When I am on the homepage
       And I follow "new pdf" within ".title"
       And I press "Create pdf"
+    And I wait 1 second
+    When I am on the homepage
     Then I should see "pdf(75)" within ".title"
     When I follow "pdf(75)" within ".title"
     Then I should be visiting "Space in/title+ weirdnesses:"'s 75 pdf page

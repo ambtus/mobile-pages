@@ -487,7 +487,7 @@ h1 {page-break-before: always;}
     html = head + style + title + "</head><body>" + self.build_html + "</body></html>"
     margins = "-B 0 -L 0 -R 0 -T 0"
     self.pdf_html = html
-    `/usr/local/bin/wkhtmltopdf --quiet #{margins} "#{self.pdf_html_file_name}" "#{self.pdf_file_name(font_size)}" 2>&1`
+    system "/usr/local/bin/wkhtmltopdf --quiet #{margins} \"#{self.pdf_html_file_name}\" \"#{self.pdf_file_name(font_size)}\" >/tmp/wkhtml.out 2>&1 &"
   end
 
   def to_pml
