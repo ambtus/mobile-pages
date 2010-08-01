@@ -17,6 +17,7 @@ Feature: basic download
       And I should see "&"
       And I should not see "&amp;"
       And I should see "________________"
+      And I should not see "someclass"
       And I should not see "div>"
       And I should not see "p>"
       And I should not see "small>"

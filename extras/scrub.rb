@@ -47,7 +47,9 @@ module Scrub
 
   def self.html_to_text(html)
     return "" unless html
-    text = html.gsub(/<a .*?>(.*?)<\/a>/m) {|s| " [#{$1}] " unless $1.blank?}
+    text = html.gsub(/ class=".*?"/, "")
+    text = text.gsub(/ id=".*?"/, "")
+    text = text.gsub(/<a .*?>(.*?)<\/a>/m) {|s| " [#{$1}] " unless $1.blank?}
     text = text.gsub(/<\/?b>/, "\*")
     text = text.gsub(/<\/?big>/, "\*")
     text = text.gsub(/<\/?blockquote>/, "")
