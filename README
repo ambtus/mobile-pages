@@ -26,6 +26,8 @@ Filter: find something in a specific genre
 
 libxml2 libxslt
 
+wkhtmltopdf (http://code.google.com/p/wkhtmltopdf/)
+
 utf-8 encoding
 
 === required configuration (will likely require modification)
