@@ -6,7 +6,7 @@ Create an archive of pages saved from the web, or uploaded, to read on your mobi
 
 Released under the MIT license. See LICENSE.
 
-This application has no authentication or user models, nor was it designed with security in mind. It is intended for personal use only and should be run only on a private network, or behind web server authentication. Any use other than an individual saving content for personal viewing runs the risk of copyright infringement.
+This application has basic authentication but users must be set via the console
 
 == Overview of features
 
@@ -39,24 +39,12 @@ cp config/initializers/secret_token.example config/initializers/secret_token.rb
 
 edit public/stylesheets/application.css
 
-edit lib/tasks/cucumber.rake
-
 === gem installation
 
-gem install haml # rake fails without
-rake gems:install RAILS_ENV=cucumber
+bundle install
 rake db:create:all
 rake db:schema:load
 
-==== digest auth fix for mechanize
-
-rake gems:unpack GEM=mechanize
-in vendor/gems/mechanize-0.9.3/lib/www/mechanize/chain/auth_headers.rb
-change line 71
-
--          header << "nc=#{'%08x' % @@nonce_count[params['nonce']]}, "
-+          header << ", nc=#{'%08x' % @@nonce_count[params['nonce']]}, "
-
 == Testing
 
-rake
+rake cucumber
