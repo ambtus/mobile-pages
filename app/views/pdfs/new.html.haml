@@ -3,8 +3,7 @@
 
 .title= @page.title
 .pdfs
-  = form_tag page_pdfs_path do
-    = hidden_field_tag(:page_id, @page.id)
+  = form_tag page_pdfs_path(@page) do
     = label_tag :font_size, "Font Size"
     = select_tag :font_size, options_for_select(Page::PDF_FONT_SIZES, :selected => Page::DEFAULT_PDF_FONT_SIZE)
     .button= submit_tag "Create pdf"

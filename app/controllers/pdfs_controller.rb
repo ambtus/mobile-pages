@@ -3,6 +3,11 @@ class PdfsController < ApplicationController
     @page = Page.find(params[:page_id])
   end
 
+  def index
+    @page = Page.find(params[:page_id])
+    @pdf_files = @page.pdf_files.map {|f| File.basename(f, '.pdf') }
+  end
+
   def show
     page = Page.find(params[:page_id])
     font_size = params[:id] || Page::DEFAULT_PDF_FONT_SIZE
@@ -19,9 +24,14 @@ class PdfsController < ApplicationController
 
   def create
     page = Page.find(params[:page_id])
-    font_size = params[:font_size] || Page::DEFAULT_PDF_FONT_SIZE
-    redirect_to page, :notice => "Large files may take a while to process"
-    page.to_pdf(font_size)
+    if params[:commit] == "Remove all pdfs"
+      page.destroy_all_pdfs
+      redirect_to page, :notice => "All pdfs removed"
+    else
+      font_size = params[:font_size] || Page::DEFAULT_PDF_FONT_SIZE
+      redirect_to page, :notice => "Large files may take a while to process"
+      page.to_pdf(font_size)
+    end
   end
 
 end

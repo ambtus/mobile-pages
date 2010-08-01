@@ -23,9 +23,8 @@ class Page < ActiveRecord::Base
   LONG_WC = 10000
   EPIC_WC = 80000
 
-  # 12 is good for printing. 20 for the iPad. 50 for the iPhone. 75 for the iPhone when tired
-  PDF_FONT_SIZES = ["12", "20", "50", "75"] 
-  DEFAULT_PDF_FONT_SIZE = "75" 
+  PDF_FONT_SIZES = ["12", "20", "24", "32", "40"] 
+  DEFAULT_PDF_FONT_SIZE = "40" 
 
   def set_wordcount
     wordcount = self.remove_html.scan(/(\w|-)+/).size
@@ -415,6 +414,14 @@ class Page < ActiveRecord::Base
     Rails.public_path + self.pdf_file_basename(font_size)
   end
 
+  def pdf_files
+    Dir[File.join(Rails.public_path + self.mypath, '*.pdf')]
+  end
+
+  def destroy_all_pdfs
+    self.pdf_files.each {|f| File.unlink(f)}
+  end
+
   def pdf_html_file_name
     "/tmp/" + self.id.to_s + ".html"
   end
@@ -484,7 +491,7 @@ class Page < ActiveRecord::Base
     head = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
     style_type = '<style type="text/css">'
     style = "#{style_type}
-body {font-family: Georgia; font-size: #{font_size}}
+body {font-family: Georgia; font-size: #{font_size}pt}
 h1 {page-break-before: always;}
 </style>"
     title = "<title>#{self.title}</title>"
