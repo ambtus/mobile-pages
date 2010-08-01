@@ -40,6 +40,8 @@ module Scrub
     html.gsub!(/(<br \/> ?){3,}/, "<hr />")
     html.gsub!(/<br \/> ?<br \/>/, "<p>")
     html.gsub!(/<a><\/a>/, "")
+    html.gsub!("Alright", "All right")
+    html.gsub!("alright", "all right")
     html
   end
 

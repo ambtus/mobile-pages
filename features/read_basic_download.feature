@@ -183,3 +183,9 @@ Feature: basic download
     Then I should see "Author: Ster Julie"
       And I should not see "This is a Usenet group"
 
+  Scenario: can't stand alright
+    Given a titled page exists with url: "http://test.sidrasue.com/alright.html"
+    When I am on the page's page
+      And I follow "Text" within ".title"
+    Then I should see "All right, all right"
+      And I should not see "Alright, alright"
