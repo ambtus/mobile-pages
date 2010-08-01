@@ -30,7 +30,5 @@ end
 
 Then /^the page "([^\"]*)" has no pdfs$/ do |title|
   page = Page.find_by_title(title)
-  Page::PDF_FONT_SIZES.each do |size|
-    FileUtils.rm_f(page.pdf_file_name(size))
-  end
+  page.destroy_all_pdfs
 end

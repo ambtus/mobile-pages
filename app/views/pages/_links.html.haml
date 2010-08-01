@@ -11,6 +11,7 @@
   - page.pdf_sizes.each do |size|
     = link_to "pdf(#{size})", page_pdf_path(page, size)
   = link_to "new pdf", new_page_pdf_path(page)
+  = link_to "rm pdfs", page_pdfs_path(page.id) unless page.pdf_files.blank?
   = link_to "eReader", page.ereader_url if page.ereader_exists?
   = link_to "Rate", rate_path(page) 
   - unless called_by == "index"
