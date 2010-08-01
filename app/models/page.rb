@@ -23,8 +23,9 @@ class Page < ActiveRecord::Base
   LONG_WC = 10000
   EPIC_WC = 80000
 
-  DEFAULT_PDF_FONT_SIZE = "50" # large font for iPhone
-  PDF_FONT_SIZES = ["20", "50"]
+  # 12 is good for printing. 20 for the iPad. 50 for the iPhone. 75 for the iPhone when tired
+  PDF_FONT_SIZES = ["12", "20", "50", "75"] 
+  DEFAULT_PDF_FONT_SIZE = "75" 
 
   def set_wordcount
     wordcount = self.remove_html.scan(/(\w|-)+/).size
@@ -476,11 +477,17 @@ class Page < ActiveRecord::Base
   end
 
   def to_pdf(font_size=DEFAULT_PDF_FONT_SIZE)
-    style = '<style type="text/css">h1 { page-break-before: always; }</style>'
-    html = "<head><title>#{self.title}</title>#{style}</head><body>"
-    html = html + self.build_html + "</body>"
+    head = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
+    style_type = '<style type="text/css">'
+    style = "#{style_type}
+body {font-family: Georgia; font-size: #{font_size}}
+h1 {page-break-before: always;}
+</style>"
+    title = "<title>#{self.title}</title>"
+    html = head + style + title + "</head><body>" + self.build_html + "</body></html>"
+    margins = "-B 0 -L 0 -R 0 -T 0"
     self.pdf_html = html
-    `/usr/local/bin/wkhtmltopdf --encoding UTF8 --minimum-font-size #{font_size} #{self.pdf_html_file_name} #{self.pdf_file_name(font_size)} 2>&1`
+    `/usr/local/bin/wkhtmltopdf --quiet #{margins} #{self.pdf_html_file_name} #{self.pdf_file_name(font_size)} 2>&1`
   end
 
   def to_pml

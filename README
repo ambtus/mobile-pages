@@ -30,6 +30,8 @@ wkhtmltopdf (http://code.google.com/p/wkhtmltopdf/)
 
 utf-8 encoding
 
+Georgia font (ttf-mscorefonts-installer)
+
 === required configuration (will likely require modification)
 
 cp config/database.example config/database.yml 
