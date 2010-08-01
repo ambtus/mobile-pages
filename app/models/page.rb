@@ -407,8 +407,12 @@ class Page < ActiveRecord::Base
     Rails.public_path + self.mypath + "raw.html"
   end
 
+  def pdf_file_basename(font_size=DEFAULT_PDF_FONT_SIZE)
+    self.mypath + self.clean_title + "-#{font_size}.pdf"
+  end
+
   def pdf_file_name(font_size=DEFAULT_PDF_FONT_SIZE)
-    Rails.public_path + self.mypath + self.clean_title + "-#{font_size}.pdf"
+    Rails.public_path + self.pdf_file_basename(font_size)
   end
 
   def pdf_html_file_name
