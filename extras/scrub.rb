@@ -28,11 +28,20 @@ module Scrub
   end
   
   def self.sanitize_html(html)
-    html = Sanitize.clean(html, :elements => [ 'a', 'b', 'big', 'blockquote', 'br', 'center', 'div', 'dt', 'em', 'i', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'img', 'li', 'p', 'small', 'strike', 'strong', 'sub', 'sup', 'u'], :attributes => { 'a' => ['href'], 'div' => ['id', 'class'], 'img' => ['align', 'alt', 'height', 'src', 'title', 'width'] })
+    html = Sanitize.clean(
+      html, 
+      :elements => [ 'a', 'b', 'big', 'blockquote', 'br', 'center', 
+                     'div', 'dt', 'em', 'i', 'h1', 'h2', 'h3', 'h4', 
+                     'h5', 'h6', 'hr', 'img', 'li', 'p', 'small', 
+                     'strike', 'strong', 'sub', 'sup', 'u'], 
+      :attributes => { :all => ['class', 'id'], 'a' => ['href'],
+                       'img' => ['align', 'alt', 'height', 'src', 'title', 'width'] })
     html.gsub!(/<p> ?<\/p>/, "<br />")
     html.gsub!(/(<br \/> ?){3,}/, "<hr />")
     html.gsub!(/<br \/> ?<br \/>/, "<p>")
     html.gsub!(/<a><\/a>/, "")
+    html.gsub!("Alright", "All right")
+    html.gsub!("alright", "all right")
     html
   end
 

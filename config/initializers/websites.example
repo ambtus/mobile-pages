@@ -14,6 +14,8 @@ module MyWebsites
       when /livejournal/
         url = url + "?mode=reply" unless url.match("thread")
         url + "&format=light"
+      when /archiveofourown/
+        url + "?view_adult=true&view_full_work=true&style=light"
       else url
     end
   end
@@ -30,6 +32,8 @@ module MyWebsites
         body.at('div#storytext')
       when /archiveofourown/
         body.at('div#feedback').remove if body.at('div#feedback')
+        body.search(".landmark").each { |node| node.remove }
+        body.search(".navigation").each { |node| node.remove }
         body.at('div.works-show')
       when /wraithbait/
         body.at('div#mainpage') || body

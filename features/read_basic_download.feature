@@ -157,14 +157,23 @@ Feature: basic download
       And I should not see "Review this Story"
 
   Scenario: download archive of our own page content only
-    Given a titled page exists with url: "http://test.archiveofourown.org/works/695"
+    Given a titled page exists with url: "http://test.archiveofourown.org/works/692"
     When I am on the page's page
-      And I follow "Text" within ".title"
-    Then I should see "Work Header"
+      And I follow "Read"
+    When I follow "Text" within ".title"
+    Then I should not see "Work Header"
+      And I should not see "Work Text"
+      And I should not see "Chapter Text"
+      And I should not see "View chapter by chapter"
       And I should see "Summary"
-      And I should see "Work Text"
-      And I should see "AJ had just started"
-      And I should see "I ever wrote"
+      And I should see "Using time-travel"
+      And I should see "written for nanowrimo"
+      And I should see ": Where am I?"
+      And I should see "Amy woke slowly"
+      And I should see ": Hogwarts"
+      And I should see "giving up"
+      And I should see "Amy looked at the pair in disbelief."
+      And I should see "I'm not. Am I?"
     But I should not see "Add Comment"
 
   Scenario: download google groops content only
@@ -174,3 +183,9 @@ Feature: basic download
     Then I should see "Author: Ster Julie"
       And I should not see "This is a Usenet group"
 
+  Scenario: can't stand alright
+    Given a titled page exists with url: "http://test.sidrasue.com/alright.html"
+    When I am on the page's page
+      And I follow "Text" within ".title"
+    Then I should see "All right, all right"
+      And I should not see "Alright, alright"
