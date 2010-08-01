@@ -5,7 +5,9 @@ MobilePages::Application.routes.draw do
   resources :genres, :only => ['show', 'create']
   resources :htmls, :only => ['edit'] 
   resources :notes, :only => ['edit']
-  resources :pages, :only => ['index', 'show', 'create', 'update']
+  resources :pages do
+    resources :pdfs
+  end
   resources :parts, :only => ['new', 'edit', 'create']
   resources :rates, :only => ['show', 'create']
   resources :reads, :only => ['show']
