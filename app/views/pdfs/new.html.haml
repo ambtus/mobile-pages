@@ -5,8 +5,6 @@
 .pdfs
   = form_tag page_pdfs_path do
     = hidden_field_tag(:page_id, @page.id)
-    = label_tag "font_size", "Font Size"
-    - Page::PDF_FONT_SIZES.each do |size|
-      = label_tag "font_size_#{size}", size
-      = radio_button_tag :font_size, size, size == Page::DEFAULT_PDF_FONT_SIZE
+    = label_tag :font_size, "Font Size"
+    = select_tag :font_size, options_for_select(Page::PDF_FONT_SIZES, :selected => Page::DEFAULT_PDF_FONT_SIZE)
     .button= submit_tag "Create pdf"

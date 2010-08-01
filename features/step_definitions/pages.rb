@@ -27,3 +27,10 @@ end
 Then /^my page named "([^\"]*)" should not contain "([^\"]*)"$/ do |title, string|
   assert_no_match Regexp.new(string), Page.find_by_title(title).clean_html
 end
+
+Then /^the page "([^\"]*)" has no pdfs$/ do |title|
+  page = Page.find_by_title(title)
+  Page::PDF_FONT_SIZES.each do |size|
+    FileUtils.rm_f(page.pdf_file_name(size))
+  end
+end

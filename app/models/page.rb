@@ -23,7 +23,7 @@ class Page < ActiveRecord::Base
   LONG_WC = 10000
   EPIC_WC = 80000
 
-  DEFAULT_PDF_FONT_SIZE = 50 # large font for iPhone
+  DEFAULT_PDF_FONT_SIZE = "50" # large font for iPhone
   PDF_FONT_SIZES = ["20", "50"]
 
   def set_wordcount
