@@ -1,9 +1,5 @@
 module Scrub 
-
-  def self.to_xhtml(body)
-    Scrub.minimize(body.children).to_xhtml(:encoding => 'utf8').gsub("&#13;", '')
-  end
-
+  # 1: regularize
   def self.regularize_body(html)
     replacements = [
                    [ '&#151;', '&#8212;' ],
@@ -22,11 +18,17 @@ module Scrub
     Scrub.remove_scripts(body) if body
   end
 
-  def self.minimize(nodeset)
+  # 2: get node from MyWebsites
+
+  # 3: to xhtml
+  def self.to_xhtml(body)
+    nodeset = body.children
     nodeset = Scrub.remove_blanks(nodeset)
-    Scrub.remove_surrounding(nodeset)
+    nodeset = Scrub.remove_surrounding(nodeset)
+    body = nodeset.to_xhtml(:encoding => 'utf8').gsub("&#13;", '')
   end
-  
+
+  # 4: sanitize
   def self.sanitize_html(html)
     html = Sanitize.clean(
       html, 
@@ -34,22 +36,29 @@ module Scrub
                      'div', 'dt', 'em', 'i', 'h1', 'h2', 'h3', 'h4', 
                      'h5', 'h6', 'hr', 'img', 'li', 'p', 'small', 
                      'strike', 'strong', 'sub', 'sup', 'u'], 
-      :attributes => { :all => ['class', 'id'], 'a' => ['href'],
+      :attributes => { 'a' => ['href'],
                        'img' => ['align', 'alt', 'height', 'src', 'title', 'width'] })
-    html.gsub!(/<p> ?<\/p>/, "<br />")
-    html.gsub!(/(<br \/> ?){3,}/, "<hr />")
-    html.gsub!(/<br \/> ?<br \/>/, "<p>")
     html.gsub!(/<a><\/a>/, "")
     html.gsub!("Alright", "All right")
     html.gsub!("alright", "all right")
-    html
+    html.gsub!("\n", " ")
+    html.gsub!(/ +<p>/, "<p>")
+    html.gsub!(/<p> +/, "<p>")
+    html.gsub!(/ +<\/p>/, "</p>")
+    html.gsub!(/<\/p> +/, "</p>")
+    html.gsub!(/ +<br \/>/, "<br \>")
+    html.gsub!(/<br \/> +/, "<br \>")
+    html.gsub!(/<br \/><\/p>/, "</p>")
+    html.gsub!(/<p><br \/>/, "<p>")
+    html.gsub!(/(<p><\/p>){2,}/, "<hr />")
+    html.gsub!(/(<p><\/p>)/, "")
+    html.gsub!(/(<p><\/p>)/, "")
+    "<body>" + html + "</body>"
   end
 
   def self.html_to_text(html)
     return "" unless html
-    text = html.gsub(/ class=".*?"/, "")
-    text = text.gsub(/ id=".*?"/, "")
-    text = text.gsub(/<a .*?>(.*?)<\/a>/m) {|s| " [#{$1}] " unless $1.blank?}
+    text = html.gsub(/<a .*?>(.*?)<\/a>/m) {|s| " [#{$1}] " unless $1.blank?}
     text = text.gsub(/<\/?b>/, "\*")
     text = text.gsub(/<\/?big>/, "\*")
     text = text.gsub(/<\/?blockquote>/, "")

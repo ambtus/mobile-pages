@@ -23,8 +23,8 @@ class Page < ActiveRecord::Base
   LONG_WC = 10000
   EPIC_WC = 80000
 
-  PDF_FONT_SIZES = ["12", "20", "24", "32", "40", "60"] 
-  DEFAULT_PDF_FONT_SIZE = "40" 
+  PDF_FONT_SIZES = ["12", "24", "32", "40", "50", "55"]
+  DEFAULT_PDF_FONT_SIZE = "55" 
 
   def set_wordcount
     wordcount = self.remove_html.scan(/(\w|-)+/).size
@@ -431,15 +431,12 @@ class Page < ActiveRecord::Base
   end
 
   def pdf_sizes
-    sizes = []
-    PDF_FONT_SIZES.each do |size|
-      sizes << size if File.exists?(pdf_file_name(size))
-    end
-    sizes
+    files = self.pdf_files.map {|f| File.basename(f, '.pdf')}
+    files.map{|f| f.gsub(self.clean_title + "-", '')}
   end
 
   def nodes
-    html = self.clean_html + "<div></div>"
+    html = self.clean_html
     array = []
     all = Nokogiri::HTML(html).xpath('//body').children
     all.each do |node|
@@ -447,6 +444,7 @@ class Page < ActiveRecord::Base
         array << node.to_xhtml(:encoding => 'utf8')
       end
     end
+    array << "<div></div>"
     array
   end
 
@@ -489,16 +487,15 @@ class Page < ActiveRecord::Base
 
   def to_pdf(font_size=DEFAULT_PDF_FONT_SIZE)
     head = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
-    style_type = '<style type="text/css">'
-    style = "#{style_type}
-body {font-family: Georgia; font-size: #{font_size}pt}
+    style = '<style type="text/css">
+body {font-family: Georgia;}
 h1 {page-break-before: always;}
-</style>"
+</style>'
     title = "<title>#{self.title}</title>"
     html = head + style + title + "</head><body>" + self.build_html + "</body></html>"
-    margins = "-B 0 -L 0 -R 0 -T 0"
+    fit = "-B 0 -L 0 -R 0 -T 0 --minimum-font-size #{font_size}"
     self.pdf_html = html
-    system "/usr/local/bin/wkhtmltopdf --quiet #{margins} \"#{self.pdf_html_file_name}\" \"#{self.pdf_file_name(font_size)}\" >/tmp/wkhtml.out 2>&1 &"
+    system "/usr/local/bin/wkhtmltopdf --quiet #{fit} \"#{self.pdf_html_file_name}\" \"#{self.pdf_file_name(font_size)}\" >/tmp/wkhtml.out 2>&1 &"
   end
 
   def to_pml

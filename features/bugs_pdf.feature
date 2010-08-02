@@ -8,6 +8,6 @@ Feature: download pdf version
       And I press "Create pdf"
     And I wait 1 second
     When I am on the homepage
-    Then I should see "pdf(40)" within ".title"
-    When I follow "pdf(40)" within ".title"
-    Then I should be visiting "Space in/title+ weirdnesses:"'s 40 pdf page
+    Then I should see "pdf(55)" within ".title"
+    When I follow "pdf(55)" within ".title"
+    Then I should be visiting "Space in/title+ weirdnesses:"'s 55 pdf page
