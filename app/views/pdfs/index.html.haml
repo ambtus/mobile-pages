@@ -1,9 +1,0 @@
-- content_for :title do
-  = "Remove pdfs for " + @page.title
-
-.title= @page.title
-.pdfs
-  - @pdf_files.each do |name|
-    = name
-  = form_tag page_pdfs_path(@page) do
-    .button= submit_tag "Remove all pdfs"

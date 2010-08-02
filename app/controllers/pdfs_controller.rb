@@ -1,10 +1,6 @@
 class PdfsController < ApplicationController
   def new
     @page = Page.find(params[:page_id])
-  end
-
-  def index
-    @page = Page.find(params[:page_id])
     @pdf_files = @page.pdf_files.map {|f| File.basename(f, '.pdf') }
   end
 

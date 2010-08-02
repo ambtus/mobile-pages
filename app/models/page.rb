@@ -356,6 +356,7 @@ class Page < ActiveRecord::Base
   end
 
   def clean_html=(content)
+    FileUtils.rm_f(pdf_html_file_name)
     File.open(self.clean_html_file_name, 'w') { |f| f.write(content) }
   end
 
@@ -406,6 +407,10 @@ class Page < ActiveRecord::Base
     Rails.public_path + self.mypath + "raw.html"
   end
 
+  def pdf_html_file_name
+    Rails.public_path + self.mypath + "build.html"
+  end
+
   def pdf_file_basename(font_size=DEFAULT_PDF_FONT_SIZE)
     self.mypath + self.clean_title + "-#{font_size}.pdf"
   end
@@ -418,12 +423,13 @@ class Page < ActiveRecord::Base
     Dir[File.join(Rails.public_path + self.mypath, '*.pdf')]
   end
 
-  def destroy_all_pdfs
-    self.pdf_files.each {|f| File.unlink(f)}
+  def no_pdfs
+    self.pdf_files.blank? && !File.exists?(pdf_html_file_name)
   end
 
-  def pdf_html_file_name
-    "/tmp/" + self.id.to_s + ".html"
+  def destroy_all_pdfs
+    self.pdf_files.each {|f| File.unlink(f)}
+    FileUtils.rm_f(pdf_html_file_name)
   end
 
   def pdf_html=(content)
@@ -478,38 +484,36 @@ class Page < ActiveRecord::Base
     Scrub.html_to_text(self.clean_html)
   end
 
+  def formatted_notes
+    text = "<p>" + self.notes + "</p>"
+    text.gsub!(/\r\n?/, "\n")                    # \r\n and \r -> \n
+    text.gsub!(/\n\n+/, "<p></p>")  # 2+ newline  -> paragraph
+    text.gsub!(/\n/, "<br \>")  # 2+ newline  -> paragraph
+    text
+  end
+
   def build_html
     self.build_me(true) if self.needs_recleaning?
     html = "<p>" + self.tag_string + "</p>"
-    html = html + "<p>" + self.notes + "</p>" unless self.notes.blank?
+    html = html + self.formatted_notes unless self.notes.blank?
+    html = html + "<h1>#{self.title}</h1>
+" if self.parts.blank?
     html + self.clean_html
   end
 
   def to_pdf(font_size=DEFAULT_PDF_FONT_SIZE)
-    head = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
-    style = '<style type="text/css">
+    unless File.exists?(pdf_html_file_name)
+      head = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
+      style = '<style type="text/css">
 body {font-family: Georgia;}
 h1 {page-break-before: always;}
 </style>'
-    title = "<title>#{self.title}</title>"
-    html = head + style + title + "</head><body>" + self.build_html + "</body></html>"
+      title = "<title>#{self.title}</title>"
+      html = head + style + title + "</head><body>" + self.build_html + "</body></html>"
+      self.pdf_html = html
+    end
     fit = "-B 0 -L 0 -R 0 -T 0 --minimum-font-size #{font_size}"
-    self.pdf_html = html
     system "/usr/local/bin/wkhtmltopdf --quiet #{fit} \"#{self.pdf_html_file_name}\" \"#{self.pdf_file_name(font_size)}\" >/tmp/wkhtml.out 2>&1 &"
-  end
-
-  def to_pml
-    Scrub.html_to_pml(self.build_html, self.title, self.author_string)
-  end
-
-  def pdb_name
-    self.id.to_s + ".pdb"
-  end
-  def ereader_url
-    "ereader://pdbs.sidrasue.com/" + self.pdb_name
-  end
-  def ereader_exists?
-    File.exists?("/home/alice/pdbs/" + self.pdb_name)
   end
 
   def needs_recleaning?

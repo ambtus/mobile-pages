@@ -1,5 +1,5 @@
 - content_for :title do
-  = "New pdf for " + @page.title
+  = "Edit pdfs for " + @page.title
 
 .title= @page.title
 .pdfs
@@ -7,3 +7,7 @@
     = label_tag :font_size, "Font Size"
     = select_tag :font_size, options_for_select(Page::PDF_FONT_SIZES, :selected => Page::DEFAULT_PDF_FONT_SIZE)
     .button= submit_tag "Create pdf"
+    Current pdfs:
+    - @pdf_files.each do |name|
+      .pdf= name
+    .button= submit_tag "Remove all pdfs"
