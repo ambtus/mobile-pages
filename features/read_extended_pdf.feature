@@ -10,7 +10,7 @@ Feature: download pdf version
     When I press "Create pdf"
     Then I should see "Large files may take a while to process" within "#flash_notice"
     Then I should not see "pdf(55)" within ".title"
-    When I wait 1 second
+    When I wait 2 seconds
       And I am on the page's page
     Then I should see "pdf(55)" within ".title"
     When I follow "pdf(55)" within ".title"

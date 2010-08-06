@@ -19,10 +19,10 @@ Feature: basic sizes
    Then I should see "short" within ".size"
      And I should not see "long" within ".size"
 
-  Scenario: add epic state
+  Scenario: add novel state
     Given a titled page exists with base_url: "http://test.sidrasue.com/long*.html", url_substitutions: "1 2 3 4 5 6 7 8"
    When I am on the page's page
-   Then I should see "epic" within ".size"
+   Then I should see "novel" within ".size"
      And I should not see "long" within ".size"
      And I should not see "short" within ".size"
    When I follow "Manage Parts"
@@ -30,4 +30,4 @@ Feature: basic sizes
      And I press "Update"
    Then I should not see "short" within ".size"
      And I should see "long" within ".size"
-     And I should not see "epic" within ".size"
+     And I should not see "novel" within ".size"

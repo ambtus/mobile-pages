@@ -12,25 +12,29 @@ class Page < ActiveRecord::Base
 
   DURATION = "years"
   MININOTE = 75 # keep first this many characters plus enough for full words 
-  LIMIT = 10 # number of pages to show in index
+  LIMIT = 15 # number of pages to show in index
 
   UNREAD = "unread"
   FAVORITE = "favorite"
 
-  SIZES = ["short", "medium", "long", "epic", "any"]
+  SIZES = ["short", "medium", "long", "novel", "epic", "any"]
 
-  SHORT_WC = 1000
-  LONG_WC = 10000
-  EPIC_WC = 80000
+  SHORT_WC =  1500
+  MED_WC =    7500
+  LONG_WC =  17500
+  NOVEL_WV = 50000
+  EPIC_WC = 150000
 
-  PDF_FONT_SIZES = ["12", "24", "32", "40", "50", "55"]
+  PDF_FONT_SIZES = ["12", "24", "32", "40", "55"]
   DEFAULT_PDF_FONT_SIZE = "55" 
-
-  def set_wordcount
-    wordcount = self.remove_html.scan(/(\w|-)+/).size
-    self.size = "medium"
-    self.size = "short" if wordcount < SHORT_WC
-    self.size = "long" if wordcount > LONG_WC
+  
+  def set_wordcount(recount=true)
+    self.wordcount = self.remove_html.scan(/(\w|-)+/).size if recount
+    self.size = "short"
+    return unless wordcount
+    self.size = "medium" if wordcount > SHORT_WC
+    self.size = "long" if wordcount > MED_WC
+    self.size = "novel" if wordcount > LONG_WC
     self.size = "epic" if wordcount > EPIC_WC
     self.save
   end
@@ -101,7 +105,7 @@ class Page < ActiveRecord::Base
   end
 
   def clean_title
-    clean = self.title.gsub('/', '')
+    clean = self.title.gsub('/', '').gsub("'", '')
     CGI::escape(clean).gsub('+', ' ').gsub('.', ' ')
   end
 

@@ -50,9 +50,12 @@ module Scrub
     html.gsub!(/<br \/> +/, "<br \>")
     html.gsub!(/<br \/><\/p>/, "</p>")
     html.gsub!(/<p><br \/>/, "<p>")
-    html.gsub!(/(<p><\/p>){2,}/, "<hr />")
+    html.gsub!(/(<br \/>){3,}/, '<hr />')
+    html.gsub!(/(<p><\/p>){2,}/, '<hr />')
+    html.gsub!(/<p><hr \/>/, '<hr />')
+    html.gsub!(/(<hr \/>\s*){2,}/, '<hr />')
     html.gsub!(/(<p><\/p>)/, "")
-    html.gsub!(/(<p><\/p>)/, "")
+    html.gsub!(/<hr \/>/, '<hr width="80%"/>')
     "<body>" + html + "</body>"
   end
 
@@ -72,7 +75,7 @@ module Scrub
     text = text.gsub(/<h1>(.*?)<\/h1>/) {|s| "\# #{$1} \#" unless $1.blank?}
     text = text.gsub(/<h2>(.*?)<\/h2>/) {|s| "\#\# #{$1} \#\#" unless $1.blank?}
     text = text.gsub(/<\/?h\d.*?>/, "\*")
-    text = text.gsub(/<hr \/>/, "______________________________\n")
+    text = text.gsub(/<hr width="80%"\/>/, "______________________________\n")
     text = text.gsub(/<img.*?alt="(.*?)".*?>/) {|s| " [#{$1}] " unless $1.blank?}
     text = text.gsub(/<img.*?>/, "")
     text = text.gsub(/<li>/, "* ")
