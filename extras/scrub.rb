@@ -51,6 +51,7 @@ module Scrub
     html.gsub!(/<br \/><\/p>/, "</p>")
     html.gsub!(/<p><br \/>/, "<p>")
     html.gsub!(/(<br \/>){3,}/, '<hr />')
+    html.gsub!(/(<br \/>){2,}/, '<p>')
     html.gsub!(/(<p><\/p>){2,}/, '<hr />')
     html.gsub!(/<p><hr \/>/, '<hr />')
     html.gsub!(/(<hr \/>\s*){2,}/, '<hr />')
