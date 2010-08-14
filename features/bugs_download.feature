@@ -1,5 +1,10 @@
 Feature: bugs on download
 
+  Scenario: download with question marks in title 
+    Given a page exists with title: "This title?"
+    When I go to the page's page
+      And I follow "Text" within ".title"
+
   Scenario: download with slashes in title 
     Given a page exists with title: "This title 1/2"
     When I go to the page's page

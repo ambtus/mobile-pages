@@ -105,7 +105,7 @@ class Page < ActiveRecord::Base
   end
 
   def clean_title
-    clean = self.title.gsub('/', '').gsub("'", '')
+    clean = self.title.gsub('/', '').gsub("'", '').gsub("?", '')
     CGI::escape(clean).gsub('+', ' ').gsub('.', ' ')
   end
 
