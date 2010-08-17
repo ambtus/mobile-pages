@@ -105,7 +105,7 @@ class Page < ActiveRecord::Base
   end
 
   def clean_title
-    clean = self.title.gsub('/', '').gsub("'", '').gsub("?", '')
+    clean = self.title.gsub('/', '').gsub("'", '').gsub("?", '').gsub(",", '')
     CGI::escape(clean).gsub('+', ' ').gsub('.', ' ')
   end
 
@@ -510,7 +510,7 @@ class Page < ActiveRecord::Base
       head = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
       style = '<style type="text/css">
 body {font-family: Georgia;}
-h1 {page-break-before: always;}
+h1,h2 {page-break-before: always;}
 </style>'
       title = "<title>#{self.title}</title>"
       html = head + style + title + "</head><body>" + self.build_html + "</body></html>"
