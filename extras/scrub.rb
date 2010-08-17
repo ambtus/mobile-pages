@@ -24,6 +24,7 @@ module Scrub
     doc = Nokogiri::HTML(html)
     body = doc.xpath('//body').first
     Scrub.remove_scripts(body) if body
+    body
   end
 
   # 2: get node from MyWebsites
@@ -54,8 +55,8 @@ module Scrub
     html.gsub!(/<p> +/, "<p>")
     html.gsub!(/ +<\/p>/, "</p>")
     html.gsub!(/<\/p> +/, "</p>")
-    html.gsub!(/ +<br \/>/, "<br \>")
-    html.gsub!(/<br \/> +/, "<br \>")
+    html.gsub!(/ +<br \/>/, "<br />")
+    html.gsub!(/<br \/> +/, "<br />")
     html.gsub!(/<br \/><\/p>/, "</p>")
     html.gsub!(/<p><br \/>/, "<p>")
     html.gsub!(/(<br \/>){3,}/, '<hr />')
@@ -152,19 +153,19 @@ module Scrub
     text = '\vTITLE="' + title + '" AUTHOR="' + author_string +'"\v' + "\n" + text.strip
   end
 
+  def self.remove_blanks(nodeset)
+    nodeset.each do |top_node|
+      nodeset.delete(top_node) if (top_node.is_a?(Nokogiri::XML::Text) && top_node.blank?)
+    end
+    nodeset
+  end
+
   private
 
     def self.remove_surrounding(nodeset)
       return nodeset unless nodeset.is_a? Nokogiri::XML::NodeSet
       if nodeset.size == 1 && nodeset.first.is_a?(Nokogiri::XML::Element)
         return Scrub.remove_surrounding(nodeset.children)
-      end
-      nodeset
-    end
-
-    def self.remove_blanks(nodeset)
-      nodeset.each do |top_node|
-        nodeset.delete(top_node) if (top_node.is_a?(Nokogiri::XML::Text) && top_node.blank?)
       end
       nodeset
     end

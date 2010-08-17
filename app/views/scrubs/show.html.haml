@@ -6,11 +6,17 @@
 %a{:href => "#end"} Jump to end
 .form
   = form_for @page do |f|
-    .button= f.submit "Scrub"
     .button= f.submit "Remove surrounding Div"
-    - @page.nodes.each_with_index do |node,index|
+    .button= f.submit "Scrub"
+    %p Top
+    - @page.top_nodes.each_with_index do |node,index|
       .node
-        = check_box_tag "nodes[]", index, index==@page.nodes.size-1 ? true : false, :id => index
+        = check_box_tag "top_nodes[]", index, false, :id => index
         = label_tag index, node
+    %p Bottom
+    - @page.bottom_nodes.each_with_index do |node,index|
+      .node
+        = check_box_tag "bottom_nodes[]", @page.bottom_nodes.size - index, false, :id => "bottom" + index.to_s
+        = label_tag "bottom" + index.to_s, node
     .button= f.submit "Scrub"
 %a{:name => "end"}

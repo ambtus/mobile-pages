@@ -12,7 +12,7 @@ Feature: bugs with scrub
       And I follow "Scrub"
       And I follow "Scrub First Part"
       And I follow "Scrub SubPart"
-      And I check boxes "0 2"
+      And I check boxes "0 bottom2"
       And I press "Scrub"
     When I am on the homepage
       And I follow "Text" within "#position_1"
@@ -36,7 +36,7 @@ Feature: bugs with scrub
     Given a titled page exists with url: "http://test.sidrasue.com/headers.html"
     When I am on the page's page
       And I follow "Scrub"
-      And I check boxes "0 2"
+      And I check boxes "0 bottom2"
       And I press "Scrub"
     Then I should not see "actual content"
     When I press "Rebuild from Raw HTML"

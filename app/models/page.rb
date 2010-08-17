@@ -445,6 +445,16 @@ class Page < ActiveRecord::Base
     files.map{|f| f.gsub(self.clean_title + "-", '')}
   end
 
+  def remove_surrounding_div!
+    children = Nokogiri::HTML(self.clean_html).xpath('//body').children.first.children
+    children = Scrub.remove_blanks(children)
+    while children.size == 1
+      children = children.children
+      children = Scrub.remove_blanks(children)
+    end
+    self.clean_html = children.to_xhtml
+  end
+
   def nodes
     html = self.clean_html
     array = []
@@ -454,33 +464,30 @@ class Page < ActiveRecord::Base
         array << node.to_xhtml(:encoding => 'utf8')
       end
     end
-    array << "<div></div>"
     array
   end
 
-  def remove_surrounding_div!
-    self.clean_html = Nokogiri::HTML(self.clean_html).xpath('//body').children.first.children.to_xhtml
+  def top_nodes
+    self.nodes[0, 10] || []
   end
 
-  def remove_nodes(ids)
-    node_array = self.nodes.to_a
-    all = node_array.size - 1
-    first = ids[0].to_i
-    if ids[1]
-      first = first + 1
-      last = ids[1].to_i - 1
-      if first == last
-        self.clean_html=node_array[first].to_s
-      else
-        self.clean_html=node_array[first..last].to_s
-      end
-    else
-      if first > all/2
-        self.clean_html=node_array[0..first-1].to_s
-      else
-        self.clean_html=node_array[first + 1..all].to_s
-      end
-    end
+  def bottom_nodes
+    self.nodes[-10, 10] || self.top_nodes
+  end
+
+  def remove_top_nodes(ids)
+    nodes = self.nodes
+    number = ids.first.to_i + 1
+    number.times { nodes.shift }
+    self.clean_html=nodes.to_s
+    self.set_wordcount
+  end
+
+  def remove_bottom_nodes(ids)
+    nodes = self.nodes
+    number = ids.first.to_i
+    number.times { nodes.pop }
+    self.clean_html=nodes.to_s
     self.set_wordcount
   end
 

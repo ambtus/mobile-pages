@@ -13,7 +13,7 @@ Feature: Basic scrub with parts
     When I am on the page's page
     And I follow "Scrub" within ".title"
       And I follow "Scrub Part 1"
-      And I check boxes "0 2"
+      And I check boxes "0 bottom2"
       And I press "Scrub"
     Then I should not see "cruft"
       And I should see "stuff for part 1"

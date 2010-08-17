@@ -84,7 +84,8 @@ class PagesController < ApplicationController
         flash[:notice] = "Surrounding div removed"
         redirect_to scrub_path(@page) and return
       when "Scrub"
-        @page.remove_nodes(params[:nodes]) if params[:nodes]
+        @page.remove_top_nodes(params[:top_nodes]) if params[:top_nodes]
+        @page.remove_bottom_nodes(params[:bottom_nodes]) if params[:bottom_nodes]
         redirect_to read_url(@page) and return
       when "Update"
         @page.update_attributes(params[:page])

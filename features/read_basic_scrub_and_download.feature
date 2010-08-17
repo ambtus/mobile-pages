@@ -9,7 +9,7 @@ Feature: Basic Scrub and download
       And I should see "bottom para"
     When I am on the page's page
       And I follow "Scrub"
-      And I check boxes "0 2"
+      And I check boxes "0 bottom2"
       And I press "Scrub"
       And I should not see "top para"
       And I should not see "bottom para"
