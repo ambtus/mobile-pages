@@ -1,4 +1,4 @@
-module Scrub 
+module Scrub
   # 1: regularize
   def self.regularize_body(html)
     replacements = [
@@ -8,6 +8,14 @@ module Scrub
                    [ '&#148;', '&#8221;' ],
                    [ '&#147;', '&#8220;' ],
                    [ '&nbsp;', ' ' ],
+                   [ 'Â\x{A0}', ' '],
+                   [ 'â€”', "—" ],
+                   [ 'â€¦', '…'],
+                   [ 'Ã©', 'é'],
+                   [ 'â€œ', '“'],
+                   [ 'â€\x{9D}', '”'],
+                   [ 'â€˜', '‘'],
+                   [ 'â€™', '’'],
                    ]
     replacements.each do |replace|
       html.gsub!(replace.first, replace.last)
@@ -31,11 +39,11 @@ module Scrub
   # 4: sanitize
   def self.sanitize_html(html)
     html = Sanitize.clean(
-      html, 
-      :elements => [ 'a', 'b', 'big', 'blockquote', 'br', 'center', 
-                     'div', 'dt', 'em', 'i', 'h1', 'h2', 'h3', 'h4', 
-                     'h5', 'h6', 'hr', 'img', 'li', 'p', 'small', 
-                     'strike', 'strong', 'sub', 'sup', 'u'], 
+      html,
+      :elements => [ 'a', 'b', 'big', 'blockquote', 'br', 'center',
+                     'div', 'dt', 'em', 'i', 'h1', 'h2', 'h3', 'h4',
+                     'h5', 'h6', 'hr', 'img', 'li', 'p', 'small',
+                     'strike', 'strong', 'sub', 'sup', 'u'],
       :attributes => { 'a' => ['href'],
                        'img' => ['align', 'alt', 'height', 'src', 'title', 'width'] })
     html.gsub!(/<a><\/a>/, "")
@@ -59,6 +67,7 @@ module Scrub
     html.gsub!(/<hr \/>/, '<hr width="80%"/>')
     "<body>" + html + "</body>"
   end
+
 
   def self.html_to_text(html)
     return "" unless html
@@ -144,7 +153,7 @@ module Scrub
   end
 
   private
-  
+
     def self.remove_surrounding(nodeset)
       return nodeset unless nodeset.is_a? Nokogiri::XML::NodeSet
       if nodeset.size == 1 && nodeset.first.is_a?(Nokogiri::XML::Element)
@@ -152,7 +161,7 @@ module Scrub
       end
       nodeset
     end
-  
+
     def self.remove_blanks(nodeset)
       nodeset.each do |top_node|
         nodeset.delete(top_node) if (top_node.is_a?(Nokogiri::XML::Text) && top_node.blank?)
