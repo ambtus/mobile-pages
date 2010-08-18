@@ -16,6 +16,8 @@ module MyWebsites
         url + "&format=light"
       when /archiveofourown/
         url + "?view_adult=true&view_full_work=true&style=light"
+      when /wraithbait/
+        url + "&chapter=all&action=printable"
       else url
     end
   end
@@ -39,6 +41,15 @@ module MyWebsites
         body.at('div#mainpage') || body
       when /google/
         body.at('div#inbdy')
+      when /wraithbait/
+        body.at('div.infobox').remove if body.at('div.infobox')
+        body.search("div.toplink").each { |node| node.remove }
+        body.search("div.chaptertitle").each do |node|
+          node.name = 'h2'
+          node.inner_html = node.inner_text.gsub(" by", '')
+        end
+        body.at('div#copyright').remove if body.at('div#copyright')
+        body
       else
         body
     end

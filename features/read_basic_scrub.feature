@@ -24,9 +24,9 @@ Feature: Basic Scrub
   | http://test.sidrasue.com/br.html           | 0 bottom2   | all on       | top line        | bottom line |
   | http://test.sidrasue.com/entities.html     | 0 bottom2   | Chris was    | Content Removed | Next        |
   | http://test.sidrasue.com/img.html          | 1 bottom3   | content      | top para        | bottom par  |
-  | http://test.sidrasue.com/tablecontent.html | 4 bottom5   | I remembered | Jump            | Content     |
+  | http://test.sidrasue.com/tablecontent.html | 4 bottom6   | I remembered | Jump            | Content     |
   | http://test.sidrasue.com/href.html         | 1 bottom3   | content      | top link        | bottom link |
-  | http://test.sidrasue.com/styled.html       | 3 bottom6   | horizontal   | sentence        | end         |
+  | http://test.sidrasue.com/styled.html       | 3 bottom11  | horizontal   | sentence        | end         |
 
  Scenario Outline: strip top or bottom only
   Given a genre exists with name: "genre"
@@ -45,4 +45,4 @@ Feature: Basic Scrub
   Examples:
   | url                                        | nodes   | wanted1 | wanted2         | unwanted     |
   | http://test.sidrasue.com/tablecontent.html | 1       | Tall    | Send Feedback   | Irony        |
-  | http://test.sidrasue.com/tablecontent.html | bottom8 | Irony   | Return to Text  | to Graphics  |
+  | http://test.sidrasue.com/tablecontent.html | bottom9 | Irony   | Return to Text  | to Graphics  |

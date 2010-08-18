@@ -468,11 +468,11 @@ class Page < ActiveRecord::Base
   end
 
   def top_nodes
-    self.nodes[0, 10] || []
+    self.nodes[0, 15] || []
   end
 
   def bottom_nodes
-    self.nodes[-10, 10] || self.top_nodes
+    self.nodes[-15, 15] || self.top_nodes
   end
 
   def remove_top_nodes(ids)

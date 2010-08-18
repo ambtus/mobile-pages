@@ -135,17 +135,18 @@ Feature: basic download
       And I follow "Text" within ".title"
     Then I should not see "recent stories"
       And I should not see "Stargate SG-1 and Stargate: Atlantis,"
-      And I should see "Summary:"
+      And I should not see "Summary:"
       And I should see "Story Notes:"
       And I should see "I swear to God, Mer, I know what I'm doing!"
 
   Scenario: download wraithbait story content only
-    Given a titled page exists with url: "http://www.wraithbait.com/viewstory.php?action=printable&textsize=0&sid=15133&chapter=all"
+    Given a titled page exists with url: "http://www.wraithbait.com/viewstory.php?sid=15133"
     When I am on the page's page
       And I follow "Text" within ".title"
-    Then I should see "Summary:"
+    Then I should not see "Summary:"
       And I should see "Story Notes:"
       And I should see "There was a time of day in Atlantis"
+      And I should see "a single tear trickled down his pale soft cheek"
 
 
   Scenario: download fanfiction page content only
