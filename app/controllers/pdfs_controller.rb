@@ -16,6 +16,7 @@ class PdfsController < ApplicationController
     else
       send_file "#{file}", :type => Mime::PDF, :disposition => 'inline'
     end
+    page.make_first
   end
 
   def create
