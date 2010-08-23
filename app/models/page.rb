@@ -29,7 +29,7 @@ class Page < ActiveRecord::Base
   DEFAULT_PDF_FONT_SIZE = "55" 
   
   def set_wordcount(recount=true)
-    self.wordcount = self.remove_html.scan(/(\w|-)+/).size if recount
+    self.wordcount = self.remove_html.scan(/\w+/).size if recount
     self.size = "short"
     return unless wordcount
     self.size = "medium" if wordcount > SHORT_WC
