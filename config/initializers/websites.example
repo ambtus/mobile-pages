@@ -38,7 +38,14 @@ module MyWebsites
         body.search(".navigation").each { |node| node.remove }
         body.at('div.works-show')
       when /wraithbait/
-        body.at('div#mainpage') || body
+        body.at('div.infobox').remove if body.at('div.infobox')
+        body.search("div.toplink").each { |node| node.remove }
+        body.search("div.chaptertitle").each do |node|
+          node.name = 'h2'
+          node.inner_html = node.inner_text.gsub(" by", '')
+        end
+        body.at('div#copyright').remove if body.at('div#copyright')
+        body
       when /google/
         body.at('div#inbdy')
       when /wraithbait/
