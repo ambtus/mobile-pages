@@ -64,6 +64,7 @@ module Scrub
     html.gsub!(/(<br \/>){2,}/, '<p>')
     html.gsub!(/(<p><\/p>){2,}/, '<hr />')
     html.gsub!(/<p><hr \/>/, '<hr />')
+    html.gsub!(/_{5,}/, '<hr />')
     html.gsub!(/(<hr \/>\s*){2,}/, '<hr />')
     html.gsub!(/(<p><\/p>)/, "")
     html.gsub!(/<hr \/>/, '<hr width="80%"/>')

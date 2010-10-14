@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.0.rc'
+gem 'rails', '3.0.0'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -38,11 +38,11 @@ group :test do
   gem 'launchy'    # So you can do Then show me the page
 end
 
-gem 'haml', '>=3'
+gem 'haml', '>=3.0.18'
 gem 'nokogiri', '>=1.4.1'
 gem 'sanitize', '>=1.2.0'
 gem 'mechanize' 
-gem 'devise'
+gem 'devise', '>=1.1.2'
 gem 'mysql2'
 
 gem 'mongrel'

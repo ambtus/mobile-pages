@@ -15,4 +15,3 @@ rerun.txt
 vendor/gems
 capybara*.html
 feature/capybara*.html
-Gemfile.lock
