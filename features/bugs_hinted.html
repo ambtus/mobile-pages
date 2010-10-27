@@ -1,9 +1,0 @@
-Feature: bugs with hinted fields
-
-  Scenario: hinted fields
-    When I go to the homepage
-    Then the "page_title" field should contain "Title"
-    When I fill in "page_title" with "Something"
-      And I press "Find"
-      Then show me the page
-    Then the "page_title" field should contain "Something"

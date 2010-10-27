@@ -1,5 +1,8 @@
-Given /^I have no filters$/ do
+Given /^I have no authors$/ do
   Author.delete_all
+end
+
+Given /^I have no genres$/ do
   Genre.delete_all
 end
 

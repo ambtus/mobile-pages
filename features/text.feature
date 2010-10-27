@@ -1,9 +1,9 @@
-Feature: basic download
-  What: create a text version suitable for download to BookZ on the iPhone
-  Why: so i can read pages offline
-  Result: link to text page
+Feature: text version of pages
 
-  Scenario: download a text version of styled html
+# FIXME: some of this is removed in the initial scrub, not in the text reformat
+# and should be tested in clean.feature instead of here
+
+  Scenario: text version of styled html
     Given a titled page exists with url: "http://test.sidrasue.com/styled.html"
     When I am on the page's page
       And I follow "Text" within ".title"
@@ -22,17 +22,13 @@ Feature: basic download
       And I should not see "p>"
       And I should not see "small>"
       And I should see "(something little)"
-      And I should see "…"
-      And I should see "–"
-      And I should see "’"
       And I should not see ";"
       And I should see "*This is another header*"
       And I should see "*One Two, Three*"
       And I should see "_One, Two? Three_"
       And I should see "_One-TwoThree_"
-      And I should see "façade"
 
-  Scenario: download stripping links and images
+  Scenario: text stripping links and images
     Given a titled page exists with url: "http://test.sidrasue.com/href.html"
     When I am on the page's page
       And I follow "Text" within ".title"
@@ -44,7 +40,7 @@ Feature: basic download
       And I should not see "\[\]"
       And I should not see "href"
 
-  Scenario: download stripping of javascript and comments
+  Scenario: text stripping of javascript and comments
     Given a titled page exists with url: "http://test.sidrasue.com/entities.html"
     When I am on the page's page
       And I follow "Text" within ".title"
@@ -54,7 +50,7 @@ Feature: basic download
       And I should not see "noscript"
       And I should see "Chris was antsy"
 
-  Scenario: download stripping of tables
+  Scenario: text stripping of tables
     Given a titled page exists with url: "http://test.sidrasue.com/tablecontent.html"
     When I am on the page's page
       And I follow "Text" within ".title"
@@ -65,7 +61,7 @@ Feature: basic download
       And I should see "Irony"
       And I should see "I remembered waking up"
 
-  Scenario: download stripping of lists
+  Scenario: text stripping of lists
     Given a titled page exists with url: "http://test.sidrasue.com/list.html"
     When I am on the page's page
       And I follow "Text" within ".title"
@@ -76,7 +72,7 @@ Feature: basic download
       And I should see "* unordered"
       And I should see "term:"
 
-  Scenario: download crappy Microsoft Office "html"
+  Scenario: text of crappy Microsoft Office "html"
     Given a titled page exists with url: "http://test.sidrasue.com/mso.html"
     When I am on the page's page
       And I follow "Text" within ".title"
@@ -85,7 +81,7 @@ Feature: basic download
       And I should not see "\n\n\n\n"
       And I should not see "<o:p>"
 
-  Scenario: download more crappy Microsoft Office "html"
+  Scenario: more crappy Microsoft Office "html"
     Given a titled page exists with url: "http://test.sidrasue.com/mso2.html"
     When I am on the page's page
       And I follow "Text" within ".title"
@@ -95,7 +91,7 @@ Feature: basic download
       And I should see "*My boyfriend"
       And I should not see "<o:p>"
 
-  Scenario: download weird empty divs
+  Scenario: text of weird empty divs
     Given a titled page exists with url: "http://test.sidrasue.com/ejournal_div.html"
     When I am on the page's page
       And I follow "Text" within ".title"
@@ -109,6 +105,12 @@ Feature: basic download
      Then I should not see "thirdfourth"
      Then I should not see "fifthsixth"
 
+  Scenario: make multi (more than two) line breaks visible as hr
+    Given a titled page exists with url: "http://test.sidrasue.com/breaks.html"
+    When I am on the homepage
+      And I follow "Text" within ".title"
+    Then I should see "__________"
+
   Scenario: divs with attributes
     Given a titled page exists with url: "http://test.sidrasue.com/div.html"
     When I am on the page's page
@@ -117,7 +119,7 @@ Feature: basic download
       And I should see "second div"
       And I should not see "<"
 
-  Scenario: download livejournal page content only
+  Scenario: text for livejournal page content only
     Given a titled page exists with url: "http://sid.livejournal.com/119818.html"
     When I am on the page's page
       And I follow "Text" within ".title"
@@ -129,7 +131,7 @@ Feature: basic download
       And I should not see "Reply"
       And I should see "is mesmerizing"
 
-  Scenario: download wraithbait page content only
+  Scenario: text wraithbait page content only
     Given a titled page exists with url: "http://www.wraithbait.com/viewstory.php?sid=15331"
     When I am on the page's page
       And I follow "Text" within ".title"
@@ -139,7 +141,7 @@ Feature: basic download
       And I should see "Story Notes:"
       And I should see "I swear to God, Mer, I know what I'm doing!"
 
-  Scenario: download wraithbait story content only
+  Scenario: text wraithbait story content only
     Given a titled page exists with url: "http://www.wraithbait.com/viewstory.php?sid=15133"
     When I am on the page's page
       And I follow "Text" within ".title"
@@ -148,8 +150,7 @@ Feature: basic download
       And I should see "There was a time of day in Atlantis"
       And I should see "a single tear trickled down his pale soft cheek"
 
-
-  Scenario: download fanfiction page content only
+  Scenario: text fanfiction page content only
     Given a titled page exists with url: "http://www.fanfiction.net/s/638499/1/"
     When I am on the page's page
       And I follow "Text" within ".title"
@@ -158,7 +159,7 @@ Feature: basic download
     But I should not see "Rated: "
       And I should not see "Review this Story"
 
-  Scenario: download archive of our own page content only
+  Scenario: text archive of our own page content only
     Given a titled page exists with url: "http://test.archiveofourown.org/works/692"
     When I am on the page's page
       And I follow "Read"
@@ -178,7 +179,7 @@ Feature: basic download
       And I should see "I'm not. Am I?"
     But I should not see "Add Comment"
 
-  Scenario: download google groops content only
+  Scenario: text google groops content only
     Given a titled page exists with url: "http://test.sidrasue.com/google.html"
     When I am on the page's page
       And I follow "Text" within ".title"
@@ -191,3 +192,49 @@ Feature: basic download
       And I follow "Text" within ".title"
     Then I should see "All right, all right"
       And I should not see "Alright, alright"
+  Scenario: question marks in title
+    Given a page exists with title: "This title?"
+    When I go to the page's page
+      And I follow "Text" within ".title"
+
+  Scenario: slashes in title
+    Given a page exists with title: "This title 1/2"
+    When I go to the page's page
+      And I follow "Text" within ".title"
+
+  Scenario: periods in title
+    Given a page exists with title: "This.title.has.periods"
+    When I go to the page's page
+      And I follow "Text" within ".title"
+
+  Scenario: spaces in title
+    Given a page exists with title: "This title has spaces"
+    When I go to the page's page
+      And I follow "Text" within ".title"
+
+  Scenario: blank named anchor
+    Given a titled page exists with url: "http://sidra.livejournal.com/838.html"
+    When I go to the page's page
+      And I follow "Text" within ".title"
+    Then I should see "Ron crouched"
+      And I should not see "<a"
+
+  Scenario: tidy ocassionally re-adds &nbsp;
+    Given a titled page exists with url: "http://test.sidrasue.com/tidy.html"
+    When I am on the page's page
+      And I follow "Text" within ".title"
+    Then I should not see "nbsp"
+
+  Scenario: text for a multi-part doc
+    Given the following page
+      | title  | base_url                              | url_substitutions |
+      | multi  | http://test.sidrasue.com/parts/*.html | 1 2 3   |
+    When I am on the homepage
+    When I follow "Text" within ".title"
+    Then I should see "stuff for part 1"
+      And I should see "stuff for part 2"
+      And I should see "stuff for part 3"
+      And I should see "# Part 1 #"
+      And I should see "# Part 2 #"
+      And I should see "# Part 3 #"
+

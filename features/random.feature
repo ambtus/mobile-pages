@@ -1,4 +1,4 @@
-Feature: basic random
+Feature: random page
 
   Scenario: find a random page if no pages
     When I am on the homepage

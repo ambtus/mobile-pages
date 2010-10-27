@@ -1,15 +1,37 @@
-Feature: Multiple Search
-  what: search returns more than one page
-  why: there are two pages with the title substring
-  result: get a list of titles to select from
+Feature: stuff to do with titles
 
-  Scenario: Find pages by title
+  Scenario: change title
+    Given a page exists with title: "Old Title", url: "http://test.sidrasue.com/test.html"
+      And I am on the page's page
+    When I follow "Manage Parts"
+      And I fill in "title" with "New Title"
+      And I press "Update"
+    Then I should see "New Title" within ".title"
+    When I follow "Read"
+    Then I should see "Retrieved from the web" within ".content"
+
+  Scenario: Find page by title (first, middle, last, and whole)
     Given the following pages
-      | title                                              | 
+      | title                                              |
       | A Christmas Carol by Charles Dickens               |
       | The Call of the Wild by Jack London                |
       | The Mysterious Affair at Styles by Agatha Christie |
-      And I am on the homepage
+     When I am on the homepage
+       And I fill in "page_title" with "The Call"
+       And I press "Find"
+     Then I should see "The Call of the Wild by Jack London" within ".title"
+     When I am on the homepage
+       And I fill in "page_title" with "Carol"
+       And I press "Find"
+     Then I should see "A Christmas Carol by Charles Dickens" within ".title"
+     When I am on the homepage
+       And I fill in "page_title" with "Styles"
+       And I press "Find"
+     Then I should see "The Mysterious Affair at Styles by Agatha Christie" within ".title"
+     When I am on the homepage
+       And I fill in "page_title" with "A Christmas Carol by Charles Dickens"
+       And I press "Find"
+     Then I should see "A Christmas Carol by Charles Dickens" within ".title"
      When I fill in "page_title" with "by"
       And I press "Find"
      Then I should see "A Christmas Carol" within ".title"
@@ -24,30 +46,14 @@ Feature: Multiple Search
      When I follow "Read"
      Then I should see "A Christmas Carol" within ".title"
 
-  Scenario: Find pages by notes
-    Given the following pages
-      | title                           | notes                       | 
-      | A Christmas Carol               | by Charles Dickens, classic | 
-      | The Call of the Wild            | by Jack London, classic     | 
-      | The Mysterious Affair at Styles | by Agatha Christie, mystery | 
-      And I am on the homepage
-     When I fill in "page_notes" with "by"
+  Scenario: No matching title
+    Given a titled page exists
+    When I am on the homepage
+    Then I should see "page 1"
+    And I fill in "page_title" with "10"
       And I press "Find"
-     Then I should see "A Christmas Carol" within ".title"
-       And I should see "The Call of the Wild" within ".title"
-       And I should see "The Mysterious Affair" within ".title"
-     When I am on the homepage
-      And I fill in "page_notes" with "classic"
-      And I press "Find"
-     Then I should see "A Christmas Carol" within ".title"
-       And I should see "The Call of the Wild" within ".title"
-       And I should not see "The Mysterious Affair" within ".title"
-     When I am on the homepage
-      And I fill in "page_notes" with "mystery"
-      And I press "Find"
-     Then I should not see "A Christmas Carol" within ".title"
-       And I should not see "The Call of the Wild" within ".title"
-       And I should see "The Mysterious Affair" within ".title"
+    Then I should see "No pages found" within "#flash_alert"
+      And I should not see "page 1"
 
   Scenario: limit number of found pages
     Given 16 titled pages exist

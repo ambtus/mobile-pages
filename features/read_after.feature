@@ -1,0 +1,170 @@
+Feature: read_after order
+
+  Scenario: Read pages in order
+    Given the following pages
+      | title                           |
+      | A Christmas Carol               |
+      | The Call of the Wild            |
+      | The Mysterious Affair at Styles |
+     When I am on the homepage
+       Then I should see "A Christmas Carol" within "#position_1"
+     When I follow "Read" within "#position_1"
+       And I press "Read Later"
+       Then I should see "The Call of the Wild" within ".title"
+     When I press "Read Later"
+       Then I should see "The Mysterious Affair at Styles" within ".title"
+     When I press "Read Later"
+       Then I should see "A Christmas Carol" within ".title"
+     When I am on the homepage
+       Then I should see "The Call of the Wild" within "#position_2"
+     When I follow "Text" within "#position_2"
+     When I am on the homepage
+     Then I should see "The Call of the Wild" within "#position_1"
+       And I should see "The Mysterious Affair at Styles" within "#position_3"
+       And I follow "Text" within "#position_3"
+     When I am on the homepage
+       Then I should see "The Mysterious Affair at Styles" within "#position_1"
+
+  Scenario: Add a page and make it first
+    Given a titled page exists
+    When I am on the homepage
+    Then I should see "page 1" within "#position_1"
+    When I fill in "page_title" with "page 2"
+      And I press "Store"
+    When I go to the page with title "page 2"
+      And I press "Read First"
+    When I am on the homepage
+    Then I should see "page 2" within "#position_1"
+      And I should see "page 1" within "#position_2"
+
+  Scenario: Read a page and make it first
+    Given 2 titled pages exist
+    When I am on the homepage
+    Then I should see "page 1" within "#position_1"
+      And I should see "page 2" within "#position_2"
+    When I follow "Read" within "#position_2"
+      And I press "Read First"
+    When I am on the homepage
+    Then I should see "page 2" within "#position_1"
+      And I should see "page 1" within "#position_2"
+
+  Scenario: Find a part or subpart and make it first
+    Given I have no pages
+      And the following pages
+        | title  | urls | read_after |
+        | Single |      | 2009-01-01 |
+        | Parent | http://test.sidrasue.com/parts/1.html | 2009-01-02 |
+        | Grandparent | ##Parent1\n##Parent2\nhttp://test.sidrasue.com/parts/5.html###Subpart | 2009-01-03 |
+    When I am on the homepage
+    Then I should see "Single" within "#position_1"
+      And I should see "Parent" within "#position_2"
+      And I should see "Grandparent" within "#position_3"
+    When I follow "Parent" within "#position_2"
+      And I follow "Read" within "#position_1"
+      And I press "Read First"
+    When I am on the homepage
+    And I should see "Parent" within "#position_1"
+    Then I should see "Single" within "#position_2"
+    And I should see "Grandparent" within "#position_3"
+    When I follow "Grandparent" within "#position_3"
+      And I follow "Parent2" within "#position_2"
+      And I follow "Read" within "#position_1"
+    When I press "Read First"
+      And I am on the homepage
+    Then I should see "Grandparent" within "#position_1"
+      And I should see "Parent" within "#position_2"
+      And I should see "Single" within "#position_3"
+
+  Scenario: after adding parent next should not show part
+    Given 2 titled pages exist
+    When I go to the homepage
+    Then I should see "page 1 title" within "#position_1"
+      And I should see "page 2 title" within "#position_2"
+    When I follow "Read" within "#position_1"
+      And I press "Read Later"
+    Then I should see "page 2 title" within ".title"
+      And I follow "Manage Parts"
+      And I fill in "add_parent" with "Parent for page 2"
+      And I press "Update"
+    Then I should see "Parent for page 2" within ".title"
+      When I press "Read Later"
+    Then I should see "page 1 title" within ".title"
+      When I press "Read Later"
+    Then I should see "Parent for page 2" within ".title"
+      When I press "Read Later"
+    Then I should see "page 1 title" within ".title"
+
+  Scenario: Changing read after orders
+    Given 5 titled pages exist
+    When I am on the homepage
+    Then I should see "page 1 title" within "#position_1"
+      And I should see "page 2 title" within "#position_2"
+      And I should see "page 3 title" within "#position_3"
+      And I should see "page 4 title" within "#position_4"
+      And I should see "page 5 title" within "#position_5"
+    When I follow "Read" within "#position_1"
+      And I follow "Rate"
+    Then I should see "Please rate (converted to years for next suggested read date)"
+    When I press "5"
+# FIXME - year will change every year
+    Then I should see "page 1 title set for reading again on 2015-"
+      And I should see "page 2" within "#position_1"
+      And I should see "page 3" within "#position_2"
+      And I should see "page 4" within "#position_3"
+      And I should see "page 5" within "#position_4"
+      And I should see "page 1" within "#position_5"
+    When I follow "Read" within "#position_1"
+      And I follow "Rate"
+      And I press "3"
+# FIXME - year will change every year
+    Then I should see "page 2 title set for reading again on 2013-"
+      And I should see "page 3" within "#position_1"
+      And I should see "page 4" within "#position_2"
+      And I should see "page 5" within "#position_3"
+      And I should see "page 2" within "#position_4"
+      And I should see "page 1" within "#position_5"
+    When I follow "Read" within "#position_1"
+      And I follow "Rate"
+      And I press "4"
+# FIXME - year will change every year
+    Then I should see "page 3 title set for reading again on 2014-"
+      And I should see "page 4" within "#position_1"
+      And I should see "page 5" within "#position_2"
+      And I should see "page 2" within "#position_3"
+      And I should see "page 3" within "#position_4"
+      And I should see "page 1" within "#position_5"
+    When I follow "Read" within "#position_1"
+      And I follow "Rate"
+      And I press "1"
+# FIXME - year will change every year
+    Then I should see "page 4 title set for reading again on 2011-"
+      And I should see "page 5" within "#position_1"
+      And I should see "page 4" within "#position_2"
+      And I should see "page 2" within "#position_3"
+      And I should see "page 3" within "#position_4"
+      And I should see "page 1" within "#position_5"
+    When I follow "Read" within "#position_1"
+      And I follow "Rate"
+      And I press "20"
+# FIXME - year will change every year
+    Then I should see "page 5 title set for reading again on 2030"
+      And I should see "page 4" within "#position_1"
+      And I should see "page 2" within "#position_2"
+      And I should see "page 3" within "#position_3"
+      And I should see "page 1" within "#position_4"
+      And I should see "page 5" within "#position_5"
+
+  Scenario: new parent for an existing page should have read after date
+    Given the following pages
+      | title   | read_after |
+      | Single  | 2008-01-01 |
+      | Another | 2008-02-01 |
+    When I am on the homepage
+    Then I should see "Single" within ".title"
+    When I follow "Read"
+      And I follow "Manage Parts"
+      And I fill in "add_parent" with "New Parent"
+      And I press "Update"
+    When I am on the homepage
+    Then I should see "New Parent" within ".title"
+

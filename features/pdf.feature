@@ -1,6 +1,6 @@
 Feature: download pdf version
 
-  Scenario: download pdf file
+  Scenario: download pdf file with weird title
     Given a page exists with url: "http://test.sidrasue.com/styled.html", title: "Styled"
       And the page "Styled" has no pdfs
     When I am on the homepage
@@ -33,7 +33,7 @@ Feature: download pdf version
       And I should see "Styled-55"
     When I press "Remove all pdfs"
     Then I should not see "pdf(55)" within ".title"
-      And I should see "edit pdfs" 
+      And I should see "edit pdfs"
 
   Scenario: backround pdf creation
     Given a page exists with title: "epic", base_url: "http://test.sidrasue.com/long*.html", url_substitutions: "1 2 3 4"
@@ -47,3 +47,15 @@ Feature: download pdf version
     Given I wait 3 seconds
       And I am on the page's page
     Then I should see "pdf(55)" within ".title"
+
+  Scenario: download pdf file
+    Given a page exists with url: "http://test.sidrasue.com/test.html", title: "Space's in/title+ weirdnesses:"
+      And the page "Space's in/title+ weirdnesses:" has no pdfs
+    When I am on the homepage
+      And I follow "edit pdfs" within ".title"
+      And I press "Create pdf"
+    And I wait 1 second
+    When I am on the homepage
+    Then I should see "pdf(55)" within ".title"
+    When I follow "pdf(55)" within ".title"
+    Then I should be visiting "Space's in/title+ weirdnesses:"'s 55 pdf page

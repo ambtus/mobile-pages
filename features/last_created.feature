@@ -1,4 +1,4 @@
-Feature: find last created
+Feature: last created
 
   Scenario: find last created page if no pages
     When I am on the homepage

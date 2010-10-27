@@ -31,6 +31,9 @@ module NavigationHelpers
     #   when /^(.*)'s profile page$/i
     #     user_profile_path(User.find_by_login($1))
 
+    when /^the page with title "(.*)"/
+      read_path(Page.find_by_title($1))
+
     else
       begin
         page_name =~ /the (.*) page/
