@@ -105,7 +105,7 @@ class Page < ActiveRecord::Base
   end
 
   def clean_title
-    clean = self.title.gsub('/', '').gsub("'", '').gsub("?", '').gsub(",", '').gsub(":", '').gsub('"', '').gsub("#", '')
+    clean = self.title.gsub('/', '').gsub("'", '').gsub("?", '').gsub(",", '').gsub(":", '').gsub('"', '').gsub("#", '').gsub(" ", "_")
     CGI::escape(clean).gsub('+', ' ').gsub('.', ' ')
   end
 
@@ -113,25 +113,18 @@ class Page < ActiveRecord::Base
     "#{self.id}-#{self.clean_title}"
   end
 
-  def pasted=(html)
-    self.raw_html = html
-    self.build_me(false)
-  end
-
-  def fetch(url=self.url)
+  def fetch
     return if url.blank?
-    self.update_attribute(:url, url) if url != self.url
-    agent = Mechanize.new
+    agent = Mechanize.new { |a| a.log = Logger.new("log/mechanize.log") }
     auth = MyWebsites.getpwd(url)
     agent.auth(auth[:username], auth[:password]) if auth
     begin
-      page = agent.get(MyWebsites.geturl(url))
-      if url.match(/livejournal/) && page.forms.first.try(:button).try(:name) == "adult_check"
-         form = page.forms.first
-         page = agent.submit(form, form.buttons.first)
+      content = agent.get(MyWebsites.geturl(url))
+      if url.match(/livejournal/) && content.forms.first.try(:button).try(:name) == "adult_check"
+         form = content.forms.first
+         content = agent.submit(form, form.buttons.first)
       end
-      self.raw_html = page.body
-      self.build_me(false)
+      self.raw_html = content.body.force_encoding(agent.page.encoding)
     rescue Mechanize::ResponseCodeError
       self.errors.add(:base, "error retrieving content")
     rescue SocketError
@@ -139,19 +132,12 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def build_me(reclean)
+  def sanitize
     if !self.parts.blank?
-      self.parts.each {|p| p.build_me(reclean)}
+      self.parts.each {|p| p.sanitize}
     else
-      html = reclean ? self.clean_html(false) : self.raw_html
-      body = Scrub.regularize_body(html)
-      body = MyWebsites.getnode(self.url, body) unless reclean
-      if body
-        html = Scrub.to_xhtml(body)
-        self.clean_html = Scrub.sanitize_html(html)
-      else
-        self.clean_html = ""
-      end
+      html = self.clean_html(false)
+      self.clean_html = Scrub.sanitize_html(html)
       self.set_wordcount
     end
   end
@@ -360,8 +346,9 @@ class Page < ActiveRecord::Base
   end
 
   def clean_html=(content)
-    FileUtils.rm_f(pdf_html_file_name)
-    File.open(self.clean_html_file_name, 'w') { |f| f.write(content) }
+    ensure_path
+    destroy_all_pdfs
+    File.open(self.clean_html_file_name, 'w:utf-8') { |f| f.write(content) }
   end
 
   def build_html_from_parts
@@ -379,10 +366,10 @@ class Page < ActiveRecord::Base
   end
 
   def clean_html(check=true)
-    self.build_me(true) if (check && self.needs_recleaning?)
+    self.sanitize if (check && self.sanitize_rules_changed?)
     if parts.blank?
       begin
-        File.open(self.clean_html_file_name, 'r') { |f| f.read }
+        File.open(self.clean_html_file_name, 'r:utf-8') { |f| f.read }
       rescue Errno::ENOENT
         ""
       end
@@ -395,13 +382,26 @@ class Page < ActiveRecord::Base
     Rails.public_path +  self.mypath + "original.html"
   end
 
+  def ensure_path
+    FileUtils.mkdir_p(Rails.public_path +  self.mypath)
+  end
+
   def raw_html=(content)
-    File.open(self.raw_file_name, 'w') { |f| f.write(content) }
+    ensure_path
+    body = Scrub.regularize_body(content)
+    File.open(self.raw_file_name, 'w:utf-8') { |f| f.write(body) }
+    html = MyWebsites.getnode(body, self.url)
+    if html
+      self.clean_html = Scrub.sanitize_html(html)
+    else
+      self.clean_html = ""
+    end
+    self.set_wordcount
   end
 
   def raw_html
     begin
-      File.open(self.raw_file_name, 'r') { |f| f.read }
+      File.open(self.raw_file_name, 'r:utf-8') { |f| f.read }
     rescue Errno::ENOENT
       ""
     end
@@ -437,7 +437,8 @@ class Page < ActiveRecord::Base
   end
 
   def pdf_html=(content)
-    File.open(self.pdf_html_file_name, 'w') { |f| f.write(content) }
+    ensure_path
+    File.open(self.pdf_html_file_name, 'w:utf-8') { |f| f.write(content) }
   end
 
   def pdf_sizes
@@ -446,48 +447,28 @@ class Page < ActiveRecord::Base
   end
 
   def remove_surrounding_div!
-    children = Nokogiri::HTML(self.clean_html).xpath('//body').children.first.children
-    children = Scrub.remove_blanks(children)
-    while children.size == 1
-      children = children.children
-      children = Scrub.remove_blanks(children)
-    end
-    self.clean_html = children.to_xhtml
-  end
-
-  def nodes
-    html = self.clean_html
-    array = []
-    all = Nokogiri::HTML(html).xpath('//body').children
-    all.each do |node|
-      unless (node.is_a?(Nokogiri::XML::Text) && node.to_html.blank?)
-        array << node.to_xhtml(:encoding => 'utf8')
-      end
-    end
-    array
+    self.clean_html = Scrub.remove_surrounding(self.clean_html)
   end
 
   def top_nodes
-    self.nodes[0, 15] || []
+    html = self.clean_html
+    nodeset = Nokogiri::HTML(html).xpath('//body').children
+    nodeset[0, 15].map {|n| n.to_s.chomp }
   end
 
   def bottom_nodes
-    self.nodes[-15, 15] || self.top_nodes
+    html = self.clean_html
+    nodeset = Nokogiri::HTML(html).xpath('//body').children
+    nodeset = nodeset[-15, 15] || nodeset
+    nodeset.map {|n| n.to_s.chomp }
   end
 
-  def remove_top_nodes(ids)
-    nodes = self.nodes
-    number = ids.first.to_i + 1
-    number.times { nodes.shift }
-    self.clean_html=nodes.to_s
-    self.set_wordcount
-  end
-
-  def remove_bottom_nodes(ids)
-    nodes = self.nodes
-    number = ids.first.to_i
-    number.times { nodes.pop }
-    self.clean_html=nodes.to_s
+  def remove_nodes(top, bottom)
+    html = self.clean_html
+    nodeset = Nokogiri::HTML(html).xpath('//body').children
+    top.to_i.times { nodeset.shift }
+    bottom.to_i.times { nodeset.pop }
+    self.clean_html=nodeset.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
     self.set_wordcount
   end
 
@@ -504,7 +485,7 @@ class Page < ActiveRecord::Base
   end
 
   def build_html
-    self.build_me(true) if self.needs_recleaning?
+    self.sanitize if self.sanitize_rules_changed?
     html = "<p>" + self.tag_string + "</p>"
     html = html + self.formatted_notes unless self.notes.blank?
     html = html + "<h1>#{self.title}</h1>
@@ -527,9 +508,12 @@ h1,h2 {page-break-before: always;}
     system "/usr/local/bin/wkhtmltopdf --quiet #{fit} \"#{self.pdf_html_file_name}\" \"#{self.pdf_file_name(font_size)}\" >/tmp/wkhtml.out 2>&1 &"
   end
 
-  def needs_recleaning?
-    return true unless File.exists?(self.clean_html_file_name)
-    File.mtime(self.clean_html_file_name) < File.mtime(Rails.root + "extras/scrub.rb")
+  def sanitize_rules_changed?
+    begin
+      File.mtime(self.clean_html_file_name) < File.mtime(Rails.root + "extras/scrub.rb")
+    rescue Errno::ENOENT
+      true
+    end
   end
 
   def short_notes
@@ -568,11 +552,9 @@ private
   end
 
   def initial_fetch
-    FileUtils.mkdir_p(Rails.public_path +  self.mypath)
-    self.raw_html = ""
-    if self.url
-      fetch
-    elsif self.base_url
+    if !self.url.blank?
+      self.fetch
+    elsif !self.base_url.blank?
       count = 1
       match = self.url_substitutions.match("-")
       if match
@@ -587,9 +569,10 @@ private
         count = count.next
       end
       self.set_wordcount
-    elsif self.urls
+    elsif !self.urls.blank?
       self.parts_from_urls(self.urls)
+    else
+      raw_html = ""
     end
   end
-
 end

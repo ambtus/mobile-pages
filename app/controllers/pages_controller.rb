@@ -72,11 +72,11 @@ class PagesController < ApplicationController
     @page = @page.make_first if (params[:commit] == "Read First")
     case params[:commit]
       when "Rebuild from Raw HTML"
-        @page.build_me(false)
+        @page.raw_html = @page.raw_html
         flash[:notice] = "Rebuilt from Raw HTML"
         redirect_to read_url(@page) and return
       when "Update Raw HTML"
-        @page.pasted = params[:pasted]
+        @page.raw_html = params[:pasted]
         flash[:notice] = "Raw HTML updated."
         redirect_to read_url(@page) and return
       when "Remove surrounding Div"
@@ -84,8 +84,9 @@ class PagesController < ApplicationController
         flash[:notice] = "Surrounding div removed"
         redirect_to scrub_path(@page) and return
       when "Scrub"
-        @page.remove_top_nodes(params[:top_nodes]) if params[:top_nodes]
-        @page.remove_bottom_nodes(params[:bottom_nodes]) if params[:bottom_nodes]
+        top = params[:top_node] || 0
+        bottom = params[:bottom_node] || 0
+        @page.remove_nodes(top, bottom)
         redirect_to read_url(@page) and return
       when "Update"
         @page.update_attributes(params[:page])

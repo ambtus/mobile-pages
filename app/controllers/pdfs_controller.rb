@@ -11,7 +11,7 @@ class PdfsController < ApplicationController
     unless File.exists?(file)
       redirect_to new_page_pdf_path, :alert => "Pdf doesn't exist" and return
     end
-    if ENV['RAILS_ENV'] == 'production'
+    if Rails.env == 'production'
       redirect_to page.pdf_file_basename(font_size)
     else
       send_file "#{file}", :type => Mime::PDF, :disposition => 'inline'

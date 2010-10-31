@@ -58,6 +58,12 @@
 .part {
     background-color: #CFC;
     }
+.top {
+    background-color: #DDD;
+    }
+.bottom {
+    background-color: #444;
+    }
 hr {
     border: 0;
     color: black;

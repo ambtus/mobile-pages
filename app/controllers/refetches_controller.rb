@@ -5,10 +5,12 @@ class RefetchesController < ApplicationController
   def create
     @page = Page.find(params[:page_id])
     if @page.parts.blank?
-      @page.fetch(params[:url])
+      @page.update_attribute(:url, params[:url])
+      @page.fetch
     else
       @page.parts_from_urls(params[:url_list], true)
     end
-    redirect_to read_url(@page), :alert => @page.errors[:url]
+    flash[:alert] == @page.errors[:url] unless @page.errors[:url].blank?
+    redirect_to read_url(@page)
   end
 end

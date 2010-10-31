@@ -1,0 +1,69 @@
+# Be sure to restart your server when you modify this file.
+
+module MyWebsites
+
+  def self.getpwd(url)
+    case url
+    when "http://test.sidrasue.com/basic/test.html"
+      { :username => "alice", :password => "nothingtosee" }
+    when "http://test.sidrasue.com/digest/test.html"
+      { :username => "alice", :password => "nothinghere" }
+    end
+  end
+
+  def self.geturl(url)
+    case url
+    when /ejournal/, /dreamwidth/
+      url = url + "?mode=reply" unless url.match("thread")
+      url + "&format=light"
+    when /archiveofourown/
+      url + "?view_adult=true&view_full_work=true&style=light"
+    when /wraithbait/
+      url + "&chapter=all&action=printable"
+      else url
+    end
+  end
+
+  # expects an html string
+  def self.getnode(html, url)
+    return nil unless html.is_a? String
+    doc = Nokogiri::HTML(html)
+    body = doc.xpath('//body').first
+    return html if body.blank?
+    result = case url
+    when /ejournal/, /dreamwidth/
+      if body.at('//blockquote')
+        body.at('//blockquote').next
+      else
+        body.children
+      end
+    when /fanfiction.net/
+      body.at('div#storytext')
+    when /archiveofourown/
+      body.at('div#feedback').remove if body.at('div#feedback')
+      body.search(".landmark").each { |node| node.remove }
+      body.search(".navigation").each { |node| node.remove }
+      body.search(".wrapper").each { |node| node.remove }
+      body.search("h2.title").each { |node| node.remove }
+      body.search("h3.byline").each { |node| node.remove }
+      body.search("p.series.footnote").each { |node| node.remove }
+      body.at('div.works-show')
+    when /wraithbait/
+      body.at('div.infobox').remove if body.at('div.infobox')
+      body.search("div.toplink").each { |node| node.remove }
+      body.search("div.chaptertitle").each do |node|
+        node.name = 'h2'
+        node.inner_html = node.inner_text.gsub(" by", '')
+      end
+      body.at('div#copyright').remove if body.at('div#copyright')
+      body.children
+    when /google/
+      body.at('div#inbdy')
+    else
+      body.children
+    end
+    result.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
+  end
+
+end
+

@@ -188,7 +188,8 @@ Feature: tests that don't fit neatly into another feature
       And I should see "bottom para"
     When I am on the page's page
       And I follow "Scrub"
-      And I check boxes "0 bottom2"
+      And I choose "top para" within ".top"
+      And I choose "bottom para" within ".bottom"
       And I press "Scrub"
       And I should not see "top para"
       And I should not see "bottom para"

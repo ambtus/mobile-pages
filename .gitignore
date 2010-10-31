@@ -8,10 +8,14 @@ db/*.sqlite3
 public/test
 public/development
 public/files
+config/unicorn.rb
 config/initializers/session_store.rb
-config/initializers/websites.rb
+extras/my_websites.rb
 config/initializers/secret_token.rb
 rerun.txt
 vendor/gems
 capybara*.html
 feature/capybara*.html
+public/apple-touch-icon.png
+public/google*.html
+
