@@ -15,7 +15,11 @@ module MyWebsites
     case url
     when /ejournal/, /dreamwidth/
       url = url + "?mode=reply" unless url.match("thread")
-      url + "&format=light"
+      if url.match("#comments")
+        url.gsub("#comments", "&format=light#comments")
+      else
+        url + "&format=light"
+      end
     when /archiveofourown/
       url + "?view_adult=true&view_full_work=true&style=light"
     when /wraithbait/
@@ -32,7 +36,9 @@ module MyWebsites
     return html if body.blank?
     result = case url
     when /ejournal/, /dreamwidth/
-      if body.at('//blockquote')
+      if url.match("thread|comments")
+        body.children
+      elsif body.at('//blockquote')
         body.at('//blockquote').next
       else
         body.children

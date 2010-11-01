@@ -1,3 +1,5 @@
+# encoding=utf-8
+
 class Page < ActiveRecord::Base
   MODULO = 300  # files in a single directory
 
@@ -29,13 +31,24 @@ class Page < ActiveRecord::Base
   DEFAULT_PDF_FONT_SIZE = "55" 
   
   def set_wordcount(recount=true)
-    self.wordcount = self.remove_html.scan(/\w+/).size if recount
+    if recount
+      count = 0
+      body = Nokogiri::HTML(self.clean_html(false)).xpath('//body').first
+      body.traverse { |node|
+        if node.is_a? Nokogiri::XML::Text
+          words = node.inner_text.gsub(/--/, "—").gsub(/(['’‘-])+/, "")
+          count +=  words.scan(/[a-zA-Z0-9À-ÿ_]+/).size
+        end
+      } if body
+      self.wordcount = count 
+    end
     self.size = "short"
-    return unless wordcount
-    self.size = "medium" if wordcount > SHORT_WC
-    self.size = "long" if wordcount > MED_WC
-    self.size = "novel" if wordcount > LONG_WC
-    self.size = "epic" if wordcount > EPIC_WC
+    if self.wordcount
+      self.size = "medium" if wordcount > SHORT_WC
+      self.size = "long" if wordcount > MED_WC
+      self.size = "novel" if wordcount > LONG_WC
+      self.size = "epic" if wordcount > EPIC_WC
+    end
     self.save
   end
 
