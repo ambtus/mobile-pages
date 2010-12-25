@@ -2,6 +2,7 @@ source 'http://rubygems.org'
 
 gem 'bundler', '~>1.0.0'
 gem 'rails', '3.0.1'
+gem 'mysql2'
 
 # Use unicorn as the web server
 gem 'unicorn'
@@ -24,10 +25,4 @@ gem 'haml', '>=3.0.18'
 gem 'nokogiri', '>=1.4.1'
 gem 'sanitize', '>=1.2.0'
 gem 'devise', '>=1.1.2'
-gem 'mysql2'
-
-# edge gems
-
-gem 'mechanize',
-  :git => 'git://github.com/tenderlove/mechanize.git'
-
+gem 'mechanize', '>=1.0.0'

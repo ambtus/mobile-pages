@@ -10,7 +10,7 @@ Feature: download pdf version
     When I press "Create pdf"
     Then I should see "Large files may take a while to process" within "#flash_notice"
     Then I should not see "pdf(55)" within ".title"
-    When I wait 2 seconds
+    When I wait 4 seconds
       And I am on the page's page
     Then I should see "pdf(55)" within ".title"
     When I follow "pdf(55)" within ".title"
@@ -20,7 +20,7 @@ Feature: download pdf version
       Then "55" should be selected in "Font Size"
       And I select "24" from "Font Size"
       And I press "Create pdf"
-    When I wait 1 second
+    When I wait 2 second
       And I am on the page's page
     Then I should see "pdf(24)" within ".title"
     When I follow "pdf(24)" within ".title"
@@ -44,7 +44,7 @@ Feature: download pdf version
     Then I should see "Large files may take a while to process" within "#flash_notice"
     Given I am on the page's page
     Then I should not see "pdf(55)" within ".title"
-    Given I wait 3 seconds
+    Given I wait 4 seconds
       And I am on the page's page
     Then I should see "pdf(55)" within ".title"
 
@@ -54,7 +54,7 @@ Feature: download pdf version
     When I am on the homepage
       And I follow "edit pdfs" within ".title"
       And I press "Create pdf"
-    And I wait 1 second
+    And I wait 5 seconds
     When I am on the homepage
     Then I should see "pdf(55)" within ".title"
     When I follow "pdf(55)" within ".title"
