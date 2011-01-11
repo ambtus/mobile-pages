@@ -174,9 +174,9 @@ Feature: tests that don't fit neatly into another feature
       And I press "2"
    When I am on the page's page
 # FIXME - year will change every year
-   Then I should see "2010-" within ".last_read"
+   Then I should see "2011-" within ".last_read"
      And I should see "unread" within "#position_1"
-     And I should not see "2010-" within "#position_2"
+     And I should not see "2011-" within "#position_2"
      And I should not see "unread" within "#position_2"
 
   Scenario: text, trim and text should reflect trim

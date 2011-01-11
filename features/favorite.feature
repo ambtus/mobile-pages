@@ -25,11 +25,11 @@ Feature: mark as favorite
    Then I should not see "unread" within ".last_read"
      And I should not see "favorite" within ".favorite"
 #FIXME: changes every year
-     And I should not see "2010-" within "#position_1"
+     And I should not see "2011-" within "#position_1"
      And I should see "favorite" within "#position_1"
      And I should not see "unread" within "#position_1"
 #FIXME: changes every year
-     And I should not see "2010-" within "#position_2"
+     And I should not see "2011-" within "#position_2"
      And I should not see "favorite" within "#position_2"
      And I should see "unread" within "#position_2"
    When I am on the page's page
@@ -40,7 +40,7 @@ Feature: mark as favorite
      And I should not see "favorite" within ".favorite"
      And I should not see "favorite" within "#position_1"
      And I should not see "unread" within "#position_1"
-     And I should not see "2010-" within "#position_1"
+     And I should not see "2011-" within "#position_1"
      And I should not see "unread" within "#position_2"
      And I should not see "favorite" within "#position_2"
-     And I should not see "2010-" within "#position_2"
+     And I should not see "2011-" within "#position_2"
