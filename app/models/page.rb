@@ -518,7 +518,10 @@ h1,h2 {page-break-before: always;}
       self.pdf_html = html
     end
     fit = "-B 0 -L 0 -R 0 -T 0 --minimum-font-size #{font_size}"
-    system "/usr/local/bin/wkhtmltopdf --quiet #{fit} \"#{self.pdf_html_file_name}\" \"#{self.pdf_file_name(font_size)}\" >/tmp/wkhtml.out 2>&1 &"
+    cmd = "/usr/local/bin/wkhtmltopdf --quiet #{fit} \"#{self.pdf_html_file_name}\" \"#{self.pdf_file_name(font_size)}\" "
+    Rails.logger.info cmd
+    result = %x[#{cmd}]
+    Rails.logger.info result
   end
 
   def sanitize_rules_changed?
