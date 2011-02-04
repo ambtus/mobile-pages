@@ -1,6 +1,9 @@
 # coding: utf-8
 
 module Scrub
+  def self.sanitize_version
+    return 1
+  end
 
   # regularize imported html to fix garbled encodings
   #    clean up whitespace and remove javascript

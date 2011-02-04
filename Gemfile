@@ -8,7 +8,9 @@ gem 'mysql2'
 gem 'unicorn'
 
 # To use debugger
-# gem 'ruby-debug9'
+group :development do
+  gem 'ruby-debug19'
+end
 
 group :test do
   gem 'pickle'

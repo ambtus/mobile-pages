@@ -33,7 +33,7 @@ class Page < ActiveRecord::Base
       self.wordcount = self.parts.sum(:wordcount)
     elsif recount
       count = 0
-      body = Nokogiri::HTML(self.clean_html(false)).xpath('//body').first
+      body = Nokogiri::HTML(self.clean_html).xpath('//body').first
       body.traverse { |node|
         if node.is_a? Nokogiri::XML::Text
           words = node.inner_text.gsub(/--/, "—").gsub(/(['’‘-])+/, "")
@@ -142,16 +142,6 @@ class Page < ActiveRecord::Base
       self.errors.add(:base, "error retrieving content")
     rescue SocketError
       self.errors.add(:base, "couldn't resolve host name")
-    end
-  end
-
-  def sanitize
-    if !self.parts.blank?
-      self.parts.each {|p| p.sanitize}
-    else
-      html = self.clean_html(false)
-      self.clean_html = Scrub.sanitize_html(html)
-      self.set_wordcount
     end
   end
 
@@ -370,8 +360,8 @@ class Page < ActiveRecord::Base
     File.open(self.clean_html_file_name, 'w:utf-8') { |f| f.write(content) }
   end
 
-  def clean_html(check=true)
-    self.sanitize if (check && self.sanitize_rules_changed?)
+  def clean_html
+    self.re_sanitize if self.sanitize_version < Scrub.sanitize_version
     if parts.blank?
       begin
         File.open(self.clean_html_file_name, 'r:utf-8') { |f| f.read }
@@ -379,6 +369,18 @@ class Page < ActiveRecord::Base
         ""
       end
     end
+  end
+
+  def re_sanitize
+    Rails.logger.debug "re_sanitizing #{self.id}"
+    if !self.parts.blank?
+      self.parts.each {|p| p.re_sanitize if p.sanitize_version < Scrub.sanitize_version}
+    else
+      html = self.clean_html
+      self.clean_html = Scrub.sanitize_html(html)
+      self.set_wordcount
+    end
+    self.update_attribute(:sanitize_version, Scrub.sanitize_version)
   end
 
   def ensure_path
@@ -446,14 +448,6 @@ class Page < ActiveRecord::Base
     text
   end
 
-  def sanitize_rules_changed?
-    begin
-      File.mtime(self.clean_html_file_name) < File.mtime(Rails.root + "extras/scrub.rb")
-    rescue Errno::ENOENT
-      true
-    end
-  end
-
   def short_notes
     return self.notes if self.notes.blank?
     return self.notes if self.notes.size < MININOTE
@@ -466,6 +460,7 @@ class Page < ActiveRecord::Base
 ### Download helper methods
 
   def remove_outdated_downloads
+    Rails.logger.debug "remove outdated downloads for #{self.id}"
     FileUtils.rm_rf(self.download_dir)
     self.parent.remove_outdated_downloads if self.parent
   end
@@ -509,9 +504,11 @@ private
     self.url_substitutions = nil if self.url_substitutions == URL_SUBSTITUTIONS_PLACEHOLDER
     self.urls = nil if self.urls == URLS_PLACEHOLDER
     self.read_after = Time.now if self.read_after.blank?
+    self.sanitize_version = Scrub.sanitize_version
   end
 
   def initial_fetch
+    Rails.logger.debug "initial fetch for #{self.id}"
     FileUtils.rm_rf(self.mypath) # make sure directory is clean during tests
     if !self.url.blank?
       self.fetch
