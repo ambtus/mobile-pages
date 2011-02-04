@@ -7,7 +7,7 @@ Feature: stuff to do with titles
       And I fill in "title" with "New Title"
       And I press "Update"
     Then I should see "New Title" within ".title"
-    When I follow "Read"
+    When I follow "HTML"
     Then I should see "Retrieved from the web" within ".content"
 
   Scenario: Find page by title (first, middle, last, and whole)
@@ -43,7 +43,7 @@ Feature: stuff to do with titles
      Then I should see "A Christmas Carol" within ".title"
        And I should not see "The Call of the Wild" within ".title"
        And I should see "The Mysterious Affair" within ".title"
-     When I follow "Read"
+     When I follow "A Christmas Carol"
      Then I should see "A Christmas Carol" within ".title"
 
   Scenario: No matching title

@@ -11,6 +11,6 @@ class RefetchesController < ApplicationController
       @page.parts_from_urls(params[:url_list], true)
     end
     flash[:alert] == @page.errors[:url] unless @page.errors[:url].blank?
-    redirect_to read_url(@page)
+    redirect_to page_path(@page)
   end
 end

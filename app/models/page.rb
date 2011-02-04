@@ -27,11 +27,11 @@ class Page < ActiveRecord::Base
   NOVEL_WV = 50000
   EPIC_WC = 150000
 
-  PDF_FONT_SIZES = ["12", "24", "32", "40", "55"]
-  DEFAULT_PDF_FONT_SIZE = "55"
-
   def set_wordcount(recount=true)
-    if recount
+    if self.parts.size > 0
+      self.parts.each {|part| part.set_wordcount } if recount
+      self.wordcount = self.parts.sum(:wordcount)
+    elsif recount
       count = 0
       body = Nokogiri::HTML(self.clean_html(false)).xpath('//body').first
       body.traverse { |node|
@@ -128,7 +128,7 @@ class Page < ActiveRecord::Base
 
   def fetch
     return if url.blank?
-    agent = Mechanize.new { |a| a.log = Logger.new("log/mechanize.log") }
+    agent = Mechanize.new { |a| a.log = Logger.new("#{Rails.root}/log/mechanize.log") }
     auth = MyWebsites.getpwd(url)
     agent.auth(auth[:username], auth[:password]) if auth
     begin
@@ -190,11 +190,11 @@ class Page < ActiveRecord::Base
         parent.update_attribute(:read_after, Time.now) if parent.read_after > Time.now
       else
         if page.url == url
-	        page.fetch if refetch
+          page.fetch if refetch
         else
           page.update_attribute(:url, url)
-	        page.fetch
-	      end
+          page.fetch
+        end
         page.update_attribute(:position, position)
         page.update_attribute(:title, title)
         page.update_attribute(:parent_id, parent.id)
@@ -218,11 +218,11 @@ class Page < ActiveRecord::Base
         parent.update_attribute(:read_after, Time.now) if parent.read_after > Time.now
       else
         if page.url == url
-	        page.fetch if refetch
-      	else
+          page.fetch if refetch
+        else
           page.update_attribute(:url, url)
-	        page.fetch
-	      end
+          page.fetch
+        end
         page.update_attribute(:parent_id, part.id)
         page.update_attribute(:title, title)
         page.update_attribute(:position, position)
@@ -234,7 +234,7 @@ class Page < ActiveRecord::Base
       old_part = Page.find(old_part_id)
       old_part.destroy if old_part.parent == parent
     end
-    parent.set_wordcount
+    parent.set_wordcount(false)
   end
 
   def parts
@@ -285,7 +285,7 @@ class Page < ActiveRecord::Base
       parent.update_attribute(:last_read, self.last_read)
       parent.update_attribute(:favorite, self.favorite)
     end
-    parent.set_wordcount
+    parent.set_wordcount(false)
     return parent
   end
 
@@ -337,10 +337,10 @@ class Page < ActiveRecord::Base
     self.genres
   end
 
-  def tag_names
+  def tag_names(include_date = true)
     names = self.authors.map(&:name) + self.genres.map(&:name) + [self.size]
     names = names + [FAVORITE] if self.favorite
-    names = names + [(self.last_read ? self.last_read.to_date : UNREAD)]
+    names = names + [(self.last_read ? self.last_read.to_date : UNREAD)] if include_date
     names.compact
   end
 
@@ -352,24 +352,22 @@ class Page < ActiveRecord::Base
     mine.join(", ")
   end
 
-  def clean_html=(content)
-    ensure_path
-    destroy_all_pdfs
-    File.open(self.clean_html_file_name, 'w:utf-8') { |f| f.write(content) }
+  def download_tag_string
+    mine = self.tag_names(false)
+    if self.parent
+      mine = mine - self.parent.tag_names
+    end
+    mine.join(", ")
   end
 
-  def build_html_from_parts
-    html = ""
-    self.parts.each do |part|
-      level = part.parent.parent ? "h2" : "h1"
-      html << "\n\n<#{level}>#{part.title}</#{level}>\n"
-      if part.parts.blank?
-        html << part.clean_html
-      else
-        html << part.build_html_from_parts
-      end
-    end
-    html
+  def clean_html_file_name
+    Rails.public_path +  self.mypath + "original.html"
+  end
+
+  def clean_html=(content)
+    ensure_path
+    remove_outdated_downloads
+    File.open(self.clean_html_file_name, 'w:utf-8') { |f| f.write(content) }
   end
 
   def clean_html(check=true)
@@ -380,13 +378,7 @@ class Page < ActiveRecord::Base
       rescue Errno::ENOENT
         ""
       end
-    else
-      self.build_html_from_parts
     end
-  end
-
-  def clean_html_file_name
-    Rails.public_path +  self.mypath + "original.html"
   end
 
   def ensure_path
@@ -395,6 +387,7 @@ class Page < ActiveRecord::Base
 
   def raw_html=(content)
     ensure_path
+    remove_outdated_downloads
     body = Scrub.regularize_body(content)
     File.open(self.raw_file_name, 'w:utf-8') { |f| f.write(body) }
     html = MyWebsites.getnode(body, self.url)
@@ -416,41 +409,6 @@ class Page < ActiveRecord::Base
 
   def raw_file_name
     Rails.public_path + self.mypath + "raw.html"
-  end
-
-  def pdf_html_file_name
-    Rails.public_path + self.mypath + "build.html"
-  end
-
-  def pdf_file_basename(font_size=DEFAULT_PDF_FONT_SIZE)
-    self.mypath + self.clean_title + "-#{font_size}.pdf"
-  end
-
-  def pdf_file_name(font_size=DEFAULT_PDF_FONT_SIZE)
-    Rails.public_path + self.pdf_file_basename(font_size)
-  end
-
-  def pdf_files
-    Dir[File.join(Rails.public_path + self.mypath, '*.pdf')]
-  end
-
-  def no_pdfs
-    self.pdf_files.blank? && !File.exists?(pdf_html_file_name)
-  end
-
-  def destroy_all_pdfs
-    self.pdf_files.each {|f| File.unlink(f)}
-    FileUtils.rm_f(pdf_html_file_name)
-  end
-
-  def pdf_html=(content)
-    ensure_path
-    File.open(self.pdf_html_file_name, 'w:utf-8') { |f| f.write(content) }
-  end
-
-  def pdf_sizes
-    files = self.pdf_files.map {|f| File.basename(f, '.pdf')}
-    files.map{|f| f.gsub(self.clean_title + "-", '')}
   end
 
   def remove_surrounding_div!
@@ -479,40 +437,13 @@ class Page < ActiveRecord::Base
     self.set_wordcount
   end
 
-  def remove_html
-    Scrub.html_to_text(self.clean_html)
-  end
-
   def formatted_notes
+    return "" unless self.notes
     text = "<p>" + self.notes + "</p>"
     text.gsub!(/\r\n?/, "\n")                    # \r\n and \r -> \n
     text.gsub!(/\n\n+/, "<p></p>")  # 2+ newline  -> paragraph
     text.gsub!(/\n/, "<br \>")  # 2+ newline  -> paragraph
     text
-  end
-
-  def build_html
-    self.sanitize if self.sanitize_rules_changed?
-    html = "<p>" + self.tag_string + "</p>"
-    html = html + self.formatted_notes unless self.notes.blank?
-    html = html + "<h1>#{self.title}</h1>
-" if self.parts.blank?
-    html + self.clean_html
-  end
-
-  def to_pdf(font_size=DEFAULT_PDF_FONT_SIZE)
-    unless File.exists?(pdf_html_file_name)
-      head = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
-      style = '<style type="text/css">
-body {font-family: Georgia;}
-h1,h2 {page-break-before: always;}
-</style>'
-      title = "<title>#{self.title}</title>"
-      html = head + style + title + "</head><body>" + self.build_html + "</body></html>"
-      self.pdf_html = html
-    end
-    fit = "-B 0 -L 0 -R 0 -T 0 --minimum-font-size #{font_size}"
-    system "/usr/local/bin/wkhtmltopdf --quiet #{fit} \"#{self.pdf_html_file_name}\" \"#{self.pdf_file_name(font_size)}\" >/tmp/wkhtml.out 2>&1 &"
   end
 
   def sanitize_rules_changed?
@@ -530,6 +461,28 @@ h1,h2 {page-break-before: always;}
     return self.notes unless snip_idx
     self.notes[0, snip_idx] + "..."
   end
+
+
+### Download helper methods
+
+  def remove_outdated_downloads
+    FileUtils.rm_rf(self.download_dir)
+    self.parent.remove_outdated_downloads if self.parent
+  end
+
+  def download_dir
+    "#{Rails.public_path}#{self.mypath}downloads/"
+  end
+  # needs to be filesystem safe and not overly long
+  def download_title
+    string = Iconv.conv("ASCII//TRANSLIT//IGNORE", "UTF8", self.title)
+    string = string.gsub(/[^[\w _-]]+/, '')
+    string.gsub(/ +/, " ").strip.gsub(/^(.{24}[\w.]*).*/) {$1}
+  end
+  def download_basename
+    "#{self.download_dir}#{self.download_title}"
+  end
+
 
 private
 
@@ -559,6 +512,7 @@ private
   end
 
   def initial_fetch
+    FileUtils.rm_rf(self.mypath) # make sure directory is clean during tests
     if !self.url.blank?
       self.fetch
     elsif !self.base_url.blank?

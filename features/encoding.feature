@@ -10,7 +10,9 @@ Scenario Outline: encodings
     And I press "Store"
   When I go to the page with title "<title>"
   Then I should see "<title>" within ".title"
-    And I should see "<result>" within ".content"
+  When I follow "HTML"
+  Then I should see "<result>" within ".content"
+  When I go to the page with title "<title>"
     And I follow "Original" within ".title"
     Then I should be visiting "<url>"
 
@@ -35,7 +37,7 @@ Scenario Outline: encodings
   Scenario: allow utf-8 in text version
     Given a titled page exists with url: "http://test.sidrasue.com/styled.html"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should not see ";"
       And I should see "…"
       And I should see "–"
@@ -45,18 +47,18 @@ Scenario Outline: encodings
   Scenario: utf8
     Given a titled page exists with url: "http://test.sidrasue.com/sbutf8.html"
     When I am on the page's page
-      And I follow "Read"
+      And I follow "HTML"
     Then I should see "“H"
 
   Scenario: utf8 in parts
     Given a titled page exists with urls: "http://test.sidrasue.com/sbutf8.html"
     When I am on the page's page
-      And I follow "Read"
+      And I follow "HTML"
     Then I should see "“H"
 
   Scenario: latin1
     Given a titled page exists with url: "http://test.sidrasue.com/1252.html"
     When I am on the page's page
-      And I follow "Read"
+      And I follow "HTML"
     Then I should see "“H"
 

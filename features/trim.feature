@@ -8,6 +8,7 @@ Feature: trim cruft off pages
   Then I should see "Surrounding div removed"
   When I choose "3rd" within ".bottom"
   And I press "Scrub"
+  And I follow "HTML"
   Then I should see "1st"
     And I should see "2nd"
   But I should not see "3rd"
@@ -20,6 +21,7 @@ Feature: trim cruft off pages
   Then I should see "Surrounding div removed"
   When I choose "1st" within ".top"
     And I press "Scrub"
+  And I follow "HTML"
   Then I should see "2nd"
     And I should see "3rd"
   But I should not see "1st"
@@ -31,6 +33,7 @@ Feature: trim cruft off pages
   When I choose "<unwanted1>" within ".top"
     And I choose "<unwanted2>" within ".bottom"
     And I press "Scrub"
+  And I follow "HTML"
   Then I should see "<wanted>"
     And I should not see "<unwanted1>"
     And I should not see "<unwanted2>"
@@ -53,21 +56,27 @@ Feature: trim cruft off pages
       And I follow "Scrub"
       And I choose "third header" within ".top"
       And I press "Scrub"
+    And I follow "HTML"
     Then I should see "actual content"
       And I should not see "header"
+    When I am on the page's page
     When I follow "Scrub"
       And I choose "actual content" within ".top"
       And I press "Scrub"
+    And I follow "HTML"
     Then I should not see "actual content"
+    When I am on the page's page
     When I press "Rebuild from Raw HTML"
+    And I follow "HTML"
     Then I should see "actual content"
 
   Scenario: trim a parent page
     Given a page exists with title: "Parent", base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
     And I am on the page's page
-    When I follow "Read"
+    When I follow "HTML"
     Then I should see "cruft"
-    When I follow "Text" within ".title"
+    And I am on the page's page
+    When I follow "TXT" within ".title"
     Then I should see "cruft"
     When I am on the page's page
     And I follow "Scrub" within ".title"
@@ -75,10 +84,11 @@ Feature: trim cruft off pages
       And I choose "top cruft" within ".top"
       And I choose "bottom cruft" within ".bottom"
       And I press "Scrub"
+    And I follow "HTML"
     Then I should not see "cruft"
       And I should see "stuff for part 1"
-    When I follow "Parent" within ".parent"
-      And I follow "Text" within ".title"
+    When I am on the page's page
+      And I follow "TXT" within ".title"
     Then I should not see "cruft"
       And I should see "stuff for part 1"
       And I should see "stuff for part 2"
@@ -92,8 +102,9 @@ Feature: trim cruft off pages
       And I choose "top cruft" within ".top"
       And I choose "bottom cruft" within ".bottom"
       And I press "Scrub"
-    When I am on the homepage
-      And I follow "Text" within "#position_1"
+    When I am on the page's page
+      And I follow "First Part"
+      And I follow "TXT"
     Then I should see "First Part #"
       And I should see "## SubPart ##"
       And I should see "stuff for part 1"

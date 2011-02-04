@@ -18,7 +18,7 @@ Feature: mark as favorite
    When I am on the page's page
    Then I should see "unread" within ".last_read"
      And I should not see "favorite" within ".favorite"
-   When I follow "Read" within "#position_1"
+   When I follow "Part 1" within "#position_1"
      And I follow "Rate"
      And I press "1"
    When I am on the page's page

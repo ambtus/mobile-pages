@@ -6,7 +6,7 @@ Feature: text version of pages
   Scenario: text version of styled html
     Given a titled page exists with url: "http://test.sidrasue.com/styled.html"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should see "# This is a header #"
       And I should see "## This is a second level header ##"
       And I should see "*Bold*"
@@ -23,7 +23,7 @@ Feature: text version of pages
       And I should not see "small>"
       And I should see "(something little)"
       And I should not see ";"
-      And I should see "*This is another header*"
+      And I should see "### This is another header ###"
       And I should see "*One Two, Three*"
       And I should see "_One, Two? Three_"
       And I should see "_One-TwoThree_"
@@ -31,7 +31,7 @@ Feature: text version of pages
   Scenario: text stripping links and images
     Given a titled page exists with url: "http://test.sidrasue.com/href.html"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should see "[top link]"
       And I should see "[middle link]"
       And I should see "[bottom link]"
@@ -43,7 +43,7 @@ Feature: text version of pages
   Scenario: text stripping of javascript and comments
     Given a titled page exists with url: "http://test.sidrasue.com/entities.html"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should not see "script language="
       And I should not see "FILE ARCHIVED"
       And I should not see "This script will not work without javascript enabled."
@@ -53,7 +53,7 @@ Feature: text version of pages
   Scenario: text stripping of tables
     Given a titled page exists with url: "http://test.sidrasue.com/tablecontent.html"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should not see "<table"
       And I should not see "<td"
       And I should not see "<tr>"
@@ -64,7 +64,7 @@ Feature: text version of pages
   Scenario: text stripping of lists
     Given a titled page exists with url: "http://test.sidrasue.com/list.html"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should not see "<ul"
       And I should not see "<ol>"
       And I should not see "<li>"
@@ -75,7 +75,7 @@ Feature: text version of pages
   Scenario: text of crappy Microsoft Office "html"
     Given a titled page exists with url: "http://test.sidrasue.com/mso.html"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should not see "<"
       And I should see "he _had_ to"
       And I should not see "\n\n\n\n"
@@ -84,7 +84,7 @@ Feature: text version of pages
   Scenario: more crappy Microsoft Office "html"
     Given a titled page exists with url: "http://test.sidrasue.com/mso2.html"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should not see "<wbr>"
       And I should see "so-I-am-God"
       And I should not see "<strong"
@@ -94,27 +94,27 @@ Feature: text version of pages
   Scenario: text of weird empty divs
     Given a titled page exists with url: "http://test.sidrasue.com/ejournal_div.html"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should not see "\n\n\n\n"
       And I should see "Rodney muttered imprecations"
 
   Scenario: stripping linefeeds
     Given a titled page exists with url: "http://test.sidrasue.com/linefeeds.html"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
      Then I should not see "thirdfourth"
      Then I should not see "fifthsixth"
 
   Scenario: make multi (more than two) line breaks visible as hr
     Given a titled page exists with url: "http://test.sidrasue.com/breaks.html"
-    When I am on the homepage
-      And I follow "Text" within ".title"
+    When I am on the page's page
+      And I follow "TXT" within ".title"
     Then I should see "__________"
 
   Scenario: divs with attributes
     Given a titled page exists with url: "http://test.sidrasue.com/div.html"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should see "first div"
       And I should see "second div"
       And I should not see "<"
@@ -122,7 +122,7 @@ Feature: text version of pages
   Scenario: text for livejournal page content only
     Given a titled page exists with url: "http://sid.livejournal.com/119818.html"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should not see "input type="
       And I should not see "form method="
       And I should not see "select name="
@@ -134,7 +134,7 @@ Feature: text version of pages
   Scenario: text wraithbait page content only
     Given a titled page exists with url: "http://www.wraithbait.com/viewstory.php?sid=15331"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should not see "recent stories"
       And I should not see "Stargate SG-1 and Stargate: Atlantis,"
       And I should not see "Summary:"
@@ -144,7 +144,7 @@ Feature: text version of pages
   Scenario: text wraithbait story content only
     Given a titled page exists with url: "http://www.wraithbait.com/viewstory.php?sid=15133"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should not see "Summary:"
       And I should see "Story Notes:"
       And I should see "There was a time of day in Atlantis"
@@ -153,7 +153,7 @@ Feature: text version of pages
   Scenario: text fanfiction page content only
     Given a titled page exists with url: "http://www.fanfiction.net/s/638499/1/"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should see "This is rabbit"
       And I should see "Stuck in the Muddle"
     But I should not see "Rated: "
@@ -162,8 +162,7 @@ Feature: text version of pages
   Scenario: text archive of our own page content only
     Given a titled page exists with url: "http://test.archiveofourown.org/works/692"
     When I am on the page's page
-      And I follow "Read"
-    When I follow "Text" within ".title"
+    When I follow "TXT" within ".title"
     Then I should not see "Work Header"
       And I should not see "Work Text"
       And I should not see "Chapter Text"
@@ -182,47 +181,48 @@ Feature: text version of pages
   Scenario: text google groops content only
     Given a titled page exists with url: "http://test.sidrasue.com/google.html"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should see "Author: Ster Julie"
       And I should not see "This is a Usenet group"
 
   Scenario: can't stand alright
     Given a titled page exists with url: "http://test.sidrasue.com/alright.html"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should see "All right, all right"
       And I should not see "Alright, alright"
+
   Scenario: question marks in title
     Given a page exists with title: "This title?"
     When I go to the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
 
   Scenario: slashes in title
     Given a page exists with title: "This title 1/2"
     When I go to the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
 
   Scenario: periods in title
     Given a page exists with title: "This.title.has.periods"
     When I go to the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
 
   Scenario: spaces in title
     Given a page exists with title: "This title has spaces"
     When I go to the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
 
   Scenario: blank named anchor
     Given a titled page exists with url: "http://sidra.livejournal.com/838.html"
     When I go to the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should see "Ron crouched"
       And I should not see "<a"
 
   Scenario: tidy ocassionally re-adds &nbsp;
     Given a titled page exists with url: "http://test.sidrasue.com/tidy.html"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should not see "nbsp"
 
   Scenario: text for a multi-part doc
@@ -230,7 +230,8 @@ Feature: text version of pages
       | title  | base_url                              | url_substitutions |
       | multi  | http://test.sidrasue.com/parts/*.html | 1 2 3   |
     When I am on the homepage
-    When I follow "Text" within ".title"
+      And I follow "multi"
+    When I follow "TXT" within ".title"
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
       And I should see "stuff for part 3"

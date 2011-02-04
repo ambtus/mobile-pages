@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/3245/trunk/app/views/epub
+END
+content.opfsingle
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/3245/trunk/app/views/epub/content.opfsingle
+END
+container.xml
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/2930/trunk/app/views/epub/container.xml
+END
+mimetype
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2930/trunk/app/views/epub/mimetype
+END
+toc.ncx
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/3245/trunk/app/views/epub/toc.ncx
+END
+content.opf
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/3245/trunk/app/views/epub/content.opf
+END
+toc.ncxsingle
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/3245/trunk/app/views/epub/toc.ncxsingle
+END

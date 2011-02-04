@@ -17,7 +17,7 @@ Feature: read_after order
     When I am on the homepage
     Then I should see "page 1" within "#position_1"
       And I should see "page 2" within "#position_2"
-    When I follow "Read" within "#position_2"
+    When I follow "page 2" within "#position_2"
       And I press "Read First"
     When I am on the homepage
     Then I should see "page 2" within "#position_1"
@@ -35,7 +35,7 @@ Feature: read_after order
       And I should see "Parent" within "#position_2"
       And I should see "Grandparent" within "#position_3"
     When I follow "Parent" within "#position_2"
-      And I follow "Read" within "#position_1"
+      And I follow "Part 1" within "#position_1"
       And I press "Read First"
     When I am on the homepage
     And I should see "Parent" within "#position_1"
@@ -43,7 +43,7 @@ Feature: read_after order
     And I should see "Grandparent" within "#position_3"
     When I follow "Grandparent" within "#position_3"
       And I follow "Parent2" within "#position_2"
-      And I follow "Read" within "#position_1"
+      And I follow "Subpart" within "#position_1"
     When I press "Read First"
       And I am on the homepage
     Then I should see "Grandparent" within "#position_1"
@@ -58,7 +58,7 @@ Feature: read_after order
       And I should see "page 3 title" within "#position_3"
       And I should see "page 4 title" within "#position_4"
       And I should see "page 5 title" within "#position_5"
-    When I follow "Read" within "#position_1"
+    When I follow "page 1 title" within "#position_1"
       And I follow "Rate"
     Then I should see "Please rate (converted to years for next suggested read date)"
     When I press "5"
@@ -69,7 +69,7 @@ Feature: read_after order
       And I should see "page 4" within "#position_3"
       And I should see "page 5" within "#position_4"
       And I should see "page 1" within "#position_5"
-    When I follow "Read" within "#position_1"
+    When I follow "page 2 title" within "#position_1"
       And I follow "Rate"
       And I press "3"
 # FIXME - year will change every year
@@ -79,7 +79,7 @@ Feature: read_after order
       And I should see "page 5" within "#position_3"
       And I should see "page 2" within "#position_4"
       And I should see "page 1" within "#position_5"
-    When I follow "Read" within "#position_1"
+    When I follow "page 3 title" within "#position_1"
       And I follow "Rate"
       And I press "4"
 # FIXME - year will change every year
@@ -89,7 +89,7 @@ Feature: read_after order
       And I should see "page 2" within "#position_3"
       And I should see "page 3" within "#position_4"
       And I should see "page 1" within "#position_5"
-    When I follow "Read" within "#position_1"
+    When I follow "page 4 title" within "#position_1"
       And I follow "Rate"
       And I press "1"
 # FIXME - year will change every year
@@ -99,7 +99,7 @@ Feature: read_after order
       And I should see "page 2" within "#position_3"
       And I should see "page 3" within "#position_4"
       And I should see "page 1" within "#position_5"
-    When I follow "Read" within "#position_1"
+    When I follow "page 5 title" within "#position_1"
       And I follow "Rate"
       And I press "20"
 # FIXME - year will change every year
@@ -117,7 +117,7 @@ Feature: read_after order
       | Another | 2008-02-01 |
     When I am on the homepage
     Then I should see "Single" within ".title"
-    When I follow "Read"
+    When I follow "Single"
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
       And I press "Update"

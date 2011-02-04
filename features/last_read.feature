@@ -27,7 +27,7 @@ Feature: last_read (also unread)
    When I follow "Rate"
      And I press "1"
    Then I should not see "unread" within ".last_read"
-   When I follow "Read"
+   When I follow "Multi"
      And I follow "Manage Parts"
      And I fill in "url_list" with
        """
@@ -39,10 +39,11 @@ Feature: last_read (also unread)
    Then I should see "Multi" within "#position_1"
      And I should not see "unread" within ".last_read"
    When I follow "Multi" within "#position_1"
-     And I follow "Read" within "#position_1"
+     And I follow "Part 1" within "#position_1"
    Then I should not see "unread" within ".last_read"
-   When I follow "Multi" within ".parent"
-     And I follow "Read" within "#position_2"
+   When I am on the homepage
+   When I follow "Multi"
+     And I follow "Part 2" within "#position_2"
    Then I should see "unread" within ".last_read"
 
    Scenario: add parent to read part

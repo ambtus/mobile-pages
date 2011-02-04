@@ -42,6 +42,7 @@ Feature: single-part pages
     When I fill in "pasted" with "<p>This is a test</p>"
       And I press "Update Raw HTML"
     Then I should see "Raw HTML updated" within "#flash_notice"
+    When I follow "HTML"
       And I should see "This is a test"
       And I should not see "Retrieved from the web"
 
@@ -52,6 +53,7 @@ Feature: single-part pages
       And I fill in "pasted" with "plain text"
       And I press "Update Raw HTML"
     Then I should see "Raw HTML updated" within "#flash_notice"
+    When I follow "HTML"
       And I should see "plain text" within ".content"
 
   Scenario: pasted blank is okay
@@ -61,6 +63,7 @@ Feature: single-part pages
       And I fill in "pasted" with ""
       And I press "Update Raw HTML"
     Then I should see "Raw HTML updated" within "#flash_notice"
+    When I follow "HTML"
       And I should see "" within ".content"
 
   Scenario: holder page for parts is okay
@@ -72,7 +75,7 @@ Feature: single-part pages
   Scenario: url with surrounding whitespace okay
     Given a titled page exists with url: " http://test.sidrasue.com/test.html"
     When I am on the page's page
-      And I follow "Read"
+      And I follow "HTML"
     Then I should see "Retrieved from the web"
 
   Scenario: refetch original html
@@ -81,10 +84,13 @@ Feature: single-part pages
       And I follow "Edit Raw HTML"
       And I fill in "pasted" with "system down"
       And I press "Update Raw HTML"
+    When I follow "HTML"
     Then I should see "system down" within ".content"
+    When I am on the page's page
     When I follow "Refetch"
     Then the "url" field should contain "http://test.sidrasue.com/test.html"
     When I press "Refetch"
+    When I follow "HTML"
     Then I should see "Retrieved from the web" within ".content"
 
   Scenario: page not found should display error
@@ -98,6 +104,6 @@ Feature: single-part pages
   Scenario: download livejournal adult content
     Given a titled page exists with url: "http://sidra.livejournal.com/3265.html"
     When I go to the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should not see "Adult Content"
       And I should see "alien"

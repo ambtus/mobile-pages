@@ -11,6 +11,7 @@ Feature: multi-part pages
       http://test.sidrasue.com/parts/1.html
       """
       And I press "Refetch"
+    When I follow "HTML" within ".title"
     Then I should see "stuff for part 2"
     And I should see "stuff for part 1"
 
@@ -26,7 +27,8 @@ Feature: multi-part pages
      And I press "Store"
    When I go to the page with title "Multiple pages from urls"
    Then I should see "Multiple pages from urls" within ".title"
-     And I should see "Part 1"
+   When I follow "HTML"
+   Then I should see "Part 1"
      And I should see "Part 2"
      And I should see "stuff for part 2"
      And I should see "stuff for part 1"
@@ -45,8 +47,9 @@ Feature: multi-part pages
       And I select "genre" from "Genre"
       And I press "Store"
     Then I should see "my title" within ".title"
-      And I should see "Part 1" within "h1"
-      And I should see "part title" within "h1"
+    When I follow "HTML"
+      And I should see "Part 1" within "h2"
+      And I should see "part title" within "h2"
       And I should see "stuff for part 1"
       And I should see "stuff for part 2"
 
@@ -59,6 +62,7 @@ Feature: multi-part pages
      And I press "Store"
    When I go to the page with title "Multiple pages from base"
    Then I should see "Multiple pages from base" within ".title"
+   When I follow "HTML"
      And I should see "Part 1"
      And I should see "Part 2"
      And I should see "Part 3"
@@ -75,7 +79,8 @@ Feature: multi-part pages
      And I press "Store"
    When I go to the page with title "Multiple pages from base"
    Then I should see "Multiple pages from base" within ".title"
-     And I should see "Part 1" within "h1"
+   When I follow "HTML"
+     And I should see "Part 1" within "h2"
      And I should see "Part 2"
      And I should not see "Part 3"
      And I should see "stuff for part 1"
@@ -87,7 +92,7 @@ Feature: multi-part pages
     And a page exists with title: "Single", url: "http://test.sidrasue.com/parts/1.html"
     When I am on the homepage
     Then I should see "Parent" within ".title"
-    When I follow "Read"
+    When I follow "Parent"
       And I follow "Manage Parts"
       And I fill in "add_parent" with "Grandparent"
       And I fill in "url_list" with
@@ -102,18 +107,19 @@ Feature: multi-part pages
       And I fill in "page_title" with "Single"
       And I press "Find"
       Then I should see "Single" within ".title"
-     When I follow "Read" within "#position_1"
+     When I follow "Single" within "#position_1"
       Then I should see "Single" within ".title"
      When I follow "Manage Parts"
       And I fill in "add_parent" with "Grandparent"
       And I press "Update"
     Then I should see "Parent" within "#position_1"
       And I should see "Single" within "#position_2"
-    When I follow "Text" within ".title"
-    Then I should see "# Single #"
-      And I should see "# Parent #"
-      And I should see "## Part 1 ##"
-      And I should see "## Part 2 ##"
+    When I follow "HTML" within ".title"
+    Then I should see "Grandparent" within "h1"
+      And I should see "Single" within "h2"
+      And I should see "Parent" within "h2"
+      And I should see "Part 1" within "h3"
+      And I should see "Part 2" within "h3"
       And I should see "stuff for part 1"
       And I should see "stuff for part 2"
       And I should see "stuff for part 3"
@@ -146,14 +152,16 @@ Feature: multi-part pages
       And I select "genre" from "Genre"
       And I press "Store"
     Then I should see "New Title" within ".title"
-      And I should see "Part the first" within "h1"
-      And I should see "subpart title" within "h2"
+    When I follow "HTML"
+    Then I should see "New Title" within "h1"
+      And I should see "Part the first" within "h2"
+      And I should see "subpart title" within "h3"
       And I should see "stuff for part 1"
-      And I should see "Part 2" within "h2"
+      And I should see "Part 2" within "h3"
       And I should see "stuff for part 2"
-      And I should see "Part 2" within "h1"
+      And I should see "Part 2" within "h2"
       And I should see "stuff for part 3"
-      And I should see "Third Part" within "h1"
+      And I should see "Third Part" within "h2"
       And I should see "stuff for part 4"
       And I should see "stuff for part 5"
 
@@ -163,7 +171,7 @@ Feature: multi-part pages
       And I fill in "page_urls" with
         """
         ##Child 1
-        http://test.sidrasue.com/parts/1.html
+        http://test.sidrasue.com/parts/1.html###Boo
         http://test.sidrasue.com/parts/2.html
         http://test.sidrasue.com/parts/3.html##Child 2
 
@@ -172,8 +180,12 @@ Feature: multi-part pages
      And I press "Store"
    When I go to the page with title "Parent"
    Then I should see "Parent" within ".title"
-     And I should see "Child 1" within "h1"
-     And I should see "Child 2" within "h1"
+   When I follow "HTML"
+    Then I should see "Parent" within "h1"
+     And I should see "Child 1" within "h2"
+     And I should see "Boo" within "h3"
+     And I should see "Part 2" within "h3"
+     And I should see "Child 2" within "h2"
      And I should not see "Part 3"
      And I should see "stuff for part 1"
      And I should see "stuff for part 2"
@@ -185,7 +197,6 @@ Feature: multi-part pages
     Then I should see "Parent" within ".title"
     But I should not see "Part 1"
 
-
   Scenario: create a new parent for an existing page
     Given a page exists with title: "Single", url: "http://test.sidrasue.com/test.html"
     When I am on the page's page
@@ -194,8 +205,7 @@ Feature: multi-part pages
       And I press "Update"
     Then I should see "Parent" within ".title"
       And I should see "Single" within "#position_1"
-    When I follow "Read" within "#position_1"
-    Then I should see "Retrieved from the web"
+    When I follow "Single" within "#position_1"
     Then I follow "Parent" within ".parent"
 
   Scenario: can't add a page to an ambiguous parent
@@ -231,7 +241,7 @@ Feature: multi-part pages
     And a page exists with title: "Multi", base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
     When I am on the homepage
     Then I should see "Single" within ".title"
-    When I follow "Read"
+    When I follow "Single"
       And I follow "Manage Parts"
       And I fill in "add_parent" with "Multi"
       And I press "Update"
@@ -239,7 +249,7 @@ Feature: multi-part pages
     And I should see "Part 1" within "#position_1"
       And I should see "Part 2" within "#position_2"
       And I should see "Single" within "#position_3"
-    When I follow "Read"
+    When I follow "HTML"
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
       And I should see "stuff for part 3"
@@ -263,11 +273,13 @@ Feature: multi-part pages
   Scenario: download part
     Given a titled page exists with urls: "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
     When I am on the page's page
-      And I follow "Read"
+      And I follow "HTML"
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
+    When I am on the homepage
     When I follow "page 1"
-      And I follow "Text" within "#position_1"
+      And I follow "Part 1"
+      And I follow "TXT" within ".title"
     Then I should see "stuff for part 1"
     And I should not see "stuff for part 2"
 
@@ -290,13 +302,13 @@ Feature: multi-part pages
       And I should see "part2" within "#position_2"
     When I follow "part1" within "#position_1"
       Then I should see "Part 1" within "#position_1"
-    When I follow "Read" within "#position_1"
+    When I follow "HTML" within "#position_1"
       Then I should see "stuff for part 1"
     When I am on the page's page
       And I follow "part2" within "#position_2"
     Then I should see "Part 1"
       And I should see "Part 2"
-    When I follow "Read" within ".title"
+    When I follow "HTML" within ".title"
     Then I should see "stuff for part 2"
       And I should see "stuff for part 3"
 
@@ -329,7 +341,7 @@ Feature: multi-part pages
       And I follow "Grandparent" within "#position_1"
       And I follow "Parent2" within "#position_2"
    Then I should not see "unread"
-   When I follow "Read" within "#position_2"
+   When I follow "HTML" within "#position_2"
    Then I should not see "unread"
 
   Scenario: add a new part to an existing page with parts
@@ -344,7 +356,7 @@ Feature: multi-part pages
       And I press "Update"
     Then I should see "Part 2"
       And I should see "Part 1"
-    When I follow "Read"
+    When I follow "HTML"
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
 
@@ -359,7 +371,7 @@ Feature: multi-part pages
         """
       And I press "Update"
       And I should not see "Part 3"
-      And I follow "Read"
+      And I follow "HTML"
     Then I should see "stuff for part 1"
       But I should not see "stuff for part 2"
       And I should see "stuff for part 3"
@@ -374,11 +386,11 @@ Feature: multi-part pages
         http://test.sidrasue.com/parts/1.html
         """
       And I press "Update"
-      And I follow "Read" within "#position_1"
+      And I follow "HTML" within "#position_1"
     Then I should see "stuff for part 2"
     When I am on the homepage
       And I follow "page 1" within "#position_1"
-      And I follow "Read" within "#position_2"
+      And I follow "HTML" within "#position_2"
     Then I should see "stuff for part 1"
 
   Scenario: find the parent of a part

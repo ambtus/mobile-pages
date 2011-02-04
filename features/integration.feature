@@ -12,11 +12,13 @@ Feature: tests that don't fit neatly into another feature
      And I press "Store"
    Then I should see "Page created" within "#flash_notice"
      And I should see "Simple test" within ".title"
-     And I should see "Retrieved from the web" within ".content"
      And I should see "mygenre" within ".genres"
      And I should see "some notes" within ".notes"
      And I should see "myauthor" within ".authors"
-   When I follow "Original" within ".title"
+   When I follow "HTML"
+     Then I should see "Retrieved from the web" within ".content"
+   When I am on the page with title "Simple test"
+     And I follow "Original" within ".title"
    Then I should be visiting "http://test.sidrasue.com/test.html"
 
   Scenario: create a page from a list of urls with author and notes
@@ -35,13 +37,16 @@ Feature: tests that don't fit neatly into another feature
      And I select "myauthor" from "Author"
      And I press "Store"
    Then I should see "Multiple pages from urls"
-     And I should see "Part 1"
-     And I should see "stuff for part 1"
-     And I should see "Part 2"
-     And I should see "stuff for part 2"
      And I should see "mygenre" within ".genres"
      And I should see "some notes" within ".notes"
      And I should see "myauthor" within ".authors"
+     And I should see "Part 1" within "#position_1"
+     And I should see "Part 2" within "#position_2"
+   When I follow "HTML"
+     Then I should see "Part 1"
+     And I should see "stuff for part 1"
+     And I should see "Part 2"
+     And I should see "stuff for part 2"
 
   Scenario: filter on mix of author, genre, and state
     Given the following pages
@@ -116,26 +121,24 @@ Feature: tests that don't fit neatly into another feature
   Scenario: notes but no content on multi-page view
     Given a page exists with title: "Multi", base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
    When I am on the page's page
-   Then I should see "Text" within "#position_1"
-     And I should see "Read" within "#position_1"
-     And I should see "Text" within "#position_2"
-     And I should see "Read" within "#position_2"
+   Then I should see "Part 1" within "#position_1"
+     And I should see "Part 2" within "#position_2"
      And I should not see "stuff for part 1"
      And I should not see "stuff for part 2"
      And I should not see "Original" within ".title"
-     And I should see "Original" within "#position_1"
-   When I follow "Read" within "#position_1"
+     But I should see "Original" within "#position_1"
+     And I should see "Original" within "#position_2"
+   When I follow "HTML" within "#position_1"
    Then I should see "stuff for part 1"
      And I should not see "stuff for part 2"
+   When I am on the page's page
+   And I follow "Part 1"
    When I follow "Notes"
      And I fill in "page_notes" with "This is a note"
      And I press "Update"
-   When I follow "Multi"
-   Then I should see "This is a note" within "#position_1"
-   When I follow "Read"
-   Then I should see "stuff for part 1"
-     And I should see "stuff for part 2"
    When I am on the page's page
+   Then I should see "This is a note" within "#position_1"
+     And I should not see "stuff for part 1"
      And I follow "Part 1" within "#position_1"
    Then I should see "This is a note"
      And I should not see "stuff for part 1"
@@ -146,7 +149,7 @@ Feature: tests that don't fit neatly into another feature
     When I am on the homepage
     Then I should see "page 1" within "#position_1"
       And I should see "page 2" within "#position_2"
-    When I follow "Read" within "#position_2"
+    When I follow "page 2" within "#position_2"
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
       And I press "Update"
@@ -154,7 +157,7 @@ Feature: tests that don't fit neatly into another feature
     Then I should see "page 1" within "#position_1"
       And I should see "New Parent" within "#position_2"
       And I should not see "page 2"
-    When I follow "Read" within "#position_2"
+    When I follow "New Parent" within "#position_2"
       And I follow "Manage Parts"
       And I fill in "url_list" with
         """
@@ -169,7 +172,7 @@ Feature: tests that don't fit neatly into another feature
   Scenario: non-matching last reads
     Given a titled page exists with urls: "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html", last_read: "2009-01-01"
     When I am on the page's page
-      And I follow "Read" within "#position_2"
+      And I follow "Part 2" within "#position_2"
       And I follow "Rate"
       And I press "2"
    When I am on the page's page
@@ -182,7 +185,7 @@ Feature: tests that don't fit neatly into another feature
   Scenario: text, trim and text should reflect trim
     Given a titled page exists with url: "http://test.sidrasue.com/p.html"
     When I am on the page's page
-      And I follow "Text" within ".title"
+      And I follow "TXT" within ".title"
     Then I should see "top para"
       And I should see "content"
       And I should see "bottom para"
@@ -191,10 +194,7 @@ Feature: tests that don't fit neatly into another feature
       And I choose "top para" within ".top"
       And I choose "bottom para" within ".bottom"
       And I press "Scrub"
-      And I should not see "top para"
-      And I should not see "bottom para"
-      And I should see "content"
-    When I follow "Text" within ".title"
+    When I follow "TXT" within ".title"
     Then I should not see "top para"
       And I should not see "bottom para"
       And I should see "content"

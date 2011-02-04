@@ -9,10 +9,9 @@
       = link_to h(part.title), page_path(part)
       - unless part.tag_string.blank?
         = "(#{part.tag_string})"
-      = link_to "Read", read_path(part)
-      = link_to "Text", page_path(part, :format => 'txt')
-      - part.pdf_sizes.each do |size|
-        = link_to "pdf(#{size})", page_pdf_path(part, size)
+      = link_to "Rate", rate_path(part)
+      = link_to "EPUB", download_url_for_page(part, ".epub")
+      = link_to "HTML", download_url_for_page(part, ".html")
       = link_to "Original", part.url unless part.url.blank?
       %span.notes
         = part.short_notes

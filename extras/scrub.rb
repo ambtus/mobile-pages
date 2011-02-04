@@ -2,7 +2,7 @@
 
 module Scrub
 
-  # regularize imported html to fix garbled encodings 
+  # regularize imported html to fix garbled encodings
   #    clean up whitespace and remove javascript
   #    returns what's inside the <body> elements
   #    to be saved as raw_html (raw == pre-sanitized)
@@ -104,9 +104,11 @@ module Scrub
     nodeset.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
   end
 
-  def self.html_to_text(html)
-    return "" unless html
-    text = html.gsub(/<a .*?>(.*?)<\/a>/m) {|s| " [#{$1}] " unless $1.blank?}
+  def self.html_to_text(text)
+    return "" unless text
+    text = text.gsub(/ style="page-break-before:always"/, '')
+    text = text.gsub(/ width="80%"/, '')
+    text = text.gsub(/<a .*?>(.*?)<\/a>/m) {|s| " [#{$1}] " unless $1.blank?}
     text = text.gsub(/<\/?b>/, "\*")
     text = text.gsub(/<\/?big>/, "\*")
     text = text.gsub(/<\/?blockquote>/, "")
@@ -119,8 +121,9 @@ module Scrub
     text = text.gsub(/<\/?i>/, "_")
     text = text.gsub(/<h1>(.*?)<\/h1>/) {|s| "\# #{$1} \#" unless $1.blank?}
     text = text.gsub(/<h2>(.*?)<\/h2>/) {|s| "\#\# #{$1} \#\#" unless $1.blank?}
+    text = text.gsub(/<h3>(.*?)<\/h3>/) {|s| "\#\#\# #{$1} \#\#\#" unless $1.blank?}
     text = text.gsub(/<\/?h\d.*?>/, "\*")
-    text = text.gsub(/<hr width="80%"\/>/, "______________________________\n")
+    text = text.gsub(/<hr>/, "______________________________\n")
     text = text.gsub(/<img.*?alt="(.*?)".*?>/) {|s| " [#{$1}] " unless $1.blank?}
     text = text.gsub(/<img.*?>/, "")
     text = text.gsub(/<li>/, "* ")

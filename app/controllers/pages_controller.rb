@@ -57,7 +57,7 @@ class PagesController < ApplicationController
         else
           flash[:notice] = "Page created."
           @page.genres << @genre
-          redirect_to read_url(@page) and return
+          redirect_to page_path(@page) and return
         end
       end
     else
@@ -69,15 +69,16 @@ class PagesController < ApplicationController
   def update
     @page = Page.find(params[:id])
     @page = @page.make_first if (params[:commit] == "Read First")
+    @page.remove_outdated_downloads if (params[:commit] == "Remove Downloads")
     case params[:commit]
       when "Rebuild from Raw HTML"
         @page.raw_html = @page.raw_html
         flash[:notice] = "Rebuilt from Raw HTML"
-        redirect_to read_url(@page) and return
+        redirect_to page_path(@page) and return
       when "Update Raw HTML"
         @page.raw_html = params[:pasted]
         flash[:notice] = "Raw HTML updated."
-        redirect_to read_url(@page) and return
+        redirect_to page_path(@page) and return
       when "Remove surrounding Div"
         @page.remove_surrounding_div!
         flash[:notice] = "Surrounding div removed"
@@ -86,7 +87,7 @@ class PagesController < ApplicationController
         top = params[:top_node] || 0
         bottom = params[:bottom_node] || 0
         @page.remove_nodes(top, bottom)
-        redirect_to read_url(@page) and return
+        redirect_to page_path(@page) and return
       when "Update"
         @page.update_attributes(params[:page])
         redirect_to page_url(@page) and return

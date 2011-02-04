@@ -1,0 +1,13 @@
+- part = @part if @part
+- if defined?(subpart)
+  %h3{:style=> "page-break-before:always"}= part.title
+- elsif !@mobi
+  %h2{:style=> "page-break-before:always"}= part.title
+.meta
+  .tags= part.download_tag_string
+  - unless part.notes.blank?
+    .notes=raw part.formatted_notes
+
+- unless part.clean_html.blank?
+  .content{:style=> "page-break-before:always"}
+    =raw part.clean_html

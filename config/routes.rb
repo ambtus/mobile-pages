@@ -1,16 +1,17 @@
 MobilePages::Application.routes.draw do
   devise_for :users
 
+  match '/test/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download'
+  match '/development/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download'
+  match '/files/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download'
+
   resources :authors, :only => ['show', 'create']
   resources :genres, :only => ['show', 'create']
-  resources :htmls, :only => ['edit'] 
+  resources :htmls, :only => ['edit']
   resources :notes, :only => ['edit']
-  resources :pages do
-    resources :pdfs
-  end
+  resources :pages
   resources :parts, :only => ['new', 'edit', 'create']
   resources :rates, :only => ['show', 'create']
-  resources :reads, :only => ['show']
   resources :refetches, :only => ['show', 'create']
   resources :scrubs, :only => ['show']
 

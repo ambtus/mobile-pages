@@ -19,4 +19,8 @@ module ApplicationHelper
     text_area_tag name, value, options
   end
 
+  def download_url_for_page(page, format)
+    url_for "#{page.mypath}downloads/#{page.download_title}#{format}".gsub(' ', '%20')
+  end
+
 end

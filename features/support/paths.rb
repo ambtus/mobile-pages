@@ -32,7 +32,9 @@ module NavigationHelpers
     #     user_profile_path(User.find_by_login($1))
 
     when /^the page with title "(.*)"/
-      read_path(Page.find_by_title($1))
+      page = Page.find_by_title($1)
+      raise "no page with that title" unless page
+      page_path(page)
 
     else
       begin
