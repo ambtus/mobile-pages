@@ -42,7 +42,6 @@ protected
     # render template
     html = render_to_string(:template => "downloads/show.html", :layout => 'downloads.html')
 
-    raise unless File.exist?(@page.download_dir)
     # write to file
     File.open("#{@page.download_basename}.html", 'w') {|f| f.write(html)}
   end
