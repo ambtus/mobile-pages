@@ -68,7 +68,6 @@ class PagesController < ApplicationController
 
   def update
     @page = Page.find(params[:id])
-    @page = @page.make_later if (params[:commit] == "Read Later")
     @page = @page.make_first if (params[:commit] == "Read First")
     case params[:commit]
       when "Rebuild from Raw HTML"

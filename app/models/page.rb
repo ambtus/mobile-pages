@@ -13,7 +13,7 @@ class Page < ActiveRecord::Base
   end
 
   DURATION = "years"
-  MININOTE = 75 # keep first this many characters plus enough for full words 
+  MININOTE = 75 # keep first this many characters plus enough for full words
   LIMIT = 15 # number of pages to show in index
 
   UNREAD = "unread"
@@ -28,8 +28,8 @@ class Page < ActiveRecord::Base
   EPIC_WC = 150000
 
   PDF_FONT_SIZES = ["12", "24", "32", "40", "55"]
-  DEFAULT_PDF_FONT_SIZE = "55" 
-  
+  DEFAULT_PDF_FONT_SIZE = "55"
+
   def set_wordcount(recount=true)
     if recount
       count = 0
@@ -40,7 +40,7 @@ class Page < ActiveRecord::Base
           count +=  words.scan(/[a-zA-Z0-9À-ÿ_]+/).size
         end
       } if body
-      self.wordcount = count 
+      self.wordcount = count
     end
     self.size = "short"
     if self.wordcount
@@ -287,12 +287,6 @@ class Page < ActiveRecord::Base
     end
     parent.set_wordcount
     return parent
-  end
-
-  def make_later
-    was = self.read_after || Time.now
-    self.update_attribute(:read_after, was + 3.months)
-    return Page.where(:parent_id => nil).order(:read_after).first
   end
 
   def make_first

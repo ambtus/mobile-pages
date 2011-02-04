@@ -1,30 +1,5 @@
 Feature: read_after order
 
-  Scenario: Read pages in order
-    Given the following pages
-      | title                           |
-      | A Christmas Carol               |
-      | The Call of the Wild            |
-      | The Mysterious Affair at Styles |
-     When I am on the homepage
-       Then I should see "A Christmas Carol" within "#position_1"
-     When I follow "Read" within "#position_1"
-       And I press "Read Later"
-       Then I should see "The Call of the Wild" within ".title"
-     When I press "Read Later"
-       Then I should see "The Mysterious Affair at Styles" within ".title"
-     When I press "Read Later"
-       Then I should see "A Christmas Carol" within ".title"
-     When I am on the homepage
-       Then I should see "The Call of the Wild" within "#position_2"
-     When I follow "Text" within "#position_2"
-     When I am on the homepage
-     Then I should see "The Call of the Wild" within "#position_1"
-       And I should see "The Mysterious Affair at Styles" within "#position_3"
-       And I follow "Text" within "#position_3"
-     When I am on the homepage
-       Then I should see "The Mysterious Affair at Styles" within "#position_1"
-
   Scenario: Add a page and make it first
     Given a titled page exists
     When I am on the homepage
@@ -74,25 +49,6 @@ Feature: read_after order
     Then I should see "Grandparent" within "#position_1"
       And I should see "Parent" within "#position_2"
       And I should see "Single" within "#position_3"
-
-  Scenario: after adding parent next should not show part
-    Given 2 titled pages exist
-    When I go to the homepage
-    Then I should see "page 1 title" within "#position_1"
-      And I should see "page 2 title" within "#position_2"
-    When I follow "Read" within "#position_1"
-      And I press "Read Later"
-    Then I should see "page 2 title" within ".title"
-      And I follow "Manage Parts"
-      And I fill in "add_parent" with "Parent for page 2"
-      And I press "Update"
-    Then I should see "Parent for page 2" within ".title"
-      When I press "Read Later"
-    Then I should see "page 1 title" within ".title"
-      When I press "Read Later"
-    Then I should see "Parent for page 2" within ".title"
-      When I press "Read Later"
-    Then I should see "page 1 title" within ".title"
 
   Scenario: Changing read after orders
     Given 5 titled pages exist
