@@ -6,35 +6,53 @@ class DownloadsController < ApplicationController
     @page.make_first
     @parts = @page.parts
     FileUtils.mkdir_p @page.download_dir
-    raise unless File.exist?(@page.download_dir)
 
     respond_to do |format|
-      format.html {download_html}
+      format.html {
+        create_html
+        file_created?(".html") && send_file("#{@page.download_basename}.html", :type => "text/html")
+      }
       # big pdf for GoodReader on iphone (size 55, no margins)
-      format.bigpdf {download_bigpdf}
+      format.bigpdf {
+        create_bigpdf
+        file_created?("-big.pdf") && send_file("#{@page.download_basename}-big.pdf", :type => "application/pdf")
+      }
       # pdf for GoodReader on iPad (size 24)
-      format.pdf {download_pdf}
+      format.pdf {
+        create_pdf
+        file_created?(".pdf") && send_file("#{@page.download_basename}.pdf", :type => "application/pdf")
+      }
       # mobipocket for Kindle
-      format.mobi {download_mobi}
+      format.mobi {
+        create_mobi
+        file_created?(".mobi") && send_file("#{@page.download_basename}.mobi", :type => "application/mobi")
+      }
       # epub for iBooks
-      format.epub {download_epub}
+      format.epub {
+        create_epub
+        file_created?(".epub") && send_file("#{@page.download_basename}.epub", :type => "application/epub")
+      }
       # text for BookZ
-      format.txt {download_text}
+      format.txt {
+        create_text
+        file_created?(".txt") && send_file("#{@page.download_basename}.txt", :type => "text/plain")
+      }
     end
   end
 
 protected
 
-  # used after an external program is called to make sure it worked
-  def check_for_file(format)
-    unless File.exists?("#{@page.download_basename}#{format}")
+  # test to see if the file exists before sending it
+  def file_created?(suffix)
+    if File.exists?("#{@page.download_basename}#{suffix}")
+      true
+    else
       flash[:alert] = "Creating this format failed. Please try another format"
-      redirect_to @page
       false
     end
   end
 
-  ### basic create and download methods
+  ### basic create methods
 
   def create_html
     return if File.exists?("#{@page.download_basename}.html")
@@ -44,13 +62,6 @@ protected
 
     # write to file
     File.open("#{@page.download_basename}.html", 'w') {|f| f.write(html)}
-  end
-
-  def download_html
-    create_html
-
-    # send as HTML
-    send_file("#{@page.download_basename}.html", :type => "text/html")
   end
 
   def create_text
@@ -64,13 +75,6 @@ protected
     body = Nokogiri::HTML(html).xpath('//body').first.inner_html
     text = Scrub.html_to_text(body)
     File.open("#{@page.download_basename}.txt", 'w:utf-8') { |f| f.write(text) }
-  end
-
-  def download_text
-    create_text
-
-    # send as text
-    send_file("#{@page.download_basename}.txt", :type => "text/plain")
   end
 
   def create_pdf
@@ -87,14 +91,6 @@ protected
     `#{cmd} 2> /dev/null`
   end
 
-  def download_pdf
-    create_pdf
-
-    # send as pdf
-    return unless check_for_file(".pdf")
-    send_file("#{@page.download_basename}.pdf", :type => "application/pdf")
-  end
-
   def create_bigpdf
     return if File.exists?("#{@page.download_basename}-big.pdf")
 
@@ -107,14 +103,6 @@ protected
     cmd = %Q{cd "#{@page.download_dir}"; wkhtmltopdf --encoding utf-8 -B 0 -L 0 -R 0 -T 0 --minimum-font-size 55 --title "#{title}" "#{@page.download_title}.html" "#{@page.download_title}-big.pdf"}
     Rails.logger.debug cmd
     `#{cmd} 2> /dev/null`
-  end
-
-  def download_bigpdf
-    create_bigpdf
-
-    # send as big pdf
-    return unless check_for_file("-big.pdf")
-    send_file("#{@page.download_basename}-big.pdf", :type => "application/pdf")
   end
 
   def create_mobi
@@ -147,14 +135,6 @@ protected
     `#{cmd} 2> /dev/null`
   end
 
-  def download_mobi
-    create_mobi
-
-    # send as mobi
-    return unless check_for_file(".mobi")
-    send_file("#{@page.download_basename}.mobi", :type => "application/mobi")
-  end
-
   def create_epub
     # if only one part can use same file as html and pdf versions
     if @parts.size == 1
@@ -168,14 +148,6 @@ protected
     cmd = %Q{cd "#{@page.download_dir}/epub"; zip "#{@page.download_basename}.epub" mimetype; zip -r "#{@page.download_basename}.epub" META-INF OEBPS}
     Rails.logger.debug cmd
    `#{cmd} 2> /dev/null`
-  end
-
-  def download_epub
-    create_epub
-
-    # send the file
-    return unless check_for_file(".epub")
-    send_file("#{@page.download_basename}.epub", :type => "application/epub")
   end
 
   ### extra methods for mobi and epub
