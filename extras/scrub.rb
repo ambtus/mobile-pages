@@ -68,12 +68,12 @@ module Scrub
     # alright drives me batty
     html.gsub!(/([Aa])lright/) {|s| $1 + "ll right"}
     # extra breaks inside paragraphs
-    html.gsub!(/<p><br \/>/, "<p>")
-    html.gsub!(/<br \/><\/p>/, "</p>")
+    html.gsub!(/<p><br ?\/?>/, "<p>")
+    html.gsub!(/<br ?\/?><\/p>/, "</p>")
     # more than two breaks are probably a section
-    html.gsub!(/(<br \/>){3,}/, '<hr />')
+    html.gsub!(/(<br ?\/?>){3,}/, '<hr />')
     # when sections are taken care of, multiple breaks are a paragraph
-    html.gsub!(/(<br \/>){2,}/, '<p>')
+    html.gsub!(/(<br ?\/>?){2,}/, '<p>')
     # multiple empty paragraphs are probably a section
     html.gsub!(/(<p><\/p>){2,}/, '<hr />')
     # remove empty paragraphs
@@ -115,7 +115,7 @@ module Scrub
     text = text.gsub(/<\/?b>/, "\*")
     text = text.gsub(/<\/?big>/, "\*")
     text = text.gsub(/<\/?blockquote>/, "")
-    text = text.gsub(/<br \/>/, "\n")
+    text = text.gsub(/<br ?\/?>/, "\n")
     text = text.gsub(/<\/?center>/, "")
     text = text.gsub(/<\/?div.*?>/, "\n")
     text = text.gsub(/<dt>/, "")
@@ -163,7 +163,7 @@ module Scrub
     text = text.gsub(/<\/?strong>/, '\B')
     text = text.gsub(/<\/?big>/, '\l')
     text = text.gsub(/<\/?blockquote>/, '')
-    text = text.gsub(/<br \/>/, "\n")
+    text = text.gsub(/<br ?\/?>/, "\n")
     text = text.gsub("<center>", '\c')
     text = text.gsub(/<\/center>/, "\n" + '\c' + "\n")
     text = text.gsub(/<\/?div.*?>/, "\n")
