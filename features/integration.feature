@@ -18,8 +18,7 @@ Feature: tests that don't fit neatly into another feature
    When I follow "HTML"
      Then I should see "Retrieved from the web" within ".content"
    When I am on the page with title "Simple test"
-     And I follow "Original" within ".title"
-   Then I should be visiting "http://test.sidrasue.com/test.html"
+     And "Original" should link to "http://test.sidrasue.com/test.html"
 
   Scenario: create a page from a list of urls with author and notes
     Given a genre exists with name: "mygenre"

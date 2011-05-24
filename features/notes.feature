@@ -54,7 +54,7 @@ Feature: stuff to do with notes
        And I should see "Three"
        And I should see "Four"
        And I should not see "Five"
-       And I should not see "Note" within ".title"
+       And I should not see "Note"
      When I fill in "page_notes" with "noted"
       And I press "Find"
      Then I should not see "One"
@@ -62,7 +62,7 @@ Feature: stuff to do with notes
        And I should not see "Three"
        And I should see "Four"
        And I should not see "Five"
-       And I should not see "Note" within ".title"
+       And I should not see "Note"
      When I fill in "page_notes" with "an"
       And I press "Find"
      Then I should not see "One"
@@ -70,6 +70,6 @@ Feature: stuff to do with notes
        And I should not see "Three"
        And I should see "Four"
        And I should see "Five"
-       And I should see "Note" within ".title"
+       And I should see "Note"
 
 

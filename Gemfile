@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 gem 'bundler', '~>1.0.0'
 gem 'rails', '~>3.0.3'
-gem 'mysql2'
+gem 'mysql2', '~>0.2.0'
 
 # Use unicorn as the web server
 gem 'unicorn'
@@ -14,7 +14,7 @@ end
 
 group :test do
   gem 'pickle'
-  gem 'capybara', '=0.3.9'
+  gem 'capybara'
   gem 'database_cleaner'
   gem 'cucumber-rails'
   gem 'cucumber'

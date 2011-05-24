@@ -20,3 +20,4 @@ feature/capybara*.html
 public/apple-touch-icon.png
 public/google*.html
 vendor/
+nohup.out

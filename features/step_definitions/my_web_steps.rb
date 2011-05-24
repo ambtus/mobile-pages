@@ -5,7 +5,7 @@ When /^I check boxes "([^\"]*)"$/ do |fields|
 end
 
 Then /^"([^"]*)" should be selected in "([^"]*)"$/ do |value, field|
-  find_field(field).node.xpath(".//option[@selected = 'selected']").inner_html.should =~ /#{value}/
+   find_field(field).value.should =~ /#{value}/ 
 end
 
 Given /^I wait (\d+) second.?$/ do |time|
@@ -35,4 +35,8 @@ end
 
 When(/^I go back$/) do
   visit request.env['HTTP_REFERER']
+end
+
+Then /^"([^\"]*)" should link to "([^\"]*)"$/ do |link_text, link_url|
+  page.find_link(link_text)['href'].should == link_url
 end

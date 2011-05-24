@@ -43,7 +43,7 @@ Feature: trim cruft off pages
   | http://test.sidrasue.com/p.html            | content      | top para        | bottom para |
   | http://test.sidrasue.com/table.html        | content      | top para        | Row_1_Cell_1|
   | http://test.sidrasue.com/br.html           | all on       | top line        | bottom line |
-  | http://test.sidrasue.com/entities.html     | As the stags | Content Removed | hr width    |
+  | http://test.sidrasue.com/entities.html     | As the stags | Content Removed | All fiction |
   | http://test.sidrasue.com/img.html          | content      | top para        | bottom par  |
   | http://test.sidrasue.com/tablecontent.html | I remembered | Jump            | Content     |
   | http://test.sidrasue.com/href.html         | content      | top link        | bottom link |

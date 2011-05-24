@@ -13,8 +13,7 @@ Scenario Outline: encodings
   When I follow "HTML"
   Then I should see "<result>" within ".content"
   When I go to the page with title "<title>"
-    And I follow "Original" within ".title"
-    Then I should be visiting "<url>"
+    And "Original" should link to "<url>" within ".title"
 
   Examples:
   | url                                      | title            | result                 |

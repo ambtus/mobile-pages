@@ -10,7 +10,7 @@ class DownloadsController < ApplicationController
     respond_to do |format|
       format.html {
         create_html
-        file_created?(".html") && send_file("#{@page.download_basename}.html", :type => "text/html")
+        file_created?(".html") && send_file("#{@page.download_basename}.html", :type => "text/html", :disposition => 'inline')
       }
       # big pdf for GoodReader on iphone (size 55, no margins)
       format.bigpdf {
@@ -35,7 +35,7 @@ class DownloadsController < ApplicationController
       # text for BookZ
       format.txt {
         create_text
-        file_created?(".txt") && send_file("#{@page.download_basename}.txt", :type => "text/plain")
+        file_created?(".txt") && send_file("#{@page.download_basename}.txt", :type => "text/plain", :disposition => 'inline')
       }
     end
   end
@@ -113,7 +113,7 @@ protected
      cmd_post = %Q{ --mobifile "#{@page.download_title}.mobi" --title "#{title}" }
 
     # if only one part can use same file as html and pdf versions
-    if @parts.size == 1
+    if @parts.size == 0
       create_html
 
       # except mobi requires latin1 encoding
@@ -137,7 +137,7 @@ protected
 
   def create_epub
     # if only one part can use same file as html and pdf versions
-    if @parts.size == 1
+    if @parts.size == 0
       create_epub_files("single")
     else
       create_epub_files

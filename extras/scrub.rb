@@ -73,7 +73,7 @@ module Scrub
     # more than two breaks are probably a section
     html.gsub!(/(<br ?\/?>){3,}/, '<hr />')
     # when sections are taken care of, multiple breaks are a paragraph
-    html.gsub!(/(<br ?\/>?){2,}/, '<p>')
+    html.gsub!(/(<br ?\/?>?){2,}/, '<p>')
     # multiple empty paragraphs are probably a section
     html.gsub!(/(<p><\/p>){2,}/, '<hr />')
     # remove empty paragraphs
