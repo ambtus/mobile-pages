@@ -8,6 +8,11 @@
   - unless part.notes.blank?
     .notes=raw part.formatted_notes
 
-- unless part.clean_html.blank?
+- if part.parts.blank?
   .content{:style=> "page-break-before:always"}
     =raw part.clean_html
+- else
+  - for subpart in part.parts
+    %h4{:style=> "page-break-before:always"}= subpart.title
+    =raw subpart.clean_html
+
