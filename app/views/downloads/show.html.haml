@@ -3,10 +3,12 @@
 #page
   - if @parts.size > 0
     - for part in @parts
-      = render :partial => 'download_part.html', :locals => {:part => part}
       - if part.parts.size > 0
+        %h2{:style=> "page-break-before:always"}= part.title
         - for subpart in part.parts
           = render :partial => 'download_part.html', :locals => {:part => subpart, :subpart => true}
+      - else
+        = render :partial => 'download_part.html', :locals => {:part => part}
   - else
     .content{:style=> "page-break-before:always"}
       =raw @page.clean_html
