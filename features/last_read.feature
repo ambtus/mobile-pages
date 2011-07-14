@@ -84,7 +84,7 @@ Feature: last_read (also unread)
       And I follow "Manage Parts"
       And I fill in "add_parent" with "Parent"
       And I press "Update"
-    Then I should see "Parent" within ".title"
+    Then I should see "Parent" 
       And I should not see "unread" within ".last_read"
       And I should see "unread" within "#position_1"
       And I should see "short" within ".size"

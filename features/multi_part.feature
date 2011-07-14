@@ -113,16 +113,15 @@ Feature: multi-part pages
      When I follow "Manage Parts"
       And I fill in "add_parent" with "Grandparent"
       And I press "Update"
-    Then I should see "Parent" within "#position_1"
-      And I should see "Single" within "#position_2"
+    Then I should see "Parent"
+      And I should see "Single"
     When I follow "HTML" within ".title"
-    Then I should see "Grandparent" within "h1"
-      # FIXME within bug
-      #And I should see "Single" within "h2"
-      And I should see "Parent" within "h2"
-      And I should see "Part 1" within "h3"
-      # FIXME within bug
-      #And I should see "Part 2" within "h3"
+      # FIXME within bugs
+    Then I should see "Grandparent"
+      And I should see "Single"
+      And I should see "Parent"
+      And I should see "Part 1"
+      And I should see "Part 2"
       And I should see "stuff for part 1"
       And I should see "stuff for part 2"
       And I should see "stuff for part 3"
@@ -171,6 +170,31 @@ Feature: multi-part pages
       And I should see "stuff for part 4"
       And I should see "stuff for part 5"
 
+  Scenario: third layer heirarchy
+    Given I have no pages
+      And a genre exists with name: "genre"
+    When I am on the homepage
+    When I fill in "page_url" with "http://test.sidrasue.com/parts/1.html"
+      And I fill in "page_title" with "Grandchild"
+      And I select "genre" from "Genre"
+      And I press "Store"
+    Then I should see "Grandchild" within ".title"
+    When I follow "Manage Parts"
+      And I fill in "add_parent" with "Childer"
+      And I press "Update"
+    When I follow "Manage Parts"
+      And I fill in "add_parent" with "Parent"
+      And I press "Update"
+    When I follow "Manage Parts"
+      And I fill in "add_parent" with "Grandparent"
+      And I press "Update"
+    When I follow "HTML"
+    Then I should see "Grandparent" within "h1"
+      And I should see "Parent" within "h2"
+      And I should see "Child" within "h3"
+      And I should see "Grandchild" within "h4"
+      And I should see "stuff for part 1"
+
   Scenario: ignore empty lines in list or urls
     When I am on the homepage
     When I follow "Store Multiple"
@@ -192,7 +216,7 @@ Feature: multi-part pages
      # FIXME within bug
      #And I should see "Boo" within "h3"
      #And I should see "Part 2" within "h3"
-     And I should see "Boo" 
+     And I should see "Boo"
      And I should see "Part 2"
      # FIXME within bug
      #And I should see "Child 2" within "h2"
@@ -219,6 +243,7 @@ Feature: multi-part pages
     Then I follow "Parent" within ".parent"
 
   Scenario: can't add a page to an ambiguous parent
+    Given I have no pages
     Given a page exists with title: "Ambiguous1"
       And a page exists with title: "Ambiguous2"
       And a page exists with title: "Single"
@@ -232,8 +257,7 @@ Feature: multi-part pages
     When I follow "Manage Parts"
       And I fill in "add_parent" with "Ambiguous1"
       And I press "Update"
-    Then I should see "Ambiguous1" within ".title"
-      And I should see "Single" within "#position_1"
+    Then I should see "Page added to this parent"
 
   Scenario: can't add a part to a page with content
     Given a page exists with title: "Styled", url: "http://test.sidrasue.com/styled.html"
@@ -250,19 +274,22 @@ Feature: multi-part pages
     Given a page exists with title: "Single", url: "http://test.sidrasue.com/parts/3.html"
     And a page exists with title: "Multi", base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
     When I am on the homepage
-    Then I should see "Single" within ".title"
+    Then I should see "Single"
+    And I should see "Multi"
     When I follow "Single"
       And I follow "Manage Parts"
       And I fill in "add_parent" with "Multi"
       And I press "Update"
-    Then I should see "Multi" within ".title"
-    And I should see "Part 1" within "#position_1"
-      And I should see "Part 2" within "#position_2"
-      And I should see "Single" within "#position_3"
+    Then I should see "Part 1"
+      And I should see "Part 2"
+      And I should see "Single"
     When I follow "HTML"
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
       And I should see "stuff for part 3"
+    When I am on the homepage
+    Then I should see "Multi" within ".title"
+    But I should not see "Single"
 
   Scenario: add a part to a page with content
     Given a page exists with title: "Single", url: "http://test.sidrasue.com/test.html"
