@@ -12,7 +12,7 @@
         = label_tag "unread_#{choice}", choice
       %br
       = label_tag :favorite, "Favorite:"
-      - ['yes', 'no', 'either'].each do |choice|
+      - ['yes', 'no', 'good', 'either', 'any'].each do |choice|
         = radio_button_tag :favorite, choice, @favorite == choice
         = label_tag "favorite_#{choice}", choice
       %br

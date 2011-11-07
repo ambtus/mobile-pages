@@ -1,12 +1,15 @@
 .genres= page.genre_string
 .authors= page.author_string
 .favorite
-  - if page.favorite
-    = "favorite"
+  - case page.favorite
+    - when 1
+      = "favorite"
+    - when 2
+      = "good"
 .size= page.size
 .last_read
   - if page.last_read
-    = page.last_read.to_date 
+    = page.last_read.to_date
   - else
     = "unread"
 - if called_by == "index"

@@ -18,6 +18,7 @@ class Page < ActiveRecord::Base
 
   UNREAD = "unread"
   FAVORITE = "favorite"
+  GOOD = "good"
 
   SIZES = ["short", "medium", "long", "novel", "epic", "any"]
 
@@ -89,8 +90,10 @@ class Page < ActiveRecord::Base
     pages = Page.scoped
     pages = pages.where(:last_read => nil) if params[:unread] == "yes"
     pages = pages.where('pages.last_read is not null') if params[:unread] == "no" || params[:sort_by] == "last_read"
-    pages = pages.where(:favorite => true) if params[:favorite] == "yes"
-    pages = pages.where(:favorite => false) if params[:favorite] == "no"
+    pages = pages.where(:favorite => 1) if params[:favorite] == "yes"
+    pages = pages.where(:favorite => 2) if params[:favorite] == "good"
+    pages = pages.where(:favorite => [0,2]) if params[:favorite] == "no"
+    pages = pages.where(:favorite => [1,2]) if params[:favorite] == "either"
     pages =  pages.where(:size => params[:size]) if params.has_key?(:size) unless params[:size] == "any"
     [:title, :notes, :url].each do |attrib|
       pages = pages.search(attrib, params[attrib]) if params.has_key?(attrib)
@@ -292,7 +295,14 @@ class Page < ActiveRecord::Base
 
   def update_rating(string, update_favorite=true)
     self.last_read = Time.now
-    self.favorite = (string == "1" ? true : false) if update_favorite
+    self.favorite = case string
+      when "1"
+        1
+      when "2"
+        2
+      else
+        0
+    end if update_favorite
     self.read_after = Time.now + string.to_i.send(DURATION)
     self.save
     self.parent.update_rating(string, false) if self.parent
@@ -328,7 +338,8 @@ class Page < ActiveRecord::Base
 
   def tag_names(include_date = true)
     names = self.authors.map(&:name) + self.genres.map(&:name) + [self.size]
-    names = names + [FAVORITE] if self.favorite
+    names = names + [FAVORITE] if self.favorite == 1
+    names = names + [GOOD] if self.favorite == 2
     names = names + [(self.last_read ? self.last_read.to_date : UNREAD)] if include_date
     names.compact
   end

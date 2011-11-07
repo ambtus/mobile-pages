@@ -12,6 +12,7 @@ Feature: mark as favorite
       And I press "2"
    Then I should not see "favorite" within ".favorite"
      And I should not see "unread" within ".last_read"
+     And I should see "good" within ".favorite"
 
    Scenario: rate a part marks ancestor read but not siblings
     Given a titled page exists with base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
@@ -37,10 +38,15 @@ Feature: mark as favorite
      And I press "2"
    When I am on the page's page
    Then I should not see "unread" within ".last_read"
+     And I should see "good" within ".favorite"
      And I should not see "favorite" within ".favorite"
      And I should not see "favorite" within "#position_1"
+     And I should not see "good" within "#position_1"
      And I should not see "unread" within "#position_1"
+#FIXME: changes every year
      And I should not see "2011-" within "#position_1"
      And I should not see "unread" within "#position_2"
      And I should not see "favorite" within "#position_2"
+     And I should not see "good" within "#position_2"
+#FIXME: changes every year
      And I should not see "2011-" within "#position_2"

@@ -50,13 +50,13 @@ Feature: tests that don't fit neatly into another feature
   Scenario: filter on mix of author, genre, and state
     Given the following pages
       | title                            | add_author_string        | add_genre_string  | favorite | last_read  |
-      | The Mysterious Affair at Styles  | agatha christie          | mystery           | true     | 2009-01-01 |
-      | Nancy Drew                       | Carolyn Keene            | mystery, children | false    | 2009-02-01 |
-      | The Boxcar Children              | Gertrude Chandler Warner | mystery, children | true     |            |
-      | Murder on the Orient Express     | agatha christie          | mystery           | false    |            |
-      | Another Mystery                  | agatha christie          | mystery           | false    | 2009-01-02 |
-      | Yet Another Mystery              | agatha christie          | mystery           | false    | 2009-01-03 |
-      | Still More Mysteries             | agatha christie          | mystery, short stories | true| 2009-01-04 |
+      | The Mysterious Affair at Styles  | agatha christie          | mystery           | 1        | 2009-01-01 |
+      | Nancy Drew                       | Carolyn Keene            | mystery, children | 3        | 2009-02-01 |
+      | The Boxcar Children              | Gertrude Chandler Warner | mystery, children | 1        |            |
+      | Murder on the Orient Express     | agatha christie          | mystery           | 0        |            |
+      | Another Mystery                  | agatha christie          | mystery           | 2        | 2009-01-02 |
+      | Yet Another Mystery              | agatha christie          | mystery           | 0        | 2009-01-03 |
+      | Still More Mysteries             | agatha christie          | mystery, short stories | 0   | 2009-01-04 |
     When I am on the homepage
       And I select "agatha christie" from "Author"
       And I select "mystery" from "Genre"
@@ -116,6 +116,14 @@ Feature: tests that don't fit neatly into another feature
       And I should see "The Mysterious Affair at Styles"
       And I should not see "Nancy Drew"
       And I should not see "The Boxcar Children"
+    When I am on the homepage
+      And I select "agatha christie" from "Author"
+      And I choose "favorite_good"
+      And I press "Find"
+    Then I should see "Another Mystery"
+      And I should not see "Nancy Drew"
+      And I should not see "The Mysterious Affair at Styles"
+      And I should not see "Murder on the Orient Express"
 
   Scenario: notes but no content on multi-page view
     Given a page exists with title: "Multi", base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
