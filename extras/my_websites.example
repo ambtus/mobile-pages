@@ -46,14 +46,11 @@ module MyWebsites
     when /fanfiction.net/
       body.at('div#storytext')
     when /archiveofourown/
-      body.at('div#feedback').remove if body.at('div#feedback')
       body.search(".landmark").each { |node| node.remove }
-      body.search(".navigation").each { |node| node.remove }
-      body.search(".wrapper").each { |node| node.remove }
       body.search("h2.title").each { |node| node.remove }
       body.search("h3.byline").each { |node| node.remove }
       body.search("p.series.footnote").each { |node| node.remove }
-      body.at('div.works-show')
+      body.at('div#workskin')
     when /wraithbait/
       body.at('div.infobox').remove if body.at('div.infobox')
       body.search("div.toplink").each { |node| node.remove }
