@@ -91,8 +91,9 @@ class Page < ActiveRecord::Base
     pages = pages.where(:last_read => nil) if params[:unread] == "yes"
     pages = pages.where('pages.last_read is not null') if params[:unread] == "no" || params[:sort_by] == "last_read"
     pages = pages.where(:favorite => 1) if params[:favorite] == "yes"
+    pages = pages.where(:favorite => [0,2,3,9]) if params[:favorite] == "no"
     pages = pages.where(:favorite => 2) if params[:favorite] == "good"
-    pages = pages.where(:favorite => [0,2]) if params[:favorite] == "no"
+    pages = pages.where(:favorite => 9) if params[:favorite] == "reading"
     pages = pages.where(:favorite => [1,2]) if params[:favorite] == "either"
     pages =  pages.where(:size => params[:size]) if params.has_key?(:size) unless params[:size] == "any"
     [:title, :notes, :url].each do |attrib|
@@ -300,6 +301,8 @@ class Page < ActiveRecord::Base
         1
       when "2"
         2
+      when "3"
+        3
       else
         0
     end if update_favorite
@@ -338,8 +341,18 @@ class Page < ActiveRecord::Base
 
   def tag_names(include_date = true)
     names = self.authors.map(&:name) + self.genres.map(&:name) + [self.size]
-    names = names + [FAVORITE] if self.favorite == 1
-    names = names + [GOOD] if self.favorite == 2
+    names = names + case self.favorite
+      when 1
+        [FAVORITE]
+      when 2
+        [GOOD]
+      when 3
+        ["okay"]
+      when 9
+        ["reading"]
+      else
+        []
+    end
     names = names + [(self.last_read ? self.last_read.to_date : UNREAD)] if include_date
     names.compact
   end
