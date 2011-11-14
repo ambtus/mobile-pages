@@ -72,7 +72,7 @@ class PagesController < ApplicationController
     @page.remove_outdated_downloads if (params[:commit] == "Remove Downloads")
     case params[:commit]
       when "Rebuild from Raw HTML"
-        @page.raw_html = @page.raw_html
+        @page.rebuild_from_raw
         flash[:notice] = "Rebuilt from Raw HTML"
         redirect_to page_path(@page) and return
       when "Update Raw HTML"

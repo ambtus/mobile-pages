@@ -436,6 +436,14 @@ class Page < ActiveRecord::Base
     Rails.public_path + self.mypath + "raw.html"
   end
 
+  def rebuild_from_raw
+    if self.parts.size > 0
+      self.parts.each {|p| p.rebuild_from_raw }
+    else
+      self.raw_html = self.raw_html
+    end
+  end
+
   def remove_surrounding_div!
     self.clean_html = Scrub.remove_surrounding(self.clean_html)
   end
@@ -443,13 +451,13 @@ class Page < ActiveRecord::Base
   def top_nodes
     html = self.clean_html
     nodeset = Nokogiri::HTML(html).xpath('//body').children
-    nodeset[0, 15].map {|n| n.to_s.chomp }
+    nodeset[0, 20].map {|n| n.to_s.chomp }
   end
 
   def bottom_nodes
     html = self.clean_html
     nodeset = Nokogiri::HTML(html).xpath('//body').children
-    nodeset = nodeset[-15, 15] || nodeset
+    nodeset = nodeset[-20, 20] || nodeset
     nodeset.map {|n| n.to_s.chomp }
   end
 

@@ -71,6 +71,7 @@ Feature: trim cruft off pages
     Then I should see "actual content"
 
   Scenario: trim a parent page
+       also rebuild all children from raw
     Given a page exists with title: "Parent", base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
     And I am on the page's page
     When I follow "HTML"
@@ -92,6 +93,11 @@ Feature: trim cruft off pages
     Then I should not see "cruft"
       And I should see "stuff for part 1"
       And I should see "stuff for part 2"
+    When I am on the page's page
+    When I press "Rebuild from Raw HTML"
+      And I follow "Part 1"
+      And I follow "HTML"
+      Then I should see "cruft"
 
   Scenario: trim a sub-part
     Given a titled page exists with urls: "##First Part\nhttp://test.sidrasue.com/parts/1.html###SubPart"
