@@ -23,6 +23,19 @@ Feature: read_after order
     Then I should see "page 2" within "#position_1"
       And I should see "page 1" within "#position_2"
 
+  Scenario: Read a page and make it last
+    Given 2 titled pages exist
+    When I am on the homepage
+    Then I should see "page 1" within "#position_1"
+      And I should see "page 2" within "#position_2"
+    When I follow "page 1" within "#position_1"
+      And I press "Reading"
+    When I am on the homepage
+    Then I should see "page 2" within "#position_1"
+      And I should see "page 1" within "#position_2"
+    When I follow "page 1" within "#position_2"
+      Then I should see "reading" within ".favorite"
+
   Scenario: Find a part or subpart and make it first
     Given I have no pages
       And the following pages

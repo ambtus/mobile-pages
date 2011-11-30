@@ -69,6 +69,7 @@ class PagesController < ApplicationController
   def update
     @page = Page.find(params[:id])
     @page = @page.make_first if (params[:commit] == "Read First")
+    @page = @page.make_reading if (params[:commit] == "Reading")
     @page.remove_outdated_downloads if (params[:commit] == "Remove Downloads")
     case params[:commit]
       when "Rebuild from Raw HTML"

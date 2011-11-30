@@ -288,8 +288,23 @@ class Page < ActiveRecord::Base
     if self.parent
       parent = self.parent
       parent.update_attribute(:read_after, earliest - 1.day) if parent
-      grandparent = parent.parent
+      grandparent = parent.parent if parent
       grandparent.update_attribute(:read_after, earliest - 1.day) if grandparent
+    end
+    return self
+  end
+
+  def make_reading
+    latest = Page.where(:parent_id => nil).order(:read_after).last.read_after + 1.day || Date.tomorrow
+    self.update_attribute(:read_after, latest)
+    self.update_attribute(:favorite, 9)
+    if self.parent
+      parent = self.parent
+      parent.update_attribute(:read_after, latest) if parent
+      parent.update_attribute(:favorite, 9) if parent
+      grandparent = parent.parent if parent
+      grandparent.update_attribute(:read_after, latest) if grandparent
+      grandparent.update_attribute(:favorite, 9) if grandparent
     end
     return self
   end
