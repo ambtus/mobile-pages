@@ -111,6 +111,11 @@ class Page < ActiveRecord::Base
       when "last_read"
         pages.order('last_read ASC')
       when "random"
+        unless params[:unread] == "yes"
+          # unless I'm deliberately looking for unreads
+          # when I want random fics I don't want really recent read ones
+          pages = pages.where('pages.last_read < ?', 1.year.ago)
+        end
         pages.order('RAND()')
       when "last_created"
         pages.order('created_at DESC')
