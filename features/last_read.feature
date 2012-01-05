@@ -7,7 +7,7 @@ Feature: last_read (also unread)
     When I follow "Rate"
       And I press "5"
     # FIXME - this will change every year - test will need updating
-    Then I should see "2011" within ".last_read"
+    Then I should see "2012" within ".last_read"
 
   Scenario: after rate a read page, change it's last read date
     Given a titled page exists with last_read: "2008-01-01"
@@ -17,7 +17,7 @@ Feature: last_read (also unread)
       And I press "5"
     Then I should not see "2008-01-01" within ".last_read"
     # FIXME - this will change every year - test will need updating
-      And I should see "2011" within ".last_read"
+      And I should see "2012" within ".last_read"
 
   Scenario: add unread part to read parent
     Given a page exists with title: "Multi", urls: "http://test.sidrasue.com/parts/1.html"
@@ -84,7 +84,7 @@ Feature: last_read (also unread)
       And I follow "Manage Parts"
       And I fill in "add_parent" with "Parent"
       And I press "Update"
-    Then I should see "Parent" 
+    Then I should see "Parent"
       And I should not see "unread" within ".last_read"
       And I should see "unread" within "#position_1"
       And I should see "short" within ".size"
