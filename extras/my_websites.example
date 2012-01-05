@@ -35,13 +35,19 @@ module MyWebsites
     body = doc.xpath('//body').first
     return html if body.blank?
     result = case url
-    when /ejournal/, /dreamwidth/
+    when /dreamwidth/, /insanejournal/
       if url.match("thread|comments")
         body.children
       elsif body.at('//blockquote')
         body.at('//blockquote').next
       else
         body.children
+      end
+    when /livejournal/
+      if url.match("thread|comments")
+        body.children
+      else
+        body.at('div.b-singlepost-body').children
       end
     when /fanfiction.net/
       body.at('div#storytext')
