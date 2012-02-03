@@ -24,3 +24,9 @@ Feature: clean up html from web
      Then I should see "The beginning"
        And I should not see "<br>"
 
+   Scenario: fanfiction Share button gets cleaned
+     Given a titled page exists with url: "http://www.fanfiction.net/s/5853866/1/Counting"
+     When I go to the page's page
+      And I follow "HTML" within ".title"
+     Then I should see "Skip. Skip."
+      But I should not see "Share"
