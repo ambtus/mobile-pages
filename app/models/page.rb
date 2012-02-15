@@ -20,13 +20,10 @@ class Page < ActiveRecord::Base
   FAVORITE = "favorite"
   GOOD = "good"
 
-  SIZES = ["short", "medium", "long", "novel", "epic", "any"]
+  SIZES = ["short", "medium", "long", "any"]
 
-  SHORT_WC =  1500
-  MED_WC =    7500
-  LONG_WC =  17500
-  NOVEL_WV = 50000
-  EPIC_WC = 150000
+  SHORT_WC =   7500
+  MED_WC   =  30000
 
   def set_wordcount(recount=true)
     if self.parts.size > 0
@@ -47,8 +44,6 @@ class Page < ActiveRecord::Base
     if self.wordcount
       self.size = "medium" if wordcount > SHORT_WC
       self.size = "long" if wordcount > MED_WC
-      self.size = "novel" if wordcount > LONG_WC
-      self.size = "epic" if wordcount > EPIC_WC
     end
     self.save
   end
