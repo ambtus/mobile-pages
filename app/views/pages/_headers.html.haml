@@ -10,7 +10,7 @@
       = "okay"
     - when 9
       = "reading"
-.size= page.size
+.size= "#{page.size} (#{page.wordcount})"
 .last_read
   - if page.last_read
     = page.last_read.to_date

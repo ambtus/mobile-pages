@@ -17,7 +17,7 @@
         = label_tag "favorite_#{choice}", choice
       %br
       = label_tag :size, "Size:"
-      - Page::SIZES.each do |choice|
+      - ['short', 'medium', 'long', 'either', 'any'].each do |choice|
         = radio_button_tag :size, choice, @size == choice
         = label_tag "size_#{choice}", choice
       %br

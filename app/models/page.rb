@@ -90,7 +90,10 @@ class Page < ActiveRecord::Base
     pages = pages.where(:favorite => 2) if params[:favorite] == "good"
     pages = pages.where(:favorite => 9) if params[:favorite] == "reading"
     pages = pages.where(:favorite => [1,2]) if params[:favorite] == "either"
-    pages =  pages.where(:size => params[:size]) if params.has_key?(:size) unless params[:size] == "any"
+    pages = pages.where(:size => "short") if params[:size] == "short"
+    pages = pages.where(:size => "medium") if params[:size] == "medium"
+    pages = pages.where(:size => "long") if params[:size] == "long"
+    pages = pages.where(:size => ["medium", "long"]) if params[:size] == "either"
     [:title, :notes, :url].each do |attrib|
       pages = pages.search(attrib, params[attrib]) if params.has_key?(attrib)
     end
