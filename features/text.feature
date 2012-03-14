@@ -213,7 +213,7 @@ Feature: text version of pages
       And I follow "TXT" within ".title"
 
   Scenario: blank named anchor
-    Given a titled page exists with url: "http://sidra.livejournal.com/838.html"
+    Given a titled page exists with url: "http://sidra.livejournal.com/838.html#cutid1"
     When I go to the page's page
       And I follow "TXT" within ".title"
     Then I should see "Ron crouched"
