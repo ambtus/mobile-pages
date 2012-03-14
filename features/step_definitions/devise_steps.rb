@@ -12,10 +12,10 @@ Given /^I am an authenticated user$/ do
   email = 'testing@sidrasue.com'
   password = 'secretpass'
 
-  Given %{I have one user "#{email}" with password "#{password}"}
+  step %{I have one user "#{email}" with password "#{password}"}
   visit('/users/sign_in')
-  And %{I fill in "user_email" with "#{email}"}
-  And %{I fill in "user_password" with "#{password}"}
-  And %{I press "Sign in"}
-  Then %{I should see "Signed in successfully"}
+  step %{I fill in "user_email" with "#{email}"}
+  step %{I fill in "user_password" with "#{password}"}
+  step %{I press "Sign in"}
+  step %{I should see "Signed in successfully"}
 end
