@@ -2,19 +2,21 @@
   = "Scrub " + @page.title
 
 .title= @page.title
-.info= "remove through the top selection and the bottom selection on"
+.info
+  remove above the top selection and below the bottom selection
 %a{:href => "#end"} Jump to end
 .form
   = form_for @page do |f|
     .button= f.submit "Remove surrounding Div"
     .button= f.submit "Scrub"
-    .top 
+    = @page.top_nodes.size.to_s + " nodes"
+    .top
       Top
       - @page.top_nodes.each_with_index do |node,index|
         .node
           = radio_button_tag "top_node", index + 1, false
           = label_tag "top_node_#{index + 1}", node
-    .bottom 
+    .bottom
       Bottom
       - @page.bottom_nodes.each_with_index do |node,index|
         .node

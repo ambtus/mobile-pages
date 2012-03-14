@@ -116,3 +116,13 @@ Feature: trim cruft off pages
       And I should see "stuff for part 1"
     But I should not see "top cruft"
     And I should not see "bottom cruft"
+
+  Scenario: show number of nodes
+  Given a titled page exists with url: "http://test.sidrasue.com/div.html"
+  When I am on the page's page
+    And I follow "Scrub"
+  Then I should see "4 nodes"
+  When I choose "last div" within ".bottom"
+  And I press "Scrub"
+    And I follow "Scrub"
+  Then I should see "3 nodes"
