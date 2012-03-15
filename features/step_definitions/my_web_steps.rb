@@ -5,7 +5,7 @@ When /^I check boxes "([^\"]*)"$/ do |fields|
 end
 
 Then /^"([^"]*)" should be selected in "([^"]*)"$/ do |value, field|
-   find_field(field).value.should =~ /#{value}/ 
+   find_field(field).value.should =~ /#{value}/
 end
 
 Given /^I wait (\d+) second.?$/ do |time|
@@ -26,11 +26,6 @@ end
 
 Then /^I should be visiting "([^"]*)"$/ do |link|
   current_url.should == link
-end
-
-Then /^I should be visiting "([^"]*)"'s (\d+) pdf page$/ do |title, size|
-  page = Page.find_by_title(title)
-  current_path.should == page_pdf_path(page.to_param, size)
 end
 
 When(/^I go back$/) do

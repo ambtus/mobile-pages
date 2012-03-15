@@ -28,7 +28,27 @@ Then /^my page named "([^\"]*)" should not contain "([^\"]*)"$/ do |title, strin
   assert_no_match Regexp.new(string), Page.find_by_title(title).clean_html
 end
 
-Then /^the page "([^\"]*)" has no pdfs$/ do |title|
+Then /^the download directory should exist for page titled "([^"]*)"$/ do |title|
   page = Page.find_by_title(title)
-  page.destroy_all_pdfs
+  assert File.exists?(page.download_dir)
+end
+
+Then /^the download directory should not exist for page titled "([^"]*)"$/ do |title|
+  page = Page.find_by_title(title)
+  assert !File.exists?(page.download_dir)
+end
+
+Then /^the download html file should exist for page titled "([^"]*)"$/ do |title|
+  page = Page.find_by_title(title)
+  assert File.exists?("#{page.download_basename}.html")
+end
+
+Then /^the download epub file should exist for page titled "([^"]*)"$/ do |title|
+  page = Page.find_by_title(title)
+  assert File.exists?("#{page.download_basename}.epub")
+end
+
+Then /^the download epub file should not exist for page titled "([^"]*)"$/ do |title|
+  page = Page.find_by_title(title)
+  assert !File.exists?("#{page.download_basename}.epub")
 end

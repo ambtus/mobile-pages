@@ -508,10 +508,11 @@ class Page < ActiveRecord::Base
 
 ### Download helper methods
 
-  def remove_outdated_downloads
+  def remove_outdated_downloads(recurse = false)
     Rails.logger.debug "remove outdated downloads for #{self.id}"
     FileUtils.rm_rf(self.download_dir)
-    self.parent.remove_outdated_downloads if self.parent
+    self.parent.remove_outdated_downloads(true) if self.parent
+    self.parts.each { |part| part.remove_outdated_downloads(true) unless recurse}
   end
 
   def download_dir

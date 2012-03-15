@@ -76,23 +76,31 @@ Feature: trim cruft off pages
     And I am on the page's page
     When I follow "HTML"
     Then I should see "cruft"
+      And the download directory should exist for page titled "Parent"
     When I am on the page's page
     And I follow "Scrub" within ".title"
       And I follow "Scrub Part 1"
       And I choose "top cruft" within ".top"
       And I choose "bottom cruft" within ".bottom"
       And I press "Scrub"
-    And I follow "HTML"
+    Then the download directory should not exist for page titled "Parent"
+    When I am on the page's page
+      And I follow "HTML"
     Then I should not see "cruft"
       And I should see "stuff for part 1"
     When I am on the page's page
     When I press "Rebuild from Raw HTML"
-      And I follow "Part 1"
+    Then the download directory should not exist for page titled "Parent"
       And I follow "HTML"
-      Then I should see "cruft"
+    Then I should see "cruft"
+      And the download directory should exist for page titled "Parent"
 
   Scenario: trim a sub-part
-    Given a titled page exists with urls: "##First Part\nhttp://test.sidrasue.com/parts/1.html###SubPart"
+    Given a page exists with title: "Parent", urls: "##First Part\nhttp://test.sidrasue.com/parts/1.html###SubPart"
+    When I am on the page's page
+      And I follow "HTML"
+    Then I should see "cruft"
+      And the download directory should exist for page titled "Parent"
     When I am on the page's page
       And I follow "Scrub"
       And I follow "Scrub First Part"
@@ -100,8 +108,8 @@ Feature: trim cruft off pages
       And I choose "top cruft" within ".top"
       And I choose "bottom cruft" within ".bottom"
       And I press "Scrub"
+    Then the download directory should not exist for page titled "Parent"
     When I am on the page's page
-      And I follow "First Part"
       And I follow "HTML"
     Then I should see "First Part"
       And I should see "SubPart"
