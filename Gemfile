@@ -1,8 +1,8 @@
 source 'http://rubygems.org'
 
 gem 'bundler', '~>1.0.0'
-gem 'rails', '~>3.0.3'
-gem 'mysql2', '~>0.2.0'
+gem 'rails', '~>3.1.0'
+gem 'mysql2', '~>0.3.0'
 
 # Use unicorn as the web server
 gem 'unicorn'
@@ -26,5 +26,5 @@ gem 'escape_utils'
 gem 'haml', '>=3.0.18'
 gem 'nokogiri', '>=1.4.1'
 gem 'sanitize', '>=1.2.0'
-gem 'devise', '>=1.1.2'
 gem 'mechanize', '>=1.0.0'
+gem 'bcrypt-ruby'

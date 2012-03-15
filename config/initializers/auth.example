@@ -1,0 +1,2 @@
+MobilePages::Application.config.http_name = "frodo"
+MobilePages::Application.config.http_password = "baggins"

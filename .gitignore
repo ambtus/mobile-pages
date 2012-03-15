@@ -13,6 +13,7 @@ config/unicorn.rb
 config/initializers/session_store.rb
 extras/my_websites.rb
 config/initializers/secret_token.rb
+config/initializers/auth.rb
 rerun.txt
 vendor/gems
 capybara*.html

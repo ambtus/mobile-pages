@@ -1,5 +1,4 @@
 MobilePages::Application.routes.draw do
-  devise_for :users
 
   match '/test/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download'
   match '/development/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download'
