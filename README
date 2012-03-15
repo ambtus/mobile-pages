@@ -27,7 +27,6 @@ Filter: find something in a specific genre
 libxml2 libxslt
 
 wkhtmltopdf (http://code.google.com/p/wkhtmltopdf/)
-mobiperl (https://dev.mobileread.com/svn/mobiperl)
 zip
 
 utf-8 encoding

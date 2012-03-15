@@ -22,11 +22,6 @@ class DownloadsController < ApplicationController
         create_pdf
         file_created?(".pdf") && send_file("#{@page.download_basename}.pdf", :type => "application/pdf")
       }
-      # mobipocket for Kindle
-      format.mobi {
-        create_mobi
-        file_created?(".mobi") && send_file("#{@page.download_basename}.mobi", :type => "application/mobi")
-      }
       # epub for iBooks
       format.epub {
         create_epub
@@ -58,7 +53,7 @@ protected
     return if File.exists?("#{@page.download_basename}.html")
 
     # render template
-    html = render_to_string(:template => "downloads/show.html", :layout => 'downloads.html')
+    html = render_to_string(:template => "downloads/show", :formats => [:html], :layout => 'downloads.html')
 
     # write to file
     File.open("#{@page.download_basename}.html", 'w') {|f| f.write(html)}
@@ -105,36 +100,6 @@ protected
     `#{cmd} 2> /dev/null`
   end
 
-  def create_mobi
-     # double quotes in title need to be escaped
-     title = @page.title.gsub(/"/, '\"')
-
-     cmd_pre = %Q{cd "#{@page.download_dir}"; html2mobi }
-     cmd_post = %Q{ --mobifile "#{@page.download_title}.mobi" --title "#{title}" }
-
-    # if only one part can use same file as html and pdf versions
-    if @parts.size == 0
-      create_html
-
-      # except mobi requires latin1 encoding
-      unless File.exists?("#{@page.download_dir}/mobi.html")
-        html = Iconv.conv("LATIN1//TRANSLIT//IGNORE", "UTF8",
-                 File.read("#{@page.download_basename}.html")).force_encoding("ISO-8859-1")
-        File.open("#{@page.download_dir}/mobi.html", 'w') {|f| f.write(html)}
-      end
-
-      # convert latin html to mobi
-      cmd = cmd_pre + "mobi.html" + cmd_post
-    else
-      # more than one part
-      # create a table of contents out of separate part files
-      mobi_files = create_mobi_files
-      cmd = cmd_pre + mobi_files + " --gentoc" + cmd_post
-    end
-    Rails.logger.debug cmd
-    `#{cmd} 2> /dev/null`
-  end
-
   def create_epub
     # if only one part can use same file as html and pdf versions
     if @parts.size == 0
@@ -150,33 +115,7 @@ protected
    `#{cmd} 2> /dev/null`
   end
 
-  ### extra methods for mobi and epub
-
-  def create_mobi_files
-    return if File.exists?("#{@page.download_basename}.mobi")
-    FileUtils.mkdir_p "#{@page.download_dir}/mobi"
-
-    # the preface contains meta tag information, the title/author, work summary and work notes
-    @page_title = "Preface"
-    render_mobi_html("_download_preface", "preface")
-
-    # each part may have its own byline, notes and endnotes
-    @parts.each_with_index do |part, index|
-       @part = part
-       @page_title = part.title
-       render_mobi_html("_download_part", "part#{index+1}")
-    end
-
-    part_file_names = 1.upto(@parts.size).map {|i| "mobi/part#{i}.html"}
-    ["mobi/preface.html", part_file_names.join(' ')].join(' ')
-  end
-
-  def render_mobi_html(template, basename)
-    @mobi = true
-    html = render_to_string(:template => "downloads/#{template}.html", :layout => 'downloads.html')
-    html = Iconv.conv("ASCII//TRANSLIT//IGNORE", "UTF8", html)
-    File.open("#{@page.download_dir}/mobi/#{basename}.html", 'w') {|f| f.write(html)}
-  end
+  ### extra methods for epub
 
   def create_epub_files(single = "")
     return if File.exists?("#{@page.download_basename}.epub")
@@ -201,12 +140,12 @@ protected
       create_html
       render_xhtml(File.read("#{@page.download_basename}.html"), "work")
     else
-      preface = render_to_string(:template => "downloads/_download_preface.html", :layout => 'downloads.html')
+      preface = render_to_string(:template => "downloads/_download_preface", :format => [:html], :layout => 'downloads.html')
       render_xhtml(preface, "preface")
 
       @parts.each_with_index do |part, index|
         @part = part
-        html = render_to_string(:template => "downloads/_download_part.html", :layout => "downloads.html")
+        html = render_to_string(:template => "downloads/_download_part", :format => [:html], :layout => "downloads.html")
         render_xhtml(html, "part#{index + 1}")
       end
 
