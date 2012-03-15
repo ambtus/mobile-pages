@@ -140,12 +140,12 @@ protected
       create_html
       render_xhtml(File.read("#{@page.download_basename}.html"), "work")
     else
-      preface = render_to_string(:template => "downloads/_download_preface", :format => [:html], :layout => 'downloads.html')
+      preface = render_to_string(:template => "downloads/_download_preface", :formats => [:html], :layout => 'downloads.html')
       render_xhtml(preface, "preface")
 
       @parts.each_with_index do |part, index|
         @part = part
-        html = render_to_string(:template => "downloads/_download_part", :format => [:html], :layout => "downloads.html")
+        html = render_to_string(:template => "downloads/_download_part", :formats => [:html], :layout => "downloads.html")
         render_xhtml(html, "part#{index + 1}")
       end
 
