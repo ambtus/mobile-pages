@@ -72,4 +72,18 @@ Feature: stuff to do with notes
        And I should see "Five"
        And I should see "Note"
 
+  Scenario: Update notes removes old html
+    Given a titled page exists with notes: "Lorem ipsum dolor"
+    When I am on the page's page
+     When I follow "HTML"
+    Then I should see "Lorem ipsum dolor"
+    When I am on the page's page
+    When I follow "Notes"
+      And I fill in "page_notes" with "On Assignment for Dumbledore"
+      And I press "Update"
+    When I am on the page's page
+     When I follow "HTML"
+    Then I should not see "Lorem ipsum dolor"
+      And I should see "On Assignment for Dumbledore"
+
 

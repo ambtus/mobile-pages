@@ -91,6 +91,7 @@ class PagesController < ApplicationController
         redirect_to page_path(@page) and return
       when "Update"
         @page.update_attributes(params[:page])
+        @page.remove_outdated_downloads
         redirect_to page_url(@page) and return
     end
     redirect_to @page
