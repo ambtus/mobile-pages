@@ -1,10 +1,10 @@
 = render :partial => 'download_preface', :formats => [:html]
 
 #page
-  - if @parts.size > 0
-    - for part in @parts
+  - if @page.parts.size > 0
+    - for part in @page.parts
       - if part.parts.size > 0
-        %h2{:style=> "page-break-before:always"}= part.title
+        %h2{:style=> "page-break-before:always", :class => "chapter"}= part.title
         - for subpart in part.parts
           = render :partial => 'download_part', :formats => [:html], :locals => {:part => subpart, :subpart => true}
       - else

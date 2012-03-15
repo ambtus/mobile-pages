@@ -18,11 +18,18 @@ Feature: clean up html from web
     Given a titled page exists with url: "http://test.sidrasue.com/test.html"
     When I am on the page's page
      And I follow "Edit Raw HTML"
-    When I fill in "pasted" with "<span class='first'>The</span> beginning<br><br>new paragraph"
-      And I press "Update Raw HTML"
-      And I follow "TXT"
+    When I fill in "pasted" with
+      """
+      <span class='first'>The</span> beginning
+      <script type="text/javascript">
+      emailE=('tarrotcat' + '@' + 'aol.com')
+      document.write('<a href="mailto:' + emailE + '">' + 'email Vera' +'</a>')
+      </script>
+      """
+     And I press "Update Raw HTML"
+      And I follow "HTML"
      Then I should see "The beginning"
-       And I should not see "<br>"
+       And I should not see "email Vera"
 
    Scenario: fanfiction Share button gets cleaned
      Given a titled page exists with url: "http://www.fanfiction.net/s/5853866/1/Counting"

@@ -188,20 +188,3 @@ Feature: tests that don't fit neatly into another feature
      And I should see "unread" within "#position_1"
      And I should not see "2012-" within "#position_2"
      And I should not see "unread" within "#position_2"
-
-  Scenario: text, trim and text should reflect trim
-    Given a titled page exists with url: "http://test.sidrasue.com/p.html"
-    When I am on the page's page
-      And I follow "TXT" within ".title"
-    Then I should see "top para"
-      And I should see "content"
-      And I should see "bottom para"
-    When I am on the page's page
-      And I follow "Scrub"
-      And I choose "top para" within ".top"
-      And I choose "bottom para" within ".bottom"
-      And I press "Scrub"
-    When I follow "TXT" within ".title"
-    Then I should not see "top para"
-      And I should not see "bottom para"
-      And I should see "content"

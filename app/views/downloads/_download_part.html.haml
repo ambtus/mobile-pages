@@ -1,8 +1,8 @@
 - part = @part if @part
 - if defined?(subpart)
-  %h3{:style=> "page-break-before:always"}= part.title
+  %h3{:style=> "page-break-before:always", :class => "chapter"}= part.title
 - else
-  %h2{:style=> "page-break-before:always"}= part.title
+  %h2{:style=> "page-break-before:always", :class => "chapter"}= part.title
 .meta
   .tags= part.download_tag_string
   - unless part.notes.blank?

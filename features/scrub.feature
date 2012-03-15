@@ -76,9 +76,6 @@ Feature: trim cruft off pages
     And I am on the page's page
     When I follow "HTML"
     Then I should see "cruft"
-    And I am on the page's page
-    When I follow "TXT" within ".title"
-    Then I should see "cruft"
     When I am on the page's page
     And I follow "Scrub" within ".title"
       And I follow "Scrub Part 1"
@@ -88,11 +85,6 @@ Feature: trim cruft off pages
     And I follow "HTML"
     Then I should not see "cruft"
       And I should see "stuff for part 1"
-    When I am on the page's page
-      And I follow "TXT" within ".title"
-    Then I should not see "cruft"
-      And I should see "stuff for part 1"
-      And I should see "stuff for part 2"
     When I am on the page's page
     When I press "Rebuild from Raw HTML"
       And I follow "Part 1"
@@ -110,9 +102,9 @@ Feature: trim cruft off pages
       And I press "Scrub"
     When I am on the page's page
       And I follow "First Part"
-      And I follow "TXT"
-    Then I should see "First Part #"
-      And I should see "## SubPart ##"
+      And I follow "HTML"
+    Then I should see "First Part"
+      And I should see "SubPart"
       And I should see "stuff for part 1"
     But I should not see "top cruft"
     And I should not see "bottom cruft"

@@ -104,6 +104,6 @@ Feature: single-part pages
   Scenario: download livejournal adult content
     Given a titled page exists with url: "http://sidra.livejournal.com/3265.html#cutid1"
     When I go to the page's page
-      And I follow "TXT" within ".title"
+      And I follow "HTML" within ".title"
     Then I should not see "Adult Content"
       And I should see "alien"

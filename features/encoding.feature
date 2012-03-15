@@ -33,16 +33,6 @@ Scenario Outline: encodings
     Then my page named "Linefeed" should contain "fiancé"
     And my page named "Linefeed" should not contain "&#13;"
 
-  Scenario: allow utf-8 in text version
-    Given a titled page exists with url: "http://test.sidrasue.com/styled.html"
-    When I am on the page's page
-      And I follow "TXT" within ".title"
-    Then I should not see ";"
-      And I should see "…"
-      And I should see "–"
-      And I should see "’"
-      And I should see "façade"
-
   Scenario: utf8
     Given a titled page exists with url: "http://test.sidrasue.com/sbutf8.html"
     When I am on the page's page

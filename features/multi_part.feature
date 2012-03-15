@@ -316,7 +316,7 @@ Feature: multi-part pages
     When I am on the homepage
     When I follow "page 1"
       And I follow "Part 1"
-      And I follow "TXT" within ".title"
+      And I follow "HTML" within ".title"
     Then I should see "stuff for part 1"
     And I should not see "stuff for part 2"
 

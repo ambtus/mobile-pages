@@ -10,10 +10,6 @@
   = link_to "EPUB", download_url_for_page(page, ".epub")
   = link_to "HTML", download_url_for_page(page, ".html")
   - unless called_by == "index"
-    = link_to "TXT", download_url_for_page(page, ".txt")
-    = link_to "BIG PDF", download_url_for_page(page, ".bigpdf")
-    = link_to "PDF", download_url_for_page(page, ".pdf")
-    %br
     = link_to "Notes", edit_note_path(page)
     = link_to "Authors", author_path(page)
     = link_to "Genres", genre_path(page)

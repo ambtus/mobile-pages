@@ -1,45 +1,36 @@
 == Description
 
-Create an archive of pages saved from the web, or uploaded, to read on your mobile device
+Create a private archive of pages saved from the web to read in ePub format
 
 == Caveats
 
 Released under the MIT license. See LICENSE.
 
-This application has basic authentication but users must be set via the console
-
 == Overview of features
 
 What?: Why?
 
-Store web pages: combat link rot
-Scrub: clean html for better reading on a mobile web browser
+Store: combat link rot
+Scrub: clean html for better experience on a small screen
 Download: offline reading
-Search: find a specific page to read
-Suggestion: what should I read next?
-Rate: influence when a page will be suggested again
-Filter: find something in a specific genre
+Rate: allows filtering and also sets last read date
+Search & Filter: find a specific page to read
 
 == Setup
 
-=== operating system requirements
+=== system requirements
 
-libxml2 libxslt
+calibre command line tools (http://calibre-ebook.com/download)
 
-wkhtmltopdf (http://code.google.com/p/wkhtmltopdf/)
-zip
+=== required configuration
 
-utf-8 encoding
-
-Georgia font (ttf-mscorefonts-installer)
-
-=== required configuration (will likely require modification)
-
-cp config/database.example config/database.yml 
+cp config/database.example config/database.yml
 cp extras/my_websites.example extras/my_websites.rb
 cp config/initializers/session_store.example config/initializers/session_store.rb
 cp config/initializers/secret_token.example config/initializers/secret_token.rb
 cp config/initializers/auth.example config/initializers/auth.rb
+
+edit files
 
 === optional configuration
 

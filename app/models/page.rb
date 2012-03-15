@@ -527,6 +527,12 @@ class Page < ActiveRecord::Base
     "#{self.download_dir}#{self.download_title}"
   end
 
+  def create_epub
+    return if File.exists?("#{self.download_basename}.epub")
+    cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --output-profile ipad --title "#{self.title}" --authors "#{self.download_tag_string}" }
+    Rails.logger.debug cmd
+    `#{cmd} 2> /dev/null`
+  end
 
 private
 
