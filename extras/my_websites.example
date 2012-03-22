@@ -14,11 +14,10 @@ module MyWebsites
   def self.geturl(url)
     case url
     when /ejournal/, /dreamwidth/
-      url = url + "?mode=reply" unless url.match("thread")
       if url.match("#comments")
-        url.gsub("#comments", "&format=light#comments")
+        url.gsub("#comments", "?format=light#comments")
       else
-        url + "&format=light"
+        url + "?format=light"
       end
     when /archiveofourown/
       url + "?view_adult=true&view_full_work=true&style=light"
