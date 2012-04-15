@@ -149,6 +149,10 @@ class Page < ActiveRecord::Base
     rescue SocketError
       self.errors.add(:base, "couldn't resolve host name")
     end
+    if url.match(/archiveofourown/)
+      doc = Nokogiri::HTML(self.raw_html)
+      self.update_attribute(:title, doc.at_xpath("//h2").children.text.strip)
+    end
   end
 
   def parts_from_urls(url_title_list, refetch=false)
@@ -554,7 +558,7 @@ private
 
   def remove_placeholders
     self.url = self.url == "URL" ? nil : self.url.try(:strip)
-    self.title = nil if self.title == "Title"
+    self.title = nil if self.title == "Title" && !self.url.match('archiveofourown')
     self.notes = nil if self.notes == "Notes"
     self.base_url = nil if self.base_url == BASE_URL_PLACEHOLDER
     self.url_substitutions = nil if self.url_substitutions == URL_SUBSTITUTIONS_PLACEHOLDER
