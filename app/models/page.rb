@@ -520,7 +520,7 @@ class Page < ActiveRecord::Base
   end
   # needs to be filesystem safe and not overly long
   def download_title
-    string = self.title.encode('ASCII', :invalid => :replace, :replace => '')
+    string = self.title.encode('ASCII', :invalid => :replace, :undef => :replace, :replace => '')
     string = string.gsub(/[^[\w _-]]+/, '')
     string.gsub(/ +/, " ").strip.gsub(/^(.{24}[\w.]*).*/) {$1}
   end
