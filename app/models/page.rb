@@ -132,26 +132,28 @@ class Page < ActiveRecord::Base
     "#{self.id}-#{self.clean_title}"
   end
 
-  def fetch
-    return if url.blank?
+  def fetch(working_url=self.url)
+    return if working_url.blank?
     agent = Mechanize.new { |a| a.log = Logger.new("#{Rails.root}/log/mechanize.log") }
-    auth = MyWebsites.getpwd(url)
+    auth = MyWebsites.getpwd(working_url)
     agent.auth(auth[:username], auth[:password]) if auth
     begin
-      content = agent.get(MyWebsites.geturl(url))
-      if url.match(/livejournal/) && content.forms.first.try(:button).try(:name) == "adult_check"
+      content = agent.get(MyWebsites.geturl(working_url))
+      if working_url.match(/livejournal/) && content.forms.first.try(:button).try(:name) == "adult_check"
          form = content.forms.first
          content = agent.submit(form, form.buttons.first)
       end
-      self.raw_html = content.body.force_encoding(agent.page.encoding)
+      html = content.body.force_encoding(agent.page.encoding)
+      self.raw_html = html if working_url == self.url
+      if working_url.match(/archiveofourown/) && title == "Title"
+        doc = Nokogiri::HTML(html)
+        self.update_attribute(:title, doc.at_xpath("//h2").children.text.strip)
+      end
+      return html
     rescue Mechanize::ResponseCodeError
       self.errors.add(:base, "error retrieving content")
     rescue SocketError
       self.errors.add(:base, "couldn't resolve host name")
-    end
-    if url.match(/archiveofourown/)
-      doc = Nokogiri::HTML(self.raw_html)
-      self.update_attribute(:title, doc.at_xpath("//h2").children.text.strip)
     end
   end
 
@@ -558,7 +560,7 @@ private
 
   def remove_placeholders
     self.url = self.url == "URL" ? nil : self.url.try(:strip)
-    self.title = nil if self.title == "Title" && !self.url.match('archiveofourown')
+    self.title = nil if self.title == "Title" unless (self.url && self.url.match('archiveofourown'))
     self.notes = nil if self.notes == "Notes"
     self.base_url = nil if self.base_url == BASE_URL_PLACEHOLDER
     self.url_substitutions = nil if self.url_substitutions == URL_SUBSTITUTIONS_PLACEHOLDER
@@ -571,7 +573,26 @@ private
     Rails.logger.debug "initial fetch for #{self.id}"
     FileUtils.rm_rf(self.mypath) # make sure directory is clean during tests
     if !self.url.blank?
-      self.fetch
+      if self.url.match(/archiveofourown/) && !self.url.match(/chapter/)
+        doc = Nokogiri::HTML(fetch(self.url + "/navigate"))
+        chapter_list = doc.xpath("//ol//a")
+        if chapter_list.size == 1
+          self.fetch
+        else
+          count = 1
+          chapter_list.each do |element|
+            title = element.text
+            url = "http://archiveofourown.org" + element['href']
+            Page.create(:title => title, :url => url, :position => count, :parent_id => self.id)
+            count = count.next
+          end
+          doc = Nokogiri::HTML(fetch(self.url))
+          self.update_attribute(:title, doc.at_xpath("//h2").children.text.strip)
+          self.set_wordcount
+        end
+      else
+        self.fetch
+      end
     elsif !self.base_url.blank?
       count = 1
       match = self.url_substitutions.match("-")
