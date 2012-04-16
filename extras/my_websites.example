@@ -20,7 +20,7 @@ module MyWebsites
         url + "?format=light"
       end
     when /archiveofourown/
-      url + "?view_adult=true&view_full_work=true&style=light"
+      url + "?view_adult=true"
     when /wraithbait/
       url + "&chapter=all&action=printable"
       else url
