@@ -53,10 +53,11 @@ module MyWebsites
       body.at('div#storytext')
     when /archiveofourown/
       body.search(".landmark").each { |node| node.remove }
-      body.search("h2.title").each { |node| node.remove }
-      body.search("h3.byline").each { |node| node.remove }
-      body.search("p.series.footnote").each { |node| node.remove }
-      body.at('div#workskin')
+      if url.match(/chapter/)
+        body.at_xpath("//div[@class = 'userstuff module']")
+      else
+        body.at_xpath("//div[@id = 'chapters']")
+      end
     when /wraithbait/
       body.at('div.infobox').remove if body.at('div.infobox')
       body.search("div.toplink").each { |node| node.remove }

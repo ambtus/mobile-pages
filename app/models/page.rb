@@ -132,29 +132,41 @@ class Page < ActiveRecord::Base
     "#{self.id}-#{self.clean_title}"
   end
 
-  def fetch(working_url=self.url)
-    return if working_url.blank?
-    agent = Mechanize.new { |a| a.log = Logger.new("#{Rails.root}/log/mechanize.log") }
-    auth = MyWebsites.getpwd(working_url)
-    agent.auth(auth[:username], auth[:password]) if auth
+  def fetch
     begin
-      content = agent.get(MyWebsites.geturl(working_url))
-      if working_url.match(/livejournal/) && content.forms.first.try(:button).try(:name) == "adult_check"
-         form = content.forms.first
-         content = agent.submit(form, form.buttons.first)
-      end
-      html = content.body.force_encoding(agent.page.encoding)
-      self.raw_html = html if working_url == self.url
-      if working_url.match(/archiveofourown/) && title == "Title"
-        doc = Nokogiri::HTML(html)
-        self.update_attribute(:title, doc.at_xpath("//h2").children.text.strip)
-      end
-      return html
+      self.raw_html = Scrub.fetch(self.url)
     rescue Mechanize::ResponseCodeError
       self.errors.add(:base, "error retrieving content")
     rescue SocketError
       self.errors.add(:base, "couldn't resolve host name")
     end
+    self.get_ao3_meta if self.url.match(/archiveofourown/)
+  end
+
+  def get_ao3_meta
+    doc = Nokogiri::HTML(Scrub.fetch(self.url))
+    doc_title = doc.at_xpath("//h2[@class = 'title heading']").text.strip
+    self.title = doc_title if self.title == "Title"
+    doc_summary = doc.at_xpath("//div[@class = 'summary module']").text.gsub('Summary:','').strip  rescue ""
+    doc_notes = doc.at_xpath("//div[@class = 'notes module']").text.gsub('Notes:','').strip  rescue ""
+    doc_end_notes = doc.at_xpath("//div[@class = 'end notes module']").text.gsub('Notes:','').strip  rescue ""
+    unless self.parent # don't get authors for subparts
+      doc_author = doc.at_xpath("//h3[@class = 'byline heading']").text.strip
+      mp_author = Author.find_by_name(doc_author)
+      if mp_author
+        self.authors = [mp_author]
+        doc_author = ""
+      else
+        self.authors = []
+        doc_author = "by #{doc_author}"
+      end
+    end
+    if self.parent && !(self.position == 1) # don't put summary on part one - it's redundant
+      self.notes = [doc_summary, doc_notes, doc_end_notes].join("\n\n").strip
+    elsif !self.parent
+      self.notes = [doc_author, doc_summary, doc_notes, doc_end_notes].join("\n\n").strip
+    end
+    self.save
   end
 
   def parts_from_urls(url_title_list, refetch=false)
@@ -574,7 +586,7 @@ private
     FileUtils.rm_rf(self.mypath) # make sure directory is clean during tests
     if !self.url.blank?
       if self.url.match(/archiveofourown/) && !self.url.match(/chapter/)
-        doc = Nokogiri::HTML(fetch(self.url + "/navigate"))
+        doc = Nokogiri::HTML(Scrub.fetch(self.url + "/navigate"))
         chapter_list = doc.xpath("//ol//a")
         if chapter_list.size == 1
           self.fetch
@@ -586,10 +598,11 @@ private
             Page.create(:title => title, :url => url, :position => count, :parent_id => self.id)
             count = count.next
           end
-          doc = Nokogiri::HTML(fetch(self.url))
+          doc = Nokogiri::HTML(Scrub.fetch(self.url))
           self.update_attribute(:title, doc.at_xpath("//h2").children.text.strip)
           self.set_wordcount
         end
+        self.get_ao3_meta
       else
         self.fetch
       end

@@ -107,4 +107,18 @@ module Scrub
     nodeset.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
   end
 
+
+  def self.fetch(url)
+    return if url.blank?
+    agent = Mechanize.new { |a| a.log = Logger.new("#{Rails.root}/log/mechanize.log") }
+    auth = MyWebsites.getpwd(url)
+    agent.auth(auth[:username], auth[:password]) if auth
+    content = agent.get(MyWebsites.geturl(url))
+    if url.match(/livejournal/) && content.forms.first.try(:button).try(:name) == "adult_check"
+       form = content.forms.first
+       content = agent.submit(form, form.buttons.first)
+    end
+    return content.body.force_encoding(agent.page.encoding)
+  end
+
 end
