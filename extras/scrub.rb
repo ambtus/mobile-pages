@@ -114,7 +114,7 @@ module Scrub
     auth = MyWebsites.getpwd(url)
     agent.auth(auth[:username], auth[:password]) if auth
     content = agent.get(MyWebsites.geturl(url))
-    if url.match(/livejournal/) && content.forms.first.try(:button).try(:name) == "adult_check"
+    if content.forms.first.try(:button).try(:name) == "adult_check"
        form = content.forms.first
        content = agent.submit(form, form.buttons.first)
     end
