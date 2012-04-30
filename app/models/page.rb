@@ -152,7 +152,8 @@ class Page < ActiveRecord::Base
     doc_end_notes = doc.at_xpath("//div[@class = 'end notes module']").text.gsub('Notes:','').strip  rescue ""
     unless self.parent # don't get authors for subparts
       doc_author = doc.at_xpath("//h3[@class = 'byline heading']").text.strip
-      mp_author = Author.find_by_name(doc_author)
+      t = Author.arel_table
+      mp_author = Author.where(t[:name].matches("#{doc_author}%")).first
       if mp_author
         self.authors = [mp_author]
         doc_author = ""
