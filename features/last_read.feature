@@ -69,6 +69,7 @@ Feature: last_read (also unread)
    Then I should see "unread" within "#position_1"
 
   Scenario: filter on unread part
+    Given I have no pages
     Given the following pages
      | title  | last_read  | add_genre_string | url |
      | Filler | 2008-01-01 | one              | http://test.sidrasue.com/long.html |
@@ -85,6 +86,7 @@ Feature: last_read (also unread)
       And I fill in "add_parent" with "Parent"
       And I press "Update"
     Then I should see "Parent"
+      And I should not see "Parent with that title has content"
       And I should not see "unread" within ".last_read"
       And I should see "unread" within "#position_1"
       And I should see "short" within ".size"

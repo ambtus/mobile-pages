@@ -89,6 +89,7 @@ Feature: multi-part pages
      And I should see "stuff for part 3"
 
   Scenario: second layer heirarchy
+    Given I have no pages
     Given a page exists with title: "Parent", urls: "http://test.sidrasue.com/parts/2.html\nhttp://test.sidrasue.com/parts/3.html"
     And a page exists with title: "Single", url: "http://test.sidrasue.com/parts/1.html"
     When I am on the homepage
@@ -115,6 +116,7 @@ Feature: multi-part pages
       And I press "Update"
     Then I should see "Parent"
       And I should see "Single"
+      And I should not see "Parent with that title has content"
     When I follow "HTML" within ".title"
       # FIXME within bugs
     Then I should see "Grandparent"
@@ -257,7 +259,8 @@ Feature: multi-part pages
     When I follow "Manage Parts"
       And I fill in "add_parent" with "Ambiguous1"
       And I press "Update"
-    Then I should see "Page added to this parent"
+    Then I should not see "Parent with that title has content"
+      And I should see "Page added to this parent"
 
   Scenario: can't add a part to a page with content
     Given a page exists with title: "Styled", url: "http://test.sidrasue.com/styled.html"
@@ -271,6 +274,7 @@ Feature: multi-part pages
       And I should not see "Styled" within ".title"
 
   Scenario: add an existing page to an existing page with parts
+    Given I have no pages
     Given a page exists with title: "Single", url: "http://test.sidrasue.com/parts/3.html"
     And a page exists with title: "Multi", base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
     When I am on the homepage
@@ -280,16 +284,17 @@ Feature: multi-part pages
       And I follow "Manage Parts"
       And I fill in "add_parent" with "Multi"
       And I press "Update"
-    Then I should see "Part 1"
+    Then I should see "Page added to this parent"
+      And I should see "Part 1"
       And I should see "Part 2"
       And I should see "Single"
+    When I am on the homepage
+    Then I should see "Multi" within ".title"
+    But I should not see "Single"
     When I follow "HTML"
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
       And I should see "stuff for part 3"
-    When I am on the homepage
-    Then I should see "Multi" within ".title"
-    But I should not see "Single"
 
   Scenario: add a part to a page with content
     Given a page exists with title: "Single", url: "http://test.sidrasue.com/test.html"

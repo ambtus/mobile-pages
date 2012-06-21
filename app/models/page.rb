@@ -584,7 +584,7 @@ private
 
   def initial_fetch
     Rails.logger.debug "initial fetch for #{self.id}"
-    FileUtils.rm_rf(self.mypath) # make sure directory is clean during tests
+    self.raw_html = "" # make sure raw_html is blank during tests
     if !self.url.blank?
       if self.url.match(/archiveofourown/) && !self.url.match(/chapter/)
         doc = Nokogiri::HTML(Scrub.fetch(self.url + "/navigate"))
