@@ -112,7 +112,7 @@ module Scrub
     return if url.blank?
     agent = Mechanize.new { |a| a.log = Logger.new("#{Rails.root}/log/mechanize.log") }
     auth = MyWebsites.getpwd(url)
-    agent.auth(auth[:username], auth[:password]) if auth
+    agent.add_auth(url, auth[:username], auth[:password]) if auth
     content = agent.get(MyWebsites.geturl(url))
     if content.forms.first.try(:button).try(:name) == "adult_check"
        form = content.forms.first
