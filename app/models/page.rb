@@ -263,6 +263,7 @@ class Page < ActiveRecord::Base
       if part.parts.blank?
         line = part.url
         unless part.title.match(partregexp)
+          line = "" unless line
           line = line + "##" + part.title
         end
         list << line
