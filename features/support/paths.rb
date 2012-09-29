@@ -36,6 +36,9 @@ module NavigationHelpers
       raise "no page with that title" unless page
       page_path(page)
 
+    when /^the edit page for "(.*)"$/
+      edit_genre_path(Genre.find_by_name($1))
+
     else
       begin
         page_name =~ /the (.*) page/

@@ -1,0 +1,14 @@
+- content_for :title do
+  = "Edit genre: " + @genre.name
+.destroy
+  %p= link_to 'Destroy', genre_path(@genre, :destroy => true)
+%p.genre
+  = form_for @genre do |f|
+    = hinted_text_field_tag 'genre[name]', @genre.name, "Name"
+    .button= f.submit "Update"
+    %br
+    - unless Genre.names.blank?
+      = label_tag :merge, "Merge with:"
+      = select_tag :merge, options_for_select([nil] + Genre.names)
+      %br
+    .button= f.submit "Merge"

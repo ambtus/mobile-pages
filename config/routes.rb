@@ -5,7 +5,7 @@ MobilePages::Application.routes.draw do
   match '/files/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download'
 
   resources :authors, :only => ['show', 'create']
-  resources :genres, :only => ['show', 'create']
+  resources :genres
   resources :htmls, :only => ['edit']
   resources :notes, :only => ['edit']
   resources :pages

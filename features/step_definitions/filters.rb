@@ -17,3 +17,7 @@ Given /^the following genres?$/ do |table|
   # table is a Cucumber::Ast::Table
   table.hashes.each { |hash| Genre.create(hash) }
 end
+
+Then /^I should have no genres$/ do
+  assert Genre.count == 0
+end

@@ -1,0 +1,4 @@
+- @genres.each do |genre|
+  %p
+    = genre.name
+    = link_to 'edit', edit_genre_path(genre)
