@@ -24,6 +24,8 @@
     - unless Genre.names.blank?
       = label_tag :genre, "Genre:"
       = select_tag :genre, options_for_select([nil] + Genre.names, @genre.try(:name))
+      = check_box_tag :not, 1, params[:not]
+      = label_tag "not"
       %br
     - unless Author.names.blank?
       = label_tag :author, "Author:"

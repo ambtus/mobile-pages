@@ -97,7 +97,11 @@ class Page < ActiveRecord::Base
     [:title, :notes, :url].each do |attrib|
       pages = pages.search(attrib, params[attrib]) if params.has_key?(attrib)
     end
-    pages = pages.with_genre(params[:genre]) if params.has_key?(:genre)
+    if params.has_key?(:not)
+      pages = pages.without_genre(params[:genre]) if params.has_key?(:genre)
+    else
+      pages = pages.with_genre(params[:genre]) if params.has_key?(:genre)
+    end
     pages = pages.with_author(params[:author]) if params.has_key?(:author)
     # can only find parts by title, notes, url, unread, or last_created.
     unless params[:title] || params[:notes] || params[:url] ||
@@ -565,6 +569,11 @@ private
   def self.with_genre(string)
     joins(:genres).
     where("genres.name = ?", string)
+  end
+
+  def self.without_genre(string)
+    joins(:genres).
+    where("genres.name != ?", string)
   end
 
   def self.with_author(string)
