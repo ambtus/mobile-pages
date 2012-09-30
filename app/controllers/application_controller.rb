@@ -1,5 +1,16 @@
 class ApplicationController < ActionController::Base
-  http_basic_authenticate_with :name => MobilePages::Application.config.http_name, :password => MobilePages::Application.config.http_password
   protect_from_forgery
   layout 'application'
+  before_filter :authorize
+  private
+
+  def current_user
+    @current_user ||= User.find_by_auth_token( cookies[:auth_token]) if cookies[:auth_token]
+  end
+  def authorize
+    unless current_user
+      redirect_to :login
+      false
+    end
+  end
 end

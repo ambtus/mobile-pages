@@ -1,3 +1,6 @@
 Before do
-  page.driver.browser.authorize MobilePages::Application.config.http_name, MobilePages::Application.config.http_password
+  visit '/login'
+  fill_in 'Name', :with => 'tester'
+  fill_in 'Password', :with => 'secret'
+  click_button "Log in"
 end
