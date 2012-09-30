@@ -143,6 +143,33 @@ Feature: primarily genre tests
       And I press "Find"
     Then I should see "Alice in Wonderland"
       But I should not see "The Mysterious Affair at Styles"
-      #FIXME currently if there are two genres, it still finds it if one of them is not the chosen genre
-#      And I should not see "The Boxcar Children"
+      And I should not see "The Boxcar Children"
 
+  Scenario: find by two genres
+    Given the following pages
+      | title                            | add_genre_string  |
+      | The Mysterious Affair at Styles  | mystery           |
+      | Alice in Wonderland              | children          |
+      | The Boxcar Children              | mystery, children |
+    When I am on the homepage
+      And I select "mystery" from "Genre"
+      And I select "children" from "Genre2"
+      And I press "Find"
+    Then I should see "The Boxcar Children"
+      But I should not see "The Mysterious Affair at Styles"
+      And I should not see "Alice in Wonderland"
+
+  Scenario: find by two genres and a not
+    Given the following pages
+      | title                            | add_genre_string  |
+      | The Mysterious Affair at Styles  | mystery           |
+      | Alice in Wonderland              | children          |
+      | The Boxcar Children              | mystery, children |
+    When I am on the homepage
+      And I select "mystery" from "Genre"
+      And I check "Not"
+      And I select "children" from "Genre2"
+      And I press "Find"
+    Then I should see "Alice in Wonderland"
+      And I should not see "The Mysterious Affair at Styles"
+      And I should not see "The Boxcar Children"

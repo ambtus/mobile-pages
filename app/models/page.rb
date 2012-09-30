@@ -70,6 +70,14 @@ class Page < ActiveRecord::Base
 
   after_create :initial_fetch
 
+  def self.update_genre_strings
+     Page.find_each { |page| page.update_genre_string }
+  end
+
+  def update_genre_string
+    self.update_attribute(:cached_genre_string, self.genre_string)
+  end
+
   def self.last_created
     self.order('created_at ASC').last
   end
@@ -100,8 +108,9 @@ class Page < ActiveRecord::Base
     if params.has_key?(:not)
       pages = pages.without_genre(params[:genre]) if params.has_key?(:genre)
     else
-      pages = pages.with_genre(params[:genre]) if params.has_key?(:genre)
+      pages = pages.search(:cached_genre_string, params[:genre]) if params.has_key?(:genre)
     end
+    pages = pages.search(:cached_genre_string, params[:genre2]) if params.has_key?(:genre2)
     pages = pages.with_author(params[:author]) if params.has_key?(:author)
     # can only find parts by title, notes, url, unread, or last_created.
     unless params[:title] || params[:notes] || params[:url] ||
@@ -378,6 +387,7 @@ class Page < ActiveRecord::Base
       new = Genre.find_or_create_by_name(genre.squish)
       self.genres << new
     end
+    self.cached_genre_string = genre_string
     self.genres
   end
 
@@ -566,14 +576,9 @@ private
     where("pages.#{symbol.to_s} LIKE ?",query)
   end
 
-  def self.with_genre(string)
-    joins(:genres).
-    where("genres.name = ?", string)
-  end
-
   def self.without_genre(string)
-    joins(:genres).
-    where("genres.name != ?", string)
+    query = "%#{string}%"
+    where("pages.cached_genre_string NOT LIKE ?",query)
   end
 
   def self.with_author(string)

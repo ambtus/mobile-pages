@@ -47,6 +47,7 @@ class GenresController < ApplicationController
     elsif params[:commit] == "Add Genres"
       @page.add_genre_string = params[:genres]
     end
+    @page.update_genre_string
     redirect_to page_path(@page)
   end
   def destroy

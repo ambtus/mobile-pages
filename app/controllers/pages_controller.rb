@@ -12,6 +12,7 @@ class PagesController < ApplicationController
     @favorite = params[:favorite] || "any"
     @genres = Genre.all.map(&:name)
     @genre = Genre.find_by_name(params[:genre]) if params[:genre]
+    @genre2 = Genre.find_by_name(params[:genre2]) if params[:genre2]
     @authors = Author.all.map(&:name)
     @author = Author.find_by_name(params[:author]) if params[:author]
     @pages = Page.filter(params)
@@ -27,6 +28,7 @@ class PagesController < ApplicationController
       build_route = {:action => "index" , :controller => "pages"}
       build_route[:author] = params[:author] unless params[:author].blank?
       build_route[:genre] = params[:genre] unless params[:genre].blank?
+      build_route[:genre2] = params[:genre2] unless params[:genre2].blank?
       build_route[:not] = params[:not] unless params[:not].blank?
       build_route[:sort_by] = params[:sort_by] unless (params[:sort_by].blank? || params[:sort_by] == "read_after")
       build_route[:size] = params[:size] unless (params[:size].blank? || params[:size] == "any")

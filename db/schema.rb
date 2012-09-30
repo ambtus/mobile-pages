@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120314235504) do
+ActiveRecord::Schema.define(:version => 20120929215950) do
 
   create_table "authors", :force => true do |t|
     t.string "name"
@@ -47,9 +47,10 @@ ActiveRecord::Schema.define(:version => 20120314235504) do
     t.datetime "updated_at"
     t.integer  "wordcount"
     t.string   "size"
-    t.integer  "favorite",           :limit => 2, :default => 0
+    t.integer  "favorite",            :limit => 2, :default => 0
     t.integer  "ultimate_parent_id"
-    t.integer  "sanitize_version",   :limit => 2, :default => 1, :null => false
+    t.integer  "sanitize_version",    :limit => 2, :default => 1,  :null => false
+    t.string   "cached_genre_string",              :default => "", :null => false
   end
 
   add_index "pages", ["favorite"], :name => "index_pages_on_favorite"

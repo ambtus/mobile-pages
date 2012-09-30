@@ -22,10 +22,12 @@
         = label_tag "size_#{choice}", choice
       %br
     - unless Genre.names.blank?
+      = label_tag "not"
+      = check_box_tag :not, 1, params[:not]
       = label_tag :genre, "Genre:"
       = select_tag :genre, options_for_select([nil] + Genre.names, @genre.try(:name))
-      = check_box_tag :not, 1, params[:not]
-      = label_tag "not"
+      = label_tag :genre2, "Genre2:"
+      = select_tag :genre2, options_for_select([nil] + Genre.names, @genre2.try(:name))
       %br
     - unless Author.names.blank?
       = label_tag :author, "Author:"
