@@ -285,6 +285,7 @@ class Page < ActiveRecord::Base
         part.parts.each do |subpart|
           line = subpart.url
           unless subpart.title.match(partregexp)
+            line = "" unless line
             line = line + "###" + subpart.title
           end
           list << line
