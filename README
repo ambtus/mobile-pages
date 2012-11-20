@@ -32,6 +32,12 @@ cp config/initializers/auth.example config/initializers/auth.rb
 
 edit files
 
+create user:
+
+rails db production
+
+User.create(name: 'tester', password: 'secret')
+
 === optional configuration
 
 edit public/stylesheets/application.css
