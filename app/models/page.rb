@@ -112,9 +112,11 @@ class Page < ActiveRecord::Base
     end
     pages = pages.search(:cached_genre_string, params[:genre2]) if params.has_key?(:genre2)
     pages = pages.with_author(params[:author]) if params.has_key?(:author)
-    # can only find parts by title, notes, url, unread, or last_created.
+    # can only find parts by title, notes, url, last_created.
     unless params[:title] || params[:notes] || params[:url] ||
-           params[:unread] == "yes" || params[:sort_by] == "last_created"
+           #no on unread parts. leaving it here in case I change my mind
+           #params[:unread] == "yes" || 
+           params[:sort_by] == "last_created"
       # all other searches find parents only
       pages = pages.where(:parent_id => nil)
     end
@@ -126,6 +128,8 @@ class Page < ActiveRecord::Base
           # unless I'm deliberately looking for unreads
           # when I want random fics I don't want really recent read ones
           pages = pages.where('pages.last_read < ?', 1.year.ago)
+          # and I don't want okay ones
+          pages = pages.where('pages.favorite != ?', 3)
         end
         pages.order('RAND()')
       when "last_created"
