@@ -68,7 +68,7 @@ Feature: last_read (also unread)
    Then I should see "Parent" within "#position_1"
    Then I should see "unread" within "#position_1"
 
-  Scenario: filter on unread part
+  Scenario: unread part
     Given I have no pages
     Given the following pages
      | title  | last_read  | add_genre_string | url |
@@ -97,7 +97,8 @@ Feature: last_read (also unread)
     Then I should see "Filler" within ".title"
     When I choose "unread_yes"
       And I press "Find"
-    Then I should see "Parent" within ".parent"
+      # no longer find unread parts...
+    Then I should not see "Parent"
     When I fill in "page_url" with "http://test.sidrasue.com/long2.html"
       And I fill in "page_title" with "Child2"
       And I select "one" from "Genre"
