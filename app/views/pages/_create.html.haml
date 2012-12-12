@@ -16,6 +16,11 @@
         = radio_button_tag :favorite, choice, @favorite == choice
         = label_tag "favorite_#{choice}", choice
       %br
+      = label_tag :avoid, "Avoid:"
+      - ['stressful', 'boring', 'both', 'none']. each do |choice|
+        = radio_button_tag :avoid, choice, @avoid == choice
+        = label_tag "avoid_#{choice}", choice
+      %br
       = label_tag :size, "Size:"
       - ['short', 'medium', 'long', 'either', 'any'].each do |choice|
         = radio_button_tag :size, choice, @size == choice

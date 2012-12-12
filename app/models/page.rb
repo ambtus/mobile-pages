@@ -19,6 +19,8 @@ class Page < ActiveRecord::Base
   UNREAD = "unread"
   FAVORITE = "favorite"
   GOOD = "good"
+  STRESSFUL = "stressful"
+  BORING = "boring"
 
   SIZES = ["short", "medium", "long", "any"]
 
@@ -92,12 +94,14 @@ class Page < ActiveRecord::Base
   def self.filter(params={})
     pages = Page.scoped
     pages = pages.where(:last_read => nil) if params[:unread] == "yes"
-    pages = pages.where('pages.last_read is not null') if params[:unread] == "no" || params[:sort_by] == "last_read"
-    pages = pages.where(:favorite => 1) if params[:favorite] == "yes"
-    pages = pages.where(:favorite => [0,2,3,9]) if params[:favorite] == "no"
+    pages = pages.where('pages.last_read is not null') if params[:unread] == "no" || params[:sort_by] == "last_read" || params[:favorite] == "yes"
+    pages = pages.where(:favorite => [0,1]) if params[:favorite] == "yes"
+    pages = pages.where(:favorite => [2,3,4,5,6,9]) if params[:favorite] == "no"
     pages = pages.where(:favorite => 2) if params[:favorite] == "good"
     pages = pages.where(:favorite => 9) if params[:favorite] == "reading"
-    pages = pages.where(:favorite => [1,2]) if params[:favorite] == "either"
+    pages = pages.where(:favorite => [0,1,2]) if params[:favorite] == "either"
+    pages = pages.where(:nice => [nil,0,1]) if params[:avoid] == "stressful" || params[:avoid] == "both"
+    pages = pages.where(:interesting => [nil,0,1]) if params[:avoid] == "boring" || params[:avoid] == "both"
     pages = pages.where(:size => "short") if params[:size] == "short"
     pages = pages.where(:size => "medium") if params[:size] == "medium"
     pages = pages.where(:size => "long") if params[:size] == "long"
@@ -115,7 +119,7 @@ class Page < ActiveRecord::Base
     # can only find parts by title, notes, url, last_created.
     unless params[:title] || params[:notes] || params[:url] ||
            #no on unread parts. leaving it here in case I change my mind
-           #params[:unread] == "yes" || 
+           #params[:unread] == "yes" ||
            params[:sort_by] == "last_created"
       # all other searches find parents only
       pages = pages.where(:parent_id => nil)
@@ -350,23 +354,21 @@ class Page < ActiveRecord::Base
     return self
   end
 
-  def update_rating(string, update_favorite=true)
+  def update_rating(interesting_string, nice_string, update_children=true)
     self.last_read = Time.now
-    self.favorite = case string
-      when "1"
-        1
-      when "2"
-        2
-      when "3"
-        3
-      else
-        0
-    end if update_favorite
-    self.read_after = Time.now + string.to_i.send(DURATION)
+    self.interesting = interesting_string.to_i
+    self.nice = nice_string.to_i
+    rating = interesting + nice
+    self.favorite = rating
+    if rating == 0
+      self.read_after = Time.now + 6.months
+    else
+      self.read_after = Time.now + rating.send(DURATION)
+    end
     self.save
-    self.parent.update_rating(string, false) if self.parent
-    self.parts.each {|p| p.update_rating(string, true)} if update_favorite
-    return self.read_after
+    self.parent.update_rating(interesting_string, nice_string, false) if self.parent
+    self.parts.each {|p| p.update_rating(interesting_string, nice_string, true)} if update_children
+    return rating
   end
 
   def author_string
@@ -396,9 +398,14 @@ class Page < ActiveRecord::Base
     self.genres
   end
 
-  def tag_names(include_date = true)
-    names = self.authors.map(&:name) + self.genres.map(&:name) + [self.size]
-    names = names + case self.favorite
+  def favorite_names
+    names = case self.favorite
+      when 0
+        if self.last_read
+          [FAVORITE]
+        else
+          []
+        end
       when 1
         [FAVORITE]
       when 2
@@ -410,7 +417,15 @@ class Page < ActiveRecord::Base
       else
         []
     end
+    names = names + [STRESSFUL] if nice == 3
+    names = names + [BORING] if interesting == 3
+    names.compact
+  end
+
+  def tag_names(include_date = true)
+    names = self.authors.map(&:name) + self.genres.map(&:name) + [self.size]
     names = names + [(self.last_read ? self.last_read.to_date : UNREAD)] if include_date
+    names = names + favorite_names
     names.compact
   end
 
@@ -420,6 +435,10 @@ class Page < ActiveRecord::Base
       mine = mine - self.parent.tag_names
     end
     mine.join(", ")
+  end
+
+  def favorite_string
+    self.favorite_names.join(", ")
   end
 
   def download_tag_string

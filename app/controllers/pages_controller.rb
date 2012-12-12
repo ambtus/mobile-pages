@@ -10,6 +10,7 @@ class PagesController < ApplicationController
     @size = params[:size] || "any"
     @unread = params[:unread] || "either"
     @favorite = params[:favorite] || "any"
+    @avoid = params[:avoid] || "none"
     @genres = Genre.all.map(&:name)
     @genre = Genre.find_by_name(params[:genre]) if params[:genre]
     @genre2 = Genre.find_by_name(params[:genre2]) if params[:genre2]
@@ -33,6 +34,7 @@ class PagesController < ApplicationController
       build_route[:sort_by] = params[:sort_by] unless (params[:sort_by].blank? || params[:sort_by] == "read_after")
       build_route[:size] = params[:size] unless (params[:size].blank? || params[:size] == "any")
       build_route[:favorite] = params[:favorite] unless (params[:favorite].blank? || params[:favorite] == "any")
+      build_route[:avoid] = params[:avoid] unless (params[:avoid].blank? || params[:avoid] == "none")
       build_route[:unread] = params[:unread] unless (params[:unread].blank? || params[:unread] == "either")
       if params[:page]
         build_route[:title] = params[:page][:title] unless params[:page][:title] == "Title"
@@ -46,6 +48,7 @@ class PagesController < ApplicationController
     @genre = Genre.find_by_name(params[:genre])
     @author = Author.find_by_name(params[:author])
     @favorite = params[:favorite]
+    @avoid = params[:avoid]
     if @page.save
       if !@page.errors[:base].blank?
         @errors = @page.errors
@@ -73,7 +76,6 @@ class PagesController < ApplicationController
   def update
     @page = Page.find(params[:id])
     @page = @page.make_first if (params[:commit] == "Read First")
-    @page = @page.make_reading if (params[:commit] == "Reading")
     @page.remove_outdated_downloads if (params[:commit] == "Remove Downloads")
     case params[:commit]
       when "Rebuild from Raw HTML"

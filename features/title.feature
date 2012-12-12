@@ -87,7 +87,9 @@ Feature: stuff to do with titles
        And I should see "page 15"
      But I should not see "page 16"
      When I follow "Rate" within "#position_1"
-       And I press "1"
+      And I choose "very interesting"
+      And I choose "very sweet"
+     And I press "Rate"
      When I am on the homepage
      Then I should see "page 16"
        And I should see "page 2"

@@ -5,7 +5,9 @@ Feature: last_read (also unread)
     When I am on the page's page
     Then I should not see ".last_read"
     When I follow "Rate"
-      And I press "5"
+      And I choose "dull"
+      And I choose "upsetting"
+    And I press "Rate"
     # FIXME - this will change every year - test will need updating
     Then I should see "2012" within ".last_read"
 
@@ -14,7 +16,9 @@ Feature: last_read (also unread)
     When I am on the page's page
     Then I should see "2008-01-01" within ".last_read"
     When I follow "Rate"
-      And I press "5"
+      And I choose "dull"
+      And I choose "upsetting"
+    And I press "Rate"
     Then I should not see "2008-01-01" within ".last_read"
     # FIXME - this will change every year - test will need updating
       And I should see "2012" within ".last_read"
@@ -25,7 +29,9 @@ Feature: last_read (also unread)
    Then I should see "Multi" within "#position_1"
    Then I should see "unread" within ".last_read"
    When I follow "Rate"
-     And I press "1"
+      And I choose "very interesting"
+      And I choose "easy"
+    And I press "Rate"
    Then I should not see "unread" within ".last_read"
    When I follow "Multi"
      And I follow "Manage Parts"
@@ -129,3 +135,27 @@ Feature: last_read (also unread)
       And I should see "Single" within "#position_1"
       And I should see "2008-01-01" within ".last_read"
 
+   Scenario: rate a part marks parent read but not siblings
+    Given a titled page exists with base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2 3"
+   When I am on the page's page
+   Then I should see "unread" within ".last_read"
+   When I follow "Part 1" within "#position_1"
+     And I follow "Rate"
+      And I choose "very interesting"
+      And I choose "very sweet"
+     And I press "Rate"
+   When I am on the page's page
+   Then I should not see "unread" within ".last_read"
+     And I should not see "unread" within "#position_1"
+     But I should see "unread" within "#position_2"
+     And I should see "unread" within "#position_3"
+  When I follow "Part 2" within "#position_2"
+     And I follow "Rate"
+      And I choose "good"
+      And I choose "easy"
+     And I press "Rate"
+   When I am on the page's page
+   Then I should not see "unread" within ".last_read"
+     And I should not see "unread" within "#position_1"
+     And I should not see "unread" within "#position_2"
+     But I should see "unread" within "#position_3"

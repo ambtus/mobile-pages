@@ -16,6 +16,16 @@ Given /^the following pages?$/ do |table|
   end
 end
 
+Given /^pages with all possible ratings exist$/ do
+  Page.delete_all
+  4.times do |interesting|
+    4.times do |nice|
+      p = Page.create(:title => "page" + interesting.to_s + nice.to_s)
+      p.update_rating(interesting.to_s, nice.to_s)
+    end
+  end
+end
+
 And /^the pages?$/ do |table|
   # table is a Cucumber::Ast::Table
   table.hashes.each { |h| Page.create(h) }

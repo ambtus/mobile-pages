@@ -378,7 +378,9 @@ Feature: multi-part pages
       And I should see "Parent3" within "#position_3"
     When I am on the homepage
       And I follow "Rate"
-      And I press "1"
+      And I choose "very interesting"
+      And I choose "easy"
+    And I press "Rate"
    When I am on the homepage
       And I follow "Grandparent" within "#position_1"
       And I follow "Parent2" within "#position_2"

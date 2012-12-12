@@ -1,15 +1,7 @@
 .genres= page.genre_string
 .authors= page.author_string
 .favorite
-  - case page.favorite
-    - when 1
-      = "favorite"
-    - when 2
-      = "good"
-    - when 3
-      = "okay"
-    - when 9
-      = "reading"
+  = page.favorite_string
 .size= "#{page.size} (#{page.wordcount})"
 .last_read
   - if page.last_read

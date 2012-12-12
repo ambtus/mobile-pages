@@ -52,11 +52,13 @@ Feature: tests that don't fit neatly into another feature
       | title                            | add_author_string        | add_genre_string  | favorite | last_read  |
       | The Mysterious Affair at Styles  | agatha christie          | mystery           | 1        | 2009-01-01 |
       | Nancy Drew                       | Carolyn Keene            | mystery, children | 3        | 2009-02-01 |
-      | The Boxcar Children              | Gertrude Chandler Warner | mystery, children | 1        |            |
+      | The Boxcar Children              | Gertrude Chandler Warner | mystery, children |          |            |
+      | Harry Potter                     | rowling                  | mystery, children | 1        | 2010-01-01 |
       | Murder on the Orient Express     | agatha christie          | mystery           | 0        |            |
       | Another Mystery                  | agatha christie          | mystery           | 2        | 2009-01-02 |
       | Yet Another Mystery              | agatha christie          | mystery           | 0        | 2009-01-03 |
       | Still More Mysteries             | agatha christie          | mystery, short stories | 0   | 2009-01-04 |
+    # Find all by author
     When I am on the homepage
       And I select "agatha christie" from "Author"
       And I select "mystery" from "Genre"
@@ -69,6 +71,7 @@ Feature: tests that don't fit neatly into another feature
       And I should not have a "#position_6" field
       And I should not see "Nancy Drew"
       And I should not see "The Boxcar Children"
+    # find unread by genre
     When I am on the homepage
       And I select "children" from "Genre"
       And I choose "unread_yes"
@@ -77,6 +80,7 @@ Feature: tests that don't fit neatly into another feature
       And I should not see "Nancy Drew"
       And I should not see "The Mysterious Affair at Styles"
       And I should not see "Murder on the Orient Express"
+    # find unread by author
     When I am on the homepage
     When I choose "unread_yes"
       And I select "agatha christie" from "Author"
@@ -85,14 +89,17 @@ Feature: tests that don't fit neatly into another feature
       And I should not see "The Mysterious Affair at Styles"
       And I should not see "Nancy Drew"
       And I should not see "The Boxcar Children"
+    # find favorite by genre
     When I am on the homepage
       And I select "children" from "Genre"
       And I choose "favorite_yes"
       And I press "Find"
-    Then I should see "The Boxcar Children"
+    Then I should see "Harry Potter"
+      And I should not see "The Boxcar Children"
       And I should not see "Nancy Drew"
       And I should not see "The Mysterious Affair at Styles"
       And I should not see "Murder on the Orient Express"
+    # find favorite by author
     When I am on the homepage
     When I choose "favorite_yes"
       And I select "agatha christie" from "Author"
@@ -101,13 +108,15 @@ Feature: tests that don't fit neatly into another feature
       And I should not see "Murder on the Orient Express"
       And I should not see "Nancy Drew"
       And I should not see "The Boxcar Children"
+    # find not unread
     When I am on the homepage
     When I choose "unread_no"
       And I press "Find"
     Then I should not see "Murder on the Orient Express"
-      And I should see "The Mysterious Affair at Styles"
-      And I should see "Nancy Drew"
       And I should not see "The Boxcar Children"
+      But I should see "The Mysterious Affair at Styles"
+      And I should see "Nancy Drew"
+    # find not unread by author
     When I am on the homepage
     When I choose "unread_no"
       And I select "agatha christie" from "Author"
@@ -116,6 +125,7 @@ Feature: tests that don't fit neatly into another feature
       And I should see "The Mysterious Affair at Styles"
       And I should not see "Nancy Drew"
       And I should not see "The Boxcar Children"
+    # find favorite by author
     When I am on the homepage
       And I select "agatha christie" from "Author"
       And I choose "favorite_good"
@@ -181,7 +191,9 @@ Feature: tests that don't fit neatly into another feature
     When I am on the page's page
       And I follow "Part 2" within "#position_2"
       And I follow "Rate"
-      And I press "2"
+      And I choose "dull"
+      And I choose "very sweet"
+    And I press "Rate"
    When I am on the page's page
 # FIXME - year will change every year
    Then I should see "2012-" within ".last_read"

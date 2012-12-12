@@ -6,9 +6,17 @@
 .form
   = form_tag :rates do
     = hidden_field_tag(:page_id, @page.id)
-    .button= submit_tag "1"
-    .button= submit_tag "2"
-    .button= submit_tag "3"
-    .button= submit_tag "4"
-    .button= submit_tag "5"
-    .button= submit_tag "20"
+    = label_tag :interesting, "How engrossing was it?"
+    - ['very interesting', 'good', 'dull', 'very boring'].each_with_index do |choice, index|
+      %br
+      = radio_button_tag :interesting, index
+      = label_tag "interesting_#{index}", choice
+    %br
+    = label_tag :nice, "How easy was it to read?"
+    - ['very sweet', 'easy', 'upsetting', 'very stressful'].each_with_index do |choice, index|
+      %br
+      = radio_button_tag :nice, index
+      = label_tag "nice_#{index}", choice
+
+    .button= submit_tag "Rate"
+    .button= submit_tag "Rate reading"
