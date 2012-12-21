@@ -7,7 +7,7 @@
   = form_tag :rates do
     = hidden_field_tag(:page_id, @page.id)
     = label_tag :interesting, "How engrossing was it?"
-    - ['very interesting', 'good', 'dull', 'very boring'].each_with_index do |choice, index|
+    - ['very interesting', 'good', 'dull or confusing', 'very boring'].each_with_index do |choice, index|
       %br
       = radio_button_tag :interesting, index
       = label_tag "interesting_#{index}", choice
