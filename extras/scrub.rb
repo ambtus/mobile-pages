@@ -30,6 +30,7 @@ module Scrub
                    [ 'â€˜', '‘'],
                    [ 'â€™', '’'],
                    [ 'â€', '”'],
+                   [ ' ', ' '],
                    ]
     replacements.each do |replace|
       html = html.gsub(replace.first, replace.last)
@@ -70,6 +71,9 @@ module Scrub
     # extra breaks inside paragraphs
     html.gsub!(/<p><br ?\/?>/, "<p>")
     html.gsub!(/<br ?\/?><\/p>/, "</p>")
+    # extra breaks inside divs
+    html.gsub!(/<div><br ?\/?>/, "<div>")
+    html.gsub!(/<br ?\/?><\/div>/, "</div>")
     # more than two breaks are probably a section
     html.gsub!(/(<br ?\/?>){3,}/, '<hr />')
     # when sections are taken care of, multiple breaks are a paragraph
@@ -77,7 +81,9 @@ module Scrub
     # multiple empty paragraphs are probably a section
     html.gsub!(/(<p><\/p>){2,}/, '<hr />')
     # remove empty paragraphs
-    html.gsub!(/(<p><\/p>)/, "")
+    html.gsub!(/<p>\s*<\/p>/, "")
+    # remove empty divs
+    html.gsub!(/<div>\s*<\/div>/, "")
     # remove stray paragraphs around sections
     html.gsub!(/<p><hr \/>/, '<hr />')
     html.gsub!(/<hr \/><\/p>/, '<hr />')
@@ -94,17 +100,20 @@ module Scrub
   end
 
   def self.remove_surrounding(html)
-    return html unless html.is_a? String
-    doc = Nokogiri::HTML(html)
-    body = doc.xpath('//body').first
-    nodeset = body.children
-    while nodeset.size == 1 && nodeset.first.is_a?(Nokogiri::XML::Element)
-      nodeset = nodeset.first.children
-      nodeset.each do |top_node|
-        nodeset.delete(top_node) if (top_node.is_a?(Nokogiri::XML::Text) && top_node.blank?)
+    if html.is_a?(String) && !html.empty?
+      doc = Nokogiri::HTML(html)
+      body = doc.xpath('//body').first
+      nodeset = body.children
+      while nodeset.size == 1 && nodeset.first.is_a?(Nokogiri::XML::Element)
+        nodeset = nodeset.first.children
+        nodeset.each do |top_node|
+          nodeset.delete(top_node) if (top_node.is_a?(Nokogiri::XML::Text) && top_node.blank?)
+        end
       end
+      nodeset.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
+    else
+     ""
     end
-    nodeset.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
   end
 
 

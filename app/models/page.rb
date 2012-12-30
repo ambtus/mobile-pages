@@ -98,7 +98,7 @@ class Page < ActiveRecord::Base
   def self.filter(params={})
     pages = Page.scoped
     pages = pages.where(:last_read => nil) if params[:unread] == "yes"
-    pages = pages.where('pages.last_read is not null') if params[:unread] == "no" || params[:sort_by] == "last_read" || params[:favorite] == "yes"
+    pages = pages.where('pages.last_read is not null') if params[:unread] == "no" || params[:sort_by] == "last_read" || params[:favorite] == "yes" || params[:favorite] == "either"
     pages = pages.where(:favorite => [0,1]) if params[:favorite] == "yes"
     pages = pages.where(:favorite => [2,3,4,5,6,9]) if params[:favorite] == "no"
     pages = pages.where(:favorite => 2) if params[:favorite] == "good"
@@ -390,6 +390,7 @@ class Page < ActiveRecord::Base
       Rails.logger.debug "caching genres for #{self.id}"
       self.update_attribute(:cached_genre_string, genre_string)
     end
+    genre_string
   end
 
   def add_genres_from_string=(string)
@@ -555,9 +556,10 @@ class Page < ActiveRecord::Base
   def short_notes
     return self.notes if self.notes.blank?
     return self.notes if self.notes.size < MININOTE
-    snip_idx = self.notes.index(/\s/, MININOTE)
-    return self.notes unless snip_idx
-    self.notes[0, snip_idx] + "..."
+    short = self.notes.gsub(%r{</?[^>]+?>}, '')
+    snip_idx = short.index(/\s/, MININOTE)
+    return short unless snip_idx
+    short[0, snip_idx] + "..."
   end
 
 
@@ -612,14 +614,14 @@ class Page < ActiveRecord::Base
 
   def add_author(string)
     return if string.blank?
-    t = Author.arel_table
-    mp_author = Author.where(t[:name].matches("#{string}%")).first
-    if mp_author
-      self.authors = [mp_author]
+    mp_authors = Author.where('name like ?', "%#{string}%")
+    if mp_authors && mp_authors.size == 1
+      self.authors << mp_authors.first
     else
       byline = "by #{string}"
       self.notes = self.notes ? [byline,notes].join("\n\n") : byline
       self.update_attribute(:notes, self.notes) unless self.new_record?
+      self.notes
     end
   end
 
