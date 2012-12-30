@@ -46,6 +46,7 @@ class PagesController < ApplicationController
     end
     @page = Page.new(params[:page])
     @genre = Genre.find_by_name(params[:genre])
+    @genre2 = Genre.find_by_name(params[:genre2])
     @author = Author.find_by_name(params[:author])
     @favorite = params[:favorite]
     @avoid = params[:avoid]
@@ -63,7 +64,9 @@ class PagesController < ApplicationController
           redirect_to genre_path(@page) and return
         else
           flash[:notice] = "Page created."
-          @page.genres << @genre
+          @page.genres << @genre if @genre
+          @page.genres << @genre2 if @genre2
+          @page.cache_genres
           redirect_to page_path(@page) and return
         end
       end

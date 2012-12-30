@@ -31,7 +31,7 @@ class GenresController < ApplicationController
         render :edit and return
       end
       new_genre.pages << @genre.pages
-      @genre.destroy
+      @genre.destroy_me
       redirect_to :root
     elsif @genre.update_attributes(params[:genre])
       redirect_to :root
@@ -44,15 +44,15 @@ class GenresController < ApplicationController
     if params[:commit] == "Update Genres"
       genre_ids = params[:page][:genre_ids] if params[:page]
       @page.genre_ids = genre_ids
+      @page.cache_genres
     elsif params[:commit] == "Add Genres"
-      @page.add_genre_string = params[:genres]
+      @page.add_genres_from_string = params[:genres]
     end
-    @page.update_genre_string
     redirect_to page_path(@page)
   end
   def destroy
     @genre = Genre.find(params[:id])
-    @genre.destroy
+    @genre.destroy_me
     redirect_to :root
   end
 end

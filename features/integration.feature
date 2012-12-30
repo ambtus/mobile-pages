@@ -1,5 +1,18 @@
 Feature: tests that don't fit neatly into another feature
 
+  Scenario: create a page with two genres
+    Given a genre exists with name: "genre1"
+      And a genre exists with name: "genre2"
+    When I am on the homepage
+      And I fill in "page_title" with "Testme"
+     And I select "genre1" from "Genre"
+     And I select "genre2" from "Genre2"
+      And I press "Store"
+   Then I should see "Page created" within "#flash_notice"
+     And I should see "Testme" within ".title"
+     And I should see "genre1" within ".genres"
+     And I should see "genre2" within ".genres"
+
   Scenario: create a page from a single url with author and notes
     Given a genre exists with name: "mygenre"
     Given an author exists with name: "myauthor"
@@ -49,7 +62,7 @@ Feature: tests that don't fit neatly into another feature
 
   Scenario: filter on mix of author, genre, and state
     Given the following pages
-      | title                            | add_author_string        | add_genre_string  | favorite | last_read  |
+      | title                            | add_author_string        | add_genres_from_string        | favorite | last_read  |
       | The Mysterious Affair at Styles  | agatha christie          | mystery           | 1        | 2009-01-01 |
       | Nancy Drew                       | Carolyn Keene            | mystery, children | 3        | 2009-02-01 |
       | The Boxcar Children              | Gertrude Chandler Warner | mystery, children |          |            |

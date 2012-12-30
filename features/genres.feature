@@ -53,7 +53,7 @@ Feature: primarily genre tests
     Then I should see "fantasy" within ".genres"
 
   Scenario: add a genre to a page which has genres
-    Given a titled page exists with add_genre_string: "classic"
+    Given a titled page exists with add_genres_from_string: "classic"
     When I am on the page's page
     Then I should see "classic" within ".genres"
     When I follow "Genres"
@@ -67,7 +67,7 @@ Feature: primarily genre tests
       And I select "children's" from "Genre"
 
   Scenario: new parent for an existing page should have genre
-    Given a titled page exists with add_genre_string: "genre"
+    Given a titled page exists with add_genres_from_string: "genre"
     When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
@@ -96,31 +96,33 @@ Feature: primarily genre tests
       And I select "Fantasy" from "Genre"
 
   Scenario: delete a genre
-    Given a genre exists with name: "fantasy"
+    Given a genre exists with name: "science fiction"
+      And a titled page exists with add_genres_from_string: "science fiction"
     When I am on the genre's edit page
     And I follow "Destroy"
-    Then I should see "has 0 pages"
     When I press "Yes"
     Then I should have no genres
+    When I am on the homepage
+      Then I should not see "science fiction"
 
   Scenario: merge two genres
-    Given a titled page exists with add_genre_string: "fantasy"
-      And a titled page exists with add_genre_string: "science fiction"
-    When I go to the edit page for "science fiction"
-      And I follow "Destroy"
-    Then I should see "has 1 pages"
-    When I go to the edit page for "fantasy"
-      And I select "science fiction" from "merge"
+    Given a genre exists with name: "better name"
+      And a titled page exists with add_genres_from_string: "bad name"
+    When I go to the edit page for "bad name"
+      And I select "better name" from "merge"
       And I press "Merge"
-    Then I should see "science fiction"
-      And I should not see "fantasy"
-    When I go to the edit page for "science fiction"
-      And I follow "Destroy"
-    Then I should see "has 2 pages"
+    Then I should see "better name"
+      And I should not see "bad name"
+    When I am on the homepage
+      Then I should see "better name" within ".genres"
+      And I should not see "bad name" within ".genres"
+    When I select "better name" from "Genre"
+      And I press "Find"
+    Then I should not see "No pages found"
 
   Scenario: find by genre
     Given the following pages
-      | title                            | add_genre_string  |
+      | title                            | add_genres_from_string  |
       | The Mysterious Affair at Styles  | mystery           |
       | Alice in Wonderland              | children          |
       | The Boxcar Children              | mystery, children |
@@ -133,7 +135,7 @@ Feature: primarily genre tests
 
   Scenario: find by not genre
     Given the following pages
-      | title                            | add_genre_string  |
+      | title                            | add_genres_from_string  |
       | The Mysterious Affair at Styles  | mystery           |
       | Alice in Wonderland              | children          |
       | The Boxcar Children              | mystery, children |
@@ -147,7 +149,7 @@ Feature: primarily genre tests
 
   Scenario: find by two genres
     Given the following pages
-      | title                            | add_genre_string  |
+      | title                            | add_genres_from_string  |
       | The Mysterious Affair at Styles  | mystery           |
       | Alice in Wonderland              | children          |
       | The Boxcar Children              | mystery, children |
@@ -161,7 +163,7 @@ Feature: primarily genre tests
 
   Scenario: find by two genres and a not
     Given the following pages
-      | title                            | add_genre_string  |
+      | title                            | add_genres_from_string  |
       | The Mysterious Affair at Styles  | mystery           |
       | Alice in Wonderland              | children          |
       | The Boxcar Children              | mystery, children |

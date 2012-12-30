@@ -73,11 +73,7 @@ class Page < ActiveRecord::Base
   after_create :initial_fetch
 
   def self.update_genre_strings
-     Page.find_each { |page| page.update_genre_string }
-  end
-
-  def update_genre_string
-    self.update_attribute(:cached_genre_string, self.genre_string)
+     Page.find_each { |page| page.cache_genres }
   end
 
   def self.last_created
@@ -319,6 +315,7 @@ class Page < ActiveRecord::Base
     self.update_attributes(:parent_id => parent.id, :position => count)
     if new
       parent.genres << self.genres
+      parent.cache_genres
       parent.authors << self.authors
       parent.update_attribute(:last_read, self.last_read)
       parent.update_attribute(:favorite, self.favorite)
@@ -388,14 +385,19 @@ class Page < ActiveRecord::Base
     self.genres.map(&:name).join(", ")
   end
 
-  def add_genre_string=(string)
+  def cache_genres
+    Rails.logger.debug "caching genres for #{self.id}"
+    self.cached_genre_string = genre_string
+    self.save unless self.new_record?
+  end
+
+  def add_genres_from_string=(string)
     return if string.blank?
     string.split(",").each do |genre|
       new = Genre.find_or_create_by_name(genre.squish)
       self.genres << new
     end
-    self.cached_genre_string = genre_string
-    self.genres
+    self.cache_genres
   end
 
   def favorite_names

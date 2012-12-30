@@ -77,9 +77,9 @@ Feature: last_read (also unread)
   Scenario: unread part
     Given I have no pages
     Given the following pages
-     | title  | last_read  | add_genre_string | url |
-     | Filler | 2008-01-01 | one              | http://test.sidrasue.com/long.html |
-     | Parent | 2009-01-01 | two              |     |
+     | title  | last_read  | url   | add_genres_from_string |
+     | Filler | 2008-01-01 | http://test.sidrasue.com/long.html | one |
+     | Parent | 2009-01-01 |       | two |
     When I am on the homepage
     Then I should see "Filler" within ".title"
       And I should not see "unread" within ".last_read"

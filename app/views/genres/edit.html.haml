@@ -8,7 +8,7 @@
     .button= f.submit "Update"
     %br
     - unless Genre.names.blank?
-      = label_tag :merge, "Merge with:"
+      = label_tag :merge, "Merge into:"
       = select_tag :merge, options_for_select([nil] + Genre.names)
       %br
     .button= f.submit "Merge"

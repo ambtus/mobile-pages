@@ -21,4 +21,15 @@ class Genre < ActiveRecord::Base
   def self.names
     self.all.map(&:name)
   end
+
+  def destroy_me
+    Rails.logger.debug "recaching page ids for #{self.name}"
+    page_ids = self.pages.map(&:id)
+    Rails.logger.debug "recaching page ids for #{pages.count} pages"
+    self.destroy
+    page_ids.each do |id|
+      Rails.logger.debug "recaching page ids for #{id}"
+      Page.find(id).cache_genres
+    end
+  end
 end
