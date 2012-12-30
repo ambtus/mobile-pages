@@ -50,6 +50,9 @@
       = hinted_text_area_tag 'page[urls]', page.urls, Page::URLS_PLACEHOLDER, :rows => 10, :cols => 80
     - else
       = hinted_text_field_tag 'page[url]', page.url, "URL"
+      %br
+      = label_tag :page_file, "Or upload an ePub file:"
+      = f.file_field :file
     %br
     = f.submit "Find", :name => "Find" if called_by == "index"
     = f.submit "Store", :name => "Store"

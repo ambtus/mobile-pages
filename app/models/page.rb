@@ -12,6 +12,13 @@ class Page < ActiveRecord::Base
     env + (self.id/MODULO).to_s + "/" + self.id.to_s + "/"
   end
 
+  def mydirectory
+     Rails.public_path + self.mypath
+  end
+  def download_dir
+    "#{self.mydirectory}downloads/"
+  end
+
   DURATION = "years"
   MININOTE = 75 # keep first this many characters plus enough for full words
   LIMIT = 15 # number of pages to show in index
@@ -63,6 +70,7 @@ class Page < ActiveRecord::Base
   attr_accessor :base_url
   attr_accessor :url_substitutions
   attr_accessor :urls
+  attr_accessor :file
 
   before_validation :remove_placeholders
 
@@ -167,22 +175,11 @@ class Page < ActiveRecord::Base
     doc_summary = doc.at_xpath("//div[@class = 'summary module']").text.gsub('Summary:','').strip  rescue ""
     doc_notes = doc.at_xpath("//div[@class = 'notes module']").text.gsub('Notes:','').strip  rescue ""
     doc_end_notes = doc.at_xpath("//div[@class = 'end notes module']").text.gsub('Notes:','').strip  rescue ""
-    unless self.parent # don't get authors for subparts
-      doc_author = doc.at_xpath("//h3[@class = 'byline heading']").text.strip
-      t = Author.arel_table
-      mp_author = Author.where(t[:name].matches("#{doc_author}%")).first
-      if mp_author
-        self.authors = [mp_author]
-        doc_author = ""
-      else
-        self.authors = []
-        doc_author = "by #{doc_author}"
-      end
-    end
-    if self.parent && !(self.position == 1) # don't put summary on part one - it's redundant
+    if !self.parent || !(self.position == 1) # don't put summary on part one - it's redundant
       self.notes = [doc_summary, doc_notes, doc_end_notes].join("\n\n").strip
-    elsif !self.parent
-      self.notes = [doc_author, doc_summary, doc_notes, doc_end_notes].join("\n\n").strip
+    end
+    unless self.parent # don't get authors for subparts and get after notes for byline
+      add_author(doc.at_xpath("//h3[@class = 'byline heading']").text.strip)
     end
     self.save
   end
@@ -386,9 +383,13 @@ class Page < ActiveRecord::Base
   end
 
   def cache_genres
-    Rails.logger.debug "caching genres for #{self.id}"
-    self.cached_genre_string = genre_string
-    self.save unless self.new_record?
+    if self.new_record?
+      Rails.logger.debug "genres for new record"
+      self.cached_genre_string = genre_string
+    else
+      Rails.logger.debug "caching genres for #{self.id}"
+      self.update_attribute(:cached_genre_string, genre_string)
+    end
   end
 
   def add_genres_from_string=(string)
@@ -452,11 +453,10 @@ class Page < ActiveRecord::Base
   end
 
   def clean_html_file_name
-    Rails.public_path +  self.mypath + "original.html"
+    self.mydirectory + "original.html"
   end
 
   def clean_html=(content)
-    ensure_path
     remove_outdated_downloads
     File.open(self.clean_html_file_name, 'w:utf-8') { |f| f.write(content) }
   end
@@ -484,12 +484,7 @@ class Page < ActiveRecord::Base
     self.update_attribute(:sanitize_version, Scrub.sanitize_version)
   end
 
-  def ensure_path
-    FileUtils.mkdir_p(Rails.public_path +  self.mypath)
-  end
-
   def raw_html=(content)
-    ensure_path
     remove_outdated_downloads
     body = Scrub.regularize_body(content)
     File.open(self.raw_file_name, 'w:utf-8') { |f| f.write(body) }
@@ -511,7 +506,7 @@ class Page < ActiveRecord::Base
   end
 
   def raw_file_name
-    Rails.public_path + self.mypath + "raw.html"
+    self.mydirectory + "raw.html"
   end
 
   def rebuild_from_raw
@@ -570,16 +565,14 @@ class Page < ActiveRecord::Base
 
   def remove_outdated_downloads(recurse = false)
     Rails.logger.debug "remove outdated downloads for #{self.id}"
-    FileUtils.rm_rf(self.download_dir)
+    FileUtils.rm_rf(self.download_dir) unless self.uploaded
     self.parent.remove_outdated_downloads(true) if self.parent
     self.parts.each { |part| part.remove_outdated_downloads(true) unless recurse}
   end
 
-  def download_dir
-    "#{Rails.public_path}#{self.mypath}downloads/"
-  end
   # needs to be filesystem safe and not overly long
   def download_title
+    Rails.logger.debug "getting download title for #{self.id}"
     string = self.title.encode('ASCII', :invalid => :replace, :undef => :replace, :replace => '')
     string = string.gsub(/[^[\w _-]]+/, '')
     string.gsub(/ +/, " ").strip.gsub(/^(.{24}[\w.]*).*/) {$1}
@@ -593,6 +586,41 @@ class Page < ActiveRecord::Base
     cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --output-profile ipad --title "#{self.title}" --authors "#{self.download_tag_string}" }
     Rails.logger.debug cmd
     `#{cmd} 2> /dev/null`
+  end
+
+  def create_tmpfile
+    return unless file
+    File.open(tmpfile_name, "wb") { |f| f.write(self.file.read) }
+  end
+
+  def tmpfile_name
+    raise unless file.original_filename.match(/\.epub$/)
+    "/tmp/" + file.original_filename
+  end
+
+  def get_meta_from_epub
+    Rails.logger.debug "getting meta from epub"
+    self.uploaded = true
+    create_tmpfile
+    cmd = %Q{ebook-meta "#{tmpfile_name}"}
+    Rails.logger.debug cmd
+    meta = Hash[*`#{cmd}`.split(/[:\n]/).map(&:strip)]  #`
+    self.update_attribute(:title, meta["Title"]) if self.title == "Placeholder"
+    Rails.logger.debug " epub title is #{self.title}"
+    add_author(meta["Author(s)"].match(/([^ \[]+)/).to_s.strip)
+  end
+
+  def add_author(string)
+    return if string.blank?
+    t = Author.arel_table
+    mp_author = Author.where(t[:name].matches("#{string}%")).first
+    if mp_author
+      self.authors = [mp_author]
+    else
+      byline = "by #{string}"
+      self.notes = self.notes ? [byline,notes].join("\n\n") : byline
+      self.update_attribute(:notes, self.notes) unless self.new_record?
+    end
   end
 
 private
@@ -615,6 +643,7 @@ private
   def remove_placeholders
     self.url = self.url == "URL" ? nil : self.url.try(:strip)
     self.title = nil if self.title == "Title" unless (self.url && self.url.match('archiveofourown'))
+    self.title = "Placeholder" if self.file
     self.notes = nil if self.notes == "Notes"
     # during testing Notes gets "\n" prepended
     self.notes = nil if self.notes == "\nNotes"
@@ -627,8 +656,14 @@ private
 
   def initial_fetch
     Rails.logger.debug "initial fetch for #{self.id}"
-    self.raw_html = "" # make sure raw_html is blank during tests
-    if !self.url.blank?
+    FileUtils.rm_rf(mydirectory) # make sure directory is empty for testing
+    FileUtils.mkdir_p(download_dir) # make sure directory exists
+    if file
+      get_meta_from_epub
+      cmd = "mv #{tmpfile_name} \"#{download_basename}.epub\""
+      Rails.logger.debug cmd
+      `#{cmd}`
+    elsif !self.url.blank?
       if self.url.match(/archiveofourown/) && !self.url.match(/chapter/)
         doc = Nokogiri::HTML(Scrub.fetch(self.url + "/navigate"))
         chapter_list = doc.xpath("//ol//a")
@@ -668,7 +703,7 @@ private
     elsif !self.urls.blank?
       self.parts_from_urls(self.urls)
     else
-      raw_html = ""
+      Rails.logger.debug "nothing to do in initial fetch!"
     end
   end
 end

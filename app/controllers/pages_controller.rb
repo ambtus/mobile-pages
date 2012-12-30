@@ -57,7 +57,7 @@ class PagesController < ApplicationController
         @page = Page.new(params[:page])
         @page.favorite = true if params[:favorite] == Page::FAVORITE
       else
-        @page.favorite = @favorite
+        @page.update_attribute(:favorite, @favorite)
         @page.authors << @author if @author
         if @genre.blank?
           flash[:notice] = "Page created. Please select genre(s)"

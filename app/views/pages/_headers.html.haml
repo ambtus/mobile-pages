@@ -2,7 +2,11 @@
 .authors= page.author_string
 .favorite
   = page.favorite_string
-.size= "#{page.size} (#{page.wordcount})"
+.size
+  - if page.uploaded
+    = "Uploaded"
+  - else
+    = "#{page.size} (#{page.wordcount})"
 .last_read
   - if page.last_read
     = page.last_read.to_date
