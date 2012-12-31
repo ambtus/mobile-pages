@@ -426,9 +426,10 @@ class Page < ActiveRecord::Base
     names.compact
   end
 
-  def tag_names(include_date = true)
-    names = self.authors.map(&:name) + self.genres.map(&:name) + [self.size]
-    names = names + [(self.last_read ? self.last_read.to_date : UNREAD)] if include_date
+  def tag_names(download = false)
+    names = self.authors.map(&:name) + self.genres.map(&:name)
+    names = names + [self.size] unless download
+    names = names + [(self.last_read ? self.last_read.to_date : UNREAD)] unless download
     names = names + favorite_names
     names.compact
   end
@@ -446,11 +447,7 @@ class Page < ActiveRecord::Base
   end
 
   def download_tag_string
-    mine = self.tag_names(false)
-    if self.parent
-      mine = mine - self.parent.tag_names
-    end
-    mine.join(", ")
+    self.tag_names(true).join(", ")
   end
 
   def clean_html_file_name
@@ -604,6 +601,8 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "getting meta from epub"
     self.uploaded = true
     create_tmpfile
+    self.update_attribute(:wordcount, (File.size(tmpfile_name) - 95000)/3)
+    self.set_wordcount(false)
     cmd = %Q{ebook-meta "#{tmpfile_name}"}
     Rails.logger.debug cmd
     meta = Hash[*`#{cmd}`.split(/[:\n]/).map(&:strip)]  #`

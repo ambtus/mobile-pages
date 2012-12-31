@@ -9,6 +9,7 @@ Feature: upload pre-made epub files
     Then I should not see "Title can't be blank"
       And I should see "I Drive Myself Crazy" within ".title"
       And I should see "by Sidra" within ".notes"
+      And I should see "Uploaded short" within ".size"
 
   Scenario: upload epub file and extract title and existing author
     Given a genre exists with name: "popslash"
