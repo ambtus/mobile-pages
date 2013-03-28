@@ -7,11 +7,6 @@ gem 'mysql2', '~>0.3.0'
 # Use unicorn as the web server
 gem 'unicorn'
 
-# To use debugger
-group :development do
-  gem 'ruby-debug19'
-end
-
 group :test do
   gem 'pickle'
   gem 'capybara', '~>1.1.0'
