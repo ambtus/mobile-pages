@@ -7,6 +7,7 @@ Scenario Outline: encodings
   When I am on the homepage
     And I fill in "page_url" with "<url>"
     And I fill in "page_title" with "<title>"
+#    And my variable is "<title>"
     And I press "Store"
   When I go to the page with title "<title>"
   Then I should see "<title>" within ".title"

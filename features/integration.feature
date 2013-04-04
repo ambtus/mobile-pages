@@ -209,9 +209,9 @@ Feature: tests that don't fit neatly into another feature
     And I press "Rate"
    When I am on the page's page
 # FIXME - year will change every year
-   Then I should see "2012-" within ".last_read"
+   Then I should see "2013-" within ".last_read"
      And I should see "unread" within "#position_1"
-     And I should not see "2012-" within "#position_2"
+     And I should not see "2013-" within "#position_2"
      And I should not see "unread" within "#position_2"
 
   Scenario: find either shouldn't get unread

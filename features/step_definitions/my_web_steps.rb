@@ -35,3 +35,8 @@ end
 Then /^"([^\"]*)" should link to "([^\"]*)"$/ do |link_text, link_url|
   page.find_link(link_text)['href'].should == link_url
 end
+
+
+When /^my variable is "(.*?)"$/ do |var|
+  puts var
+end

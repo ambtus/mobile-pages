@@ -9,7 +9,7 @@ Feature: last_read (also unread)
       And I choose "upsetting"
     And I press "Rate"
     # FIXME - this will change every year - test will need updating
-    Then I should see "2012" within ".last_read"
+    Then I should see "2013" within ".last_read"
 
   Scenario: after rate a read page, change it's last read date
     Given a titled page exists with last_read: "2008-01-01"
@@ -21,7 +21,7 @@ Feature: last_read (also unread)
     And I press "Rate"
     Then I should not see "2008-01-01" within ".last_read"
     # FIXME - this will change every year - test will need updating
-      And I should see "2012" within ".last_read"
+      And I should see "2013" within ".last_read"
 
   Scenario: add unread part to read parent
     Given a page exists with title: "Multi", urls: "http://test.sidrasue.com/parts/1.html"
