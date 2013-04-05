@@ -165,23 +165,7 @@ class Page < ActiveRecord::Base
     rescue SocketError
       self.errors.add(:base, "couldn't resolve host name")
     end
-    self.get_ao3_meta if self.url.match(/archiveofourown/)
-  end
-
-  def get_ao3_meta
-    doc = Nokogiri::HTML(Scrub.fetch(self.url))
-    doc_title = doc.at_xpath("//h2[@class = 'title heading']").text.strip
-    self.title = doc_title if self.title == "Title"
-    doc_summary = doc.at_xpath("//div[@class = 'summary module']").text.gsub('Summary:','').strip  rescue ""
-    doc_notes = doc.at_xpath("//div[@class = 'notes module']").text.gsub('Notes:','').strip  rescue ""
-    doc_end_notes = doc.at_xpath("//div[@class = 'end notes module']").text.gsub('Notes:','').strip  rescue ""
-    if !self.parent || !(self.position == 1) # don't put summary on part one - it's redundant
-      self.notes = [doc_summary, doc_notes, doc_end_notes].join("\n\n").strip
-    end
-    unless self.parent # don't get authors for subparts and get after notes for byline
-      add_author(doc.at_xpath("//h3[@class = 'byline heading']").text.strip)
-    end
-    self.save
+    self.get_meta_from_ao3 if self.url.match(/archiveofourown/)
   end
 
   def parts_from_urls(url_title_list, refetch=false)
@@ -624,6 +608,53 @@ class Page < ActiveRecord::Base
     end
   end
 
+  def get_chapters_from_ao3
+    doc = Nokogiri::HTML(Scrub.fetch(self.url + "/navigate"))
+    chapter_list = doc.xpath("//ol//a")
+    if chapter_list.size == 1
+      self.fetch
+    else
+      count = 1
+      chapter_list.each do |element|
+        title = element.text
+        url = "http://archiveofourown.org" + element['href']
+        Page.create(:title => title, :url => url, :position => count, :parent_id => self.id)
+        count = count.next
+      end
+      doc = Nokogiri::HTML(Scrub.fetch(self.url))
+      self.update_attribute(:title, doc.at_xpath("//h2").children.text.strip)
+      self.set_wordcount
+    end
+  end
+
+  def get_chapters_from_ff
+  end
+
+  def get_chapters_from_skyehawke
+  end
+
+  def get_meta_from_ao3
+    doc = Nokogiri::HTML(Scrub.fetch(self.url))
+    doc_title = doc.at_xpath("//h2[@class = 'title heading']").text.strip
+    self.title = doc_title if self.title == "Title"
+    doc_summary = doc.at_xpath("//div[@class = 'summary module']").text.gsub('Summary:','').strip  rescue ""
+    doc_notes = doc.at_xpath("//div[@class = 'notes module']").text.gsub('Notes:','').strip  rescue ""
+    doc_end_notes = doc.at_xpath("//div[@class = 'end notes module']").text.gsub('Notes:','').strip  rescue ""
+    if !self.parent || !(self.position == 1) # don't put summary on part one - it's redundant
+      self.notes = [doc_summary, doc_notes, doc_end_notes].join("\n\n").strip
+    end
+    unless self.parent # don't get authors for subparts and get after notes for byline
+      add_author(doc.at_xpath("//h3[@class = 'byline heading']").text.strip)
+    end
+    self.save
+  end
+
+  def get_meta_from_ff
+  end
+
+  def get_meta_from_skyhawke
+  end
+
 private
 
   def self.search(symbol, string)
@@ -666,23 +697,8 @@ private
       `#{cmd}`
     elsif !self.url.blank?
       if self.url.match(/archiveofourown/) && !self.url.match(/chapter/)
-        doc = Nokogiri::HTML(Scrub.fetch(self.url + "/navigate"))
-        chapter_list = doc.xpath("//ol//a")
-        if chapter_list.size == 1
-          self.fetch
-        else
-          count = 1
-          chapter_list.each do |element|
-            title = element.text
-            url = "http://archiveofourown.org" + element['href']
-            Page.create(:title => title, :url => url, :position => count, :parent_id => self.id)
-            count = count.next
-          end
-          doc = Nokogiri::HTML(Scrub.fetch(self.url))
-          self.update_attribute(:title, doc.at_xpath("//h2").children.text.strip)
-          self.set_wordcount
-        end
-        self.get_ao3_meta
+        self.get_meta_from_ao3
+        self.get_chapters_from_ao3
       else
         self.fetch
       end
@@ -707,4 +723,6 @@ private
       Rails.logger.debug "nothing to do in initial fetch!"
     end
   end
+
+
 end
