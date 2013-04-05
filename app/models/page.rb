@@ -589,7 +589,7 @@ class Page < ActiveRecord::Base
     self.set_wordcount(false)
     cmd = %Q{ebook-meta "#{tmpfile_name}"}
     Rails.logger.debug cmd
-    meta = Hash[*`#{cmd}`.split(/[:\n]/).map(&:strip)]  #`
+    meta = Hash[*`#{cmd}`.split(/[\n]/).map{ |s| s.split(/:/, 2) }.flatten.map(&:strip)]  #`
     self.update_attribute(:title, meta["Title"]) if self.title == "Placeholder"
     Rails.logger.debug " epub title is #{self.title}"
     add_author(meta["Author(s)"].match(/([^ \[]+)/).to_s.strip)

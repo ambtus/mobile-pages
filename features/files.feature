@@ -7,7 +7,7 @@ Feature: upload pre-made epub files
       And I select "popslash" from "genre"
       And I press "Store"
     Then I should not see "Title can't be blank"
-      And I should see "I Drive Myself Crazy" within ".title"
+      And I should see "I Drive Myself: Crazy" within ".title"
       And I should see "by Sidra" within ".notes"
       And I should see "Uploaded short" within ".size"
 
@@ -19,7 +19,7 @@ Feature: upload pre-made epub files
       And I select "popslash" from "genre"
       And I press "Store"
     Then I should not see "Title can't be blank"
-      And I should see "I Drive Myself Crazy" within ".title"
+      And I should see "I Drive Myself: Crazy" within ".title"
       And I should see "Sidra" within ".authors"
 
   Scenario: upload epub file with entered notes and not existing author
@@ -30,7 +30,7 @@ Feature: upload pre-made epub files
       And I select "popslash" from "genre"
       And I press "Store"
     Then I should not see "Title can't be blank"
-      And I should see "I Drive Myself Crazy" within ".title"
+      And I should see "I Drive Myself: Crazy" within ".title"
       And I should see "by Sidra" within ".notes"
       And I should see "my note" within ".notes"
 
@@ -43,7 +43,7 @@ Feature: upload pre-made epub files
       And I select "popslash" from "genre"
       And I press "Store"
     Then I should not see "Title can't be blank"
-      And I should see "I Drive Myself Crazy" within ".title"
+      And I should see "I Drive Myself: Crazy" within ".title"
       And I should see "Sidra" within ".authors"
       And I should see "my note" within ".notes"
 
