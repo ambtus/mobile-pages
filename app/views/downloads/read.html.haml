@@ -1,0 +1,14 @@
+= render :partial => 'download_preface', :formats => [:html]
+
+#page
+  - if @page.parts.size > 0
+    - for part in @page.parts
+      - if part.parts.size > 0
+        %h2{:style=> "page-break-before:always", :class => "chapter"}= part.title
+        - for subpart in part.parts
+          = render :partial => 'download_read', :formats => [:html], :locals => {:part => subpart, :subpart => true}
+      - else
+        = render :partial => 'download_read', :formats => [:html], :locals => {:part => part}
+  - else
+    .content{:style=> "page-break-before:always"}
+      =raw @page.read_html

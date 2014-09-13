@@ -9,6 +9,7 @@
   = link_to "Rate", rate_path(page)
   = link_to "ePub", download_url_for_page(page, ".epub")
   = link_to "HTML", download_url_for_page(page, ".html") unless page.uploaded
+  = link_to "Sectioned", download_url_for_page(page, ".read") unless page.uploaded
   - unless called_by == "index"
     = link_to "Notes", edit_note_path(page)
     = link_to "Authors", author_path(page)

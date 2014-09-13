@@ -454,6 +454,29 @@ class Page < ActiveRecord::Base
     end
   end
 
+  def read_html
+    body = Nokogiri::HTML(self.clean_html).xpath('//body').first
+    count = 0
+    section = 1
+    if body
+      body.traverse do |node|
+       if node.is_a? Nokogiri::XML::Text
+          words = node.inner_text.gsub(/(['-])+/, "")
+          count +=  words.scan(/[a-zA-Z0-9_]+/).size
+        end
+        if count > 500
+         count = 0
+         section += 1
+         node.parent.after("<h2>Section #{section} !!!!!READ SLOWLY!!!!!</h2>")
+        end
+      end
+      body.children.first.before("<h2>Section 1 !!!!!READ SLOWLY!!!!!</h2>")
+      body.children.to_xhtml
+    else
+      ""
+    end
+  end
+
   def re_sanitize
     Rails.logger.debug "re_sanitizing #{self.id}"
     if !self.parts.blank?
