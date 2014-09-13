@@ -84,7 +84,7 @@ GEM
       webrobots (~> 0.0, >= 0.0.9)
     mime-types (1.22)
     multi_json (1.7.2)
-    mysql2 (0.3.11)
+    mysql2 (0.3.16)
     net-http-digest_auth (1.2.1)
     net-http-persistent (2.8)
     nokogiri (1.5.5)
