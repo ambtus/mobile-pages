@@ -467,10 +467,10 @@ class Page < ActiveRecord::Base
         if count > 500
          count = 0
          section += 1
-         node.parent.after("<h2>Section #{section} !!!!!READ SLOWLY!!!!!</h2>")
+         node.parent.after("<h2>Section #{section} !!!!!READ SLOWLY AND ENUNCIATE!!!!!</h2>")
         end
       end
-      body.children.first.before("<h2>Section 1 !!!!!READ SLOWLY!!!!!</h2>")
+      body.children.first.before("<h2>Section 1 !!!!!READ SLOWLY AND ENNUNCIATE!!!!!</h2>")
       body.children.to_xhtml
     else
       ""
