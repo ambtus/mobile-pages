@@ -464,7 +464,7 @@ class Page < ActiveRecord::Base
           words = node.inner_text.gsub(/(['-])+/, "")
           count +=  words.scan(/[a-zA-Z0-9_]+/).size
         end
-        if count > 500
+        if count > 333
          count = 0
          section += 1
          node.parent.after("<h2>Section #{section} !!!!!READ SLOWLY AND ENUNCIATE!!!!!</h2>")
