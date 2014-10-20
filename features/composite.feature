@@ -183,7 +183,7 @@ Feature: new composite rating made up of stressful and interesting.
   Scenario: search for a with low stress
     Given pages with all possible ratings exist
       And I am on the homepage
-    When I choose "avoid_stressful"
+    When I choose "find_sweet"
       And I press "Find"
     Then I should see "page20"
       And I should see "page30"
@@ -193,7 +193,7 @@ Feature: new composite rating made up of stressful and interesting.
   Scenario: search for interesting
     Given pages with all possible ratings exist
       And I am on the homepage
-    When I choose "avoid_boring"
+    When I choose "find_interesting"
       And I press "Find"
     Then I should see "page02"
       And I should see "page03"
@@ -203,9 +203,10 @@ Feature: new composite rating made up of stressful and interesting.
   Scenario: search for a book with both low stress & high interest
     Given pages with all possible ratings exist
       And I am on the homepage
-    When I choose "avoid_both"
+    When I choose "find_both"
       And I press "Find"
-    Then I should see "page00"
-      And I should see "page10"
-    But I should not see "page20"
-      And I should not see "page02"
+    Then I should see "page00" within "#position_1"
+    But I should not see "page01"
+      And I should not see "page10"
+      And I should not see "page11"
+      And I should not see "page33"
