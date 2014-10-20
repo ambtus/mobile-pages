@@ -131,10 +131,12 @@ class Page < ActiveRecord::Base
     pages = case params[:sort_by]
       when "last_read"
         pages.order('last_read ASC')
+      when "recently_read"
+        pages.order('last_read DESC')
       when "random"
         unless params[:unread] == "yes"
           # unless I'm deliberately looking for unreads
-          # when I want random fics I don't want really recent read ones
+          # when I want random fics I don't want really recently read ones
           pages = pages.where('pages.last_read < ?', 1.year.ago)
           # and I don't want okay ones
           pages = pages.where('pages.favorite != ?', 3)
