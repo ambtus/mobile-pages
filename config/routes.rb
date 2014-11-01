@@ -7,6 +7,7 @@ MobilePages::Application.routes.draw do
 
   resources :authors, :only => ['show', 'create']
   resources :genres
+  resources :hiddens
   resources :htmls, :only => ['edit']
   resources :notes, :only => ['edit']
   resources :pages

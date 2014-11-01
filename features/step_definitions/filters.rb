@@ -21,3 +21,7 @@ end
 Then /^I should have no genres$/ do
   assert Genre.count == 0
 end
+
+Then /^I should have no hiddens$/ do
+  assert Hidden.count == 0
+end

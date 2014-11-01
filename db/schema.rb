@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121221215626) do
+ActiveRecord::Schema.define(:version => 20141101175419) do
 
   create_table "authors", :force => true do |t|
     t.string "name"
@@ -35,6 +35,17 @@ ActiveRecord::Schema.define(:version => 20121221215626) do
     t.integer "genre_id"
   end
 
+  create_table "hiddens", :force => true do |t|
+    t.string "name"
+  end
+
+  add_index "hiddens", ["name"], :name => "hidden_name", :unique => true
+
+  create_table "hiddens_pages", :id => false, :force => true do |t|
+    t.integer "page_id"
+    t.integer "hidden_id"
+  end
+
   create_table "pages", :force => true do |t|
     t.string   "url"
     t.string   "title"
@@ -47,13 +58,14 @@ ActiveRecord::Schema.define(:version => 20121221215626) do
     t.datetime "updated_at"
     t.integer  "wordcount"
     t.string   "size"
-    t.integer  "favorite",            :limit => 2, :default => 0
+    t.integer  "favorite",             :limit => 2, :default => 0
     t.integer  "ultimate_parent_id"
-    t.integer  "sanitize_version",    :limit => 2, :default => 1,     :null => false
-    t.string   "cached_genre_string",              :default => "",    :null => false
+    t.integer  "sanitize_version",     :limit => 2, :default => 1,     :null => false
+    t.string   "cached_genre_string",               :default => "",    :null => false
     t.integer  "interesting"
     t.integer  "nice"
-    t.boolean  "uploaded",                         :default => false
+    t.boolean  "uploaded",                          :default => false
+    t.string   "cached_hidden_string",              :default => "",    :null => false
   end
 
   add_index "pages", ["favorite"], :name => "index_pages_on_favorite"

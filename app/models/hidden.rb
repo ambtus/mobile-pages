@@ -1,8 +1,8 @@
-class Genre < ActiveRecord::Base
-  NEW_PLACEHOLDER = "Enter Genres to add (comma separated)"
+class Hidden < ActiveRecord::Base
+  NEW_PLACEHOLDER = "Enter Hidden genres to add (comma separated)"
 
   has_and_belongs_to_many :pages, :uniq => true
-  default_scope :order => 'genres.name asc'
+  default_scope :order => 'hiddens.name asc'
   validates_presence_of :name
   validates_uniqueness_of :name
 
@@ -29,15 +29,15 @@ class Genre < ActiveRecord::Base
     self.destroy
     page_ids.each do |id|
       Rails.logger.debug "recaching page ids for #{id}"
-      Page.find(id).cache_genres
+      Page.find(id).cache_hiddens
     end
   end
 
-  def make_hidden
-    new = Hidden.find_or_create_by_name(name)
+  def make_genre
+    new = Genre.find_or_create_by_name(name)
     pages.each do |page|
-      page.hiddens << new
-      page.cache_hiddens
+      page.genres << new
+      page.cache_genres
     end
     destroy_me
   end

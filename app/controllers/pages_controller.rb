@@ -14,6 +14,8 @@ class PagesController < ApplicationController
     @genres = Genre.all.map(&:name)
     @genre = Genre.find_by_name(params[:genre]) if params[:genre]
     @genre2 = Genre.find_by_name(params[:genre2]) if params[:genre2]
+    @hiddens = Hidden.all.map(&:name)
+    @hidden = Hidden.find_by_name(params[:hidden]) if params[:hidden]
     @authors = Author.all.map(&:name)
     @author = Author.find_by_name(params[:author]) if params[:author]
     @pages = Page.filter(params)
@@ -30,7 +32,7 @@ class PagesController < ApplicationController
       build_route[:author] = params[:author] unless params[:author].blank?
       build_route[:genre] = params[:genre] unless params[:genre].blank?
       build_route[:genre2] = params[:genre2] unless params[:genre2].blank?
-      build_route[:not] = params[:not] unless params[:not].blank?
+      build_route[:hidden] = params[:hidden] unless params[:hidden].blank?
       build_route[:sort_by] = params[:sort_by] unless (params[:sort_by].blank? || params[:sort_by] == "read_after")
       build_route[:size] = params[:size] unless (params[:size].blank? || params[:size] == "any")
       build_route[:favorite] = params[:favorite] unless (params[:favorite].blank? || params[:favorite] == "any")
@@ -47,6 +49,7 @@ class PagesController < ApplicationController
     @page = Page.new(params[:page])
     @genre = Genre.find_by_name(params[:genre])
     @genre2 = Genre.find_by_name(params[:genre2])
+    @hidden = Hidden.find_by_name(params[:hidden])
     @author = Author.find_by_name(params[:author])
     @favorite = params[:favorite]
     @find = params[:find]
@@ -67,6 +70,8 @@ class PagesController < ApplicationController
           @page.genres << @genre if @genre
           @page.genres << @genre2 if @genre2
           @page.cache_genres
+          @page.hiddens << @hidden if @hidden
+          @page.cache_hiddens
           redirect_to page_path(@page) and return
         end
       end

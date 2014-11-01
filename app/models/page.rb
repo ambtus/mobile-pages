@@ -63,6 +63,7 @@ class Page < ActiveRecord::Base
   PARENT_PLACEHOLDER = "Enter name of existing or new (unique name) parent"
 
   has_and_belongs_to_many :genres, :uniq => true
+  has_and_belongs_to_many :hiddens, :uniq => true
   has_and_belongs_to_many :authors, :uniq => true
   belongs_to :parent, :class_name => "Page"
   belongs_to :ultimate_parent, :class_name => "Page"
@@ -79,10 +80,6 @@ class Page < ActiveRecord::Base
   validates_uniqueness_of :url, :allow_blank => true
 
   after_create :initial_fetch
-
-  def self.update_genre_strings
-     Page.find_each { |page| page.cache_genres }
-  end
 
   def self.last_created
     self.order('created_at ASC').last
@@ -113,12 +110,13 @@ class Page < ActiveRecord::Base
     [:title, :notes, :url].each do |attrib|
       pages = pages.search(attrib, params[attrib]) if params.has_key?(attrib)
     end
-    if params.has_key?(:not)
-      pages = pages.without_genre(params[:genre]) if params.has_key?(:genre)
-    else
-      pages = pages.search(:cached_genre_string, params[:genre]) if params.has_key?(:genre)
-    end
+    pages = pages.search(:cached_genre_string, params[:genre]) if params.has_key?(:genre)
     pages = pages.search(:cached_genre_string, params[:genre2]) if params.has_key?(:genre2)
+    if params.has_key?(:hidden)
+      pages = pages.search(:cached_hidden_string, params[:hidden])
+    else
+      pages = pages.where(:cached_hidden_string => '')
+    end
     pages = pages.with_author(params[:author]) if params.has_key?(:author)
     # can only find parts by title, notes, url, last_created.
     unless params[:title] || params[:notes] || params[:url] ||
@@ -299,6 +297,8 @@ class Page < ActiveRecord::Base
     if new
       parent.genres << self.genres
       parent.cache_genres
+      parent.hiddens << self.hiddens
+      parent.cache_hiddens
       parent.authors << self.authors
       parent.update_attribute(:last_read, self.last_read)
       parent.update_attribute(:favorite, self.favorite)
@@ -386,6 +386,30 @@ class Page < ActiveRecord::Base
       self.genres << new
     end
     self.cache_genres
+  end
+
+  def hidden_string
+    self.hiddens.map(&:name).join(", ")
+  end
+
+  def cache_hiddens
+    if self.new_record?
+      Rails.logger.debug "hiddens for new record"
+      self.cached_hidden_string = hidden_string
+    else
+      Rails.logger.debug "caching hiddens for #{self.id}"
+      self.update_attribute(:cached_hidden_string, hidden_string)
+    end
+    hidden_string
+  end
+
+  def add_hiddens_from_string=(string)
+    return if string.blank?
+    string.split(",").each do |hidden|
+      new = Hidden.find_or_create_by_name(hidden.squish)
+      self.hiddens << new
+    end
+    self.cache_hiddens
   end
 
   def favorite_names

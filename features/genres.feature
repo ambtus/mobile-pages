@@ -31,6 +31,28 @@ Feature: primarily genre tests
       And I press "Update Genres"
     Then I should see "first" within ".genres"
 
+  Scenario: genre selected
+    Given a genre exists with name: "first"
+      And I am on the homepage
+      And I select "first" from "Genre"
+    When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+      And I fill in "page_title" with "New Title"
+      And I press "Store"
+    Then I should not see "Please select genre"
+      And I should see "first" within ".genres"
+
+  Scenario: two genres selected
+    Given a genre exists with name: "first"
+      And a genre exists with name: "second"
+      And I am on the homepage
+      And I select "first" from "Genre"
+      And I select "second" from "Genre2"
+    When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+      And I fill in "page_title" with "New Title"
+      And I press "Store"
+    Then I should not see "Please select genre"
+      And I should see "first, second" within ".genres"
+
   Scenario: add a genre to a page when there are no genres
     Given a titled page exists
     When I am on the page's page
@@ -133,20 +155,6 @@ Feature: primarily genre tests
       And I should see "The Boxcar Children"
       But I should not see "Alice in Wonderland"
 
-  Scenario: find by not genre
-    Given the following pages
-      | title                            | add_genres_from_string  |
-      | The Mysterious Affair at Styles  | mystery           |
-      | Alice in Wonderland              | children          |
-      | The Boxcar Children              | mystery, children |
-    When I am on the homepage
-      And I select "mystery" from "Genre"
-      And I check "Not"
-      And I press "Find"
-    Then I should see "Alice in Wonderland"
-      But I should not see "The Mysterious Affair at Styles"
-      And I should not see "The Boxcar Children"
-
   Scenario: find by two genres
     Given the following pages
       | title                            | add_genres_from_string  |
@@ -161,17 +169,14 @@ Feature: primarily genre tests
       But I should not see "The Mysterious Affair at Styles"
       And I should not see "Alice in Wonderland"
 
-  Scenario: find by two genres and a not
-    Given the following pages
-      | title                            | add_genres_from_string  |
-      | The Mysterious Affair at Styles  | mystery           |
-      | Alice in Wonderland              | children          |
-      | The Boxcar Children              | mystery, children |
+  Scenario: move to hidden
+    Given a genre exists with name: "genre name"
+      And a titled page exists with add_genres_from_string: "genre name"
     When I am on the homepage
-      And I select "mystery" from "Genre"
-      And I check "Not"
-      And I select "children" from "Genre2"
-      And I press "Find"
-    Then I should see "Alice in Wonderland"
-      And I should not see "The Mysterious Affair at Styles"
-      And I should not see "The Boxcar Children"
+    Then I should not see "No pages found"
+    When I go to the edit page for "genre name"
+      And I press "Move to Hidden"
+    When I am on the homepage
+      And I select "genre name" from "Hidden"
+    And I should see "No pages found"
+    And I should have no genres
