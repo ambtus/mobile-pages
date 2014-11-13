@@ -58,7 +58,7 @@ class PagesController < ApplicationController
         @errors = @page.errors
         @page.destroy
         @page = Page.new(params[:page])
-        @page.favorite = true if params[:favorite] == Page::FAVORITE
+        @page.favorite = true if params[:favorite] == "favorite"
       else
         @page.update_attribute(:favorite, @favorite)
         @page.authors << @author if @author

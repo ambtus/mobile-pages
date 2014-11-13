@@ -5,8 +5,8 @@ Feature: last_read (also unread)
     When I am on the page's page
     Then I should not see ".last_read"
     When I follow "Rate"
-      And I choose "dull"
-      And I choose "upsetting"
+      And I choose "boring"
+      And I choose "stressful"
     And I press "Rate"
     # FIXME - this will change every year - test will need updating
     Then I should see "2014" within ".last_read"
@@ -16,8 +16,8 @@ Feature: last_read (also unread)
     When I am on the page's page
     Then I should see "2008-01-01" within ".last_read"
     When I follow "Rate"
-      And I choose "dull"
-      And I choose "upsetting"
+      And I choose "boring"
+      And I choose "stressful"
     And I press "Rate"
     Then I should not see "2008-01-01" within ".last_read"
     # FIXME - this will change every year - test will need updating
@@ -30,7 +30,7 @@ Feature: last_read (also unread)
    Then I should see "unread" within ".last_read"
    When I follow "Rate"
       And I choose "very interesting"
-      And I choose "easy"
+      And I choose "sweet enough"
     And I press "Rate"
    Then I should not see "unread" within ".last_read"
    When I follow "Multi"
@@ -151,8 +151,8 @@ Feature: last_read (also unread)
      And I should see "unread" within "#position_3"
   When I follow "Part 2" within "#position_2"
      And I follow "Rate"
-      And I choose "good"
-      And I choose "easy"
+      And I choose "interesting"
+      And I choose "sweet enough"
      And I press "Rate"
    When I am on the page's page
    Then I should not see "unread" within ".last_read"

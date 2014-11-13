@@ -204,7 +204,7 @@ Feature: tests that don't fit neatly into another feature
     When I am on the page's page
       And I follow "Part 2" within "#position_2"
       And I follow "Rate"
-      And I choose "dull"
+      And I choose "boring"
       And I choose "very sweet"
     And I press "Rate"
    When I am on the page's page

@@ -1,17 +1,15 @@
-Feature: new composite rating made up of stressful and interesting.
+Feature: new composite rating made up of sweet and interesting.
 
   Scenario: new rating page
     Given a titled page exists
     When I am on the page's page
     When I follow "Rate"
     Then I should see "very interesting"
-      And I should see "good"
-      And I should see "dull"
-      And I should see "very boring"
-    Then I should see "very stressful"
-      And I should see "upsetting"
-      And I should see "easy"
-      And I should see "very sweet"
+      And I should see "interesting"
+      And I should see "boring"
+    Then I should see "very sweet"
+      And I should see "sweet"
+      And I should see "stressful"
     And I should see "Rate"
 
   Scenario: error if don't select both before rating
@@ -21,20 +19,19 @@ Feature: new composite rating made up of stressful and interesting.
     And I press "Rate"
     Then I should see "You must select both ratings"
 
-  Scenario: rate as still reading
+  Scenario: rate unfinished
     Given a titled page exists
     When I am on the page's page
     When I follow "Rate"
-      And I choose "very stressful"
-      And I choose "dull"
-    And I press "Rate reading"
+      And I choose "stressful"
+      And I choose "boring"
+    And I press "Rate unfinished"
     Then I should not see "set for reading again"
-      And I should see "set to 'reading'"
+      And I should see "set to 'unfinished'"
     When I am on the page's page
-    Then I should see "reading"
-    And I should see "stressful"
+    Then I should see "boring, stressful, unfinished"
 
-  Scenario: rate a book best
+  Scenario: rate a book 0 best
     Given a titled page exists
     When I am on the page's page
     When I follow "Rate"
@@ -43,126 +40,94 @@ Feature: new composite rating made up of stressful and interesting.
     And I press "Rate"
     Then I should see "set for reading again in 6 months"
     When I am on the page's page
-    Then I should see "favorite"
+    Then I should see "favorite, interesting, sweet"
 
-  Scenario: rate a book favorite nice
+  Scenario: rate a book 1 very sweet
     Given a titled page exists
     When I am on the page's page
     When I follow "Rate"
-      And I choose "good"
+      And I choose "interesting enough"
       And I choose "very sweet"
     And I press "Rate"
     Then I should see "set for reading again in 1 years"
     When I am on the page's page
-    Then I should see "favorite"
+    Then I should see "favorite, sweet"
 
-  Scenario: rate a book favorite interesting
+  Scenario: rate a book 1 very interesting
     Given a titled page exists
     When I am on the page's page
     When I follow "Rate"
       And I choose "very interesting"
-      And I choose "easy"
+      And I choose "sweet enough"
     And I press "Rate"
     Then I should see "set for reading again in 1 years"
     When I am on the page's page
-    Then I should see "favorite"
+    Then I should see "favorite, interesting"
 
-  Scenario: rate a book good balanced
+  Scenario: rate a book 2
     Given a titled page exists
     When I am on the page's page
     When I follow "Rate"
-      And I choose "good"
-      And I choose "easy"
+      And I choose "sweet enough"
+      And I choose "interesting enough"
     And I press "Rate"
     Then I should see "set for reading again in 2 years"
     When I am on the page's page
     Then I should see "good"
 
-  Scenario: rate a book good interesting
+  Scenario: rate a book 2 stressful but very interesting
     Given a titled page exists
     When I am on the page's page
     When I follow "Rate"
       And I choose "very interesting"
-      And I choose "upsetting"
+      And I choose "stressful"
     And I press "Rate"
     Then I should see "set for reading again in 2 years"
     When I am on the page's page
-    Then I should see "good"
+    Then I should see "good, interesting, stressful"
 
-  Scenario: rate a book good easy
+  Scenario: rate a book 2 boring but very sweet
     Given a titled page exists
     When I am on the page's page
     When I follow "Rate"
-      And I choose "dull"
+      And I choose "boring"
       And I choose "very sweet"
     And I press "Rate"
     Then I should see "set for reading again in 2 years"
     When I am on the page's page
-    Then I should see "good"
+    Then I should see "boring, good, sweet"
 
-  Scenario: rate a book okay easy
+  Scenario: rate a book 3 boring
     Given a titled page exists
     When I am on the page's page
     When I follow "Rate"
-      And I choose "dull"
-      And I choose "easy"
+      And I choose "boring"
+      And I choose "sweet enough"
     And I press "Rate"
     Then I should see "set for reading again in 3 years"
     When I am on the page's page
-    Then I should see "okay"
+    Then I should see "boring"
 
-  Scenario: rate a book okay good
+  Scenario: rate a book 3 stressful
     Given a titled page exists
     When I am on the page's page
     When I follow "Rate"
-      And I choose "good"
-      And I choose "upsetting"
+      And I choose "interesting enough"
+      And I choose "stressful"
     And I press "Rate"
     Then I should see "set for reading again in 3 years"
-    Then I should see "okay"
-
-  Scenario: rate a book okay stressful
-    Given a titled page exists
-    When I am on the page's page
-    When I follow "Rate"
-      And I choose "very interesting"
-      And I choose "very stressful"
-    And I press "Rate"
-    Then I should see "set for reading again in 3 years"
-    When I am on the page's page
     Then I should see "stressful"
 
-  Scenario: rate a book okay boring
+  Scenario: rate a book 4 worst
     Given a titled page exists
     When I am on the page's page
     When I follow "Rate"
-      And I choose "very boring"
-      And I choose "very sweet"
-    And I press "Rate"
-    Then I should see "set for reading again in 3 years"
-    When I am on the page's page
-    Then I should see "boring"
-
-  Scenario: rate a book not great
-    Given a titled page exists
-    When I am on the page's page
-    When I follow "Rate"
-      And I choose "dull"
-      And I choose "upsetting"
+      And I choose "boring"
+      And I choose "stressful"
     And I press "Rate"
     Then I should see "set for reading again in 4 years"
-
-  Scenario: rate a book very bad
-    Given a titled page exists
     When I am on the page's page
-    When I follow "Rate"
-      And I choose "very boring"
-      And I choose "very stressful"
-    And I press "Rate"
-    Then I should see "set for reading again in 6 years"
-    When I am on the page's page
-    Then I should see "boring"
-      And I should see "stressful"
+    Then I should see "boring, stressful"
 
   Scenario: search for a favorite book
     Given pages with all possible ratings exist
@@ -186,9 +151,7 @@ Feature: new composite rating made up of stressful and interesting.
     When I choose "find_sweet"
       And I press "Find"
     Then I should see "page20"
-      And I should see "page30"
     But I should not see "page02"
-      And I should not see "page03"
 
   Scenario: search for interesting
     Given pages with all possible ratings exist
@@ -196,9 +159,7 @@ Feature: new composite rating made up of stressful and interesting.
     When I choose "find_interesting"
       And I press "Find"
     Then I should see "page02"
-      And I should see "page03"
     But I should not see "page20"
-      And I should not see "page30"
 
   Scenario: search for a book with both low stress & high interest
     Given pages with all possible ratings exist
@@ -209,4 +170,5 @@ Feature: new composite rating made up of stressful and interesting.
     But I should not see "page01"
       And I should not see "page10"
       And I should not see "page11"
-      And I should not see "page33"
+      And I should not see "page20"
+      And I should not see "page22"

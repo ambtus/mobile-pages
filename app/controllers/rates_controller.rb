@@ -19,12 +19,12 @@ class RatesController < ApplicationController
           flash[:notice] = "#{page.title} set for reading again in #{rating} years"
         end
         redirect_to pages_url
-      when "Rate reading"
+      when "Rate unfinished"
         if interesting && nice
           page.update_rating(interesting, nice)
         end
-        page.make_reading
-        flash[:notice] = "#{page.title} set to 'reading'"
+        page.make_unfinished
+        flash[:notice] = "#{page.title} set to 'unfinished'"
         redirect_to pages_url
     end
   end

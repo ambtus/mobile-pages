@@ -23,12 +23,6 @@ class Page < ActiveRecord::Base
   MININOTE = 75 # keep first this many characters plus enough for full words
   LIMIT = 15 # number of pages to show in index
 
-  UNREAD = "unread"
-  FAVORITE = "favorite"
-  GOOD = "good"
-  STRESSFUL = "stressful"
-  BORING = "boring"
-
   SIZES = ["short", "medium", "long", "any"]
 
   SHORT_WC =   7500
@@ -99,7 +93,7 @@ class Page < ActiveRecord::Base
     pages = pages.where(:favorite => [0,1]) if params[:favorite] == "yes"
     pages = pages.where(:favorite => [2,3,4,5,6,9]) if params[:favorite] == "no"
     pages = pages.where(:favorite => 2) if params[:favorite] == "good"
-    pages = pages.where(:favorite => 9) if params[:favorite] == "reading"
+    pages = pages.where(:favorite => 9) if params[:favorite] == "unfinished"
     pages = pages.where(:favorite => [0,1,2]) if params[:favorite] == "either"
     pages = pages.where(:nice => [0]) if params[:find] == "sweet" || params[:find] == "both"
     pages = pages.where(:interesting => [0]) if params[:find] == "interesting" || params[:find] == "both"
@@ -319,7 +313,7 @@ class Page < ActiveRecord::Base
     return self
   end
 
-  def make_reading
+  def make_unfinished
     latest = Page.where(:parent_id => nil).order(:read_after).last.read_after + 1.day || Date.tomorrow
     self.update_attribute(:read_after, latest)
     self.update_attribute(:favorite, 9)
@@ -416,30 +410,30 @@ class Page < ActiveRecord::Base
     names = case self.favorite
       when 0
         if self.last_read
-          [FAVORITE]
+          ["favorite"]
         else
           []
         end
       when 1
-        [FAVORITE]
+        ["favorite"]
       when 2
-        [GOOD]
-      when 3
-        ["okay"]
+        ["good"]
       when 9
-        ["reading"]
+        ["unfinished"]
       else
         []
     end
-    names = names + [STRESSFUL] if nice == 3
-    names = names + [BORING] if interesting == 3
-    names.compact
+    names = names + ["sweet"] if nice == 0
+    names = names + ["interesting"] if interesting == 0
+    names = names + ["stressful"] if nice == 2
+    names = names + ["boring"] if interesting == 2
+    names.sort.compact
   end
 
   def tag_names(download = false)
     names = self.authors.map(&:name) + self.genres.map(&:name)
     names = names + [self.size] unless download
-    names = names + [(self.last_read ? self.last_read.to_date : UNREAD)] unless download
+    names = names + [(self.last_read ? self.last_read.to_date : "unread")] unless download
     names = names + favorite_names
     names.compact
   end

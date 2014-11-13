@@ -18,8 +18,8 @@ end
 
 Given /^pages with all possible ratings exist$/ do
   Page.delete_all
-  4.times do |interesting|
-    4.times do |nice|
+  3.times do |interesting|
+    3.times do |nice|
       p = Page.create(:title => "page" + interesting.to_s + nice.to_s)
       p.update_rating(interesting.to_s, nice.to_s)
     end

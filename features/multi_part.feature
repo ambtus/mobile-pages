@@ -379,7 +379,7 @@ Feature: multi-part pages
     When I am on the homepage
       And I follow "Rate"
       And I choose "very interesting"
-      And I choose "easy"
+      And I choose "sweet enough"
     And I press "Rate"
    When I am on the homepage
       And I follow "Grandparent" within "#position_1"
