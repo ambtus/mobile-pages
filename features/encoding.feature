@@ -43,7 +43,7 @@ Scenario Outline: encodings
   Scenario: utf8 in parts
     Given a titled page exists with urls: "http://test.sidrasue.com/sbutf8.html"
     When I am on the page's page
-      And I follow "HTML"
+      And I follow "HTML" within ".title"
     Then I should see "“H"
 
   Scenario: latin1

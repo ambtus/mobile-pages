@@ -34,7 +34,7 @@ Feature: primarily genre tests
   Scenario: genre selected
     Given a genre exists with name: "first"
       And I am on the homepage
-      And I select "first" from "Genre"
+      And I select "first" from "genre"
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
@@ -45,8 +45,8 @@ Feature: primarily genre tests
     Given a genre exists with name: "first"
       And a genre exists with name: "second"
       And I am on the homepage
-      And I select "first" from "Genre"
-      And I select "second" from "Genre2"
+      And I select "first" from "genre"
+      And I select "second" from "genre2"
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
@@ -62,8 +62,8 @@ Feature: primarily genre tests
     Then I should see "classic" within ".genres"
       And I should see "children's" within ".genres"
     When I am on the homepage
-    Then I select "classic" from "Genre"
-    Then I select "children's" from "Genre"
+    Then I select "classic" from "genre"
+    Then I select "children's" from "genre"
 
   Scenario: select a genre for a page when there are genres
     Given a genre exists with name: "fantasy"
@@ -84,9 +84,9 @@ Feature: primarily genre tests
       And I press "Add Genres"
     Then I should see "children's, classic, something" within ".genres"
     When I am on the homepage
-    Then I select "classic" from "Genre"
-      And I select "something" from "Genre"
-      And I select "children's" from "Genre"
+    Then I select "classic" from "genre"
+      And I select "something" from "genre"
+      And I select "children's" from "genre"
 
   Scenario: new parent for an existing page should have genre
     Given a titled page exists with add_genres_from_string: "genre"
@@ -104,18 +104,18 @@ Feature: primarily genre tests
     When I am on the genres page
     Then I should see "fantasy"
       And I should see "science fiction"
-    When I follow "edit"
+    When I follow "edit fantasy"
       Then I should see "Edit genre: fantasy"
 
   Scenario: edit the genre name
     Given a genre exists with name: "fantasy"
     When I am on the homepage
-      And I select "fantasy" from "Genre"
+      And I select "fantasy" from "genre"
     When I am on the genre's edit page
     And I fill in "genre_name" with "Fantasy"
     And I press "Update"
     When I am on the homepage
-      And I select "Fantasy" from "Genre"
+      And I select "Fantasy" from "genre"
 
   Scenario: delete a genre
     Given a genre exists with name: "science fiction"
@@ -138,7 +138,7 @@ Feature: primarily genre tests
     When I am on the homepage
       Then I should see "better name" within ".genres"
       And I should not see "bad name" within ".genres"
-    When I select "better name" from "Genre"
+    When I select "better name" from "genre"
       And I press "Find"
     Then I should not see "No pages found"
 
@@ -149,7 +149,7 @@ Feature: primarily genre tests
       | Alice in Wonderland              | children          |
       | The Boxcar Children              | mystery, children |
     When I am on the homepage
-      And I select "mystery" from "Genre"
+      And I select "mystery" from "genre"
       And I press "Find"
     Then I should see "The Mysterious Affair at Styles"
       And I should see "The Boxcar Children"
@@ -162,8 +162,8 @@ Feature: primarily genre tests
       | Alice in Wonderland              | children          |
       | The Boxcar Children              | mystery, children |
     When I am on the homepage
-      And I select "mystery" from "Genre"
-      And I select "children" from "Genre2"
+      And I select "mystery" from "genre"
+      And I select "children" from "genre2"
       And I press "Find"
     Then I should see "The Boxcar Children"
       But I should not see "The Mysterious Affair at Styles"

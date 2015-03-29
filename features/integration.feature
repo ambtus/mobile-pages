@@ -5,8 +5,8 @@ Feature: tests that don't fit neatly into another feature
       And a genre exists with name: "genre2"
     When I am on the homepage
       And I fill in "page_title" with "Testme"
-     And I select "genre1" from "Genre"
-     And I select "genre2" from "Genre2"
+     And I select "genre1" from "genre"
+     And I select "genre2" from "genre2"
       And I press "Store"
    Then I should see "Page created" within "#flash_notice"
      And I should see "Testme" within ".title"
@@ -20,7 +20,7 @@ Feature: tests that don't fit neatly into another feature
       And I fill in "page_url" with "http://test.sidrasue.com/test.html"
      And I fill in "page_title" with "Simple test"
      And I fill in "page_notes" with "some notes"
-     And I select "mygenre" from "Genre"
+     And I select "mygenre" from "genre"
      And I select "myauthor" from "Author"
      And I press "Store"
    Then I should see "Page created" within "#flash_notice"
@@ -45,7 +45,7 @@ Feature: tests that don't fit neatly into another feature
         """
      And I fill in "page_title" with "Multiple pages from urls"
      And I fill in "page_notes" with "some notes"
-     And I select "mygenre" from "Genre"
+     And I select "mygenre" from "genre"
      And I select "myauthor" from "Author"
      And I press "Store"
    Then I should see "Multiple pages from urls"
@@ -54,7 +54,7 @@ Feature: tests that don't fit neatly into another feature
      And I should see "myauthor" within ".authors"
      And I should see "Part 1" within "#position_1"
      And I should see "Part 2" within "#position_2"
-   When I follow "HTML"
+   When I follow "HTML" within ".title"
      Then I should see "Part 1"
      And I should see "stuff for part 1"
      And I should see "Part 2"
@@ -74,7 +74,7 @@ Feature: tests that don't fit neatly into another feature
     # Find all by author
     When I am on the homepage
       And I select "agatha christie" from "Author"
-      And I select "mystery" from "Genre"
+      And I select "mystery" from "genre"
       And I press "Find"
     Then I should see "The Mysterious Affair at Styles" within "#position_1"
       And I should see "Murder on the Orient Express" within "#position_2"
@@ -86,7 +86,7 @@ Feature: tests that don't fit neatly into another feature
       And I should not see "The Boxcar Children"
     # find unread by genre
     When I am on the homepage
-      And I select "children" from "Genre"
+      And I select "children" from "genre"
       And I choose "unread_yes"
       And I press "Find"
     Then I should see "The Boxcar Children"
@@ -104,7 +104,7 @@ Feature: tests that don't fit neatly into another feature
       And I should not see "The Boxcar Children"
     # find favorite by genre
     When I am on the homepage
-      And I select "children" from "Genre"
+      And I select "children" from "genre"
       And I choose "favorite_yes"
       And I press "Find"
     Then I should see "Harry Potter"

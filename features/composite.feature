@@ -10,7 +10,6 @@ Feature: new composite rating made up of sweet and interesting.
     Then I should see "very sweet"
       And I should see "sweet"
       And I should see "stressful"
-    And I should see "Rate"
 
   Scenario: error if don't select both before rating
     Given a titled page exists

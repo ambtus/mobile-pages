@@ -26,7 +26,7 @@ require File.expand_path(File.join(File.dirname(__FILE__), "..", "support", "sel
 
 module WithinHelpers
   def with_scope(locator)
-    locator ? within(*selector_for(locator)) { yield } : yield
+    locator ? within(first(*selector_for(locator))) { yield } : yield
   end
 end
 World(WithinHelpers)
@@ -91,16 +91,6 @@ Then /^(?:|I )should see "([^"]*)"$/ do |text|
     page.should have_content(text)
   else
     assert page.has_content?(text)
-  end
-end
-
-Then /^(?:|I )should see \/([^\/]*)\/$/ do |regexp|
-  regexp = Regexp.new(regexp)
-
-  if page.respond_to? :should
-    page.should have_xpath('//*', :text => regexp)
-  else
-    assert page.has_xpath?('//*', :text => regexp)
   end
 end
 

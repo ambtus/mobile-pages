@@ -9,11 +9,10 @@ gem 'unicorn'
 
 group :test do
   gem 'pickle'
-  gem 'capybara', '~>1.1.0'
+  gem 'capybara'
   gem 'database_cleaner'
   gem 'cucumber-rails'
   gem 'cucumber'
-  gem 'rspec-rails', ">=2.0.1"
   gem 'launchy'    # So you can do Then show me the page
 end
 

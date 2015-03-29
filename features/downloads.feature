@@ -19,7 +19,7 @@ Feature: downloads
   Scenario: remove downloads
     Given a page exists with title: "Alice"
     When I am on the page's page
-      And I follow "HTML"
+      And I follow "HTML" within ".title"
     Then the download directory should exist for page titled "Alice"
     When I am on the page's page
        And I press "Remove Downloads"
@@ -28,7 +28,7 @@ Feature: downloads
   Scenario: remove parent downloads
     Given a page exists with title: "Parent", urls: "http://test.sidrasue.com/parts/2.html##John\nhttp://test.sidrasue.com/parts/3.html"
     When I am on the page's page
-      And I follow "HTML"
+      And I follow "HTML" within ".title"
     Then the download directory should exist for page titled "Parent"
     When I am on the page's page
       And I follow "John"
@@ -38,7 +38,7 @@ Feature: downloads
   Scenario: remove child downloads
     Given a page exists with title: "Parent", urls: "http://test.sidrasue.com/parts/2.html##John\nhttp://test.sidrasue.com/parts/3.html"
     When I am on the page's page
-      And I follow "HTML"
+      And I follow "HTML" within ".title"
     Then the download directory should exist for page titled "Parent"
       And the download directory should not exist for page titled "John"
     When I am on the page's page
@@ -47,7 +47,7 @@ Feature: downloads
       And the download directory should not exist for page titled "John"
     When I am on the page's page
       And I follow "John"
-      And I follow "HTML"
+      And I follow "HTML" within ".title"
       And the download directory should exist for page titled "John"
     When I am on the page's page
        And I press "Remove Downloads"

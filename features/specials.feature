@@ -5,7 +5,7 @@ Feature: hiddens are just like genres, but they are hidden by default. The hidde
     Given a genre exists with name: "something"
       And I am on the homepage
       And I select "nonfiction" from "Hidden"
-      And I select "something" from "Genre"
+      And I select "something" from "genre"
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
@@ -144,7 +144,7 @@ Feature: hiddens are just like genres, but they are hidden by default. The hidde
     When I am on the homepage
     Then I should not see "No pages found"
       And I should have no hiddens
-      And I select "hidden name" from "Genre"
+      And I select "hidden name" from "genre"
       And I press "Find"
     Then I should not see "No pages found"
 

@@ -8,9 +8,9 @@
 .form
   = form_for @page do |f|
     .button= f.submit "Remove surrounding Div"
-    .button= f.submit "Scrub"
-    = @page.top_nodes.size.to_s + " nodes"
     .top
+      .button= f.submit "Scrub"
+      = @page.top_nodes.size.to_s + " nodes"
       Top
       - @page.top_nodes.each_with_index do |node,index|
         .node
@@ -23,5 +23,5 @@
           - id = @page.bottom_nodes.size - index
           = radio_button_tag "bottom_node", id, false
           = label_tag "bottom_node_#{id}", node
-    .button= f.submit "Scrub"
+      .button= f.submit "Scrub"
 %a{:name => "end"}
