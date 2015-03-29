@@ -17,3 +17,7 @@ end
 Then /^"([^\"]*)" should link to "([^\"]*)"$/ do |link_text, link_url|
   page.find_link(link_text)['href'].should == link_url
 end
+
+Then /^show me the page$/ do
+  save_and_open_page
+end

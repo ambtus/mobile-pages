@@ -11,7 +11,7 @@ Feature: clean up html from web
     Given a page exists with title: "Quotes", url: "http://test.sidrasue.com/quotes.html"
     When I go to the page's page
       And I follow "HTML" within ".title"
-    Then I should see /"Retrieved from the web"/
+    Then I should see "Retrieved from the web"
     But my page named "Quotes" should not contain "&quot;"
 
   Scenario: pasted html file gets cleaned
