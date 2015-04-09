@@ -626,16 +626,27 @@ class Page < ActiveRecord::Base
 
   def get_meta_from_epub
     Rails.logger.debug "getting meta from epub"
-    self.uploaded = true
-    create_tmpfile
-    self.update_attribute(:wordcount, (File.size(tmpfile_name) - 95000)/3)
+    self.update_attribute(:wordcount, (File.size("#{self.download_basename}.epub") - 95000)/3)
     self.set_wordcount(false)
-    cmd = %Q{ebook-meta "#{tmpfile_name}"}
+    cmd = %Q{ebook-meta "#{download_basename}.epub"}
     Rails.logger.debug cmd
-    meta = Hash[*`#{cmd}`.split(/[\n]/).map{ |s| s.split(/:/, 2) }.flatten.map(&:strip)]  #`
+    meta_array = `#{cmd}`.split(/[\n]/).map{ |s| s.split(/:/, 2) } #`
+    meta = Hash.new
+    meta_array.each do |sub_array|
+     key = sub_array.first
+     value = sub_array.second
+     if key.blank?
+       Rails.logger.debug "no key for value #{value}"
+     elsif value.blank?
+       Rails.logger.debug "no value for key #{key}"
+     else
+       meta[key.strip] = value.strip
+     end
+    end
+    Rails.logger.debug meta
     self.update_attribute(:title, meta["Title"]) if self.title == "Placeholder"
     Rails.logger.debug " epub title is #{self.title}"
-    add_author(meta["Author(s)"].match(/([^ \[]+)/).to_s.strip)
+    add_author(meta["Author(s)"])
   end
 
   def add_author(string)
@@ -734,10 +745,12 @@ private
     FileUtils.rm_rf(mydirectory) # make sure directory is empty for testing
     FileUtils.mkdir_p(download_dir) # make sure directory exists
     if file
-      get_meta_from_epub
+      self.uploaded = true
+      create_tmpfile
       cmd = "mv #{tmpfile_name} \"#{download_basename}.epub\""
       Rails.logger.debug cmd
       `#{cmd}`
+      get_meta_from_epub
     elsif !self.url.blank?
       if self.url.match(/archiveofourown/) && !self.url.match(/chapter/)
         self.get_meta_from_ao3
