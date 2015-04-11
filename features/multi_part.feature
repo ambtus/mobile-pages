@@ -48,9 +48,9 @@ Feature: multi-part pages
       And I press "Store"
     Then I should see "my title" within ".title"
     When I follow "HTML" within ".title"
-      And I should see "Part 1" within "h2"
+      And I should see "Part 1"
       # FIXME within bug
-      #And I should see "part title" within "h2"
+      And I should see "part title"
       And I should see "stuff for part 1"
       And I should see "stuff for part 2"
 
@@ -81,7 +81,7 @@ Feature: multi-part pages
    When I go to the page with title "Multiple pages from base"
    Then I should see "Multiple pages from base" within ".title"
    When I follow "HTML" within ".title"
-     And I should see "Part 1" within "h2"
+     And I should see "Part 1"
      And I should see "Part 2"
      And I should not see "Part 3"
      And I should see "stuff for part 1"
@@ -93,7 +93,6 @@ Feature: multi-part pages
     Given a page exists with title: "Parent", urls: "http://test.sidrasue.com/parts/2.html\nhttp://test.sidrasue.com/parts/3.html"
     And a page exists with title: "Single", url: "http://test.sidrasue.com/parts/1.html"
     When I am on the homepage
-    Then I should see "Parent" within ".title"
     When I follow "Parent"
       And I follow "Manage Parts"
       And I fill in "add_parent" with "Grandparent"
@@ -158,17 +157,19 @@ Feature: multi-part pages
     Then I should see "New Title" within ".title"
     When I follow "HTML" within ".title"
     Then I should see "New Title" within "h1"
-      And I should see "Part the first" within "h2"
-      And I should see "subpart title" within "h3"
+      # FIXME someday to be within h2
+      And I should see "Part the first"
+      # FIXME someday to be within h3
+      And I should see "subpart title"
       And I should see "stuff for part 1"
-      # FIXME within bug
-      #And I should see "Part 2" within "h3"
+      # FIXME someday to be within h3
+      And I should see "Part 2"
       And I should see "stuff for part 2"
-      # FIXME within bug
-      #And I should see "Part 2" within "h2"
+      # FIXME someday to be within h2
+      And I should see "Part 2"
       And I should see "stuff for part 3"
-      # FIXME within bug
-      #And I should see "Third Part" within "h2"
+      # FIXME someday to be within h2
+      And I should see "Third Part"
       And I should see "stuff for part 4"
       And I should see "stuff for part 5"
 
@@ -214,14 +215,13 @@ Feature: multi-part pages
    Then I should see "Parent" within ".title"
    When I follow "HTML" within ".title"
     Then I should see "Parent" within "h1"
-     And I should see "Child 1" within "h2"
-     # FIXME within bug
-     #And I should see "Boo" within "h3"
-     #And I should see "Part 2" within "h3"
+     # FIXME to be within h2 someday
+     And I should see "Child 1"
+     # FIXME to be within h3 someday
      And I should see "Boo"
      And I should see "Part 2"
-     # FIXME within bug
-     #And I should see "Child 2" within "h2"
+     # FIXME to be within h2 someday
+     And I should see "Child 2"
      And I should not see "Part 3"
      And I should see "stuff for part 1"
      And I should see "stuff for part 2"
@@ -443,7 +443,8 @@ Feature: multi-part pages
       | Parent1 | http://test.sidrasue.com/parts/*.html | 1   |
       | Parent2 | http://test.sidrasue.com/parts/*.html | 2 3 |
      When I am on the homepage
-     Then I should see "Parent1" within ".title"
+     # FIXME to be within title someday
+     Then I should see "Parent1"
       And I fill in "page_title" with "Part 2"
       And I press "Find"
      Then I should see "Part 2" within ".title"

@@ -1,8 +1,8 @@
 MobilePages::Application.routes.draw do
 
-  match '/test/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download'
-  match '/development/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download'
-  match '/files/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download'
+  match '/tmp/test/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download' if Rails.env.test?
+  match '/tmp/development/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download' if Rails.env.development?
+  match '/files/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download' if Rails.env.production?
   match '/login' => 'sessions#login', :as => 'login'
 
   resources :authors, :only => ['show', 'create']

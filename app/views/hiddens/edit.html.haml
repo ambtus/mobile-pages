@@ -1,5 +1,6 @@
-- content_for :title do
-  = "Edit hidden genre: " + @hidden.name
+-title="Edit hidden genre: #{@hidden.name}"
+-content_for(:title, title)
+%h1=title
 .destroy
   %p= link_to 'Destroy', hidden_path(@hidden, :destroy => true)
 %p.genre

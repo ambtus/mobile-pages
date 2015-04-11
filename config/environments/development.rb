@@ -26,4 +26,5 @@ MobilePages::Application.configure do
   # Print deprecation notices to the stderr
   # could also be :log
   config.active_support.deprecation = :stderr
+
 end

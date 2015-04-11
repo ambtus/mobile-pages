@@ -4,8 +4,12 @@ gem 'bundler'
 gem 'rails', '~>3.2.0'
 gem 'mysql2', '~>0.3.0'
 
-# Use unicorn as the web server
-gem 'unicorn'
+gem 'unicorn', group: :production
+
+group :development do
+  gem 'quiet_safari'
+  gem 'thin'
+end
 
 group :test do
   gem 'pickle'

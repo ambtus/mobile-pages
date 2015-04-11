@@ -20,7 +20,7 @@ module ApplicationHelper
   end
 
   def download_url_for_page(page, format)
-    url_for "#{page.mypath}downloads/#{page.download_title}#{format}".gsub(' ', '%20')
+    url_for page.download_url(format)
   end
 
 end

@@ -85,6 +85,7 @@ class PagesController < ApplicationController
     @page = Page.find(params[:id])
     @page = @page.make_first if (params[:commit] == "Read First")
     @page.remove_outdated_downloads if (params[:commit] == "Remove Downloads")
+    @page.make_audio if (params[:commit] == "Audiobook created")
     case params[:commit]
       when "Rebuild from Raw HTML"
         @page.rebuild_from_raw
@@ -107,7 +108,21 @@ class PagesController < ApplicationController
         @page.update_attributes(params[:page])
         @page.remove_outdated_downloads
         redirect_to page_url(@page) and return
+      when "Preview Section"
+        @section_number = params[:section].to_i
+        @old = @page.section(@section_number)
+        @new = params[:edited]
+        render :preview and return
+      when "Confirm Section Edit"
+        @page.edit_section(params[:section].to_i,params[:new])
+        redirect_to @page.download_url(".read") and return
     end
     redirect_to @page
+  end
+
+  def edit # used for editing sections
+    @page = Page.find(params[:id])
+    @section_number = params[:section].to_i
+    @section = @page.section(@section_number)
   end
 end

@@ -4,21 +4,29 @@ class Page < ActiveRecord::Base
   MODULO = 300  # files in a single directory
 
   def mypath
-    env = case Rails.env
-      when "test"; "/test/"
-      when "development"; "/development/"
+    prefix = case Rails.env
+      when "test"; "/tmp/test/"
+      when "development"; "/tmp/development/"
       when "production"; "/files/"
     end
-    env + (self.id/MODULO).to_s + "/" + self.id.to_s + "/"
+    prefix + (self.id/MODULO).to_s + "/" + self.id.to_s + "/"
   end
-
   def mydirectory
-     Rails.public_path + self.mypath
+    if Rails.env.production?
+      Rails.public_path + mypath
+    else
+      mypath
+    end
   end
+  DOWNLOADS = "downloads/"
   def download_dir
-    "#{self.mydirectory}downloads/"
+    mydirectory + DOWNLOADS
+  end
+  def download_url(format)
+    "#{mypath}#{DOWNLOADS}/#{download_title}#{format}".gsub(' ', '%20')
   end
 
+  HIDDEN = "audio"
   DURATION = "years"
   MININOTE = 75 # keep first this many characters plus enough for full words
   LIMIT = 15 # number of pages to show in index
@@ -398,6 +406,7 @@ class Page < ActiveRecord::Base
   end
 
   def add_hiddens_from_string=(string)
+    Rails.logger.debug "adding hiddens: #{string} to #{self.id}"
     return if string.blank?
     string.split(",").each do |hidden|
       new = Hidden.find_or_create_by_name(hidden.squish)
@@ -461,6 +470,7 @@ class Page < ActiveRecord::Base
   def clean_html=(content)
     remove_outdated_downloads
     File.open(self.clean_html_file_name, 'w:utf-8') { |f| f.write(content) }
+    self.set_wordcount
   end
 
   def clean_html
@@ -476,26 +486,75 @@ class Page < ActiveRecord::Base
 
   def read_html
     body = Nokogiri::HTML(self.clean_html).xpath('//body').first
-    count = 0
-    section = 1
     if body
+      count = 0
+      section = 0
+      now = true
       body.traverse do |node|
-       if node.is_a? Nokogiri::XML::Text
+        if count == 0 && now
+         section += 1
+         now = false
+         node.add_previous_sibling("<h2 id=section_#{section}><a href=/pages/#{self.id}/edit?section=#{section}>Section #{section}</a> !!!!!READ SLOWLY AND ENUNCIATE!!!!!</h2>")
+        end
+        if node.text?
+          now = true
           words = node.inner_text.gsub(/(['-])+/, "")
           count +=  words.scan(/[a-zA-Z0-9_]+/).size
-        end
-        if count > 333
-         count = 0
-         section += 1
-         node.parent.after("<h2>Section #{section} !!!!!READ SLOWLY AND ENUNCIATE!!!!!</h2>")
+          count = 0 if count > 333
         end
       end
-      body.children.first.before("<h2>Section 1 !!!!!READ SLOWLY AND ENNUNCIATE!!!!!</h2>")
       body.children.to_xhtml
     else
       ""
     end
   end
+
+  def section(number)
+    body = Nokogiri::HTML(self.read_html).xpath('//body').first
+    first = body.at("h2#section_#{number}")
+    last = body.at("h2#section_#{number+1}")
+    result = []
+    while true do
+      break if first.blank?
+      first = first.next
+      break if first == last
+      result << first.to_html
+    end
+    result.join
+  end
+
+  def edit_section(number, new)
+    body = Nokogiri::HTML(self.clean_html).xpath('//body').first
+    if body
+      added = false
+      count = 0
+      section = 1
+      body.traverse do |node|
+        if node.text?
+          words = node.inner_text.gsub(/(['-])+/, "")
+          count +=  words.scan(/[a-zA-Z0-9_]+/).size
+          if count > 333
+            count = 0
+            section += 1
+          end
+          if section == number
+            node.parent.remove
+          elsif section == number + 1 && !added
+            node.parent.add_previous_sibling(new)
+            added = true
+          end
+        end
+      end
+      if added == false
+        Rails.logger.debug "added to end"
+        body.children.last.add_next_sibling(new)
+      end
+      self.clean_html=body.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
+    else
+      ""
+    end
+  end
+
 
   def re_sanitize
     Rails.logger.debug "re_sanitizing #{self.id}"
@@ -565,7 +624,6 @@ class Page < ActiveRecord::Base
     top.to_i.times { nodeset.shift }
     bottom.to_i.times { nodeset.pop }
     self.clean_html=nodeset.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
-    self.set_wordcount
   end
 
   def formatted_notes
@@ -584,6 +642,15 @@ class Page < ActiveRecord::Base
     snip_idx = short.index(/\s/, MININOTE)
     return short unless snip_idx
     short[0, snip_idx] + "..."
+  end
+
+  def make_audio
+    Rails.logger.debug "marking as audio for #{self.id}"
+    read_hidden = Hidden.find_or_create_by_name(HIDDEN)
+    earliest_read_book = read_hidden.pages.order(:read_after).first
+    earliest = earliest_read_book ? earliest_read_book.read_after : Date.today
+    self.add_hiddens_from_string= HIDDEN
+    self.update_attributes(:read_after => earliest - 1.day, :favorite => 0)
   end
 
 

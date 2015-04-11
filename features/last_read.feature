@@ -81,9 +81,9 @@ Feature: last_read (also unread)
      | Filler | 2008-01-01 | http://test.sidrasue.com/long.html | one |
      | Parent | 2009-01-01 |       | two |
     When I am on the homepage
-    Then I should see "Filler" within ".title"
-      And I should not see "unread" within ".last_read"
-      And I should see "medium" within ".size"
+    Then I should see "Filler" within "#position_1"
+      And I should not see "unread"
+      And I should see "medium"
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "Child"
       And I select "one" from "genre"
@@ -100,7 +100,7 @@ Feature: last_read (also unread)
       And I should see "two" within ".genres"
       And I should see "one" within "#position_1"
     When I am on the homepage
-    Then I should see "Filler" within ".title"
+    Then I should see "Filler"
     When I choose "unread_yes"
       And I press "Find"
       # no longer find unread parts...

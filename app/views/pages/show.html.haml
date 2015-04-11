@@ -14,5 +14,4 @@
       = link_to "HTML", download_url_for_page(part, ".html") unless part.uploaded
       = link_to "Sectioned", download_url_for_page(part, ".read") unless part.uploaded
       = link_to "Original", part.url unless part.url.blank?
-      %span.notes
-        = part.short_notes
+      %span.notes=part.short_notes

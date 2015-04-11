@@ -1,0 +1,8 @@
+-title = "Edit Section #{@section_number} for page: #{@page.title}"
+-content_for(:title, title)
+%h1=title
+.content
+  = form_for @page do |f|
+    .button= f.submit "Preview Section"
+    = hidden_field_tag(:section, @section_number)
+    = text_area_tag :edited, @section, :rows => 30, :cols => 80

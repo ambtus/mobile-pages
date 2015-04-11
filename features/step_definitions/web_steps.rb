@@ -26,7 +26,7 @@ require File.expand_path(File.join(File.dirname(__FILE__), "..", "support", "sel
 
 module WithinHelpers
   def with_scope(locator)
-    locator ? within(first(*selector_for(locator))) { yield } : yield
+    locator ? within(*selector_for(locator)) { yield } : yield
   end
 end
 World(WithinHelpers)
