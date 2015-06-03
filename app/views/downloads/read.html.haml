@@ -12,3 +12,6 @@
   - else
     .content{:style=> "page-break-before:always"}
       =raw @page.read_html
+.form
+  = form_for @page do
+    = submit_tag "Audiobook created"

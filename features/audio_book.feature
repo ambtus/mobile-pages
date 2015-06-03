@@ -98,6 +98,7 @@ Feature: preparation for reading
     And I should not see "favorite"
     And I should not see "audio"
     When I follow "first" within "#position_1"
+    And I follow "Sectioned"
     And I press "Audiobook created"
     When I am on the page with title "first"
     Then I should see "audio" within ".hiddens"
@@ -105,6 +106,7 @@ Feature: preparation for reading
     When I am on the homepage
     Then I should not see "first" within "#position_1"
     When I follow "second" within "#position_1"
+    And I follow "Sectioned"
     And I press "Audiobook created"
       And I am on the homepage
     Then I should not see "second"
