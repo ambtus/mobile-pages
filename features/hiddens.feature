@@ -16,6 +16,7 @@ Feature: hiddens are just like genres, but they are hidden by default. The hidde
     Given a titled page exists
     When I go to the page's page
       And I follow "Hiddens"
+      And I follow "Add Hidden Genres"
       And I fill in "hiddens" with "  nonfiction,  audio  book,save for   later  "
       And I press "Add Hidden Genres"
     Then I should see "audio book, nonfiction, save for later" within ".hiddens"
@@ -24,6 +25,7 @@ Feature: hiddens are just like genres, but they are hidden by default. The hidde
     Given a titled page exists
     When I am on the page's page
       And I follow "Hiddens"
+      And I follow "Add Hidden Genres"
     When I fill in "hiddens" with "nonfiction, audio book"
       And I press "Add Hidden Genres"
     Then I should see "nonfiction" within ".hiddens"
@@ -36,7 +38,7 @@ Feature: hiddens are just like genres, but they are hidden by default. The hidde
     Given a hidden exists with name: "work in progress"
     And a titled page exists
     When I am on the page's page
-    When I follow "Hiddens"
+      And I follow "Hiddens"
       And I select "work in progress" from "page_hidden_ids_"
       And I press "Update Hidden Genres"
     Then I should see "work in progress" within ".hiddens"
@@ -74,7 +76,8 @@ Feature: hiddens are just like genres, but they are hidden by default. The hidde
       And I select "audiobooked" from "Hidden"
 
   Scenario: delete a hidden
-    Given a hidden exists with name: "work in progress"
+    Given I have no hiddens
+    And a hidden exists with name: "work in progress"
       And a titled page exists with add_hiddens_from_string: "work in progress"
     When I am on the hidden's edit page
     And I follow "Destroy"
@@ -135,7 +138,8 @@ Feature: hiddens are just like genres, but they are hidden by default. The hidde
       But I should not see "The Mysterious Affair at Styles"
 
   Scenario: move to genre
-    Given a hidden exists with name: "hidden name"
+    Given I have no hiddens
+    And a hidden exists with name: "hidden name"
       And a titled page exists with add_hiddens_from_string: "hidden name"
     When I am on the homepage
     Then I should see "No pages found"
@@ -148,3 +152,13 @@ Feature: hiddens are just like genres, but they are hidden by default. The hidde
       And I press "Find"
     Then I should not see "No pages found"
 
+
+  Scenario: include hiddens
+    Given the following pages
+      | title                            | add_hiddens_from_string  |
+      | Alice in Wonderland              | children          |
+    When I am on the homepage
+      Then I should not see "Alice in Wonderland"
+    When I select "any" from "Hidden"
+      And I press "Find"
+    Then I should see "Alice in Wonderland"

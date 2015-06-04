@@ -1,6 +1,8 @@
 class Hidden < ActiveRecord::Base
   NEW_PLACEHOLDER = "Enter Hidden genres to add (comma separated)"
 
+  ANY_PLACEHOLDER = Hidden.find_or_create_by_name("any")
+
   has_and_belongs_to_many :pages, :uniq => true
   default_scope :order => 'hiddens.name asc'
   validates_presence_of :name
@@ -10,6 +12,7 @@ class Hidden < ActiveRecord::Base
 
   def remove_placeholder
     self.name = nil if self.name == NEW_PLACEHOLDER
+    self.name = nil if self.name == "any"
   end
 
   before_save :strip_whitespace

@@ -115,7 +115,9 @@ class Page < ActiveRecord::Base
     pages = pages.search(:cached_genre_string, params[:genre]) if params.has_key?(:genre)
     pages = pages.search(:cached_genre_string, params[:genre2]) if params.has_key?(:genre2)
     if params.has_key?(:hidden)
-      pages = pages.search(:cached_hidden_string, params[:hidden])
+      unless params[:hidden] == "any"
+        pages = pages.search(:cached_hidden_string, params[:hidden])
+      end
     else
       pages = pages.where(:cached_hidden_string => '')
     end

@@ -6,6 +6,10 @@ Given /^I have no genres$/ do
   Genre.delete_all
 end
 
+Given /^I have no hiddens$/ do
+  Hidden.delete_all
+end
+
 Given /^the following authors?$/ do |table|
   Author.delete_all
   # table is a Cucumber::Ast::Table
