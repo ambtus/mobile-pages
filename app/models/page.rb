@@ -649,10 +649,10 @@ class Page < ActiveRecord::Base
   def make_audio
     Rails.logger.debug "marking as audio for #{self.id}"
     read_hidden = Hidden.find_or_create_by_name(HIDDEN)
-    earliest_read_book = read_hidden.pages.order(:read_after).first
-    earliest = earliest_read_book ? earliest_read_book.read_after : Date.today
+    last_read_book = read_hidden.pages.order(:read_after).last
+    last = last_read_book ? last_read_book.read_after : Date.today
     self.add_hiddens_from_string= HIDDEN
-    self.update_attributes(:read_after => earliest - 1.day, :favorite => 0)
+    self.update_attributes(:read_after => last + 1.day, :favorite => 0)
   end
 
 

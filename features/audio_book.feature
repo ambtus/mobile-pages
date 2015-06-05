@@ -112,5 +112,18 @@ Feature: preparation for reading
     Then I should not see "second"
     When I select "audio" from "Hidden"
       And I press "Find"
-    Then I should see "first" within "#position_2"
-    And I should see "second" within "#position_1"
+    Then I should see "first" within "#position_1"
+    And I should see "second" within "#position_2"
+    And I should not see "third"
+    When I am on the homepage
+    And I follow "third" within "#position_1"
+        And I press "Audiobook created"
+    When I am on the page with title "third"
+    Then I should see "audio" within ".hiddens"
+    When I am on the homepage
+      And I select "audio" from "Hidden"
+      And I press "Find"
+    Then I should see "first" within "#position_1"
+    And I should see "second" within "#position_2"
+    And I should see "third" within "#position_3"
+
