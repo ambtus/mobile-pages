@@ -126,4 +126,4 @@ Feature: preparation for reading
     Then I should see "first" within "#position_1"
     And I should see "second" within "#position_2"
     And I should see "third" within "#position_3"
-
+    And I should not see "2014"

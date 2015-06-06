@@ -652,7 +652,7 @@ class Page < ActiveRecord::Base
     last_read_book = read_hidden.pages.order(:read_after).last
     last = last_read_book ? last_read_book.read_after : Date.today
     self.add_hiddens_from_string= HIDDEN
-    self.update_attributes(:read_after => last + 1.day, :favorite => 0)
+    self.update_attributes(:read_after => last + 1.day, :favorite => 0, :last_read => Time.now)
   end
 
 
