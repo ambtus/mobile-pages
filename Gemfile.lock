@@ -100,7 +100,6 @@ GEM
       cucumber (>= 0.8)
       rake
     polyglot (0.3.5)
-    power_assert (0.2.3)
     quiet_safari (1.0.0)
       railties (>= 3.1.0)
     rack (1.4.7)
@@ -182,3 +181,6 @@ DEPENDENCIES
   test-unit (~> 3.0)
   thin
   unicorn
+
+BUNDLED WITH
+   1.10.5
