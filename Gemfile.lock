@@ -52,7 +52,7 @@ GEM
       nokogiri (~> 1.5)
       rails (>= 3, < 5)
     daemons (1.2.3)
-    database_cleaner (1.4.1)
+    database_cleaner (1.5.0)
     diff-lcs (1.2.5)
     domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
@@ -100,6 +100,7 @@ GEM
       cucumber (>= 0.8)
       rake
     polyglot (0.3.5)
+    power_assert (0.2.4)
     quiet_safari (1.0.0)
       railties (>= 3.1.0)
     rack (1.4.7)
@@ -137,6 +138,8 @@ GEM
       multi_json (~> 1.0)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
+    test-unit (3.1.3)
+      power_assert
     thin (1.6.3)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0)
@@ -176,7 +179,7 @@ DEPENDENCIES
   nokogiri (>= 1.4.1)
   pickle
   quiet_safari
-  rails (~> 3.2.0)
+  rails (~> 3.2.22)
   sanitize (>= 1.2.0)
   test-unit (~> 3.0)
   thin
