@@ -338,7 +338,7 @@ class Page < ActiveRecord::Base
     return self
   end
 
-  def update_rating(interesting_string, nice_string, update_children=true)
+  def update_rating(interesting_string, nice_string, update_children=true, update_parent=true)
     self.last_read = Time.now
     self.interesting = interesting_string.to_i
     self.nice = nice_string.to_i
@@ -350,8 +350,8 @@ class Page < ActiveRecord::Base
       self.read_after = Time.now + rating.send(DURATION)
     end
     self.save
-    self.parent.update_rating(interesting_string, nice_string, false) if self.parent
-    self.parts.each {|p| p.update_rating(interesting_string, nice_string, true)} if update_children
+    self.parent.update_rating(interesting_string, nice_string, false, true) if self.parent && update_parent
+    self.parts.each {|p| p.update_rating(interesting_string, nice_string, true, false)} if update_children
     return rating
   end
 

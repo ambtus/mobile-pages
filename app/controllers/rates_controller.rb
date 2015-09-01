@@ -26,6 +26,14 @@ class RatesController < ApplicationController
         page.make_unfinished
         flash[:notice] = "#{page.title} set to 'unfinished'"
         redirect_to pages_url
+      when "Rate part"
+        unless interesting && nice
+          flash[:alert] = "You must select both ratings"
+          redirect_to rate_path(page) and return
+        end
+        page.update_rating(interesting, nice, true, false)
+        flash[:notice] = "#{page.parent.title} reading date unchanged"
+        redirect_to pages_url
     end
   end
 end

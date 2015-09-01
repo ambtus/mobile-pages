@@ -171,3 +171,27 @@ Feature: new composite rating made up of sweet and interesting.
       And I should not see "page11"
       And I should not see "page20"
       And I should not see "page22"
+
+  Scenario: rate part only
+    Given the following pages
+      | title  | base_url                              | url_substitutions |
+      | Parent | http://test.sidrasue.com/parts/*.html | 1 2 |
+    When I am on the homepage
+      And I follow "Parent"
+      And I follow "Part 1"
+      And I follow "Rate"
+      And I choose "very interesting"
+      And I choose "very sweet"
+    And I press "Rate"
+    Then I should see "set for reading again in 6 months"
+    When I follow "Parent"
+      And I follow "Part 2"
+      And I follow "Rate"
+      And I choose "stressful"
+      And I choose "boring"
+    And I press "Rate part"
+    Then I should see "Parent reading date unchanged"
+    And I should see "favorite, interesting, sweet"
+    When I follow "Parent"
+      And I follow "Part 2"
+      Then I should see "boring, stressful"
