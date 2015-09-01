@@ -18,6 +18,7 @@ group :test do
   gem 'cucumber-rails'
   gem 'cucumber'
   gem 'launchy'    # So you can do Then show me the page
+  gem 'test-unit', '~> 3.0'
 end
 
 gem 'escape_utils'
