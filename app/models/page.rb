@@ -161,6 +161,13 @@ class Page < ActiveRecord::Base
     "#{self.id}-#{self.clean_title}"
   end
 
+  def ao3?
+    (self.url && self.url.match(/archiveofourown/)) ||
+    (self.parts.first && self.parts.first.url && self.parts.first.url.match(/archiveofourown/))
+  end
+  def ao3_url; self.url || self.parts.first.url.split("/chapter").first; end
+
+
   def fetch
     begin
       self.raw_html = Scrub.fetch(self.url)
@@ -169,7 +176,13 @@ class Page < ActiveRecord::Base
     rescue SocketError
       self.errors.add(:base, "couldn't resolve host name")
     end
-    self.get_meta_from_ao3 if self.url.match(/archiveofourown/)
+    self.get_meta_from_ao3 if self.ao3?
+  end
+
+  def refetch_ao3
+    Rails.logger.debug "refetch #{self.id}"
+    refetch_chapters_from_ao3
+    get_meta_from_ao3(true)
   end
 
   def parts_from_urls(url_title_list, refetch=false)
@@ -750,16 +763,37 @@ class Page < ActiveRecord::Base
     end
   end
 
+  def refetch_chapters_from_ao3
+    doc = Nokogiri::HTML(Scrub.fetch(self.url + "/navigate"))
+    chapter_list = doc.xpath("//ol//a")
+    Rails.logger.debug "chapter list for #{self.id}: #{chapter_list}"
+    if chapter_list.size == 1
+      Rails.logger.debug "fetch one chapter"
+      self.fetch
+    else
+      Rails.logger.debug "fetch #{chapter_list.size} chapters"
+      url_list = []
+      chapter_list.each do |element|
+        title = element.text
+        url = "http://archiveofourown.org" + element['href']
+        url_list << url + "##" + title
+      end
+      Rails.logger.debug "#{url_list}"
+      self.parts_from_urls(url_list.join("\r"))
+    end
+  end
+
+  #TODO
   def get_chapters_from_ff
   end
 
   def get_chapters_from_skyehawke
   end
 
-  def get_meta_from_ao3
+  def get_meta_from_ao3(refetch=false)
     doc = Nokogiri::HTML(Scrub.fetch(self.url))
     doc_title = doc.at_xpath("//h2[@class = 'title heading']").text.strip
-    self.title = doc_title if self.title == "Title"
+    self.title = doc_title if (self.title == "Title" || refetch)
     doc_summary = doc.at_xpath("//div[@class = 'summary module']").text.gsub('Summary:','').strip  rescue ""
     doc_notes = doc.at_xpath("//div[@class = 'notes module']").text.gsub('Notes:','').strip  rescue ""
     doc_end_notes = doc.at_xpath("//div[@class = 'end notes module']").text.gsub('Notes:','').strip  rescue ""
@@ -821,7 +855,7 @@ private
       `#{cmd}`
       get_meta_from_epub
     elsif !self.url.blank?
-      if self.url.match(/archiveofourown/) && !self.url.match(/chapter/)
+      if self.ao3? && !self.url.match(/chapter/)
         self.get_meta_from_ao3
         self.get_chapters_from_ao3
       else

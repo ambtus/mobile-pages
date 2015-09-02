@@ -4,9 +4,13 @@ class RefetchesController < ApplicationController
   end
   def create
     @page = Page.find(params[:page_id])
-    if @page.parts.blank?
+    if @page.parts.blank? || @page.ao3?
       @page.update_attribute(:url, params[:url])
-      @page.fetch
+      if @page.ao3?
+        @page.refetch_ao3
+      else
+        @page.fetch
+      end
     else
       @page.parts_from_urls(params[:url_list], true)
     end
