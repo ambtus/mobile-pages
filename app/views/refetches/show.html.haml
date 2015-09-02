@@ -3,10 +3,10 @@
 .form
   = form_tag refetches_path do
     = hidden_field_tag(:page_id, @page.id)
-    - if @page.parts.blank?
-      = text_field_tag :url, @page.url, :maxlength => 255, :size => 80
     - if @page.ao3?
       = text_field_tag :url, @page.ao3_url, :maxlength => 255, :size => 80
+    - elsif @page.parts.blank?
+      = text_field_tag :url, @page.url, :maxlength => 255, :size => 80
     - else
       .parts= text_area_tag :url_list, @page.url_list, :rows => @page.parts.size + 2, :cols => 80
     = submit_tag "Refetch"
