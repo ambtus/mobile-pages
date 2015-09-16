@@ -97,12 +97,18 @@ class Page < ActiveRecord::Base
   def self.filter(params={})
     pages = Page.scoped
     pages = pages.where(:last_read => nil) if params[:unread] == "yes"
-    pages = pages.where('pages.last_read is not null') if params[:unread] == "no" || params[:sort_by] == "last_read" || params[:favorite] == "yes" || params[:favorite] == "either"
-    pages = pages.where(:favorite => [0,1]) if params[:favorite] == "yes"
+    pages = pages.where('pages.last_read is not null') if params[:unread] == "no" || params[:sort_by] == "last_read"
+    if params[:favorite] == "yes"
+      pages = pages.where(:favorite => [0,1])
+      pages = pages.where('pages.last_read is not null')
+    end
+    if params[:favorite] == "either"
+      pages = pages.where(:favorite => [0,1,2])
+      pages = pages.where('pages.last_read is not null')
+    end
     pages = pages.where(:favorite => [2,3,4,5,6,9]) if params[:favorite] == "no"
     pages = pages.where(:favorite => 2) if params[:favorite] == "good"
     pages = pages.where(:favorite => 9) if params[:favorite] == "unfinished"
-    pages = pages.where(:favorite => [0,1,2]) if params[:favorite] == "either"
     pages = pages.where(:nice => [0]) if params[:find] == "sweet" || params[:find] == "both"
     pages = pages.where(:interesting => [0]) if params[:find] == "interesting" || params[:find] == "both"
     pages = pages.where(:size => "short") if params[:size] == "short"
@@ -136,12 +142,19 @@ class Page < ActiveRecord::Base
       when "recently_read"
         pages.order('last_read DESC')
       when "random"
+        # when I want random fics, unless I'm deliberately asking for them
         unless params[:unread] == "yes"
-          # unless I'm deliberately looking for unreads
-          # when I want random fics I don't want really recently read ones
-          pages = pages.where('pages.last_read < ?', 1.year.ago)
-          # and I don't want okay ones
-          pages = pages.where('pages.favorite != ?', 3)
+          # I don't want unread ones, or ones that have been recently read
+          pages = pages.where('pages.last_read < ?', 6.months.ago)
+        end
+        unless params[:find] == "none"
+          # and I don't want stressful or boring ones
+          pages = pages.where(:nice => [0,1,nil])
+          pages = pages.where(:interesting => [0,1,nil])
+        end
+        unless params[:favorite] == "unfinished"
+          # and I don't want unfinished ones
+          pages = pages.where('pages.favorite != ?', 9)
         end
         pages.order('RAND()')
       when "last_created"

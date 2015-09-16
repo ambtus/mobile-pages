@@ -6,15 +6,15 @@ Feature: random page
       And I press "Find"
     Then I should see "No pages"
 
-  Scenario: find a random page
-    Given 2 titled pages exist
+  Scenario: don’t find unread random pages
+    Given a titled page exists
     When I am on the homepage
     When I choose "sort_by_random"
       And I press "Find"
     Then I should see "No pages found"
 
-  Scenario: find a random page
-    Given 2 titled pages exist
+  Scenario: do find unread random pages if requested
+    Given a titled page exists
     When I am on the homepage
     When I choose "sort_by_random"
       And I choose "unread_yes"
