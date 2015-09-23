@@ -235,6 +235,7 @@ Feature: tests that don't fit neatly into another feature
       And a page exists with title: "page 3", url: "http://test.sidrasue.com/parts/3.html", last_read: "2003-01-02", favorite: 2
       And a page exists with title: "page 4", url: "http://test.sidrasue.com/parts/4.html", last_read: "2004-01-02", favorite: 3
       And a page exists with title: "page 5", url: "http://test.sidrasue.com/parts/5.html", last_read: "2004-01-02", favorite: 9
+      And a page exists with title: "page 6", url: "http://test.sidrasue.com/parts/6.html"
     When I am on the homepage
       And I choose "favorite_neither"
       And I press "Find"
@@ -243,3 +244,4 @@ Feature: tests that don't fit neatly into another feature
       And I should not see "page 2"
       And I should not see "page 3"
       And I should see "page 5"
+      And I should see "page 6"
