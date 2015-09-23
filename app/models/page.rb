@@ -98,17 +98,22 @@ class Page < ActiveRecord::Base
     pages = Page.scoped
     pages = pages.where(:last_read => nil) if params[:unread] == "yes"
     pages = pages.where('pages.last_read is not null') if params[:unread] == "no" || params[:sort_by] == "last_read"
-    if params[:favorite] == "yes"
-      pages = pages.where(:favorite => [0,1])
-      pages = pages.where('pages.last_read is not null')
+    case params[:favorite]
+      when "yes"
+        pages = pages.where(:favorite => [0,1])
+        pages = pages.where('pages.last_read is not null')
+      when "good"
+        pages = pages.where(:favorite => 2)
+      when "either"
+        pages = pages.where(:favorite => [0,1,2])
+        pages = pages.where('pages.last_read is not null')
+      when "neither"
+        pages = pages.where('pages.favorite != ?', 0)
+        pages = pages.where('pages.favorite != ?', 1)
+        pages = pages.where('pages.favorite != ?', 2)
+      when "unfinished"
+        pages = pages.where(:favorite => 9)
     end
-    if params[:favorite] == "either"
-      pages = pages.where(:favorite => [0,1,2])
-      pages = pages.where('pages.last_read is not null')
-    end
-    pages = pages.where(:favorite => [2,3,4,5,6,9]) if params[:favorite] == "no"
-    pages = pages.where(:favorite => 2) if params[:favorite] == "good"
-    pages = pages.where(:favorite => 9) if params[:favorite] == "unfinished"
     pages = pages.where(:nice => [0]) if params[:find] == "sweet" || params[:find] == "both"
     pages = pages.where(:interesting => [0]) if params[:find] == "interesting" || params[:find] == "both"
     pages = pages.where(:size => "short") if params[:size] == "short"

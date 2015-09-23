@@ -228,3 +228,18 @@ Feature: tests that don't fit neatly into another feature
     Then I should not see "page 1"
       And I should see "page 2"
       And I should see "page 3"
+
+  Scenario: find neither shouldn't get favorite or good
+    Given a page exists with title: "page 1", url: "http://test.sidrasue.com/parts/1.html", last_read: "2001-01-02", favorite: 0
+      And a page exists with title: "page 2", url: "http://test.sidrasue.com/parts/2.html", last_read: "2002-01-02", favorite: 1
+      And a page exists with title: "page 3", url: "http://test.sidrasue.com/parts/3.html", last_read: "2003-01-02", favorite: 2
+      And a page exists with title: "page 4", url: "http://test.sidrasue.com/parts/4.html", last_read: "2004-01-02", favorite: 3
+      And a page exists with title: "page 5", url: "http://test.sidrasue.com/parts/5.html", last_read: "2004-01-02", favorite: 9
+    When I am on the homepage
+      And I choose "favorite_neither"
+      And I press "Find"
+    Then I should see "page 4"
+      And I should not see "page 1"
+      And I should not see "page 2"
+      And I should not see "page 3"
+      And I should see "page 5"
