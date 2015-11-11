@@ -46,7 +46,7 @@ module MyWebsites
       if url.match("thread|comments")
         body.children
       else
-        body.at('div.b-singlepost-body').children
+        body.at('.b-singlepost-body').children
       end
     when /fanfiction.net/
       body.search("span").each { |node| node.remove }
