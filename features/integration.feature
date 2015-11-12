@@ -189,8 +189,6 @@ Feature: tests that don't fit neatly into another feature
       And I press "Update"
     When I am on the homepage
     Then I should see "page 1" within "#position_1"
-      And I should see "New Parent" within "#position_2"
-      And I should not see "page 2"
     When I follow "New Parent" within "#position_2"
       And I follow "Manage Parts"
       And I fill in "url_list" with

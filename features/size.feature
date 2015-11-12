@@ -33,7 +33,8 @@ Feature: page size
       And I should not see "Short"
       And I should not see "Medium"
       And I should not see "Epic"
-      And I should not see "Part 1"
+      And I should see "Part 1 | Part 2"
+      And I should not see "Part 4 | Part 5"
     When I choose "size_long"
       And I press "Find"
     Then I should see "Novel" within "#position_1"
@@ -41,7 +42,7 @@ Feature: page size
       And I should not see "Short"
       And I should not see "Medium"
       And I should not see "Long"
-      And I should not see "Part 1"
+      And I should see "Part 4 | Part 5"
 
    Scenario: changing sizes
     Given a titled page exists with url: "http://test.sidrasue.com/long.html"

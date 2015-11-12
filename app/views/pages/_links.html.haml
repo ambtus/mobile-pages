@@ -10,7 +10,12 @@
   = link_to "ePub", download_url_for_page(page, ".epub")
   = link_to "HTML", download_url_for_page(page, ".html") unless page.uploaded
   = link_to "Sectioned", download_url_for_page(page, ".read") unless page.uploaded
-  - unless called_by == "index"
+  - if called_by == "index"
+    .part_links
+      -page.parts[0,5].each_with_index do |part,index|
+        ="|" unless index == 0
+        = link_to h(part.title), page_path(part)
+  - else
     = link_to "Notes", edit_note_path(page)
     = link_to "Authors", author_path(page)
     = link_to "Genres", genre_path(page)

@@ -231,7 +231,7 @@ Feature: multi-part pages
     Given a page exists with title: "Parent", urls: "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
     When I am on the homepage
     Then I should see "Parent" within ".title"
-    But I should not see "Part 1"
+    And I should see "Part 1 | Part 2"
 
   Scenario: create a new parent for an existing page
     Given a page exists with title: "Single", url: "http://test.sidrasue.com/test.html"
@@ -290,7 +290,7 @@ Feature: multi-part pages
       And I should see "Single"
     When I am on the homepage
     Then I should see "Multi" within ".title"
-    But I should not see "Single"
+    And I should see "Part 1 | Part 2 | Single"
     When I follow "HTML" within ".title"
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
