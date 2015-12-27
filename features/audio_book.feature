@@ -67,7 +67,6 @@ Feature: preparation for reading
       And I should not see "Aliquam eu ipsum a urna congue vulputate" within "#edited"
     When I press "Confirm Section Edit"
       Then I should see "New Content"
-      Then show me the page
       And I should not see "Aliquam eu ipsum a urna congue vulputate"
 
   Scenario: section editing last section
