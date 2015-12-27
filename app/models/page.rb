@@ -2,6 +2,7 @@
 
 class Page < ActiveRecord::Base
   MODULO = 300  # files in a single directory
+  COUNT = 150 # words in an edited section
 
   def mypath
     prefix = case Rails.env
@@ -527,13 +528,13 @@ class Page < ActiveRecord::Base
         if count == 0 && now
          section += 1
          now = false
-         node.add_previous_sibling("<h2 id=section_#{section}><a href=/pages/#{self.id}/edit?section=#{section}>Section #{section}</a> !!!!!READ SLOWLY AND ENUNCIATE!!!!!</h2>")
+         node.add_previous_sibling("<h2 id=section_#{section}><a href=/pages/#{self.id}/edit?section=#{section}>Section #{section}</a> !!!!!SLOW DOWN AND ENUNCIATE!!!!!</h2>")
         end
         if node.text?
           now = true
           words = node.inner_text.gsub(/(['-])+/, "")
           count +=  words.scan(/[a-zA-Z0-9_]+/).size
-          count = 0 if count > 333
+          count = 0 if count > COUNT
         end
       end
       body.children.to_xhtml
@@ -566,7 +567,7 @@ class Page < ActiveRecord::Base
         if node.text?
           words = node.inner_text.gsub(/(['-])+/, "")
           count +=  words.scan(/[a-zA-Z0-9_]+/).size
-          if count > 333
+          if count > COUNT
             count = 0
             section += 1
           end

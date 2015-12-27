@@ -13,7 +13,7 @@ Feature: preparation for reading
     When I am on the page's page
       And I follow "Sectioned"
       Then I should see "Lorem ipsum dolor"
-      And I should see "READ SLOWLY"
+      And I should see "SLOW DOWN"
       And I should see "Section 1"
       And I should see "Section 2"
 
@@ -49,6 +49,7 @@ Feature: preparation for reading
       Then I should see "New Content"
       And I should not see "Lorem ipsum dolor sit amet"
 
+  #FIXME
   Scenario: section editing mid section
     Given a titled page exists with url: "http://test.sidrasue.com/long.html"
     When I am on the page's page
@@ -57,24 +58,25 @@ Feature: preparation for reading
       And I follow "Section 5"
       Then I should see "Edit Section 5 for page: page 1"
       And I should not see "Lorem ipsum dolor sit amet"
-      And I should see "L0rem ipsum dolor sit amet"
+      And I should see "Aliquam eu ipsum a urna congue vulputate"
       And I should not see "L9rem ipsum dolor sit amet"
     When I fill in "edited" with "<p>New Content</p>"
       And I press "Preview Section"
-      And I should see "L0rem ipsum dolor sit amet" within "#original"
+      And I should see "Aliquam eu ipsum a urna congue vulputate" within "#original"
       And I should see "New Content" within "#edited"
-      And I should not see "L0rem ipsum dolor sit amet" within "#edited"
+      And I should not see "Aliquam eu ipsum a urna congue vulputate" within "#edited"
     When I press "Confirm Section Edit"
       Then I should see "New Content"
-      And I should not see "L0rem ipsum dolor sit amet"
+      Then show me the page
+      And I should not see "Aliquam eu ipsum a urna congue vulputate"
 
   Scenario: section editing last section
     Given a titled page exists with url: "http://test.sidrasue.com/long.html"
     When I am on the page's page
       And I follow "Sectioned"
     Then I should not see "New Content"
-      And I follow "Section 27"
-      Then I should see "Edit Section 27 for page: page 1"
+      And I follow "Section 51"
+      Then I should see "Edit Section 51 for page: page 1"
       And I should not see "Lorem ipsum dolor sit amet"
       And I should not see "L0rem ipsum dolor sit amet"
       And I should see "L9rem ipsum dolor sit amet"
