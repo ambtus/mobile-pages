@@ -1,6 +1,6 @@
-Feature: primarily genre tests
+Feature: genre stuff
 
-  Scenario: strip genre whitespace
+  Scenario: strip genre whitespace amd sort
     Given a titled page exists
     When I go to the page's page
       And I follow "Genres"
@@ -31,7 +31,7 @@ Feature: primarily genre tests
       And I press "Update Genres"
     Then I should see "first" within ".genres"
 
-  Scenario: genre selected
+  Scenario: genre selected during create
     Given a genre exists with name: "first"
       And I am on the homepage
       And I select "first" from "genre"
@@ -41,7 +41,7 @@ Feature: primarily genre tests
     Then I should not see "Please select genre"
       And I should see "first" within ".genres"
 
-  Scenario: two genres selected
+  Scenario: two genres selected during create
     Given a genre exists with name: "first"
       And a genre exists with name: "second"
       And I am on the homepage
@@ -88,7 +88,7 @@ Feature: primarily genre tests
       And I select "something" from "genre"
       And I select "children's" from "genre"
 
-  Scenario: new parent for an existing page should have genre
+  Scenario: new parent for an existing page should have the same genre
     Given a titled page exists with add_genres_from_string: "genre"
     When I am on the page's page
       And I follow "Manage Parts"

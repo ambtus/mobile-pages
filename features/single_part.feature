@@ -66,17 +66,48 @@ Feature: single-part pages
     When I follow "HTML"
       And I should see "" within ".content"
 
-  Scenario: holder page for parts is okay
-    Given I am on the homepage
-    When I fill in "page_title" with "Only entered Title"
-      And I press "Store"
-    Then I should see "Page created" within "#flash_notice"
-
   Scenario: url with surrounding whitespace okay
     Given a titled page exists with url: " http://test.sidrasue.com/test.html"
     When I am on the page's page
       And I follow "HTML"
     Then I should see "Retrieved from the web"
+
+    Scenario: duplicate url
+    Given a page exists with title: "Original", url: "http://test.sidrasue.com/test.html"
+    When I am on the homepage
+      And I fill in "page_title" with "duplicate"
+      And I fill in "page_url" with "http://test.sidrasue.com/test.html"
+      And I press "Store"
+    Then I should see "Url has already been taken" within "#flash_alert"
+      And I should not see "duplicate"
+
+  Scenario: create a page from a single url with author and notes
+    Given a genre exists with name: "mygenre"
+    Given an author exists with name: "myauthor"
+      And I am on the homepage
+      And I fill in "page_url" with "http://test.sidrasue.com/test.html"
+     And I fill in "page_title" with "Simple test"
+     And I fill in "page_notes" with "some notes"
+     And I select "mygenre" from "genre"
+     And I select "myauthor" from "Author"
+     And I press "Store"
+   Then I should see "Page created" within "#flash_notice"
+     And I should see "Simple test" within ".title"
+     And I should see "mygenre" within ".genres"
+     And I should see "some notes" within ".notes"
+     And I should see "myauthor" within ".authors"
+   When I follow "HTML"
+     Then I should see "Retrieved from the web" within ".content"
+   When I am on the page with title "Simple test"
+     And "Original" should link to "http://test.sidrasue.com/test.html"
+
+  Scenario: page not found should display error
+    When I am on the homepage
+      And I fill in "page_title" with "bad url"
+      And I fill in "page_url" with "http://test.sidrasue.com/style.html"
+      And I press "Store"
+    Then I should see "error retrieving content" within "#flash_alert"
+      And I should not see "Page created"
 
   Scenario: refetch original html
     Given a titled page exists with url: "http://test.sidrasue.com/test.html"
@@ -92,18 +123,3 @@ Feature: single-part pages
     When I press "Refetch"
     When I follow "HTML"
     Then I should see "Retrieved from the web" within ".content"
-
-  Scenario: page not found should display error
-    When I am on the homepage
-      And I fill in "page_title" with "bad url"
-      And I fill in "page_url" with "http://test.sidrasue.com/style.html"
-      And I press "Store"
-    Then I should see "error retrieving content" within "#flash_alert"
-      And I should not see "Page created"
-
-  Scenario: download livejournal adult content
-    Given a titled page exists with url: "http://sidra.livejournal.com/3265.html"
-    When I go to the page's page
-      And I follow "HTML" within ".title"
-    Then I should not see "Adult Content"
-      And I should see "alien"

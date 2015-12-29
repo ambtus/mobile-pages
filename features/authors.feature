@@ -1,6 +1,6 @@
 Feature: author stuff
 
-  Scenario: add authors to a page when there are no authors
+  Scenario: add authors to a page when there are no authors in the database
     Given a page exists with title: "Alice"
       And I am on the page's page
     When I follow "Authors"
@@ -12,7 +12,7 @@ Feature: author stuff
       And I select "charles dodgson" from "Author"
       And I select "lewis carroll" from "Author"
 
-  Scenario: add an author for a page when there are authors
+  Scenario: add an author for a page when there are authors in the database
     Given a page exists with title: "Alice"
       And an author exists with name: "lewis carroll"
     When I am on the page's page
@@ -35,7 +35,7 @@ Feature: author stuff
     When I am on the homepage
     Then I select "charles dodgson" from "Author"
 
-  Scenario: new parent for an existing page should have author
+  Scenario: new parent for an existing page should have the same author
     Given a titled page exists with add_author_string: "author"
     When I am on the page's page
       And I follow "Manage Parts"
@@ -58,7 +58,7 @@ Feature: author stuff
       And "grimm" should be selected in "author"
     When I select "charles dodgson" from "Author"
       And I press "Find"
-    Then I should see "Alice's Adventures In Wonderland"
+    Then I should see "Alice's Adventures In Wonderland" within "#position_1"
       And "charles dodgson" should be selected in "author"
     When I select "agatha christie" from "Author"
       And I press "Find"

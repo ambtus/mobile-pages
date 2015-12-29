@@ -13,6 +13,10 @@ require 'capybara'
 # steps to use the XPath syntax.
 Capybara.default_selector = :css
 
+Capybara.configure do |config|
+  config.match = :prefer_exact
+end
+
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how
 # your application behaves in the production environment, where an error page will

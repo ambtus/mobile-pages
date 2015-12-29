@@ -1,6 +1,6 @@
 Feature: hiddens are just like genres, but they are hidden by default. The hidden collection is null during search, and anything with a hidden is not found. If something is chosen from hiddens, then it is found.
 
-  Scenario: hidden selected
+  Scenario: hidden selected during creat
     Given a hidden exists with name: "nonfiction"
     Given a genre exists with name: "something"
       And I am on the homepage
@@ -57,7 +57,7 @@ Feature: hiddens are just like genres, but they are hidden by default. The hidde
       And I select "audio book" from "Hidden"
       And I select "wip" from "Hidden"
 
-  Scenario: new parent for an existing page should have hidden
+  Scenario: new parent for an existing page should have the same hidden
     Given a titled page exists with add_hiddens_from_string: "nonfiction"
     When I am on the page's page
       And I follow "Manage Parts"

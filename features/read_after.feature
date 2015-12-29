@@ -130,18 +130,3 @@ Feature: read_after order
       And I should see "page 3" within "#position_3"
       And I should see "page 1" within "#position_4"
       And I should see "page 5" within "#position_5"
-
-  # FIXME this scenario doesn't do what it says it does.
-  Scenario: new parent for an existing page should have read after date
-    Given the following pages
-      | title   | read_after |
-      | Single  | 2008-01-01 |
-      | Another | 2008-02-01 |
-    When I am on the homepage
-    When I follow "Single"
-      And I follow "Manage Parts"
-      And I fill in "add_parent" with "New Parent"
-      And I press "Update"
-    When I am on the homepage
-    Then I should see "New Parent"
-

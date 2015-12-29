@@ -1,4 +1,4 @@
-Feature: preparation for reading
+Feature: tools to help audiobook creation
 
   Scenario: audiobook link
     Given a page exists with title: "Alice"
@@ -49,7 +49,6 @@ Feature: preparation for reading
       Then I should see "New Content"
       And I should not see "Lorem ipsum dolor sit amet"
 
-  #FIXME
   Scenario: section editing mid section
     Given a titled page exists with url: "http://test.sidrasue.com/long.html"
     When I am on the page's page
@@ -88,12 +87,11 @@ Feature: preparation for reading
       Then I should see "New Content"
       And I should not see "L9rem ipsum dolor sit amet"
 
-  Scenario: hide the page from the reading list
+  Scenario: audiobook created adds the hidden audio tag and makes it a favorite and updates last read
     Given the following pages
       | title  | last_read  | favorite |
       | first  | 2014-01-01 | 2 |
       | second | 2014-02-01 | 2 |
-      | third  | 2014-03-01 | 2 |
     When I am on the homepage
     Then I should see "first" within "#position_1"
     And I should not see "favorite"
@@ -105,26 +103,11 @@ Feature: preparation for reading
     Then I should see "audio" within ".hiddens"
     And I should see "favorite" within ".favorite"
     When I am on the homepage
-    Then I should not see "first" within "#position_1"
-    When I follow "second" within "#position_1"
-    And I follow "Sectioned"
-    And I press "Audiobook created"
-      And I am on the homepage
-    Then I should not see "second"
+    Then I should see "second" within "#position_1"
+      And I should not see "first"
+      And I should see "2014"
     When I select "audio" from "Hidden"
       And I press "Find"
     Then I should see "first" within "#position_1"
-    And I should see "second" within "#position_2"
-    And I should not see "third"
-    When I am on the homepage
-    And I follow "third" within "#position_1"
-        And I press "Audiobook created"
-    When I am on the page with title "third"
-    Then I should see "audio" within ".hiddens"
-    When I am on the homepage
-      And I select "audio" from "Hidden"
-      And I press "Find"
-    Then I should see "first" within "#position_1"
-    And I should see "second" within "#position_2"
-    And I should see "third" within "#position_3"
-    And I should not see "2014"
+    And I should not see "second"
+      And I should not see "2014"

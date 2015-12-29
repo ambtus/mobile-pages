@@ -1,5 +1,25 @@
 Feature: last_read (also unread)
 
+  Scenario: find recently read page if no pages
+    When I am on the homepage
+    When I choose "sort_by_recently_read"
+      And I press "Find"
+    Then I should see "No pages"
+
+  Scenario: find recently read pages
+    Given the following pages
+      | title  | last_read  |
+      | first  | 2014-01-01 |
+      | second | 2014-02-01 |
+      | third  | 2014-03-01 |
+    When I am on the homepage
+    Then I should see "first" within "#position_1"
+    When I choose "sort_by_recently_read"
+      And I press "Find"
+    Then I should see "third" within "#position_1"
+      And I should see "second" within "#position_2"
+      And I should see "first" within "#position_3"
+
   Scenario: after rate an unread page, display it's last read date
     Given a titled page exists
     When I am on the page's page
@@ -8,8 +28,7 @@ Feature: last_read (also unread)
       And I choose "boring"
       And I choose "stressful"
     And I press "Rate"
-    # FIXME - this will change every year - test will need updating
-    Then I should see "2015" within ".last_read"
+    Then last read should be today
 
   Scenario: after rate a read page, change it's last read date
     Given a titled page exists with last_read: "2008-01-01"
@@ -20,59 +39,7 @@ Feature: last_read (also unread)
       And I choose "stressful"
     And I press "Rate"
     Then I should not see "2008-01-01" within ".last_read"
-    # FIXME - this will change every year - test will need updating
-      And I should see "2015" within ".last_read"
-
-  Scenario: add unread part to read parent
-    Given a page exists with title: "Multi", urls: "http://test.sidrasue.com/parts/1.html"
-      And I am on the homepage
-   Then I should see "Multi" within "#position_1"
-   Then I should see "unread" within ".last_read"
-   When I follow "Rate"
-      And I choose "very interesting"
-      And I choose "sweet enough"
-    And I press "Rate"
-   Then I should not see "unread" within ".last_read"
-   When I follow "Multi"
-     And I follow "Manage Parts"
-     And I fill in "url_list" with
-       """
-       http://test.sidrasue.com/parts/1.html
-       http://test.sidrasue.com/parts/2.html
-       """
-     And I press "Update"
-   When I am on the homepage
-   Then I should see "Multi" within "#position_1"
-     And I should not see "unread" within ".last_read"
-   When I follow "Multi" within "#position_1"
-     And I follow "Part 1" within "#position_1"
-   Then I should not see "unread" within ".last_read"
-   When I am on the homepage
-   When I follow "Multi"
-     And I follow "Part 2" within "#position_2"
-   Then I should see "unread" within ".last_read"
-
-   Scenario: add parent to read part
-    Given a page exists with title: "Part", last_read: "2009-01-01"
-      And I am on the page's page
-   Then I should not see "unread" within ".last_read"
-   When I follow "Manage Parts"
-     And I fill in "add_parent" with "Parent"
-     And I press "Update"
-   When I am on the homepage
-   Then I should see "Parent" within "#position_1"
-   Then I should not see "unread" within "#position_1"
-
-   Scenario: add parent to unread part
-    Given a titled page exists
-      And I am on the page's page
-   Then I should see "unread" within ".last_read"
-   When I follow "Manage Parts"
-     And I fill in "add_parent" with "Parent"
-     And I press "Update"
-   When I am on the homepage
-   Then I should see "Parent" within "#position_1"
-   Then I should see "unread" within "#position_1"
+    And last read should be today
 
   Scenario: unread part
     Given I have no pages

@@ -86,4 +86,29 @@ Feature: stuff to do with notes
     Then I should not see "Lorem ipsum dolor"
       And I should see "On Assignment for Dumbledore"
 
+  Scenario: notes but no content on multi-page view
+    Given a page exists with title: "Multi", base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
+   When I am on the page's page
+   Then I should see "Part 1" within "#position_1"
+     And I should see "Part 2" within "#position_2"
+     And I should not see "stuff for part 1"
+     And I should not see "stuff for part 2"
+     And I should not see "Original" within ".title"
+     But I should see "Original" within "#position_1"
+     And I should see "Original" within "#position_2"
+   When I follow "HTML" within "#position_1"
+   Then I should see "stuff for part 1"
+     And I should not see "stuff for part 2"
+   When I am on the page's page
+   And I follow "Part 1"
+   When I follow "Notes"
+     And I fill in "page_notes" with "This is a note"
+     And I press "Update"
+   When I am on the page's page
+   Then I should see "This is a note" within "#position_1"
+     And I should not see "stuff for part 1"
+     And I follow "Part 1" within "#position_1"
+   Then I should see "This is a note"
+     And I should not see "stuff for part 1"
+
 

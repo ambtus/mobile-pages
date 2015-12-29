@@ -1,6 +1,6 @@
 Feature: ao3 specific stuff
 
-  Scenario: grab stuff
+  Scenario: grab single page
     Given a genre exists with name: "popslash"
       And an author exists with name: "Sidra"
       And I am on the homepage
@@ -13,7 +13,7 @@ Feature: ao3 specific stuff
       And I should see "randomling" within ".notes"
       And I should see "Sidra" within ".authors"
 
-  Scenario: grab chapters
+  Scenario: grab chaptered page
     Given a genre exists with name: "harry potter"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/692"
@@ -27,17 +27,24 @@ Feature: ao3 specific stuff
       And I should not see "Using time-travel" within "#position_1"
       And I should see "giving up on nanowrimo" within "#position_2"
 
-  Scenario: refetch from ao3
-    Given a titled page exists
+  Scenario: refetch from ao3 when it used to be somewhere else
+    Given a page exists with title: "Counting", url: "https://www.fanfiction.net/s/5853866/1/Counting"
       And I am on the page's page
+      # Then I should see "ambtus" # after add grabbing author from fanfiction
+      And I should not see "lauriegilbert"
+      When I follow "HTML"
+      Then I should see "Skip."
+    When I am on the homepage
+      And I follow "Counting"
       And I follow "Refetch" within ".title"
-    When I fill in "url" with "http://archiveofourown.org/works/692"
+    When I fill in "url" with "http://archiveofourown.org/works/688"
       And I press "Refetch"
     Then I should see "by Sidra"
-      And I should see "Using time-travel"
-      And I should see "1. Where am I?"
-      And I should see "2. Hogwarts"
-      And I should see "Time Was, Time Is"
+      And I should not see "ambtus"
+      And I should see "Skipping Stones"
+      And I should see "thanks to lauriegilbert"
+      When I follow "HTML"
+      Then I should see "Skip."
 
   Scenario: deliberately fetch only one chapter
     Given a genre exists with name: "harry potter"
