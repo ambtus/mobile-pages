@@ -508,13 +508,6 @@ class Page < ActiveRecord::Base
     self.set_wordcount
   end
 
-  def remove_old_surrounding
-    if nodes.size == 1
-      clean_html= Scrub.remove_surrounding(clean_html)
-      puts "cleaned page id: #{self.id} #{self.title}"
-    end
-  end
-
   def clean_html
     self.re_sanitize if self.sanitize_version < Scrub.sanitize_version
     if parts.blank?
