@@ -503,8 +503,16 @@ class Page < ActiveRecord::Base
 
   def clean_html=(content)
     remove_outdated_downloads
+    content = Scrub.remove_surrounding(content) if nodes(content).size == 1
     File.open(self.clean_html_file_name, 'w:utf-8') { |f| f.write(content) }
     self.set_wordcount
+  end
+
+  def remove_old_surrounding
+    if nodes.size == 1
+      clean_html= Scrub.remove_surrounding(clean_html)
+      puts "cleaned page id: #{self.id} #{self.title}"
+    end
   end
 
   def clean_html
@@ -635,26 +643,21 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def remove_surrounding_div!
-    self.clean_html = Scrub.remove_surrounding(self.clean_html)
+  def nodes(content = clean_html)
+    Nokogiri::HTML(content).xpath('//body').children
   end
 
   def top_nodes
-    html = self.clean_html
-    nodeset = Nokogiri::HTML(html).xpath('//body').children
-    nodeset[0, 20].map {|n| n.to_s.chomp }
+    nodes[0, 20].map {|n| n.to_s.chomp }
   end
 
   def bottom_nodes
-    html = self.clean_html
-    nodeset = Nokogiri::HTML(html).xpath('//body').children
-    nodeset = nodeset[-20, 20] || nodeset
+    nodeset = nodes[-20, 20] || nodes
     nodeset.map {|n| n.to_s.chomp }
   end
 
   def remove_nodes(top, bottom)
-    html = self.clean_html
-    nodeset = Nokogiri::HTML(html).xpath('//body').children
+    nodeset = nodes
     top.to_i.times { nodeset.shift }
     bottom.to_i.times { nodeset.pop }
     self.clean_html=nodeset.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')

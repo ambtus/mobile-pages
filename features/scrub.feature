@@ -1,11 +1,9 @@
 Feature: trim cruft off pages
 
- Scenario: remove surrounding div and bottom
+ Scenario: remove bottom when one automatically removed surrounding div
   Given a titled page exists with url: "http://test.sidrasue.com/divs.html"
   When I am on the page's page
     And I follow "Scrub"
-  When I press "Remove surrounding Div"
-  Then I should see "Surrounding div removed"
   When I choose "3rd" within ".bottom"
   And I press "Scrub" within ".top"
   And I follow "HTML" within ".title"
@@ -13,12 +11,10 @@ Feature: trim cruft off pages
     And I should see "2nd"
   But I should not see "3rd"
 
- Scenario: remove surrounding blockquote and top
+ Scenario: remove top when one automatically removed surrounding blockquote
   Given a titled page exists with url: "http://test.sidrasue.com/blockquote.html"
   When I am on the page's page
     And I follow "Scrub"
-  When I press "Remove surrounding Div"
-  Then I should see "Surrounding div removed"
   When I choose "1st" within ".top"
     And I press "Scrub" within ".bottom"
   And I follow "HTML" within ".title"
@@ -60,15 +56,9 @@ Feature: trim cruft off pages
     Then I should see "actual content"
       And I should not see "header"
     When I am on the page's page
-    When I follow "Scrub"
-      And I choose "actual content" within ".top"
-      And I press "Scrub" within ".top"
-    And I follow "HTML" within ".title"
-    Then I should not see "actual content"
-    When I am on the page's page
     When I press "Rebuild from Raw HTML"
     And I follow "HTML" within ".title"
-    Then I should see "actual content"
+    Then I should see "header"
 
   Scenario: trim a parent page
        also rebuild all children from raw

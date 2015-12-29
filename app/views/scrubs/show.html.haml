@@ -7,10 +7,9 @@
 %a{:href => "#end"} Jump to end
 .form
   = form_for @page do |f|
-    .button= f.submit "Remove surrounding Div"
     .top
+      = @page.nodes.size.to_s + " nodes"
       .button= f.submit "Scrub"
-      = @page.top_nodes.size.to_s + " nodes"
       Top
       - @page.top_nodes.each_with_index do |node,index|
         .node
