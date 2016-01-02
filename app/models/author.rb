@@ -1,8 +1,8 @@
 class Author < ActiveRecord::Base
   NEW_PLACEHOLDER = "Enter Authors to add (comma separated)"
 
-  has_and_belongs_to_many :pages, :uniq => true
-  default_scope :order => 'authors.name asc'
+  has_and_belongs_to_many :pages, -> { uniq }
+  default_scope { order('authors.name asc') }
   validates_presence_of :name
   validates_uniqueness_of :name
 

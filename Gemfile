@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'bundler'
-gem 'rails', '~>3.2.22'
+gem 'rails', '~>4.0.0'
 gem 'mysql2', '~>0.3.0'
 
 gem 'unicorn', group: :production
@@ -26,5 +26,5 @@ gem 'haml', '>=3.0.18'
 gem 'nokogiri', '>=1.4.1'
 gem 'sanitize', '>=1.2.0'
 gem 'mechanize', '>=1.0.0'
-gem 'bcrypt-ruby', '~>3.0.0'
+gem 'bcrypt-ruby', '~>3.1.2'
 

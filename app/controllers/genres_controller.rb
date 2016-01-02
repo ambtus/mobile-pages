@@ -36,7 +36,7 @@ class GenresController < ApplicationController
     elsif params[:commit] == "Move to Hidden"
       @genre.make_hidden
       redirect_to :root
-    elsif @genre.update_attributes(params[:genre])
+    elsif @genre.update_attribute(:name, params[:genre][:name])
       redirect_to :root
     else
       render :edit

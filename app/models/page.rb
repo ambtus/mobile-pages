@@ -65,9 +65,9 @@ class Page < ActiveRecord::Base
   URLS_PLACEHOLDER = "Alternatively: full URLs for parts, one per line"
   PARENT_PLACEHOLDER = "Enter name of existing or new (unique name) parent"
 
-  has_and_belongs_to_many :genres, :uniq => true
-  has_and_belongs_to_many :hiddens, :uniq => true
-  has_and_belongs_to_many :authors, :uniq => true
+  has_and_belongs_to_many :genres, -> { uniq }
+  has_and_belongs_to_many :hiddens, -> { uniq }
+  has_and_belongs_to_many :authors, -> { uniq }
   belongs_to :parent, :class_name => "Page"
   belongs_to :ultimate_parent, :class_name => "Page"
 
@@ -96,7 +96,7 @@ class Page < ActiveRecord::Base
   end
 
   def self.filter(params={})
-    pages = Page.scoped
+    pages = Page.all
     pages = pages.where(:last_read => nil) if params[:unread] == "yes"
     pages = pages.where('pages.last_read is not null') if params[:unread] == "no" || params[:sort_by] == "last_read"
     case params[:favorite]
@@ -232,8 +232,8 @@ class Page < ActiveRecord::Base
       title = part.sub(/.*#/, "") if part.match("#")
       position = parts.index(part) + 1
       title = "Part " + position.to_s unless title
-      page = Page.find_by_url(url) unless url.blank?
-      page = Page.find_by_title_and_parent_id(title, parent.id) unless page
+      page = Page.find_by(url: url) unless url.blank?
+      page = Page.find_by(title: title, parent_id: parent.id) unless page
       if page.blank?
         page = Page.create(:url=>url, :title=>title, :parent_id=>parent.id, :position => position)
         parent.update_attribute(:read_after, Time.now) if parent.read_after > Time.now
@@ -255,12 +255,12 @@ class Page < ActiveRecord::Base
       url = title = position = nil
       part_string = (lines[0..lines.index(subpart)] & parts).last
       part_title = part_string.split("#").last
-      part = Page.find_by_title_and_parent_id(part_title, parent.id)
+      part = Page.find_by(title: part_title, parent_id: parent.id)
       url = subpart.sub(/#.*/, "")
       title = subpart.sub(/.*#/, "") if subpart.match("#")
       position = lines.index(subpart) - lines.index(part_string)
       title = "Part " + position.to_s unless title
-      page = Page.find_by_url(url)
+      page = Page.find_by(url: url)
       if page.blank?
         page = Page.create(:url=>url, :title=>title, :parent_id=>part.id, :position => position)
         part.update_attribute(:read_after, Time.now) if part.read_after > Time.now
@@ -394,7 +394,7 @@ class Page < ActiveRecord::Base
   def add_author_string=(string)
     return if string.blank?
     string.split(",").each do |author|
-      new = Author.find_or_create_by_name(author.squish)
+      new = Author.find_or_create_by(name: author.squish)
       self.authors << new
     end
     self.authors
@@ -418,7 +418,7 @@ class Page < ActiveRecord::Base
   def add_genres_from_string=(string)
     return if string.blank?
     string.split(",").each do |genre|
-      new = Genre.find_or_create_by_name(genre.squish)
+      new = Genre.find_or_create_by(name: genre.squish)
       self.genres << new
     end
     self.cache_genres
@@ -443,7 +443,7 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "adding hiddens: #{string} to #{self.id}"
     return if string.blank?
     string.split(",").each do |hidden|
-      new = Hidden.find_or_create_by_name(hidden.squish)
+      new = Hidden.find_or_create_by(name: hidden.squish)
       self.hiddens << new
     end
     self.cache_hiddens
@@ -676,7 +676,7 @@ class Page < ActiveRecord::Base
 
   def make_audio
     Rails.logger.debug "marking as audio for #{self.id}"
-    read_hidden = Hidden.find_or_create_by_name(HIDDEN)
+    read_hidden = Hidden.find_or_create_by(name: HIDDEN)
     last_read_book = read_hidden.pages.order(:read_after).last
     last = last_read_book ? last_read_book.read_after : Date.today
     self.add_hiddens_from_string= HIDDEN

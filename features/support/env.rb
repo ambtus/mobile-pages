@@ -53,5 +53,3 @@ end
 #     DatabaseCleaner.strategy = :transaction
 #   end
 #
-
-User.create(name: 'tester', password: 'secret')

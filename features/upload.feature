@@ -3,7 +3,7 @@ Feature: upload pre-made epub files
   Scenario: upload epub file and extract title and not existing author
     Given a genre exists with name: "popslash"
       And I am on the homepage
-    When I attach the file "extras/testfiles/book.epub" to "page_file"
+    When I attach the file "features/testfiles/book.epub" to "page_file"
       And I select "popslash" from "genre"
       And I press "Store"
     Then I should not see "Title can't be blank"
@@ -15,7 +15,7 @@ Feature: upload pre-made epub files
     Given a genre exists with name: "popslash"
       And an author exists with name: "Sidra"
       And I am on the homepage
-    When I attach the file "extras/testfiles/book.epub" to "page_file"
+    When I attach the file "features/testfiles/book.epub" to "page_file"
       And I select "popslash" from "genre"
       And I press "Store"
     Then I should not see "Title can't be blank"
@@ -25,7 +25,7 @@ Feature: upload pre-made epub files
   Scenario: upload epub file with entered notes and not existing author
     Given a genre exists with name: "popslash"
       And I am on the homepage
-    When I attach the file "extras/testfiles/book.epub" to "page_file"
+    When I attach the file "features/testfiles/book.epub" to "page_file"
       And I fill in "page_notes" with "my note"
       And I select "popslash" from "genre"
       And I press "Store"
@@ -38,7 +38,7 @@ Feature: upload pre-made epub files
     Given a genre exists with name: "popslash"
       And an author exists with name: "Sidra"
       And I am on the homepage
-    When I attach the file "extras/testfiles/book.epub" to "page_file"
+    When I attach the file "features/testfiles/book.epub" to "page_file"
       And I fill in "page_notes" with "my note"
       And I select "popslash" from "genre"
       And I press "Store"

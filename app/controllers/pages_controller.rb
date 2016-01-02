@@ -46,7 +46,7 @@ class PagesController < ApplicationController
       end
       redirect_to(build_route) and return
     end
-    @page = Page.new(params[:page])
+    @page = Page.new(params[:page].permit!)
     @genre = Genre.find_by_name(params[:genre])
     @genre2 = Genre.find_by_name(params[:genre2])
     @hidden = Hidden.find_by_name(params[:hidden])
@@ -101,7 +101,7 @@ class PagesController < ApplicationController
         @page.remove_nodes(top, bottom)
         redirect_to page_path(@page) and return
       when "Update"
-        @page.update_attributes(params[:page])
+        @page.update_attributes(params[:page].permit!)
         @page.remove_outdated_downloads
         redirect_to page_url(@page) and return
       when "Preview Section"

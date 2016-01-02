@@ -1,10 +1,10 @@
 class Hidden < ActiveRecord::Base
   NEW_PLACEHOLDER = "Enter Hidden genres to add (comma separated)"
 
-  ANY_PLACEHOLDER = Hidden.find_or_create_by_name("any")
+  ANY_PLACEHOLDER = Hidden.find_or_create_by(name: "any")
 
-  has_and_belongs_to_many :pages, :uniq => true
-  default_scope :order => 'hiddens.name asc'
+  has_and_belongs_to_many :pages, -> { uniq }
+  default_scope { order('hiddens.name asc') }
   validates_presence_of :name
   validates_uniqueness_of :name
 
@@ -37,7 +37,7 @@ class Hidden < ActiveRecord::Base
   end
 
   def make_genre
-    new = Genre.find_or_create_by_name(name)
+    new = Genre.find_or_create_by(name: name)
     pages.each do |page|
       page.genres << new
       page.cache_genres

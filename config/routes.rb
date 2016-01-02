@@ -1,9 +1,9 @@
 MobilePages::Application.routes.draw do
 
-  match '/tmp/test/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download' if Rails.env.test?
-  match '/tmp/development/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download' if Rails.env.development?
-  match '/files/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download' if Rails.env.production?
-  match '/login' => 'sessions#login', :as => 'login'
+  get '/tmp/test/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download' if Rails.env.test?
+  get '/tmp/development/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download' if Rails.env.development?
+  get '/files/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download' if Rails.env.production?
+  match '/login' => 'sessions#login', :as => 'login', via: [:get, :post]
 
   resources :authors, :only => ['show', 'create']
   resources :genres
