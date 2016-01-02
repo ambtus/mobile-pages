@@ -25,7 +25,7 @@ calibre command line tools (http://calibre-ebook.com/download)
 === required configuration
 
 cp config/database.example config/database.yml
-cp extras/my_websites.example extras/my_websites.rb
+cp config/initializers/my_websites.example config/initializers/my_websites.rb
 cp config/initializers/session_store.example config/initializers/session_store.rb
 cp config/initializers/secret_token.example config/initializers/secret_token.rb
 cp config/initializers/auth.example config/initializers/auth.rb
