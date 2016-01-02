@@ -14,7 +14,7 @@ class Page < ActiveRecord::Base
   end
   def mydirectory
     if Rails.env.production?
-      Rails.public_path + mypath
+      Rails.public_path.to_s + mypath
     else
       mypath
     end
