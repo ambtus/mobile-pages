@@ -1,8 +1,8 @@
 source 'http://rubygems.org'
 
 gem 'bundler'
-gem 'rails', '~>4.1.0'
-gem 'mysql2', '~>0.3.0'
+gem 'rails', '~>4.2.0'
+gem 'mysql2'
 
 gem 'unicorn', group: :production
 
