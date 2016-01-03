@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'bundler'
-gem 'rails', '~>4.0.0'
+gem 'rails', '~>4.1.0'
 gem 'mysql2', '~>0.3.0'
 
 gem 'unicorn', group: :production
@@ -18,13 +18,13 @@ group :test do
   gem 'cucumber-rails', :require => false
   gem 'cucumber'
   gem 'launchy'    # So you can do Then show me the page
-  gem 'test-unit', '~> 3.0'
+  gem 'test-unit'
 end
 
 gem 'escape_utils'
-gem 'haml', '>=3.0.18'
-gem 'nokogiri', '>=1.4.1'
-gem 'sanitize', '>=1.2.0'
-gem 'mechanize', '>=1.0.0'
-gem 'bcrypt-ruby', '~>3.1.2'
+gem 'haml'
+gem 'nokogiri'
+gem 'sanitize'
+gem 'mechanize'
+gem 'bcrypt-ruby'
 
