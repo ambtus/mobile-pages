@@ -1,0 +1,7 @@
+-title="Edit scrubbed html for #{@page.title}"
+-content_for(:title, title)
+%h1=title
+.content
+  = form_for @page do |f|
+    .button= f.submit "Update Scrubbed HTML"
+    = text_area_tag :pasted, @page.clean_html, :rows => 10, :cols => 80
