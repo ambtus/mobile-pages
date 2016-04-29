@@ -35,7 +35,7 @@ to get and set the environment variable SECRET_KEY_BASE
 
 create user:
 
-rails db production
+rails console production
 
 User.create(name: 'tester', password: 'secret')
 

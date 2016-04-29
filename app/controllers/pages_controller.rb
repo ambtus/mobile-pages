@@ -95,6 +95,10 @@ class PagesController < ApplicationController
         @page.raw_html = params[:pasted]
         flash[:notice] = "Raw HTML updated."
         redirect_to page_path(@page) and return
+      when "Update Scrubbed HTML"
+        @page.clean_html = params[:pasted]
+        flash[:notice] = "Clean HTML updated."
+        redirect_to page_path(@page) and return
       when "Scrub"
         top = params[:top_node] || 0
         bottom = params[:bottom_node] || 0
