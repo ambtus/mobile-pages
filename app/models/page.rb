@@ -185,6 +185,7 @@ class Page < ActiveRecord::Base
     (self.parts.first && self.parts.first.url && self.parts.first.url.match(/archiveofourown/))
   end
   def ao3_url; self.url || self.parts.first.url.split("/chapter").first; end
+  def ao3_chapter?; self.url.match(/chapters/); end
 
 
   def fetch
@@ -807,17 +808,34 @@ class Page < ActiveRecord::Base
 
   def get_meta_from_ao3(refetch=false)
     doc = Nokogiri::HTML(Scrub.fetch(self.url))
-    doc_title = doc.at_xpath("//h2[@class = 'title heading']").text.strip
-    self.title = doc_title if (self.title == "Title" || refetch)
-    doc_summary = doc.at_xpath("//div[@class = 'summary module']").text.gsub('Summary:','').strip  rescue ""
-    doc_notes = doc.at_xpath("//div[@class = 'notes module']").text.gsub('Notes:','').strip  rescue ""
-    doc_end_notes = doc.at_xpath("//div[@class = 'end notes module']").text.gsub('Notes:','').strip  rescue ""
-    if !self.parent || !(self.position == 1) # don't put summary on part one - it's redundant
-      self.notes = [doc_summary, doc_notes, doc_end_notes].join("\n\n").strip
+    doc_title = doc.css(".preface .title").text.strip rescue nil
+    doc_chapter_title = doc.css(".chapter .title").text.strip rescue nil
+
+    if self.ao3_chapter?  # if this is a chapter
+      self.title = doc_chapter_title || doc_title
+    else
+      self.title = doc_title
     end
-    unless self.parent # don't get authors for subparts and get after notes for byline
-      add_author(doc.at_xpath("//h3[@class = 'byline heading']").text.strip)
+
+    doc_summary = doc.css(".summary blockquote").text.strip  rescue nil
+    doc_notes = doc.css(".notes blockquote").map(&:text).join(", ") rescue nil
+    doc_fandoms = doc.css(".fandom a").map(&:text).join(", End Notes:")  rescue nil
+    doc_relationships = doc.css(".relationship a").map(&:text).join(", ")  rescue nil
+    doc_tags = doc.css(".freeform a").map(&:text).join(", ")  rescue nil
+
+    if self.ao3_chapter? && self.parent # if this is a chapter but not a deliberately single chapter
+      self.notes = doc_notes
+    elsif self.parts.empty? # this is a single chapter work
+      self.notes = [doc_summary, doc_notes, doc_tags, doc_fandoms, doc_relationships].compact.join("\n\n").strip
+    else # this is the enclosing doc
+      self.notes = [doc_summary, doc_tags, doc_fandoms, doc_relationships].compact.join("\n\n").strip
     end
+
+    # don't get authors for subparts and get after notes for byline
+    unless self.parent
+      add_author(doc.css(".byline a").map(&:text).join(", "))
+    end
+
     self.save
   end
 
