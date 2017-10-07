@@ -26,5 +26,5 @@ gem 'haml'
 gem 'nokogiri'
 gem 'sanitize'
 gem 'mechanize'
-gem 'bcrypt-ruby'
+gem 'bcrypt'
 
