@@ -819,16 +819,15 @@ class Page < ActiveRecord::Base
 
     doc_summary = doc.css(".summary blockquote").text.strip  rescue nil
     doc_notes = doc.css(".notes blockquote").map(&:text).join(", ") rescue nil
-    doc_fandoms = doc.css(".fandom a").map(&:text).join(", End Notes:")  rescue nil
     doc_relationships = doc.css(".relationship a").map(&:text).join(", ")  rescue nil
     doc_tags = doc.css(".freeform a").map(&:text).join(", ")  rescue nil
 
     if self.ao3_chapter? && self.parent # if this is a chapter but not a deliberately single chapter
       self.notes = doc_notes
     elsif self.parts.empty? # this is a single chapter work
-      self.notes = [doc_summary, doc_notes, doc_tags, doc_fandoms, doc_relationships].compact.join("\n\n").strip
+      self.notes = [doc_summary, doc_notes, doc_tags, doc_relationships].compact.join("\n\n").strip
     else # this is the enclosing doc
-      self.notes = [doc_summary, doc_tags, doc_fandoms, doc_relationships].compact.join("\n\n").strip
+      self.notes = [doc_summary, doc_tags, doc_relationships].compact.join("\n\n").strip
     end
 
     # don't get authors for subparts and get after notes for byline

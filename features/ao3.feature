@@ -10,7 +10,7 @@ Feature: ao3 specific stuff
     Then I should not see "Title can't be blank"
       And I should see "I Drive Myself Crazy" within ".title"
       And I should see "please no crossovers" within ".notes"
-      And I should see "Popslash" within ".notes"
+      And I should not see "Popslash" within ".notes"
       And I should see "AJ/JC" within ".notes"
       And I should see "Make the Yuletide Gay" within ".notes"
       And I should see "Sidra" within ".authors"
