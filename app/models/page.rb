@@ -74,7 +74,6 @@ class Page < ActiveRecord::Base
   attr_accessor :base_url
   attr_accessor :url_substitutions
   attr_accessor :urls
-  attr_accessor :file
 
   before_validation :remove_placeholders
 
@@ -689,7 +688,7 @@ class Page < ActiveRecord::Base
 
   def remove_outdated_downloads(recurse = false)
     Rails.logger.debug "remove outdated downloads for #{self.id}"
-    FileUtils.rm_rf(self.download_dir) unless self.uploaded
+    FileUtils.rm_rf(self.download_dir)
     self.parent.remove_outdated_downloads(true) if self.parent
     self.parts.each { |part| part.remove_outdated_downloads(true) unless recurse}
   end
@@ -710,41 +709,6 @@ class Page < ActiveRecord::Base
     cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --output-profile ipad --title "#{self.title}" --authors "#{self.download_tag_string}" }
     Rails.logger.debug cmd
     `#{cmd} 2> /dev/null`
-  end
-
-  def create_tmpfile
-    return unless file
-    File.open(tmpfile_name, "wb") { |f| f.write(self.file.read) }
-  end
-
-  def tmpfile_name
-    raise unless file.original_filename.match(/\.epub$/)
-    "/tmp/" + file.original_filename
-  end
-
-  def get_meta_from_epub
-    Rails.logger.debug "getting meta from epub"
-    self.update_attribute(:wordcount, (File.size("#{self.download_basename}.epub") - 95000)/3)
-    self.set_wordcount(false)
-    cmd = %Q{ebook-meta "#{download_basename}.epub"}
-    Rails.logger.debug cmd
-    meta_array = `#{cmd}`.split(/[\n]/).map{ |s| s.split(/:/, 2) } #`
-    meta = Hash.new
-    meta_array.each do |sub_array|
-     key = sub_array.first
-     value = sub_array.second
-     if key.blank?
-       Rails.logger.debug "no key for value #{value}"
-     elsif value.blank?
-       Rails.logger.debug "no value for key #{key}"
-     else
-       meta[key.strip] = value.strip
-     end
-    end
-    Rails.logger.debug meta
-    self.update_attribute(:title, meta["Title"]) if self.title == "Placeholder"
-    Rails.logger.debug " epub title is #{self.title}"
-    add_author(meta["Author(s)"])
   end
 
   def add_author(string)
@@ -799,13 +763,6 @@ class Page < ActiveRecord::Base
     end
   end
 
-  #TODO
-  def get_chapters_from_ff
-  end
-
-  def get_chapters_from_skyehawke
-  end
-
   def get_meta_from_ao3(refetch=false)
     doc = Nokogiri::HTML(Scrub.fetch(self.url))
     doc_title = doc.css(".preface .title").text.strip rescue nil
@@ -838,6 +795,13 @@ class Page < ActiveRecord::Base
     self.save
   end
 
+#TODO
+  def get_chapters_from_ff
+  end
+
+  def get_chapters_from_skyehawke
+  end
+
   def get_meta_from_ff
   end
 
@@ -864,7 +828,6 @@ private
   def remove_placeholders
     self.url = self.url == "URL" ? nil : self.url.try(:strip)
     self.title = nil if self.title == "Title" unless (self.url && self.url.match('archiveofourown'))
-    self.title = "Placeholder" if self.file
     self.notes = nil if self.notes == "Notes"
     # during testing Notes gets "\n" prepended
     self.notes = nil if self.notes == "\nNotes"
@@ -879,14 +842,7 @@ private
     Rails.logger.debug "initial fetch for #{self.id}"
     FileUtils.rm_rf(mydirectory) # make sure directory is empty for testing
     FileUtils.mkdir_p(download_dir) # make sure directory exists
-    if file
-      self.uploaded = true
-      create_tmpfile
-      cmd = "mv #{tmpfile_name} \"#{download_basename}.epub\""
-      Rails.logger.debug cmd
-      `#{cmd}`
-      get_meta_from_epub
-    elsif !self.url.blank?
+    if !self.url.blank?
       if self.ao3? && !self.url.match(/chapter/)
         self.get_meta_from_ao3
         self.get_chapters_from_ao3

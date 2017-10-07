@@ -8,8 +8,8 @@
     = link_to h(page.title), page_path(page)
   = link_to "Rate", rate_path(page)
   = link_to "ePub", download_url_for_page(page, ".epub")
-  = link_to "HTML", download_url_for_page(page, ".html") unless page.uploaded
-  = link_to "Sectioned", download_url_for_page(page, ".read") unless page.uploaded
+  = link_to "HTML", download_url_for_page(page, ".html")
+  = link_to "Sectioned", download_url_for_page(page, ".read")
   - if called_by == "index"
     .part_links
       -page.parts[0,5].each_with_index do |part,index|
@@ -25,8 +25,8 @@
     = link_to "Hiddens", hidden_path(page)
     %br
     = link_to "Manage Parts", edit_part_path(page)
-    = link_to "Edit Scrubbed HTML", edit_html_path(page, format: "scrubbed") unless page.uploaded
-    = link_to "Edit Raw HTML", edit_html_path(page) unless page.uploaded
-    = link_to "Scrub", scrub_path(page) unless page.uploaded
-    = link_to "Refetch", refetch_path(page) unless page.uploaded
+    = link_to "Edit Scrubbed HTML", edit_html_path(page, format: "scrubbed")
+    = link_to "Edit Raw HTML", edit_html_path(page)
+    = link_to "Scrub", scrub_path(page)
+    = link_to "Refetch", refetch_path(page)
   = link_to "Original", page.url unless page.url.blank?

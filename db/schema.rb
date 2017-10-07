@@ -60,12 +60,11 @@ ActiveRecord::Schema.define(version: 20151229203412) do
     t.string   "size",                 limit: 255
     t.integer  "favorite",             limit: 2,        default: 10
     t.integer  "ultimate_parent_id",   limit: 4
-    t.integer  "sanitize_version",     limit: 2,        default: 1,     null: false
-    t.string   "cached_genre_string",  limit: 255,      default: "",    null: false
+    t.integer  "sanitize_version",     limit: 2,        default: 1,  null: false
+    t.string   "cached_genre_string",  limit: 255,      default: "", null: false
     t.integer  "interesting",          limit: 4
     t.integer  "nice",                 limit: 4
-    t.boolean  "uploaded",                              default: false
-    t.string   "cached_hidden_string", limit: 255,      default: "",    null: false
+    t.string   "cached_hidden_string", limit: 255,      default: "", null: false
   end
 
   add_index "pages", ["favorite"], name: "index_pages_on_favorite", using: :btree

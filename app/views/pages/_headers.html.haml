@@ -4,8 +4,6 @@
 .favorite
   = page.favorite_string
 .size
-  - if page.uploaded
-    = "Uploaded"
   = "#{page.size} (#{page.wordcount})"
 .last_read
   - if page.last_read
