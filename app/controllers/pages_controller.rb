@@ -40,8 +40,7 @@ class PagesController < ApplicationController
       build_route[:unread] = params[:unread] unless (params[:unread].blank? || params[:unread] == "either")
       if params[:page]
         build_route[:title] = params[:page][:title] unless params[:page][:title] == "Title"
-        # during testing Notes gets "\n" prepended
-        build_route[:notes] = params[:page][:notes] unless params[:page][:notes].match(/Notes$/)
+        build_route[:notes] = params[:page][:notes] unless params[:page][:notes] == "Notes"
         build_route[:url] = params[:page][:url] unless params[:page][:url] == "URL"
       end
       redirect_to(build_route) and return

@@ -829,8 +829,6 @@ private
     self.url = self.url == "URL" ? nil : self.url.try(:strip)
     self.title = nil if self.title == "Title" unless (self.url && self.url.match('archiveofourown'))
     self.notes = nil if self.notes == "Notes"
-    # during testing Notes gets "\n" prepended
-    self.notes = nil if self.notes == "\nNotes"
     self.base_url = nil if self.base_url == BASE_URL_PLACEHOLDER
     self.url_substitutions = nil if self.url_substitutions == URL_SUBSTITUTIONS_PLACEHOLDER
     self.urls = nil if self.urls == URLS_PLACEHOLDER
