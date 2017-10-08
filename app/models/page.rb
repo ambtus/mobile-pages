@@ -732,7 +732,7 @@ class Page < ActiveRecord::Base
     else
       count = 1
       chapter_list.each do |element|
-        title = element.text
+        title = element.text.gsub(/^\d+. /, "")
         url = "http://archiveofourown.org" + element['href']
         Page.create(:title => title, :url => url, :position => count, :parent_id => self.id)
         count = count.next
@@ -760,7 +760,7 @@ class Page < ActiveRecord::Base
       Rails.logger.debug "DEBUG: getting #{chapter_list.size} chapters"
       url_list = []
       chapter_list.each do |element|
-        title = element.text
+        title = element.text.gsub(/^\d+. /, "")
         url = "http://archiveofourown.org" + element['href']
         url_list << url + "##" + title
       end

@@ -29,6 +29,8 @@ Feature: ao3 specific stuff
       And I should see "Where am I?"
       And I should see "written for nanowrimo" within "#position_1"
       And I should see "giving up on nanowrimo" within "#position_2"
+      And I should not see "1" within "#position_1"
+      And I should not see "2" within "#position_2"
     When I follow "Hogwarts"
       Then I should not see "by Sidra" within ".notes"
       And I should not see "Using time-travel" within ".notes"
@@ -63,6 +65,7 @@ Feature: ao3 specific stuff
       And I should see "Using time-travel"
       And I should not see "Hogwarts"
       And I should not see "giving up on nanowrimo"
+      And I should not see "1" within ".title"
 
   Scenario: fetch more chapters from ao3
     Given a titled page exists with urls: "http://archiveofourown.org/works/692/chapters/803"
@@ -75,3 +78,5 @@ Feature: ao3 specific stuff
       And I should see "Where am I?" within "#position_1"
       And I should see "Hogwarts" within "#position_2"
       And I should not see "Chapter"
+      And I should not see "1" within "#position_1"
+      And I should not see "2" within "#position_2"
