@@ -732,7 +732,7 @@ class Page < ActiveRecord::Base
     else
       count = 1
       chapter_list.each do |element|
-        title = element.text.gsub(/^\d+. /, "")
+        title = element.text
         url = "http://archiveofourown.org" + element['href']
         Page.create(:title => title, :url => url, :position => count, :parent_id => self.id)
         count = count.next
@@ -744,7 +744,15 @@ class Page < ActiveRecord::Base
   end
 
   def ao3_doc_title(doc); doc.at_xpath("//h2").children.text.strip; end
-  def ao3_chapter_title(doc)
+  def ao3_chapter_title(doc, position)
+    chapter_title = doc.css(".chapter .title").children.last.text.strip rescue nil
+    if chapter_title
+      return chapter_title.gsub(": ","#{position}. ")
+    else
+      return "Chapter #{position}"
+    end
+  end
+  def ao3_single_chapter_fic_title(doc)
     doc.css(".chapter .title").children.last.text.strip.gsub(": ","") rescue nil
   end
 
@@ -760,7 +768,7 @@ class Page < ActiveRecord::Base
       Rails.logger.debug "DEBUG: getting #{chapter_list.size} chapters"
       url_list = []
       chapter_list.each do |element|
-        title = element.text.gsub(/^\d+. /, "")
+        title = element.text
         url = "http://archiveofourown.org" + element['href']
         url_list << url + "##" + title
       end
@@ -774,8 +782,13 @@ class Page < ActiveRecord::Base
     doc = Nokogiri::HTML(Scrub.fetch(self.url))
 
     if self.ao3_chapter?  # if this is a chapter
-      Rails.logger.debug "DEBUG: getting chapter title for #{self.id}"
-      self.title = ao3_chapter_title(doc) || ao3_doc_title(doc)
+      if position
+        Rails.logger.debug "DEBUG: getting chapter title for #{self.id} at position #{position}"
+        self.title = ao3_chapter_title(doc, position)
+      else
+        Rails.logger.debug "DEBUG: getting title for standalone single chapter #{self.id}"
+        self.title = ao3_single_chapter_fic_title(doc) || ao3_doc_title(doc)
+      end
     else
       Rails.logger.debug "DEBUG: getting work title for #{self.id}"
       self.title = ao3_doc_title(doc)
