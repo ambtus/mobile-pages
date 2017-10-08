@@ -199,7 +199,7 @@ class Page < ActiveRecord::Base
   end
 
   def refetch_ao3
-    Rails.logger.debug "refetch #{self.id}"
+    Rails.logger.debug "DEBUG: refetch_ao3 #{self.id}"
     refetch_chapters_from_ao3
     get_meta_from_ao3(true)
   end
@@ -406,10 +406,10 @@ class Page < ActiveRecord::Base
 
   def cache_genres
     if self.new_record?
-      Rails.logger.debug "genres for new record"
+      Rails.logger.debug "DEBUG: cache_genres for new record"
       self.cached_genre_string = genre_string
     else
-      Rails.logger.debug "caching genres for #{self.id}"
+      Rails.logger.debug "DEBUG: cache_genres for #{self.id}"
       self.update_attribute(:cached_genre_string, genre_string)
     end
     genre_string
@@ -430,17 +430,17 @@ class Page < ActiveRecord::Base
 
   def cache_hiddens
     if self.new_record?
-      Rails.logger.debug "hiddens for new record"
+      Rails.logger.debug "DEBUG: cache_hiddens for new record"
       self.cached_hidden_string = hidden_string
     else
-      Rails.logger.debug "caching hiddens for #{self.id}"
+      Rails.logger.debug "DEBUG: cache_hiddens for #{self.id}"
       self.update_attribute(:cached_hidden_string, hidden_string)
     end
     hidden_string
   end
 
   def add_hiddens_from_string=(string)
-    Rails.logger.debug "adding hiddens: #{string} to #{self.id}"
+    Rails.logger.debug "DEBUG: adding hiddens: #{string} to #{self.id}"
     return if string.blank?
     string.split(",").each do |hidden|
       new = Hidden.find_or_create_by(name: hidden.squish)
@@ -581,7 +581,7 @@ class Page < ActiveRecord::Base
         end
       end
       if added == false
-        Rails.logger.debug "added to end"
+        Rails.logger.debug "DEBUG: added node to end in edit_section #{number}"
         body.children.last.add_next_sibling(new)
       end
       self.clean_html=body.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
@@ -592,7 +592,7 @@ class Page < ActiveRecord::Base
 
 
   def re_sanitize
-    Rails.logger.debug "re_sanitizing #{self.id}"
+    Rails.logger.debug "DEBUG: re_sanitizing #{self.id}"
     if !self.parts.blank?
       self.parts.each {|p| p.re_sanitize if p.sanitize_version < Scrub.sanitize_version}
     else
@@ -675,7 +675,7 @@ class Page < ActiveRecord::Base
   end
 
   def make_audio
-    Rails.logger.debug "marking as audio for #{self.id}"
+    Rails.logger.debug "DEBUG: mark_audio for #{self.id}"
     read_hidden = Hidden.find_or_create_by(name: HIDDEN)
     last_read_book = read_hidden.pages.order(:read_after).last
     last = last_read_book ? last_read_book.read_after : Date.today
@@ -687,7 +687,7 @@ class Page < ActiveRecord::Base
 ### Download helper methods
 
   def remove_outdated_downloads(recurse = false)
-    Rails.logger.debug "remove outdated downloads for #{self.id}"
+    Rails.logger.debug "DEBUG: remove outdated downloads for #{self.id}"
     FileUtils.rm_rf(self.download_dir)
     self.parent.remove_outdated_downloads(true) if self.parent
     self.parts.each { |part| part.remove_outdated_downloads(true) unless recurse}
@@ -695,7 +695,6 @@ class Page < ActiveRecord::Base
 
   # needs to be filesystem safe and not overly long
   def download_title
-    Rails.logger.debug "getting download title for #{self.id}"
     string = self.title.encode('ASCII', :invalid => :replace, :undef => :replace, :replace => '')
     string = string.gsub(/[^[\w _-]]+/, '')
     string.gsub(/ +/, " ").strip.gsub(/^(.{24}[\w.]*).*/) {$1}
@@ -707,7 +706,7 @@ class Page < ActiveRecord::Base
   def create_epub
     return if File.exists?("#{self.download_basename}.epub")
     cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --output-profile ipad --title "#{self.title}" --authors "#{self.download_tag_string}" }
-    Rails.logger.debug cmd
+    Rails.logger.debug "DEBUG: #{cmd}"
     `#{cmd} 2> /dev/null`
   end
 
@@ -725,6 +724,7 @@ class Page < ActiveRecord::Base
   end
 
   def get_chapters_from_ao3
+    Rails.logger.debug "DEBUG: getting chapters from ao3 for #{self.id}"
     doc = Nokogiri::HTML(Scrub.fetch(self.url + "/navigate"))
     chapter_list = doc.xpath("//ol//a")
     if chapter_list.size == 1
@@ -738,40 +738,47 @@ class Page < ActiveRecord::Base
         count = count.next
       end
       doc = Nokogiri::HTML(Scrub.fetch(self.url))
-      self.update_attribute(:title, doc.at_xpath("//h2").children.text.strip)
+      self.update_attribute(:title, ao3_doc_title(doc))
       self.set_wordcount
     end
   end
 
+  def ao3_doc_title(doc); doc.at_xpath("//h2").children.text.strip; end
+  def ao3_chapter_title(doc)
+    doc.css(".chapter .title").children.last.text.strip.gsub(": ","") rescue nil
+  end
+
   def refetch_chapters_from_ao3
+    Rails.logger.debug "DEBUG: refetching chapters from ao3 for #{self.id}"
     doc = Nokogiri::HTML(Scrub.fetch(self.url + "/navigate"))
     chapter_list = doc.xpath("//ol//a")
-    Rails.logger.debug "chapter list for #{self.id}: #{chapter_list}"
+    Rails.logger.debug "DEBUG: chapter list for #{self.id}: #{chapter_list}"
     if chapter_list.size == 1
-      Rails.logger.debug "fetch one chapter"
+      Rails.logger.debug "DEBUG: only one chapter"
       self.fetch
     else
-      Rails.logger.debug "fetch #{chapter_list.size} chapters"
+      Rails.logger.debug "DEBUG: getting #{chapter_list.size} chapters"
       url_list = []
       chapter_list.each do |element|
         title = element.text
         url = "http://archiveofourown.org" + element['href']
         url_list << url + "##" + title
       end
-      Rails.logger.debug "#{url_list}"
+      Rails.logger.debug "DEBUG: using #{url_list}"
       self.parts_from_urls(url_list.join("\r"))
     end
   end
 
   def get_meta_from_ao3(refetch=false)
+    Rails.logger.debug "DEBUG: getting meta from ao3 for #{self.id}"
     doc = Nokogiri::HTML(Scrub.fetch(self.url))
-    doc_title = doc.css(".preface .title").text.strip rescue nil
-    doc_chapter_title = doc.css(".chapter .title").text.strip rescue nil
 
     if self.ao3_chapter?  # if this is a chapter
-      self.title = doc_chapter_title || doc_title
+      Rails.logger.debug "DEBUG: getting chapter title for #{self.id}"
+      self.title = ao3_chapter_title(doc) || ao3_doc_title(doc)
     else
-      self.title = doc_title
+      Rails.logger.debug "DEBUG: getting work title for #{self.id}"
+      self.title = ao3_doc_title(doc)
     end
 
     doc_summary = doc.css(".summary blockquote").text.strip  rescue nil
@@ -837,7 +844,7 @@ private
   end
 
   def initial_fetch
-    Rails.logger.debug "initial fetch for #{self.id}"
+    Rails.logger.debug "DEBUG: initial fetch for #{self.id}"
     FileUtils.rm_rf(mydirectory) # make sure directory is empty for testing
     FileUtils.mkdir_p(download_dir) # make sure directory exists
     if !self.url.blank?
@@ -865,7 +872,7 @@ private
     elsif !self.urls.blank?
       self.parts_from_urls(self.urls)
     else
-      Rails.logger.debug "nothing to do in initial fetch!"
+      Rails.logger.debug "DEBUG: nothing to do in initial fetch!"
     end
   end
 
