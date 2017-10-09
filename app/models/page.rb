@@ -200,7 +200,11 @@ class Page < ActiveRecord::Base
 
   def refetch_ao3
     Rails.logger.debug "DEBUG: refetch_ao3 #{self.id}"
-    refetch_chapters_from_ao3
+    if ao3_chapter?
+      self.fetch
+    else
+      refetch_chapters_from_ao3
+    end
     get_meta_from_ao3(true)
   end
 

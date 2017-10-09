@@ -21,3 +21,16 @@ end
 Then /^show me the page$/ do
   save_and_open_page
 end
+
+When /^I go back$/ do
+  case Capybara::current_driver
+  when :selenium, :webkit
+    page.execute_script('window.history.back()')
+  else
+    if page.driver.respond_to?(:browser)
+      visit page.driver.browser.last_request.env['HTTP_REFERER']
+    else
+      visit page.driver.last_request.env['HTTP_REFERER']
+    end
+  end
+end

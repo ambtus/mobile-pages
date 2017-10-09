@@ -131,3 +131,13 @@ Feature: creating multi-part pages
      And I should see "stuff for part 2"
      And I should see "stuff for part 3"
 
+
+  Scenario: should not be able to store using a pasted html file
+    Given a titled page exists with url: "http://test.sidrasue.com/test.html"
+    When I am on the page's page
+     Then I should see "Edit Raw HTML"
+     And I should see "Edit Scrubbed HTML"
+    Given a titled page exists with urls: "http://test.sidrasue.com/test.html"
+    When I am on the page's page
+     Then I should not see "Edit Raw HTML"
+     And I should not see "Edit Scrubbed HTML"

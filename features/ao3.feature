@@ -67,6 +67,35 @@ Feature: ao3 specific stuff
       And I should not see "Hogwarts"
       And I should not see "giving up on nanowrimo"
 
+  Scenario: refetch one chapter from ao3
+    Given a genre exists with name: "harry potter"
+      And I am on the homepage
+    When I fill in "page_url" with "http://archiveofourown.org/works/692/chapters/803"
+      And I select "harry potter" from "genre"
+      And I press "Store"
+      And I follow "Notes"
+      And I fill in "page_notes" with "changed notes"
+      And I press "Update"
+    Then I should see "changed notes" within ".notes"
+      And I should not see "by Sidra" within ".notes"
+    And I follow "Edit Scrubbed HTML"
+      And I fill in "pasted" with "oops"
+      And I press "Update Scrubbed HTML"
+      And I follow "HTML"
+    Then I should see "oops"
+      And I should not see "Amy woke slowly"
+    When I go back
+      And I follow "Refetch"
+      Then the "url" field should contain "http://archiveofourown.org/works/692/chapters/803"
+    When I press "Refetch"
+      Then I should see "Where am I?" within ".title"
+      And I should not see "1."
+      And I should see "by Sidra" within ".notes"
+      And I should not see "changed notes" within ".notes"
+      When I follow "HTML"
+      Then I should not see "oops"
+      And I should see "Amy woke slowly"
+
   Scenario: fetch more chapters from ao3
     Given a genre exists with name: "harry potter"
       And I am on the homepage

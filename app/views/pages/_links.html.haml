@@ -25,8 +25,9 @@
     = link_to "Hiddens", hidden_path(page)
     %br
     = link_to "Manage Parts", edit_part_path(page)
-    = link_to "Edit Scrubbed HTML", edit_html_path(page, format: "scrubbed")
-    = link_to "Edit Raw HTML", edit_html_path(page)
+    - if page.parts.empty?
+      = link_to "Edit Scrubbed HTML", edit_html_path(page, format: "scrubbed")
+      = link_to "Edit Raw HTML", edit_html_path(page)
     = link_to "Scrub", scrub_path(page)
     = link_to "Refetch", refetch_path(page)
   = link_to "Original", page.url unless page.url.blank?
