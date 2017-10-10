@@ -42,6 +42,8 @@
       %br
     = hinted_text_field_tag 'page[title]', page.title, "Title"
     %br
+    = hinted_text_area_tag 'page[my_notes]', page.my_notes, "My Notes", :rows => 1, :cols => 30
+    %br
     = hinted_text_area_tag 'page[notes]', page.notes, "Notes", :rows => 1, :cols => 30
     %br
     - if called_by == "multiple"

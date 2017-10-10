@@ -24,6 +24,12 @@
     border-style: solid;
     background-color: #FC9;
     }
+.notes {
+   background-color: #FC9;
+    }
+.my_notes {
+    background-color: #F00;
+    }
 .title {
     background-color: #CCF;
     font-weight: bold;
@@ -45,9 +51,6 @@
     }
 .last_read {
     background-color: #F99;
-    }
-.notes {
-    background-color: #FC9;
     }
 .content {
     background-color: #EEE;

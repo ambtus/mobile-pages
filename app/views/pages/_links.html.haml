@@ -19,6 +19,7 @@
         ="|"
         = link_to "More Parts", page_path(page)
   - else
+    = link_to "My Notes", edit_my_note_path(page)
     = link_to "Notes", edit_note_path(page)
     = link_to "Authors", author_path(page)
     = link_to "Genres", genre_path(page)

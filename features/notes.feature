@@ -45,7 +45,7 @@ Feature: stuff to do with notes
       | Three  | a note    |
       | Four   | anoted    |
       | Five   | anotate   |
-      | Note   | an        |
+      | Six    | an        |
       And I am on the homepage
      When I fill in "page_notes" with "note"
       And I press "Find"
@@ -54,7 +54,7 @@ Feature: stuff to do with notes
        And I should see "Three"
        And I should see "Four"
        And I should not see "Five"
-       And I should not see "Note"
+       And I should not see "Six"
      When I fill in "page_notes" with "noted"
       And I press "Find"
      Then I should not see "One"
@@ -62,7 +62,7 @@ Feature: stuff to do with notes
        And I should not see "Three"
        And I should see "Four"
        And I should not see "Five"
-       And I should not see "Note"
+       And I should not see "Six"
      When I fill in "page_notes" with "an"
       And I press "Find"
      Then I should not see "One"
@@ -70,7 +70,7 @@ Feature: stuff to do with notes
        And I should not see "Three"
        And I should see "Four"
        And I should see "Five"
-       And I should see "Note"
+       And I should see "Six"
 
   Scenario: Update notes removes old html
     Given a titled page exists with notes: "Lorem ipsum dolor"

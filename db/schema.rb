@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151229203412) do
+ActiveRecord::Schema.define(version: 20171010003006) do
 
   create_table "authors", force: :cascade do |t|
     t.string "name", limit: 255
@@ -65,6 +65,7 @@ ActiveRecord::Schema.define(version: 20151229203412) do
     t.integer  "interesting",          limit: 4
     t.integer  "nice",                 limit: 4
     t.string   "cached_hidden_string", limit: 255,      default: "", null: false
+    t.text     "my_notes",             limit: 65535
   end
 
   add_index "pages", ["favorite"], name: "index_pages_on_favorite", using: :btree

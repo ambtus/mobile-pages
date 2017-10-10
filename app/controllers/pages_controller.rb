@@ -5,6 +5,7 @@ class PagesController < ApplicationController
     @page = Page.new(params[:page])
     @page.title = params[:title] if params[:title]
     @page.notes = params[:notes] if params[:notes]
+    @page.my_notes = params[:my_notes] if params[:my_notes]
     @page.url = params[:url] if params[:url]
     @sort_by = params[:sort_by] || "read_after"
     @size = params[:size] || "any"
@@ -41,6 +42,7 @@ class PagesController < ApplicationController
       if params[:page]
         build_route[:title] = params[:page][:title] unless params[:page][:title] == "Title"
         build_route[:notes] = params[:page][:notes] unless params[:page][:notes] == "Notes"
+        build_route[:my_notes] = params[:page][:my_notes] unless params[:page][:my_notes] == "My Notes"
         build_route[:url] = params[:page][:url] unless params[:page][:url] == "URL"
       end
       redirect_to(build_route) and return

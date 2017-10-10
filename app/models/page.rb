@@ -120,7 +120,7 @@ class Page < ActiveRecord::Base
     pages = pages.where(:size => "medium") if params[:size] == "medium"
     pages = pages.where(:size => "long") if params[:size] == "long"
     pages = pages.where(:size => ["medium", "long"]) if params[:size] == "either"
-    [:title, :notes, :url].each do |attrib|
+    [:title, :notes, :my_notes, :url].each do |attrib|
       pages = pages.search(attrib, params[attrib]) if params.has_key?(attrib)
     end
     pages = pages.search(:cached_genre_string, params[:genre]) if params.has_key?(:genre)
@@ -133,8 +133,8 @@ class Page < ActiveRecord::Base
       pages = pages.where(:cached_hidden_string => '')
     end
     pages = pages.with_author(params[:author]) if params.has_key?(:author)
-    # can only find parts by title, notes, url, last_created.
-    unless params[:title] || params[:notes] || params[:url] ||
+    # can only find parts by title, notes, my_notes, url, last_created.
+    unless params[:title] || params[:notes] || params[:my_notes] || params[:url] ||
            #no on unread parts. leaving it here in case I change my mind
            #params[:unread] == "yes" ||
            params[:sort_by] == "last_created"
@@ -678,6 +678,15 @@ class Page < ActiveRecord::Base
     short[0, snip_idx] + "..."
   end
 
+  def short_my_notes
+    return self.my_notes if self.my_notes.blank?
+    return self.my_notes if self.my_notes.size < MININOTE
+    short = self.my_notes.gsub(%r{</?[^>]+?>}, '')
+    snip_idx = short.index(/\s/, MININOTE)
+    return short unless snip_idx
+    short[0, snip_idx] + "..."
+  end
+
   def make_audio
     Rails.logger.debug "DEBUG: mark_audio for #{self.id}"
     read_hidden = Hidden.find_or_create_by(name: HIDDEN)
@@ -853,6 +862,7 @@ private
     self.url = self.url == "URL" ? nil : self.url.try(:strip)
     self.title = nil if self.title == "Title" unless (self.url && self.url.match('archiveofourown'))
     self.notes = nil if self.notes == "Notes"
+    self.my_notes = nil if self.my_notes == "My Notes"
     self.base_url = nil if self.base_url == BASE_URL_PLACEHOLDER
     self.url_substitutions = nil if self.url_substitutions == URL_SUBSTITUTIONS_PLACEHOLDER
     self.urls = nil if self.urls == URLS_PLACEHOLDER

@@ -10,6 +10,7 @@ MobilePages::Application.routes.draw do
   resources :hiddens
   resources :htmls, :only => ['edit']
   resources :notes, :only => ['edit']
+  resources :my_notes, :only => ['edit']
   resources :pages
   resources :parts, :only => ['new', 'edit', 'create']
   resources :rates, :only => ['show', 'create']
