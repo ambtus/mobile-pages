@@ -170,13 +170,8 @@ class Page < ActiveRecord::Base
     pages.group(:id).limit(LIMIT)
   end
 
-  def clean_title
-    clean = self.title.gsub('/', '').gsub("'", '').gsub("?", '').gsub(",", '').gsub(":", '').gsub('"', '').gsub("#", '').gsub(" ", "_").gsub("&", "").gsub("(", "").gsub(")", "")
-    CGI::escape(clean).gsub('+', ' ').gsub('.', ' ')
-  end
-
   def to_param
-    "#{self.id}-#{self.clean_title}"
+    "#{self.id}-#{self.download_title}"
   end
 
   def ao3?
@@ -710,7 +705,7 @@ class Page < ActiveRecord::Base
   def download_title
     string = self.title.encode('ASCII', :invalid => :replace, :undef => :replace, :replace => '')
     string = string.gsub(/[^[\w _-]]+/, '')
-    string.gsub(/ +/, " ").strip.gsub(/^(.{24}[\w.]*).*/) {$1}
+    string.gsub(/ +/, " ").strip.gsub(/^(.{30}[\w.]*).*/) {$1}
   end
   def download_basename
     "#{self.download_dir}#{self.download_title}"
