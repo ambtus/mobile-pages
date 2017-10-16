@@ -203,7 +203,7 @@ class Page < ActiveRecord::Base
     if ao3_chapter?
       self.fetch
     else
-      refetch_chapters_from_ao3
+      get_chapters_from_ao3
     end
     get_meta_from_ao3(true)
   end
@@ -736,26 +736,6 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def get_chapters_from_ao3
-    Rails.logger.debug "DEBUG: getting chapters from ao3 for #{self.id}"
-    doc = Nokogiri::HTML(Scrub.fetch(self.url + "/navigate"))
-    chapter_list = doc.xpath("//ol//a")
-    if chapter_list.size == 1
-      self.fetch
-    else
-      count = 1
-      chapter_list.each do |element|
-        title = element.text
-        url = "http://archiveofourown.org" + element['href']
-        Page.create(:title => title, :url => url, :position => count, :parent_id => self.id)
-        count = count.next
-      end
-      doc = Nokogiri::HTML(Scrub.fetch(self.url))
-      self.update_attribute(:title, ao3_doc_title(doc))
-      self.set_wordcount
-    end
-  end
-
   def ao3_doc_title(doc); doc.at_xpath("//h2").children.text.strip; end
   def ao3_chapter_title(doc, position)
     chapter_title = doc.css(".chapter .title").children.last.text.strip rescue nil
@@ -769,8 +749,8 @@ class Page < ActiveRecord::Base
     doc.css(".chapter .title").children.last.text.strip.gsub(": ","") rescue nil
   end
 
-  def refetch_chapters_from_ao3
-    Rails.logger.debug "DEBUG: refetching chapters from ao3 for #{self.id}"
+  def get_chapters_from_ao3
+    Rails.logger.debug "DEBUG: getting chapters from ao3 for #{self.id}"
     doc = Nokogiri::HTML(Scrub.fetch(self.url + "/navigate"))
     chapter_list = doc.xpath("//ol//a")
     Rails.logger.debug "DEBUG: chapter list for #{self.id}: #{chapter_list}"
@@ -778,15 +758,25 @@ class Page < ActiveRecord::Base
       Rails.logger.debug "DEBUG: only one chapter"
       self.fetch
     else
-      Rails.logger.debug "DEBUG: getting #{chapter_list.size} chapters"
-      url_list = []
+      count = 1
       chapter_list.each do |element|
         title = element.text
         url = "http://archiveofourown.org" + element['href']
-        url_list << url + "##" + title
+        chapter = Page.find_by(url: url)
+        if chapter
+          if chapter.position == count && chapter.parent_id == self.id
+            Rails.logger.debug "DEBUG: chapter already exists, skipping #{chapter.id} in position #{count}"
+          else
+            Rails.logger.debug "DEBUG: chapter already exists, updating #{chapter.id} with position #{count}"
+            chapter.update_attributes(position: count, parent_id: self.id)
+          end
+        else
+          Rails.logger.debug "DEBUG: chapter does not yet exist, creating #{title} in position #{count}"
+          Page.create(:title => title, :url => url, :position => count, :parent_id => self.id)
+        end
+        count = count.next
       end
-      Rails.logger.debug "DEBUG: using #{url_list}"
-      self.parts_from_urls(url_list.join("\r"))
+      self.set_wordcount
     end
   end
 
