@@ -760,7 +760,7 @@ class Page < ActiveRecord::Base
   def ao3_chapter_title(doc, position)
     chapter_title = doc.css(".chapter .title").children.last.text.strip rescue nil
     if chapter_title.blank?
-      return "Chapter #{position}"
+      return "#{position}. Chapter #{position}"
     else
       return chapter_title.gsub(": ","#{position}. ")
     end
