@@ -793,7 +793,7 @@ class Page < ActiveRecord::Base
     end
 
     doc_summary = doc.css(".summary blockquote").text.strip  rescue nil
-    doc_notes = doc.css(".notes blockquote").map(&:text).join(", ") rescue nil
+    doc_notes = doc.css(".notes blockquote").map(&:text).join("\n\n") rescue nil
     doc_relationships = doc.css(".relationship a").map(&:text).join(", ")  rescue nil
     doc_tags = doc.css(".freeform a").map(&:text).join(", ")  rescue nil
 
