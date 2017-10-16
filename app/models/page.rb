@@ -759,10 +759,10 @@ class Page < ActiveRecord::Base
   def ao3_doc_title(doc); doc.at_xpath("//h2").children.text.strip; end
   def ao3_chapter_title(doc, position)
     chapter_title = doc.css(".chapter .title").children.last.text.strip rescue nil
-    if chapter_title
-      return chapter_title.gsub(": ","#{position}. ")
-    else
+    if chapter_title.blank?
       return "Chapter #{position}"
+    else
+      return chapter_title.gsub(": ","#{position}. ")
     end
   end
   def ao3_single_chapter_fic_title(doc)
@@ -813,7 +813,11 @@ class Page < ActiveRecord::Base
     doc_tags = doc.css(".freeform a").map(&:text).join(", ")  rescue nil
 
     if self.ao3_chapter? && self.parent # if this is a chapter but not a deliberately single chapter
-      self.notes = doc_notes
+      if position == 1
+        self.notes = doc_notes
+      else
+        self.notes = [doc_summary, doc_notes].compact.join("\n\n").strip
+      end
     elsif self.parts.empty? # this is a single chapter work
       self.notes = [doc_summary, doc_notes, doc_tags, doc_relationships].compact.join("\n\n").strip
     else # this is the enclosing doc
