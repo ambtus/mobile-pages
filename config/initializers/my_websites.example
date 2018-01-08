@@ -45,8 +45,10 @@ module MyWebsites
     when /livejournal/
       if url.match("thread|comments")
         body.children
+      elsif body.at('//blockquote')
+        body.at('//blockquote').next
       else
-        body.at('.b-singlepost-body').children
+        body.at('article.b-singlepost-body').children
       end
     when /fanfiction.net/
       body.search("span").each { |node| node.remove }

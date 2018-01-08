@@ -127,6 +127,15 @@ module Scrub
        form = content.forms.first
        content = agent.submit(form, form.buttons.first)
     end
+    signin_message = content.at('div #signin').try(:text)
+    if signin_message && signin_message.include?("This work is only available to registered users of the Archive")
+       form = content.forms.first
+       username_field = form.field_with(:id => 'user_session_login')
+       username_field.value = auth[:username]
+       password_field = form.field_with(:id => 'user_session_password')
+       password_field.value = auth[:password]
+       content = agent.submit(form, form.buttons.first)
+    end
     return content.body.force_encoding(agent.page.encoding)
   end
 
