@@ -1,6 +1,7 @@
 .form
   = form_for page do |f|
     - if called_by == "index"
+      = hidden_field_tag :count, @count
       = label_tag :sort_by, "Sort by:"
       - ['random', 'last_read', 'last_created', 'read_after', 'recently_read'].each do |choice|
         = radio_button_tag :sort_by, choice, @sort_by == choice
@@ -55,6 +56,7 @@
     - else
       = hinted_text_field_tag 'page[url]', page.url, "URL"
     %br
+    = f.submit "Next", :name => "Next" if called_by == "index"
     = f.submit "Find", :name => "Find" if called_by == "index"
     = f.submit "Store", :name => "Store"
     = link_to("Store Multiple", new_part_path) if called_by == "index"

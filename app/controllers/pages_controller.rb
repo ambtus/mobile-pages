@@ -2,6 +2,7 @@ class PagesController < ApplicationController
 
   def index
     @title = "Mobile pages"
+    @count = params[:count].to_i
     @page = Page.new(params[:page])
     @page.title = params[:title] if params[:title]
     @page.notes = params[:notes] if params[:notes]
@@ -28,8 +29,9 @@ class PagesController < ApplicationController
   end
 
   def create
-    if params[:Find]
+    if params[:Find] || params[:Next]
       build_route = {:action => "index" , :controller => "pages"}
+      build_route[:count] = params[:count].to_i + Page::LIMIT if params[:Next]
       build_route[:author] = params[:author] unless params[:author].blank?
       build_route[:genre] = params[:genre] unless params[:genre].blank?
       build_route[:genre2] = params[:genre2] unless params[:genre2].blank?

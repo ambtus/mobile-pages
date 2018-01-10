@@ -167,7 +167,9 @@ class Page < ActiveRecord::Base
       else
         pages.order('read_after ASC')
     end
-    pages.group(:id).limit(LIMIT)
+    start = params[:count].to_i
+    Rails.logger.debug "DEBUG: find #{LIMIT} pages starting at #{start}"
+    pages.group(:id).limit(start + LIMIT)[start..-1]
   end
 
   def to_param
