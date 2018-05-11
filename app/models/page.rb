@@ -120,8 +120,11 @@ class Page < ActiveRecord::Base
     pages = pages.where(:size => "medium") if params[:size] == "medium"
     pages = pages.where(:size => "long") if params[:size] == "long"
     pages = pages.where(:size => ["medium", "long"]) if params[:size] == "either"
-    [:title, :notes, :my_notes, :url].each do |attrib|
+    [:title, :notes, :my_notes].each do |attrib|
       pages = pages.search(attrib, params[attrib]) if params.has_key?(attrib)
+    end
+    if params.has_key?(:url) # strip the https? in case it was stored under the other
+      pages = pages.search(:url, params[:url].sub(/^https?/, ''))
     end
     pages = pages.search(:cached_genre_string, params[:genre]) if params.has_key?(:genre)
     pages = pages.search(:cached_genre_string, params[:genre2]) if params.has_key?(:genre2)
