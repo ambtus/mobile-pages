@@ -1,8 +1,61 @@
 - content_for :title do
   = @title
-= render :partial => "pages/create", :locals => {:page => @page, :called_by => "index", :size => @size, :genre => @genre, :author => @author }
-- if @pages
-  - @pages.each_with_index do |page, index|
-    .page{:id => "position_#{index+1}"}
-      = render :partial => "pages/links", :locals => {:page => page, :called_by => "index" }
-      = render :partial => "pages/headers", :locals => {:page => page, :called_by => "index"}
+.form
+  = form_for @page do |f|
+    = hidden_field_tag :count, @count
+    = label_tag :sort_by, "Sort by:"
+    - ['random', 'last_read', 'last_created', 'read_after', 'recently_read'].each do |choice|
+      = radio_button_tag :sort_by, choice, @sort_by == choice
+      = label_tag "sort_by_#{choice}", choice.humanize.downcase
+    %br
+    = label_tag :unread, "Unread:"
+    - ['yes', 'no', 'either'].each do |choice|
+      = radio_button_tag :unread, choice, @unread == choice
+      = label_tag "unread_#{choice}", choice
+    %br
+    = label_tag :favorite, "Favorite:"
+    - ['yes', 'good', 'either', 'neither', 'unfinished', 'any'].each do |choice|
+      = radio_button_tag :favorite, choice, @favorite == choice
+      = label_tag "favorite_#{choice}", choice
+    %br
+    = label_tag :find, "Find:"
+    - ['sweet', 'interesting', 'both', 'none']. each do |choice|
+      = radio_button_tag :find, choice, @find == choice
+      = label_tag "find_#{choice}", choice
+    %br
+    = label_tag :size, "Size:"
+    - ['short', 'medium', 'long', 'either', 'any'].each do |choice|
+      = radio_button_tag :size, choice, @size == choice
+      = label_tag "size_#{choice}", choice
+    %br
+    - unless Genre.names.blank?
+      = label_tag :genre, "Genre:"
+      = select_tag :genre, options_for_select([nil] + Genre.names, @genre.try(:name))
+      = label_tag :genre2, "Genre2:"
+      = select_tag :genre2, options_for_select([nil] + Genre.names, @genre2.try(:name))
+      %br
+    - unless Hidden.names.blank?
+      = label_tag :hidden, "Hidden:"
+      = select_tag :hidden, options_for_select([nil] + Hidden.names, @hidden.try(:name))
+      %br
+    - unless Author.names.blank?
+      = label_tag :author, "Author:"
+      = select_tag :author, options_for_select([nil] + Author.names, @author.try(:name))
+      %br
+    = hinted_text_field_tag 'page[title]', @page.title, "Title"
+    %br
+    = hinted_text_area_tag 'page[my_notes]', @page.my_notes, "My Notes", :rows => 1, :cols => 30
+    %br
+    = hinted_text_area_tag 'page[notes]', @page.notes, "Notes", :rows => 1, :cols => 30
+    %br
+    = hinted_text_field_tag 'page[url]', @page.url, "URL"
+    %br
+    = f.submit "Find", :name => "Find"
+    = f.submit "Store", :name => "Store"
+    = link_to("Store Multiple", new_part_path)
+    - if @pages
+      - @pages.each_with_index do |page, index|
+        .page{:id => "position_#{index+1}"}
+          = render :partial => "pages/links", :locals => {:page => page, :called_by => "index" }
+          = render :partial => "pages/headers", :locals => {:page => page, :called_by => "index"}
+    = f.submit "Next", :name => "Next"

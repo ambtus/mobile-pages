@@ -1,32 +1,5 @@
 .form
   = form_for page do |f|
-    - if called_by == "index"
-      = hidden_field_tag :count, @count
-      = label_tag :sort_by, "Sort by:"
-      - ['random', 'last_read', 'last_created', 'read_after', 'recently_read'].each do |choice|
-        = radio_button_tag :sort_by, choice, @sort_by == choice
-        = label_tag "sort_by_#{choice}", choice.humanize.downcase
-      %br
-      = label_tag :unread, "Unread:"
-      - ['yes', 'no', 'either'].each do |choice|
-        = radio_button_tag :unread, choice, @unread == choice
-        = label_tag "unread_#{choice}", choice
-      %br
-      = label_tag :favorite, "Favorite:"
-      - ['yes', 'good', 'either', 'neither', 'unfinished', 'any'].each do |choice|
-        = radio_button_tag :favorite, choice, @favorite == choice
-        = label_tag "favorite_#{choice}", choice
-      %br
-      = label_tag :find, "Find:"
-      - ['sweet', 'interesting', 'both', 'none']. each do |choice|
-        = radio_button_tag :find, choice, @find == choice
-        = label_tag "find_#{choice}", choice
-      %br
-      = label_tag :size, "Size:"
-      - ['short', 'medium', 'long', 'either', 'any'].each do |choice|
-        = radio_button_tag :size, choice, @size == choice
-        = label_tag "size_#{choice}", choice
-      %br
     - unless Genre.names.blank?
       = label_tag :genre, "Genre:"
       = select_tag :genre, options_for_select([nil] + Genre.names, @genre.try(:name))
@@ -56,7 +29,4 @@
     - else
       = hinted_text_field_tag 'page[url]', page.url, "URL"
     %br
-    = f.submit "Next", :name => "Next" if called_by == "index"
-    = f.submit "Find", :name => "Find" if called_by == "index"
     = f.submit "Store", :name => "Store"
-    = link_to("Store Multiple", new_part_path) if called_by == "index"
