@@ -31,7 +31,7 @@ Feature: ao3 specific stuff
       And I should see "giving up on nanowrimo" within "#position_2"
       And I should see "1. Where am I?" within "#position_1"
       And I should see "2. Hogwarts" within "#position_2"
-    When I follow "2. Hogwarts"
+    When I follow "Hogwarts"
       Then I should not see "by Sidra" within ".notes"
       And I should not see "Using time-travel" within ".notes"
       And I should not see "abandoned" within ".notes"
@@ -110,16 +110,8 @@ Feature: ao3 specific stuff
     When I press "Refetch"
     Then I should see "Time Was, Time Is" within ".title"
       And I should see "Using time-travel"
+      And I should see "1. Where am I?" within "#position_1"
       And I should see "2. Hogwarts" within "#position_2"
-      And I should see "Where am I?" within "#position_1"
-      And I should not see "1. " within "#position_1"
-        # This is not a bug. See following feature.
-        # It's better to have to refetch a chapter that you want to update the chapter title of
-        # Than to have the chapter titles updated even if you don't want them to change
-    When I follow "Where am I?"
-      And I follow "Refetch"
-      And I press "Refetch"
-      Then I should see "1. Where am I?"
 
   Scenario: refetching top level fic shouldn't change chapter titles if i've modified them
      Given a genre exists with name: "harry potter"
@@ -127,14 +119,12 @@ Feature: ao3 specific stuff
     When I fill in "page_url" with "http://archiveofourown.org/works/692"
       And I select "harry potter" from "genre"
       And I press "Store"
-      And I follow "2. Hogwarts"
+      And I follow "Hogwarts"
     When I follow "Manage Parts"
       And I fill in "title" with "Hogwarts (abandoned)"
       And I press "Update"
       And I follow "Time Was, Time Is"
     Then I should see "Hogwarts (abandoned)" within "#position_2"
-      And I should not see "2." within "#position_2"
     When I follow "Refetch"
       And I press "Refetch"
     Then I should see "Hogwarts (abandoned)" within "#position_2"
-      And I should not see "2." within "#position_2"
