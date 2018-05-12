@@ -205,7 +205,7 @@ class Page < ActiveRecord::Base
     else
       get_chapters_from_ao3
     end
-    get_meta_from_ao3(true)
+    get_meta_from_ao3
   end
 
   def parts_from_urls(url_title_list, refetch=false)
@@ -780,7 +780,7 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def get_meta_from_ao3(refetch=false)
+  def get_meta_from_ao3
     Rails.logger.debug "DEBUG: getting meta from ao3 for #{self.id}"
     doc = Nokogiri::HTML(Scrub.fetch(self.url))
 

@@ -4,7 +4,12 @@ class RefetchesController < ApplicationController
   end
   def create
     @page = Page.find(params[:page_id])
-    if @page.parts.blank? || @page.ao3?
+    if params[:commit] == "Refetch Meta"
+      @page.parts.each do |part|
+        part.get_meta_from_ao3
+      end
+      @page.get_meta_from_ao3
+    elsif @page.parts.blank? || @page.ao3?
       @page.update_attribute(:url, params[:url])
       if @page.ao3?
         @page.refetch_ao3
