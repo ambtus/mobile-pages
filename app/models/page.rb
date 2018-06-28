@@ -2,7 +2,6 @@
 
 class Page < ActiveRecord::Base
   MODULO = 300  # files in a single directory
-  COUNT = 150 # words in an edited section
 
   def mypath
     prefix = case Rails.env
@@ -526,20 +525,12 @@ class Page < ActiveRecord::Base
   def read_html
     body = Nokogiri::HTML(self.clean_html).xpath('//body').first
     if body
-      count = 0
       section = 0
-      now = true
       body.traverse do |node|
-        if count == 0 && now
-         section += 1
-         now = false
-         node.add_previous_sibling("<h2 id=section_#{section}><a href=/pages/#{self.id}/edit?section=#{section}>Section #{section}</a> !!!!!SLOW DOWN AND ENUNCIATE!!!!!</h2>")
-        end
-        if node.text?
-          now = true
-          words = node.inner_text.gsub(/(['-])+/, "")
-          count +=  words.scan(/[a-zA-Z0-9_]+/).size
-          count = 0 if count > COUNT
+        if node.text? && !node.blank?
+          node.add_previous_sibling("<h2>!!!!!SLOW DOWN AND ENUNCIATE!!!!!</h2>") if section % 10 == 0 || section == 0
+          section += 1
+          node.add_previous_sibling("<a id=section_#{section} href=/pages/#{self.id}/edit?section=#{section}>#{section}</a>")
         end
       end
       body.children.to_xhtml
@@ -549,43 +540,42 @@ class Page < ActiveRecord::Base
   end
 
   def section(number)
-    body = Nokogiri::HTML(self.read_html).xpath('//body').first
-    first = body.at("h2#section_#{number}")
-    last = body.at("h2#section_#{number+1}")
-    result = []
-    while true do
-      break if first.blank?
-      first = first.next
-      break if first == last
-      result << first.to_html
+    body = Nokogiri::HTML(self.clean_html).xpath('//body').first
+    if body
+      section = 0
+      body.traverse do |node|
+        if node.text? && !node.blank?
+          section += 1
+          return node.text if section == number
+        end
+      end
+    else
+      ""
     end
-    result.join
   end
 
   def edit_section(number, new)
     body = Nokogiri::HTML(self.clean_html).xpath('//body').first
     if body
       added = false
-      count = 0
-      section = 1
-      body.traverse do |node|
-        if node.text?
-          words = node.inner_text.gsub(/(['-])+/, "")
-          count +=  words.scan(/[a-zA-Z0-9_]+/).size
-          if count > COUNT
-            count = 0
+      if body
+        section = 0
+        body.traverse do |node|
+          if node.text? && !node.blank?
             section += 1
-          end
-          if section == number
-            node.parent.remove
-          elsif section == number + 1 && !added
-            node.parent.add_previous_sibling(new)
-            added = true
+            if section == number
+              node.content = new if section == number
+              added = true
+              Rails.logger.debug "DEBUG: replaced node text in section #{number}"
+              break
+            end
           end
         end
+      else
+        ""
       end
       if added == false
-        Rails.logger.debug "DEBUG: added node to end in edit_section #{number}"
+        Rails.logger.debug "DEBUG: added new text to end"
         body.children.last.add_next_sibling(new)
       end
       self.clean_html=body.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
@@ -736,7 +726,7 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def ao3_doc_title(doc); doc.at_xpath("//h2").children.text.strip; end
+  def ao3_doc_title(doc); doc.xpath("//h2").last.children.text.strip; end
   def ao3_chapter_title(doc, position)
     chapter_title = doc.css(".chapter .title").children.last.text.strip rescue nil
     if chapter_title.blank?

@@ -13,7 +13,7 @@
       = link_to "Rate", rate_path(part)
       = link_to "EPUB", download_url_for_page(part, ".epub")
       = link_to "HTML", download_url_for_page(part, ".html")
-      = link_to "Sectioned", download_url_for_page(part, ".read")
+      = link_to "Text", download_url_for_page(part, ".read")
       = link_to "Original", part.url unless part.url.blank?
       %span.my_notes=part.short_my_notes
       %span.notes=part.short_notes

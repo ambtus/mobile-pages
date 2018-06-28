@@ -1,9 +1,9 @@
-Feature: tools to help audiobook creation
+Feature: audiobook
 
   Scenario: audiobook link
     Given a page exists with title: "Alice"
     When I am on the page's page
-      And I follow "Sectioned"
+      And I follow "Text"
     Then the download directory should exist for page titled "Alice"
     Then the download html file should exist for page titled "Alice"
     Then the download epub file should not exist for page titled "Alice"
@@ -11,11 +11,11 @@ Feature: tools to help audiobook creation
   Scenario: audiobook sections
     Given a titled page exists with url: "http://test.sidrasue.com/long.html"
     When I am on the page's page
-      And I follow "Sectioned"
+      And I follow "Text"
       Then I should see "Lorem ipsum dolor"
       And I should see "SLOW DOWN"
-      And I should see "Section 1"
-      And I should see "Section 2"
+      And I should see "1"
+      And I should see "2"
 
   Scenario: part sections
     When I am on the homepage
@@ -28,64 +28,7 @@ Feature: tools to help audiobook creation
      And I fill in "page_title" with "Multiple pages from urls"
      And I press "Store"
    When I go to the page with title "Multiple pages from urls"
-   Then I should see "Sectioned" within "#position_1"
-
-  Scenario: section editing first section
-    Given a titled page exists with url: "http://test.sidrasue.com/long.html"
-    When I am on the page's page
-      And I follow "Sectioned"
-    Then I should not see "New Content"
-      And I follow "Section 1"
-      Then I should see "Edit Section 1 for page: page 1"
-      And I should see "Lorem ipsum dolor sit amet"
-      And I should not see "L0rem ipsum dolor sit amet"
-      And I should not see "L9rem ipsum dolor sit amet"
-    When I fill in "edited" with "<p>New Content</p>"
-      And I press "Preview Section"
-      And I should see "Lorem ipsum dolor sit amet" within "#original"
-      And I should see "New Content" within "#edited"
-      And I should not see "Lorem ipsum dolor sit amet" within "#edited"
-    When I press "Confirm Section Edit"
-      Then I should see "New Content"
-      And I should not see "Lorem ipsum dolor sit amet"
-
-  Scenario: section editing mid section
-    Given a titled page exists with url: "http://test.sidrasue.com/long.html"
-    When I am on the page's page
-      And I follow "Sectioned"
-    Then I should not see "New Content"
-      And I follow "Section 5"
-      Then I should see "Edit Section 5 for page: page 1"
-      And I should not see "Lorem ipsum dolor sit amet"
-      And I should see "Aliquam eu ipsum a urna congue vulputate"
-      And I should not see "L9rem ipsum dolor sit amet"
-    When I fill in "edited" with "<p>New Content</p>"
-      And I press "Preview Section"
-      And I should see "Aliquam eu ipsum a urna congue vulputate" within "#original"
-      And I should see "New Content" within "#edited"
-      And I should not see "Aliquam eu ipsum a urna congue vulputate" within "#edited"
-    When I press "Confirm Section Edit"
-      Then I should see "New Content"
-      And I should not see "Aliquam eu ipsum a urna congue vulputate"
-
-  Scenario: section editing last section
-    Given a titled page exists with url: "http://test.sidrasue.com/long.html"
-    When I am on the page's page
-      And I follow "Sectioned"
-    Then I should not see "New Content"
-      And I follow "Section 51"
-      Then I should see "Edit Section 51 for page: page 1"
-      And I should not see "Lorem ipsum dolor sit amet"
-      And I should not see "L0rem ipsum dolor sit amet"
-      And I should see "L9rem ipsum dolor sit amet"
-    When I fill in "edited" with "<p>New Content</p>"
-      And I press "Preview Section"
-      And I should see "L9rem ipsum dolor sit amet" within "#original"
-      And I should see "New Content" within "#edited"
-      And I should not see "L9rem ipsum dolor sit amet" within "#edited"
-    When I press "Confirm Section Edit"
-      Then I should see "New Content"
-      And I should not see "L9rem ipsum dolor sit amet"
+   Then I should see "Text" within "#position_1"
 
   Scenario: audiobook created adds the hidden audio tag and makes it a favorite and updates last read
     Given the following pages
@@ -97,7 +40,7 @@ Feature: tools to help audiobook creation
     And I should not see "favorite"
     And I should not see "audio"
     When I follow "first" within "#position_1"
-    And I follow "Sectioned"
+    And I follow "Text"
     And I press "Audiobook created"
     When I am on the page with title "first"
     Then I should see "audio" within ".hiddens"

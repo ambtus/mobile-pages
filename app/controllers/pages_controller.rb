@@ -111,12 +111,12 @@ class PagesController < ApplicationController
         @page.update_attributes(params[:page].permit!)
         @page.remove_outdated_downloads
         redirect_to page_url(@page) and return
-      when "Preview Section"
+      when "Preview Text"
         @section_number = params[:section].to_i
         @old = @page.section(@section_number)
         @new = params[:edited]
         render :preview and return
-      when "Confirm Section Edit"
+      when "Confirm Text Edit"
         @page.edit_section(params[:section].to_i,params[:new])
         redirect_to @page.download_url(".read") and return
     end

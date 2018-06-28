@@ -1,4 +1,4 @@
--title = "Preview Section #{@section_number} for page: #{@page.title}"
+-title = "Preview Text #{@section_number} for page: #{@page.title}"
 -content_for(:title, title)
 %h1=title
 %h2 Old
@@ -7,7 +7,7 @@
 #edited=raw @new
 .content
   = form_for @page do |f|
-    .button= f.submit "Confirm Section Edit"
+    .button= f.submit "Confirm Text Edit"
     = hidden_field_tag(:section, @section_number)
     = hidden_field_tag(:new, @new)
 
