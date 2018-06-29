@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 gem 'bundler'
 gem 'rails', '~>4.2.0'
-gem 'mysql2'
+gem 'mysql2', '~>0.4.9'
 
 gem 'unicorn', group: :production
 
