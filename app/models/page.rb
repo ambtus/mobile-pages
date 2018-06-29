@@ -42,7 +42,7 @@ class Page < ActiveRecord::Base
       self.wordcount = self.parts.sum(:wordcount)
     elsif recount
       count = 0
-      body = Nokogiri::HTML(self.clean_html).xpath('//body').first
+      body = Nokogiri::HTML(self.edited_html).xpath('//body').first
       body.traverse { |node|
         if node.is_a? Nokogiri::XML::Text
           words = node.inner_text.gsub(/--/, "—").gsub(/(['’‘-])+/, "")
@@ -500,47 +500,9 @@ class Page < ActiveRecord::Base
     self.tag_names(true).join(", ")
   end
 
-  def clean_html_file_name
-    self.mydirectory + "original.html"
-  end
-
-  def clean_html=(content)
-    remove_outdated_downloads
-    content = Scrub.remove_surrounding(content) if nodes(content).size == 1
-    File.open(self.clean_html_file_name, 'w:utf-8') { |f| f.write(content) }
-    self.set_wordcount
-  end
-
-  def clean_html
-    self.re_sanitize if self.sanitize_version < Scrub.sanitize_version
-    if parts.blank?
-      begin
-        File.open(self.clean_html_file_name, 'r:utf-8') { |f| f.read }
-      rescue Errno::ENOENT
-        ""
-      end
-    end
-  end
-
-  def read_html
-    body = Nokogiri::HTML(self.clean_html).xpath('//body').first
-    if body
-      section = 0
-      body.traverse do |node|
-        if node.text? && !node.blank?
-          node.add_previous_sibling("<h2>!!!!!SLOW DOWN AND ENUNCIATE!!!!!</h2>") if section % 10 == 0 || section == 0
-          section += 1
-          node.add_previous_sibling("<a id=section_#{section} href=/pages/#{self.id}/edit?section=#{section}>#{section}</a>")
-        end
-      end
-      body.children.to_xhtml
-    else
-      ""
-    end
-  end
 
   def section(number)
-    body = Nokogiri::HTML(self.clean_html).xpath('//body').first
+    body = Nokogiri::HTML(self.edited_html).xpath('//body').first
     if body
       section = 0
       body.traverse do |node|
@@ -555,7 +517,7 @@ class Page < ActiveRecord::Base
   end
 
   def edit_section(number, new)
-    body = Nokogiri::HTML(self.clean_html).xpath('//body').first
+    body = Nokogiri::HTML(self.edited_html).xpath('//body').first
     if body
       added = false
       if body
@@ -578,7 +540,7 @@ class Page < ActiveRecord::Base
         Rails.logger.debug "DEBUG: added new text to end"
         body.children.last.add_next_sibling(new)
       end
-      self.clean_html=body.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
+      self.edited_html=body.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
     else
       ""
     end
@@ -597,10 +559,16 @@ class Page < ActiveRecord::Base
     self.update_attribute(:sanitize_version, Scrub.sanitize_version)
   end
 
+  ## Raw html includes everything from the web
+
+  def raw_html_file_name
+    self.mydirectory + "raw.html"
+  end
+
   def raw_html=(content)
     remove_outdated_downloads
     body = Scrub.regularize_body(content)
-    File.open(self.raw_file_name, 'w:utf-8') { |f| f.write(body) }
+    File.open(self.raw_html_file_name, 'w:utf-8') { |f| f.write(body) }
     html = MyWebsites.getnode(body, self.url)
     if html
       self.clean_html = Scrub.sanitize_html(html)
@@ -612,23 +580,58 @@ class Page < ActiveRecord::Base
 
   def raw_html
     begin
-      File.open(self.raw_file_name, 'r:utf-8') { |f| f.read }
+      File.open(self.raw_html_file_name, 'r:utf-8') { |f| f.read }
     rescue Errno::ENOENT
       ""
     end
   end
 
-  def raw_file_name
-    self.mydirectory + "raw.html"
-  end
-
-  def rebuild_from_raw
+  def rebuild_clean_from_raw
     if self.parts.size > 0
-      self.parts.each {|p| p.rebuild_from_raw }
+      self.parts.each {|p| p.rebuild_clean_from_raw }
     else
       self.raw_html = self.raw_html
     end
   end
+
+  ## Clean html includes all the original text
+
+  def clean_html_file_name
+    self.mydirectory + "original.html"
+  end
+
+  def clean_html=(content)
+    remove_outdated_downloads
+    content = Scrub.remove_surrounding(content) if nodes(content).size == 1
+    File.open(self.clean_html_file_name, 'w:utf-8') { |f| f.write(content) }
+    if content
+      self.edited_html = content
+    else
+      self.edited_html = ""
+    end
+    self.set_wordcount
+  end
+
+  def clean_html
+    self.re_sanitize if self.sanitize_version < Scrub.sanitize_version
+    if parts.blank?
+      begin
+        File.open(self.clean_html_file_name, 'r:utf-8') { |f| f.read }
+      rescue Errno::ENOENT
+        ""
+      end
+    end
+  end
+
+  def rebuild_edited_from_clean
+    if self.parts.size > 0
+      self.parts.each {|p| p.rebuild_edited_from_clean }
+    else
+      self.clean_html = self.clean_html
+    end
+  end
+
+  ### scrubbing (removing top and bottom nodes) is done on clean text
 
   def nodes(content = clean_html)
     Nokogiri::HTML(content).xpath('//body').children
@@ -649,6 +652,58 @@ class Page < ActiveRecord::Base
     bottom.to_i.times { nodeset.pop }
     self.clean_html=nodeset.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
   end
+
+  ## Edited html is the final result and what I want to read or hear
+
+  def edited_html_file_name
+    self.mydirectory + "edited.html"
+  end
+
+  def edited_html=(content)
+    remove_outdated_downloads
+    File.open(self.edited_html_file_name, 'w:utf-8') { |f| f.write(content) }
+    self.set_wordcount
+  end
+
+  def edited_html
+    if parts.blank?
+      begin
+        File.open(self.edited_html_file_name, 'r:utf-8') { |f| f.read }
+      rescue Errno::ENOENT
+        ""
+      end
+    end
+  end
+
+  ### Read html is what I would read for an audio book, and also how I edit
+
+  def read_html
+    body = Nokogiri::HTML(self.edited_html).xpath('//body').first
+    if body
+      section = 0
+      body.traverse do |node|
+        if node.text? && !node.blank?
+          node.add_previous_sibling("<h2>!!!!!SLOW DOWN AND ENUNCIATE!!!!!</h2>") if section % 10 == 0 || section == 0
+          section += 1
+          node.add_previous_sibling("<a id=section_#{section} href=/pages/#{self.id}/edit?section=#{section}>#{section}</a>")
+        end
+      end
+      body.children.to_xhtml
+    else
+      ""
+    end
+  end
+
+  def make_audio
+    Rails.logger.debug "DEBUG: mark_audio for #{self.id}"
+    read_hidden = Hidden.find_or_create_by(name: HIDDEN)
+    last_read_book = read_hidden.pages.order(:read_after).last
+    last = last_read_book ? last_read_book.read_after : Date.today
+    self.add_hiddens_from_string= HIDDEN
+    self.update_attributes(:read_after => last + 1.day, :favorite => 0, :last_read => Time.now)
+  end
+
+  ## Notes
 
   def formatted_notes
     return "" unless self.notes
@@ -677,17 +732,7 @@ class Page < ActiveRecord::Base
     short[0, snip_idx] + "..."
   end
 
-  def make_audio
-    Rails.logger.debug "DEBUG: mark_audio for #{self.id}"
-    read_hidden = Hidden.find_or_create_by(name: HIDDEN)
-    last_read_book = read_hidden.pages.order(:read_after).last
-    last = last_read_book ? last_read_book.read_after : Date.today
-    self.add_hiddens_from_string= HIDDEN
-    self.update_attributes(:read_after => last + 1.day, :favorite => 0, :last_read => Time.now)
-  end
-
-
-### Download helper methods
+  ## Download helper methods
 
   def remove_outdated_downloads(recurse = false)
     Rails.logger.debug "DEBUG: remove outdated downloads for #{self.id}"

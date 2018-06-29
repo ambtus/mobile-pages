@@ -8,8 +8,8 @@ Feature: read_after order
       And I press "Store"
     When I go to the page with title "page 2"
       And I press "Read First"
-    When I am on the homepage
-    Then I should see "page 2" within "#position_1"
+      Then I should see "Set to Read First"
+      And I should see "page 2" within "#position_1"
       And I should see "page 1" within "#position_2"
 
   Scenario: Read a page and make it first

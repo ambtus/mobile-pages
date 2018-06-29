@@ -1,6 +1,6 @@
 Feature: tools to help audiobook creation
 
-  Scenario: section editing first section
+  Scenario: section editing first section and recover from editing too much
     Given a titled page exists with url: "http://test.sidrasue.com/long.html"
     When I am on the page's page
       And I follow "Text"
@@ -18,6 +18,12 @@ Feature: tools to help audiobook creation
     When I press "Confirm Text Edit"
       Then I should see "New Content"
       And I should not see "Lorem ipsum dolor sit amet"
+    When I am on the page's page
+    When I press "Rebuild from Clean HTML"
+    And I follow "HTML" within ".title"
+    Then I should see "Lorem ipsum dolor sit amet"
+      And I should not see "New Content"
+
 
   Scenario: section editing mid section
     Given a titled page exists with url: "http://test.sidrasue.com/long.html"
@@ -56,3 +62,4 @@ Feature: tools to help audiobook creation
     When I press "Confirm Text Edit"
       Then I should see "New Content"
       And I should not see "L9rem ipsum dolor sit amet"
+

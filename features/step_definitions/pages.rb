@@ -32,10 +32,10 @@ And /^the pages?$/ do |table|
 end
 
 Then /^my page named "([^\"]*)" should contain "([^\"]*)"$/ do |title, string|
-  assert_match Regexp.new(string), Page.find_by_title(title).clean_html
+  assert_match Regexp.new(string), Page.find_by_title(title).edited_html
 end
 Then /^my page named "([^\"]*)" should not contain "([^\"]*)"$/ do |title, string|
-  assert_no_match Regexp.new(string), Page.find_by_title(title).clean_html
+  assert_no_match Regexp.new(string), Page.find_by_title(title).edited_html
 end
 
 Then /^the download directory should exist for page titled "([^"]*)"$/ do |title|

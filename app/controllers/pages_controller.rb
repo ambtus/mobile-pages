@@ -86,13 +86,19 @@ class PagesController < ApplicationController
 
   def update
     @page = Page.find(params[:id])
-    @page = @page.make_first if (params[:commit] == "Read First")
-    @page.remove_outdated_downloads if (params[:commit] == "Remove Downloads")
     @page.make_audio if (params[:commit] == "Audiobook created")
     case params[:commit]
+      when "Read First"
+        @page.make_first
+        flash[:notice] = "Set to Read First"
+        redirect_to root_path and return
       when "Rebuild from Raw HTML"
-        @page.rebuild_from_raw
+        @page.rebuild_clean_from_raw
         flash[:notice] = "Rebuilt from Raw HTML"
+        redirect_to page_path(@page) and return
+      when "Rebuild from Clean HTML"
+        @page.rebuild_edited_from_clean
+        flash[:notice] = "Rebuilt from Clean HTML"
         redirect_to page_path(@page) and return
       when "Update Raw HTML"
         @page.raw_html = params[:pasted]
