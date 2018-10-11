@@ -207,11 +207,23 @@ class Page < ActiveRecord::Base
     get_meta_from_ao3
   end
 
+  def part_title(position, original)
+    if original
+      if original.match(position)
+        original
+      else
+        "#{position}. #{original}"
+      end
+    else
+      "Part #{position}"
+    end
+  end
+
   def parts_from_urls(url_title_list, refetch=false)
     old_part_ids = self.parts.map(&:id)
     new_part_ids = []
 
-    lines = url_title_list.split(/[\r\n]/).select {|l| l.chomp} - [""]
+    lines = url_title_list.split(/[\r\n]/).select {|l| l.chomp}.map(&:squish) - [""]
 
     parts_with_subparts = lines.select {|l| l.match("^##") && !l.match("###")}
 
@@ -232,11 +244,12 @@ class Page < ActiveRecord::Base
     parts.each do |part|
       url = title = position = nil
       url = part.sub(/#.*/, "")
-      title = part.sub(/.*#/, "") if part.match("#")
+      original_title = part.sub(/.*#/, "") if part.match("#")
       position = parts.index(part) + 1
-      title = "Part " + position.to_s unless title
+      title = part_title(position.to_s, original_title)
       page = Page.find_by(url: url) unless url.blank?
       page = Page.find_by(title: title, parent_id: parent.id) unless page
+      page = Page.find_by(title: original_title, parent_id: parent.id) unless page
       if page.blank?
         page = Page.create(:url=>url, :title=>title, :parent_id=>parent.id, :position => position)
         parent.update_attribute(:read_after, Time.now) if parent.read_after > Time.now
@@ -257,12 +270,12 @@ class Page < ActiveRecord::Base
     subparts.each do |subpart|
       url = title = position = nil
       part_string = (lines[0..lines.index(subpart)] & parts).last
-      part_title = part_string.split("#").last
-      part = Page.find_by(title: part_title, parent_id: parent.id)
-      url = subpart.sub(/#.*/, "")
-      title = subpart.sub(/.*#/, "") if subpart.match("#")
       position = lines.index(subpart) - lines.index(part_string)
-      title = "Part " + position.to_s unless title
+      original_part_title = part_string.split("#").last
+      part = Page.where(parent_id: parent.id).where('title LIKE ?', "%#{original_part_title}").first
+      url = subpart.sub(/#.*/, "")
+      original_title = subpart.sub(/.*#/, "") if subpart.match("#")
+      title = part_title(position.to_s, original_title)
       page = Page.find_by(url: url)
       if page.blank?
         page = Page.create(:url=>url, :title=>title, :parent_id=>part.id, :position => position)
@@ -772,16 +785,21 @@ class Page < ActiveRecord::Base
   end
 
   def ao3_doc_title(doc); doc.xpath("//h2").last.children.text.strip; end
+  def ao3_single_chapter_fic_title(doc)
+    doc.css(".chapter .title").children.last.text.strip.gsub(": ","") rescue nil
+  end
   def ao3_chapter_title(doc, position)
     chapter_title = doc.css(".chapter .title").children.last.text.strip rescue nil
     if chapter_title.blank?
-      return "Chapter #{position}"
+      "Chapter #{position}"
     else
-      return chapter_title.gsub(": ","")
+      original = chapter_title.gsub(/^: /,"")
+      if original.match(position.to_s)
+        original
+      else
+        "#{position}. #{original}"
+      end
     end
-  end
-  def ao3_single_chapter_fic_title(doc)
-    doc.css(".chapter .title").children.last.text.strip.gsub(": ","") rescue nil
   end
 
   def get_chapters_from_ao3

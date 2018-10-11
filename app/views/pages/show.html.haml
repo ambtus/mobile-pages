@@ -6,7 +6,6 @@
 .parts
   - @page.parts.each do |part|
     .part{:id => "position_#{part.position}"}
-      #{part.position}.
       = link_to h(part.title), page_path(part)
       - unless part.tag_string.blank?
         = "(#{part.tag_string})"

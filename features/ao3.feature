@@ -110,8 +110,12 @@ Feature: ao3 specific stuff
     When I press "Refetch"
     Then I should see "Time Was, Time Is" within ".title"
       And I should see "Using time-travel"
-      And I should see "1. Where am I?" within "#position_1"
+      And I should see "Where am I?" within "#position_1"
+      And I should not see "1. Were am I?" within "#position_1"
       And I should see "2. Hogwarts" within "#position_2"
+    When I follow "Refetch"
+      And I press "Refetch Meta"
+      Then I should see "1. Where am I?" within "#position_1"
 
   Scenario: refetching top level fic shouldn't change chapter titles if i've modified them
      Given a genre exists with name: "harry potter"
