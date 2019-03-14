@@ -370,6 +370,17 @@ class Page < ActiveRecord::Base
     end
     return self
   end
+  def make_last
+    latest = Page.where(:parent_id => nil).order(:read_after).last.read_after || Date.today
+    self.update_attribute(:read_after, latest + 1.day)
+    if self.parent
+      parent = self.parent
+      parent.update_attribute(:read_after, latest + 1.day) if parent
+      grandparent = parent.parent if parent
+      grandparent.update_attribute(:read_after, latest + 1.day) if grandparent
+    end
+    return self
+  end
 
   def make_unfinished
     latest = Page.where(:parent_id => nil).order(:read_after).last.read_after + 1.day || Date.tomorrow

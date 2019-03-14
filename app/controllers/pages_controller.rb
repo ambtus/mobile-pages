@@ -88,9 +88,13 @@ class PagesController < ApplicationController
     @page = Page.find(params[:id])
     @page.make_audio if (params[:commit] == "Audiobook created")
     case params[:commit]
-      when "Read First"
+      when "Read Now"
         @page.make_first
-        flash[:notice] = "Set to Read First"
+        flash[:notice] = "Set to Read Now"
+        redirect_to root_path and return
+      when "Read Later"
+        @page.make_last
+        flash[:notice] = "Set to Read Later"
         redirect_to root_path and return
       when "Rebuild from Raw HTML"
         @page.rebuild_clean_from_raw
