@@ -118,7 +118,7 @@ class PagesController < ApplicationController
         @page.remove_nodes(top, bottom)
         redirect_to page_path(@page) and return
       when "Update"
-        @page.update_attributes(params[:page].permit!)
+        @page.update(params[:page].permit!)
         @page.remove_outdated_downloads
         redirect_to page_url(@page) and return
       when "Preview Text"

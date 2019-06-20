@@ -78,7 +78,7 @@ class Page < ActiveRecord::Base
 
   validates_presence_of :title, :message => "can't be blank or 'Title'"
   validates_format_of :url, :with => URI.regexp, :allow_blank => true
-  validates_uniqueness_of :url, :allow_blank => true
+  validates_uniqueness_of :url, :allow_blank => true, :case_sensitive => false
 
   after_create :initial_fetch
 
@@ -345,7 +345,7 @@ class Page < ActiveRecord::Base
       return parent.raw_html unless parent.raw_html.blank?
     end
     count = parent.parts.size + 1
-    self.update_attributes(:parent_id => parent.id, :position => count)
+    self.update(:parent_id => parent.id, :position => count)
     if new
       parent.genres << self.genres
       parent.cache_genres
@@ -724,7 +724,7 @@ class Page < ActiveRecord::Base
     last_read_book = read_hidden.pages.order(:read_after).last
     last = last_read_book ? last_read_book.read_after : Date.today
     self.add_hiddens_from_string= HIDDEN
-    self.update_attributes(:read_after => last + 1.day, :favorite => 0, :last_read => Time.now)
+    self.update(:read_after => last + 1.day, :favorite => 0, :last_read => Time.now)
   end
 
   ## Notes
@@ -832,7 +832,7 @@ class Page < ActiveRecord::Base
             Rails.logger.debug "DEBUG: chapter already exists, skipping #{chapter.id} in position #{count}"
           else
             Rails.logger.debug "DEBUG: chapter already exists, updating #{chapter.id} with position #{count}"
-            chapter.update_attributes(position: count, parent_id: self.id)
+            chapter.update(position: count, parent_id: self.id)
           end
         else
           Rails.logger.debug "DEBUG: chapter does not yet exist, creating #{title} in position #{count}"
