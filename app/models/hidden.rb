@@ -3,7 +3,7 @@ class Hidden < ActiveRecord::Base
 
   ANY_PLACEHOLDER = Hidden.find_or_create_by(name: "any")
 
-  has_and_belongs_to_many :pages, -> { uniq }
+  has_and_belongs_to_many :pages, -> { distinct }
   default_scope { order('hiddens.name asc') }
   validates_presence_of :name
   validates_uniqueness_of :name

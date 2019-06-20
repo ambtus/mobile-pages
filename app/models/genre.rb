@@ -1,7 +1,7 @@
 class Genre < ActiveRecord::Base
   NEW_PLACEHOLDER = "Enter Genres to add (comma separated)"
 
-  has_and_belongs_to_many :pages, -> { uniq }
+  has_and_belongs_to_many :pages, -> { distinct }
   default_scope { order('genres.name asc') }
   validates_presence_of :name
   validates_uniqueness_of :name

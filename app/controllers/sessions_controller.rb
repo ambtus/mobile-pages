@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  skip_before_filter :authorize
+  skip_before_action :authorize
 
   def login
     render :new
@@ -16,7 +16,7 @@ class SessionsController < ApplicationController
     end
   end
 
-  private 
+  private
 
   def user_params
     params.require(:user).permit(:name, :password, :password_confirmation)

@@ -64,9 +64,9 @@ class Page < ActiveRecord::Base
   URLS_PLACEHOLDER = "Alternatively: full URLs for parts, one per line"
   PARENT_PLACEHOLDER = "Enter name of existing or new (unique name) parent"
 
-  has_and_belongs_to_many :genres, -> { uniq }
-  has_and_belongs_to_many :hiddens, -> { uniq }
-  has_and_belongs_to_many :authors, -> { uniq }
+  has_and_belongs_to_many :genres, -> { distinct }
+  has_and_belongs_to_many :hiddens, -> { distinct }
+  has_and_belongs_to_many :authors, -> { distinct }
   belongs_to :parent, :class_name => "Page"
   belongs_to :ultimate_parent, :class_name => "Page"
 
