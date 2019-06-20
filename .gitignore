@@ -12,7 +12,6 @@ public/files
 config/unicorn.rb
 config/initializers/session_store.rb
 config/initializers/my_websites.rb
-config/initializers/secret_token.rb
 config/initializers/auth.rb
 rerun.txt
 vendor/gems
@@ -22,3 +21,6 @@ public/apple-touch-icon.png
 public/google*.html
 vendor/
 nohup.out
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key

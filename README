@@ -29,9 +29,10 @@ cp config/initializers/my_websites.example config/initializers/my_websites.rb
 cp config/initializers/session_store.example config/initializers/session_store.rb
 cp config/initializers/auth.example config/initializers/auth.rb
 
-use
-rake secret
-to get and set the environment variable SECRET_KEY_BASE
+create credentials:
+
+rails secret
+rails credentials:edit
 
 create user:
 

@@ -163,7 +163,7 @@ class Page < ActiveRecord::Base
           # and I don't want unfinished ones
           pages = pages.where('pages.favorite != ?', 9)
         end
-        pages.order('RAND()')
+        pages.order(Arel.sql('RAND()'))
       when "last_created"
         pages.order('created_at DESC')
       else
