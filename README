@@ -27,22 +27,17 @@ calibre command line tools (http://calibre-ebook.com/download)
 cp config/database.example config/database.yml
 cp config/initializers/my_websites.example config/initializers/my_websites.rb
 cp config/initializers/session_store.example config/initializers/session_store.rb
-cp config/initializers/auth.example config/initializers/auth.rb
 
 create credentials:
 
 rails secret
 rails credentials:edit
 
-create user:
-
-rails console production
-
-User.create(name: 'tester', password: 'secret')
-
 === optional configuration
 
 edit public/stylesheets/application.css
+
+add password authentication to front end server
 
 === gem installation
 

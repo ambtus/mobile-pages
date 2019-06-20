@@ -16,7 +16,6 @@ Rails.application.routes.draw do
   resources :rates, :only => ['show', 'create']
   resources :refetches, :only => ['show', 'create']
   resources :scrubs, :only => ['show']
-  resources :sessions, :only => ['login', 'create']
 
   root :to => 'pages#index'
 end
