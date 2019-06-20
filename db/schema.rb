@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,74 +10,70 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171010003006) do
+ActiveRecord::Schema.define(version: 2018_01_10_417523) do
 
-  create_table "authors", force: :cascade do |t|
-    t.string "name", limit: 255
+  create_table "authors", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "name"
+    t.index ["name"], name: "author_name", unique: true
   end
 
-  add_index "authors", ["name"], name: "author_name", unique: true, using: :btree
-
-  create_table "authors_pages", id: false, force: :cascade do |t|
-    t.integer "page_id",   limit: 4
-    t.integer "author_id", limit: 4
+  create_table "authors_pages", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.integer "page_id"
+    t.integer "author_id"
   end
 
-  create_table "genres", force: :cascade do |t|
-    t.string "name", limit: 255
+  create_table "genres", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "name"
+    t.index ["name"], name: "genre_name", unique: true
   end
 
-  add_index "genres", ["name"], name: "genre_name", unique: true, using: :btree
-
-  create_table "genres_pages", id: false, force: :cascade do |t|
-    t.integer "page_id",  limit: 4
-    t.integer "genre_id", limit: 4
+  create_table "genres_pages", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.integer "page_id"
+    t.integer "genre_id"
   end
 
-  create_table "hiddens", force: :cascade do |t|
-    t.string "name", limit: 255
+  create_table "hiddens", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "name"
+    t.index ["name"], name: "hidden_name", unique: true
   end
 
-  add_index "hiddens", ["name"], name: "hidden_name", unique: true, using: :btree
-
-  create_table "hiddens_pages", id: false, force: :cascade do |t|
-    t.integer "page_id",   limit: 4
-    t.integer "hidden_id", limit: 4
+  create_table "hiddens_pages", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.integer "page_id"
+    t.integer "hidden_id"
   end
 
-  create_table "pages", force: :cascade do |t|
-    t.string   "url",                  limit: 255
-    t.string   "title",                limit: 255
-    t.text     "notes",                limit: 16777215
-    t.integer  "parent_id",            limit: 4
-    t.integer  "position",             limit: 4
+  create_table "pages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "url"
+    t.string "title"
+    t.text "notes", limit: 16777215
+    t.integer "parent_id"
+    t.integer "position"
     t.datetime "last_read"
     t.datetime "read_after"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "wordcount",            limit: 4
-    t.string   "size",                 limit: 255
-    t.integer  "favorite",             limit: 2,        default: 10
-    t.integer  "ultimate_parent_id",   limit: 4
-    t.integer  "sanitize_version",     limit: 2,        default: 1,  null: false
-    t.string   "cached_genre_string",  limit: 255,      default: "", null: false
-    t.integer  "interesting",          limit: 4
-    t.integer  "nice",                 limit: 4
-    t.string   "cached_hidden_string", limit: 255,      default: "", null: false
-    t.text     "my_notes",             limit: 65535
+    t.integer "wordcount"
+    t.string "size"
+    t.integer "favorite", limit: 2, default: 10
+    t.integer "ultimate_parent_id"
+    t.integer "sanitize_version", limit: 2, default: 1, null: false
+    t.string "cached_genre_string", default: "", null: false
+    t.integer "interesting"
+    t.integer "nice"
+    t.string "cached_hidden_string", default: "", null: false
+    t.text "my_notes"
+    t.index ["favorite"], name: "index_pages_on_favorite"
+    t.index ["parent_id"], name: "index_pages_on_parent_id"
+    t.index ["size"], name: "index_pages_on_size", length: 250
+    t.index ["ultimate_parent_id"], name: "index_pages_on_ultimate_parent_id"
   end
 
-  add_index "pages", ["favorite"], name: "index_pages_on_favorite", using: :btree
-  add_index "pages", ["parent_id"], name: "index_pages_on_parent_id", using: :btree
-  add_index "pages", ["size"], name: "index_pages_on_size", length: {"size"=>250}, using: :btree
-  add_index "pages", ["ultimate_parent_id"], name: "index_pages_on_ultimate_parent_id", using: :btree
-
-  create_table "users", force: :cascade do |t|
-    t.string   "name",            limit: 255
-    t.string   "password_digest", limit: 255
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.string   "auth_token",      limit: 255
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "name"
+    t.string "password_digest"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "auth_token"
   end
 
 end

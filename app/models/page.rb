@@ -67,8 +67,8 @@ class Page < ActiveRecord::Base
   has_and_belongs_to_many :genres, -> { distinct }
   has_and_belongs_to_many :hiddens, -> { distinct }
   has_and_belongs_to_many :authors, -> { distinct }
-  belongs_to :parent, :class_name => "Page"
-  belongs_to :ultimate_parent, :class_name => "Page"
+  belongs_to :parent, class_name: "Page", optional: true
+  belongs_to :ultimate_parent, class_name: "Page", optional: true
 
   attr_accessor :base_url
   attr_accessor :url_substitutions

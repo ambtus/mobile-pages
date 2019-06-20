@@ -1,4 +1,4 @@
-MobilePages::Application.routes.draw do
+Rails.application.routes.draw do
 
   get '/tmp/test/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download' if Rails.env.test?
   get '/tmp/development/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download' if Rails.env.development?
