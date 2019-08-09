@@ -795,7 +795,7 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def ao3_doc_title(doc); doc.xpath("//h2").last.children.text.strip; end
+  def ao3_doc_title(doc); doc.xpath("//h2").last.children.text.strip rescue "empty title"; end
   def ao3_single_chapter_fic_title(doc)
     doc.css(".chapter .title").children.last.text.strip.gsub(": ","") rescue nil
   end
@@ -844,9 +844,21 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def get_meta_from_ao3
+  def rebuild_meta
+    get_meta_from_ao3(false) if ao3?
+  end
+
+  def get_meta_from_ao3(refetch=true)
     Rails.logger.debug "DEBUG: getting meta from ao3 for #{self.id}"
-    doc = Nokogiri::HTML(Scrub.fetch(self.url))
+    if refetch
+      doc = Nokogiri::HTML(Scrub.fetch(self.url))
+    else
+      if parts.empty?
+        doc = Nokogiri::HTML(raw_html)
+      else
+        doc = Nokogiri::HTML(parts.first.raw_html)
+      end
+    end
 
     if self.ao3_chapter?  # if this is a chapter
       if position

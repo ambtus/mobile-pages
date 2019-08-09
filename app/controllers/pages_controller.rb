@@ -104,6 +104,10 @@ class PagesController < ApplicationController
         @page.rebuild_edited_from_clean
         flash[:notice] = "Rebuilt from Clean HTML"
         redirect_to page_path(@page) and return
+      when "Rebuild Meta"
+        @page.rebuild_meta
+        flash[:notice] = "Rebuilt Meta"
+        redirect_to page_path(@page) and return
       when "Update Raw HTML"
         @page.raw_html = params[:pasted]
         flash[:notice] = "Raw HTML updated."
