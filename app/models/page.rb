@@ -501,7 +501,13 @@ class Page < ActiveRecord::Base
   end
 
   def tag_names(download = false)
-    names = self.authors.map(&:name) + self.genres.map(&:name)
+    names =
+      if download
+        self.authors.map(&:short_name)
+      else
+        self.authors.map(&:name)
+      end
+    names = names + self.genres.map(&:name)
     names = names + [self.size] unless download
     names = names + [(self.last_read ? self.last_read.to_date : "unread")] unless download
     names = names + favorite_names

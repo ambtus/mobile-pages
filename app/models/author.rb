@@ -18,6 +18,10 @@ class Author < ActiveRecord::Base
     self.name.squish!
   end
 
+  def short_name
+    name.split(" (").first
+  end
+
   def self.names
     self.all.map(&:name)
   end
