@@ -790,11 +790,21 @@ class Page < ActiveRecord::Base
 
   def add_author(string)
     return if string.blank?
-    mp_authors = Author.where('name like ?', "%#{string}%")
-    if mp_authors && mp_authors.size == 1
-      self.authors << mp_authors.first
-    else
-      byline = "by #{string}"
+    try = string.split(" (").first
+    tries = try.split(", ")
+    mp_authors = []
+    non_mp_authors = []
+    tries.each do |t|
+      found = Author.where('name like ?', "%#{t}%")
+      if found.blank?
+        non_mp_authors << t
+      else
+        mp_authors << found
+      end
+    end
+    mp_authors.each {|a| self.authors << a}
+    unless non_mp_authors.empty?
+      byline = "by #{non_mp_authors.join(", ")}"
       self.notes = self.notes ? [byline,notes].join("\n\n") : byline
       self.update_attribute(:notes, self.notes) unless self.new_record?
       self.notes
