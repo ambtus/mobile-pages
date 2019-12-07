@@ -23,6 +23,6 @@ class Author < ActiveRecord::Base
   end
 
   def self.names
-    self.all.map(&:name)
+    self.all.map(&:short_name)
   end
 end
