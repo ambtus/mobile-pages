@@ -941,7 +941,7 @@ private
 
   def self.with_author(string)
     joins(:authors).
-    where("authors.name = ?", string)
+    where(["authors.name LIKE ?", string + "%"])
   end
 
   def remove_placeholders

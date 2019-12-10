@@ -22,6 +22,11 @@ class Author < ActiveRecord::Base
     name.split(" (").first
   end
 
+  def self.find_by_short_name(short)
+    return nil if short.blank?
+    self.where(["name LIKE ?", short + "%"]).first
+  end
+
   def self.names
     self.all.map(&:short_name)
   end

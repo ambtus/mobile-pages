@@ -18,8 +18,8 @@ class PagesController < ApplicationController
     @genre2 = Genre.find_by_name(params[:genre2]) if params[:genre2]
     @hiddens = Hidden.all.map(&:name)
     @hidden = Hidden.find_by_name(params[:hidden]) if params[:hidden]
-    @authors = Author.all.map(&:name)
-    @author = Author.find_by_name(params[:author]) if params[:author]
+    @authors = Author.all.map(&:short_name)
+    @author = Author.find_by_short_name(params[:author]) if params[:author]
     @pages = Page.filter(params)
     flash.now[:alert] = "No pages found" if @pages.to_a.empty?
   end
@@ -53,7 +53,7 @@ class PagesController < ApplicationController
     @genre = Genre.find_by_name(params[:genre])
     @genre2 = Genre.find_by_name(params[:genre2])
     @hidden = Hidden.find_by_name(params[:hidden])
-    @author = Author.find_by_name(params[:author])
+    @author = Author.find_by_short_name(params[:author])
     @favorite = params[:favorite]
     @find = params[:find]
     if @page.save

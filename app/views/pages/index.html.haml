@@ -40,7 +40,7 @@
       %br
     - unless Author.names.blank?
       = label_tag :author, "Author:"
-      = select_tag :author, options_for_select([nil] + Author.names, @author.try(:name))
+      = select_tag :author, options_for_select([nil] + Author.names, @author.try(:short_name))
       %br
     = hinted_text_field_tag 'page[title]', @page.title, "Title"
     %br
