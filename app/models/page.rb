@@ -503,13 +503,17 @@ class Page < ActiveRecord::Base
   def tag_names(download = false)
     names =
       if download
-        self.authors.map(&:short_name)
+        []
       else
         self.authors.map(&:name)
       end
     names = names + self.genres.map(&:name)
-    names = names + [self.size] unless download
-    names = names + [(self.last_read ? self.last_read.to_date : "unread")] unless download
+    names = names + [self.size]
+    if self.last_read.blank?
+      names = names + ["unread"]
+    elsif !download
+      names = names + [self.last_read.to_date]
+    end
     names = names + favorite_names
     names.compact
   end
@@ -525,11 +529,6 @@ class Page < ActiveRecord::Base
   def favorite_string
     self.favorite_names.join(", ")
   end
-
-  def download_tag_string
-    self.tag_names(true).join(", ")
-  end
-
 
   def section(number)
     body = Nokogiri::HTML(self.edited_html).xpath('//body').first
@@ -781,9 +780,14 @@ class Page < ActiveRecord::Base
     "#{self.download_dir}#{self.download_title}"
   end
 
+  def download_author_string; authors.map(&:short_name).join(" & "); end
+  def download_tag_string
+    self.tag_names(true).join(", ")
+  end
+
   def create_epub
     return if File.exists?("#{self.download_basename}.epub")
-    cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --output-profile ipad --title "#{self.title}" --authors "#{self.download_tag_string}" }
+    cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --output-profile ipad --title "#{self.title}" --authors "#{self.download_author_string}" --tags "#{self.download_tag_string}" }
     Rails.logger.debug "DEBUG: #{cmd}"
     `#{cmd} 2> /dev/null`
   end
