@@ -784,10 +784,17 @@ class Page < ActiveRecord::Base
   def download_tag_string
     self.tag_names(true).join(", ")
   end
+  def download_comment_string
+    if my_notes.blank?
+      download_tag_string
+    else
+      [download_tag_string, my_notes].join("; ")
+    end
+  end
 
   def create_epub
     return if File.exists?("#{self.download_basename}.epub")
-    cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --output-profile ipad --title "#{self.title}" --authors "#{self.download_author_string}" --tags "#{self.download_tag_string}" }
+    cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --output-profile ipad --title "#{self.title}" --authors "#{self.download_author_string}" --tags "#{self.download_tag_string}" --comments "#{self.download_comment_string}"}
     Rails.logger.debug "DEBUG: #{cmd}"
     `#{cmd} 2> /dev/null`
   end
