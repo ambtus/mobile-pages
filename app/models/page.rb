@@ -782,11 +782,10 @@ class Page < ActiveRecord::Base
 
   def download_author_string; authors.map(&:short_name).join(" & "); end
   def download_tag_string
-    [*tag_names(true), *hiddens.map(&:names)].join(", ")
+    [*tag_names(true), *hiddens.map(&:name)].join(", ")
   end
   def download_comment_string
-    [download_tag_string, my_notes, notes].join("
-")
+    [download_tag_string, my_notes, notes].join(" ")
   end
 
   def create_epub
