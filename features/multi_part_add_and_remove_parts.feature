@@ -134,8 +134,8 @@ Feature: adding parents and children and siblings
       And I should see "stuff for part 3"
 
        Scenario: add a part updates the parent's read_after but add a parent doesn't
-    Given a page exists with title: "page 1", url: "http://test.sidrasue.com/parts/1.html", read_after: "2020-01-01"
-      And a page exists with title: "page 2", url: "http://test.sidrasue.com/parts/2.html", read_after: "2020-01-02"
+    Given a page exists with title: "page 1", url: "http://test.sidrasue.com/parts/1.html", read_after: "2050-01-01"
+      And a page exists with title: "page 2", url: "http://test.sidrasue.com/parts/2.html", read_after: "2050-01-02"
     When I am on the homepage
     Then I should see "page 1" within "#position_1"
       And I should see "page 2" within "#position_2"
