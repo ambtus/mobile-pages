@@ -12,40 +12,40 @@
 
 ActiveRecord::Schema.define(version: 2019_06_20_181428) do
 
-  create_table "authors", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "authors", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.index ["name"], name: "author_name", unique: true
   end
 
-  create_table "authors_pages", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "authors_pages", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "page_id"
     t.integer "author_id"
   end
 
-  create_table "genres", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "genres", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.index ["name"], name: "genre_name", unique: true
   end
 
-  create_table "genres_pages", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "genres_pages", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "page_id"
     t.integer "genre_id"
   end
 
-  create_table "hiddens", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "hiddens", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.index ["name"], name: "hidden_name", unique: true
   end
 
-  create_table "hiddens_pages", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "hiddens_pages", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "page_id"
     t.integer "hidden_id"
   end
 
-  create_table "pages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "pages", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "url"
     t.string "title"
-    t.text "notes", size: :medium
+    t.text "notes"
     t.integer "parent_id"
     t.integer "position"
     t.datetime "last_read"
@@ -64,7 +64,7 @@ ActiveRecord::Schema.define(version: 2019_06_20_181428) do
     t.text "my_notes"
     t.index ["favorite"], name: "index_pages_on_favorite"
     t.index ["parent_id"], name: "index_pages_on_parent_id"
-    t.index ["size"], name: "index_pages_on_size", length: 250
+    t.index ["size"], name: "index_pages_on_size"
     t.index ["ultimate_parent_id"], name: "index_pages_on_ultimate_parent_id"
   end
 

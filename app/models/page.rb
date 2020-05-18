@@ -812,7 +812,7 @@ class Page < ActiveRecord::Base
     [*tag_names(true), *hiddens.map(&:name)].join(", ")
   end
   def download_comment_string
-    [download_tag_string, my_notes, notes].join(" ")
+    [download_tag_string, my_notes, short_notes].join(" ")
   end
 
   def create_epub
