@@ -187,6 +187,8 @@ class Page < ActiveRecord::Base
 
 
   def fetch
+    remove_outdated_downloads
+    remove_outdated_edits
     begin
       self.raw_html = Scrub.fetch(self.url)
     rescue Mechanize::ResponseCodeError
@@ -581,8 +583,8 @@ class Page < ActiveRecord::Base
     if !self.parts.blank?
       self.parts.each {|p| p.re_sanitize if p.sanitize_version < Scrub.sanitize_version}
     else
-      html = self.clean_html
-      self.clean_html = Scrub.sanitize_html(html)
+      html = self.scrubbed_html
+      self.scrubbed_html = Scrub.sanitize_html(html)
       self.set_wordcount
     end
     self.update_attribute(:sanitize_version, Scrub.sanitize_version)
@@ -600,9 +602,9 @@ class Page < ActiveRecord::Base
     File.open(self.raw_html_file_name, 'w:utf-8') { |f| f.write(body) }
     html = MyWebsites.getnode(body, self.url)
     if html
-      self.clean_html = Scrub.sanitize_html(html)
+      self.scrubbed_html = Scrub.sanitize_html(html)
     else
-      self.clean_html = ""
+      self.scrubbed_html = ""
     end
     self.set_wordcount
   end
@@ -616,6 +618,7 @@ class Page < ActiveRecord::Base
   end
 
   def rebuild_clean_from_raw
+    remove_outdated_downloads
     if self.parts.size > 0
       self.parts.each {|p| p.rebuild_clean_from_raw }
     else
@@ -625,27 +628,22 @@ class Page < ActiveRecord::Base
 
   ## Clean html includes all the original text
 
-  def clean_html_file_name
-    self.mydirectory + "original.html"
+  def scrubbed_html_file_name
+    self.mydirectory + "scrubbed.html"
   end
 
-  def clean_html=(content)
+  def scrubbed_html=(content)
     remove_outdated_downloads
     content = Scrub.remove_surrounding(content) if nodes(content).size == 1
-    File.open(self.clean_html_file_name, 'w:utf-8') { |f| f.write(content) }
-    if content
-      self.edited_html = content
-    else
-      self.edited_html = ""
-    end
+    File.open(self.scrubbed_html_file_name, 'w:utf-8') { |f| f.write(content) }
     self.set_wordcount
   end
 
-  def clean_html
+  def scrubbed_html
     self.re_sanitize if self.sanitize_version < Scrub.sanitize_version
     if parts.blank?
       begin
-        File.open(self.clean_html_file_name, 'r:utf-8') { |f| f.read }
+        File.open(self.scrubbed_html_file_name, 'r:utf-8') { |f| f.read }
       rescue Errno::ENOENT
         ""
       end
@@ -653,16 +651,17 @@ class Page < ActiveRecord::Base
   end
 
   def rebuild_edited_from_clean
+    remove_outdated_downloads
     if self.parts.size > 0
       self.parts.each {|p| p.rebuild_edited_from_clean }
     else
-      self.clean_html = self.clean_html
+      FileUtils.rm(edited_html_file_name)
     end
   end
 
   ### scrubbing (removing top and bottom nodes) is done on clean text
 
-  def nodes(content = clean_html)
+  def nodes(content = scrubbed_html)
     Nokogiri::HTML(content).xpath('//body').children
   end
 
@@ -679,10 +678,11 @@ class Page < ActiveRecord::Base
     nodeset = nodes
     top.to_i.times { nodeset.shift }
     bottom.to_i.times { nodeset.pop }
-    self.clean_html=nodeset.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
+    self.scrubbed_html=nodeset.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
   end
 
   ## Edited html is the final result and what I want to read or hear
+  ## but don't create a new file if it's identical to the scrubbed version
 
   def edited_html_file_name
     self.mydirectory + "edited.html"
@@ -699,7 +699,11 @@ class Page < ActiveRecord::Base
       begin
         File.open(self.edited_html_file_name, 'r:utf-8') { |f| f.read }
       rescue Errno::ENOENT
-        ""
+        begin
+          File.open(self.scrubbed_html_file_name, 'r:utf-8') { |f| f.read }
+        rescue Errno::ENOENT
+          ""
+        end
       end
     end
   end
@@ -768,6 +772,12 @@ class Page < ActiveRecord::Base
     FileUtils.rm_rf(self.download_dir)
     self.parent.remove_outdated_downloads(true) if self.parent
     self.parts.each { |part| part.remove_outdated_downloads(true) unless recurse}
+  end
+
+  def remove_outdated_edits
+    Rails.logger.debug "DEBUG: remove outdated edits for #{self.id}"
+    FileUtils.rm_f(self.scrubbed_html_file_name)
+    FileUtils.rm_f(self.edited_html_file_name)
   end
 
   # needs to be filesystem safe and not overly long
@@ -868,6 +878,7 @@ class Page < ActiveRecord::Base
   end
 
   def rebuild_meta
+    remove_outdated_downloads
     get_meta_from_ao3(false) if ao3?
   end
 

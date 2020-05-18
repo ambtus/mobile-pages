@@ -100,9 +100,9 @@ class PagesController < ApplicationController
         @page.rebuild_clean_from_raw
         flash[:notice] = "Rebuilt from Raw HTML"
         redirect_to page_path(@page) and return
-      when "Rebuild from Clean HTML"
+      when "Rebuild from Scrubbed HTML"
         @page.rebuild_edited_from_clean
-        flash[:notice] = "Rebuilt from Clean HTML"
+        flash[:notice] = "Rebuilt from Scrubbed HTML"
         redirect_to page_path(@page) and return
       when "Rebuild Meta"
         @page.rebuild_meta
@@ -112,8 +112,8 @@ class PagesController < ApplicationController
         @page.raw_html = params[:pasted]
         flash[:notice] = "Raw HTML updated."
         redirect_to page_path(@page) and return
-      when "Update Scrubbed HTML"
-        @page.clean_html = params[:pasted]
+      when "Edit HTML"
+        @page.edited_html = params[:pasted]
         flash[:notice] = "Clean HTML updated."
         redirect_to page_path(@page) and return
       when "Scrub"

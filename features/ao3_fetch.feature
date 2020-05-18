@@ -80,7 +80,7 @@ Feature: ao3 specific stuff
       And I should not see "by Sidra" within ".notes"
     And I follow "Edit Scrubbed HTML"
       And I fill in "pasted" with "oops"
-      And I press "Update Scrubbed HTML"
+      And I press "Edit HTML"
       And I follow "HTML"
     Then I should see "oops"
       And I should not see "Amy woke slowly"
