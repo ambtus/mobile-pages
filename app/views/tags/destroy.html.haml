@@ -1,11 +1,11 @@
 %p
-  The genre
+  The tag
   =surround '"' do
-    =@genre.name
+    =@tag.name
   currently has
-  =@genre.pages.count
+  =@tag.pages.count
   pages associated with it.
 %p
   Are you sure you want to destroy it?
 %p
-  = button_to "Yes", @genre, :method => :delete
+  = button_to "Yes", @tag, :method => :delete

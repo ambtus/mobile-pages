@@ -3,32 +3,32 @@ Feature: hiddens are tags which are hidden by default. During search, anything w
 
   Scenario: hidden selected during creat
     Given a hidden exists with name: "nonfiction"
-    Given a genre exists with name: "something"
+    Given a tag exists with name: "something"
       And I am on the homepage
       And I select "nonfiction" from "Hidden"
-      And I select "something" from "genre"
+      And I select "something" from "tag"
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should not see "Please select genre"
+    Then I should not see "Please select tag"
       And I should see "nonfiction" within ".hiddens"
 
   Scenario: strip hidden whitespace
     Given a titled page exists
     When I go to the page's page
       And I follow "Hiddens"
-      And I follow "Add Hidden Genres"
+      And I follow "Add Hidden Tags"
       And I fill in "hiddens" with "  nonfiction,  audio  book,save for   later  "
-      And I press "Add Hidden Genres"
+      And I press "Add Hidden Tags"
     Then I should see "audio book, nonfiction, save for later" within ".hiddens"
 
   Scenario: add a hidden to a page when there are no hiddens
     Given a titled page exists
     When I am on the page's page
       And I follow "Hiddens"
-      And I follow "Add Hidden Genres"
+      And I follow "Add Hidden Tags"
     When I fill in "hiddens" with "nonfiction, audio book"
-      And I press "Add Hidden Genres"
+      And I press "Add Hidden Tags"
     Then I should see "nonfiction" within ".hiddens"
       And I should see "audio book" within ".hiddens"
     When I am on the homepage
@@ -41,7 +41,7 @@ Feature: hiddens are tags which are hidden by default. During search, anything w
     When I am on the page's page
       And I follow "Hiddens"
       And I select "work in progress" from "page_hidden_ids_"
-      And I press "Update Hidden Genres"
+      And I press "Update Hidden Tags"
     Then I should see "work in progress" within ".hiddens"
 
   Scenario: add a hidden to a page which has hiddens
@@ -49,9 +49,9 @@ Feature: hiddens are tags which are hidden by default. During search, anything w
     When I am on the page's page
     Then I should see "nonfiction" within ".hiddens"
     When I follow "Hiddens"
-      And I follow "Add Hidden Genres"
+      And I follow "Add Hidden Tags"
       And I fill in "hiddens" with "audio book, wip"
-      And I press "Add Hidden Genres"
+      And I press "Add Hidden Tags"
     Then I should see "audio book, nonfiction, wip" within ".hiddens"
     When I am on the homepage
     Then I select "nonfiction" from "Hidden"
@@ -113,9 +113,9 @@ Feature: hiddens are tags which are hidden by default. During search, anything w
       And I should not see "The Boxcar Children"
       And I should not see "Alice in Wonderland"
 
-  Scenario: hidden by default with genres
+  Scenario: hidden by default with tags
     Given the following pages
-      | title                            | add_genres_from_string  | add_hiddens_from_string |
+      | title                            | add_tags_from_string  | add_hiddens_from_string |
       | The Mysterious Affair at Styles  | mystery                 | hide |
       | Alice in Wonderland              | children                | hide, go away |
       | The Boxcar Children              | mystery, children       | |
@@ -138,18 +138,18 @@ Feature: hiddens are tags which are hidden by default. During search, anything w
       And I should see "The Boxcar Children"
       But I should not see "The Mysterious Affair at Styles"
 
-  Scenario: move to genre
+  Scenario: move to tag
     Given I have no hiddens
     And a hidden exists with name: "hidden name"
       And a titled page exists with add_hiddens_from_string: "hidden name"
     When I am on the homepage
     Then I should see "No pages found"
     When I go to the edit hidden page for "hidden name"
-      And I press "Move to Genre"
+      And I press "Move to Tag"
     When I am on the homepage
     Then I should not see "No pages found"
       And I should have no hiddens
-      And I select "hidden name" from "genre"
+      And I select "hidden name" from "tag"
       And I press "Find"
     Then I should not see "No pages found"
 

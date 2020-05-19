@@ -6,9 +6,9 @@ Feature: filter/find
     Then I should see "Parent" within ".title"
     And I should see "Part 1 | Part 2"
 
-  Scenario: filter on mix of author, genre, and state
+  Scenario: filter on mix of author, tag, and state
     Given the following pages
-      | title                            | add_author_string        | add_genres_from_string        | favorite | last_read  |
+      | title                            | add_author_string        | add_tags_from_string        | favorite | last_read  |
       | The Mysterious Affair at Styles  | agatha christie          | mystery           | 1        | 2009-01-01 |
       | Nancy Drew                       | Carolyn Keene            | mystery, children | 3        | 2009-02-01 |
       | The Boxcar Children              | Gertrude Chandler Warner | mystery, children | 0        |            |
@@ -20,7 +20,7 @@ Feature: filter/find
     # Find all by author
     When I am on the homepage
       And I select "agatha christie" from "Author"
-      And I select "mystery" from "genre"
+      And I select "mystery" from "tag"
       And I press "Find"
     Then I should see "The Mysterious Affair at Styles" within "#position_1"
       And I should see "Murder on the Orient Express" within "#position_2"
@@ -30,9 +30,9 @@ Feature: filter/find
       And I should not have a "#position_6" field
       And I should not see "Nancy Drew"
       And I should not see "The Boxcar Children"
-    # find unread by genre
+    # find unread by tag
     When I am on the homepage
-      And I select "children" from "genre"
+      And I select "children" from "tag"
       And I choose "unread_yes"
       And I press "Find"
     Then I should see "The Boxcar Children"
@@ -48,9 +48,9 @@ Feature: filter/find
       And I should not see "The Mysterious Affair at Styles"
       And I should not see "The Boxcar Children"
       And I should see "To Read Mystery"
-    # find favorite by genre
+    # find favorite by tag
     When I am on the homepage
-      And I select "children" from "genre"
+      And I select "children" from "tag"
       And I choose "favorite_yes"
       And I press "Find"
     Then I should see "Harry Potter"

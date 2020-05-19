@@ -70,7 +70,7 @@ class Page < ActiveRecord::Base
   URLS_PLACEHOLDER = "Alternatively: full URLs for parts, one per line"
   PARENT_PLACEHOLDER = "Enter name of existing or new (unique name) parent"
 
-  has_and_belongs_to_many :genres, -> { distinct }
+  has_and_belongs_to_many :tags, -> { distinct }
   has_and_belongs_to_many :authors, -> { distinct }
   belongs_to :parent, class_name: "Page", optional: true
   belongs_to :ultimate_parent, class_name: "Page", optional: true
@@ -130,8 +130,8 @@ class Page < ActiveRecord::Base
     if params.has_key?(:url) # strip the https? in case it was stored under the other
       pages = pages.search(:url, params[:url].sub(/^https?/, ''))
     end
-    pages = pages.search(:cached_genre_string, params[:genre]) if params.has_key?(:genre)
-    pages = pages.search(:cached_genre_string, params[:genre2]) if params.has_key?(:genre2)
+    pages = pages.search(:cached_tag_string, params[:tag]) if params.has_key?(:tag)
+    pages = pages.search(:cached_tag_string, params[:tag2]) if params.has_key?(:tag2)
     pages = pages.with_author(params[:author]) if params.has_key?(:author)
     # can only find parts by title, notes, my_notes, url, last_created.
     unless params[:title] || params[:notes] || params[:my_notes] || params[:url] ||
@@ -347,8 +347,8 @@ class Page < ActiveRecord::Base
     count = parent.parts.size + 1
     self.update(:parent_id => parent.id, :position => count)
     if new
-      parent.genres << self.genres
-      parent.cache_genres
+      parent.tags << self.tags
+      parent.cache_tags
       parent.authors << self.authors
       parent.update_attribute(:last_read, self.last_read)
       parent.update_attribute(:favorite, self.favorite)
@@ -429,28 +429,28 @@ class Page < ActiveRecord::Base
     self.authors
   end
 
-  def genre_string
-    self.genres.map(&:name).join(", ")
+  def tag_string
+    self.tags.map(&:name).join(", ")
   end
 
-  def cache_genres
+  def cache_tags
     if self.new_record?
-      Rails.logger.debug "DEBUG: cache_genres for new record"
-      self.cached_genre_string = genre_string
+      Rails.logger.debug "DEBUG: cache_tags for new record"
+      self.cached_tag_string = tag_string
     else
-      Rails.logger.debug "DEBUG: cache_genres for #{self.id}"
-      self.update_attribute(:cached_genre_string, genre_string)
+      Rails.logger.debug "DEBUG: cache_tags for #{self.id}"
+      self.update_attribute(:cached_tag_string, tag_string)
     end
-    genre_string
+    tag_string
   end
 
-  def add_genres_from_string=(string)
+  def add_tags_from_string=(string)
     return if string.blank?
-    string.split(",").each do |genre|
-      new = Genre.find_or_create_by(name: genre.squish)
-      self.genres << new
+    string.split(",").each do |tag|
+      new = Tag.find_or_create_by(name: tag.squish)
+      self.tags << new
     end
-    self.cache_genres
+    self.cache_tags
   end
 
   def favorite_names
@@ -484,7 +484,7 @@ class Page < ActiveRecord::Base
       else
         self.authors.map(&:name)
       end
-    names = names + self.genres.map(&:name)
+    names = names + self.tags.map(&:name)
     names = names + [self.size]
     if self.last_read.blank?
       names = names + ["unread"]
@@ -704,7 +704,7 @@ class Page < ActiveRecord::Base
 
   def make_audio  # add an audio tag and mark it as read today
     Rails.logger.debug "DEBUG: mark_audio for #{self.id}"
-    self.add_genres_from_string=AUDIO
+    self.add_tags_from_string=AUDIO
     self.update(:last_read => Time.now)
     self.update_read_after
   end
@@ -925,9 +925,9 @@ private
     where("pages.#{symbol.to_s} LIKE ?",query)
   end
 
-  def self.without_genre(string)
+  def self.without_tag(string)
     query = "%#{string}%"
-    where("pages.cached_genre_string NOT LIKE ?",query)
+    where("pages.cached_tag_string NOT LIKE ?",query)
   end
 
   def self.with_author(string)

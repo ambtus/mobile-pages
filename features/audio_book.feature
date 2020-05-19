@@ -42,11 +42,11 @@ Feature: audiobook
     And I follow "Text"
     And I press "Audiobook created"
     When I am on the page with title "first"
-    Then I should see "audio" within ".genres"
+    Then I should see "audio" within ".tags"
     When I am on the homepage
     Then I should see "second" within "#position_1"
     And I should see "first" within "#position_2"
-    When I select "audio" from "Genre"
+    When I select "audio" from "Tag"
       And I press "Find"
     Then I should see "first" within "#position_1"
     And I should not see "second"

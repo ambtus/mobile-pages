@@ -1,9 +1,0 @@
-- content_for :title do
-  = "New genres for " + @page.title
-
-.title= @page.title
-.genres
-  = form_tag genres_path do
-    = hidden_field_tag(:page_id, @page.id)
-    = hinted_text_field_tag :genres, params[:genres], Genre::NEW_PLACEHOLDER, :maxlength => 255, :size => 70
-    .button= submit_tag "Add Genres"

@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   match '/login' => 'sessions#login', :as => 'login', via: [:get, :post]
 
   resources :authors, :only => ['show', 'create']
-  resources :genres
+  resources :tags
   resources :htmls, :only => ['edit']
   resources :notes, :only => ['edit']
   resources :my_notes, :only => ['edit']

@@ -1,0 +1,10 @@
+- content_for :title do
+  = "Select tags for " + @page.title
+.title= @page.title
+.tags
+  = form_tag tags_path do
+    = hidden_field_tag(:page_id, @page.id)
+    .filters
+      = select_tag("page[tag_ids][]", options_from_collection_for_select(Tag.all, 'id', 'name', selected = @page.tags.map(&:id)), :multiple => true)
+    .button= submit_tag "Update Tags"
+  = link_to "Add Tags", tag_path(@page, :add => true)

@@ -1,10 +1,10 @@
 Feature: ao3 specific stuff
 
   Scenario: refetching meta of a top level fic
-     Given a genre exists with name: "harry potter"
+     Given a tag exists with name: "harry potter"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/692"
-      And I select "harry potter" from "genre"
+      And I select "harry potter" from "tag"
       And I press "Store"
       And I follow "Notes"
       And I fill in "page_notes" with "changed notes"
@@ -25,10 +25,10 @@ Feature: ao3 specific stuff
       But I should see "Hogwarts" within "#position_2"
 
   Scenario: rebuild meta
-    Given a genre exists with name: "popslash"
+    Given a tag exists with name: "popslash"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/68481"
-      And I select "popslash" from "genre"
+      And I select "popslash" from "tag"
       And I press "Store"
     Then I should see "please no crossovers" within ".notes"
       And I should see "AJ/JC" within ".notes"
@@ -50,10 +50,10 @@ Feature: ao3 specific stuff
       And I should see "Make the Yuletide Gay" within ".notes"
 
   Scenario: ensure rebuild meta isn’t refetching
-    Given a genre exists with name: "popslash"
+    Given a tag exists with name: "popslash"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/68481"
-      And I select "popslash" from "genre"
+      And I select "popslash" from "tag"
       And I press "Store"
     Then I should see "please no crossovers" within ".notes"
       And I should see "AJ/JC" within ".notes"

@@ -37,7 +37,7 @@ module NavigationHelpers
       page_path(page)
 
     when /^the edit page for "(.*)"$/
-      edit_genre_path(Genre.find_by_name($1))
+      edit_tag_path(Tag.find_by_name($1))
 
     when /^the edit hidden page for "(.*)"$/
       edit_hidden_path(Hidden.find_by_name($1))

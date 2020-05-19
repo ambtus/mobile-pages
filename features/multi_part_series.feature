@@ -1,7 +1,7 @@
 Feature: third level hierarchy
 
   Scenario: create from a list of urls with some titles
-    Given a genre exists with name: "genre"
+    Given a tag exists with name: "mytag"
     When I am on the homepage
       And I follow "Store Multiple"
     When I fill in "page_urls" with
@@ -17,7 +17,7 @@ Feature: third level hierarchy
       http://test.sidrasue.com/parts/5.html
       """
       And I fill in "page_title" with "New Title"
-      And I select "genre" from "genre"
+      And I select "mytag" from "tag"
       And I press "Store"
     Then I should see "New Title" within ".title"
     When I follow "HTML" within ".title"
@@ -35,11 +35,11 @@ Feature: third level hierarchy
 
   Scenario: create by adding parent to parent
     Given I have no pages
-      And a genre exists with name: "genre"
+      And a tag exists with name: "mytag"
     When I am on the homepage
     When I fill in "page_url" with "http://test.sidrasue.com/parts/1.html"
       And I fill in "page_title" with "Grandchild"
-      And I select "genre" from "genre"
+      And I select "mytag" from "tag"
       And I press "Store"
     Then I should see "Grandchild" within ".title"
     When I follow "Manage Parts"

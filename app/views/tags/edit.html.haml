@@ -1,0 +1,16 @@
+-title="Edit tag: #{@tag.name}"
+-content_for(:title, title)
+%h1=title
+.destroy
+  %p= link_to 'Destroy', tag_path(@tag, :destroy => true)
+%p.tag
+  = form_for @tag do |f|
+    Change name:
+    = hinted_text_field_tag 'tag[name]', @tag.name, "Name"
+    .button= f.submit "Update"
+    %br
+    - unless Tag.names.blank?
+      = label_tag :merge, "Merge into:"
+      = select_tag :merge, options_for_select([nil] + Tag.names)
+      %br
+    .button= f.submit "Merge"

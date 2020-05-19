@@ -1,4 +1,4 @@
 - content_for :title do
   = "Page create error"
-= render :partial => "pages/create", :locals => {:page => @page, :called_by => "error", :genre => @genre, :author => @author }
+= render :partial => "pages/create", :locals => {:page => @page, :called_by => "error", :tag => @tag, :author => @author }
 = link_to "Store Multiple", new_part_path

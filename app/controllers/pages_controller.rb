@@ -13,9 +13,9 @@ class PagesController < ApplicationController
     @unread = params[:unread] || "either"
     @favorite = params[:favorite] || "any"
     @find = params[:find] || "none"
-    @genres = Genre.all.map(&:name)
-    @genre = Genre.find_by_name(params[:genre]) if params[:genre]
-    @genre2 = Genre.find_by_name(params[:genre2]) if params[:genre2]
+    @tags = Tag.all.map(&:name)
+    @tag = Tag.find_by_name(params[:tag]) if params[:tag]
+    @tag2 = Tag.find_by_name(params[:tag2]) if params[:tag2]
     @authors = Author.all.map(&:short_name)
     @author = Author.find_by_short_name(params[:author]) if params[:author]
     @pages = Page.filter(params)
@@ -31,8 +31,8 @@ class PagesController < ApplicationController
       build_route = {:action => "index" , :controller => "pages"}
       build_route[:count] = params[:count].to_i + Page::LIMIT if params[:Next]
       build_route[:author] = params[:author] unless params[:author].blank?
-      build_route[:genre] = params[:genre] unless params[:genre].blank?
-      build_route[:genre2] = params[:genre2] unless params[:genre2].blank?
+      build_route[:tag] = params[:tag] unless params[:tag].blank?
+      build_route[:tag2] = params[:tag2] unless params[:tag2].blank?
       build_route[:sort_by] = params[:sort_by] unless (params[:sort_by].blank? || params[:sort_by] == "read_after")
       build_route[:size] = params[:size] unless (params[:size].blank? || params[:size] == "any")
       build_route[:favorite] = params[:favorite] unless (params[:favorite].blank? || params[:favorite] == "any")
@@ -47,8 +47,8 @@ class PagesController < ApplicationController
       redirect_to(build_route) and return
     end
     @page = Page.new(params[:page].permit!)
-    @genre = Genre.find_by_name(params[:genre])
-    @genre2 = Genre.find_by_name(params[:genre2])
+    @tag = Tag.find_by_name(params[:tag])
+    @tag2 = Tag.find_by_name(params[:tag2])
     @author = Author.find_by_short_name(params[:author])
     @favorite = params[:favorite]
     @find = params[:find]
@@ -61,14 +61,14 @@ class PagesController < ApplicationController
       else
         @page.update_attribute(:favorite, @favorite)
         @page.authors << @author if @author
-        if @genre.blank?
-          flash[:notice] = "Page created. Please select genre(s)"
-          redirect_to genre_path(@page) and return
+        if @tag.blank?
+          flash[:notice] = "Page created. Please select tag(s)"
+          redirect_to tag_path(@page) and return
         else
           flash[:notice] = "Page created."
-          @page.genres << @genre if @genre
-          @page.genres << @genre2 if @genre2
-          @page.cache_genres
+          @page.tags << @tag if @tag
+          @page.tags << @tag2 if @tag2
+          @page.cache_tags
           redirect_to page_path(@page) and return
         end
       end

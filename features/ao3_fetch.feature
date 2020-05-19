@@ -1,11 +1,11 @@
 Feature: ao3 specific stuff
 
   Scenario: grab single page
-    Given a genre exists with name: "popslash"
+    Given a tag exists with name: "popslash"
       And an author exists with name: "Sidra"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/68481"
-      And I select "popslash" from "genre"
+      And I select "popslash" from "tag"
       And I press "Store"
     Then I should not see "Title can't be blank"
       And I should see "I Drive Myself Crazy" within ".title"
@@ -17,10 +17,10 @@ Feature: ao3 specific stuff
       And I should not see "by Sidra" within ".notes"
 
   Scenario: grab chaptered page
-    Given a genre exists with name: "harry potter"
+    Given a tag exists with name: "harry potter"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/692"
-      And I select "harry potter" from "genre"
+      And I select "harry potter" from "tag"
       And I press "Store"
     Then I should see "Time Was, Time Is"
       And I should see "by Sidra" within ".notes"
@@ -55,10 +55,10 @@ Feature: ao3 specific stuff
       Then I should see "Skip."
 
   Scenario: deliberately fetch only one chapter
-    Given a genre exists with name: "harry potter"
+    Given a tag exists with name: "harry potter"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/692/chapters/803"
-      And I select "harry potter" from "genre"
+      And I select "harry potter" from "tag"
       And I press "Store"
     Then I should see "Where am I?" within ".title"
       And I should not see "1." within ".title"
@@ -68,10 +68,10 @@ Feature: ao3 specific stuff
       And I should not see "giving up on nanowrimo"
 
   Scenario: refetch one chapter from ao3
-    Given a genre exists with name: "harry potter"
+    Given a tag exists with name: "harry potter"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/692/chapters/803"
-      And I select "harry potter" from "genre"
+      And I select "harry potter" from "tag"
       And I press "Store"
       And I follow "Notes"
       And I fill in "page_notes" with "changed notes"
@@ -97,10 +97,10 @@ Feature: ao3 specific stuff
       And I should see "Amy woke slowly"
 
   Scenario: fetch more chapters from ao3
-    Given a genre exists with name: "harry potter"
+    Given a tag exists with name: "harry potter"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/692/chapters/803"
-      And I select "harry potter" from "genre"
+      And I select "harry potter" from "tag"
       And I press "Store"
     When I follow "Manage Parts"
      And I fill in "add_parent" with "Parent"
@@ -118,10 +118,10 @@ Feature: ao3 specific stuff
       Then I should see "1. Where am I?" within "#position_1"
 
   Scenario: refetching top level fic shouldn't change chapter titles if i've modified them
-     Given a genre exists with name: "harry potter"
+     Given a tag exists with name: "harry potter"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/692"
-      And I select "harry potter" from "genre"
+      And I select "harry potter" from "tag"
       And I press "Store"
       And I follow "Hogwarts"
     When I follow "Manage Parts"

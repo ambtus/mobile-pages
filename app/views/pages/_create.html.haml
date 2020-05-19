@@ -1,10 +1,10 @@
 .form
   = form_for page do |f|
-    - unless Genre.names.blank?
-      = label_tag :genre, "Genre:"
-      = select_tag :genre, options_for_select([nil] + Genre.names, @genre.try(:name))
-      = label_tag :genre2, "Genre2:"
-      = select_tag :genre2, options_for_select([nil] + Genre.names, @genre2.try(:name))
+    - unless Tag.names.blank?
+      = label_tag :tag, "Tag:"
+      = select_tag :tag, options_for_select([nil] + Tag.names, @tag.try(:name))
+      = label_tag :tag2, "Tag2:"
+      = select_tag :tag2, options_for_select([nil] + Tag.names, @tag2.try(:name))
       %br
     - unless Author.names.blank?
       = label_tag :author, "Author:"

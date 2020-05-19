@@ -1,8 +1,8 @@
-class Genre < ActiveRecord::Base
-  NEW_PLACEHOLDER = "Enter Genres to add (comma separated)"
+class Tag < ActiveRecord::Base
+  NEW_PLACEHOLDER = "Enter Tags to add (comma separated)"
 
   has_and_belongs_to_many :pages, -> { distinct }
-  default_scope { order('genres.name asc') }
+  default_scope { order('tags.name asc') }
   validates_presence_of :name
   validates_uniqueness_of :name, :case_sensitive => false
 
@@ -29,7 +29,7 @@ class Genre < ActiveRecord::Base
     self.destroy
     page_ids.each do |id|
       Rails.logger.debug "recaching page ids for #{id}"
-      Page.find(id).cache_genres
+      Page.find(id).cache_tags
     end
   end
 

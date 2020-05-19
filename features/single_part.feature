@@ -82,18 +82,18 @@ Feature: single-part pages
       And I should not see "duplicate"
 
   Scenario: create a page from a single url with author and notes
-    Given a genre exists with name: "mygenre"
+    Given a tag exists with name: "mytag"
     Given an author exists with name: "myauthor"
       And I am on the homepage
       And I fill in "page_url" with "http://test.sidrasue.com/test.html"
      And I fill in "page_title" with "Simple test"
      And I fill in "page_notes" with "some notes"
-     And I select "mygenre" from "genre"
+     And I select "mytag" from "tag"
      And I select "myauthor" from "Author"
      And I press "Store"
    Then I should see "Page created" within "#flash_notice"
      And I should see "Simple test" within ".title"
-     And I should see "mygenre" within ".genres"
+     And I should see "mytag" within ".tags"
      And I should see "some notes" within ".notes"
      And I should see "myauthor" within ".authors"
    When I follow "HTML"
