@@ -6,19 +6,7 @@ class Page < ActiveRecord::Base
   def self.remove_all_downloads
     self.all.each do |page|
       page.remove_outdated_downloads
-      page.remove_excess_edits
     end;1
-  end
-  def remove_excess_edits
-    cmd = %Q{cd "#{self.mydirectory}"; mv original.html scrubbed.html}
-    Rails.logger.debug "DEBUG: #{cmd}"
-    `#{cmd} 2> /dev/null`
-    if File.exists?(edited_html_file_name)
-      if FileUtils.identical?(edited_html_file_name, scrubbed_html_file_name)
-        Rails.logger.debug "DEBUG: removing identical #{edited_html_file_name}"
-        FileUtils.rm(edited_html_file_name)
-      end
-    end
   end
 
   def mypath
