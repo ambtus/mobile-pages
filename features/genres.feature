@@ -169,14 +169,3 @@ Feature: genre stuff
       But I should not see "The Mysterious Affair at Styles"
       And I should not see "Alice in Wonderland"
 
-  Scenario: move to hidden
-    Given a genre exists with name: "genre name"
-      And a titled page exists with add_genres_from_string: "genre name"
-    When I am on the homepage
-    Then I should not see "No pages found"
-    When I go to the edit page for "genre name"
-      And I press "Move to Hidden"
-    When I am on the homepage
-      And I select "genre name" from "Hidden"
-    And I should see "No pages found"
-    And I should have no genres

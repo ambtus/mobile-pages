@@ -1,4 +1,5 @@
-Feature: hiddens are just like genres, but they are hidden by default. The hidden collection is null during search, and anything with a hidden is not found. If something is chosen from hiddens, then it is found.
+@wip
+Feature: hiddens are tags which are hidden by default. During search, anything with a hidden is not found unless it is chosen from hiddens. TODO: an ebook with a hidden tag is also hidden from marvin - its author and tag strings are empty and put into the comment string.
 
   Scenario: hidden selected during creat
     Given a hidden exists with name: "nonfiction"

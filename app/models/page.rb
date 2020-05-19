@@ -32,7 +32,7 @@ class Page < ActiveRecord::Base
     "#{mypath}#{DOWNLOADS}/#{download_title}#{format}".gsub(' ', '%20')
   end
 
-  HIDDEN = "audio"
+  AUDIO = "audio"
   DURATION = "years"
   MININOTE = 75 # keep first this many characters plus enough for full words
   LIMIT = 15 # number of pages to show in index
@@ -71,7 +71,6 @@ class Page < ActiveRecord::Base
   PARENT_PLACEHOLDER = "Enter name of existing or new (unique name) parent"
 
   has_and_belongs_to_many :genres, -> { distinct }
-  has_and_belongs_to_many :hiddens, -> { distinct }
   has_and_belongs_to_many :authors, -> { distinct }
   belongs_to :parent, class_name: "Page", optional: true
   belongs_to :ultimate_parent, class_name: "Page", optional: true
@@ -133,13 +132,6 @@ class Page < ActiveRecord::Base
     end
     pages = pages.search(:cached_genre_string, params[:genre]) if params.has_key?(:genre)
     pages = pages.search(:cached_genre_string, params[:genre2]) if params.has_key?(:genre2)
-    if params.has_key?(:hidden)
-      unless params[:hidden] == "any"
-        pages = pages.search(:cached_hidden_string, params[:hidden])
-      end
-    else
-      pages = pages.where(:cached_hidden_string => '')
-    end
     pages = pages.with_author(params[:author]) if params.has_key?(:author)
     # can only find parts by title, notes, my_notes, url, last_created.
     unless params[:title] || params[:notes] || params[:my_notes] || params[:url] ||
@@ -357,8 +349,6 @@ class Page < ActiveRecord::Base
     if new
       parent.genres << self.genres
       parent.cache_genres
-      parent.hiddens << self.hiddens
-      parent.cache_hiddens
       parent.authors << self.authors
       parent.update_attribute(:last_read, self.last_read)
       parent.update_attribute(:favorite, self.favorite)
@@ -409,17 +399,21 @@ class Page < ActiveRecord::Base
     self.last_read = Time.now
     self.interesting = interesting_string.to_i
     self.nice = nice_string.to_i
-    rating = interesting + nice
-    self.favorite = rating
+    self.favorite = interesting + nice
+    update_read_after
+    self.parent.update_rating(interesting_string, nice_string, false, true) if self.parent && update_parent
+    self.parts.each {|p| p.update_rating(interesting_string, nice_string, true, false)} if update_children
+    return self.favorite
+  end
+
+  def update_read_after
+    rating = self.favorite
     if rating == 0
       self.read_after = Time.now + 6.months
     else
       self.read_after = Time.now + rating.send(DURATION)
     end
     self.save
-    self.parent.update_rating(interesting_string, nice_string, false, true) if self.parent && update_parent
-    self.parts.each {|p| p.update_rating(interesting_string, nice_string, true, false)} if update_children
-    return rating
   end
 
   def author_string
@@ -457,31 +451,6 @@ class Page < ActiveRecord::Base
       self.genres << new
     end
     self.cache_genres
-  end
-
-  def hidden_string
-    self.hiddens.map(&:name).join(", ")
-  end
-
-  def cache_hiddens
-    if self.new_record?
-      Rails.logger.debug "DEBUG: cache_hiddens for new record"
-      self.cached_hidden_string = hidden_string
-    else
-      Rails.logger.debug "DEBUG: cache_hiddens for #{self.id}"
-      self.update_attribute(:cached_hidden_string, hidden_string)
-    end
-    hidden_string
-  end
-
-  def add_hiddens_from_string=(string)
-    Rails.logger.debug "DEBUG: adding hiddens: #{string} to #{self.id}"
-    return if string.blank?
-    string.split(",").each do |hidden|
-      new = Hidden.find_or_create_by(name: hidden.squish)
-      self.hiddens << new
-    end
-    self.cache_hiddens
   end
 
   def favorite_names
@@ -733,13 +702,11 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def make_audio
+  def make_audio  # add an audio tag and mark it as read today
     Rails.logger.debug "DEBUG: mark_audio for #{self.id}"
-    read_hidden = Hidden.find_or_create_by(name: HIDDEN)
-    last_read_book = read_hidden.pages.order(:read_after).last
-    last = last_read_book ? last_read_book.read_after : Date.today
-    self.add_hiddens_from_string= HIDDEN
-    self.update(:read_after => last + 1.day, :favorite => 0, :last_read => Time.now)
+    self.add_genres_from_string=AUDIO
+    self.update(:last_read => Time.now)
+    self.update_read_after
   end
 
   ## Notes
@@ -797,7 +764,7 @@ class Page < ActiveRecord::Base
 
   def download_author_string; authors.map(&:short_name).join(" & "); end
   def download_tag_string
-    [*tag_names(true), *hiddens.map(&:name)].join(", ")
+    [*tag_names(true)].join(", ")
   end
   def download_comment_string
     [download_tag_string, my_notes, short_notes].join(" ")

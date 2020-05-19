@@ -33,12 +33,4 @@ class Genre < ActiveRecord::Base
     end
   end
 
-  def make_hidden
-    new = Hidden.find_or_create_by(name: name)
-    pages.each do |page|
-      page.hiddens << new
-      page.cache_hiddens
-    end
-    destroy_me
-  end
 end

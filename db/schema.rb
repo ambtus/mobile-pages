@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_20_181428) do
+ActiveRecord::Schema.define(version: 2020_05_19_121541) do
 
   create_table "authors", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
@@ -32,16 +32,6 @@ ActiveRecord::Schema.define(version: 2019_06_20_181428) do
     t.integer "genre_id"
   end
 
-  create_table "hiddens", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.string "name"
-    t.index ["name"], name: "hidden_name", unique: true
-  end
-
-  create_table "hiddens_pages", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "page_id"
-    t.integer "hidden_id"
-  end
-
   create_table "pages", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "url"
     t.string "title"
@@ -60,7 +50,6 @@ ActiveRecord::Schema.define(version: 2019_06_20_181428) do
     t.string "cached_genre_string", default: "", null: false
     t.integer "interesting"
     t.integer "nice"
-    t.string "cached_hidden_string", default: "", null: false
     t.text "my_notes"
     t.index ["favorite"], name: "index_pages_on_favorite"
     t.index ["parent_id"], name: "index_pages_on_parent_id"

@@ -7,7 +7,6 @@ Rails.application.routes.draw do
 
   resources :authors, :only => ['show', 'create']
   resources :genres
-  resources :hiddens
   resources :htmls, :only => ['edit']
   resources :notes, :only => ['edit']
   resources :my_notes, :only => ['edit']

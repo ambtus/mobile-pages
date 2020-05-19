@@ -6,10 +6,6 @@
       = label_tag :genre2, "Genre2:"
       = select_tag :genre2, options_for_select([nil] + Genre.names, @genre2.try(:name))
       %br
-    - unless Hidden.names.blank?
-      = label_tag :hidden, "Hidden:"
-      = select_tag :hidden, options_for_select([nil] + Hidden.names, @hidden.try(:name))
-      %br
     - unless Author.names.blank?
       = label_tag :author, "Author:"
       = select_tag :author, options_for_select([nil] + Author.names, @author.try(:name))

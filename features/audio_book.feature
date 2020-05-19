@@ -30,26 +30,23 @@ Feature: audiobook
    When I go to the page with title "Multiple pages from urls"
    Then I should see "Text" within "#position_1"
 
-  Scenario: audiobook created adds the hidden audio tag and makes it a favorite and updates last read
+  Scenario: audiobook created adds the audio tag and updates last read
     Given the following pages
-      | title  | last_read  | favorite |
-      | first  | 2014-01-01 | 2 |
-      | second | 2014-02-01 | 2 |
+      | title  | last_read  |
+      | first  | 2014-01-01 |
+      | second | 2014-02-01 |
     When I am on the homepage
     Then I should see "first" within "#position_1"
-    And I should not see "favorite"
     And I should not see "audio"
     When I follow "first" within "#position_1"
     And I follow "Text"
     And I press "Audiobook created"
     When I am on the page with title "first"
-    Then I should see "audio" within ".hiddens"
-    And I should see "favorite" within ".favorite"
+    Then I should see "audio" within ".genres"
     When I am on the homepage
     Then I should see "second" within "#position_1"
-      And I should not see "first"
-      And I should see "2014"
-    When I select "audio" from "Hidden"
+    And I should see "first" within "#position_2"
+    When I select "audio" from "Genre"
       And I press "Find"
     Then I should see "first" within "#position_1"
     And I should not see "second"

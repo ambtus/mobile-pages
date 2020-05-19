@@ -1,4 +1,3 @@
 Author
 Genre
-Hidden
 Page
