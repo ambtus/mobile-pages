@@ -6,6 +6,11 @@ class Tag < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :case_sensitive => false
 
+  scope :hidden, -> { where(type: 'Hidden') }
+  scope :generic, -> { where(type: '') }
+
+  scope :by_type, -> {order('tags.type asc') }
+
   before_validation :remove_placeholder
 
   def remove_placeholder
@@ -19,7 +24,7 @@ class Tag < ActiveRecord::Base
   end
 
   def self.names
-    self.all.map(&:name)
+    self.generic.map(&:name)
   end
 
   def destroy_me

@@ -1,4 +1,4 @@
-Feature: tag stuff
+Feature: generic tag stuff
 
   Scenario: strip tag whitespace amd sort
     Given a titled page exists

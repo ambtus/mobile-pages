@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_19_190338) do
+ActiveRecord::Schema.define(version: 2020_05_20_112309) do
 
   create_table "authors", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
@@ -54,7 +54,9 @@ ActiveRecord::Schema.define(version: 2020_05_19_190338) do
 
   create_table "tags", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
+    t.string "type", default: "", null: false
     t.index ["name"], name: "tag_name", unique: true
+    t.index ["type"], name: "tag_type"
   end
 
 end

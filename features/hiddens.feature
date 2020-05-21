@@ -1,7 +1,7 @@
 @wip
 Feature: hiddens are tags which are hidden by default. During search, anything with a hidden is not found unless it is chosen from hiddens. TODO: an ebook with a hidden tag is also hidden from marvin - its author and tag strings are empty and put into the comment string.
 
-  Scenario: hidden selected during creat
+  Scenario: hidden selected during create
     Given a hidden exists with name: "nonfiction"
     Given a tag exists with name: "something"
       And I am on the homepage
