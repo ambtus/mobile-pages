@@ -7,4 +7,4 @@
     .filters
       = select_tag("page[tag_ids][]", options_from_collection_for_select(Tag.all, 'id', 'name', selected = @page.tags.map(&:id)), :multiple => true)
     .button= submit_tag "Update Tags"
-  = link_to "Add Tags", tag_path(@page, :add => true)
+    =render "add"

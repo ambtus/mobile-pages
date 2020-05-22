@@ -56,14 +56,14 @@ Feature: author stuff
     Then I select "charles dodgson" from "Author"
 
   Scenario: new parent for an existing page should have the same author
-    Given a titled page exists with add_author_string: "author"
+    Given a titled page exists with add_author_string: "newbie"
     When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
       And I press "Update"
     When I am on the homepage
     Then I should see "New Parent" within ".title"
-    And I should see "author" within ".authors"
+    And I should see "newbie" within ".tags"
 
   Scenario: filter on author
     Given the following pages

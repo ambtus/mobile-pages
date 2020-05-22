@@ -20,7 +20,7 @@ Feature: tools to help audiobook creation
       And I should not see "Lorem ipsum dolor sit amet"
     When I am on the page's page
     When I press "Rebuild from Scrubbed HTML"
-    And I follow "HTML" within ".title"
+    And I view the HTML
     Then I should see "Lorem ipsum dolor sit amet"
       And I should not see "New Content"
 

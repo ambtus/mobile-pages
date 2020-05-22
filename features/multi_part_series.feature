@@ -20,7 +20,7 @@ Feature: third level hierarchy
       And I select "mytag" from "tag"
       And I press "Store"
     Then I should see "New Title" within ".title"
-    When I follow "HTML" within ".title"
+    When I view the HTML
     Then I should see "New Title" within "h1"
       And I should see "Part the first" within "h2"
       And I should see "subpart title" within "h3"
@@ -51,7 +51,7 @@ Feature: third level hierarchy
     When I follow "Manage Parts"
       And I fill in "add_parent" with "Grandparent"
       And I press "Update"
-    When I follow "HTML" within ".title"
+    When I view the HTML
     Then I should see "Grandparent" within "h1"
       And I should see "Parent" within "h2"
       And I should see "Child" within "h3"
@@ -83,7 +83,7 @@ Feature: third level hierarchy
       And I follow "Parent2" within "#position_2"
     Then I should see "Part 1"
       And I should see "Part 2"
-    When I follow "HTML" within ".title"
+    When I view the HTML
     Then I should see "stuff for part 2"
       And I should see "stuff for part 3"
 
@@ -115,7 +115,7 @@ Feature: third level hierarchy
     Then I should see "Parent"
       And I should see "Single"
       And I should not see "Parent with that title has content"
-    When I follow "HTML" within ".title"
+    When I view the HTML
     Then I should see "Grandparent" within "h1"
       And I should see "Parent" within "h2"
       And I should see "Part 1" within "h3"

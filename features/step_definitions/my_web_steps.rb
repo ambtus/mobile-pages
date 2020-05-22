@@ -10,6 +10,11 @@ When /^(?:|I )fill in "([^\"]*)" with$/ do |field, value|
   fill_in(field, :with => value)
 end
 
+When("I view the HTML") do
+  click_link("HTML")
+end
+
+
 Then /^(?:|I )should not have a "([^"]*)" field$/ do |field|
   assert !has_css?(field)
 end

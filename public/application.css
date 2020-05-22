@@ -16,6 +16,9 @@
 .links {
     background-color: #CCF;
     }
+.views {
+    background-color: #CCF;
+    }
 .form {
     background-color: #9FF;
     }
@@ -23,6 +26,9 @@
     border-width: 1px;
     border-style: solid;
     background-color: #FC9;
+    }
+.tags {
+    background-color: #A9F;
     }
 .notes {
    background-color: #FC9;
@@ -48,6 +54,9 @@
     }
 .hiddens {
     background-color: #CCC;
+    }
+.edits {
+    background-color: #C9F;
     }
 .last_read {
     background-color: #F99;

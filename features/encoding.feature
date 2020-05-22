@@ -14,7 +14,7 @@ Scenario Outline: encodings
   When I follow "HTML"
   Then I should see "<result>" within ".content"
   When I go to the page with title "<title>"
-    And "Original" should link to "<url>" within ".title"
+    And "Original" should link to "<url>"
 
   Examples:
   | url                                      | title            | result                 |
@@ -43,7 +43,7 @@ Scenario Outline: encodings
   Scenario: utf8 in parts
     Given a titled page exists with urls: "http://test.sidrasue.com/sbutf8.html"
     When I am on the page's page
-      And I follow "HTML" within ".title"
+      And I view the HTML
     Then I should see "“H"
 
   Scenario: latin1

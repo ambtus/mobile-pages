@@ -80,7 +80,7 @@ Feature: adding parents and children and siblings
     When I am on the homepage
     Then I should see "Multi" within ".title"
     And I should see "Part 1 | Part 2 | Single"
-    When I follow "HTML" within ".title"
+    When I view the HTML
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
       And I should see "stuff for part 3"
@@ -113,7 +113,7 @@ Feature: adding parents and children and siblings
       And I press "Update"
     Then I should see "Part 2"
       And I should see "Part 1"
-    When I follow "HTML" within ".title"
+    When I view the HTML
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
 
@@ -128,7 +128,7 @@ Feature: adding parents and children and siblings
         """
       And I press "Update"
       And I should not see "Part 3"
-      And I follow "HTML" within ".title"
+      And I view the HTML
     Then I should see "stuff for part 1"
       But I should not see "stuff for part 2"
       And I should see "stuff for part 3"
@@ -175,12 +175,12 @@ Feature: adding parents and children and siblings
     Given a page exists with title: "Multi", urls: "http://test.sidrasue.com/parts/1.html"
       And I am on the homepage
    Then I should see "Multi" within "#position_1"
-   Then I should see "unread" within ".last_read"
+   Then I should see "unread" within "#position_1"
    When I follow "Rate"
       And I choose "very interesting"
       And I choose "sweet enough"
     And I press "Rate"
-   Then I should not see "unread" within ".last_read"
+   Then I should not see "unread" within "#position_1"
    When I follow "Multi"
      And I follow "Manage Parts"
      And I fill in "url_list" with
@@ -191,7 +191,7 @@ Feature: adding parents and children and siblings
      And I press "Update"
    When I am on the homepage
    Then I should see "Multi" within "#position_1"
-     And I should not see "unread" within ".last_read"
+     And I should not see "unread" within "#position_1"
    When I follow "Multi" within "#position_1"
      And I follow "Part 1" within "#position_1"
    Then I should not see "unread" within ".last_read"
@@ -203,7 +203,7 @@ Feature: adding parents and children and siblings
   Scenario: refetch original html for parts
     Given a titled page exists with urls: "http://test.sidrasue.com/parts/1.html"
     When I am on the page's page
-    When I follow "Refetch" within ".title"
+    When I follow "Refetch" within ".edits"
     Then the "url_list" field should contain "http://test.sidrasue.com/parts/1.html"
     When I fill in "url_list" with
       """
@@ -211,7 +211,7 @@ Feature: adding parents and children and siblings
       http://test.sidrasue.com/parts/1.html
       """
       And I press "Refetch"
-    When I follow "HTML" within ".title"
+    When I view the HTML
     Then I should see "stuff for part 2"
     And I should see "stuff for part 1"
 

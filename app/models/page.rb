@@ -477,7 +477,7 @@ class Page < ActiveRecord::Base
     names.sort.compact
   end
 
-  def tag_names(download = false)
+  def tags_et_al_names(download = false)
     names =
       if download
         []
@@ -495,10 +495,10 @@ class Page < ActiveRecord::Base
     names.compact
   end
 
-  def tag_string
-    mine = self.tag_names
+  def tags_et_al_string
+    mine = self.tags_et_al_names
     if self.parent
-      mine = mine - self.parent.tag_names
+      mine = mine - self.parent.tags_et_al_names
     end
     mine.join(", ")
   end
@@ -764,7 +764,7 @@ class Page < ActiveRecord::Base
 
   def download_author_string; authors.map(&:short_name).join(" & "); end
   def download_tag_string
-    [*tag_names(true)].join(", ")
+    [*tags_et_al_names(true)].join(", ")
   end
   def download_comment_string
     [download_tag_string, my_notes, short_notes].join(" ")

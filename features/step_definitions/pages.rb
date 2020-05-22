@@ -66,3 +66,4 @@ end
 Then(/^last read should be today$/) do
   assert Page.first.last_read.to_date == Date.today
 end
+

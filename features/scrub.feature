@@ -6,7 +6,7 @@ Feature: trim cruft off pages
     And I follow "Scrub"
   When I choose "3rd" within ".bottom"
   And I press "Scrub" within ".top"
-  And I follow "HTML" within ".title"
+  And I view the HTML
   Then I should see "1st"
     And I should see "2nd"
   But I should not see "3rd"
@@ -17,7 +17,7 @@ Feature: trim cruft off pages
     And I follow "Scrub"
   When I choose "1st" within ".top"
     And I press "Scrub" within ".bottom"
-  And I follow "HTML" within ".title"
+  And I view the HTML
   Then I should see "2nd"
     And I should see "3rd"
   But I should not see "1st"
@@ -29,7 +29,7 @@ Feature: trim cruft off pages
   When I choose "<unwanted1>" within ".top"
     And I choose "<unwanted2>" within ".bottom"
     And I press "Scrub" within ".top"
-  And I follow "HTML" within ".title"
+  And I view the HTML
   Then I should see "<wanted>"
     And I should not see "<unwanted1>"
     And I should not see "<unwanted2>"
@@ -52,43 +52,43 @@ Feature: trim cruft off pages
       And I follow "Scrub"
       And I choose "third header" within ".top"
       And I press "Scrub" within ".bottom"
-    And I follow "HTML" within ".title"
+    And I view the HTML
     Then I should see "actual content"
       And I should not see "header"
     When I am on the page's page
     When I press "Rebuild from Raw HTML"
-    And I follow "HTML" within ".title"
+    And I view the HTML
     Then I should see "header"
 
   Scenario: trim a parent page
        also rebuild all children from raw
     Given a page exists with title: "Parent", base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
     And I am on the page's page
-    When I follow "HTML" within ".title"
+    When I view the HTML
     Then I should see "cruft"
       And the download directory should exist for page titled "Parent"
     When I am on the page's page
-    And I follow "Scrub" within ".title"
+    And I follow "Scrub" within ".edits"
       And I follow "Scrub Part 1"
       And I choose "top cruft" within ".top"
       And I choose "bottom cruft" within ".bottom"
       And I press "Scrub" within ".bottom"
     Then the download directory should not exist for page titled "Parent"
     When I am on the page's page
-      And I follow "HTML" within ".title"
+      And I view the HTML
     Then I should not see "cruft"
       And I should see "stuff for part 1"
     When I am on the page's page
     When I press "Rebuild from Raw HTML"
     Then the download directory should not exist for page titled "Parent"
-      And I follow "HTML" within ".title"
+      And I view the HTML
     Then I should see "cruft"
       And the download directory should exist for page titled "Parent"
 
   Scenario: trim a sub-part
     Given a page exists with title: "Parent", urls: "##First Part\nhttp://test.sidrasue.com/parts/1.html###SubPart"
     When I am on the page's page
-      And I follow "HTML" within ".title"
+      And I view the HTML
     Then I should see "cruft"
       And the download directory should exist for page titled "Parent"
     When I am on the page's page
@@ -100,7 +100,7 @@ Feature: trim cruft off pages
       And I press "Scrub" within ".top"
     Then the download directory should not exist for page titled "Parent"
     When I am on the page's page
-      And I follow "HTML" within ".title"
+      And I view the HTML
     Then I should see "First Part"
       And I should see "SubPart"
       And I should see "stuff for part 1"

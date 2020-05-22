@@ -7,8 +7,8 @@
   - @page.parts.each do |part|
     .part{:id => "position_#{part.position}"}
       = link_to h(part.title), page_path(part)
-      - unless part.tag_string.blank?
-        = "(#{part.tag_string})"
+      - unless part.tags_et_al_string.blank?
+        = "(#{part.tags_et_al_string})"
       = link_to "Rate", rate_path(part)
       = link_to "EPUB", download_url_for_page(part, ".epub")
       = link_to "HTML", download_url_for_page(part, ".html")

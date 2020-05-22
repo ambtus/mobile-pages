@@ -3,7 +3,7 @@ Feature: numbering parts with a parent
   Scenario: no numbers when ends in a number
     Given a titled page exists with urls: "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
     When I am on the page's page
-      And I follow "HTML" within ".title"
+      And I view the HTML
    Then I should see "Part 1"
      And I should see "Part 2"
      And I should see "stuff for part 1"
@@ -22,7 +22,7 @@ Feature: numbering parts with a parent
      And I fill in "page_title" with "Multiple pages from urls"
      And I press "Store"
    When I go to the page with title "Multiple pages from urls"
-      And I follow "HTML" within ".title"
+      And I view the HTML
    Then I should see "stuff for part 1"
      And I should see "stuff for part 2"
      And I should see "1. One"
@@ -39,7 +39,7 @@ Feature: numbering parts with a parent
      And I fill in "page_title" with "Multiple pages from urls"
      And I press "Store"
    When I go to the page with title "Multiple pages from urls"
-      And I follow "HTML" within ".title"
+      And I view the HTML
    Then I should see "stuff for part 1"
      And I should see "stuff for part 2"
    Then I should see "Section 1"
@@ -51,7 +51,7 @@ Feature: numbering parts with a parent
     When I fill in "page_url" with "http://archiveofourown.org/works/310586"
       And I press "Store"
    When I go to the page with title "Open the Door"
-     And I follow "HTML" within ".title"
+     And I view the HTML
   Then I should see "Chapter 1"
       And I should see "2. Ours"
       But I should not see "1. Chapter 1"

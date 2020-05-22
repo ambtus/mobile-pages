@@ -3,13 +3,13 @@ Feature: other mult-part tests
   Scenario: download part
     Given a titled page exists with urls: "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
     When I am on the page's page
-      And I follow "HTML" within ".title"
+      And I view the HTML
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
     When I am on the homepage
     When I follow "page 1"
       And I follow "Part 1"
-      And I follow "HTML" within ".title"
+      And I view the HTML
     Then I should see "stuff for part 1"
     And I should not see "stuff for part 2"
 

@@ -41,18 +41,6 @@ Feature: generic tag stuff
     Then I should not see "Please select tag"
       And I should see "first" within ".tags"
 
-  Scenario: two tags selected during create
-    Given a tag exists with name: "first"
-      And a tag exists with name: "second"
-      And I am on the homepage
-      And I select "first" from "tag"
-      And I select "second" from "tag2"
-    When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-      And I fill in "page_title" with "New Title"
-      And I press "Store"
-    Then I should not see "Please select tag"
-      And I should see "first, second" within ".tags"
-
   Scenario: add a tag to a page when there are no tags
     Given a titled page exists
     When I am on the page's page
@@ -79,7 +67,6 @@ Feature: generic tag stuff
     When I am on the page's page
     Then I should see "classic" within ".tags"
     When I follow "Tags"
-      And I follow "Add Tags"
       And I fill in "tags" with "something, children's"
       And I press "Add Tags"
     Then I should see "children's, classic, something" within ".tags"
@@ -154,18 +141,4 @@ Feature: generic tag stuff
     Then I should see "The Mysterious Affair at Styles"
       And I should see "The Boxcar Children"
       But I should not see "Alice in Wonderland"
-
-  Scenario: find by two tags
-    Given the following pages
-      | title                            | add_tags_from_string  |
-      | The Mysterious Affair at Styles  | mystery           |
-      | Alice in Wonderland              | children          |
-      | The Boxcar Children              | mystery, children |
-    When I am on the homepage
-      And I select "mystery" from "tag"
-      And I select "children" from "tag2"
-      And I press "Find"
-    Then I should see "The Boxcar Children"
-      But I should not see "The Mysterious Affair at Styles"
-      And I should not see "Alice in Wonderland"
 

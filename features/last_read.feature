@@ -38,7 +38,7 @@ Feature: last_read (also unread)
       And I choose "boring"
       And I choose "stressful"
     And I press "Rate"
-    Then I should not see "2008-01-01" within ".last_read"
+    Then I should not see "2008-01-01"
     And last read should be today
 
   Scenario: unread part
@@ -58,7 +58,7 @@ Feature: last_read (also unread)
       And I follow "Manage Parts"
       And I fill in "add_parent" with "Parent"
       And I press "Update"
-    Then I should see "Parent"
+    Then I should see "Parent" within ".title"
       And I should not see "Parent with that title has content"
       And I should not see "unread" within ".last_read"
       And I should see "unread" within "#position_1"

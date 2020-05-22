@@ -13,6 +13,19 @@ Feature: hiddens are tags which are hidden by default. During search, anything w
     Then I should not see "Please select tag"
       And I should see "nonfiction" within ".hiddens"
 
+  Scenario: two tags selected during create
+    Given a tag exists with name: "first"
+      And a hidden exists with name: "second"
+      And I am on the homepage
+      And I select "first" from "tag"
+      And I select "second" from "hidden"
+    When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+      And I fill in "page_title" with "New Title"
+      And I press "Store"
+    Then I should not see "Please select tag"
+      And I should see "first" within ".tags"
+      And I should see "second" within ".hiddens"
+
   Scenario: strip hidden whitespace
     Given a titled page exists
     When I go to the page's page
