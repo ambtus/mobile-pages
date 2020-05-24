@@ -2,7 +2,7 @@ Feature: filter/find
 
   Scenario: filter on mix of author, tag, and state
     Given the following pages
-      | title                            | add_author_string        | add_tags_from_string        | favorite | last_read  |
+      | title                            | add_author_string        | tags        | favorite | last_read  |
       | The Mysterious Affair at Styles  | agatha christie          | mystery           | 1        | 2009-01-01 |
       | Nancy Drew                       | Carolyn Keene            | mystery, children | 3        | 2009-02-01 |
       | The Boxcar Children              | Gertrude Chandler Warner | mystery, children | 0        |            |

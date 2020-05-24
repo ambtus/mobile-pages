@@ -57,6 +57,10 @@ When("I follow {string}") do |link|
   click_link(link)
 end
 
+When("I edit its tags") do
+  within(".edits") { click_link("Tags") }
+end
+
 When("I follow {string} within {string}") do |link, parent|
   within(parent) { click_link(link) }
 end

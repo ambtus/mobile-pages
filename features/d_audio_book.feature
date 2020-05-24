@@ -46,7 +46,7 @@ Feature: audiobook
     When I am on the homepage
     Then I should see "second" within "#position_1"
     And I should see "first" within "#position_2"
-    When I select "audio" from "Tag"
+    When I select "audio book" from "Tag"
       And I press "Find"
     Then I should see "first" within "#position_1"
     And I should not see "second"

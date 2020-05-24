@@ -7,12 +7,7 @@ Given /a page exists(?: with (.*))?/ do |fields|
   fields.blank? ? hash = {} : hash = fields.create_hash
   hash[:title] = hash[:title] || "Page 1"
   hash[:urls] =  hash[:urls].split(',').join("\r") if hash[:urls]
-  Rails.logger.debug "DEBUG: creating page with hash: #{hash}"
-  tag_string = hash.delete(:add_tags_from_string)
-  hidden_string = hash.delete(:add_hiddens_from_string)
-  page = Page.create(hash)
-  page.add_tags_from_string = tag_string
-  page.add_hiddens_from_string = hidden_string
+  Page.create_from_hash(hash)
 end
 
 # create many identical pages
@@ -29,8 +24,7 @@ Given /^the following pages?$/ do |table|
   # table is a Cucumber::Ast::Table
   table.hashes.each do |hash|
     hash['urls'] =  hash['urls'].split('\\n').join("\r") if hash['urls']
-    Rails.logger.debug "DEBUG: creating page with hash: #{hash}"
-    Page.create(hash)
+    Page.create_from_hash(hash.symbolize_keys)
   end
 end
 

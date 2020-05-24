@@ -32,7 +32,6 @@ class Page < ActiveRecord::Base
     "#{mypath}#{DOWNLOADS}/#{download_title}#{format}".gsub(' ', '%20')
   end
 
-  AUDIO = "audio"
   DURATION = "years"
   MININOTE = 75 # keep first this many characters plus enough for full words
   LIMIT = 15 # number of pages to show in index
@@ -87,6 +86,16 @@ class Page < ActiveRecord::Base
 
   after_create :initial_fetch
 
+  def self.create_from_hash(hash)
+    Rails.logger.debug "DEBUG: creating page from hash: #{hash}"
+    tag_string = hash.delete(:tags)
+    hidden_string = hash.delete(:hiddens)
+    page = Page.create(hash)
+    page.add_tags_from_string(tag_string)
+    page.add_hiddens_from_string(hidden_string)
+    Rails.logger.debug "DEBUG: created page with tags: #{page.tags.map(&:name)}"
+  end
+
   def self.last_created
     self.order('created_at ASC').last
   end
@@ -131,7 +140,11 @@ class Page < ActiveRecord::Base
       pages = pages.search(:url, params[:url].sub(/^https?/, ''))
     end
     pages = pages.search(:cached_tag_string, params[:tag]) if params.has_key?(:tag)
-    pages = pages.with_hidden(params[:hidden]) if params.has_key?(:hidden)
+    if params.has_key?(:hidden)
+      pages = pages.search(:cached_hidden_string, params[:hidden])
+    else
+      pages = pages.where(:cached_hidden_string => "")
+    end
     pages = pages.with_author(params[:author]) if params.has_key?(:author)
     # can only find parts by title, notes, my_notes, url, last_created.
     unless params[:title] || params[:notes] || params[:my_notes] || params[:url] ||
@@ -169,7 +182,7 @@ class Page < ActiveRecord::Base
     end
     start = params[:count].to_i
     Rails.logger.debug "DEBUG: find #{LIMIT} pages starting at #{start}"
-    pages.group(:id).limit(start + LIMIT)[start..-1]
+    pages.limit(start + LIMIT)[start..-1]
   end
 
   def to_param
@@ -333,21 +346,24 @@ class Page < ActiveRecord::Base
   end
 
   def add_parent(title)
-    pages=Page.where(["title LIKE ?", "%" + title + "%"])
-    return "ambiguous" if pages.size > 1
-    parent = nil
+    parent=Page.find_by_title(title)
     new = false
-    if pages.size == 0
-      parent = Page.create(:title => title, :last_read => self.last_read, :read_after => self.read_after)
-      new = true
-    else
-      parent = pages.first
-      return parent.raw_html unless parent.raw_html.blank?
+    unless parent
+      pages=Page.where(["title LIKE ?", "%" + title + "%"])
+      if pages.size > 1
+        return "ambiguous"
+      elsif pages.size == 0
+        parent = Page.create(:title => title, :last_read => self.last_read, :read_after => self.read_after)
+        new = true
+      elsif pages.size == 1
+        parent = pages.first
+      end
     end
+    return "content" unless parent.raw_html.blank?
     count = parent.parts.size + 1
     self.update(:parent_id => parent.id, :position => count)
     if new
-      parent.tags << self.tags
+      parent.tags << self.tags.not_hidden
       parent.cache_tags
       parent.authors << self.authors
       parent.update_attribute(:last_read, self.last_read)
@@ -437,17 +453,11 @@ class Page < ActiveRecord::Base
   end
 
   def cache_tags
-    if self.new_record?
-      Rails.logger.debug "DEBUG: cache_tags for new record: #{tag_string}"
-      self.cached_tag_string = tag_string
-    else
-      Rails.logger.debug "DEBUG: cache_tags for #{self.id}: #{tag_string}"
-      self.update_attribute(:cached_tag_string, tag_string)
-    end
-    tag_string
+    Rails.logger.debug "DEBUG: cache_tags for #{self.id}"
+    self.update(:cached_tag_string => tag_string, :cached_hidden_string => hidden_string)
   end
 
-  def add_tags_from_string=(string)
+  def add_tags_from_string(string)
     return if string.blank?
     string.split(",").each do |tag|
       self.tags << Tag.find_or_create_by(name: tag.squish)
@@ -456,12 +466,12 @@ class Page < ActiveRecord::Base
     self.cache_tags
   end
 
-  def add_hiddens_from_string=(string)
+  def add_hiddens_from_string(string)
     return if string.blank?
     string.split(",").each do |tag|
-      new = Hidden.find_or_create_by(name: tag.squish)
-      self.tags << new
+      self.tags << Hidden.find_or_create_by(name: tag.squish)
     end
+    self.cache_tags
   end
 
   def favorite_names
@@ -715,7 +725,7 @@ class Page < ActiveRecord::Base
 
   def make_audio  # add an audio tag and mark it as read today
     Rails.logger.debug "DEBUG: mark_audio for #{self.id}"
-    self.add_tags_from_string=AUDIO
+    self.add_tags_from_string("audio book")
     self.update(:last_read => Time.now)
     self.update_read_after
   end
@@ -944,10 +954,6 @@ private
   def self.with_author(string)
     joins(:authors).
     where(["authors.name LIKE ?", string + "%"])
-  end
-  def self.with_hidden(string)
-    joins(:tags).
-    where(tags: {type: 'Hidden', name: string})
   end
 
   def remove_placeholders

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_20_112309) do
+ActiveRecord::Schema.define(version: 2020_05_24_182143) do
 
   create_table "authors", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 2020_05_20_112309) do
     t.integer "interesting"
     t.integer "nice"
     t.text "my_notes"
+    t.string "cached_hidden_string", default: "", null: false
     t.index ["favorite"], name: "index_pages_on_favorite"
     t.index ["parent_id"], name: "index_pages_on_parent_id"
     t.index ["size"], name: "index_pages_on_size"

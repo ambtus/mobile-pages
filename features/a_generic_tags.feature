@@ -3,7 +3,7 @@ Feature: generic tag stuff
   Scenario: strip tag whitespace and sort
     Given a page exists
     When I am on the page's page
-      And I follow "Tags"
+      And I edit its tags
       And I fill in "tags" with "  funny,  joy  joy,happy happy  "
       And I press "Add Tags"
     Then I should see "funny, happy happy, joy joy" within ".tags"
@@ -44,7 +44,7 @@ Feature: generic tag stuff
   Scenario: add a tag to a page when there are no tags
     Given a page exists
     When I am on the page's page
-      And I follow "Tags"
+      And I edit its tags
     When I fill in "tags" with "classic, children's"
       And I press "Add Tags"
     Then I should see "classic" within ".tags"
@@ -57,16 +57,16 @@ Feature: generic tag stuff
     Given a tag exists with name: "fantasy"
     And a page exists
     When I am on the page's page
-    When I follow "Tags"
+    When I edit its tags
       And I select "fantasy" from "page_tag_ids_"
       And I press "Update Tags"
     Then I should see "fantasy" within ".tags"
 
   Scenario: add a tag to a page which already has tags
-    Given a page exists with add_tags_from_string: "classic"
+    Given a page exists with tags: "classic"
     When I am on the page's page
     Then I should see "classic" within ".tags"
-    When I follow "Tags"
+    When I edit its tags
       And I fill in "tags" with "something, children's"
       And I press "Add Tags"
     Then I should see "children's, classic, something" within ".tags"
@@ -76,7 +76,7 @@ Feature: generic tag stuff
       And I select "children's" from "tag"
 
   Scenario: new parent for an existing page should have the same tag
-    Given a page exists with add_tags_from_string: "tag"
+    Given a page exists with tags: "tag"
     When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
@@ -105,7 +105,7 @@ Feature: generic tag stuff
       And I select "Fantasy" from "tag"
 
   Scenario: delete a tag
-    Given a page exists with add_tags_from_string: "science fiction"
+    Given a page exists with tags: "science fiction"
     When I am on the edit tag page for "science fiction"
     And I follow "Destroy"
     When I press "Yes"
@@ -116,7 +116,7 @@ Feature: generic tag stuff
 
   Scenario: merge two tags
     Given a tag exists with name: "better name"
-      And a page exists with add_tags_from_string: "bad name"
+      And a page exists with tags: "bad name"
     When I am on the edit tag page for "bad name"
       And I select "better name" from "merge"
       And I press "Merge"
@@ -131,7 +131,7 @@ Feature: generic tag stuff
 
   Scenario: find by tag
     Given the following pages
-      | title                            | add_tags_from_string  |
+      | title                            | tags  |
       | The Mysterious Affair at Styles  | mystery           |
       | Alice in Wonderland              | children          |
       | The Boxcar Children              | mystery, children |

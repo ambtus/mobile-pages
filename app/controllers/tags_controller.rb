@@ -30,14 +30,19 @@ class TagsController < ApplicationController
         flash.now[:alert] = "can't merge with non-existant tag"
         render :edit and return
       end
-      new_tag.pages << @tag.pages
+      @tag.pages.each do |page|
+        page.tags << new_tag
+      end
       @tag.destroy_me
-      redirect_to :root
+      redirect_to tags_path
     elsif params[:commit] == "Change"
       @tag.update_attribute(:type, params[:change])
-      redirect_to :root
-    elsif @tag.update_attribute(:name, params[:tag][:name])
-      redirect_to :root
+      @tag.pages.map(&:cache_tags)
+      redirect_to tags_path
+    elsif params[:commit] == "Update"
+      @tag.update_attribute(:name, params[:tag][:name])
+      @tag.pages.map(&:cache_tags)
+      redirect_to tags_path
     else
       render :edit
     end
@@ -49,9 +54,9 @@ class TagsController < ApplicationController
       @page.tag_ids = tag_ids
       @page.cache_tags
     elsif params[:commit] == "Add Tags"
-      @page.add_tags_from_string = params[:tags]
+      @page.add_tags_from_string(params[:tags])
     elsif params[:commit] == "Add Hidden Tags"
-      @page.add_hiddens_from_string = params[:tags]
+      @page.add_hiddens_from_string(params[:tags])
     end
     redirect_to page_path(@page)
   end

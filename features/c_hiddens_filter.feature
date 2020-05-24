@@ -1,9 +1,8 @@
-@wip
 Feature: pages with hidden tags are filtered out by default. During search, anything with a hidden is not found unless it is chosen from hiddens.
 
   Scenario: hidden by default
     Given the following pages
-      | title                            | add_hiddens_from_string  |
+      | title                            | hiddens  |
       | The Mysterious Affair at Styles  | mystery           |
       | Alice in Wonderland              | children          |
       | The Boxcar Children              | mystery, children |
@@ -15,7 +14,7 @@ Feature: pages with hidden tags are filtered out by default. During search, anyt
 
   Scenario: hidden by default with tags
     Given the following pages
-      | title                            | add_tags_from_string  | add_hiddens_from_string |
+      | title                            | tags  | hiddens |
       | The Mysterious Affair at Styles  | mystery                 | hide |
       | Alice in Wonderland              | children                | hide, go away |
       | The Boxcar Children              | mystery, children       | |
@@ -25,39 +24,77 @@ Feature: pages with hidden tags are filtered out by default. During search, anyt
       And I should not see "The Mysterious Affair at Styles"
       And I should not see "Alice in Wonderland"
 
-  Scenario: include hiddens
+  Scenario: find by hidden
     Given the following pages
-      | title                            | add_hiddens_from_string  |
+      | title                            | hiddens  |
       | Alice in Wonderland              | children          |
     When I am on the homepage
       Then I should not see "Alice in Wonderland"
-    When I select "any" from "Hidden"
+    When I select "children" from "Hidden"
       And I press "Find"
     Then I should see "Alice in Wonderland"
 
-  Scenario: move to tag
-    Given I have no hiddens
-    And a tag exists with name: "hidden name" AND type: "Hidden"
-      And a page exists with add_hiddens_from_string: "hidden name"
+  Scenario: find by tag and hidden
+    Given the following pages
+      | title                            | tags  | hiddens |
+      | The Mysterious Affair at Styles  | mystery | |
+      | Alice in Wonderland              |         | children |
+      | The Boxcar Children              | mystery | children |
     When I am on the homepage
-    Then I should see "No pages found"
-    When I am on the edit tag page for "hidden name"
-      And I press "Move to Tag"
-    When I am on the homepage
-    Then I should not see "No pages found"
-      And I should have no hiddens
-      And I select "hidden name" from "tag"
+      And I select "mystery" from "tag"
+      And I select "children" from "hidden"
       And I press "Find"
-    Then I should not see "No pages found"
+    Then I should see "The Boxcar Children"
+      But I should not see "The Mysterious Affair at Styles"
+      And I should not see "Alice in Wonderland"
 
-  Scenario: new parent for an existing page should have the same hidden
-    Given I'm not so sure about this
-    Given a page exists with add_hiddens_from_string: "nonfiction"
+  Scenario: change hidden to generic tag
+    Given I have no tags
+    And a page exists with hiddens: "will be visible"
+    When I am on the homepage
+      Then I should see "No pages found"
+      And I select "will be visible" from "hidden"
+    When I am on the page's page
+      Then I should see "will be visible" within ".hiddens"
+    When I am on the edit tag page for "will be visible"
+      And I select "" from "change"
+      And I press "Change"
+    When I am on the homepage
+      Then I should not see "No pages found"
+      And I should see "Page 1"
+      And I select "will be visible" from "tag"
+    When I am on the page's page
+      Then I should see "will be visible" within ".tags"
+
+  Scenario: change generic to hidden tag
+    Given I have no tags
+    And a page exists with tags: "to be hidden"
+    When I am on the homepage
+      Then I should not see "No pages found"
+      And I should see "Page 1"
+      And I select "to be hidden" from "tag"
+    When I am on the page's page
+      Then I should see "to be hidden" within ".tags"
+    When I am on the edit tag page for "to be hidden"
+      And I select "Hidden" from "change"
+      And I press "Change"
+    When I am on the homepage
+      Then I should see "No pages found"
+      And I select "to be hidden" from "hidden"
+    When I am on the page's page
+      Then I should see "to be hidden" within ".hiddens"
+
+  Scenario: new parent for an existing page should NOT have the same hidden
+    Given a page exists with hiddens: "nonfiction"
+    When I am on the homepage
+      Then I should see "No pages found"
     When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
       And I press "Update"
-    When I am on the page's page
-      And I follow "New Parent"
-    Then I should see "nonfiction" within ".hiddens"
-
+    When I am on the page with title "New Parent"
+    Then I should not see "nonfiction" within ".hiddens"
+      But I should see "(nonfiction)" within "#position_1"
+    When I am on the homepage
+      Then I should not see "No pages found"
+      And I should see "New Parent" within "#position_1"

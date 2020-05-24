@@ -3,7 +3,7 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
   Scenario: strip hidden whitespace and sort
     Given a page exists
     When I am on the page's page
-      And I follow "Tags"
+      And I edit its tags
       And I fill in "tags" with "  nonfiction,  audio  book,save for   later  "
       And I press "Add Hidden Tags"
     Then I should see "audio book, nonfiction, save for later" within ".hiddens"
@@ -59,7 +59,7 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
   Scenario: add a hidden to a page when there are no hiddens
     Given a page exists
     When I am on the page's page
-      And I follow "Tags"
+      And I edit its tags
     When I fill in "tags" with "nonfiction, audio book"
       And I press "Add Hidden Tags"
     Then I should see "nonfiction" within ".hiddens"
@@ -72,16 +72,16 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
     Given a tag exists with name: "work in progress" AND type: "Hidden"
     And a page exists
     When I am on the page's page
-      And I follow "Tags"
+      And I edit its tags
       And I select "work in progress" from "page_tag_ids_"
       And I press "Update Tags"
     Then I should see "work in progress" within ".hiddens"
 
   Scenario: add a hidden to a page which already has hiddens
-    Given a page exists with add_hiddens_from_string: "nonfiction"
+    Given a page exists with hiddens: "nonfiction"
     When I am on the page's page
     Then I should see "nonfiction" within ".hiddens"
-    When I follow "Tags"
+    When I edit its tags
       And I fill in "tags" with "audio book, wip"
       And I press "Add Hidden Tags"
     Then I should see "audio book, nonfiction, wip" within ".hiddens"
@@ -111,7 +111,7 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       And I select "speculative fiction" from "hidden"
 
   Scenario: delete a hidden
-    Given a page exists with add_hiddens_from_string: "work in progress"
+    Given a page exists with hiddens: "work in progress"
     When I am on the edit tag page for "work in progress"
     And I follow "Destroy"
     When I press "Yes"
@@ -130,7 +130,7 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
   Scenario: merge two hiddens
     Given a tag exists with name: "not hidden"
     Given a tag exists with name: "better name" AND type: "Hidden"
-      And a page exists with add_hiddens_from_string: "bad name"
+      And a page exists with hiddens: "bad name"
     When I am on the edit tag page for "bad name"
       Then I should not see "not hidden"
       And I select "better name" from "merge"
@@ -142,54 +142,3 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       And I press "Find"
     Then I should not see "No pages found"
       And I should see "better name" within ".tags"
-
-  Scenario: change hidden to generic tag
-    Given a tag exists
-    And a tag exists with name: "hidden name" AND type: "Hidden"
-    When I am on the homepage
-      And I select "hidden name" from "hidden"
-    When I am on the edit tag page for "hidden name"
-      And I select "" from "change"
-      And I press "Change"
-    When I am on the homepage
-      And I select "hidden name" from "tag"
-
-  Scenario: change generic to hidden tag
-    Given I have no tags
-    And a tag exists with name: "to be hidden"
-    When I am on the homepage
-      And I select "to be hidden" from "tag"
-    When I am on the edit tag page for "to be hidden"
-      And I select "Hidden" from "change"
-      And I press "Change"
-    When I am on the homepage
-      And I select "to be hidden" from "hidden"
-
-  Scenario: find hidden
-    Given the following pages
-      | title                            | add_hiddens_from_string  |
-      | The Mysterious Affair at Styles  | mystery           |
-      | Alice in Wonderland              | children          |
-      | The Boxcar Children              | mystery, children |
-    When I am on the homepage
-      And I select "children" from "Hidden"
-      And I press "Find"
-    Then I should see "Alice in Wonderland"
-      And I should see "The Boxcar Children"
-      But I should not see "The Mysterious Affair at Styles"
-
-  Scenario: find by tag and hidden
-    Given the following pages
-      | title                            | add_tags_from_string  | add_hiddens_from_string |
-      | The Mysterious Affair at Styles  | mystery | |
-      | Alice in Wonderland              |         | children |
-      | The Boxcar Children              | mystery | children |
-    When I am on the homepage
-      And I select "mystery" from "tag"
-      And I select "children" from "hidden"
-      And I press "Find"
-    Then I should see "The Boxcar Children"
-      But I should not see "The Mysterious Affair at Styles"
-      And I should not see "Alice in Wonderland"
-
-

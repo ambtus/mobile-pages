@@ -9,7 +9,9 @@
     = stylesheet_link_tag '/application.css'
   %body
     .links
-      = link_to "Home", pages_path
+      = link_to "Pages", pages_path
+      = link_to "Tags", tags_path
+      -#TODO = link_to "Authors", authors_path
 
     - flash.each do |name, msg|
       = content_tag :div, msg, :id => "flash_#{name}"
@@ -17,5 +19,7 @@
     = yield
 
     .links
-      = link_to "Home", pages_path
+      = link_to "Pages", pages_path
+      = link_to "Tags", tags_path
+      -#TODO = link_to "Authors", authors_path
 

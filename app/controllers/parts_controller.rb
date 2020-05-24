@@ -19,7 +19,7 @@ class PartsController < ApplicationController
     @page.update_attribute(:title, title) if title && title != @page.title
     url_list = params[:url_list]
     if url_list != @page.url_list
-      @page.parts_from_urls(params[:url_list]) 
+      @page.parts_from_urls(params[:url_list])
     end
     if params[:add_parent] && params[:add_parent] != NEW_PARENT_TITLE && params[:add_parent] != @page.parent.try(:title)
       @page = @page.add_parent(params[:add_parent])
@@ -27,11 +27,11 @@ class PartsController < ApplicationController
         when "ambiguous"
            flash[:alert] = "More than one page with that title"
            @page = Page.find(params[:page_id])
-        when Page
-           flash[:notice] = "Page added to this parent"
-        else
+        when "content"
            flash[:alert] = "Parent with that title has content"
            @page = Page.find(params[:page_id])
+        when Page
+           flash[:notice] = "Page added to this parent"
       end
     end
     redirect_to page_path(@page)
