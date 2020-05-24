@@ -1,7 +1,7 @@
 Feature: trim cruft off pages
 
  Scenario: remove bottom when one automatically removed surrounding div
-  Given a titled page exists with url: "http://test.sidrasue.com/divs.html"
+  Given a page exists with url: "http://test.sidrasue.com/divs.html"
   When I am on the page's page
     And I follow "Scrub"
   When I choose "3rd" within ".bottom"
@@ -12,7 +12,7 @@ Feature: trim cruft off pages
   But I should not see "3rd"
 
  Scenario: remove top when one automatically removed surrounding blockquote
-  Given a titled page exists with url: "http://test.sidrasue.com/blockquote.html"
+  Given a page exists with url: "http://test.sidrasue.com/blockquote.html"
   When I am on the page's page
     And I follow "Scrub"
   When I choose "1st" within ".top"
@@ -23,7 +23,7 @@ Feature: trim cruft off pages
   But I should not see "1st"
 
  Scenario Outline: strip beginning and end
-  Given a titled page exists with url: "<url>"
+  Given a page exists with url: "<url>"
   When I am on the page's page
     And I follow "Scrub"
   When I choose "<unwanted1>" within ".top"
@@ -47,7 +47,7 @@ Feature: trim cruft off pages
 
   Scenario: trim when many headers and short fic
             also recover from trimming too much
-    Given a titled page exists with url: "http://test.sidrasue.com/headers.html"
+    Given a page exists with url: "http://test.sidrasue.com/headers.html"
     When I am on the page's page
       And I follow "Scrub"
       And I choose "third header" within ".top"
@@ -62,23 +62,23 @@ Feature: trim cruft off pages
 
   Scenario: trim a parent page
        also rebuild all children from raw
-    Given a page exists with title: "Parent", base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
-    And I am on the page's page
+    Given a page exists with title: "Parent" AND base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
+    And I am on the page with title "Parent"
     When I view the HTML
     Then I should see "cruft"
       And the download directory should exist for page titled "Parent"
-    When I am on the page's page
+    When I am on the page with title "Parent"
     And I follow "Scrub" within ".edits"
       And I follow "Scrub Part 1"
       And I choose "top cruft" within ".top"
       And I choose "bottom cruft" within ".bottom"
       And I press "Scrub" within ".bottom"
     Then the download directory should not exist for page titled "Parent"
-    When I am on the page's page
+    When I am on the page with title "Parent"
       And I view the HTML
     Then I should not see "cruft"
       And I should see "stuff for part 1"
-    When I am on the page's page
+    When I am on the page with title "Parent"
     When I press "Rebuild from Raw HTML"
     Then the download directory should not exist for page titled "Parent"
       And I view the HTML
@@ -86,11 +86,18 @@ Feature: trim cruft off pages
       And the download directory should exist for page titled "Parent"
 
   Scenario: trim a sub-part
-    Given a page exists with title: "Parent", urls: "##First Part\nhttp://test.sidrasue.com/parts/1.html###SubPart"
+    Given a page exists
     When I am on the page's page
+      And I follow "Manage Parts"
+      And I fill in "url_list" with
+        """
+        ##First Part
+        http://test.sidrasue.com/parts/1.html###SubPart
+        """
+      And I press "Update"
       And I view the HTML
     Then I should see "cruft"
-      And the download directory should exist for page titled "Parent"
+      And the download directory should exist for page titled "Page 1"
     When I am on the page's page
       And I follow "Scrub"
       And I follow "Scrub 1. First Part"
@@ -98,7 +105,7 @@ Feature: trim cruft off pages
       And I choose "top cruft" within ".top"
       And I choose "bottom cruft" within ".bottom"
       And I press "Scrub" within ".top"
-    Then the download directory should not exist for page titled "Parent"
+    Then the download directory should not exist for page titled "Page 1"
     When I am on the page's page
       And I view the HTML
     Then I should see "First Part"
@@ -108,7 +115,7 @@ Feature: trim cruft off pages
     And I should not see "bottom cruft"
 
   Scenario: show number of nodes
-  Given a titled page exists with url: "http://test.sidrasue.com/div.html"
+  Given a page exists with url: "http://test.sidrasue.com/div.html"
   When I am on the page's page
     And I follow "Scrub"
   Then I should see "4 nodes"

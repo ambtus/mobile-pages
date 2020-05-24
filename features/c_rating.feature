@@ -1,7 +1,7 @@
 Feature: composite rating made up of sweet and interesting.
 
   Scenario: new rating page
-    Given a titled page exists
+    Given a page exists
     When I am on the page's page
     When I follow "Rate"
     Then I should see "very interesting"
@@ -12,14 +12,14 @@ Feature: composite rating made up of sweet and interesting.
       And I should see "stressful"
 
   Scenario: error if don't select both before rating
-    Given a titled page exists
+    Given a page exists
     When I am on the page's page
     When I follow "Rate"
     And I press "Rate"
     Then I should see "You must select both ratings"
 
   Scenario: rate unfinished
-    Given a titled page exists
+    Given a page exists
     When I am on the page's page
     When I follow "Rate"
       And I choose "stressful"
@@ -31,7 +31,7 @@ Feature: composite rating made up of sweet and interesting.
     Then I should see "boring, stressful, unfinished"
 
   Scenario: rate a book 0 best
-    Given a titled page exists
+    Given a page exists
     When I am on the page's page
     When I follow "Rate"
       And I choose "very interesting"
@@ -42,7 +42,7 @@ Feature: composite rating made up of sweet and interesting.
     Then I should see "favorite, interesting, sweet"
 
   Scenario: rate a book 1 very sweet
-    Given a titled page exists
+    Given a page exists
     When I am on the page's page
     When I follow "Rate"
       And I choose "interesting enough"
@@ -53,7 +53,7 @@ Feature: composite rating made up of sweet and interesting.
     Then I should see "favorite, sweet"
 
   Scenario: rate a book 1 very interesting
-    Given a titled page exists
+    Given a page exists
     When I am on the page's page
     When I follow "Rate"
       And I choose "very interesting"
@@ -64,7 +64,7 @@ Feature: composite rating made up of sweet and interesting.
     Then I should see "favorite, interesting"
 
   Scenario: rate a book 2
-    Given a titled page exists
+    Given a page exists
     When I am on the page's page
     When I follow "Rate"
       And I choose "sweet enough"
@@ -75,7 +75,7 @@ Feature: composite rating made up of sweet and interesting.
     Then I should see "good"
 
   Scenario: rate a book 2 stressful but very interesting
-    Given a titled page exists
+    Given a page exists
     When I am on the page's page
     When I follow "Rate"
       And I choose "very interesting"
@@ -86,7 +86,7 @@ Feature: composite rating made up of sweet and interesting.
     Then I should see "good, interesting, stressful"
 
   Scenario: rate a book 2 boring but very sweet
-    Given a titled page exists
+    Given a page exists
     When I am on the page's page
     When I follow "Rate"
       And I choose "boring"
@@ -97,7 +97,7 @@ Feature: composite rating made up of sweet and interesting.
     Then I should see "boring, good, sweet"
 
   Scenario: rate a book 3 boring
-    Given a titled page exists
+    Given a page exists
     When I am on the page's page
     When I follow "Rate"
       And I choose "boring"
@@ -108,7 +108,7 @@ Feature: composite rating made up of sweet and interesting.
     Then I should see "boring"
 
   Scenario: rate a book 3 stressful
-    Given a titled page exists
+    Given a page exists
     When I am on the page's page
     When I follow "Rate"
       And I choose "interesting enough"
@@ -118,7 +118,7 @@ Feature: composite rating made up of sweet and interesting.
     Then I should see "stressful"
 
   Scenario: rate a book 4 worst
-    Given a titled page exists
+    Given a page exists
     When I am on the page's page
     When I follow "Rate"
       And I choose "boring"
@@ -197,29 +197,29 @@ Feature: composite rating made up of sweet and interesting.
       Then I should see "boring, stressful"
 
   Scenario: find either shouldn't get unread
-    Given a page exists with title: "page 1", url: "http://test.sidrasue.com/parts/1.html"
-      And a page exists with title: "page 2", url: "http://test.sidrasue.com/parts/2.html", last_read: "2002-01-02", favorite: 1
-      And a page exists with title: "page 3", url: "http://test.sidrasue.com/parts/3.html", last_read: "2003-01-02", favorite: 2
+    Given a page exists with title: "Page 1" AND url: "http://test.sidrasue.com/parts/1.html"
+      And a page exists with title: "Page 2" AND url: "http://test.sidrasue.com/parts/2.html" AND last_read: "2002-01-02" AND favorite: "1"
+      And a page exists with title: "Page 3" AND url: "http://test.sidrasue.com/parts/3.html" AND last_read: "2003-01-02" AND favorite: "2"
     When I am on the homepage
       And I choose "favorite_either"
       And I press "Find"
-    Then I should not see "page 1"
-      And I should see "page 2"
-      And I should see "page 3"
+    Then I should not see "Page 1"
+      And I should see "Page 2"
+      And I should see "Page 3"
 
   Scenario: find neither shouldn't get favorite or good
-    Given a page exists with title: "page 1", url: "http://test.sidrasue.com/parts/1.html", last_read: "2001-01-02", favorite: 0
-      And a page exists with title: "page 2", url: "http://test.sidrasue.com/parts/2.html", last_read: "2002-01-02", favorite: 1
-      And a page exists with title: "page 3", url: "http://test.sidrasue.com/parts/3.html", last_read: "2003-01-02", favorite: 2
-      And a page exists with title: "page 4", url: "http://test.sidrasue.com/parts/4.html", last_read: "2004-01-02", favorite: 3
-      And a page exists with title: "page 5", url: "http://test.sidrasue.com/parts/5.html", last_read: "2004-01-02", favorite: 9
-      And a page exists with title: "page 6", url: "http://test.sidrasue.com/parts/6.html"
+    Given a page exists with url: "http://test.sidrasue.com/parts/1.html" AND last_read: "2001-01-02" AND favorite: 0
+      And a page exists with title: "Page 2" AND url: "http://test.sidrasue.com/parts/2.html" AND last_read: "2002-01-02" AND favorite: "1"
+      And a page exists with title: "Page 3" AND url: "http://test.sidrasue.com/parts/3.html" AND last_read: "2003-01-02" AND favorite: "2"
+      And a page exists with title: "Page 4" AND url: "http://test.sidrasue.com/parts/4.html" AND last_read: "2004-01-02" AND favorite: "3"
+      And a page exists with title: "Page 5" AND url: "http://test.sidrasue.com/parts/5.html" AND last_read: "2004-01-02" AND favorite: "9"
+      And a page exists with title: "Page 6" AND url: "http://test.sidrasue.com/parts/6.html"
     When I am on the homepage
       And I choose "favorite_neither"
       And I press "Find"
-    Then I should see "page 4"
-      And I should not see "page 1"
-      And I should not see "page 2"
-      And I should not see "page 3"
-      And I should see "page 5"
-      And I should see "page 6"
+    Then I should see "Page 4"
+      And I should not see "Page 1"
+      And I should not see "Page 2"
+      And I should not see "Page 3"
+      And I should see "Page 5"
+      And I should see "Page 6"

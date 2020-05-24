@@ -59,7 +59,7 @@ Feature: third level hierarchy
       And I should see "stuff for part 1"
 
   Scenario: create by adding subpart headings
-    Given a titled page exists with base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2 3"
+    Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3"
       And I am on the page's page
     When I follow "Manage Parts"
       And I fill in "title" with "Now I'm a Grandparent"
@@ -79,7 +79,7 @@ Feature: third level hierarchy
       Then I should see "Part 1" within "#position_1"
     When I follow "HTML" within "#position_1"
       Then I should see "stuff for part 1"
-    When I am on the page's page
+    When I am on the page with title "Now I'm a Grandparent"
       And I follow "Parent2" within "#position_2"
     Then I should see "Part 1"
       And I should see "Part 2"
@@ -89,8 +89,8 @@ Feature: third level hierarchy
 
   Scenario: add a parent to a page with parts
     Given I have no pages
-    Given a page exists with title: "Parent", urls: "http://test.sidrasue.com/parts/2.html\nhttp://test.sidrasue.com/parts/3.html"
-    And a page exists with title: "Single", url: "http://test.sidrasue.com/parts/1.html"
+    Given a page exists with title: "Parent" AND urls: "http://test.sidrasue.com/parts/2.html,http://test.sidrasue.com/parts/3.html"
+    And a page exists with title: "Single" AND url: "http://test.sidrasue.com/parts/1.html"
     When I am on the homepage
     When I follow "Parent"
       And I follow "Manage Parts"
@@ -134,9 +134,17 @@ Feature: third level hierarchy
       And I should see "Original" within "#position_1"
 
   Scenario: add another mid level
-    Given a page exists with title: "Grandparent", urls: "##Parent1\n##Parent2\nhttp://test.sidrasue.com/parts/3.html\n##Parent3"
-    When I am on the homepage
-      And I follow "Grandparent" within "#position_1"
+    Given a page exists
+    When I am on the page's page
+    When I follow "Manage Parts"
+      And I fill in "url_list" with
+        """
+        ##Parent1
+        ##Parent2
+        http://test.sidrasue.com/parts/3.html\
+        ##Parent3
+        """
+      And I press "Update"
       And I follow "Parent2" within "#position_2"
     Then I should see "Part 1" within "#position_1"
       And I should not see "Part 2"
@@ -151,7 +159,7 @@ Feature: third level hierarchy
       And I should not see "Could not find or create parent"
       And I should see "Part 1" within "#position_1"
       And I should see "Part 2" within "#position_2"
-    When I follow "Grandparent" within ".parent"
+    When I follow "Page 1" within ".parent"
     Then I should see "Parent1" within "#position_1"
       And I should see "Parent2" within "#position_2"
       And I should see "Parent3" within "#position_3"
@@ -161,7 +169,7 @@ Feature: third level hierarchy
       And I choose "sweet enough"
     And I press "Rate"
    When I am on the homepage
-      And I follow "Grandparent" within "#position_1"
+      And I follow "Page 1" within "#position_1"
       And I follow "Parent2" within "#position_2"
    Then I should not see "unread"
    When I follow "HTML" within "#position_2"

@@ -1,7 +1,7 @@
 Feature: numbering parts with a parent
 
   Scenario: no numbers when ends in a number
-    Given a titled page exists with urls: "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
+    Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html"
     When I am on the page's page
       And I view the HTML
    Then I should see "Part 1"
@@ -21,7 +21,7 @@ Feature: numbering parts with a parent
         """
      And I fill in "page_title" with "Multiple pages from urls"
      And I press "Store"
-   When I go to the page with title "Multiple pages from urls"
+   When I am on the page with title "Multiple pages from urls"
       And I view the HTML
    Then I should see "stuff for part 1"
      And I should see "stuff for part 2"
@@ -38,7 +38,7 @@ Feature: numbering parts with a parent
         """
      And I fill in "page_title" with "Multiple pages from urls"
      And I press "Store"
-   When I go to the page with title "Multiple pages from urls"
+   When I am on the page with title "Multiple pages from urls"
       And I view the HTML
    Then I should see "stuff for part 1"
      And I should see "stuff for part 2"
@@ -46,12 +46,3 @@ Feature: numbering parts with a parent
      And I should see "2. Epilogue"
    But I should not see "1. Section 1"
 
-  Scenario: ao3 with and without chapter titles
-    Given I am on the homepage
-    When I fill in "page_url" with "http://archiveofourown.org/works/310586"
-      And I press "Store"
-   When I go to the page with title "Open the Door"
-     And I view the HTML
-  Then I should see "Chapter 1"
-      And I should see "2. Ours"
-      But I should not see "1. Chapter 1"

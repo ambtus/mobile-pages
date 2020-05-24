@@ -1,7 +1,7 @@
 Feature: single-part pages
 
   Scenario: hinted fields
-    When I go to the homepage
+    When I am on the homepage
     Then the "page_title" field should contain "Title"
     When I fill in "page_title" with "Something"
       And I press "Find"
@@ -36,7 +36,7 @@ Feature: single-part pages
       And I should not see "Page created"
 
   Scenario: store using a pasted html file
-    Given a titled page exists with url: "http://test.sidrasue.com/test.html"
+    Given a page exists with url: "http://test.sidrasue.com/test.html"
     When I am on the page's page
      And I follow "Edit Raw HTML"
     When I fill in "pasted" with "<p>This is a test</p>"
@@ -47,7 +47,7 @@ Feature: single-part pages
       And I should not see "Retrieved from the web"
 
   Scenario: pasted plaintext is okay
-    Given a titled page exists
+    Given a page exists
       And I am on the page's page
     When I follow "Edit Raw HTML"
       And I fill in "pasted" with "plain text"
@@ -57,7 +57,7 @@ Feature: single-part pages
       And I should see "plain text" within ".content"
 
   Scenario: pasted blank is okay
-    Given a titled page exists
+    Given a page exists
       And I am on the page's page
     When I follow "Edit Raw HTML"
       And I fill in "pasted" with ""
@@ -67,13 +67,13 @@ Feature: single-part pages
       And I should see "" within ".content"
 
   Scenario: url with surrounding whitespace okay
-    Given a titled page exists with url: " http://test.sidrasue.com/test.html"
+    Given a page exists with url: " http://test.sidrasue.com/test.html"
     When I am on the page's page
       And I follow "HTML"
     Then I should see "Retrieved from the web"
 
     Scenario: duplicate url
-    Given a page exists with title: "Original", url: "http://test.sidrasue.com/test.html"
+    Given a page exists with title: "Original" AND url: "http://test.sidrasue.com/test.html"
     When I am on the homepage
       And I fill in "page_title" with "duplicate"
       And I fill in "page_url" with "http://test.sidrasue.com/test.html"
@@ -110,7 +110,7 @@ Feature: single-part pages
       And I should not see "Page created"
 
   Scenario: refetch original html
-    Given a titled page exists with url: "http://test.sidrasue.com/test.html"
+    Given a page exists with url: "http://test.sidrasue.com/test.html"
     When I am on the page's page
       And I follow "Edit Raw HTML"
       And I fill in "pasted" with "system down"

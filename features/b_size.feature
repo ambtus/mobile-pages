@@ -6,9 +6,9 @@ Feature: page size
       | Short  | http://test.sidrasue.com/short.html   |
       | Medium | http://test.sidrasue.com/medium.html  |
       | Long   | http://test.sidrasue.com/long.html    |
-    And a page exists with title: "Long2", base_url: "http://test.sidrasue.com/medium*.html", url_substitutions: "1 2 3"
-    And a page exists with title: "Novel", base_url: "http://test.sidrasue.com/long*.html", url_substitutions: "1 2 3"
-    And a page exists with title: "Epic", base_url: "http://test.sidrasue.com/long*.html", url_substitutions: "4 5 6 7 8 9"
+    And a page exists with title: "Long2" AND base_url: "http://test.sidrasue.com/medium*.html" AND url_substitutions: "1 2 3"
+    And a page exists with title: "Novel" AND base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3"
+    And a page exists with title: "Epic" AND base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "4 5 6 7 8 9"
     When I am on the homepage
       And I choose "size_any"
       And I press "Find"
@@ -48,7 +48,7 @@ Feature: page size
       Then I should see "Epic"
 
    Scenario: changing sizes
-    Given a titled page exists with url: "http://test.sidrasue.com/long.html"
+    Given a page exists with url: "http://test.sidrasue.com/long.html"
       And I am on the page's page
    Then I should see "medium" within ".size"
    When I follow "Refetch"
@@ -70,7 +70,7 @@ Feature: page size
      And I should not see "long" within ".size"
 
   Scenario: changing sizes with parts
-    Given a titled page exists with base_url: "http://test.sidrasue.com/long*.html", url_substitutions: "1 2 3 4 5 6 7 8"
+    Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3 4 5 6 7 8"
    When I am on the page's page
    Then I should see "long" within ".size"
      And I should not see "medium" within ".size"

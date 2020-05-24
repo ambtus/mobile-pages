@@ -27,8 +27,8 @@ Feature: hiddens are tags which are hidden by default. During search, anything w
       And I should see "second" within ".hiddens"
 
   Scenario: strip hidden whitespace
-    Given a titled page exists
-    When I go to the page's page
+    Given a page exists
+    When I am on the page's page
       And I follow "Hiddens"
       And I follow "Add Hidden Tags"
       And I fill in "hiddens" with "  nonfiction,  audio  book,save for   later  "
@@ -36,7 +36,7 @@ Feature: hiddens are tags which are hidden by default. During search, anything w
     Then I should see "audio book, nonfiction, save for later" within ".hiddens"
 
   Scenario: add a hidden to a page when there are no hiddens
-    Given a titled page exists
+    Given a page exists
     When I am on the page's page
       And I follow "Hiddens"
       And I follow "Add Hidden Tags"
@@ -50,7 +50,7 @@ Feature: hiddens are tags which are hidden by default. During search, anything w
 
   Scenario: select a hidden for a page when there are hiddens
     Given a hidden exists with name: "work in progress"
-    And a titled page exists
+    And a page exists
     When I am on the page's page
       And I follow "Hiddens"
       And I select "work in progress" from "page_hidden_ids_"
@@ -58,7 +58,7 @@ Feature: hiddens are tags which are hidden by default. During search, anything w
     Then I should see "work in progress" within ".hiddens"
 
   Scenario: add a hidden to a page which has hiddens
-    Given a titled page exists with add_hiddens_from_string: "nonfiction"
+    Given a page exists with add_hiddens_from_string: "nonfiction"
     When I am on the page's page
     Then I should see "nonfiction" within ".hiddens"
     When I follow "Hiddens"
@@ -72,7 +72,7 @@ Feature: hiddens are tags which are hidden by default. During search, anything w
       And I select "wip" from "Hidden"
 
   Scenario: new parent for an existing page should have the same hidden
-    Given a titled page exists with add_hiddens_from_string: "nonfiction"
+    Given a page exists with add_hiddens_from_string: "nonfiction"
     When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
@@ -92,7 +92,7 @@ Feature: hiddens are tags which are hidden by default. During search, anything w
   Scenario: delete a hidden
     Given I have no hiddens
     And a hidden exists with name: "work in progress"
-      And a titled page exists with add_hiddens_from_string: "work in progress"
+      And a page exists with add_hiddens_from_string: "work in progress"
     When I am on the hidden's edit page
     And I follow "Destroy"
     When I press "Yes"
@@ -102,8 +102,8 @@ Feature: hiddens are tags which are hidden by default. During search, anything w
 
   Scenario: merge two hiddens
     Given a hidden exists with name: "better name"
-      And a titled page exists with add_hiddens_from_string: "bad name"
-    When I go to the edit hidden page for "bad name"
+      And a page exists with add_hiddens_from_string: "bad name"
+    When I am on the edit hidden page for "bad name"
       And I select "better name" from "merge"
       And I press "Merge"
     Then I should see "better name"
@@ -154,10 +154,10 @@ Feature: hiddens are tags which are hidden by default. During search, anything w
   Scenario: move to tag
     Given I have no hiddens
     And a hidden exists with name: "hidden name"
-      And a titled page exists with add_hiddens_from_string: "hidden name"
+      And a page exists with add_hiddens_from_string: "hidden name"
     When I am on the homepage
     Then I should see "No pages found"
-    When I go to the edit hidden page for "hidden name"
+    When I am on the edit hidden page for "hidden name"
       And I press "Move to Tag"
     When I am on the homepage
     Then I should not see "No pages found"

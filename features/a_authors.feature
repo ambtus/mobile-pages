@@ -1,7 +1,7 @@
 Feature: author stuff
 
   Scenario: add authors to a page when there are no authors in the database
-    Given a page exists with title: "Alice"
+    Given a page exists
       And I am on the page's page
     When I follow "Authors"
       And I fill in "authors" with "lewis carroll, charles dodgson"
@@ -13,7 +13,7 @@ Feature: author stuff
       And I select "lewis carroll" from "Author"
 
   Scenario: add author with aka to a page
-    Given a page exists with title: "Alice"
+    Given a page exists
       And I am on the page's page
     When I follow "Authors"
       And I fill in "authors" with "lewis carroll (charles dodgson)"
@@ -23,7 +23,7 @@ Feature: author stuff
       And I select "lewis carroll" from "Author"
 
   Scenario: add an author for a page when there are authors in the database
-    Given a page exists with title: "Alice"
+    Given a page exists
       And an author exists with name: "lewis carroll"
     When I am on the page's page
     Then I should not see "lewis carroll" within ".authors"
@@ -33,7 +33,7 @@ Feature: author stuff
     Then I should see "lewis carroll" within ".authors"
 
   Scenario: add an existing author with aka
-    Given a page exists with title: "Alice"
+    Given a page exists
       And an author exists with name: "lewis carroll (charles dodgson)"
     When I am on the page's page
     Then I should not see "lewis carroll" within ".authors"
@@ -43,7 +43,7 @@ Feature: author stuff
     Then I should see "lewis carroll (charles dodgson)" within ".authors"
 
   Scenario: add an author to a page which has authors
-    Given a page exists with title: "Alice", add_author_string: "lewis carroll"
+    Given a page exists with add_author_string: "lewis carroll"
     When I am on the page's page
     Then I should see "lewis carroll" within ".authors"
     When I follow "Authors"
@@ -56,7 +56,7 @@ Feature: author stuff
     Then I select "charles dodgson" from "Author"
 
   Scenario: new parent for an existing page should have the same author
-    Given a titled page exists with add_author_string: "newbie"
+    Given a page exists with add_author_string: "newbie"
     When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"

@@ -1,8 +1,8 @@
 Feature: generic tag stuff
 
   Scenario: strip tag whitespace amd sort
-    Given a titled page exists
-    When I go to the page's page
+    Given a page exists
+    When I am on the page's page
       And I follow "Tags"
       And I fill in "tags" with "  funny,  joy  joy,happy happy  "
       And I press "Add Tags"
@@ -42,7 +42,7 @@ Feature: generic tag stuff
       And I should see "first" within ".tags"
 
   Scenario: add a tag to a page when there are no tags
-    Given a titled page exists
+    Given a page exists
     When I am on the page's page
       And I follow "Tags"
     When I fill in "tags" with "classic, children's"
@@ -55,7 +55,7 @@ Feature: generic tag stuff
 
   Scenario: select a tag for a page when there are tags
     Given a tag exists with name: "fantasy"
-    And a titled page exists
+    And a page exists
     When I am on the page's page
     When I follow "Tags"
       And I select "fantasy" from "page_tag_ids_"
@@ -63,7 +63,7 @@ Feature: generic tag stuff
     Then I should see "fantasy" within ".tags"
 
   Scenario: add a tag to a page which has tags
-    Given a titled page exists with add_tags_from_string: "classic"
+    Given a page exists with add_tags_from_string: "classic"
     When I am on the page's page
     Then I should see "classic" within ".tags"
     When I follow "Tags"
@@ -76,7 +76,7 @@ Feature: generic tag stuff
       And I select "children's" from "tag"
 
   Scenario: new parent for an existing page should have the same tag
-    Given a titled page exists with add_tags_from_string: "tag"
+    Given a page exists with add_tags_from_string: "tag"
     When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
@@ -98,7 +98,7 @@ Feature: generic tag stuff
     Given a tag exists with name: "fantasy"
     When I am on the homepage
       And I select "fantasy" from "tag"
-    When I am on the tag's edit page
+    When I am on the edit tag page for "fantasy"
     And I fill in "tag_name" with "Fantasy"
     And I press "Update"
     When I am on the homepage
@@ -106,8 +106,8 @@ Feature: generic tag stuff
 
   Scenario: delete a tag
     Given a tag exists with name: "science fiction"
-      And a titled page exists with add_tags_from_string: "science fiction"
-    When I am on the tag's edit page
+      And a page exists with add_tags_from_string: "science fiction"
+    When I am on the edit tag page for "science fiction"
     And I follow "Destroy"
     When I press "Yes"
     Then I should have no tags
@@ -116,8 +116,8 @@ Feature: generic tag stuff
 
   Scenario: merge two tags
     Given a tag exists with name: "better name"
-      And a titled page exists with add_tags_from_string: "bad name"
-    When I go to the edit page for "bad name"
+      And a page exists with add_tags_from_string: "bad name"
+    When I am on the edit tag page for "bad name"
       And I select "better name" from "merge"
       And I press "Merge"
     Then I should see "better name"

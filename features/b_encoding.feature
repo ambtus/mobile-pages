@@ -9,11 +9,11 @@ Scenario Outline: encodings
     And I fill in "page_title" with "<title>"
 #    And my variable is "<title>"
     And I press "Store"
-  When I go to the page with title "<title>"
+  When I am on the page with title "<title>"
   Then I should see "<title>" within ".title"
   When I follow "HTML"
   Then I should see "<result>" within ".content"
-  When I go to the page with title "<title>"
+  When I am on the page with title "<title>"
     And "Original" should link to "<url>"
 
   Examples:
@@ -30,24 +30,24 @@ Scenario Outline: encodings
 
   # webrat is not displaying the entity
   Scenario: clean html with stray linefeed
-    Given a page exists with title: "Linefeed", url: "http://test.sidrasue.com/112a.html"
+    Given a page exists with title: "Linefeed" AND url: "http://test.sidrasue.com/112a.html"
     Then my page named "Linefeed" should contain "fiancé"
     And my page named "Linefeed" should not contain "&#13;"
 
   Scenario: utf8
-    Given a titled page exists with url: "http://test.sidrasue.com/sbutf8.html"
+    Given a page exists with url: "http://test.sidrasue.com/sbutf8.html"
     When I am on the page's page
       And I follow "HTML"
     Then I should see "“H"
 
   Scenario: utf8 in parts
-    Given a titled page exists with urls: "http://test.sidrasue.com/sbutf8.html"
+    Given a page exists with url: "http://test.sidrasue.com/sbutf8.html"
     When I am on the page's page
       And I view the HTML
     Then I should see "“H"
 
   Scenario: latin1
-    Given a titled page exists with url: "http://test.sidrasue.com/1252.html"
+    Given a page exists with url: "http://test.sidrasue.com/1252.html"
     When I am on the page's page
       And I follow "HTML"
     Then I should see "“H"

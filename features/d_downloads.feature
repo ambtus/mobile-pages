@@ -2,7 +2,7 @@ Feature: downloads
 
   Scenario: html downloads
     Given a page exists with title: "Alice"
-    When I am on the page's page
+    When I am on the page with title "Alice"
       And I follow "HTML"
     Then the download directory should exist for page titled "Alice"
     Then the download html file should exist for page titled "Alice"
@@ -10,7 +10,7 @@ Feature: downloads
 
   Scenario: epub downloads
     Given a page exists with title: "Bob"
-    When I am on the page's page
+    When I am on the page with title "Bob"
       And I follow "ePub"
     Then the download directory should exist for page titled "Bob"
     Then the download html file should exist for page titled "Bob"

@@ -2,14 +2,14 @@ Feature: audiobook
 
   Scenario: audiobook link
     Given a page exists with title: "Alice"
-    When I am on the page's page
+    When I am on the page with title "Alice"
       And I follow "Text"
     Then the download directory should exist for page titled "Alice"
     Then the download html file should exist for page titled "Alice"
     Then the download epub file should not exist for page titled "Alice"
 
   Scenario: audiobook sections
-    Given a titled page exists with url: "http://test.sidrasue.com/long.html"
+    Given a page exists with url: "http://test.sidrasue.com/long.html"
     When I am on the page's page
       And I follow "Text"
       Then I should see "Lorem ipsum dolor"
@@ -27,7 +27,7 @@ Feature: audiobook
         """
      And I fill in "page_title" with "Multiple pages from urls"
      And I press "Store"
-   When I go to the page with title "Multiple pages from urls"
+   When I am on the page with title "Multiple pages from urls"
    Then I should see "Text" within "#position_1"
 
   Scenario: audiobook created adds the audio tag and updates last read

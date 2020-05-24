@@ -2,17 +2,31 @@ Given /^I have no pages$/ do
   Page.delete_all
 end
 
+# create a page
+Given /a page exists(?: with (.*))?/ do |fields|
+  fields.blank? ? hash = {} : hash = fields.create_hash
+  hash[:title] = hash[:title] || "Page 1"
+  hash[:urls] =  hash[:urls].split(',').join("\r") if hash[:urls]
+  Rails.logger.debug "DEBUG: creating page with hash: #{hash}"
+  Page.create(hash)
+end
+
+# create many identical pages
+Given("{int} pages exist") do |count|
+  count.times do |i|
+    Page.create(title: "Page #{(i+1)}")
+    Kernel::sleep 1
+  end
+end
+
+# create many different pages
 Given /^the following pages?$/ do |table|
   Page.delete_all
   # table is a Cucumber::Ast::Table
   table.hashes.each do |hash|
-    if hash['urls']
-      newhash = hash.dup
-      newhash['urls'] =  newhash['urls'].split('\\n').join("\r")
-      Page.create(newhash)
-    else
-      Page.create(hash)
-    end
+    hash['urls'] =  hash['urls'].split('\\n').join("\r") if hash['urls']
+    Rails.logger.debug "DEBUG: creating page with hash: #{hash}"
+    Page.create(hash)
   end
 end
 
@@ -64,6 +78,8 @@ Then /^the download epub file should not exist for page titled "([^"]*)"$/ do |t
 end
 
 Then(/^last read should be today$/) do
-  assert Page.first.last_read.to_date == Date.today
+  Rails.logger.debug "DEBUG: comparing #{Page.first.last_read.to_date} with #{Date.current}"
+  assert Page.first.last_read.to_date == Date.current
 end
+
 

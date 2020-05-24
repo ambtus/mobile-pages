@@ -7,7 +7,7 @@ Feature: last created
     Then I should see "No pages"
 
   Scenario: find last created page
-    Given 2 titled pages exist
+    Given 2 pages exist
     When I am on the homepage
       And I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
@@ -17,7 +17,7 @@ Feature: last created
       And I press "Find"
     Then I should see "New Title" within "#position_1"
     When I wait 1 second
-      And I follow "page 1 title"
+      And I follow "Page 1"
       And I follow "Manage Parts"
       And I fill in "url_list" with "http://test.sidrasue.com/short.html"
       And I press "Update"

@@ -36,14 +36,24 @@ Feature: ao3 specific stuff
       And I should not see "Using time-travel" within ".notes"
       And I should not see "abandoned" within ".notes"
 
+  Scenario: ao3 with and without chapter titles
+    Given I am on the homepage
+    When I fill in "page_url" with "http://archiveofourown.org/works/310586"
+      And I press "Store"
+    When I am on the page with title "Open the Door"
+     And I view the HTML
+    Then I should see "Chapter 1"
+      And I should see "2. Ours"
+      But I should not see "1. Chapter 1"
+
   Scenario: refetch from ao3 when it used to be somewhere else
-    Given a page exists with title: "Counting", url: "https://www.fanfiction.net/s/5853866/1/Counting"
-      And I am on the page's page
-      # Then I should see "ambtus" # after add grabbing author from fanfiction
+    Given a page exists with title: "Counting" AND url: "https://www.fanfiction.net/s/5853866/1/Counting"
+      And I am on the page with title "Counting"
+      # Then I should see "ambtus" # TODO after add grabbing author from fanfiction
       And I should not see "lauriegilbert"
       When I follow "HTML"
       Then I should see "Skip."
-    When I am on the page's page
+    When I am on the page with title "Counting"
       And I follow "Refetch" within ".edits"
     When I fill in "url" with "http://archiveofourown.org/works/688"
       And I press "Refetch"
@@ -84,7 +94,7 @@ Feature: ao3 specific stuff
       And I follow "HTML"
     Then I should see "oops"
       And I should not see "Amy woke slowly"
-    When I go back
+    When I am on the page with title "Where am I?"
       And I follow "Refetch"
       Then the "url" field should contain "http://archiveofourown.org/works/692/chapters/803"
     When I press "Refetch"
@@ -132,4 +142,18 @@ Feature: ao3 specific stuff
     When I follow "Refetch"
       And I press "Refetch"
     Then I should see "Hogwarts (abandoned)" within "#position_2"
+
+  Scenario: finding page stored with https
+    Given a page exists with url: "https://archiveofourown.org/works/68481"
+    When I am on the homepage
+      And I fill in "page_url" with "http://archiveofourown.org/works/68481"
+      And I press "Find"
+    Then I should see "I Drive Myself Crazy" within "#position_1"
+
+  Scenario: finding page stored with http
+    Given a page exists with url: "http://archiveofourown.org/works/68481"
+    When I am on the homepage
+      And I fill in "page_url" with "https://archiveofourown.org/works/68481"
+      And I press "Find"
+    Then I should see "I Drive Myself Crazy" within "#position_1"
 

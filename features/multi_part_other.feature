@@ -1,20 +1,20 @@
 Feature: other mult-part tests
 
   Scenario: download part
-    Given a titled page exists with urls: "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
+    Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html"
     When I am on the page's page
       And I view the HTML
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
     When I am on the homepage
-    When I follow "page 1"
+    When I follow "Page 1"
       And I follow "Part 1"
       And I view the HTML
     Then I should see "stuff for part 1"
     And I should not see "stuff for part 2"
 
   Scenario: reorder the parts on an existing page with parts
-    Given a titled page exists with base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
+    Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
     When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "url_list" with
@@ -26,7 +26,7 @@ Feature: other mult-part tests
       And I follow "HTML" within "#position_1"
     Then I should see "stuff for part 2"
     When I am on the homepage
-      And I follow "page 1" within "#position_1"
+      And I follow "Page 1" within "#position_1"
       And I follow "HTML" within "#position_2"
     Then I should see "stuff for part 1"
 

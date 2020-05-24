@@ -35,7 +35,6 @@ Feature: filter/find
       And I should see "Another Mystery" within "#position_3"
       And I should see "To Read Mystery" within "#position_4"
       And I should see "Still More Mysteries" within "#position_5"
-      And I should not have a "#position_6" field
       And I should not see "Nancy Drew"
       And I should not see "The Boxcar Children"
     # find unread by tag
@@ -111,7 +110,6 @@ Feature: filter/find
       | A Christmas Carol by Charles Dickens               | http://test.sidrasue.com/cc.html   |
       | The Call of the Wild by Jack London                | http://test.sidrasue.com/cotw.html |
       | The Mysterious Affair at Styles by Agatha Christie | http://test.sidrasue.com/maas.html |
-      | Title | https://archiveofourown.org/works/68481 |
     When I am on the homepage
       And I fill in "page_url" with "maas"
       And I press "Find"
@@ -138,7 +136,3 @@ Feature: filter/find
       And I fill in "page_url" with "maas"
       And I press "Find"
     Then I should see "The Mysterious Affair at Styles" within "#position_1"
-    When I am on the homepage
-      And I fill in "page_url" with "http://archiveofourown.org/works/68481"
-      And I press "Find"
-    Then I should see "I Drive Myself Crazy" within "#position_1"

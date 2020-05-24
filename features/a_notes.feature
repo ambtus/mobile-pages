@@ -4,23 +4,23 @@ Feature: stuff to do with notes
     When I am on the homepage
      And I fill in "page_title" with "no notes"
      And I press "Store"
-   When I go to the page with title "no notes"
+   When I am on the page with title "no notes"
    Then I should not see "Notes" within ".notes"
 
   Scenario: long notes should be truncated at word boundaries in lists
-    Given a titled page exists with notes: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id turpis pretium ante malesuada pulvinar. Phasellus nullam."
+    Given a page exists with notes: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id turpis pretium ante malesuada pulvinar. Phasellus nullam."
     When I am on the page's page
      Then I should see "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id turpis pretium ante malesuada pulvinar. Phasellus nullam." within ".notes"
    When I am on the homepage
      Then I should see "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id turpis pretium..." within "#position_1"
 
   Scenario: a note without a space after 75 characters
-    Given a titled page exists with notes: "On Assignment for Dumbledore, in past, Harry sees his lover from a new perspective."
+    Given a page exists with notes: "On Assignment for Dumbledore, in past, Harry sees his lover from a new perspective."
     When I am on the homepage
       Then I should see "On Assignment for Dumbledore, in past, Harry sees his lover from a new perspective."
 
   Scenario: add notes to a page without a note
-    Given a titled page exists
+    Given a page exists
     When I am on the page's page
       And I follow "Notes"
       And I fill in "page_notes" with "testing notes"
@@ -28,7 +28,7 @@ Feature: stuff to do with notes
     Then I should see "testing notes" within ".notes"
 
   Scenario: edit notes on a page with a note
-    Given a titled page exists with notes: "some basic notes"
+    Given a page exists with notes: "some basic notes"
       And I am on the page's page
     Then I should see "some basic notes" within ".notes"
     When I follow "Notes"
@@ -73,7 +73,7 @@ Feature: stuff to do with notes
        And I should see "Six"
 
   Scenario: Update notes removes old html
-    Given a titled page exists with notes: "Lorem ipsum dolor"
+    Given a page exists with notes: "Lorem ipsum dolor"
     When I am on the page's page
      When I follow "HTML"
     Then I should see "Lorem ipsum dolor"
@@ -87,8 +87,8 @@ Feature: stuff to do with notes
       And I should see "On Assignment for Dumbledore"
 
   Scenario: notes but no content on multi-page view
-    Given a page exists with title: "Multi", base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1 2"
-   When I am on the page's page
+    Given a page exists with title: "Multi" AND base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
+   When I am on the page with title "Multi"
    Then I should see "Part 1" within "#position_1"
      And I should see "Part 2" within "#position_2"
      And I should not see "stuff for part 1"
@@ -99,12 +99,12 @@ Feature: stuff to do with notes
    When I follow "HTML" within "#position_1"
    Then I should see "stuff for part 1"
      And I should not see "stuff for part 2"
-   When I am on the page's page
+   When I am on the page with title "Multi"
    And I follow "Part 1"
    When I follow "Notes"
      And I fill in "page_notes" with "This is a note"
      And I press "Update"
-   When I am on the page's page
+   When I am on the page with title "Multi"
    Then I should see "This is a note" within "#position_1"
      And I should not see "stuff for part 1"
      And I follow "Part 1" within "#position_1"

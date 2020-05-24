@@ -150,9 +150,6 @@ GEM
     nokogumbo (2.0.2)
       nokogiri (~> 1.8, >= 1.8.4)
     ntlm-http (0.1.1)
-    pickle (0.5.5)
-      cucumber (>= 0.8, < 4.0)
-      rake
     power_assert (1.2.0)
     public_suffix (4.0.5)
     quiet_safari (1.0.0)
@@ -241,7 +238,6 @@ DEPENDENCIES
   mechanize
   mysql2
   nokogiri
-  pickle
   quiet_safari
   rails (~> 6.0.1)
   sanitize

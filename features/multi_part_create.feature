@@ -1,7 +1,7 @@
 Feature: creating multi-part pages
 
   Scenario: children should not show up on front page by themselves
-    Given a page exists with title: "Parent", urls: "http://test.sidrasue.com/parts/1.html\nhttp://test.sidrasue.com/parts/2.html"
+    Given a page exists with title: "Parent" AND urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html"
     When I am on the homepage
     Then I should see "Parent" within ".title"
     And I should see "Part 1 | Part 2" within ".part_links"
@@ -23,7 +23,7 @@ Feature: creating multi-part pages
         """
      And I fill in "page_title" with "Multiple pages from urls"
      And I press "Store"
-   When I go to the page with title "Multiple pages from urls"
+   When I am on the page with title "Multiple pages from urls"
    Then I should see "Multiple pages from urls" within ".title"
    When I view the HTML
    Then I should see "Part 1"
@@ -85,7 +85,7 @@ Feature: creating multi-part pages
      And I fill in "page_url_substitutions" with "1-3"
      And I fill in "page_title" with "Multiple pages from base"
      And I press "Store"
-   When I go to the page with title "Multiple pages from base"
+   When I am on the page with title "Multiple pages from base"
    Then I should see "Multiple pages from base" within ".title"
    When I view the HTML
      And I should see "Part 1"
@@ -102,7 +102,7 @@ Feature: creating multi-part pages
      And I fill in "page_url_substitutions" with "1 3"
      And I fill in "page_title" with "Multiple pages from base"
      And I press "Store"
-   When I go to the page with title "Multiple pages from base"
+   When I am on the page with title "Multiple pages from base"
    Then I should see "Multiple pages from base" within ".title"
    When I view the HTML
      And I should see "Part 1"
@@ -125,7 +125,7 @@ Feature: creating multi-part pages
         """
      And I fill in "page_title" with "Parent"
      And I press "Store"
-   When I go to the page with title "Parent"
+   When I am on the page with title "Parent"
    Then I should see "Parent" within ".title"
    When I view the HTML
     Then I should see "Parent" within "h1"
@@ -140,11 +140,13 @@ Feature: creating multi-part pages
 
 
   Scenario: should not be able to store using a pasted html file
-    Given a titled page exists with url: "http://test.sidrasue.com/test.html"
+    Given a page exists with url: "http://test.sidrasue.com/test.html"
     When I am on the page's page
-     Then I should see "Edit Raw HTML"
-     And I should see "Edit Scrubbed HTML"
-    Given a titled page exists with urls: "http://test.sidrasue.com/test.html"
+      Then I should not see "Part 1"
+      But I should see "Edit Raw HTML"
+      And I should see "Edit Scrubbed HTML"
+    Given a page exists with urls: "http://test.sidrasue.com/test.html"
     When I am on the page's page
-     Then I should not see "Edit Raw HTML"
-     And I should not see "Edit Scrubbed HTML"
+      Then I should see "Part 1"
+      And I should not see "Edit Raw HTML"
+      And I should not see "Edit Scrubbed HTML"
