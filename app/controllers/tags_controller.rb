@@ -33,6 +33,9 @@ class TagsController < ApplicationController
       new_tag.pages << @tag.pages
       @tag.destroy_me
       redirect_to :root
+    elsif params[:commit] == "Change"
+      @tag.update_attribute(:type, params[:change])
+      redirect_to :root
     elsif @tag.update_attribute(:name, params[:tag][:name])
       redirect_to :root
     else

@@ -5,6 +5,10 @@ class Tag < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :case_sensitive => false
 
+  def self.types
+    ["", "Hidden"]
+  end
+
   scope :by_type, -> { order('tags.type asc') }
   scope :by_name, -> { order('tags.name asc') }
   scope :ordered, -> { order('tags.type asc').order('tags.name asc') }

@@ -1,6 +1,6 @@
 Feature: generic tag stuff
 
-  Scenario: strip tag whitespace amd sort
+  Scenario: strip tag whitespace and sort
     Given a page exists
     When I am on the page's page
       And I follow "Tags"
@@ -8,7 +8,7 @@ Feature: generic tag stuff
       And I press "Add Tags"
     Then I should see "funny, happy happy, joy joy" within ".tags"
 
-  Scenario: no tags
+  Scenario: no tags exist during create
     Given I am on the homepage
       And I have no pages
       And I have no tags
@@ -20,7 +20,7 @@ Feature: generic tag stuff
       And I press "Add Tags"
     Then I should see "my tag" within ".tags"
 
-  Scenario: no tag selected
+  Scenario: no tags selected during create
     Given a tag exists with name: "first"
       And I am on the homepage
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
@@ -62,7 +62,7 @@ Feature: generic tag stuff
       And I press "Update Tags"
     Then I should see "fantasy" within ".tags"
 
-  Scenario: add a tag to a page which has tags
+  Scenario: add a tag to a page which already has tags
     Given a page exists with add_tags_from_string: "classic"
     When I am on the page's page
     Then I should see "classic" within ".tags"
@@ -91,7 +91,7 @@ Feature: generic tag stuff
     When I am on the tags page
     Then I should see "fantasy"
       And I should see "science fiction"
-    When I follow "edit fantasy"
+    When I follow "fantasy"
       Then I should see "Edit tag: fantasy"
 
   Scenario: edit the tag name
@@ -105,14 +105,14 @@ Feature: generic tag stuff
       And I select "Fantasy" from "tag"
 
   Scenario: delete a tag
-    Given a tag exists with name: "science fiction"
-      And a page exists with add_tags_from_string: "science fiction"
+    Given a page exists with add_tags_from_string: "science fiction"
     When I am on the edit tag page for "science fiction"
     And I follow "Destroy"
     When I press "Yes"
     Then I should have no tags
     When I am on the homepage
       Then I should not see "science fiction"
+      But I should see "Page 1"
 
   Scenario: merge two tags
     Given a tag exists with name: "better name"

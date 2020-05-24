@@ -25,9 +25,6 @@ module NavigationHelpers
     when /^the edit tag page for "(.*)"$/
       edit_tag_path(Tag.find_by_name($1))
 
-    when /^the edit hidden page for "(.*)"$/
-      edit_hidden_path(Hidden.find_by_name($1))
-
     else
       begin
         page_name =~ /the (.*) page/

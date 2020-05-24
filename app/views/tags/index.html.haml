@@ -1,3 +1,10 @@
-- @tags.each do |tag|
+-content_for(:title, "Tags")
+-type = ""
+%h2 Generic Tags
+- Tag.ordered.each do |tag|
+  -unless tag.type == type
+    -type = tag.type
+    %h2 #{type} Tags
   %p
-    = link_to "edit #{tag.name}", edit_tag_path(tag)
+    edit
+    = link_to "#{tag.name}", edit_tag_path(tag)
