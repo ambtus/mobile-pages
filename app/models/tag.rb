@@ -2,14 +2,15 @@ class Tag < ActiveRecord::Base
   NEW_PLACEHOLDER = "Enter Tags to add (comma separated)"
 
   has_and_belongs_to_many :pages, -> { distinct }
-  default_scope { order('tags.name asc') }
   validates_presence_of :name
   validates_uniqueness_of :name, :case_sensitive => false
 
+  scope :by_type, -> { order('tags.type asc') }
+  scope :by_name, -> { order('tags.name asc') }
+  scope :ordered, -> { order('tags.type asc').order('tags.name asc') }
   scope :hidden, -> { where(type: 'Hidden') }
   scope :generic, -> { where(type: '') }
-
-  scope :by_type, -> {order('tags.type asc') }
+  scope :not_hidden, -> { where.not(type: 'Hidden') }
 
   before_validation :remove_placeholder
 
@@ -24,7 +25,7 @@ class Tag < ActiveRecord::Base
   end
 
   def self.names
-    self.generic.map(&:name)
+    self.not_hidden.ordered.map(&:name)
   end
 
   def destroy_me

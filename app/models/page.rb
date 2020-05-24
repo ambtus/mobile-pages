@@ -131,7 +131,7 @@ class Page < ActiveRecord::Base
       pages = pages.search(:url, params[:url].sub(/^https?/, ''))
     end
     pages = pages.search(:cached_tag_string, params[:tag]) if params.has_key?(:tag)
-    pages = pages.search(:cached_tag_string, params[:tag2]) if params.has_key?(:tag2)
+    pages = pages.with_hidden(params[:hidden]) if params.has_key?(:hidden)
     pages = pages.with_author(params[:author]) if params.has_key?(:author)
     # can only find parts by title, notes, my_notes, url, last_created.
     unless params[:title] || params[:notes] || params[:my_notes] || params[:url] ||
@@ -430,15 +430,18 @@ class Page < ActiveRecord::Base
   end
 
   def tag_string
-    self.tags.map(&:name).join(", ")
+    self.tags.not_hidden.ordered.map(&:name).join(", ")
+  end
+  def hidden_string
+    self.tags.hidden.by_name.map(&:name).join(", ")
   end
 
   def cache_tags
     if self.new_record?
-      Rails.logger.debug "DEBUG: cache_tags for new record"
+      Rails.logger.debug "DEBUG: cache_tags for new record: #{tag_string}"
       self.cached_tag_string = tag_string
     else
-      Rails.logger.debug "DEBUG: cache_tags for #{self.id}"
+      Rails.logger.debug "DEBUG: cache_tags for #{self.id}: #{tag_string}"
       self.update_attribute(:cached_tag_string, tag_string)
     end
     tag_string
@@ -447,10 +450,18 @@ class Page < ActiveRecord::Base
   def add_tags_from_string=(string)
     return if string.blank?
     string.split(",").each do |tag|
-      new = Tag.find_or_create_by(name: tag.squish)
+      self.tags << Tag.find_or_create_by(name: tag.squish)
+    end
+    self.save!
+    self.cache_tags
+  end
+
+  def add_hiddens_from_string=(string)
+    return if string.blank?
+    string.split(",").each do |tag|
+      new = Hidden.find_or_create_by(name: tag.squish)
       self.tags << new
     end
-    self.cache_tags
   end
 
   def favorite_names
@@ -933,6 +944,10 @@ private
   def self.with_author(string)
     joins(:authors).
     where(["authors.name LIKE ?", string + "%"])
+  end
+  def self.with_hidden(string)
+    joins(:tags).
+    where(tags: {type: 'Hidden', name: string})
   end
 
   def remove_placeholders

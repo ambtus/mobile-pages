@@ -26,6 +26,20 @@ Feature: hiddens are tags which are hidden by default. During search, anything w
       And I should see "first" within ".tags"
       And I should see "second" within ".hiddens"
 
+  Scenario: find by two tags
+    Given the following pages
+      | title                            | add_tags_from_string  | add_hiddens_from_string |
+      | The Mysterious Affair at Styles  | mystery | |
+      | Alice in Wonderland              |         | children |
+      | The Boxcar Children              | mystery | children |
+    When I am on the homepage
+      And I select "mystery" from "tag"
+      And I select "children" from "hidden"
+      And I press "Find"
+    Then I should see "The Boxcar Children"
+      But I should not see "The Mysterious Affair at Styles"
+      And I should not see "Alice in Wonderland"
+
   Scenario: strip hidden whitespace
     Given a page exists
     When I am on the page's page

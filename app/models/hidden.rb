@@ -1,7 +1,7 @@
 class Hidden < Tag
 
   def self.names
-    self.all.map(&:name)
+    self.by_name.map(&:name)
   end
 
 end

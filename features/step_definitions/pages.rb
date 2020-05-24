@@ -8,7 +8,11 @@ Given /a page exists(?: with (.*))?/ do |fields|
   hash[:title] = hash[:title] || "Page 1"
   hash[:urls] =  hash[:urls].split(',').join("\r") if hash[:urls]
   Rails.logger.debug "DEBUG: creating page with hash: #{hash}"
-  Page.create(hash)
+  tag_string = hash.delete(:add_tags_from_string)
+  hidden_string = hash.delete(:add_hiddens_from_string)
+  page = Page.create(hash)
+  page.add_tags_from_string = tag_string
+  page.add_hiddens_from_string = hidden_string
 end
 
 # create many identical pages

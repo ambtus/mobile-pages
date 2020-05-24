@@ -1,19 +1,5 @@
 Feature: filter/find
 
-  Scenario: find by two tags
-    Given the following pages
-      | title                            | add_tags_from_string  |
-      | The Mysterious Affair at Styles  | mystery           |
-      | Alice in Wonderland              | children          |
-      | The Boxcar Children              | mystery, children |
-    When I am on the homepage
-      And I select "mystery" from "tag"
-      And I select "children" from "tag2"
-      And I press "Find"
-    Then I should see "The Boxcar Children"
-      But I should not see "The Mysterious Affair at Styles"
-      And I should not see "Alice in Wonderland"
-
   Scenario: filter on mix of author, tag, and state
     Given the following pages
       | title                            | add_author_string        | add_tags_from_string        | favorite | last_read  |

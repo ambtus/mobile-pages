@@ -3,8 +3,8 @@
     - unless Tag.names.blank?
       = label_tag :tag, "Tag:"
       = select_tag :tag, options_for_select([nil] + Tag.names, @tag.try(:name))
-      = label_tag :tag2, "Tag2:"
-      = select_tag :tag2, options_for_select([nil] + Tag.names, @tag2.try(:name))
+      = label_tag :hidden, "Hidden:"
+      = select_tag :hidden, options_for_select([nil] + Hidden.names, @hidden.try(:name))
       %br
     - unless Author.names.blank?
       = label_tag :author, "Author:"

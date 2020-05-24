@@ -31,13 +31,13 @@
     - unless Tag.names.blank?
       = label_tag :tag, "Tag:"
       = select_tag :tag, options_for_select([nil] + Tag.names, @tag.try(:name))
-      = label_tag :tag2, "Tag2:"
-      = select_tag :tag2, options_for_select([nil] + Tag.names, @tag2.try(:name))
-      %br
+    - unless Hidden.names.blank?
+      = label_tag :hidden, "Hidden:"
+      = select_tag :hidden, options_for_select([nil] + Hidden.names, @hidden.try(:name))
     - unless Author.names.blank?
       = label_tag :author, "Author:"
       = select_tag :author, options_for_select([nil] + Author.names, @author.try(:short_name))
-      %br
+    %br
     = hinted_text_field_tag 'page[title]', @page.title, "Title"
     %br
     = hinted_text_area_tag 'page[my_notes]', @page.my_notes, "My Notes", :rows => 1, :cols => 30
