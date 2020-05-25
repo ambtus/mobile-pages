@@ -38,7 +38,6 @@ Feature: downloads
     Then I should not see "Lorem ipsum dolor"
       And I should see "On Assignment for Dumbledore"
 
-
   Scenario: my notes don’t go in html (or epub)
     Given a page exists with my_notes: "Lorem ipsum dolor"
     When I am on the page's page
@@ -52,3 +51,14 @@ Feature: downloads
      When I view the content
     Then I should not see "On Assignment for Dumbledore"
 
+  Scenario: epub page; author and tag strings are populated
+    Given a page exists with tags: "my tag" AND add_author_string: "my author"
+    Then the download epub command should include tags: "my tag"
+    And the download epub command should include authors: "my author"
+    And the download epub command should not include comments: "my author"
+    But the download epub command should include comments: "my tag"
+
+  Scenario: do not put aka in author tag for epub
+    Given a page exists with add_author_string: "my author (AKA)"
+    And the download epub command should include authors: "my author"
+    But the download epub command should not include authors: "AKA"

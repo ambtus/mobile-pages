@@ -783,20 +783,34 @@ class Page < ActiveRecord::Base
     "#{self.download_dir}#{self.download_title}"
   end
 
-  def download_author_string; authors.map(&:short_name).join(" & "); end
+  def download_author_string
+    tags.hidden.empty? ? authors.map(&:short_name).join(" & ") : ""
+  end
   def download_tag_string
-    [*tags_et_al_names(true)].join(", ")
+    tags.hidden.empty? ? tags_et_al_names(true).join(", ") : cached_hidden_string
   end
   def download_comment_string
-    [download_tag_string, my_notes, short_notes].join(" ")
+    if tags.hidden.empty?
+      [download_tag_string, my_notes, short_notes].join(" ")
+    else
+      ["by #{authors.map(&:short_name).join(' & ')},",
+       tags_et_al_names(true).join(", "),
+       my_notes,
+       short_notes].
+      join(" ")
+    end
+  end
+
+  def epub_command
+     cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --output-profile ipad --title "#{self.title}" --authors "#{self.download_author_string}" --tags "#{self.download_tag_string}" --comments "#{self.download_comment_string}"}
+    Rails.logger.debug "DEBUG: #{cmd}"
+    return cmd
   end
 
   def create_epub
     return if File.exists?("#{self.download_basename}.epub")
     FileUtils.mkdir_p(download_dir) # make sure directory exists
-    cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --output-profile ipad --title "#{self.title}" --authors "#{self.download_author_string}" --tags "#{self.download_tag_string}" --comments "#{self.download_comment_string}"}
-    Rails.logger.debug "DEBUG: #{cmd}"
-    `#{cmd} 2> /dev/null`
+    `#{epub_command} 2> /dev/null`
   end
 
   def add_author(string)
