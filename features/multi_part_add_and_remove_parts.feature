@@ -80,7 +80,7 @@ Feature: adding parents and children and siblings
     When I am on the homepage
     Then I should see "Multi" within ".title"
     And I should see "Part 1 | Part 2 | Single"
-    When I view the HTML
+    When I view the content
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
       And I should see "stuff for part 3"
@@ -113,7 +113,7 @@ Feature: adding parents and children and siblings
       And I press "Update"
     Then I should see "Part 2"
       And I should see "Part 1"
-    When I view the HTML
+    When I view the content
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
 
@@ -128,7 +128,7 @@ Feature: adding parents and children and siblings
         """
       And I press "Update"
       And I should not see "Part 3"
-      And I view the HTML
+      And I view the content
     Then I should see "stuff for part 1"
       But I should not see "stuff for part 2"
       And I should see "stuff for part 3"
@@ -211,7 +211,7 @@ Feature: adding parents and children and siblings
       http://test.sidrasue.com/parts/1.html
       """
       And I press "Refetch"
-    When I view the HTML
+    When I view the content
     Then I should see "stuff for part 2"
     And I should see "stuff for part 1"
 

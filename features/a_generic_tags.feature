@@ -81,9 +81,9 @@ Feature: generic tag stuff
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
       And I press "Update"
-    When I am on the homepage
-    Then I should see "New Parent" within ".title"
-    And I should see "tag" within ".tags"
+    Then I should see "tag" within ".tags"
+    And I should see "Page 1" within ".parts"
+    But I should not see "tag" within ".parts"
 
   Scenario: list the tags
     Given a tag exists with name: "fantasy"
@@ -125,20 +125,6 @@ Feature: generic tag stuff
     When I am on the homepage
       Then I should see "better name" within ".tags"
       And I should not see "bad name" within ".tags"
-    When I select "better name" from "tag"
-      And I press "Find"
-    Then I should not see "No pages found"
-
-  Scenario: find by tag
-    Given the following pages
-      | title                            | tags  |
-      | The Mysterious Affair at Styles  | mystery           |
-      | Alice in Wonderland              | children          |
-      | The Boxcar Children              | mystery, children |
-    When I am on the homepage
-      And I select "mystery" from "tag"
-      And I press "Find"
-    Then I should see "The Mysterious Affair at Styles"
-      And I should see "The Boxcar Children"
-      But I should not see "Alice in Wonderland"
-
+    When I am on the page's page
+    Then I should not see "bad name"
+    And I should see "better name" within ".tags"

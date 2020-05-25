@@ -11,10 +11,8 @@ Scenario Outline: encodings
     And I press "Store"
   When I am on the page with title "<title>"
   Then I should see "<title>" within ".title"
-  When I follow "HTML"
+  When I view the content
   Then I should see "<result>" within ".content"
-  When I am on the page with title "<title>"
-    And "Original" should link to "<url>"
 
   Examples:
   | url                                      | title            | result                 |
@@ -37,18 +35,18 @@ Scenario Outline: encodings
   Scenario: utf8
     Given a page exists with url: "http://test.sidrasue.com/sbutf8.html"
     When I am on the page's page
-      And I follow "HTML"
+      And I view the content
     Then I should see "“H"
 
   Scenario: utf8 in parts
     Given a page exists with url: "http://test.sidrasue.com/sbutf8.html"
     When I am on the page's page
-      And I view the HTML
+      And I view the content
     Then I should see "“H"
 
   Scenario: latin1
     Given a page exists with url: "http://test.sidrasue.com/1252.html"
     When I am on the page's page
-      And I follow "HTML"
+      And I view the content
     Then I should see "“H"
 

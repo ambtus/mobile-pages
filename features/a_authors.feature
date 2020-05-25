@@ -1,6 +1,6 @@
 Feature: author stuff
 
-  Scenario: add authors to a page when there are no authors in the database
+  Scenario: add a new author to a page
     Given a page exists
       And I am on the page's page
     When I follow "Authors"
@@ -12,17 +12,7 @@ Feature: author stuff
       And I select "charles dodgson" from "Author"
       And I select "lewis carroll" from "Author"
 
-  Scenario: add author with aka to a page
-    Given a page exists
-      And I am on the page's page
-    When I follow "Authors"
-      And I fill in "authors" with "lewis carroll (charles dodgson)"
-      And I press "Add Authors"
-    Then I should see "lewis carroll (charles dodgson)" within ".authors"
-    When I am on the homepage
-      And I select "lewis carroll" from "Author"
-
-  Scenario: add an author for a page when there are authors in the database
+  Scenario: add an existing author to a page
     Given a page exists
       And an author exists with name: "lewis carroll"
     When I am on the page's page
@@ -32,17 +22,7 @@ Feature: author stuff
       And I press "Update Authors"
     Then I should see "lewis carroll" within ".authors"
 
-  Scenario: add an existing author with aka
-    Given a page exists
-      And an author exists with name: "lewis carroll (charles dodgson)"
-    When I am on the page's page
-    Then I should not see "lewis carroll" within ".authors"
-    When I follow "Authors"
-      And I select "lewis carroll" from "page_author_ids_"
-      And I press "Update Authors"
-    Then I should see "lewis carroll (charles dodgson)" within ".authors"
-
-  Scenario: add an author to a page which has authors
+  Scenario: add another author to a page
     Given a page exists with add_author_string: "lewis carroll"
     When I am on the page's page
     Then I should see "lewis carroll" within ".authors"
@@ -50,8 +30,7 @@ Feature: author stuff
       And I follow "Add Authors"
       And I fill in "authors" with "charles dodgson"
       And I press "Add Authors"
-    Then I should see "lewis carroll" within ".authors"
-      And I should see "charles dodgson" within ".authors"
+    Then I should see "charles dodgson, lewis carroll" within ".authors"
     When I am on the homepage
     Then I select "charles dodgson" from "Author"
 
@@ -61,41 +40,37 @@ Feature: author stuff
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
       And I press "Update"
-    When I am on the homepage
-    Then I should see "New Parent" within ".title"
-    And I should see "newbie" within ".tags"
+    Then I should see "newbie" within ".authors"
+    And I should see "Page 1" within ".parts"
+    But I should not see "newbie" within ".parts"
 
-  Scenario: filter on author
-    Given the following pages
-      | title                            | add_author_string |
-      | The Mysterious Affair at Styles  | agatha christie   |
-      | Grimm's Fairy Tales              | grimm             |
-      | Alice's Adventures In Wonderland | lewis carroll, charles dodgson |
-    When I am on the homepage
-    When I select "grimm" from "Author"
-      And I press "Find"
-    Then I should see "Grimm's Fairy Tales" within "#position_1"
-      And "grimm" should be selected in "author"
-    When I select "charles dodgson" from "Author"
-      And I press "Find"
-    Then I should see "Alice's Adventures In Wonderland" within "#position_1"
-      And "charles dodgson" should be selected in "author"
-    When I select "agatha christie" from "Author"
-      And I press "Find"
-    Then I should see "The Mysterious Affair at Styles" within "#position_1"
-      And "agatha christie" should be selected in "author"
-    When I select "lewis carroll" from "Author"
-      And I press "Find"
-    Then I should see "Alice's Adventures In Wonderland" within "#position_1"
-      And "lewis carroll" should be selected in "author"
+  @wip
+  Scenario: list the authors
+    Given an author exists with name: "jane"
+      And an author exists with name: "bob"
+    When I am on the authors page
+    Then I should see "jane"
+      And I should see "bob"
+    When I follow "jane"
+      Then I should see "Edit author: jane"
 
-  Scenario: filter on author with AKA
-    Given the following pages
-      | title                            | add_author_string |
-      | Alice's Adventures In Wonderland | lewis carroll (charles dodgson) |
-    When I am on the homepage
-    When I select "lewis carroll" from "Author"
-      And I press "Find"
-    Then I should see "Alice's Adventures In Wonderland" within "#position_1"
-      And "lewis carroll" should be selected in "author"
+  @wip
+  Scenario: edit the author name
+    Given a page exists with add_author_string: "jane"
+    When I am on the edit author page for "jane"
+    And I fill in "author_name" with "June"
+    And I press "Update"
+    When I am on the page's page
+      Then I should see "June" within ".authors"
+
+  @wip
+  Scenario: delete an author
+    Given a page exists with add_author_string: "jane"
+    When I am on the edit author page for "jane"
+    And I follow "Destroy"
+    When I press "Yes"
+    Then I should have no authors
+    When I am on the page's page
+      Then I should not see "jane" within ".authors"
+      But I should see "by jane" within ".my_notes"
 

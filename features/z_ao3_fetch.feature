@@ -41,7 +41,7 @@ Feature: ao3 specific stuff
     When I fill in "page_url" with "http://archiveofourown.org/works/310586"
       And I press "Store"
     When I am on the page with title "Open the Door"
-     And I view the HTML
+     And I view the content
     Then I should see "Chapter 1"
       And I should see "2. Ours"
       But I should not see "1. Chapter 1"
@@ -51,7 +51,7 @@ Feature: ao3 specific stuff
       And I am on the page with title "Counting"
       # Then I should see "ambtus" # TODO after add grabbing author from fanfiction
       And I should not see "lauriegilbert"
-      When I follow "HTML"
+      When I view the content
       Then I should see "Skip."
     When I am on the page with title "Counting"
       And I follow "Refetch" within ".edits"
@@ -61,7 +61,7 @@ Feature: ao3 specific stuff
       And I should not see "ambtus"
       And I should see "Skipping Stones"
       And I should see "thanks to lauriegilbert"
-      When I follow "HTML"
+      When I view the content
       Then I should see "Skip."
 
   Scenario: deliberately fetch only one chapter
@@ -91,7 +91,7 @@ Feature: ao3 specific stuff
     And I follow "Edit Scrubbed HTML"
       And I fill in "pasted" with "oops"
       And I press "Edit HTML"
-      And I follow "HTML"
+      And I view the content
     Then I should see "oops"
       And I should not see "Amy woke slowly"
     When I am on the page with title "Where am I?"
@@ -102,7 +102,7 @@ Feature: ao3 specific stuff
       And I should not see "1."
       And I should see "by Sidra" within ".notes"
       And I should not see "changed notes" within ".notes"
-      When I follow "HTML"
+      When I view the content
       Then I should not see "oops"
       And I should see "Amy woke slowly"
 

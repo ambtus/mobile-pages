@@ -25,7 +25,7 @@ Feature: creating multi-part pages
      And I press "Store"
    When I am on the page with title "Multiple pages from urls"
    Then I should see "Multiple pages from urls" within ".title"
-   When I view the HTML
+   When I view the content
    Then I should see "Part 1"
      And I should see "Part 2"
      And I should see "stuff for part 2"
@@ -52,7 +52,7 @@ Feature: creating multi-part pages
      And I should see "myauthor" within ".authors"
      And I should see "Part 1" within "#position_1"
      And I should see "Part 2" within "#position_2"
-   When I view the HTML
+   When I view the content
      Then I should see "Part 1"
      And I should see "stuff for part 1"
      And I should see "Part 2"
@@ -72,7 +72,7 @@ Feature: creating multi-part pages
       And I select "tag" from "tag"
       And I press "Store"
     Then I should see "my title" within ".title"
-    When I view the HTML
+    When I view the content
       And I should see "Part 1"
       And I should see "part title"
       And I should see "stuff for part 1"
@@ -87,7 +87,7 @@ Feature: creating multi-part pages
      And I press "Store"
    When I am on the page with title "Multiple pages from base"
    Then I should see "Multiple pages from base" within ".title"
-   When I view the HTML
+   When I view the content
      And I should see "Part 1"
      And I should see "Part 2"
      And I should see "Part 3"
@@ -104,7 +104,7 @@ Feature: creating multi-part pages
      And I press "Store"
    When I am on the page with title "Multiple pages from base"
    Then I should see "Multiple pages from base" within ".title"
-   When I view the HTML
+   When I view the content
      And I should see "Part 1"
      And I should see "Part 2"
      And I should not see "Part 3"
@@ -127,7 +127,7 @@ Feature: creating multi-part pages
      And I press "Store"
    When I am on the page with title "Parent"
    Then I should see "Parent" within ".title"
-   When I view the HTML
+   When I view the content
     Then I should see "Parent" within "h1"
      And I should see "Child 1" within "h2"
      And I should see "Boo" within "h3"

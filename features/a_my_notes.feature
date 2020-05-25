@@ -37,54 +37,6 @@ Feature: stuff to do with my notes
     Then I should see "new notes" within ".my_notes"
       And I should not see "some basic notes" within ".my_notes"
 
-  Scenario: Find pages by notes
-    Given the following pages
-      | title  | my_notes  |
-      | One    | note      |
-      | Two    | noted     |
-      | Three  | a note    |
-      | Four   | anoted    |
-      | Five   | anotate   |
-      | Six    | an        |
-      And I am on the homepage
-     When I fill in "page_my_notes" with "note"
-      And I press "Find"
-     Then I should see "One"
-       And I should see "Two"
-       And I should see "Three"
-       And I should see "Four"
-       And I should not see "Five"
-       And I should not see "Six"
-     When I fill in "page_my_notes" with "noted"
-      And I press "Find"
-     Then I should not see "One"
-       And I should see "Two"
-       And I should not see "Three"
-       And I should see "Four"
-       And I should not see "Five"
-       And I should not see "Six"
-     When I fill in "page_my_notes" with "an"
-      And I press "Find"
-     Then I should not see "One"
-       And I should not see "Two"
-       And I should not see "Three"
-       And I should see "Four"
-       And I should see "Five"
-       And I should see "Six"
-
-  Scenario: my notes don’t go in html (or epub)
-    Given a page exists with my_notes: "Lorem ipsum dolor"
-    When I am on the page's page
-     When I follow "HTML"
-    Then I should not see "Lorem ipsum dolor"
-    When I am on the page's page
-    When I follow "My Notes"
-      And I fill in "page_my_notes" with "On Assignment for Dumbledore"
-      And I press "Update"
-    When I am on the page's page
-     When I follow "HTML"
-    Then I should not see "On Assignment for Dumbledore"
-
   Scenario: notes on multi-page view
     Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
    When I am on the page's page

@@ -31,18 +31,6 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       And I press "Update Tags"
     Then I should see "first" within ".hiddens"
 
-  Scenario: hidden selected during create
-    Given a tag exists with name: "nonfiction" AND type: "Hidden"
-    Given a tag exists with name: "something"
-      And I am on the homepage
-      And I select "nonfiction" from "hidden"
-      And I select "something" from "tag"
-    When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-      And I fill in "page_title" with "New Title"
-      And I press "Store"
-    Then I should not see "Please select tag"
-      And I should see "nonfiction" within ".hiddens"
-
   Scenario: hidden and tag selected during create
     Given a tag exists with name: "first"
       And a tag exists with name: "second" AND type: "Hidden"
@@ -55,6 +43,18 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
     Then I should not see "Please select tag"
       And I should see "first" within ".tags"
       And I should see "second" within ".hiddens"
+
+  Scenario: hidden only selected during create
+    Given a tag exists with name: "nonfiction" AND type: "Hidden"
+    Given a tag exists with name: "something"
+      And I am on the homepage
+      And I select "nonfiction" from "hidden"
+      And I select "something" from "tag"
+    When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+      And I fill in "page_title" with "New Title"
+      And I press "Store"
+    Then I should not see "Please select tag"
+      And I should see "nonfiction" within ".hiddens"
 
   Scenario: add a hidden to a page when there are no hiddens
     Given a page exists
@@ -90,7 +90,20 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       And I select "audio book" from "Hidden"
       And I select "wip" from "Hidden"
 
-  Scenario: list the hiddens
+   Scenario: new parent for an existing page should NOT have the same hidden
+    Given a page exists with hiddens: "nonfiction"
+    When I am on the page's page
+      And I follow "Manage Parts"
+      And I fill in "add_parent" with "New Parent"
+      And I press "Update"
+    When I am on the page with title "New Parent"
+    Then I should not see "nonfiction" within ".hiddens"
+      But I should see "(nonfiction)" within "#position_1"
+    When I am on the homepage
+      Then I should see "New Parent" within "#position_1"
+    But I should not see "nonfiction" within ".tags"
+
+ Scenario: list the hiddens
     Given a tag exists
     Given a tag exists with name: "audio book" AND type: "Hidden"
     When I am on the tags page
@@ -120,6 +133,16 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       Then I should not see "work in progress"
       But I should see "Page 1"
 
+  Scenario: merge two tags
+    Given a tag exists with name: "better name" AND type: "Hidden"
+      And a page exists with hiddens: "bad name"
+    When I am on the edit tag page for "bad name"
+      And I select "better name" from "merge"
+      And I press "Merge"
+    When I am on the page's page
+    Then I should not see "bad name"
+    And I should see "better name" within ".hiddens"
+
   Scenario: don’t allow merge if not the same type
     Given a tag exists with name: "not hidden"
     Given a tag exists with name: "bad name" AND type: "Hidden"
@@ -127,18 +150,25 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       Then I should not see "not hidden"
       And I should not see "Merge"
 
-  Scenario: merge two hiddens
-    Given a tag exists with name: "not hidden"
-    Given a tag exists with name: "better name" AND type: "Hidden"
-      And a page exists with hiddens: "bad name"
-    When I am on the edit tag page for "bad name"
-      Then I should not see "not hidden"
-      And I select "better name" from "merge"
-      And I press "Merge"
-    Then I should see "better name"
-      And I should not see "bad name"
-    When I am on the homepage
-    And I select "better name" from "Hidden"
-      And I press "Find"
-    Then I should not see "No pages found"
-      And I should see "better name" within ".tags"
+  Scenario: change hidden to generic tag
+    Given a page exists with hiddens: "will be visible"
+    When I am on the page's page
+      Then I should see "will be visible" within ".hiddens"
+    When I am on the edit tag page for "will be visible"
+      And I select "" from "change"
+      And I press "Change"
+    When I am on the page's page
+      Then I should see "will be visible" within ".tags"
+      And the page should not have any hidden tags
+
+  Scenario: change generic to hidden tag
+    Given a page exists with tags: "will be hidden"
+    When I am on the page's page
+      Then I should see "will be hidden" within ".tags"
+    When I am on the edit tag page for "will be hidden"
+      And I select "Hidden" from "change"
+      And I press "Change"
+    When I am on the page's page
+      Then I should see "will be hidden" within ".hiddens"
+      And the page should not have any not hidden tags
+

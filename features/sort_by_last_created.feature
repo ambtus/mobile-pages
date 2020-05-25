@@ -1,6 +1,7 @@
 Feature: last created
 
   Scenario: find last created page if no pages
+    Given I have no pages
     When I am on the homepage
     When I choose "sort_by_last_created"
       And I press "Find"

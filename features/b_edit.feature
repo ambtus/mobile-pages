@@ -1,9 +1,12 @@
-Feature: tools to help audiobook creation
+Feature: tools to enable onscreen content editing
+
+  Scenario: TODO tag after editing
+    Given a page exists with url: "http://test.sidrasue.com/short.html"
 
   Scenario: section editing first section and recover from editing too much
     Given a page exists with url: "http://test.sidrasue.com/long.html"
     When I am on the page's page
-      And I follow "Text"
+      And I want to edit the text
     Then I should not see "New Content"
       And I follow "1"
       Then I should see "Edit Text 1 for page: Page 1"
@@ -20,7 +23,7 @@ Feature: tools to help audiobook creation
       And I should not see "Lorem ipsum dolor sit amet"
     When I am on the page's page
     When I press "Rebuild from Scrubbed HTML"
-    And I view the HTML
+    And I view the content
     Then I should see "Lorem ipsum dolor sit amet"
       And I should not see "New Content"
 
@@ -28,7 +31,7 @@ Feature: tools to help audiobook creation
   Scenario: section editing mid section
     Given a page exists with url: "http://test.sidrasue.com/long.html"
     When I am on the page's page
-      And I follow "Text"
+      And I want to edit the text
     Then I should not see "New Content"
       And I follow "5"
       Then I should see "Edit Text 5 for page: Page 1"
@@ -47,7 +50,7 @@ Feature: tools to help audiobook creation
   Scenario: section editing last section
     Given a page exists with url: "http://test.sidrasue.com/long.html"
     When I am on the page's page
-      And I follow "Text"
+      And I want to edit the text
     Then I should not see "New Content"
       And I follow "111"
       Then I should see "Edit Text 111 for page: Page 1"
