@@ -80,7 +80,6 @@ class PagesController < ApplicationController
 
   def update
     @page = Page.find(params[:id])
-    @page.make_audio if (params[:commit] == "Audiobook created")
     case params[:commit]
       when "Read Now"
         @page.make_first
@@ -90,35 +89,34 @@ class PagesController < ApplicationController
         @page.make_last
         flash[:notice] = "Set to Read Later"
         redirect_to root_path and return
+      when "Audiobook created"
+        @page.make_audio
+        flash[:notice] = "Tagged and marked as read"
       when "Rebuild from Raw HTML"
         @page.rebuild_clean_from_raw
         flash[:notice] = "Rebuilt from Raw HTML"
-        redirect_to page_path(@page) and return
       when "Rebuild from Scrubbed HTML"
         @page.rebuild_edited_from_clean
         flash[:notice] = "Rebuilt from Scrubbed HTML"
-        redirect_to page_path(@page) and return
+      when "Remove Downloads"
+        @page.remove_outdated_downloads
+        flash[:notice] = "Removed Downloads"
       when "Rebuild Meta"
         @page.rebuild_meta
         flash[:notice] = "Rebuilt Meta"
-        redirect_to page_path(@page) and return
       when "Update Raw HTML"
         @page.raw_html = params[:pasted]
         flash[:notice] = "Raw HTML updated."
-        redirect_to page_path(@page) and return
       when "Edit HTML"
         @page.edited_html = params[:pasted]
         flash[:notice] = "Clean HTML updated."
-        redirect_to page_path(@page) and return
       when "Scrub"
         top = params[:top_node] || 0
         bottom = params[:bottom_node] || 0
         @page.remove_nodes(top, bottom)
-        redirect_to page_path(@page) and return
       when "Update"
         @page.update(params[:page].permit!)
         @page.remove_outdated_downloads
-        redirect_to page_url(@page) and return
       when "Preview Text"
         @section_number = params[:section].to_i
         @old = @page.section(@section_number)
@@ -128,7 +126,7 @@ class PagesController < ApplicationController
         @page.edit_section(params[:section].to_i,params[:new])
         redirect_to @page.download_url(".read") and return
     end
-    redirect_to @page
+    render :show
   end
 
   def edit # used for editing sections

@@ -651,7 +651,7 @@ class Page < ActiveRecord::Base
     if self.parts.size > 0
       self.parts.each {|p| p.rebuild_edited_from_clean }
     else
-      FileUtils.rm(edited_html_file_name)
+      FileUtils.rm_f(edited_html_file_name)
     end
   end
 
@@ -802,7 +802,7 @@ class Page < ActiveRecord::Base
   end
 
   def epub_command
-     cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --output-profile ipad --title "#{self.title}" --authors "#{self.download_author_string}" --tags "#{self.download_tag_string}" --comments "#{self.download_comment_string}"}
+     cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --title "#{self.title}" --authors "#{self.download_author_string}" --tags "#{self.download_tag_string}" --comments "#{self.download_comment_string}"}
     Rails.logger.debug "DEBUG: #{cmd}"
     return cmd
   end
