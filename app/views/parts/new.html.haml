@@ -1,3 +1,6 @@
 - content_for :title do
   = @title
-= render :partial => "pages/create", :locals => {:page => @new_page, :called_by => "multiple", :tag => @tag, :author => @author }
+.form
+  = form_for @new_page do |f|
+    = render :partial => "pages/create", :locals => {:page => @new_page, :called_by => "multiple", :tag => @tag, :author => @author }
+    = f.submit "Store", :name => "Store"

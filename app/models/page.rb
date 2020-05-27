@@ -181,8 +181,7 @@ class Page < ActiveRecord::Base
         pages.order('read_after ASC')
     end
     start = params[:count].to_i
-    Rails.logger.debug "DEBUG: find #{LIMIT} pages starting at #{start}"
-    pages.limit(start + LIMIT)[start..-1]
+    pages.group(:id).limit(start + LIMIT)[start..-1]
   end
 
   def to_param
@@ -234,7 +233,11 @@ class Page < ActiveRecord::Base
 
   def parts_from_urls(url_title_list, refetch=false)
     old_part_ids = self.parts.map(&:id)
+    old_subpart_ids = self.parts.collect{|p| p.parts.map(&:id)}.flatten
+    Rails.logger.debug "DEBUG: my old parts #{old_part_ids} and subparts #{old_subpart_ids}"
+
     new_part_ids = []
+    new_subpart_ids = []
 
     lines = url_title_list.split(/[\r\n]/).select {|l| l.chomp}.map(&:squish) - [""]
 
@@ -254,6 +257,7 @@ class Page < ActiveRecord::Base
       parent = self
     end
 
+    Rails.logger.debug "DEBUG: find or create parts #{parts}"
     parts.each do |part|
       url = title = position = nil
       url = part.sub(/#.*/, "")
@@ -279,22 +283,31 @@ class Page < ActiveRecord::Base
       end
       new_part_ids << page.id
     end
+    Rails.logger.debug "DEBUG: parts found or created: #{new_part_ids}"
 
+    Rails.logger.debug "DEBUG: find or create subparts #{subparts}"
     subparts.each do |subpart|
       url = title = position = nil
       part_string = (lines[0..lines.index(subpart)] & parts).last
+      part_index = parts.index(part_string)
       position = lines.index(subpart) - lines.index(part_string)
-      original_part_title = part_string.split("#").last
-      part = Page.where(parent_id: parent.id).where('title LIKE ?', "%#{original_part_title}").first
+      Rails.logger.debug "DEBUG: part_index: #{part_index} position: #{position}"
+      part = Page.find(new_part_ids[part_index])
       url = subpart.sub(/#.*/, "")
       original_title = subpart.sub(/.*#/, "") if subpart.match("#")
       title = part_title(position.to_s, original_title)
-      page = Page.find_by(url: url)
+      page = if url.blank?
+        part.parts.find {|p| p.title.match(original_title) }
+      else
+        page = Page.find_by(url: url)
+      end
       if page.blank?
+        Rails.logger.debug "DEBUG: creating new page"
         page = Page.create(:url=>url, :title=>title, :parent_id=>part.id, :position => position)
         part.update_attribute(:read_after, Time.now) if part.read_after > Time.now
         parent.update_attribute(:read_after, Time.now) if parent.read_after > Time.now
       else
+        Rails.logger.debug "DEBUG: updating page #{page.id}"
         if page.url == url
           page.fetch if refetch
         else
@@ -305,12 +318,14 @@ class Page < ActiveRecord::Base
         page.update_attribute(:title, title)
         page.update_attribute(:position, position)
       end
+      new_subpart_ids << page.id
     end
+    Rails.logger.debug "DEBUG: subparts found or created: #{new_subpart_ids}"
 
-    remove = old_part_ids - new_part_ids
+    remove = old_part_ids + old_subpart_ids - new_part_ids - new_subpart_ids
+    Rails.logger.debug "DEBUG: removing deleted parts and subparts #{remove}"
     remove.each do |old_part_id|
-      old_part = Page.find(old_part_id)
-      old_part.destroy if old_part.parent == parent
+      Page.find(old_part_id).destroy
     end
     parent.set_wordcount(false)
   end
@@ -347,15 +362,19 @@ class Page < ActiveRecord::Base
 
   def add_parent(title)
     parent=Page.find_by_title(title)
+    Rails.logger.debug "DEBUG: parent #{title} found? #{parent.is_a?(Page)}"
     new = false
-    unless parent
+    unless parent.is_a?(Page)
       pages=Page.where(["title LIKE ?", "%" + title + "%"])
       if pages.size > 1
+        Rails.logger.debug "DEBUG: #{pages.size} possible parents found"
         return "ambiguous"
-      elsif pages.size == 0
-        parent = Page.create(:title => title, :last_read => self.last_read, :read_after => self.read_after)
+      elsif pages.empty? || pages.first == self
+        Rails.logger.debug "DEBUG: creating a new parent"
+        parent = Page.create!(:title => title, :last_read => self.last_read, :read_after => self.read_after)
         new = true
-      elsif pages.size == 1
+      else
+        Rails.logger.debug "DEBUG: matching parent found #{pages.first.title}"
         parent = pages.first
       end
     end
@@ -503,26 +522,29 @@ class Page < ActiveRecord::Base
       if download
         []
       else
-        self.authors.map(&:name)
+        [
+        (self.authors.empty? ? nil : "by #{self.authors.map(&:name).join(' & ')}"),
+        self.size,
+        *self.favorite_names,
+        (self.last_read.blank? ? "unread" : self.last_read.to_date)
+        ]
       end
     names = names + self.tags.map(&:name)
-    names = names + [self.size]
-    if self.last_read.blank?
-      names = names + ["unread"]
-    elsif !download
-      names = names + [self.last_read.to_date]
-    end
-    names = names + favorite_names
     names.compact
   end
 
-  def tags_et_al_string
-    mine = self.tags_et_al_names
+  def tags_et_al_string(download = false)
+    mine = self.tags_et_al_names(download)
     if self.parent
       mine = mine - self.parent.tags_et_al_names
     end
     mine.join(", ")
   end
+
+  def title_with_tags
+    tags_et_al_string(true).blank? ? title : "#{title} (#{tags_et_al_string(true)})"
+  end
+
 
   def favorite_string
     self.favorite_names.join(", ")
@@ -732,14 +754,8 @@ class Page < ActiveRecord::Base
 
   ## Notes
 
-  def formatted_notes
-    return "" unless self.notes
-    text = "<p>" + self.notes + "</p>"
-    text.gsub!(/\r\n?/, "\n")                    # \r\n and \r -> \n
-    text.gsub!(/\n\n+/, "<p></p>")  # 2+ newline  -> paragraph
-    text.gsub!(/\n/, "<br \>")  # 2+ newline  -> paragraph
-    text
-  end
+  def formatted_notes; notes.blank? ? "" : notes.formatted; end
+  def my_formatted_notes; my_notes.blank? ? "" : my_notes.formatted; end
 
   def short_notes
     return self.notes if self.notes.blank?
@@ -750,7 +766,7 @@ class Page < ActiveRecord::Base
     short[0, snip_idx] + "..."
   end
 
-  def short_my_notes
+  def my_short_notes
     return self.my_notes if self.my_notes.blank?
     return self.my_notes if self.my_notes.size < MININOTE
     short = self.my_notes.gsub(%r{</?[^>]+?>}, '')
@@ -768,7 +784,6 @@ class Page < ActiveRecord::Base
   end
 
   def remove_outdated_edits
-    Rails.logger.debug "DEBUG: remove outdated edits for #{self.id}"
     FileUtils.rm_f(self.scrubbed_html_file_name)
     FileUtils.rm_f(self.edited_html_file_name)
   end
@@ -891,13 +906,15 @@ class Page < ActiveRecord::Base
   end
 
   def get_meta_from_ao3(refetch=true)
-    Rails.logger.debug "DEBUG: getting meta from ao3 for #{self.id}"
     if refetch
+      Rails.logger.debug "DEBUG: fetching meta from ao3 for #{self.url}"
       doc = Nokogiri::HTML(Scrub.fetch(self.url))
     else
       if parts.empty?
+        Rails.logger.debug "DEBUG: build meta from raw html for #{self.id}"
         doc = Nokogiri::HTML(raw_html)
       else
+        Rails.logger.debug "DEBUG: build meta from raw html of first part #{parts.first.id}"
         doc = Nokogiri::HTML(parts.first.raw_html)
       end
     end
@@ -983,7 +1000,6 @@ private
   end
 
   def initial_fetch
-    Rails.logger.debug "DEBUG: initial fetch for #{self.id}"
     FileUtils.rm_rf(mydirectory) # make sure directory is empty for testing
     FileUtils.mkdir_p(download_dir) # make sure directory exists
     if !self.url.blank?
@@ -1010,8 +1026,6 @@ private
       self.set_wordcount
     elsif !self.urls.blank?
       self.parts_from_urls(self.urls)
-    else
-      Rails.logger.debug "DEBUG: nothing to do in initial fetch!"
     end
   end
 

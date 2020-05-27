@@ -1,5 +1,17 @@
 Feature: stuff to do with titles
 
+  Scenario: fill title in url box by mistake
+    Given I am on the homepage
+    When I fill in "page_url" with "Title of the Fic"
+      And I press "Store"
+    Then I should see "Title can't be blank"
+
+  Scenario: fill title in url box with Title
+    Given I am on the homepage
+    When I fill in "page_title" with "Title"
+      And I press "Store"
+    Then I should see "Title can't be blank or 'Title'"
+
   Scenario: change title
     Given a page exists with url: "http://test.sidrasue.com/test.html"
       And I am on the page's page
@@ -7,6 +19,3 @@ Feature: stuff to do with titles
       And I fill in "title" with "New Title"
       And I press "Update"
     Then I should see "New Title" within ".title"
-    When I view the content
-    Then I should see "New Title" within "h1"
-

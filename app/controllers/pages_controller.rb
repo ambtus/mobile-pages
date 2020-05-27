@@ -18,6 +18,7 @@ class PagesController < ApplicationController
     @hidden = Hidden.find_by_name(params[:hidden]) if params[:hidden]
     @authors = Author.all.map(&:short_name)
     @author = Author.find_by_short_name(params[:author]) if params[:author]
+    Rails.logger.debug "DEBUG: Page.filter(#{params.to_unsafe_h.symbolize_keys})"
     @pages = Page.filter(params)
     flash.now[:alert] = "No pages found" if @pages.to_a.empty?
   end
@@ -91,7 +92,7 @@ class PagesController < ApplicationController
         redirect_to root_path and return
       when "Audiobook created"
         @page.make_audio
-        flash[:notice] = "Tagged and marked as read"
+        flash[:notice] = "Tagged as audio book and marked as read today"
       when "Rebuild from Raw HTML"
         @page.rebuild_clean_from_raw
         flash[:notice] = "Rebuilt from Raw HTML"

@@ -10,8 +10,6 @@ Feature: page size
     And a page exists with title: "Novel" AND base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3"
     And a page exists with title: "Epic" AND base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "4 5 6 7 8 9"
     When I am on the homepage
-      And I choose "size_any"
-      And I press "Find"
     Then I should see "Short" within "#position_1"
       And I should see "Medium" within "#position_2"
       And I should see "Long" within "#position_3"

@@ -1,84 +1,41 @@
-#flash_notice {
-    background-color: #FF0;
-    }
-#flash_alert {
-    background-color: #F00;
-    }
-.fieldWithErrors {
-    background-color: #F00;
-    }
-.gray-input {
-    color: #7a7a7a;
-}
-.black-input {
-    color: #000;
-}
-.links {
-    background-color: #CCF;
-    }
-.views {
-    background-color: #CCF;
-    }
-.form {
-    background-color: #9FF;
-    }
+#flash_notice { background-color: #FF0; }
+#flash_alert { background-color: #F00; }
+.fieldWithErrors { background-color: #F00; }
+.gray-input { color: #7a7a7a; }
+.black-input { color: #000; }
 .page {
     border-width: 1px;
-    border-style: solid;
+    border-style: dotted;
     background-color: #FC9;
     }
-.tags {
-    background-color: #A9F;
-    }
-.notes {
-   background-color: #FC9;
-    }
-.my_notes {
-    background-color: #F00;
-    }
+.part {
+    border-width: 1px;
+    border-style: dotted;
+    background-color: #CFC;
+}
 .title {
     background-color: #CCF;
     font-weight: bold;
     }
-.size {
-    background-color: #A9F;
-    }
-.favorite {
-    background-color: #E9F;
-    }
-.authors {
-    background-color: #CFF;
-    }
-.genres {
-    background-color: #C9F;
-    }
-.hiddens {
-    background-color: #CCC;
-    }
-.edits {
-    background-color: #C9F;
-    }
-.last_read {
-    background-color: #F99;
-    }
-.content {
-    background-color: #EEE;
-    }
-.node {
-    background-color: #990;
-    }
-.checkbox {
-    background-color: #FF9;
-    }
-.part {
-    background-color: #CFC;
-    }
-.top {
-    background-color: #DDD;
-    }
-.bottom {
-    background-color: #444;
-    }
+.bottom { background-color: #444; }
+.node { background-color: #990; }
+.form { background-color: #9FF; }
+.tags { background-color: #A9F; }
+.size { background-color: #C9F; }
+.edits { background-color: #C9F; }
+.hiddens { background-color: #CCC; }
+.links { background-color: #CCF; }
+.views { background-color: #CCF; }
+.parent { background-color: #CFC; }
+.authors { background-color: #CFF; }
+.top { background-color: #DDD; }
+.favorite { background-color: #E9F; }
+.content { background-color: #EEE; }
+.my_notes { background-color: #F00; }
+.last_read { background-color: #F99; }
+.notes { background-color: #FC9; }
+.part_links { background-color: #FCF; }
+.checkbox { background-color: #FF9; }
 hr {
     border: 0;
     color: black;
@@ -86,6 +43,4 @@ hr {
     height: 3px;
     width: 80%;
 }
-page {
-    font-family: Georgia,serif;
-}
+page { font-family: Georgia,serif; }

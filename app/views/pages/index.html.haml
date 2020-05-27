@@ -28,23 +28,7 @@
       = radio_button_tag :size, choice, @size == choice
       = label_tag "size_#{choice}", choice
     %br
-    - unless Tag.names.blank?
-      = label_tag :tag, "Tag:"
-      = select_tag :tag, options_for_select([nil] + Tag.names, @tag.try(:name))
-    - unless Hidden.names.blank?
-      = label_tag :hidden, "Hidden:"
-      = select_tag :hidden, options_for_select([nil] + Hidden.names, @hidden.try(:name))
-    - unless Author.names.blank?
-      = label_tag :author, "Author:"
-      = select_tag :author, options_for_select([nil] + Author.names, @author.try(:short_name))
-    %br
-    = hinted_text_field_tag 'page[title]', @page.title, "Title"
-    %br
-    = hinted_text_area_tag 'page[my_notes]', @page.my_notes, "My Notes", :rows => 1, :cols => 30
-    %br
-    = hinted_text_area_tag 'page[notes]', @page.notes, "Notes", :rows => 1, :cols => 30
-    %br
-    = hinted_text_field_tag 'page[url]', @page.url, "URL"
+    = render :partial => "pages/create", :locals => {:page => @page, :called_by => "index"}
     %br
     = f.submit "Find", :name => "Find"
     = f.submit "Store", :name => "Store"
@@ -52,6 +36,21 @@
     - if @pages
       - @pages.each_with_index do |page, index|
         .page{:id => "position_#{index+1}"}
-          = render :partial => "pages/links", :locals => {:page => page, :called_by => "index" }
-          = render :partial => "pages/headers", :locals => {:page => page, :called_by => "index"}
-    = f.submit "Next", :name => "Next"
+          .title= link_to page.title, page_path(page)
+          .views
+            = link_to "Rate", rate_path(page)
+            = link_to "ePub", download_url_for_page(page, ".epub")
+            = link_to "HTML", download_url_for_page(page, ".html")
+            = link_to "Text", download_url_for_page(page, ".read") if page.parts.empty?
+            = link_to "Original", page.url unless page.url.blank?
+          .part_links
+            -page.parts[0,5].each_with_index do |part,index|
+              ="|" unless index == 0
+              = link_to h(part.title), page_path(part)
+            -if page.parts.size > 5
+              ="|"
+              = link_to "More Parts", page_path(page)
+          .tags=page.tags_et_al_string
+          .my_notes=page.my_short_notes
+          .notes=page.short_notes
+      = f.submit "Next", :name => "Next"

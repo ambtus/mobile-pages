@@ -1,8 +1,46 @@
 - content_for :title do
   =@page.title
-= render :partial => "pages/buttons", :locals => {:page => @page }
-= render :partial => "pages/links", :locals => {:page => @page, :called_by => "show" }
-= render :partial => "pages/headers", :locals => {:page => @page, :called_by => "show" }
+.form
+  = form_for @page do
+    = submit_tag "Read Now"
+    = submit_tag "Read Later"
+    = submit_tag "Rebuild from Raw HTML"
+    = submit_tag "Rebuild from Scrubbed HTML"
+    = submit_tag "Remove Downloads"
+    = submit_tag "Rebuild Meta"
+.parent= link_to @page.parent.title, page_path(@page.parent) if @page.parent
+.page
+  .title=h @page.title
+  .views
+    = link_to "Rate", rate_path(@page)
+    = link_to "ePub", download_url_for_page(@page, ".epub")
+    = link_to "HTML", download_url_for_page(@page, ".html")
+    = link_to "Text", download_url_for_page(@page, ".read") if @page.parts.empty?
+    = link_to "Original", @page.url unless @page.url.blank?
+    .edits
+      = link_to "My Notes", edit_my_note_path(@page)
+      = link_to "Notes", edit_note_path(@page)
+      = link_to "Authors", author_path(@page)
+      = link_to "Tags", tag_path(@page)
+      %br
+      = link_to "Manage Parts", edit_part_path(@page)
+      - if @page.parts.empty?
+        = link_to "Edit Scrubbed HTML", edit_html_path(@page, format: "scrubbed")
+        = link_to "Edit Raw HTML", edit_html_path(@page)
+      = link_to "Scrub", scrub_path(@page)
+      = link_to "Refetch", refetch_path(@page)
+  .tags= @page.tag_string
+  .hiddens= @page.hidden_string
+  .authors= @page.author_string
+  .favorite= @page.favorite_string
+  .size= "#{@page.size} (#{@page.wordcount})"
+  .last_read
+    - if @page.last_read
+      = @page.last_read.to_date
+    - else
+      = "unread"
+  .my_notes=raw @page.my_formatted_notes
+  .notes=raw @page.formatted_notes
 .parts
   - @page.parts.each do |part|
     .part{:id => "position_#{part.position}"}
@@ -12,7 +50,7 @@
       = link_to "Rate", rate_path(part)
       = link_to "EPUB", download_url_for_page(part, ".epub")
       = link_to "HTML", download_url_for_page(part, ".html")
-      = link_to "Text", download_url_for_page(part, ".read")
+      = link_to "Text", download_url_for_page(part, ".read") if part.parts.empty?
       = link_to "Original", part.url unless part.url.blank?
-      %span.my_notes=part.short_my_notes
+      %span.my_notes=part.my_short_notes
       %span.notes=part.short_notes

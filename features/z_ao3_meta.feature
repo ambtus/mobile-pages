@@ -68,3 +68,11 @@ Feature: ao3 specific stuff
     When I press "Rebuild Meta"
     Then I should not see "AJ/JC" within ".notes"
       And I should not see "testing notes" within ".notes"
+
+  @wip
+  Scenario: formatting notes
+  Given a page exists with url: "https://archiveofourown.org/works/23477578"
+  When I am on the homepage
+  Then I should not see "theirsThe"
+  But I should see "theirs The"
+

@@ -124,11 +124,12 @@ module Scrub
     agent.add_auth(url, auth[:username], auth[:password]) if auth
     content = agent.get(MyWebsites.geturl(url))
     if content.forms.first.try(:button).try(:name) == "adult_check"
+       Rails.logger.debug "DEBUG: adult check"
        form = content.forms.first
        content = agent.submit(form, form.buttons.first)
     end
-    signin_message = content.at('div #signin').try(:text)
-    if signin_message && signin_message.include?("This work is only available to registered users of the Archive")
+    if content.uri.to_s == "https://archiveofourown.org/users/login?restricted=true"
+       Rails.logger.debug "DEBUG: ao3 sign in"
        form = content.forms.first
        username_field = form.field_with(:name => 'user[login]')
        username_field.value = auth[:username]

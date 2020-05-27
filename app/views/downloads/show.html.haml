@@ -1,14 +1,24 @@
-= render :partial => 'download_preface', :formats => [:html]
-
-#page
-  - if @page.parts.size > 0
-    - for part in @page.parts
-      - if part.parts.size > 0
-        %h2{:style=> "page-break-before:always", :class => "chapter"}= part.title
-        - for subpart in part.parts
-          = render :partial => 'download_part', :formats => [:html], :locals => {:part => subpart, :subpart => true}
-      - else
-        = render :partial => 'download_part', :formats => [:html], :locals => {:part => part}
-  - else
-    .content{:style=> "page-break-before:always"}
-      =raw @page.edited_html
+- content_for :title do
+  = @page.title
+%h2{:class => "chapter"} Notes
+=render :partial => "downloads/notes", :locals => {:page => @page}
+- if @page.parts.empty?
+  %h2{:style=> "page-break-before:always", :class => "chapter"}=@page.title
+  .content=raw @page.edited_html
+- else
+  - @page.parts.each do |first_level|
+    %h2{:style=> "page-break-before:always", :class => "chapter"}=first_level.title_with_tags
+    =render :partial => "downloads/notes", :locals => {:page => first_level}
+    - if first_level.parts.empty?
+      .content=raw first_level.edited_html
+    - else
+      - first_level.parts.each do |second_level|
+        %h3{:style=> "page-break-before:always", :class => "chapter"}= second_level.title_with_tags
+        =render :partial => "downloads/notes", :locals => {:page => second_level}
+        - if second_level.parts.empty?
+          .content=raw second_level.edited_html
+        - else
+          - second_level.parts.each do |third_level|
+            %h4{:style=> "page-break-before:always", :class => "chapter"}= third_level.title_with_tags
+            =render :partial => "downloads/notes", :locals => {:page => third_level}
+            .content=raw third_level.edited_html
