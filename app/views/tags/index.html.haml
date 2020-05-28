@@ -8,5 +8,5 @@
   %p
     edit
     = link_to "#{tag.name}", edit_tag_path(tag)
-    =link_to pages_path(tag.class.name.downcase.to_sym => tag.name) do
-      (#{tag.pages.count} #{"page".pluralize(tag.pages.count)})
+    =surround "(", ")" do
+      = link_to "#{tag.pages.count} #{'page'.pluralize(tag.pages.count)}", pages_path(tag.class.name.downcase.to_sym => tag.name)

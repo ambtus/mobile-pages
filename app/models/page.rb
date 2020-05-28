@@ -87,7 +87,7 @@ class Page < ActiveRecord::Base
   after_create :initial_fetch
 
   def self.create_from_hash(hash)
-    Rails.logger.debug "DEBUG: creating page from hash: #{hash}"
+    Rails.logger.debug "DEBUG: Page.create_from_hash(#{hash})"
     tag_string = hash.delete(:tags)
     fandom_string = hash.delete(:fandoms)
     hidden_string = hash.delete(:hiddens)
@@ -142,6 +142,7 @@ class Page < ActiveRecord::Base
       pages = pages.search(:url, params[:url].sub(/^https?/, ''))
     end
     pages = pages.search(:cached_tag_string, params[:tag]) if params.has_key?(:tag)
+    pages = pages.search(:cached_tag_string, params[:fandom]) if params.has_key?(:fandom)
     if params.has_key?(:hidden)
       pages = pages.search(:cached_hidden_string, params[:hidden])
     else
