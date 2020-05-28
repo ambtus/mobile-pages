@@ -93,6 +93,14 @@ Then("{string} should be selected in {string}") do |selected, dropdown|
   assert page.has_select?(dropdown, selected: selected)
 end
 
+Then("I should be able to select {string} from {string}") do |selection, dropdown|
+   assert page.has_select?(dropdown, with_options: [selection])
+end
+
+Then("I should not be able to select {string} from {string}") do |selection, dropdown|
+   assert !page.has_select?(dropdown, with_options: [selection])
+end
+
 When("I wait {int} second") do |time|
   Kernel::sleep time
 end

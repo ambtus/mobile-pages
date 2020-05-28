@@ -9,8 +9,8 @@ Feature: author stuff
     Then I should see "lewis carroll" within ".authors"
       And I should see "charles dodgson" within ".authors"
     When I am on the homepage
-      And I select "charles dodgson" from "Author"
-      And I select "lewis carroll" from "Author"
+      And I should be able to select "charles dodgson" from "Author"
+      And I should be able to select "lewis carroll" from "Author"
 
   Scenario: add an existing author to a page
     Given a page exists
@@ -32,7 +32,7 @@ Feature: author stuff
       And I press "Add Authors"
     Then I should see "charles dodgson, lewis carroll" within ".authors"
     When I am on the homepage
-    Then I select "charles dodgson" from "Author"
+    Then I should be able to select "charles dodgson" from "Author"
 
   Scenario: new parent for an existing page should have the same author
     Given a page exists with add_author_string: "newbie"

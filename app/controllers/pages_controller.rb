@@ -15,6 +15,7 @@ class PagesController < ApplicationController
     @find = params[:find] || "none"
     @tags = Tag.all.map(&:name)
     @tag = Tag.find_by_name(params[:tag]) if params[:tag]
+    @fandom = Fandom.find_by_name(params[:fandom]) if params[:fandom]
     @hidden = Hidden.find_by_name(params[:hidden]) if params[:hidden]
     @authors = Author.all.map(&:short_name)
     @author = Author.find_by_short_name(params[:author]) if params[:author]
@@ -34,6 +35,7 @@ class PagesController < ApplicationController
       build_route[:author] = params[:author] unless params[:author].blank?
       build_route[:tag] = params[:tag] unless params[:tag].blank?
       build_route[:hidden] = params[:hidden] unless params[:hidden].blank?
+      build_route[:fandom] = params[:fandom] unless params[:fandom].blank?
       build_route[:sort_by] = params[:sort_by] unless (params[:sort_by].blank? || params[:sort_by] == "read_after")
       build_route[:size] = params[:size] unless (params[:size].blank? || params[:size] == "any")
       build_route[:favorite] = params[:favorite] unless (params[:favorite].blank? || params[:favorite] == "any")
@@ -50,6 +52,7 @@ class PagesController < ApplicationController
     @page = Page.new(params[:page].permit!)
     @tag = Tag.find_by_name(params[:tag])
     @hidden = Hidden.find_by_name(params[:hidden])
+    @fandom = Fandom.find_by_name(params[:fandom])
     @author = Author.find_by_short_name(params[:author])
     @favorite = params[:favorite]
     @find = params[:find]
@@ -69,6 +72,7 @@ class PagesController < ApplicationController
           flash[:notice] = "Page created."
           @page.tags << @tag if @tag
           @page.tags << @hidden if @hidden
+          @page.tags << @fandom if @fandom
           @page.cache_tags
           redirect_to page_path(@page) and return
         end

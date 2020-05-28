@@ -50,34 +50,6 @@ Then /^my page named "([^\"]*)" should not contain "([^\"]*)"$/ do |title, strin
   assert_no_match Regexp.new(string), Page.find_by_title(title).edited_html
 end
 
-Then("the download directory should exist") do
-  assert File.exists?(Page.first.download_dir)
-end
-
-Then("the download directory should not exist") do
-  assert !File.exists?(Page.first.download_dir)
-end
-
-Then("the download html file should exist") do
-  assert File.exists?("#{Page.first.download_basename}.html")
-end
-
-Then("the download epub file should exist") do
-  assert File.exists?("#{Page.first.download_basename}.epub")
-end
-
-Then("the download epub file should not exist") do
-  assert !File.exists?("#{Page.first.download_basename}.epub")
-end
-
-Then("the page should not have any not hidden tags") do
-  Page.first.tags.not_hidden.empty?
-end
-
-Then("the page should not have any hidden tags") do
-  Page.first.tags.hidden.empty?
-end
-
 Then(/^last read should be today$/) do
   Rails.logger.debug "DEBUG: comparing #{Page.first.last_read.to_date} with #{Date.current}"
   assert Page.first.last_read.to_date == Date.current

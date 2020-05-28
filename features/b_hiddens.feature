@@ -65,8 +65,8 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
     Then I should see "nonfiction" within ".hiddens"
       And I should see "audio book" within ".hiddens"
     When I am on the homepage
-    Then I select "nonfiction" from "Hidden"
-    Then I select "audio book" from "Hidden"
+    Then I should be able to select "nonfiction" from "Hidden"
+    Then I should be able to select "audio book" from "Hidden"
 
   Scenario: select a hidden for a page when there are hiddens
     Given a tag exists with name: "work in progress" AND type: "Hidden"
@@ -86,9 +86,9 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       And I press "Add Hidden Tags"
     Then I should see "audio book, nonfiction, wip" within ".hiddens"
     When I am on the homepage
-    Then I select "nonfiction" from "Hidden"
-      And I select "audio book" from "Hidden"
-      And I select "wip" from "Hidden"
+    Then I should be able to select "nonfiction" from "Hidden"
+      And I should be able to select "audio book" from "Hidden"
+      And I should be able to select "wip" from "Hidden"
 
    Scenario: new parent for an existing page should NOT have the same hidden
     Given a page exists with hiddens: "nonfiction"
@@ -116,12 +116,13 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
     Given I have no tags
     And a tag exists with name: "fantasy" AND type: "Hidden"
     When I am on the homepage
-      And I select "fantasy" from "hidden"
+      Then I should be able to select "fantasy" from "hidden"
     When I am on the edit tag page for "fantasy"
     And I fill in "tag_name" with "speculative fiction"
     And I press "Update"
     When I am on the homepage
-      And I select "speculative fiction" from "hidden"
+      And I should be able to select "speculative fiction" from "hidden"
+      But I should not be able to select "fantasy" from "hidden"
 
   Scenario: delete a hidden
     Given a page exists with hiddens: "work in progress"
@@ -160,6 +161,9 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
     When I am on the page's page
       Then I should see "will be visible" within ".tags"
       And the page should not have any hidden tags
+    When I am on the homepage
+      Then I should be able to select "will be visible" from "tag"
+      But I should not be able to select "will be visible" from "hidden"
 
   Scenario: change generic to hidden tag
     Given a page exists with tags: "will be hidden"
@@ -171,4 +175,7 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
     When I am on the page's page
       Then I should see "will be hidden" within ".hiddens"
       And the page should not have any not hidden tags
+    When I am on the homepage
+      Then I should be able to select "will be hidden" from "hidden"
+      But I should not be able to select "will be hidden" from "tag"
 

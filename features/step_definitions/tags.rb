@@ -14,6 +14,10 @@ Then /^I should have no hiddens$/ do
   assert Hidden.count == 0
 end
 
+Then /^I should have no fandoms$/ do
+  assert Fandom.count == 0
+end
+
 # create a tag
 Given /a tag exists(?: with (.*))?/ do |fields|
   fields.blank? ? hash = {} : hash = fields.create_hash
@@ -27,5 +31,18 @@ Given /^the following tags?$/ do |table|
   Tag.delete_all
   # table is a Cucumber::Ast::Table
   table.hashes.each { |hash| Tag.create(hash) }
+end
+
+
+Then("the page should not have any not hidden tags") do
+  Page.first.tags.not_hidden.empty?
+end
+
+Then("the page should not have any hidden tags") do
+  Page.first.tags.hidden.empty?
+end
+
+Then("the page should not have any fandom tags") do
+  Page.first.tags.fandom.empty?
 end
 

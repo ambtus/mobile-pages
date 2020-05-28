@@ -57,6 +57,8 @@ class TagsController < ApplicationController
       @page.add_tags_from_string(params[:tags])
     elsif params[:commit] == "Add Hidden Tags"
       @page.add_hiddens_from_string(params[:tags])
+    elsif params[:commit] == "Add Fandom Tags"
+      @page.add_fandoms_from_string(params[:tags])
     end
     redirect_to page_path(@page)
   end

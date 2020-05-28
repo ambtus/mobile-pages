@@ -1,0 +1,198 @@
+Feature: fandoms are a type of tag, and can be created and selected like tags
+
+  Scenario: fandom tag not in tag dropdown
+    Given a tag exists with name: "not fandom"
+    Given a tag exists with name: "yes fandom" AND type: "Fandom"
+    When I am on the homepage
+    Then I should not be able to select "yes fandom" from "tag"
+    But I should be able to select "yes fandom" from "fandom"
+    And I should be able to select "not fandom" from "tag"
+
+  Scenario: strip fandom whitespace and sort
+    Given a page exists
+    When I am on the page's page
+      And I edit its tags
+      And I fill in "tags" with "  nonfiction,  audio  book,save for   later  "
+      And I press "Add Fandom Tags"
+    Then I should see "audio book, nonfiction, save for later" within ".fandoms"
+
+  Scenario: no tags exist during create
+    Given I am on the homepage
+      And I have no pages
+      And I have no tags
+    When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+      And I fill in "page_title" with "New Title"
+      And I press "Store"
+    Then I should see "Please select tag"
+    When I fill in "tags" with "new fandom"
+      And I press "Add Fandom Tags"
+    Then I should see "new fandom" within ".fandoms"
+
+  Scenario: no tags selected during create
+    Given a tag exists with name: "first" AND type: "Fandom"
+      And I am on the homepage
+    When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+      And I fill in "page_title" with "New Title"
+      And I press "Store"
+    Then I should see "Please select tag"
+    When I select "first" from "page_tag_ids_"
+      And I press "Update Tags"
+    Then I should see "first" within ".fandoms"
+
+  Scenario: fandom and other tag selected during create
+    Given a tag exists with name: "first"
+      And a tag exists with name: "second" AND type: "Fandom"
+      And I am on the homepage
+      And I select "first" from "tag"
+      And I select "second" from "fandom"
+    When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+      And I fill in "page_title" with "New Title"
+      And I press "Store"
+    Then I should not see "Please select tag"
+      And I should see "first" within ".tags"
+      And I should see "second" within ".fandoms"
+
+  Scenario: fandom only selected during create
+    Given a tag exists with name: "nonfiction" AND type: "Fandom"
+    Given a tag exists with name: "something"
+      And I am on the homepage
+      And I select "nonfiction" from "fandom"
+      And I select "something" from "tag"
+    When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+      And I fill in "page_title" with "New Title"
+      And I press "Store"
+    Then I should not see "Please select tag"
+      And I should see "nonfiction" within ".fandoms"
+
+  Scenario: add a fandom to a page when there are no fandoms
+    Given a page exists
+    When I am on the page's page
+      And I edit its tags
+    When I fill in "tags" with "Star Wars, Harry Potter"
+      And I press "Add Fandom Tags"
+    Then I should see "Harry Potter, Star Wars" within ".fandoms"
+    When I am on the homepage
+    Then I should be able to select "Star Wars" from "Fandom"
+    And I should be able to select "Harry Potter" from "Fandom"
+
+  Scenario: select a fandom for a page when there are fandoms
+    Given a tag exists with name: "SGA" AND type: "Fandom"
+    And a page exists
+    When I am on the page's page
+      And I edit its tags
+      And I select "SGA" from "page_tag_ids_"
+      And I press "Update Tags"
+    Then I should see "SGA" within ".fandoms"
+
+  Scenario: add a fandom to a page which already has fandoms
+    Given a page exists with fandoms: "nonfiction"
+    When I am on the page's page
+    Then I should see "nonfiction" within ".fandoms"
+    When I edit its tags
+      And I fill in "tags" with "meta, reviews"
+      And I press "Add Fandom Tags"
+    Then I should see "meta, nonfiction, reviews" within ".fandoms"
+    When I am on the homepage
+    Then I should be able to select "meta" from "Fandom"
+
+   Scenario: new parent for an existing page should have the same fandom
+    Given a page exists with fandoms: "nonfiction"
+    When I am on the page's page
+      And I follow "Manage Parts"
+      And I fill in "add_parent" with "New Parent"
+      And I press "Update"
+    Then I should see "nonfiction" within ".fandoms"
+    And I should see "Page 1" within ".parts"
+      But I should not see "nonfiction" within ".parts"
+    When I am on the homepage
+      Then I should see "New Parent" within "#position_1"
+    And I should see "nonfiction" within ".tags"
+
+ Scenario: list the fandoms
+    Given a tag exists with name: "Harry Potter" AND type: "Fandom"
+    When I am on the tags page
+    Then I should see "Harry Potter"
+    When I follow "Harry Potter"
+      Then I should see "Edit tag: Harry Potter"
+
+  Scenario: edit the fandom name
+    Given I have no tags
+    And a tag exists with name: "fantasy" AND type: "Fandom"
+    When I am on the homepage
+      And I select "fantasy" from "fandom"
+    When I am on the edit tag page for "fantasy"
+    And I fill in "tag_name" with "speculative fiction"
+    And I press "Update"
+    When I am on the homepage
+      And I should be able to select "speculative fiction" from "fandom"
+
+  Scenario: delete a fandom
+    Given a page exists with fandoms: "Twilight"
+    When I am on the edit tag page for "Twilight"
+    And I follow "Destroy"
+    When I press "Yes"
+    Then I should have no fandoms
+    When I am on the homepage
+      Then I should not see "Twilight"
+      But I should see "Page 1"
+
+  Scenario: merge two tags
+    Given a tag exists with name: "better name" AND type: "Fandom"
+      And a page exists with fandoms: "bad name"
+    When I am on the edit tag page for "bad name"
+      And I select "better name" from "merge"
+      And I press "Merge"
+    When I am on the page's page
+    Then I should not see "bad name"
+    And I should see "better name" within ".fandoms"
+
+  Scenario: don’t allow merge if not the same type
+    Given a tag exists with name: "not fandom"
+    Given a tag exists with name: "bad name" AND type: "Fandom"
+    When I am on the edit tag page for "bad name"
+      Then I should not see "not fandom"
+      And I should not see "Merge"
+
+  Scenario: change fandom to generic tag
+    Given a page exists with fandoms: "will be visible"
+    When I am on the page's page
+      Then I should see "will be visible" within ".fandoms"
+    When I am on the edit tag page for "will be visible"
+      And I select "" from "change"
+      And I press "Change"
+    When I am on the page's page
+      Then I should see "will be visible" within ".tags"
+      And the page should not have any fandom tags
+
+  Scenario: change generic to fandom tag
+    Given a page exists with tags: "will be fandom"
+    When I am on the page's page
+      Then I should see "will be fandom" within ".tags"
+    When I am on the edit tag page for "will be fandom"
+      And I select "Fandom" from "change"
+      And I press "Change"
+    When I am on the page's page
+      Then I should see "will be fandom" within ".fandoms"
+
+  Scenario: change hidden to fandom tag
+    Given a page exists with hiddens: "will be visible"
+    When I am on the page's page
+      Then I should see "will be visible" within ".hiddens"
+    When I am on the edit tag page for "will be visible"
+      And I select "Fandom" from "change"
+      And I press "Change"
+    When I am on the page's page
+      Then I should see "will be visible" within ".fandoms"
+      And the page should not have any hidden tags
+
+  Scenario: change fandom to hidden tag
+    Given a page exists with fandoms: "will be hidden"
+    When I am on the page's page
+      Then I should see "will be hidden" within ".fandoms"
+    When I am on the edit tag page for "will be hidden"
+      And I select "Hidden" from "change"
+      And I press "Change"
+    When I am on the page's page
+      Then I should see "will be hidden" within ".hiddens"
+      And the page should not have any not hidden tags
+

@@ -6,13 +6,13 @@ class Tag < ActiveRecord::Base
   validates_uniqueness_of :name, :case_sensitive => false
 
   def self.types
-    ["", "Hidden"]
+    ["", "Hidden", "Fandom"]
   end
 
-  scope :by_type, -> { order('tags.type asc') }
   scope :by_name, -> { order('tags.name asc') }
   scope :ordered, -> { order('tags.type asc').order('tags.name asc') }
   scope :hidden, -> { where(type: 'Hidden') }
+  scope :fandom, -> { where(type: 'Fandom') }
   scope :generic, -> { where(type: '') }
   scope :not_hidden, -> { where.not(type: 'Hidden') }
 
@@ -29,7 +29,7 @@ class Tag < ActiveRecord::Base
   end
 
   def self.names
-    self.not_hidden.ordered.map(&:name)
+    self.generic.by_name.map(&:name)
   end
 
   def destroy_me

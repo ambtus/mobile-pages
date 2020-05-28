@@ -89,9 +89,11 @@ class Page < ActiveRecord::Base
   def self.create_from_hash(hash)
     Rails.logger.debug "DEBUG: creating page from hash: #{hash}"
     tag_string = hash.delete(:tags)
+    fandom_string = hash.delete(:fandoms)
     hidden_string = hash.delete(:hiddens)
     page = Page.create(hash)
     page.add_tags_from_string(tag_string)
+    page.add_fandoms_from_string(fandom_string)
     page.add_hiddens_from_string(hidden_string)
     Rails.logger.debug "DEBUG: created page with tags: #{page.tags.map(&:name)}"
   end
@@ -464,16 +466,22 @@ class Page < ActiveRecord::Base
     self.authors
   end
 
-  def tag_string
+  def not_hidden_tag_string
     self.tags.not_hidden.ordered.map(&:name).join(", ")
   end
   def hidden_string
     self.tags.hidden.by_name.map(&:name).join(", ")
   end
+  def generic_tag_string
+    self.tags.generic.by_name.map(&:name).join(", ")
+  end
+  def fandom_string
+    self.tags.fandom.by_name.map(&:name).join(", ")
+  end
 
   def cache_tags
     Rails.logger.debug "DEBUG: cache_tags for #{self.id}"
-    self.update(:cached_tag_string => tag_string, :cached_hidden_string => hidden_string)
+    self.update(:cached_tag_string => not_hidden_tag_string, :cached_hidden_string => hidden_string)
   end
 
   def add_tags_from_string(string)
@@ -489,6 +497,14 @@ class Page < ActiveRecord::Base
     return if string.blank?
     string.split(",").each do |tag|
       self.tags << Hidden.find_or_create_by(name: tag.squish)
+    end
+    self.cache_tags
+  end
+
+  def add_fandoms_from_string(string)
+    return if string.blank?
+    string.split(",").each do |tag|
+      self.tags << Fandom.find_or_create_by(name: tag.squish)
     end
     self.cache_tags
   end
@@ -517,20 +533,22 @@ class Page < ActiveRecord::Base
     names.sort.compact
   end
 
+  def ordered_tag_names; self.tags.ordered.map(&:name); end
+  def et_al_names
+    [
+      (self.authors.empty? ? nil : "by #{self.authors.map(&:name).join(' & ')}"),
+      self.size,
+      *self.favorite_names,
+      (self.last_read.blank? ? "unread" : self.last_read.to_date),
+    ].compact
+  end
+
   def tags_et_al_names(download = false)
-    names =
-      if download
-        []
-      else
-        [
-        (self.authors.empty? ? nil : "by #{self.authors.map(&:name).join(' & ')}"),
-        self.size,
-        *self.favorite_names,
-        (self.last_read.blank? ? "unread" : self.last_read.to_date)
-        ]
-      end
-    names = names + self.tags.map(&:name)
-    names.compact
+    if download
+      ordered_tag_names
+    else
+      et_al_names + ordered_tag_names
+    end
   end
 
   def tags_et_al_string(download = false)
@@ -802,22 +820,47 @@ class Page < ActiveRecord::Base
     tags.hidden.empty? ? authors.map(&:short_name).join(" & ") : ""
   end
   def download_tag_string
-    tags.hidden.empty? ? tags_et_al_names(true).join(", ") : cached_hidden_string
+    tags.hidden.empty? ? ordered_tag_names.join(", ") : cached_hidden_string
+  end
+  def download_fandom_string
+    if tags.fandom.empty?
+      ""
+    elsif tags.fandom.size == 1
+      tags.fandom.first.name
+    else
+      "crossover"
+    end
   end
   def download_comment_string
     if tags.hidden.empty?
       [download_tag_string, my_notes, short_notes].join(" ")
     else
       ["by #{authors.map(&:short_name).join(' & ')},",
-       tags_et_al_names(true).join(", "),
+       ordered_tag_names.join(", "),
        my_notes,
        short_notes].
       join(" ")
     end
   end
 
+  def epub_tags
+    string = ""
+    unless self.download_author_string.blank?
+      string = string + %Q{ --authors "#{self.download_author_string}"}
+    end
+    unless self.download_tag_string.blank?
+      string = string + %Q{ --tags "#{self.download_tag_string}"}
+    end
+    unless self.download_fandom_string.blank?
+      string = string + %Q{ --series "#{self.download_fandom_string}"}
+    end
+    unless self.download_comment_string.blank?
+      string = string + %Q{ --comments "#{self.download_comment_string}"}
+    end
+    string
+  end
   def epub_command
-     cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --title "#{self.title}" --authors "#{self.download_author_string}" --tags "#{self.download_tag_string}" --comments "#{self.download_comment_string}"}
+     cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --title "#{self.title}"} + epub_tags
     Rails.logger.debug "DEBUG: #{cmd}"
     return cmd
   end

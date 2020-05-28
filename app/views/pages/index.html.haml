@@ -52,5 +52,5 @@
               = link_to "More Parts", page_path(page)
           .tags=page.tags_et_al_string
           .my_notes=page.my_short_notes
-          .notes=page.short_notes
+          .notes=simple_format page.short_notes
       = f.submit "Next", :name => "Next"

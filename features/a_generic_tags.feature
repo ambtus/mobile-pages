@@ -50,8 +50,8 @@ Feature: generic tag stuff
     Then I should see "classic" within ".tags"
       And I should see "children's" within ".tags"
     When I am on the homepage
-    Then I select "classic" from "tag"
-    Then I select "children's" from "tag"
+    Then I should be able to select "classic" from "tag"
+    And I should be able to select "children's" from "tag"
 
   Scenario: select a tag for a page when there are tags
     Given a tag exists with name: "fantasy"
@@ -71,9 +71,9 @@ Feature: generic tag stuff
       And I press "Add Tags"
     Then I should see "children's, classic, something" within ".tags"
     When I am on the homepage
-    Then I select "classic" from "tag"
-      And I select "something" from "tag"
-      And I select "children's" from "tag"
+    Then I should be able to select "classic" from "tag"
+      And I should be able to select "something" from "tag"
+      And I should be able to select "children's" from "tag"
 
   Scenario: new parent for an existing page should have the same tag
     Given a page exists with tags: "tag"
@@ -97,12 +97,13 @@ Feature: generic tag stuff
   Scenario: edit the tag name
     Given a tag exists with name: "fantasy"
     When I am on the homepage
-      And I select "fantasy" from "tag"
+    Then I should be able to select "fantasy" from "tag"
     When I am on the edit tag page for "fantasy"
     And I fill in "tag_name" with "Fantasy"
     And I press "Update"
     When I am on the homepage
-      And I select "Fantasy" from "tag"
+    Then I should be able to select "Fantasy" from "tag"
+    But I should not be able to select "fantasy" from "tag"
 
   Scenario: delete a tag
     Given a page exists with tags: "science fiction"

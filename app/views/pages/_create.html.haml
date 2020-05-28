@@ -1,3 +1,6 @@
+- unless Fandom.names.blank?
+  = label_tag :fandom, "Fandom:"
+  = select_tag :fandom, options_for_select([nil] + Fandom.names, @fandom.try(:name))
 - unless Tag.names.blank?
   = label_tag :tag, "Tag:"
   = select_tag :tag, options_for_select([nil] + Tag.names, @tag.try(:name))

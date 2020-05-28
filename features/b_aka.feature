@@ -8,7 +8,7 @@ Feature: author stuff
       And I press "Add Authors"
     Then I should see "lewis carroll (charles dodgson)" within ".authors"
     When I am on the homepage
-      And I select "lewis carroll" from "Author"
+      And I should be able to select "lewis carroll" from "Author"
 
   Scenario: add an existing author with aka to a page
     Given a page exists
@@ -28,11 +28,12 @@ Feature: author stuff
     And I fill in "author_name" with "jane (aka)"
     And I press "Update"
     When I am on the homepage
-      And I select "jane" from "author"
+    Then I should be able to select "jane" from "author"
+    But I should not be able to select "jane (aka)" from "author"
     Given a page exists
     When I am on the page's page
     And I follow "Authors"
-      And I select "jane (aka)" from "page_author_ids_"
+    Then I should be able to select "jane (aka)" from "page_author_ids_"
 
   @wip
   Scenario: merge two authors
