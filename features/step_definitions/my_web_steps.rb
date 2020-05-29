@@ -70,7 +70,7 @@ Then("I should see {string}") do |text|
 end
 
 Then("I should not see {string}") do |text|
-  assert !page.has_content?(text)
+  assert_no_text(text)
 end
 
 Then("I should see {string} within {string}") do |text, parent|
@@ -78,7 +78,7 @@ Then("I should see {string} within {string}") do |text, parent|
 end
 
 Then("I should not see {string} within {string}") do |text, parent|
-  within(parent) { assert !page.has_content?(text) }
+  within(parent) { assert_no_text(text) }
 end
 
 When("I choose {string}") do |field|
@@ -123,7 +123,7 @@ Then("{string} should link to {string}") do |link_text, link_url|
 end
 
 
-# When /^I go back$/ do
+# When("I go back") do
 #   case Capybara::current_driver
 #   when :selenium, :webkit
 #     page.execute_script('window.history.back()')

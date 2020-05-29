@@ -1,7 +1,7 @@
 # Restart required even in development mode when you modify this file.
 
 # A list of all the methods defined here to prevent breaking rails by overwriting something in use
-%w{chip strip_quotes create_hash formatted}.each do |meth|
+%w{chip strip_quotes create_hash}.each do |meth|
  raise "#{meth} is already defined in String class" if String.method_defined?(meth)
 end
 
@@ -9,7 +9,7 @@ class String
 
   def chip; self[1..-1]; end
 
-  def strip_quotes; self.chip.chop; end
+  def strip_quotes; self.chip.chop; end ##TODO raise errors if not quoted
 
   def create_hash
     array = self.split(' AND ')
@@ -21,13 +21,6 @@ class String
     end
 
     return hash
-  end
-
-  def formatted
-    self.gsub!(/\r\n?/, "\n")            # \r\n and \r -> \n
-    self.gsub!(/\n\n+/, "<br \><br \>")  # 2+ newline  -> paragraph
-    self.gsub!(/\n/, "<br \>")  # 1 newline  -> line break
-    self
   end
 
 end

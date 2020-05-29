@@ -7,4 +7,4 @@
     .filters
       = select_tag("page[author_ids][]", options_from_collection_for_select(Author.all, 'id', 'name', selected = @page.authors.map(&:id)), :multiple => true)
     .button= submit_tag "Update Authors"
-  = link_to "Add Authors", author_path(@page, :add => true)
+    =render "add"

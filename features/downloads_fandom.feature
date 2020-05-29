@@ -1,11 +1,18 @@
-Feature: an ebook with a fandom tag is added to a series for marvin
+Feature: an ebook with a fandom tag is collected by series (not subjects) for marvin
 
   Scenario: epub download fandom page
-    Given a page exists with fandoms: "harry potter"
+    Given a page exists with fandoms: "harry potter" AND tags: "AU"
     Then the download epub command should include series: "harry potter"
-    And the download epub command should include comments: "harry potter"
+    And the download epub command should include tags: "AU"
+    But the download epub command should not include tags: "harry potter"
+    And the download epub command should not include series: "AU"
+    And the download epub command should include comments: "harry potter, AU"
 
   Scenario: epub download multi-fandom page
-    Given a page exists with fandoms: "harry potter, sga"
+    Given a page exists with fandoms: "harry potter, sga" AND tags: "AU"
     Then the download epub command should include series: "crossover"
-    But the download epub command should include comments: "harry potter, sga"
+    And the download epub command should include tags: "AU"
+    But the download epub command should not include tags: "harry potter"
+    And the download epub command should not include series: "harry potter"
+    And the download epub command should include comments: "harry potter, sga, AU"
+    But the download epub command should not include comments: "crossover"

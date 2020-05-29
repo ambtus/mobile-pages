@@ -15,6 +15,8 @@ class Tag < ActiveRecord::Base
   scope :fandom, -> { where(type: 'Fandom') }
   scope :generic, -> { where(type: '') }
   scope :not_hidden, -> { where.not(type: 'Hidden') }
+  scope :not_fandom, -> { where.not(type: 'Fandom') }
+  scope :joined, -> { map(&:name).join(", ") }
 
   before_validation :remove_placeholder
 

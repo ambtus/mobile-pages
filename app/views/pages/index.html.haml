@@ -50,7 +50,7 @@
             -if page.parts.size > 5
               ="|"
               = link_to "More Parts", page_path(page)
-          .tags=page.tags_et_al_string
+          .tags=page.merged_tag_string
           .my_notes=page.my_short_notes
           .notes=simple_format page.short_notes
       = f.submit "Next", :name => "Next"

@@ -33,7 +33,8 @@ class Page < ActiveRecord::Base
   end
 
   DURATION = "years"
-  MININOTE = 75 # keep first this many characters plus enough for full words
+  UNREAD = "unread"
+  SHORT_LENGTH = 80 # truncate at this many characters
   LIMIT = 15 # number of pages to show in index
 
   SIZES = ["short", "medium", "long", "any"]
@@ -86,16 +87,17 @@ class Page < ActiveRecord::Base
 
   after_create :initial_fetch
 
+  # used in tests
   def self.create_from_hash(hash)
     Rails.logger.debug "DEBUG: Page.create_from_hash(#{hash})"
-    tag_string = hash.delete(:tags)
-    fandom_string = hash.delete(:fandoms)
-    hidden_string = hash.delete(:hiddens)
+    tag_types = Hash.new("")
+    %w{tags hiddens fandoms}.each {|tag_type| tag_types[tag_type] = hash.delete(tag_type.to_sym) }
     page = Page.create(hash)
-    page.add_tags_from_string(tag_string)
-    page.add_fandoms_from_string(fandom_string)
-    page.add_hiddens_from_string(hidden_string)
-    Rails.logger.debug "DEBUG: created page with tags: #{page.tags.map(&:name)}"
+    tag_types.each do |key, value|
+      page.send("add_#{key}_from_string", value)
+    end
+    Rails.logger.debug "DEBUG: created page with tags: [#{page.tags.joined}]"
+    page
   end
 
   def self.last_created
@@ -218,6 +220,7 @@ class Page < ActiveRecord::Base
       self.fetch
     else
       get_chapters_from_ao3
+      self.set_wordcount
     end
     get_meta_from_ao3
   end
@@ -330,7 +333,7 @@ class Page < ActiveRecord::Base
     remove.each do |old_part_id|
       Page.find(old_part_id).destroy
     end
-    parent.set_wordcount(false)
+    self.set_wordcount
   end
 
   def parts
@@ -454,9 +457,6 @@ class Page < ActiveRecord::Base
     self.save
   end
 
-  def author_string
-    self.authors.map(&:name).join(", ")
-  end
 
   def add_author_string=(string)
     return if string.blank?
@@ -467,23 +467,24 @@ class Page < ActiveRecord::Base
     self.authors
   end
 
-  def not_hidden_tag_string
-    self.tags.not_hidden.ordered.map(&:name).join(", ")
-  end
-  def hidden_string
-    self.tags.hidden.by_name.map(&:name).join(", ")
-  end
-  def generic_tag_string
-    self.tags.generic.by_name.map(&:name).join(", ")
-  end
-  def fandom_string
-    self.tags.fandom.by_name.map(&:name).join(", ")
-  end
+  def unread?; last_read.blank?; end
 
-  def cache_tags
-    Rails.logger.debug "DEBUG: cache_tags for #{self.id}"
-    self.update(:cached_tag_string => not_hidden_tag_string, :cached_hidden_string => hidden_string)
-  end
+  # used in show view
+  def generic_string; self.tags.generic.by_name.joined; end
+  def fandom_string; self.tags.fandom.by_name.joined; end
+  def hidden_string; self.tags.hidden.by_name.joined; end
+  def author_string; self.authors.joined; end
+  def favorite_string; self.favorite_names.join(", "); end
+  def size_string; "#{self.size} (#{self.wordcount})"; end
+  def last_read_string; unread? ? UNREAD : last_read.to_date; end
+  def my_formatted_notes; Scrub.sanitize_html(my_notes); end
+  def formatted_notes; Scrub.sanitize_html(notes); end
+  def part_tag_string; tags_et_al.empty? ? "" : " (#{tags_et_al.join(', ')})"; end
+
+  # used in index view
+  def merged_tag_string; tags_et_al.join(', ');end
+  def short_notes; Scrub.strip_html(notes).truncate(SHORT_LENGTH, separator: /\s/); end
+  def my_short_notes; Scrub.strip_html(my_notes).truncate(SHORT_LENGTH, separator: /\s/); end
 
   def add_tags_from_string(string)
     return if string.blank?
@@ -510,6 +511,12 @@ class Page < ActiveRecord::Base
     self.cache_tags
   end
 
+  def cache_string; self.tags.not_hidden.ordered.joined; end
+  def cache_tags
+    Rails.logger.debug "DEBUG: cache_tags for #{self.id} tags: #{cache_string}, hiddens: #{hidden_string}"
+    self.update(cached_tag_string: cache_string, cached_hidden_string: hidden_string)
+  end
+
   def favorite_names
     names = case self.favorite
       when 0
@@ -534,40 +541,26 @@ class Page < ActiveRecord::Base
     names.sort.compact
   end
 
-  def ordered_tag_names; self.tags.ordered.map(&:name); end
   def et_al_names
     [
-      (self.authors.empty? ? nil : "by #{self.authors.map(&:name).join(' & ')}"),
+      (self.authors.empty? ? nil : "by #{author_string}"),
       self.size,
       *self.favorite_names,
       (self.last_read.blank? ? "unread" : self.last_read.to_date),
     ].compact
   end
 
-  def tags_et_al_names(download = false)
-    if download
-      ordered_tag_names
-    else
-      et_al_names + ordered_tag_names
-    end
-  end
-
-  def tags_et_al_string(download = false)
-    mine = self.tags_et_al_names(download)
+  def tags_et_al_names; et_al_names + tags.ordered.map(&:name); end
+  def tags_et_al
+    mine = self.tags_et_al_names
     if self.parent
       mine = mine - self.parent.tags_et_al_names
     end
-    mine.join(", ")
+    mine
   end
 
-  def title_with_tags
-    tags_et_al_string(true).blank? ? title : "#{title} (#{tags_et_al_string(true)})"
-  end
+  def title_with_tags; title + part_tag_string; end
 
-
-  def favorite_string
-    self.favorite_names.join(", ")
-  end
 
   def section(number)
     body = Nokogiri::HTML(self.edited_html).xpath('//body').first
@@ -673,7 +666,6 @@ class Page < ActiveRecord::Base
     remove_outdated_downloads
     content = Scrub.remove_surrounding(content) if nodes(content).size == 1
     File.open(self.scrubbed_html_file_name, 'w:utf-8') { |f| f.write(content) }
-    self.set_wordcount
   end
 
   def scrubbed_html
@@ -716,10 +708,8 @@ class Page < ActiveRecord::Base
     top.to_i.times { nodeset.shift }
     bottom.to_i.times { nodeset.pop }
     self.scrubbed_html=nodeset.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
+    self.set_wordcount
   end
-
-  ## Edited html is the final result and what I want to read or hear
-  ## but don't create a new file if it's identical to the scrubbed version
 
   def edited_html_file_name
     self.mydirectory + "edited.html"
@@ -731,6 +721,7 @@ class Page < ActiveRecord::Base
     self.set_wordcount
   end
 
+  ## but if it doesn't exist (I haven't edited) use the scrubbed version
   def edited_html
     if parts.blank?
       begin
@@ -771,29 +762,6 @@ class Page < ActiveRecord::Base
     self.update_read_after
   end
 
-  ## Notes
-
-  def formatted_notes; notes.blank? ? "" : notes.formatted; end
-  def my_formatted_notes; my_notes.blank? ? "" : my_notes.formatted; end
-
-  def short_notes
-    return self.notes if self.notes.blank?
-    return self.notes if self.notes.size < MININOTE
-    short = self.notes.gsub(%r{</?[^>]+?>}, '')
-    snip_idx = short.index(/\s/, MININOTE)
-    return short unless snip_idx
-    short[0, snip_idx] + "..."
-  end
-
-  def my_short_notes
-    return self.my_notes if self.my_notes.blank?
-    return self.my_notes if self.my_notes.size < MININOTE
-    short = self.my_notes.gsub(%r{</?[^>]+?>}, '')
-    snip_idx = short.index(/\s/, MININOTE)
-    return short unless snip_idx
-    short[0, snip_idx] + "..."
-  end
-
   ## Download helper methods
 
   def remove_outdated_downloads(recurse = false)
@@ -817,31 +785,38 @@ class Page < ActiveRecord::Base
     "#{self.download_dir}#{self.download_title}"
   end
 
-  def download_author_string
-    tags.hidden.empty? ? authors.map(&:short_name).join(" & ") : ""
+  ## --authors
+  ## if it's hidden, then hide the authors also
+  ## if it's not, use the short names
+  def hidden?; cached_hidden_string.present?; end
+  def download_author_string; hidden? ? "" : authors.map(&:short_name).join(" & "); end
+  ## --tags
+  ## if it's hidden, then the hidden tags are the only tags
+  ## if it's not hidden, then add size and unread (if not read) to not-fandom tags
+  def download_tags;
+    [(unread? ? UNREAD : ""),
+     size,
+     tags.not_fandom.joined,
+     ].join_comma
   end
-  def download_tag_string
-    tags.hidden.empty? ? ordered_tag_names.join(", ") : cached_hidden_string
-  end
-  def download_fandom_string
-    if tags.fandom.empty?
-      ""
-    elsif tags.fandom.size == 1
-      tags.fandom.first.name
-    else
-      "crossover"
-    end
-  end
+  def download_tag_string; hidden? ? cached_hidden_string : download_tags; end
+  ## --series
+  ## if it's a crossover, then replace the fandom tags
+  def crossover?; tags.fandom.size > 1; end
+  def fandom_name; tags.fandom.present? ? tags.fandom.first.name : ""; end
+  def download_fandom_string; crossover? ? "crossover" : fandom_name; end
+  ## --comments
+  ## if it's hidden, then put the authors into the comments
   def download_comment_string
-    if tags.hidden.empty?
-      [download_tag_string, my_notes, short_notes].join(" ")
-    else
-      ["by #{authors.map(&:short_name).join(' & ')},",
-       ordered_tag_names.join(", "),
-       my_notes,
-       short_notes].
-      join(" ")
-    end
+    [
+      (hidden? ? "by #{author_string}, #{hidden_string}" : ""),
+      fandom_string,
+      generic_string,
+      favorite_string,
+      size_string,
+      my_short_notes,
+      short_notes,
+    ].join_comma.truncate(SHORT_LENGTH, separator: /\s/)
   end
 
   def epub_tags
@@ -862,7 +837,8 @@ class Page < ActiveRecord::Base
   end
   def epub_command
      cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --title "#{self.title}"} + epub_tags
-    Rails.logger.debug "DEBUG: #{cmd}"
+    # Rails.logger.debug "DEBUG: #{cmd}"
+    Rails.logger.debug "DEBUG: #{epub_tags}"
     return cmd
   end
 
@@ -940,13 +916,13 @@ class Page < ActiveRecord::Base
         end
         count = count.next
       end
-      self.set_wordcount
     end
   end
 
   def rebuild_meta
     remove_outdated_downloads
     get_meta_from_ao3(false) if ao3?
+    set_wordcount
   end
 
   def get_meta_from_ao3(refetch=true)
@@ -976,8 +952,8 @@ class Page < ActiveRecord::Base
       self.title = ao3_doc_title(doc)
     end
 
-    doc_summary = doc.css(".summary blockquote").text.strip  rescue nil
-    doc_notes = doc.css(".notes blockquote").map(&:text).join("\n\n") rescue nil
+    doc_summary = Scrub.sanitize_html(doc.css(".summary blockquote")).children.to_html
+    doc_notes = Scrub.sanitize_html(doc.css(".notes blockquote")).children.to_html
     doc_relationships = doc.css(".relationship a").map(&:text).join(", ")  rescue nil
     doc_tags = doc.css(".freeform a").map(&:text).join(", ")  rescue nil
 
@@ -985,12 +961,12 @@ class Page < ActiveRecord::Base
       if position == 1
         self.notes = doc_notes
       else
-        self.notes = [doc_summary, doc_notes].compact.join("\n\n").strip
+        self.notes = [doc_summary, doc_notes].join_hr
       end
     elsif self.parts.empty? # this is a single chapter work
-      self.notes = [doc_summary, doc_notes, doc_tags, doc_relationships].compact.join("\n\n").strip
+      self.notes = [doc_summary, doc_notes, doc_tags, doc_relationships].join_hr
     else # this is the enclosing doc
-      self.notes = [doc_summary, doc_tags, doc_relationships].compact.join("\n\n").strip
+      self.notes = [doc_summary, doc_tags, doc_relationships].join_hr
     end
 
     # don't get authors for subparts and get after notes for byline
@@ -1070,6 +1046,8 @@ private
       self.set_wordcount
     elsif !self.urls.blank?
       self.parts_from_urls(self.urls)
+    else
+      self.set_wordcount
     end
   end
 

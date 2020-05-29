@@ -52,6 +52,8 @@ module Scrub
     nodeset.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
   end
 
+  def self.strip_html(html); Sanitize.fragment(html).squish; end
+
   # sanitize
   def self.sanitize_html(html)
     return html unless html.is_a? String

@@ -29,25 +29,20 @@
         = link_to "Edit Raw HTML", edit_html_path(@page)
       = link_to "Scrub", scrub_path(@page)
       = link_to "Refetch", refetch_path(@page)
-  .tags= @page.generic_tag_string
+  .tags= @page.generic_string
   .fandoms= @page.fandom_string
   .hiddens= @page.hidden_string
   .authors= @page.author_string
   .favorite= @page.favorite_string
-  .size= "#{@page.size} (#{@page.wordcount})"
-  .last_read
-    - if @page.last_read
-      = @page.last_read.to_date
-    - else
-      = "unread"
+  .size=@page.size_string
+  .last_read=@page.last_read_string
   .my_notes=raw @page.my_formatted_notes
   .notes=raw @page.formatted_notes
 .parts
   - @page.parts.each do |part|
     .part{:id => "position_#{part.position}"}
       = link_to h(part.title), page_path(part)
-      - unless part.tags_et_al_string.blank?
-        = "(#{part.tags_et_al_string})"
+      = part.part_tag_string
       = link_to "Rate", rate_path(part)
       = link_to "EPUB", download_url_for_page(part, ".epub")
       = link_to "HTML", download_url_for_page(part, ".html")

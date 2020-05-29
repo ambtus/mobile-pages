@@ -27,10 +27,9 @@ Feature: author stuff
     When I am on the page's page
     Then I should see "lewis carroll" within ".authors"
     When I follow "Authors"
-      And I follow "Add Authors"
       And I fill in "authors" with "charles dodgson"
       And I press "Add Authors"
-    Then I should see "charles dodgson, lewis carroll" within ".authors"
+    Then I should see "charles dodgson & lewis carroll" within ".authors"
     When I am on the homepage
     Then I should be able to select "charles dodgson" from "Author"
 

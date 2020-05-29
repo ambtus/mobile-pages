@@ -6,6 +6,8 @@ class Author < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :case_sensitive => false
 
+  scope :joined, -> { map(&:name).join(" & ") }
+
   before_validation :remove_placeholder
 
   def remove_placeholder

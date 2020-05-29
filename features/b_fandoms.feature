@@ -154,15 +154,18 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
       And I should not see "Merge"
 
   Scenario: change fandom to generic tag
-    Given a page exists with fandoms: "will be visible"
+    Given a page exists with fandoms: "not a fandom"
     When I am on the page's page
-      Then I should see "will be visible" within ".fandoms"
-    When I am on the edit tag page for "will be visible"
+      Then I should see "not a fandom" within ".fandoms"
+    When I am on the edit tag page for "not a fandom"
       And I select "" from "change"
       And I press "Change"
     When I am on the page's page
-      Then I should see "will be visible" within ".tags"
+      Then I should see "not a fandom" within ".tags"
       And the page should not have any fandom tags
+      When I am on the homepage
+    Then I should be able to select "not a fandom" from "tag"
+    But I should not be able to select "not a fandom" from "fandom"
 
   Scenario: change generic to fandom tag
     Given a page exists with tags: "will be fandom"
@@ -173,6 +176,9 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
       And I press "Change"
     When I am on the page's page
       Then I should see "will be fandom" within ".fandoms"
+      When I am on the homepage
+    Then I should be able to select "will be fandom" from "fandom"
+    But I should not be able to select "will be fandom" from "tag"
 
   Scenario: change hidden to fandom tag
     Given a page exists with hiddens: "will be visible"

@@ -1,4 +1,4 @@
-Given /^I have no pages$/ do
+Given("I have no pages") do
   Page.delete_all
 end
 
@@ -18,7 +18,7 @@ Given /a page exists(?: with (.*))?/ do |fields|
   Page.create_from_hash(hash)
 end
 
-# create many different pages
+# create one or more different pages
 Given /^the following pages?$/ do |table|
   Page.delete_all
   # table is a Cucumber::Ast::Table
@@ -28,7 +28,7 @@ Given /^the following pages?$/ do |table|
   end
 end
 
-Given /^pages with all possible ratings exist$/ do
+Given("pages with all possible ratings exist") do
   Page.delete_all
   3.times do |interesting|
     3.times do |nice|
@@ -50,7 +50,7 @@ Then /^my page named "([^\"]*)" should not contain "([^\"]*)"$/ do |title, strin
   assert_no_match Regexp.new(string), Page.find_by_title(title).edited_html
 end
 
-Then(/^last read should be today$/) do
+Then("last read should be today") do
   Rails.logger.debug "DEBUG: comparing #{Page.first.last_read.to_date} with #{Date.current}"
   assert Page.first.last_read.to_date == Date.current
 end
