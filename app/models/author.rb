@@ -32,4 +32,16 @@ class Author < ActiveRecord::Base
   def self.names
     self.all.map(&:short_name)
   end
+
+  def destroy_me
+    pages = self.pages
+    Rails.logger.debug "moving author to note for #{pages.size} pages"
+    pages.each do |page|
+      Rails.logger.debug "moving author to note for page #{id}"
+      new_note = ["by #{self.name}", page.notes].join_hr
+      page.update_attribute(:notes, new_note)
+    end
+    self.destroy
+  end
+
 end

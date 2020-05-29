@@ -24,13 +24,17 @@ Feature: filter on author
     Then I should see "Alice's Adventures In Wonderland" within "#position_1"
       And "lewis carroll" should be selected in "author"
 
+  @wip
   Scenario: filter on author with AKA
     Given the following pages
       | title                            | add_author_string |
       | Alice's Adventures In Wonderland | lewis carroll (charles dodgson) |
     When I am on the homepage
-    When I select "lewis carroll" from "Author"
+      And I select "lewis carroll" from "Author"
       And I press "Find"
     Then I should see "Alice's Adventures In Wonderland" within "#position_1"
       And "lewis carroll" should be selected in "author"
-
+    When I am on the homepage
+      And I select "charles dodgson" from "Author"
+      And I press "Find"
+    Then I should see "Alice's Adventures In Wonderland" within "#position_1"

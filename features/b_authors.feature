@@ -3,7 +3,7 @@ Feature: author stuff
   Scenario: add a new author to a page
     Given a page exists
       And I am on the page's page
-    When I follow "Authors"
+    When I want to edit the authors
       And I fill in "authors" with "lewis carroll, charles dodgson"
       And I press "Add Authors"
     Then I should see "lewis carroll" within ".authors"
@@ -17,7 +17,7 @@ Feature: author stuff
       And an author exists with name: "lewis carroll"
     When I am on the page's page
     Then I should not see "lewis carroll" within ".authors"
-    When I follow "Authors"
+    When I want to edit the authors
       And I select "lewis carroll" from "page_author_ids_"
       And I press "Update Authors"
     Then I should see "lewis carroll" within ".authors"
@@ -26,7 +26,7 @@ Feature: author stuff
     Given a page exists with add_author_string: "lewis carroll"
     When I am on the page's page
     Then I should see "lewis carroll" within ".authors"
-    When I follow "Authors"
+    When I want to edit the authors
       And I fill in "authors" with "charles dodgson"
       And I press "Add Authors"
     Then I should see "charles dodgson & lewis carroll" within ".authors"
@@ -43,7 +43,6 @@ Feature: author stuff
     And I should see "Page 1" within ".parts"
     But I should not see "newbie" within ".parts"
 
-  @wip
   Scenario: list the authors
     Given an author exists with name: "jane"
       And an author exists with name: "bob"
@@ -53,7 +52,16 @@ Feature: author stuff
     When I follow "jane"
       Then I should see "Edit author: jane"
 
-  @wip
+  Scenario: delete an author
+    Given a page exists with add_author_string: "jane"
+    When I am on the edit author page for "jane"
+    And I follow "Destroy"
+    When I press "Yes"
+    Then I should have no authors
+    When I am on the page's page
+      Then I should not see "jane" within ".authors"
+      But I should see "by jane" within ".notes"
+
   Scenario: edit the author name
     Given a page exists with add_author_string: "jane"
     When I am on the edit author page for "jane"
@@ -63,13 +71,14 @@ Feature: author stuff
       Then I should see "June" within ".authors"
 
   @wip
-  Scenario: delete an author
+  Scenario: add an AKA
     Given a page exists with add_author_string: "jane"
     When I am on the edit author page for "jane"
-    And I follow "Destroy"
-    When I press "Yes"
-    Then I should have no authors
+    And I fill in "author_name" with "jane (june)"
+    And I press "Update"
     When I am on the page's page
-      Then I should not see "jane" within ".authors"
-      But I should see "by jane" within ".my_notes"
+      Then I should see "jane (june)" within ".authors"
+    When I am on the homepage
+    Then I should be able to select "jane" from "Author"
+    And I should be able to select "june" from "Author"
 

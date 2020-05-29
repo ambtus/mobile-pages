@@ -8,7 +8,9 @@ Feature: an ebook with a hidden tag is also hidden from marvin
     And the download epub command should not include authors: "my author"
     But the download epub command should include comments: "my author"
 
-  Scenario: epub download hidden part; author and tag strings are empty
+  @wip
+  Scenario: epub download hidden part as standalone; author and tag strings are empty
 
-  Scenario: epub omits hidden part; author and tag strings populated
+  @wip
+  Scenario: epub omits hidden part of parent; author and tag strings populated
 

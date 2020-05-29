@@ -3,7 +3,7 @@ Feature: author stuff
   Scenario: add a new author with aka to a page
     Given a page exists
       And I am on the page's page
-    When I follow "Authors"
+    When I want to edit the authors
       And I fill in "authors" with "lewis carroll (charles dodgson)"
       And I press "Add Authors"
     Then I should see "lewis carroll (charles dodgson)" within ".authors"
@@ -15,7 +15,7 @@ Feature: author stuff
       And an author exists with name: "lewis carroll (charles dodgson)"
     When I am on the page's page
     Then I should not see "lewis carroll" within ".authors"
-    When I follow "Authors"
+    When I want to edit the authors
       And I select "lewis carroll" from "page_author_ids_"
       And I press "Update Authors"
     When I am on the page's page

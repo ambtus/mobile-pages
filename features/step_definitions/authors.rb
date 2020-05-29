@@ -2,6 +2,14 @@ Given /^I have no authors$/ do
   Author.delete_all
 end
 
+Then("I should have no authors") do
+  assert Author.count == 0
+end
+
+When("I want to edit the authors") do
+  within(".edits") {click_link("Authors")}
+end
+
 # create an author
 Given /an author exists(?: with (.*))?/ do |fields|
   fields.blank? ? hash = {} : hash = fields.create_hash
