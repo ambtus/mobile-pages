@@ -21,7 +21,6 @@ Feature: author stuff
     When I am on the page's page
       Then I should see "lewis carroll (charles dodgson)" within ".authors"
 
-  @wip
   Scenario: add an aka to the author name
     Given an author exists with name: "jane"
     When I am on the edit author page for "jane"
@@ -32,14 +31,15 @@ Feature: author stuff
     But I should not be able to select "jane (aka)" from "author"
     Given a page exists
     When I am on the page's page
-    And I follow "Authors"
-    Then I should be able to select "jane (aka)" from "page_author_ids_"
+      And I want to edit the authors
+    When I select "jane (aka)" from "page_author_ids_"
+      And I press "Update Authors"
+    Then I should see "jane (aka)" within ".authors"
 
-  @wip
   Scenario: merge two authors
     Given a page exists with add_author_string: "jane" AND title: "Page 2"
       And a page exists with add_author_string: "aka"
-    When I am on the edit tag page for "aka"
+    When I am on the edit author page for "aka"
       And I select "jane" from "merge"
       And I press "Merge"
     When I am on the page's page

@@ -6,7 +6,7 @@
   =@author.pages.count
   ='page'.pluralize(@author.pages.count)
   associated with it:
-  = link_to "#{@author.name}’s Pages", pages_path(author: @author.short_name)
+  = link_to "#{@author.name}’s Pages", pages_path(author: @author.true_name)
 %p
   Are you sure you want to destroy it?
 %p

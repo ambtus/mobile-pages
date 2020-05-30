@@ -12,7 +12,7 @@ class DownloadsController < ApplicationController
       }
       # html for reading aloud inline for audiobooks
       format.read {
-        Rails.logger.debug "sending sectioned for #{@page.id}"
+        Rails.logger.debug "DEBUG: sending sectioned for #{@page.id}"
         render_sections
         send_file("#{@page.download_basename}.read", :type => "text/html", :disposition => 'inline')
       }

@@ -24,7 +24,6 @@ Feature: filter on author
     Then I should see "Alice's Adventures In Wonderland" within "#position_1"
       And "lewis carroll" should be selected in "author"
 
-  @wip
   Scenario: filter on author with AKA
     Given the following pages
       | title                            | add_author_string |

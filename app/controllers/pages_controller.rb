@@ -17,8 +17,7 @@ class PagesController < ApplicationController
     @tag = Tag.find_by_name(params[:tag]) if params[:tag]
     @fandom = Fandom.find_by_name(params[:fandom]) if params[:fandom]
     @hidden = Hidden.find_by_name(params[:hidden]) if params[:hidden]
-    @authors = Author.all.map(&:short_name)
-    @author = Author.find_by_short_name(params[:author]) if params[:author]
+    @author_name = params[:author] if params[:author]
     Rails.logger.debug "DEBUG: Page.filter(#{params.to_unsafe_h.symbolize_keys})"
     @pages = Page.filter(params)
     flash.now[:alert] = "No pages found" if @pages.to_a.empty?
@@ -53,6 +52,7 @@ class PagesController < ApplicationController
     @tag = Tag.find_by_name(params[:tag])
     @hidden = Hidden.find_by_name(params[:hidden])
     @fandom = Fandom.find_by_name(params[:fandom])
+    @author_name = params[:author] unless params[:author].blank?
     @author = Author.find_by_short_name(params[:author])
     @favorite = params[:favorite]
     @find = params[:find]

@@ -4,4 +4,4 @@
     edit
     = link_to "#{author.name}", edit_author_path(author)
     =surround "(", ")" do
-      = link_to "#{author.pages.count} #{'page'.pluralize(author.pages.count)}", pages_path(author: author.short_name)
+      = link_to "#{author.pages.count} #{'page'.pluralize(author.pages.count)}", pages_path(author: author.true_name)

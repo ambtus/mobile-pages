@@ -35,12 +35,12 @@ class Tag < ActiveRecord::Base
   end
 
   def destroy_me
-    Rails.logger.debug "recaching page ids for #{self.name}"
+    Rails.logger.debug "DEBUG: recaching page ids for #{self.name}"
     page_ids = self.pages.map(&:id)
-    Rails.logger.debug "recaching page ids for #{pages.count} pages"
+    Rails.logger.debug "DEBUG: recaching page ids for #{pages.count} pages"
     self.destroy
     page_ids.each do |id|
-      Rails.logger.debug "recaching page ids for #{id}"
+      Rails.logger.debug "DEBUG: recaching page ids for #{id}"
       Page.find(id).cache_tags
     end
   end

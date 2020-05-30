@@ -3,11 +3,11 @@ class AuthorsController < ApplicationController
   def show
     if params[:destroy].present?
       @author = Author.find(params[:id])
-      Rails.logger.debug "deleting author #{@author.name}"
+      Rails.logger.debug "DEBUG: deleting author #{@author.name}"
       render :destroy and return
     else
       @page = Page.find(params[:id])
-      Rails.logger.debug "updatings authors for #{@page.title}"
+      Rails.logger.debug "DEBUG: updatings authors for #{@page.title}"
       if Author.count == 0 || params[:add]
         render :new
       else
@@ -27,35 +27,30 @@ class AuthorsController < ApplicationController
   end
   def edit
     @author = Author.find(params[:id])
-    Rails.logger.debug "editing author #{@author.name}"
   end
   def destroy
     @author = Author.find(params[:id])
-    Rails.logger.debug "destroying author #{@author.name}"
     @author.destroy_me
     redirect_to authors_path
   end
   def update
     @author = Author.find(params[:id])
-    Rails.logger.debug "#{params} for author #{@author.name}"
     if params[:commit] == "Update"
+      Rails.logger.debug "DEBUG: update name for author from #{@author.name} to #{params[:author][:name]}"
       @author.update_attribute(:name, params[:author][:name])
       redirect_to authors_path
     elsif params[:commit] == "Merge"
-      aka_author = Author.find_by_short_name(params[:merge])
-      if aka_author == @author
+      true_author = Author.find_by_short_name(params[:merge])
+      if true_author == @author
         flash.now[:alert] = "can't merge with self"
         render :edit and return
       end
-      if aka_author.nil?
+      if true_author.nil?
         flash.now[:alert] = "can't merge with non-existant author"
         render :edit and return
       end
-      @author.pages.each do |page|
-        page.tags << new_tag
-      end
-      @author.destroy
-      redirect_to tags_path
+      true_author.add_aka(@author)
+      redirect_to authors_path
     end
   end
 end

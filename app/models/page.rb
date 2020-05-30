@@ -96,7 +96,7 @@ class Page < ActiveRecord::Base
     tag_types.each do |key, value|
       page.send("add_#{key}_from_string", value)
     end
-    Rails.logger.debug "DEBUG: created page with tags: [#{page.tags.joined}]"
+    Rails.logger.debug "DEBUG: created page with tags: [#{page.tags.joined}] and authors: #{page.authors.map(&:true_name)}"
     page
   end
 
@@ -789,7 +789,7 @@ class Page < ActiveRecord::Base
   ## if it's hidden, then hide the authors also
   ## if it's not, use the short names
   def hidden?; cached_hidden_string.present?; end
-  def download_author_string; hidden? ? "" : authors.map(&:short_name).join(" & "); end
+  def download_author_string; hidden? ? "" : authors.map(&:true_name).join(" & "); end
   ## --tags
   ## if it's hidden, then the hidden tags are the only tags
   ## if it's not hidden, then add size and unread (if not read) to not-fandom tags
@@ -1004,7 +1004,7 @@ private
 
   def self.with_author(string)
     joins(:authors).
-    where(["authors.name LIKE ?", string + "%"])
+    where(["authors.name LIKE ?", "%" + string + "%"])
   end
 
   def remove_placeholders

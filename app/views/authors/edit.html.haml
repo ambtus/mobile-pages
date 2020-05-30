@@ -11,6 +11,6 @@
     %br
     - unless (Author.names - [@author.name]).blank?
       = label_tag :merge, "Merge into:"
-      = select_tag :merge, options_for_select([nil] + Author.names - [@author.name])
+      = select_tag :merge, options_for_select([nil] + Author.names - [@author.true_name])
       %br
       .button= f.submit "Merge"

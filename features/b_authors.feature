@@ -29,7 +29,7 @@ Feature: author stuff
     When I want to edit the authors
       And I fill in "authors" with "charles dodgson"
       And I press "Add Authors"
-    Then I should see "charles dodgson & lewis carroll" within ".authors"
+    Then I should see "lewis carroll & charles dodgson" within ".authors"
     When I am on the homepage
     Then I should be able to select "charles dodgson" from "Author"
 
@@ -70,7 +70,6 @@ Feature: author stuff
     When I am on the page's page
       Then I should see "June" within ".authors"
 
-  @wip
   Scenario: add an AKA
     Given a page exists with add_author_string: "jane"
     When I am on the edit author page for "jane"
