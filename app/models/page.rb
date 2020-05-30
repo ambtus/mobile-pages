@@ -842,7 +842,7 @@ class Page < ActiveRecord::Base
       size_string,
       my_short_notes,
       short_notes,
-    ].join_comma.truncate(SHORT_LENGTH, separator: /\s/)
+    ].join_comma.truncate(SHORT_LENGTH*6, separator: /\s/)
   end
 
   def epub_tags
