@@ -1,7 +1,8 @@
 - content_for :title do
   = @page.title
-%h2{:class => "chapter"} Notes
-=render :partial => "downloads/notes", :locals => {:page => @page}
+-unless @page.notes.blank? && @page.my_notes.blank?
+  %h2{:class => "chapter"} Notes
+  =render :partial => "downloads/notes", :locals => {:page => @page}
 - if @page.parts.empty?
   %h2{:style=> "page-break-before:always", :class => "chapter"}=@page.title
   .content=raw @page.edited_html

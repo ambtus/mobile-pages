@@ -40,8 +40,6 @@ Feature: one part unread
       And I press "Update"
     Then I should see "Parent" within ".title"
       And I should see "medium" within ".size"
-      And I should not see "medium" within "#position_2"
-      And I should see "short" within "#position_1"
       And I should not see "two" within "#position_2"
       And I should see "one" within "#position_2"
     When I am on the homepage

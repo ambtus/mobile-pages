@@ -544,7 +544,6 @@ class Page < ActiveRecord::Base
   def et_al_names
     [
       (self.authors.empty? ? nil : "by #{author_string}"),
-      self.size,
       *self.favorite_names,
       (self.last_read.blank? ? "unread" : self.last_read.to_date),
     ].compact

@@ -28,3 +28,12 @@ Feature: downloads metadata
     And the download epub command should not include tags: "2014"
     And the download epub command should include comments: "medium"
     But the download epub command should not include comments: "2014"
+
+  Scenario: part titles shouldn't have size
+    Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3"
+    Then the download epub command should include tags: "long"
+      And the download epub command should include comments: "long"
+    When I am on the page's page
+    And I view the content
+     Then I should see "Part 1" within "h2"
+     But I should not see "Part 1 (medium)" within "h2"
