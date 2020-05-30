@@ -40,7 +40,7 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should not see "Please select tag"
+    Then I should NOT see "Please select tag"
       And I should see "first" within ".tags"
       And I should see "second" within ".hiddens"
 
@@ -53,7 +53,7 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should not see "Please select tag"
+    Then I should NOT see "Please select tag"
       And I should see "nonfiction" within ".hiddens"
 
   Scenario: add a hidden to a page when there are no hiddens
@@ -97,11 +97,11 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       And I fill in "add_parent" with "New Parent"
       And I press "Update"
     When I am on the page with title "New Parent"
-    Then I should not see "nonfiction" within ".hiddens"
+    Then I should NOT see "nonfiction" within ".hiddens"
       But I should see "(nonfiction)" within "#position_1"
     When I am on the homepage
       Then I should see "New Parent" within "#position_1"
-    But I should not see "nonfiction" within ".tags"
+    But I should NOT see "nonfiction" within ".tags"
 
  Scenario: list the hiddens
     Given a tag exists
@@ -122,7 +122,7 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
     And I press "Update"
     When I am on the homepage
       And I should be able to select "speculative fiction" from "hidden"
-      But I should not be able to select "fantasy" from "hidden"
+      But I should NOT be able to select "fantasy" from "hidden"
 
   Scenario: delete a hidden
     Given a page exists with hiddens: "work in progress"
@@ -131,7 +131,7 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
     When I press "Yes"
     Then I should have no hiddens
     When I am on the homepage
-      Then I should not see "work in progress"
+      Then I should NOT see "work in progress"
       But I should see "Page 1"
 
   Scenario: merge two tags
@@ -141,15 +141,15 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       And I select "better name" from "merge"
       And I press "Merge"
     When I am on the page's page
-    Then I should not see "bad name"
+    Then I should NOT see "bad name"
     And I should see "better name" within ".hiddens"
 
   Scenario: don’t allow merge if not the same type
     Given a tag exists with name: "not hidden"
     Given a tag exists with name: "bad name" AND type: "Hidden"
     When I am on the edit tag page for "bad name"
-      Then I should not see "not hidden"
-      And I should not see "Merge"
+      Then I should NOT see "not hidden"
+      And I should NOT see "Merge"
 
   Scenario: change hidden to generic tag
     Given a page exists with hiddens: "will be visible"
@@ -160,10 +160,10 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       And I press "Change"
     When I am on the page's page
       Then I should see "will be visible" within ".tags"
-      And the page should not have any hidden tags
+      And the page should NOT have any hidden tags
     When I am on the homepage
       Then I should be able to select "will be visible" from "tag"
-      But I should not be able to select "will be visible" from "hidden"
+      But I should NOT be able to select "will be visible" from "hidden"
 
   Scenario: change generic to hidden tag
     Given a page exists with tags: "will be hidden"
@@ -174,8 +174,8 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       And I press "Change"
     When I am on the page's page
       Then I should see "will be hidden" within ".hiddens"
-      And the page should not have any not hidden tags
+      And the page should NOT have any not hidden tags
     When I am on the homepage
       Then I should be able to select "will be hidden" from "hidden"
-      But I should not be able to select "will be hidden" from "tag"
+      But I should NOT be able to select "will be hidden" from "tag"
 

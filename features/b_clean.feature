@@ -5,14 +5,14 @@ Feature: clean up html from web
     When I am on the page's page
       And I view the content
     Then I should see "A Single Love"
-    But I should not see "email Vera"
+    But I should NOT see "email Vera"
 
   Scenario: quotes
     Given a page exists with title: "Quotes" AND url: "http://test.sidrasue.com/quotes.html"
     When I am on the page with title "Quotes"
       And I view the content
     Then I should see "Retrieved from the web"
-    But my page named "Quotes" should not contain "&quot;"
+    But my page named "Quotes" should NOT contain "&quot;"
 
   Scenario: pasted html file gets cleaned
     Given a page exists with url: "http://test.sidrasue.com/test.html"
@@ -29,11 +29,11 @@ Feature: clean up html from web
      And I press "Update Raw HTML"
       And I view the content
      Then I should see "The beginning"
-       And I should not see "email Vera"
+       And I should NOT see "email Vera"
 
    Scenario: fanfiction Share button gets cleaned
      Given a page exists with url: "http://www.fanfiction.net/s/5853866/1/Counting"
      When I am on the page's page
       And I view the content
      Then I should see "Skip. Skip."
-      But I should not see "Share"
+      But I should NOT see "Share"

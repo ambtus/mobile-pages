@@ -11,7 +11,7 @@ Feature: filter on tags
       And I press "Find"
     Then I should see "The Mysterious Affair at Styles"
       And I should see "The Boxcar Children"
-      But I should not see "Alice in Wonderland"
+      But I should NOT see "Alice in Wonderland"
 
   Scenario: find after merging
     Given a page exists with tags: "better name"
@@ -21,7 +21,7 @@ Feature: filter on tags
       And I press "Merge"
     When I am on the homepage
       Then I should see "better name" within ".tags"
-      And I should not see "bad name" within ".tags"
+      And I should NOT see "bad name" within ".tags"
     When I select "better name" from "tag"
       And I press "Find"
     Then I should see "Page 1"

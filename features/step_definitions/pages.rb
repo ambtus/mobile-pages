@@ -46,7 +46,7 @@ end
 Then /^my page named "([^\"]*)" should contain "([^\"]*)"$/ do |title, string|
   assert_match Regexp.new(string), Page.find_by_title(title).edited_html
 end
-Then /^my page named "([^\"]*)" should not contain "([^\"]*)"$/ do |title, string|
+Then /^my page named "([^\"]*)" should NOT contain "([^\"]*)"$/ do |title, string|
   assert_no_match Regexp.new(string), Page.find_by_title(title).edited_html
 end
 

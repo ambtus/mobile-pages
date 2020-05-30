@@ -7,14 +7,14 @@ Feature: ao3 specific stuff
     When I fill in "page_url" with "http://archiveofourown.org/works/68481"
       And I select "popslash" from "tag"
       And I press "Store"
-    Then I should not see "Title can't be blank"
+    Then I should NOT see "Title can't be blank"
       And I should see "I Drive Myself Crazy" within ".title"
       And I should see "please no crossovers" within ".notes"
-      And I should not see "Popslash" within ".notes"
+      And I should NOT see "Popslash" within ".notes"
       And I should see "AJ/JC" within ".notes"
       And I should see "Make the Yuletide Gay" within ".notes"
       And I should see "Sidra" within ".authors"
-      And I should not see "by Sidra" within ".notes"
+      And I should NOT see "by Sidra" within ".notes"
 
   Scenario: grab chaptered page
     Given a tag exists with name: "harry potter"
@@ -32,9 +32,9 @@ Feature: ao3 specific stuff
       And I should see "1. Where am I?" within "#position_1"
       And I should see "2. Hogwarts" within "#position_2"
     When I follow "Hogwarts"
-      Then I should not see "by Sidra" within ".notes"
-      And I should not see "Using time-travel" within ".notes"
-      And I should not see "abandoned" within ".notes"
+      Then I should NOT see "by Sidra" within ".notes"
+      And I should NOT see "Using time-travel" within ".notes"
+      And I should NOT see "abandoned" within ".notes"
 
   Scenario: ao3 with and without chapter titles
     Given I am on the homepage
@@ -44,13 +44,13 @@ Feature: ao3 specific stuff
      And I view the content
     Then I should see "Chapter 1"
       And I should see "2. Ours"
-      But I should not see "1. Chapter 1"
+      But I should NOT see "1. Chapter 1"
 
   Scenario: refetch from ao3 when it used to be somewhere else
     Given a page exists with title: "Counting" AND url: "https://www.fanfiction.net/s/5853866/1/Counting"
       And I am on the page with title "Counting"
       # Then I should see "ambtus" # TODO after add grabbing author from fanfiction
-      And I should not see "lauriegilbert"
+      And I should NOT see "lauriegilbert"
       When I view the content
       Then I should see "Skip."
     When I am on the page with title "Counting"
@@ -58,7 +58,7 @@ Feature: ao3 specific stuff
     When I fill in "url" with "http://archiveofourown.org/works/688"
       And I press "Refetch"
     Then I should see "by Sidra"
-      And I should not see "ambtus"
+      And I should NOT see "ambtus"
       And I should see "Skipping Stones"
       And I should see "thanks to lauriegilbert"
       When I view the content
@@ -71,11 +71,11 @@ Feature: ao3 specific stuff
       And I select "harry potter" from "tag"
       And I press "Store"
     Then I should see "Where am I?" within ".title"
-      And I should not see "1."
+      And I should NOT see "1."
       And I should see "by Sidra"
       And I should see "Using time-travel"
-      And I should not see "Hogwarts"
-      And I should not see "giving up on nanowrimo"
+      And I should NOT see "Hogwarts"
+      And I should NOT see "giving up on nanowrimo"
 
   Scenario: refetch one chapter from ao3
     Given a tag exists with name: "harry potter"
@@ -87,23 +87,23 @@ Feature: ao3 specific stuff
       And I fill in "page_notes" with "changed notes"
       And I press "Update"
     Then I should see "changed notes" within ".notes"
-      And I should not see "by Sidra" within ".notes"
+      And I should NOT see "by Sidra" within ".notes"
     And I follow "Edit Scrubbed HTML"
       And I fill in "pasted" with "oops"
       And I press "Edit HTML"
       And I view the content
     Then I should see "oops"
-      And I should not see "Amy woke slowly"
+      And I should NOT see "Amy woke slowly"
     When I am on the page with title "Where am I?"
       And I follow "Refetch"
       Then the "url" field should contain "http://archiveofourown.org/works/692/chapters/803"
     When I press "Refetch"
       Then I should see "Where am I?" within ".title"
-      And I should not see "1."
+      And I should NOT see "1."
       And I should see "by Sidra" within ".notes"
-      And I should not see "changed notes" within ".notes"
+      And I should NOT see "changed notes" within ".notes"
       When I view the content
-      Then I should not see "oops"
+      Then I should NOT see "oops"
       And I should see "Amy woke slowly"
 
   Scenario: fetch more chapters from ao3
@@ -121,7 +121,7 @@ Feature: ao3 specific stuff
     Then I should see "Time Was, Time Is" within ".title"
       And I should see "Using time-travel"
       And I should see "Where am I?" within "#position_1"
-      And I should not see "1. Were am I?" within "#position_1"
+      And I should NOT see "1. Were am I?" within "#position_1"
       And I should see "2. Hogwarts" within "#position_2"
     When I follow "Refetch"
       And I press "Refetch Meta"

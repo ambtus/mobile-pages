@@ -9,7 +9,7 @@ Feature: trim cruft off pages
   And I view the content
   Then I should see "1st"
     And I should see "2nd"
-  But I should not see "3rd"
+  But I should NOT see "3rd"
 
  Scenario: remove top when one automatically removed surrounding blockquote
   Given a page exists with url: "http://test.sidrasue.com/blockquote.html"
@@ -20,7 +20,7 @@ Feature: trim cruft off pages
   And I view the content
   Then I should see "2nd"
     And I should see "3rd"
-  But I should not see "1st"
+  But I should NOT see "1st"
 
  Scenario Outline: strip beginning and end
   Given a page exists with url: "<url>"
@@ -31,8 +31,8 @@ Feature: trim cruft off pages
     And I press "Scrub" within ".top"
   And I view the content
   Then I should see "<wanted>"
-    And I should not see "<unwanted1>"
-    And I should not see "<unwanted2>"
+    And I should NOT see "<unwanted1>"
+    And I should NOT see "<unwanted2>"
 
   Examples:
   | url                                        | wanted       | unwanted1       | unwanted2   |
@@ -54,7 +54,7 @@ Feature: trim cruft off pages
       And I press "Scrub" within ".bottom"
     And I view the content
     Then I should see "actual content"
-      And I should not see "header"
+      And I should NOT see "header"
     When I am on the page's page
     When I press "Rebuild from Raw HTML"
     And I view the content
@@ -73,14 +73,14 @@ Feature: trim cruft off pages
       And I choose "top cruft" within ".top"
       And I choose "bottom cruft" within ".bottom"
       And I press "Scrub" within ".bottom"
-    Then the download directory should not exist
+    Then the download directory should NOT exist
     And I am on the page's page
       And I view the content
-    Then I should not see "cruft"
+    Then I should NOT see "cruft"
       And I should see "stuff for part 1"
     And I am on the page's page
     When I press "Rebuild from Raw HTML"
-    Then the download directory should not exist
+    Then the download directory should NOT exist
       And I view the content
     Then I should see "cruft"
       And the download directory should exist
@@ -105,14 +105,14 @@ Feature: trim cruft off pages
       And I choose "top cruft" within ".top"
       And I choose "bottom cruft" within ".bottom"
       And I press "Scrub" within ".top"
-    Then the download directory should not exist
+    Then the download directory should NOT exist
     When I am on the page's page
       And I view the content
     Then I should see "First Part"
       And I should see "SubPart"
       And I should see "stuff for part 1"
-    But I should not see "top cruft"
-    And I should not see "bottom cruft"
+    But I should NOT see "top cruft"
+    And I should NOT see "bottom cruft"
 
   Scenario: show number of nodes
   Given a page exists with url: "http://test.sidrasue.com/div.html"

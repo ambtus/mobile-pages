@@ -1,11 +1,11 @@
 Feature: creating multi-part pages
 
-  Scenario: children should not show up on front page by themselves
+  Scenario: children should NOT show up on front page by themselves
     Given a page exists with title: "Parent" AND urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html"
     When I am on the homepage
     Then I should see "Parent" within ".title"
     And I should see "Part 1 | Part 2" within ".part_links"
-    Then I should not see "Part 1" within ".title"
+    Then I should NOT see "Part 1" within ".title"
 
   Scenario: holder page for parts is okay
     Given I am on the homepage
@@ -107,9 +107,9 @@ Feature: creating multi-part pages
    When I view the content
      And I should see "Part 1"
      And I should see "Part 2"
-     And I should not see "Part 3"
+     And I should NOT see "Part 3"
      And I should see "stuff for part 1"
-     And I should not see "stuff for part 2"
+     And I should NOT see "stuff for part 2"
      And I should see "stuff for part 3"
 
   Scenario: ignore empty lines in list or urls during create
@@ -132,20 +132,20 @@ Feature: creating multi-part pages
    Then I should see "Parent" within ".title"
    And I should see "Child 1" within "#position_1"
    And I should see "Child 2" within "#position_2"
-   And I should not see "Boo"
+   And I should NOT see "Boo"
    When I follow "Child 1"
    Then I should see "Boo" within "#position_1"
    And I should see "Part 2" within "#position_2"
 
 
-  Scenario: should not be able to store using a pasted html file
+  Scenario: should NOT be able to store using a pasted html file
     Given a page exists with url: "http://test.sidrasue.com/test.html"
     When I am on the page's page
-      Then I should not see "Part 1"
+      Then I should NOT see "Part 1"
       But I should see "Edit Raw HTML"
       And I should see "Edit Scrubbed HTML"
     Given a page exists with urls: "http://test.sidrasue.com/test.html"
     When I am on the page's page
       Then I should see "Part 1"
-      And I should not see "Edit Raw HTML"
-      And I should not see "Edit Scrubbed HTML"
+      And I should NOT see "Edit Raw HTML"
+      And I should NOT see "Edit Scrubbed HTML"

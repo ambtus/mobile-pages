@@ -4,7 +4,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     Given a tag exists with name: "not fandom"
     Given a tag exists with name: "yes fandom" AND type: "Fandom"
     When I am on the homepage
-    Then I should not be able to select "yes fandom" from "tag"
+    Then I should NOT be able to select "yes fandom" from "tag"
     But I should be able to select "yes fandom" from "fandom"
     And I should be able to select "not fandom" from "tag"
 
@@ -48,7 +48,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should not see "Please select tag"
+    Then I should NOT see "Please select tag"
       And I should see "first" within ".tags"
       And I should see "second" within ".fandoms"
 
@@ -61,7 +61,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should not see "Please select tag"
+    Then I should NOT see "Please select tag"
       And I should see "nonfiction" within ".fandoms"
 
   Scenario: add a fandom to a page when there are no fandoms
@@ -103,7 +103,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
       And I press "Update"
     Then I should see "nonfiction" within ".fandoms"
     And I should see "Page 1" within ".parts"
-      But I should not see "nonfiction" within ".parts"
+      But I should NOT see "nonfiction" within ".parts"
     When I am on the homepage
       Then I should see "New Parent" within "#position_1"
     And I should see "nonfiction" within ".tags"
@@ -133,7 +133,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I press "Yes"
     Then I should have no fandoms
     When I am on the homepage
-      Then I should not see "Twilight"
+      Then I should NOT see "Twilight"
       But I should see "Page 1"
 
   Scenario: merge two tags
@@ -143,15 +143,15 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
       And I select "better name" from "merge"
       And I press "Merge"
     When I am on the page's page
-    Then I should not see "bad name"
+    Then I should NOT see "bad name"
     And I should see "better name" within ".fandoms"
 
   Scenario: don’t allow merge if not the same type
     Given a tag exists with name: "not fandom"
     Given a tag exists with name: "bad name" AND type: "Fandom"
     When I am on the edit tag page for "bad name"
-      Then I should not see "not fandom"
-      And I should not see "Merge"
+      Then I should NOT see "not fandom"
+      And I should NOT see "Merge"
 
   Scenario: change fandom to generic tag
     Given a page exists with fandoms: "not a fandom"
@@ -162,10 +162,10 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
       And I press "Change"
     When I am on the page's page
       Then I should see "not a fandom" within ".tags"
-      And the page should not have any fandom tags
+      And the page should NOT have any fandom tags
       When I am on the homepage
     Then I should be able to select "not a fandom" from "tag"
-    But I should not be able to select "not a fandom" from "fandom"
+    But I should NOT be able to select "not a fandom" from "fandom"
 
   Scenario: change generic to fandom tag
     Given a page exists with tags: "will be fandom"
@@ -178,7 +178,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
       Then I should see "will be fandom" within ".fandoms"
       When I am on the homepage
     Then I should be able to select "will be fandom" from "fandom"
-    But I should not be able to select "will be fandom" from "tag"
+    But I should NOT be able to select "will be fandom" from "tag"
 
   Scenario: change hidden to fandom tag
     Given a page exists with hiddens: "will be visible"
@@ -189,7 +189,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
       And I press "Change"
     When I am on the page's page
       Then I should see "will be visible" within ".fandoms"
-      And the page should not have any hidden tags
+      And the page should NOT have any hidden tags
 
   Scenario: change fandom to hidden tag
     Given a page exists with fandoms: "will be hidden"
@@ -200,5 +200,5 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
       And I press "Change"
     When I am on the page's page
       Then I should see "will be hidden" within ".hiddens"
-      And the page should not have any not hidden tags
+      And the page should NOT have any not hidden tags
 

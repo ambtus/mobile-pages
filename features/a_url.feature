@@ -13,7 +13,7 @@ Feature: url stuff
       And I fill in "page_url" with "http://w.sidrasue.com/tests/test.html"
       And I press "Store"
     Then I should see "couldn't resolve host name" within "#flash_alert"
-      And I should not see "Page created"
+      And I should NOT see "Page created"
 
   Scenario: url with surrounding whitespace okay
     Given a page exists with url: " http://test.sidrasue.com/test.html"
@@ -28,7 +28,7 @@ Feature: url stuff
       And I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I press "Store"
     Then I should see "Url has already been taken" within "#flash_alert"
-      And I should not see "duplicate"
+      And I should NOT see "duplicate"
 
   Scenario: page not found should display error
     When I am on the homepage
@@ -36,4 +36,4 @@ Feature: url stuff
       And I fill in "page_url" with "http://test.sidrasue.com/style.html"
       And I press "Store"
     Then I should see "error retrieving content" within "#flash_alert"
-      And I should not see "Page created"
+      And I should NOT see "Page created"

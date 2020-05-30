@@ -26,10 +26,10 @@ Feature: audiobook
     Given a page exists with last_read: "2014-01-01"
     When I am on the page's page
     Then I should see "2014" within ".last_read"
-    Then I should not see "audio"
+    Then I should NOT see "audio"
     When I want to edit the text
     And I press "Audiobook created"
     When I am on the page's page
     Then I should see "audio" within ".tags"
     And last read should be today
-    And I should not see "2014" within ".last_read"
+    And I should NOT see "2014" within ".last_read"

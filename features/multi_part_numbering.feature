@@ -8,8 +8,8 @@ Feature: numbering parts with a parent
      And I should see "Part 2"
      And I should see "stuff for part 1"
      And I should see "stuff for part 2"
-   But I should not see "1. Part 1"
-     And I should not see "2. Part 2"
+   But I should NOT see "1. Part 1"
+     And I should NOT see "2. Part 2"
 
   Scenario: yes numbers when does not end in a number
     Given I am on the homepage
@@ -44,5 +44,5 @@ Feature: numbering parts with a parent
      And I should see "stuff for part 2"
    Then I should see "Section 1"
      And I should see "2. Epilogue"
-   But I should not see "1. Section 1"
+   But I should NOT see "1. Section 1"
 

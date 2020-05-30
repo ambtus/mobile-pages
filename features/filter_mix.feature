@@ -21,25 +21,25 @@ Feature: filter/find
       And I should see "Another Mystery" within "#position_3"
       And I should see "To Read Mystery" within "#position_4"
       And I should see "Still More Mysteries" within "#position_5"
-      And I should not see "Nancy Drew"
-      And I should not see "The Boxcar Children"
+      And I should NOT see "Nancy Drew"
+      And I should NOT see "The Boxcar Children"
     # find unread by tag
     When I am on the homepage
       And I select "children" from "tag"
       And I choose "unread_yes"
       And I press "Find"
     Then I should see "The Boxcar Children"
-      And I should not see "Nancy Drew"
-      And I should not see "The Mysterious Affair at Styles"
-      And I should not see "Murder on the Orient Express"
+      And I should NOT see "Nancy Drew"
+      And I should NOT see "The Mysterious Affair at Styles"
+      And I should NOT see "Murder on the Orient Express"
     # find unread by author
     When I am on the homepage
     When I choose "unread_yes"
       And I select "agatha christie" from "Author"
       And I press "Find"
-    Then I should not see "Murder on the Orient Express"
-      And I should not see "The Mysterious Affair at Styles"
-      And I should not see "The Boxcar Children"
+    Then I should NOT see "Murder on the Orient Express"
+      And I should NOT see "The Mysterious Affair at Styles"
+      And I should NOT see "The Boxcar Children"
       And I should see "To Read Mystery"
     # find favorite by tag
     When I am on the homepage
@@ -47,10 +47,10 @@ Feature: filter/find
       And I choose "favorite_yes"
       And I press "Find"
     Then I should see "Harry Potter"
-      And I should not see "The Boxcar Children"
-      And I should not see "Nancy Drew"
-      And I should not see "The Mysterious Affair at Styles"
-      And I should not see "Murder on the Orient Express"
+      And I should NOT see "The Boxcar Children"
+      And I should NOT see "Nancy Drew"
+      And I should NOT see "The Mysterious Affair at Styles"
+      And I should NOT see "Murder on the Orient Express"
     # find favorite by author
     When I am on the homepage
     When I choose "favorite_yes"
@@ -58,18 +58,18 @@ Feature: filter/find
       And I press "Find"
     Then I should see "The Mysterious Affair at Styles"
       And I should see "Murder on the Orient Express"
-      And I should not see "Still More Mysteries"
-      And I should not see "Another Mystery"
-      And I should not see "To Read Mystery"
-      And I should not see "Harry Potter"
+      And I should NOT see "Still More Mysteries"
+      And I should NOT see "Another Mystery"
+      And I should NOT see "To Read Mystery"
+      And I should NOT see "Harry Potter"
     # find not unread (i.e. read)
     When I am on the homepage
     When I choose "unread_no"
       And I press "Find"
     Then I should see "Murder on the Orient Express"
-      And I should not see "The Boxcar Children"
+      And I should NOT see "The Boxcar Children"
       But I should see "The Mysterious Affair at Styles"
-      And I should not see "To Read Mystery"
+      And I should NOT see "To Read Mystery"
       And I should see "Nancy Drew"
     # find not unread by author
     When I am on the homepage
@@ -78,17 +78,17 @@ Feature: filter/find
       And I press "Find"
     Then I should see "Murder on the Orient Express"
       And I should see "The Mysterious Affair at Styles"
-      And I should not see "To Read Mystery"
-      And I should not see "Nancy Drew"
+      And I should NOT see "To Read Mystery"
+      And I should NOT see "Nancy Drew"
     # find favorite by author
     When I am on the homepage
       And I select "agatha christie" from "Author"
       And I choose "favorite_good"
       And I press "Find"
     Then I should see "Another Mystery"
-      And I should not see "Nancy Drew"
-      And I should not see "The Mysterious Affair at Styles"
-      And I should not see "Murder on the Orient Express"
+      And I should NOT see "Nancy Drew"
+      And I should NOT see "The Mysterious Affair at Styles"
+      And I should NOT see "Murder on the Orient Express"
 
   Scenario: Find page by url
     Given the following pages

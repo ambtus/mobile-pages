@@ -16,7 +16,7 @@ Feature: author stuff
     Given a page exists
       And an author exists with name: "lewis carroll"
     When I am on the page's page
-    Then I should not see "lewis carroll" within ".authors"
+    Then I should NOT see "lewis carroll" within ".authors"
     When I want to edit the authors
       And I select "lewis carroll" from "page_author_ids_"
       And I press "Update Authors"
@@ -41,7 +41,7 @@ Feature: author stuff
       And I press "Update"
     Then I should see "newbie" within ".authors"
     And I should see "Page 1" within ".parts"
-    But I should not see "newbie" within ".parts"
+    But I should NOT see "newbie" within ".parts"
 
   Scenario: list the authors
     Given an author exists with name: "jane"
@@ -59,7 +59,7 @@ Feature: author stuff
     When I press "Yes"
     Then I should have no authors
     When I am on the page's page
-      Then I should not see "jane" within ".authors"
+      Then I should NOT see "jane" within ".authors"
       But I should see "by jane" within ".notes"
 
   Scenario: edit the author name

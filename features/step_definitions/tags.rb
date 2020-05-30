@@ -34,15 +34,15 @@ Given /^the following tags?$/ do |table|
 end
 
 
-Then("the page should not have any not hidden tags") do
+Then("the page should NOT have any not hidden tags") do
   Page.first.tags.not_hidden.empty?
 end
 
-Then("the page should not have any hidden tags") do
+Then("the page should NOT have any hidden tags") do
   Page.first.tags.hidden.empty?
 end
 
-Then("the page should not have any fandom tags") do
+Then("the page should NOT have any fandom tags") do
   Page.first.tags.fandom.empty?
 end
 

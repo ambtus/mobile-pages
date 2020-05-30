@@ -30,7 +30,7 @@ Scenario Outline: encodings
   Scenario: clean html with stray linefeed
     Given a page exists with title: "Linefeed" AND url: "http://test.sidrasue.com/112a.html"
     Then my page named "Linefeed" should contain "fiancé"
-    And my page named "Linefeed" should not contain "&#13;"
+    And my page named "Linefeed" should NOT contain "&#13;"
 
   Scenario: utf8
     Given a page exists with url: "http://test.sidrasue.com/sbutf8.html"

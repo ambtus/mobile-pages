@@ -8,9 +8,9 @@ Feature: pages with hidden tags are filtered out by default. During search, anyt
       | The Boxcar Children              | mystery, children |
     When I am on the homepage
     Then I should see "No pages found"
-      And I should not see "The Mysterious Affair at Styles"
-      And I should not see "The Boxcar Children"
-      And I should not see "Alice in Wonderland"
+      And I should NOT see "The Mysterious Affair at Styles"
+      And I should NOT see "The Boxcar Children"
+      And I should NOT see "Alice in Wonderland"
 
   Scenario: hidden by default with tags
     Given the following pages
@@ -19,17 +19,17 @@ Feature: pages with hidden tags are filtered out by default. During search, anyt
       | Alice in Wonderland              | children                | hide, go away |
       | The Boxcar Children              | mystery, children       | |
     When I am on the homepage
-    Then I should not see "No pages found"
+    Then I should NOT see "No pages found"
       And I should see "The Boxcar Children"
-      And I should not see "The Mysterious Affair at Styles"
-      And I should not see "Alice in Wonderland"
+      And I should NOT see "The Mysterious Affair at Styles"
+      And I should NOT see "Alice in Wonderland"
 
   Scenario: find by hidden
     Given the following pages
       | title                            | hiddens  |
       | Alice in Wonderland              | children          |
     When I am on the homepage
-      Then I should not see "Alice in Wonderland"
+      Then I should NOT see "Alice in Wonderland"
     When I select "children" from "Hidden"
       And I press "Find"
     Then I should see "Alice in Wonderland"
@@ -45,8 +45,8 @@ Feature: pages with hidden tags are filtered out by default. During search, anyt
       And I select "children" from "hidden"
       And I press "Find"
     Then I should see "The Boxcar Children"
-      But I should not see "The Mysterious Affair at Styles"
-      And I should not see "Alice in Wonderland"
+      But I should NOT see "The Mysterious Affair at Styles"
+      And I should NOT see "Alice in Wonderland"
 
   Scenario: change hidden to generic tag
     Given I have no tags
@@ -60,7 +60,7 @@ Feature: pages with hidden tags are filtered out by default. During search, anyt
       And I select "" from "change"
       And I press "Change"
     When I am on the homepage
-      Then I should not see "No pages found"
+      Then I should NOT see "No pages found"
       And I should see "Page 1"
       And I select "will be visible" from "tag"
     When I am on the page's page
@@ -70,7 +70,7 @@ Feature: pages with hidden tags are filtered out by default. During search, anyt
     Given I have no tags
     And a page exists with tags: "to be hidden"
     When I am on the homepage
-      Then I should not see "No pages found"
+      Then I should NOT see "No pages found"
       And I should see "Page 1"
       And I select "to be hidden" from "tag"
     When I am on the page's page

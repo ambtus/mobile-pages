@@ -25,7 +25,7 @@ Feature: composite rating made up of sweet and interesting.
       And I choose "stressful"
       And I choose "boring"
     And I press "Rate unfinished"
-    Then I should not see "set for reading again"
+    Then I should NOT see "set for reading again"
       And I should see "set to 'unfinished'"
     When I am on the page's page
     Then I should see "boring, stressful, unfinished"

@@ -37,7 +37,7 @@ Then("the {string} field should contain {string}") do |field, text|
   assert page.has_field?(field, with: text)
 end
 
-Then("the {string} field should not contain {string}") do |field, text|
+Then("the {string} field should NOT contain {string}") do |field, text|
   assert !page.has_field?(field, with: text)
 end
 
@@ -66,18 +66,18 @@ When("I follow {string} within {string}") do |link, parent|
 end
 
 Then("I should see {string}") do |text|
-  assert page.has_content?(text)
+  assert_text(text)
 end
 
-Then("I should not see {string}") do |text|
+Then("I should NOT see {string}") do |text|
   assert_no_text(text)
 end
 
 Then("I should see {string} within {string}") do |text, parent|
-  within(parent) { assert page.has_content?(text) }
+  within(parent) { assert assert_text(text) }
 end
 
-Then("I should not see {string} within {string}") do |text, parent|
+Then("I should NOT see {string} within {string}") do |text, parent|
   within(parent) { assert_no_text(text) }
 end
 
@@ -97,7 +97,7 @@ Then("I should be able to select {string} from {string}") do |selection, dropdow
    assert page.has_select?(dropdown, with_options: [selection])
 end
 
-Then("I should not be able to select {string} from {string}") do |selection, dropdown|
+Then("I should NOT be able to select {string} from {string}") do |selection, dropdown|
    assert !page.has_select?(dropdown, with_options: [selection])
 end
 

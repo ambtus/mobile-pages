@@ -11,7 +11,7 @@ Feature: random page
     When I am on the homepage
     When I choose "sort_by_random"
       And I press "Find"
-    Then I should not see "No pages found"
+    Then I should NOT see "No pages found"
 
   Scenario: don’t find unread random pages
     Given a page exists
@@ -26,5 +26,5 @@ Feature: random page
     When I choose "sort_by_random"
       And I choose "unread_yes"
       And I press "Find"
-    Then I should not see "No pages found"
+    Then I should NOT see "No pages found"
 

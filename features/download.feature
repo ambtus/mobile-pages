@@ -6,7 +6,7 @@ Feature: downloads
       And I follow "Text"
     Then the download directory should exist
     Then the download html file should exist
-    Then the download epub file should not exist
+    Then the download epub file should NOT exist
 
   Scenario: html downloads
     Given a page exists
@@ -14,7 +14,7 @@ Feature: downloads
       And I view the content
     Then the download directory should exist
     Then the download html file should exist
-    Then the download epub file should not exist
+    Then the download epub file should NOT exist
 
   Scenario: epub downloads
     Given a page exists
@@ -30,7 +30,7 @@ Feature: downloads
       And I download the epub
     When I am on the page's page
       And I press "Remove Downloads"
-    Then the download directory should not exist
+    Then the download directory should NOT exist
 
   Scenario: Update notes removes old html
     Given a page exists with notes: "Lorem ipsum dolor"
@@ -43,7 +43,7 @@ Feature: downloads
       And I press "Update"
     When I am on the page's page
      When I view the content
-    Then I should not see "Lorem ipsum dolor"
+    Then I should NOT see "Lorem ipsum dolor"
       And I should see "On Assignment for Dumbledore"
 
   Scenario: my notes do go in html (and epub)

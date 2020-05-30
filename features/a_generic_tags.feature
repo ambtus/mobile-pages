@@ -38,7 +38,7 @@ Feature: generic tag stuff
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should not see "Please select tag"
+    Then I should NOT see "Please select tag"
       And I should see "first" within ".tags"
 
   Scenario: add a tag to a page when there are no tags
@@ -83,7 +83,7 @@ Feature: generic tag stuff
       And I press "Update"
     Then I should see "tag" within ".tags"
     And I should see "Page 1" within ".parts"
-    But I should not see "tag" within ".parts"
+    But I should NOT see "tag" within ".parts"
 
   Scenario: list the tags
     Given a tag exists with name: "fantasy"
@@ -103,7 +103,7 @@ Feature: generic tag stuff
     And I press "Update"
     When I am on the homepage
     Then I should be able to select "Fantasy" from "tag"
-    But I should not be able to select "fantasy" from "tag"
+    But I should NOT be able to select "fantasy" from "tag"
 
   Scenario: delete a tag
     Given a page exists with tags: "science fiction"
@@ -112,7 +112,7 @@ Feature: generic tag stuff
     When I press "Yes"
     Then I should have no tags
     When I am on the homepage
-      Then I should not see "science fiction"
+      Then I should NOT see "science fiction"
       But I should see "Page 1"
 
   Scenario: merge two tags
@@ -122,10 +122,10 @@ Feature: generic tag stuff
       And I select "better name" from "merge"
       And I press "Merge"
     Then I should see "better name"
-      And I should not see "bad name"
+      And I should NOT see "bad name"
     When I am on the homepage
       Then I should see "better name" within ".tags"
-      And I should not see "bad name" within ".tags"
+      And I should NOT see "bad name" within ".tags"
     When I am on the page's page
-    Then I should not see "bad name"
+    Then I should NOT see "bad name"
     And I should see "better name" within ".tags"

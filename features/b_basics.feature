@@ -9,7 +9,7 @@ Feature: basic stuff
     Then I should see "Raw HTML updated" within "#flash_notice"
     When I view the content
       And I should see "This is a test"
-      And I should not see "Retrieved from the web"
+      And I should NOT see "Retrieved from the web"
 
   Scenario: pasted plaintext is okay
     Given a page exists

@@ -14,7 +14,7 @@ Feature: author stuff
     Given a page exists
       And an author exists with name: "lewis carroll (charles dodgson)"
     When I am on the page's page
-    Then I should not see "lewis carroll" within ".authors"
+    Then I should NOT see "lewis carroll" within ".authors"
     When I want to edit the authors
       And I select "lewis carroll" from "page_author_ids_"
       And I press "Update Authors"
@@ -28,7 +28,7 @@ Feature: author stuff
     And I press "Update"
     When I am on the homepage
     Then I should be able to select "jane" from "author"
-    But I should not be able to select "jane (aka)" from "author"
+    But I should NOT be able to select "jane (aka)" from "author"
     Given a page exists
     When I am on the page's page
       And I want to edit the authors

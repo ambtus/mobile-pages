@@ -7,14 +7,14 @@ Feature: composite rating made up of sweet and interesting.
       And I press "Find"
     Then I should see "page00"
       And I should see "page01"
-    But I should not see "page02"
-      And I should not see "page03"
+    But I should NOT see "page02"
+      And I should NOT see "page03"
     Then I should see "page10"
-    But I should not see "page11"
-      And I should not see "page12"
-      And I should not see "page13"
-      And I should not see "page2"
-      And I should not see "page3"
+    But I should NOT see "page11"
+      And I should NOT see "page12"
+      And I should NOT see "page13"
+      And I should NOT see "page2"
+      And I should NOT see "page3"
 
   Scenario: search for a with low stress
     Given pages with all possible ratings exist
@@ -22,7 +22,7 @@ Feature: composite rating made up of sweet and interesting.
     When I choose "find_sweet"
       And I press "Find"
     Then I should see "page20"
-    But I should not see "page02"
+    But I should NOT see "page02"
 
   Scenario: search for interesting
     Given pages with all possible ratings exist
@@ -30,7 +30,7 @@ Feature: composite rating made up of sweet and interesting.
     When I choose "find_interesting"
       And I press "Find"
     Then I should see "page02"
-    But I should not see "page20"
+    But I should NOT see "page20"
 
   Scenario: search for a book with both low stress & high interest
     Given pages with all possible ratings exist
@@ -38,11 +38,11 @@ Feature: composite rating made up of sweet and interesting.
     When I choose "find_both"
       And I press "Find"
     Then I should see "page00" within "#position_1"
-    But I should not see "page01"
-      And I should not see "page10"
-      And I should not see "page11"
-      And I should not see "page20"
-      And I should not see "page22"
+    But I should NOT see "page01"
+      And I should NOT see "page10"
+      And I should NOT see "page11"
+      And I should NOT see "page20"
+      And I should NOT see "page22"
 
   Scenario: find either shouldn't get unread
     Given a page exists with title: "Page 1" AND url: "http://test.sidrasue.com/parts/1.html"
@@ -51,7 +51,7 @@ Feature: composite rating made up of sweet and interesting.
     When I am on the homepage
       And I choose "favorite_either"
       And I press "Find"
-    Then I should not see "Page 1"
+    Then I should NOT see "Page 1"
       And I should see "Page 2"
       And I should see "Page 3"
 
@@ -66,8 +66,8 @@ Feature: composite rating made up of sweet and interesting.
       And I choose "favorite_neither"
       And I press "Find"
     Then I should see "Page 4"
-      And I should not see "Page 1"
-      And I should not see "Page 2"
-      And I should not see "Page 3"
+      And I should NOT see "Page 1"
+      And I should NOT see "Page 2"
+      And I should NOT see "Page 3"
       And I should see "Page 5"
       And I should see "Page 6"

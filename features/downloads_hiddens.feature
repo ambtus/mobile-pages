@@ -3,9 +3,9 @@ Feature: an ebook with a hidden tag is also hidden from marvin
   Scenario: epub download hidden page; author and tag strings are empty
     Given a page exists with hiddens: "hide me" AND tags: "my tag" AND add_author_string: "my author"
     Then the download epub command should include tags: "hide me"
-    But the download epub command should not include tags: "my tag"
+    But the download epub command should NOT include tags: "my tag"
     But the download epub command should include comments: "my tag"
-    And the download epub command should not include authors: "my author"
+    And the download epub command should NOT include authors: "my author"
     But the download epub command should include comments: "my author"
 
   Scenario: epub of a parent omits hidden part but author and tag strings populated. epub download of a hidden part as standalone: author and tag strings are empty but are in comments
@@ -15,22 +15,22 @@ Feature: an ebook with a hidden tag is also hidden from marvin
       And I fill in "tags" with "hide me"
       And I press "Add Hidden Tags"
     When I am on the homepage
-      Then I should not see "Part 2"
+      Then I should NOT see "Part 2"
     When I am on the page's page
       Then I should see "Part 2"
       And I should see "hide me" within "#position_2"
     When I view the content
-      Then I should not see "Part 2"
-      And I should not see "hide me"
-      And I should not see "stuff for part 2"
+      Then I should NOT see "Part 2"
+      And I should NOT see "hide me"
+      And I should NOT see "stuff for part 2"
     And the download epub command should include tags: "show me"
-    But the download epub command should not include tags: "hide me"
+    But the download epub command should NOT include tags: "hide me"
     And the download epub command should include authors: "my author"
     When I am on the page with title "Part 2"
       And I view the content
       Then I should see "stuff for part 2"
-    And the download epub command for "part 2" should not include tags: "show me"
+    And the download epub command for "part 2" should NOT include tags: "show me"
     But the download epub command for "part 2" should include tags: "hide me"
-    And the download epub command for "part 2" should not include authors: "my author"
+    And the download epub command for "part 2" should NOT include authors: "my author"
     And the download epub command for "part 2" should include comments: "by my author"
     And the download epub command for "part 2" should include comments: "show me"

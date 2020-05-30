@@ -5,14 +5,14 @@ Feature: stuff to do with my notes
      And I fill in "page_title" with "no notes"
      And I press "Store"
    When I am on the page with title "no notes"
-   Then I should not see "My Notes" within ".my_notes"
+   Then I should NOT see "My Notes" within ".my_notes"
 
   Scenario: long notes should be truncated at word boundaries in index
-    Given a page exists with my_notes: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id turpis pretium ante malesuada pulvinar. Phasellus nullam."
+    Given a page exists with my_notes: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id turpis pretium ante malesuada pulvinar. Phasellus nullam. Lorem ipsum dolor sit amet consectetur adipiscing elit. Integer id turpis pretium ante malesuada pulvinar. Phasellus nullam."
     When I am on the page's page
-     Then I should see "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id turpis pretium ante malesuada pulvinar. Phasellus nullam." within ".my_notes"
+     Then I should see "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id turpis pretium ante malesuada pulvinar. Phasellus nullam. Lorem ipsum dolor sit amet consectetur adipiscing elit. Integer id turpis pretium ante malesuada pulvinar. Phasellus nullam." within ".my_notes"
    When I am on the homepage
-     Then I should see "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id turpis..." within "#position_1"
+     Then I should see "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id turpis pretium ante malesuada pulvinar. Phasellus nullam. Lorem ipsum dolor sit amet..." within "#position_1"
 
   Scenario: a shorter note won’t be truncated
     Given a page exists with my_notes: "On Assignment for Dumbledore, Harry sees his lover from a new perspective."
@@ -35,7 +35,7 @@ Feature: stuff to do with my notes
       And I fill in "page_my_notes" with "new notes"
       And I press "Update"
     Then I should see "new notes" within ".my_notes"
-      And I should not see "some basic notes" within ".my_notes"
+      And I should NOT see "some basic notes" within ".my_notes"
 
   Scenario: notes on multi-page view
     Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
@@ -55,6 +55,6 @@ Feature: stuff to do with my notes
      Then I should see "This is not actually a very long note (once you take out the html)" within ".my_notes"
     When I am on the page's page
      ## This ¶ is not
-     Then I should not see "This is not" within ".my_notes"
+     Then I should NOT see "This is not" within ".my_notes"
      But I should see "once you take out the "
      And "html" should link to "http://some.domain.com"

@@ -11,7 +11,7 @@ Feature: other mult-part tests
       And I follow "Part 1"
       And I view the content
     Then I should see "stuff for part 1"
-    And I should not see "stuff for part 2"
+    And I should NOT see "stuff for part 2"
 
   Scenario: reorder the parts on an existing page with parts
     Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
