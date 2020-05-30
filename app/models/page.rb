@@ -475,7 +475,7 @@ class Page < ActiveRecord::Base
   def hidden_string; self.tags.hidden.by_name.joined; end
   def author_string; self.authors.joined; end
   def favorite_string; self.favorite_names.join(", "); end
-  def size_string; "#{self.size} (#{self.wordcount})"; end
+  def size_string; "#{self.size} (#{ActionController::Base.helpers.number_with_delimiter(self.wordcount)} words)"; end
   def last_read_string; unread? ? UNREAD : last_read.to_date; end
   def my_formatted_notes; Scrub.sanitize_html(my_notes); end
   def formatted_notes; Scrub.sanitize_html(notes); end
@@ -842,7 +842,7 @@ class Page < ActiveRecord::Base
       size_string,
       my_short_notes,
       short_notes,
-    ].join_comma.truncate(SHORT_LENGTH*6, separator: /\s/)
+    ].join_comma.truncate(SHORT_LENGTH*12, separator: /\s/)
   end
 
   def epub_tags
