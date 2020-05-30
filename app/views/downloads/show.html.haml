@@ -6,19 +6,19 @@
   %h2{:style=> "page-break-before:always", :class => "chapter"}=@page.title
   .content=raw @page.edited_html
 - else
-  - @page.parts.each do |first_level|
+  - @page.not_hidden_parts.each do |first_level|
     %h2{:style=> "page-break-before:always", :class => "chapter"}=first_level.title_with_tags
     =render :partial => "downloads/notes", :locals => {:page => first_level}
     - if first_level.parts.empty?
       .content=raw first_level.edited_html
     - else
-      - first_level.parts.each do |second_level|
+      - first_level.not_hidden_parts.each do |second_level|
         %h3{:style=> "page-break-before:always", :class => "chapter"}= second_level.title_with_tags
         =render :partial => "downloads/notes", :locals => {:page => second_level}
         - if second_level.parts.empty?
           .content=raw second_level.edited_html
         - else
-          - second_level.parts.each do |third_level|
+          - second_level.not_hidden_parts.each do |third_level|
             %h4{:style=> "page-break-before:always", :class => "chapter"}= third_level.title_with_tags
             =render :partial => "downloads/notes", :locals => {:page => third_level}
             .content=raw third_level.edited_html

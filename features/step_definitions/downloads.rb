@@ -26,3 +26,11 @@ Then /^the download epub command should not include (.+): "([^"]*)"$/ do |option
   assert !Page.first.epub_command.match("--#{option} \"[^\"]*#{text}[^\"]*\"")
 end
 
+Then /^the download epub command for "([^"]*)" should include (.+): "([^"]*)"$/ do |title, option, text|
+  assert Page.find_by_title(title).epub_command.match("--#{option} \"[^\"]*#{text}[^\"]*\"")
+end
+
+Then /^the download epub command for "([^"]*)" should not include (.+): "([^"]*)"$/ do |title, option, text|
+  assert !Page.find_by_title(title).epub_command.match("--#{option} \"[^\"]*#{text}[^\"]*\"")
+end
+

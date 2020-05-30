@@ -336,9 +336,9 @@ class Page < ActiveRecord::Base
     self.set_wordcount
   end
 
-  def parts
-    Page.order(:position).where(["parent_id = ?", id])
-  end
+  def parts; Page.order(:position).where(["parent_id = ?", id]); end
+
+  def not_hidden_parts; parts.select{|part| part.cached_hidden_string.blank?}; end
 
   def url_list
     partregexp = /\APart \d+\Z/
@@ -788,30 +788,57 @@ class Page < ActiveRecord::Base
   ## --authors
   ## if it's hidden, then hide the authors also
   ## if it's not, use the short names
+  ## if it's a part, add the parent's authors
+  def all_authors;
+    my_authors = self.authors
+    my_parents_authors = self.parent_id.blank? ? [] : self.parent.all_authors
+    (my_authors + my_parents_authors).pulverize.sort_by{|a| a.name}
+  end
+  def all_authors_string; all_authors.map(&:true_name).join(" & "); end
   def hidden?; cached_hidden_string.present?; end
-  def download_author_string; hidden? ? "" : authors.map(&:true_name).join(" & "); end
+  def download_author_string; hidden? ? "" : all_authors_string; end
   ## --tags
   ## if it's hidden, then the hidden tags are the only tags
   ## if it's not hidden, then add size and unread (if not read) to not-fandom tags
+  ## if it's a part, add the parent's tags
   def download_tags;
     [(unread? ? UNREAD : ""),
      size,
      tags.not_fandom.joined,
-     ].join_comma
+     ]
   end
-  def download_tag_string; hidden? ? cached_hidden_string : download_tags; end
+  def all_tags;
+    my_tags = download_tags
+    my_parents_tags = self.parent_id.blank? ? [] : self.parent.all_tags
+    (my_tags + my_parents_tags).pulverize
+  end
+  def download_tag_string; hidden? ? cached_hidden_string : all_tags.join_comma; end
   ## --series
   ## if it's a crossover, then replace the fandom tags
   def crossover?; tags.fandom.size > 1; end
   def fandom_name; tags.fandom.present? ? tags.fandom.first.name : ""; end
   def download_fandom_string; crossover? ? "crossover" : fandom_name; end
   ## --comments
-  ## if it's hidden, then put the authors into the comments
+  ## if it's hidden, then put the authors (if they exist) into the comments with the hidden tags
+  def hidden_comment_string
+    return "" unless hidden?
+    return hidden_string unless all_authors_string.present?
+    "by #{all_authors_string}, #{hidden_string}"
+  end
+  def all_tags_for_comments
+    my_tags = self.tags.fandom + self.tags.generic
+    my_parents_tags = self.parent_id.blank? ? [] : self.parent.all_tags_for_comments
+    (my_tags + my_parents_tags).pulverize
+  end
+  def all_tags_for_comments_string
+    fandoms = all_tags_for_comments.select{|t| t.type == "Fandom"}
+    generics = all_tags_for_comments.select{|t| t.type == ""}
+    (fandoms + generics).map(&:name).join_comma
+  end
   def download_comment_string
     [
-      (hidden? ? "by #{author_string}, #{hidden_string}" : ""),
-      fandom_string,
-      generic_string,
+      hidden_comment_string,
+      all_tags_for_comments_string,
       favorite_string,
       size_string,
       my_short_notes,
