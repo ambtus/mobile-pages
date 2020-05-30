@@ -34,7 +34,7 @@ class Page < ActiveRecord::Base
 
   DURATION = "years"
   UNREAD = "unread"
-  SHORT_LENGTH = 80 # truncate at this many characters
+  SHORT_LENGTH = 160 # truncate at this many characters
   LIMIT = 15 # number of pages to show in index
 
   SIZES = ["short", "medium", "long", "any"]
@@ -842,7 +842,7 @@ class Page < ActiveRecord::Base
       size_string,
       my_short_notes,
       short_notes,
-    ].join_comma.truncate(SHORT_LENGTH*12, separator: /\s/)
+    ].join_comma
   end
 
   def epub_tags
