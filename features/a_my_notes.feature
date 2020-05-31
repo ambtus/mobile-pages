@@ -58,3 +58,8 @@ Feature: stuff to do with my notes
      Then I should NOT see "This is not" within ".my_notes"
      But I should see "once you take out the "
      And "html" should link to "http://some.domain.com"
+
+  Scenario: my html notes are html save
+    Given a page exists with my_notes: "This is fun & cute <3"
+   When I am on the homepage
+     Then I should see "This is fun & cute <3" within ".my_notes"

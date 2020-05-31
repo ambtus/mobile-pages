@@ -470,8 +470,8 @@ class Page < ActiveRecord::Base
 
   # used in index view
   def merged_tag_string; tags_et_al.join(', ');end
-  def short_notes; Scrub.strip_html(notes).truncate(SHORT_LENGTH, separator: /\s/); end
-  def my_short_notes; Scrub.strip_html(my_notes).truncate(SHORT_LENGTH, separator: /\s/); end
+  def short_notes; Scrub.strip_html(notes).truncate(SHORT_LENGTH, separator: /\s/).html_safe; end
+  def my_short_notes; Scrub.strip_html(my_notes).truncate(SHORT_LENGTH, separator: /\s/).html_safe; end
 
   def add_tags_from_string(string)
     return if string.blank?
