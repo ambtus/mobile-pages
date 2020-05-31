@@ -225,18 +225,6 @@ class Page < ActiveRecord::Base
     get_meta_from_ao3
   end
 
-  def part_title(position, original)
-    if original
-      if original.match(position)
-        original
-      else
-        "#{position}. #{original}"
-      end
-    else
-      "Part #{position}"
-    end
-  end
-
   def parts_from_urls(url_title_list, refetch=false)
     old_part_ids = self.parts.map(&:id)
     old_subpart_ids = self.parts.collect{|p| p.parts.map(&:id)}.flatten
@@ -267,12 +255,11 @@ class Page < ActiveRecord::Base
     parts.each do |part|
       url = title = position = nil
       url = part.sub(/#.*/, "")
-      original_title = part.sub(/.*#/, "") if part.match("#")
+      title = part.sub(/.*#/, "") if part.match("#")
       position = parts.index(part) + 1
-      title = part_title(position.to_s, original_title)
+      title = "Part #{position}" if title.blank?
       page = Page.find_by(url: url) unless url.blank?
       page = Page.find_by(title: title, parent_id: parent.id) unless page
-      page = Page.find_by(title: original_title, parent_id: parent.id) unless page
       if page.blank?
         page = Page.create(:url=>url, :title=>title, :parent_id=>parent.id, :position => position)
         parent.update_attribute(:read_after, Time.now) if parent.read_after > Time.now
@@ -300,10 +287,10 @@ class Page < ActiveRecord::Base
       Rails.logger.debug "DEBUG: part_index: #{part_index} position: #{position}"
       part = Page.find(new_part_ids[part_index])
       url = subpart.sub(/#.*/, "")
-      original_title = subpart.sub(/.*#/, "") if subpart.match("#")
-      title = part_title(position.to_s, original_title)
+      title = subpart.sub(/.*#/, "") if subpart.match("#")
+      title = "Part #{position}" if title.blank?
       page = if url.blank?
-        part.parts.find {|p| p.title.match(original_title) }
+        part.parts.find {|p| p.title.match(title) }
       else
         page = Page.find_by(url: url)
       end
@@ -558,8 +545,15 @@ class Page < ActiveRecord::Base
     mine
   end
 
-  def title_with_tags; title + part_tag_string; end
+  def visible_part_title
+    if title.match(position.to_s)
+      title
+    else
+      "#{position}. #{title}"
+    end
+  end
 
+  def title_with_tags; visible_part_title + part_tag_string; end
 
   def section(number)
     body = Nokogiri::HTML(self.edited_html).xpath('//body').first
@@ -906,12 +900,7 @@ class Page < ActiveRecord::Base
     if chapter_title.blank?
       "Chapter #{position}"
     else
-      original = chapter_title.gsub(/^: /,"")
-      if original.match(position.to_s)
-        original
-      else
-        "#{position}. #{original}"
-      end
+      chapter_title.gsub(/^: /,"")
     end
   end
 

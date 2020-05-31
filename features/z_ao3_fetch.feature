@@ -35,6 +35,7 @@ Feature: ao3 specific stuff
       Then I should NOT see "by Sidra" within ".notes"
       And I should NOT see "Using time-travel" within ".notes"
       And I should NOT see "abandoned" within ".notes"
+   But the part titles should be stored as "Where am I? & Hogwarts"
 
   Scenario: ao3 with and without chapter titles
     Given I am on the homepage
@@ -45,6 +46,7 @@ Feature: ao3 specific stuff
     Then I should see "Chapter 1"
       And I should see "2. Ours"
       But I should NOT see "1. Chapter 1"
+   But the part titles should be stored as "Chapter 1 & Ours"
 
   Scenario: refetch from ao3 when it used to be somewhere else
     Given a page exists with title: "Counting" AND url: "https://www.fanfiction.net/s/5853866/1/Counting"

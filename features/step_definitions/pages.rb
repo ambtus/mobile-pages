@@ -55,4 +55,8 @@ Then("last read should be today") do
   assert Page.first.last_read.to_date == Date.current
 end
 
+Then("the part titles should be stored as {string}") do |title_string|
+   assert Page.first.parts.map(&:title).join(" & ") == title_string
+end
+
 

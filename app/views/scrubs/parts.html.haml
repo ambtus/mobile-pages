@@ -3,4 +3,4 @@
 
 .title= @page.title
 - @page.parts.each do |part|
-  .part= link_to "Scrub #{part.title}", scrub_path(part)
+  .part= link_to "Scrub #{part.visible_part_title}", scrub_path(part)
