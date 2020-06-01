@@ -3,7 +3,7 @@
 .form
   = form_tag parts_path do
     = hidden_field_tag(:page_id, @page.id)
-    .parent= hinted_text_field_tag :add_parent, @parent_title, Page::PARENT_PLACEHOLDER, :size => 80
-    .title= text_field_tag :title, @page.title, :size => 80
-    .parts= text_area_tag :url_list, @page.url_list, :rows => @page.parts.size + 2, :cols => 80
+    .parent= hinted_text_field_tag :add_parent, @parent_title, Page::PARENT_PLACEHOLDER, :size => 33
+    .title= text_field_tag :title, @page.title, :size => 33
+    .parts= text_area_tag :url_list, @page.url_list, :rows => @page.parts.size + 2, :cols => 33
     .button= submit_tag "Update"

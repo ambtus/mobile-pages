@@ -1,8 +1,7 @@
-- content_for :title do
-  = "Edit notes for " + @page.title
-
-.title= @page.title
+-title = "Edit notes for #{@page.title}"
+-content_for(:title, title)
+.title=title
 .notes
   = form_for @page do |f|
-    = f.text_area :notes, :rows => 10, :cols => 80
+    = f.text_area :notes, :rows => 10, :cols => 33
     .button= f.submit "Update"

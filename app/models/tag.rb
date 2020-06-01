@@ -6,16 +6,18 @@ class Tag < ActiveRecord::Base
   validates_uniqueness_of :name, :case_sensitive => false
 
   def self.types
-    ["", "Hidden", "Fandom"]
+    ["", "Fandom", "Omitted", "Hidden"]
   end
 
   scope :by_name, -> { order('tags.name asc') }
   scope :ordered, -> { order('tags.type asc').order('tags.name asc') }
-  scope :hidden, -> { where(type: 'Hidden') }
-  scope :fandom, -> { where(type: 'Fandom') }
   scope :generic, -> { where(type: '') }
+  scope :hidden, -> { where(type: 'Hidden') }
   scope :not_hidden, -> { where.not(type: 'Hidden') }
+  scope :fandom, -> { where(type: 'Fandom') }
   scope :not_fandom, -> { where.not(type: 'Fandom') }
+  scope :omitted, -> { where(type: 'Omitted') }
+  scope :not_omitted, -> { where.not(type: 'Omitted') }
   scope :joined, -> { map(&:name).join(", ") }
 
   before_validation :remove_placeholder

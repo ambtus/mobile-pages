@@ -1,22 +1,27 @@
-Given /^I have no tags$/ do
+Then("I have no tags") do
   Tag.delete_all
 end
 
-Then /^I should have no tags$/ do
-  assert Tag.count == 0
-end
-
-Given /^I have no hiddens$/ do
+Then("I have no omitteds") do
   Hidden.delete_all
 end
 
-Then /^I should have no hiddens$/ do
+Then("I should have no tags") do
+  assert Tag.count == 0
+end
+
+Then("I should have no hiddens") do
   assert Hidden.count == 0
 end
 
-Then /^I should have no fandoms$/ do
+Then("I should have no fandoms") do
   assert Fandom.count == 0
 end
+
+Then("I should have no omitteds") do
+  assert Omitted.count == 0
+end
+
 
 # create a tag
 Given /a tag exists(?: with (.*))?/ do |fields|
@@ -46,3 +51,10 @@ Then("the page should NOT have any fandom tags") do
   Page.first.tags.fandom.empty?
 end
 
+Then("the page should NOT have any omitted tags") do
+  Page.first.tags.omitted.empty?
+end
+
+Then("the page should NOT have any not omitted tags") do
+  Page.first.tags.not_omitted.empty?
+end

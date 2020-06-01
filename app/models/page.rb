@@ -91,7 +91,7 @@ class Page < ActiveRecord::Base
   def self.create_from_hash(hash)
     Rails.logger.debug "DEBUG: Page.create_from_hash(#{hash})"
     tag_types = Hash.new("")
-    %w{tags hiddens fandoms}.each {|tag_type| tag_types[tag_type] = hash.delete(tag_type.to_sym) }
+    %w{tags hiddens fandoms omitteds}.each {|tag_type| tag_types[tag_type] = hash.delete(tag_type.to_sym) }
     page = Page.create(hash)
     tag_types.each do |key, value|
       page.send("add_#{key}_from_string", value)
@@ -375,7 +375,7 @@ class Page < ActiveRecord::Base
     count = parent.parts.size + 1
     self.update(:parent_id => parent.id, :position => count)
     if new
-      parent.tags << self.tags.not_hidden
+      parent.tags << self.tags.not_hidden.not_omitted
       parent.cache_tags
       parent.authors << self.authors
       parent.update_attribute(:last_read, self.last_read)
@@ -458,8 +458,11 @@ class Page < ActiveRecord::Base
 
   # used in show view
   def generic_string; self.tags.generic.by_name.joined; end
-  def fandom_string; self.tags.fandom.by_name.joined; end
-  def hidden_string; self.tags.hidden.by_name.joined; end
+  Tag.types.reject(&:blank?).each do |type|
+    define_method(type.downcase + "_string") do
+      self.tags.where(type: type).by_name.joined
+    end
+  end
   def author_string; self.authors.joined; end
   def favorite_string; self.favorite_names.join(", "); end
   def size_string; "#{self.size} (#{ActionController::Base.helpers.number_with_delimiter(self.wordcount)} words)"; end
@@ -473,30 +476,17 @@ class Page < ActiveRecord::Base
   def short_notes; Scrub.strip_html(notes).truncate(SHORT_LENGTH, separator: /\s/).html_safe; end
   def my_short_notes; Scrub.strip_html(my_notes).truncate(SHORT_LENGTH, separator: /\s/).html_safe; end
 
-  def add_tags_from_string(string)
+  def add_tags_from_string(string, type="Tag")
     return if string.blank?
+    type = "Tag" if type == "Generic"
     string.split(",").each do |tag|
-      self.tags << Tag.find_or_create_by(name: tag.squish)
-    end
-    self.save!
-    self.cache_tags
-  end
-
-  def add_hiddens_from_string(string)
-    return if string.blank?
-    string.split(",").each do |tag|
-      self.tags << Hidden.find_or_create_by(name: tag.squish)
+      self.tags << type.constantize.find_or_create_by(name: tag.squish)
     end
     self.cache_tags
   end
-
-  def add_fandoms_from_string(string)
-    return if string.blank?
-    string.split(",").each do |tag|
-      self.tags << Fandom.find_or_create_by(name: tag.squish)
-    end
-    self.cache_tags
-  end
+  def add_hiddens_from_string(string); add_tags_from_string(string, "Hidden"); end
+  def add_fandoms_from_string(string); add_tags_from_string(string, "Fandom"); end
+  def add_omitteds_from_string(string); add_tags_from_string(string, "Omitted"); end
 
   def cache_string; self.tags.not_hidden.ordered.joined; end
   def cache_tags

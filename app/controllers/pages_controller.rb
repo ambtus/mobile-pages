@@ -16,6 +16,7 @@ class PagesController < ApplicationController
     @tags = Tag.all.map(&:name)
     @tag = Tag.find_by_name(params[:tag]) if params[:tag]
     @fandom = Fandom.find_by_name(params[:fandom]) if params[:fandom]
+    @omitted = Omitted.find_by_name(params[:omitted]) if params[:omitted]
     @hidden = Hidden.find_by_name(params[:hidden]) if params[:hidden]
     @author_name = params[:author] if params[:author]
     Rails.logger.debug "DEBUG: Page.filter(#{params.to_unsafe_h.symbolize_keys})"
@@ -35,6 +36,7 @@ class PagesController < ApplicationController
       build_route[:tag] = params[:tag] unless params[:tag].blank?
       build_route[:hidden] = params[:hidden] unless params[:hidden].blank?
       build_route[:fandom] = params[:fandom] unless params[:fandom].blank?
+      build_route[:omitted] = params[:omitted] unless params[:omitted].blank?
       build_route[:sort_by] = params[:sort_by] unless (params[:sort_by].blank? || params[:sort_by] == "read_after")
       build_route[:size] = params[:size] unless (params[:size].blank? || params[:size] == "any")
       build_route[:favorite] = params[:favorite] unless (params[:favorite].blank? || params[:favorite] == "any")
@@ -52,6 +54,7 @@ class PagesController < ApplicationController
     @tag = Tag.find_by_name(params[:tag])
     @hidden = Hidden.find_by_name(params[:hidden])
     @fandom = Fandom.find_by_name(params[:fandom])
+    @omitted = Omitted.find_by_name(params[:omitted])
     @author_name = params[:author] unless params[:author].blank?
     @author = Author.find_by_short_name(params[:author])
     @favorite = params[:favorite]
@@ -73,6 +76,7 @@ class PagesController < ApplicationController
           @page.tags << @tag if @tag
           @page.tags << @hidden if @hidden
           @page.tags << @fandom if @fandom
+          @page.tags << @omitted if @omitted
           @page.cache_tags
           redirect_to page_path(@page) and return
         end

@@ -5,7 +5,7 @@ Feature: generic tag stuff
     When I am on the page's page
       And I edit its tags
       And I fill in "tags" with "  funny,  joy  joy,happy happy  "
-      And I press "Add Tags"
+      And I press "Add Generic Tags"
     Then I should see "funny, happy happy, joy joy" within ".tags"
 
   Scenario: no tags exist during create
@@ -17,7 +17,7 @@ Feature: generic tag stuff
       And I press "Store"
     Then I should see "Please select tag"
     When I fill in "tags" with "my tag"
-      And I press "Add Tags"
+      And I press "Add Generic Tags"
     Then I should see "my tag" within ".tags"
 
   Scenario: no tags selected during create
@@ -46,7 +46,7 @@ Feature: generic tag stuff
     When I am on the page's page
       And I edit its tags
     When I fill in "tags" with "classic, children's"
-      And I press "Add Tags"
+      And I press "Add Generic Tags"
     Then I should see "classic" within ".tags"
       And I should see "children's" within ".tags"
     When I am on the homepage
@@ -68,7 +68,7 @@ Feature: generic tag stuff
     Then I should see "classic" within ".tags"
     When I edit its tags
       And I fill in "tags" with "something, children's"
-      And I press "Add Tags"
+      And I press "Add Generic Tags"
     Then I should see "children's, classic, something" within ".tags"
     When I am on the homepage
     Then I should be able to select "classic" from "tag"

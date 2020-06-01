@@ -53,4 +53,5 @@ Rails.application.configure do
   # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.hosts << `hostname`.chomp.downcase
+  config.hosts << `hostname`.chomp.downcase + ".local"
 end

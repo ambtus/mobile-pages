@@ -53,12 +53,8 @@ class TagsController < ApplicationController
       tag_ids = params[:page][:tag_ids] if params[:page]
       @page.tag_ids = tag_ids
       @page.cache_tags
-    elsif params[:commit] == "Add Tags"
-      @page.add_tags_from_string(params[:tags])
-    elsif params[:commit] == "Add Hidden Tags"
-      @page.add_hiddens_from_string(params[:tags])
-    elsif params[:commit] == "Add Fandom Tags"
-      @page.add_fandoms_from_string(params[:tags])
+    elsif params[:commit].match /Add (.*) Tags/
+      @page.add_tags_from_string(params[:tags], $1.squish)
     end
     redirect_to page_path(@page)
   end

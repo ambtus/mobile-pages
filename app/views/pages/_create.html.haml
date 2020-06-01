@@ -4,6 +4,9 @@
 - unless Tag.names.blank?
   = label_tag :tag, "Tag:"
   = select_tag :tag, options_for_select([nil] + Tag.names, @tag.try(:name))
+- unless Omitted.names.blank?
+  = label_tag :omitted, "Omitted:"
+  = select_tag :omitted, options_for_select([nil] + Omitted.names, @omitted.try(:name))
 - unless Hidden.names.blank?
   = label_tag :hidden, "Hidden:"
   = select_tag :hidden, options_for_select([nil] + Hidden.names, @hidden.try(:name))
@@ -11,11 +14,11 @@
   = label_tag :author, "Author:"
   = select_tag :author, options_for_select([nil] + Author.names, @author_name)
   %br
-= hinted_text_field_tag 'page[title]', page.title, "Title"
+= hinted_text_field_tag 'page[title]', page.title, "Title", :size => 33
 %br
-= hinted_text_area_tag 'page[my_notes]', page.my_notes, "My Notes", :rows => 1, :cols => 30
+= hinted_text_area_tag 'page[my_notes]', page.my_notes, "My Notes", :rows => 1, :cols => 33
 %br
-= hinted_text_area_tag 'page[notes]', page.notes, "Notes", :rows => 1, :cols => 30
+= hinted_text_area_tag 'page[notes]', page.notes, "Notes", :rows => 1, :cols => 33
 %br
 - if called_by == "multiple"
   = hinted_text_field_tag 'page[base_url]', page.base_url, Page::BASE_URL_PLACEHOLDER, :maxlength => 255, :size => 80
@@ -24,4 +27,4 @@
   %br
   = hinted_text_area_tag 'page[urls]', page.urls, Page::URLS_PLACEHOLDER, :rows => 10, :cols => 80
 - else
-  = hinted_text_field_tag 'page[url]', page.url, "URL"
+  = hinted_text_field_tag 'page[url]', page.url, "URL", :size => 33
