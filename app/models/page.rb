@@ -100,17 +100,6 @@ class Page < ActiveRecord::Base
     page
   end
 
-  def self.last_created
-    self.order('created_at ASC').last
-  end
-
-  def self.find_random
-    count = self.count
-    return nil if count == 0
-    offset = rand(count)
-    page = self.where(:parent_id => nil).offset(offset).first
-  end
-
   def self.filter(params={})
     pages = Page.all
     pages = pages.where(:last_read => nil) if params[:unread] == "yes"
@@ -145,6 +134,7 @@ class Page < ActiveRecord::Base
     end
     pages = pages.search(:cached_tag_string, params[:tag]) if params.has_key?(:tag)
     pages = pages.search(:cached_tag_string, params[:fandom]) if params.has_key?(:fandom)
+    pages = pages.without_tag(params[:omitted]) if params.has_key?(:omitted)
     if params.has_key?(:hidden)
       pages = pages.search(:cached_hidden_string, params[:hidden])
     else
