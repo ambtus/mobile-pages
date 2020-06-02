@@ -776,8 +776,7 @@ class Page < ActiveRecord::Base
   ## if it's a part, add the parent's tags
   def download_tags;
     [(unread? ? UNREAD : ""),
-     size,
-     tags.not_fandom.joined,
+     *tags.not_fandom.map(&:name),
      ]
   end
   def all_tags;
@@ -785,11 +784,18 @@ class Page < ActiveRecord::Base
     my_parents_tags = self.parent_id.blank? ? [] : self.parent.all_tags
     (my_tags + my_parents_tags).pulverize
   end
-  def download_tag_string; hidden? ? cached_hidden_string : all_tags.join_comma; end
+  def download_tag_string; hidden? ? cached_hidden_string : "#{size}, #{all_tags.join_comma}"; end
   ## --series
   ## if it's a crossover, then replace the fandom tags
-  def crossover?; tags.fandom.size > 1; end
-  def fandom_name; tags.fandom.present? ? tags.fandom.first.name : ""; end
+  def all_fandoms;
+    my_fandoms = tags.fandom
+    my_parents_fandoms = self.parent_id.blank? ? [] : self.parent.all_fandoms
+    (my_fandoms + my_parents_fandoms).pulverize
+  end
+  def fandom_name
+    all_fandoms.present? ? all_fandoms.first.name : ""
+  end
+  def crossover?; all_fandoms.size > 1; end
   def download_fandom_string; crossover? ? "crossover" : fandom_name; end
   ## --comments
   ## if it's hidden, then put the authors (if they exist) into the comments with the hidden tags
@@ -820,14 +826,14 @@ class Page < ActiveRecord::Base
   end
 
   def epub_tags
-    string = ""
+    string = %Q{--title "#{self.title}"}
     unless self.download_author_string.blank?
       string = string + %Q{ --authors "#{self.download_author_string}"}
     end
     unless self.download_tag_string.blank?
       string = string + %Q{ --tags "#{self.download_tag_string}"}
     end
-    unless self.download_fandom_string.blank?
+    if self.download_fandom_string.present? && self.cached_hidden_string.blank?
       string = string + %Q{ --series "#{self.download_fandom_string}"}
     end
     unless self.download_comment_string.blank?
@@ -836,9 +842,9 @@ class Page < ActiveRecord::Base
     string
   end
   def epub_command
-     cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --no-default-epub-cover --title "#{self.title}"} + epub_tags
-    # Rails.logger.debug "DEBUG: #{cmd}"
-    Rails.logger.debug "DEBUG: #{epub_tags}"
+     cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --no-default-epub-cover } + epub_tags
+    Rails.logger.debug "DEBUG: #{cmd}"
+    # Rails.logger.debug "DEBUG: #{epub_tags}"
     return cmd
   end
 

@@ -37,3 +37,16 @@ Feature: downloads metadata
     And I view the content
      Then I should see "Part 1" within "h2"
      But I should NOT see "Part 1 (medium)" within "h2"
+
+  Scenario: part epubs should have all metadata from parent except size
+    Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3" AND fandoms: "harry potter" AND tags: "AU" AND add_author_string: "my author"
+    Then the download epub command for "Part 2" should include series: "harry potter"
+    But the download epub command for "Part 2" should NOT include tags: "harry potter"
+    And the download epub command for "Part 2" should include tags: "AU"
+    But the download epub command for "Part 2" should NOT include series: "AU"
+    And the download epub command for "Part 2" should include comments: "harry potter, AU"
+    And the download epub command for "Part 2" should include authors: "my author"
+    But the download epub command for "Part 2" should NOT include comments: "my author"
+    And the download epub command for "Part 2" should include tags: "medium"
+    But the download epub command for "Part 2" should NOT include tags: "long"
+    And the download epub command for "Part 2" should include comments: "medium"

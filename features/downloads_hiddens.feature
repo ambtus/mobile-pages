@@ -1,12 +1,14 @@
 Feature: an ebook with a hidden tag is also hidden from marvin
 
-  Scenario: epub download hidden page; author and tag strings are empty
-    Given a page exists with hiddens: "hide me" AND tags: "my tag" AND add_author_string: "my author"
+  Scenario: epub download hidden page; author and tag and fandom strings are empty
+    Given a page exists with hiddens: "hide me" AND tags: "my tag" AND add_author_string: "my author" AND fandoms: "my fandom"
     Then the download epub command should include tags: "hide me"
     But the download epub command should NOT include tags: "my tag"
     But the download epub command should include comments: "my tag"
     And the download epub command should NOT include authors: "my author"
     But the download epub command should include comments: "my author"
+    And the download epub command should NOT include series: "my fandom"
+    But the download epub command should include comments: "my fandom"
 
   Scenario: epub of a parent omits hidden part but author and tag strings populated. epub download of a hidden part as standalone: author and tag strings are empty but are in comments
     Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3" AND tags: "show me" AND add_author_string: "my author"
