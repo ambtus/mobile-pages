@@ -9,7 +9,7 @@
   = form_for @page do |f|
     .top
       = @page.nodes.size.to_s + " nodes"
-      .button= f.submit "Scrub"
+      = f.submit "Scrub"
       Top
       - @page.top_nodes.each_with_index do |node,index|
         .node
@@ -22,5 +22,5 @@
           - id = @page.bottom_nodes.size - index
           = radio_button_tag "bottom_node", id, false
           = label_tag "bottom_node_#{id}", node
-      .button= f.submit "Scrub"
+      = f.submit "Scrub"
 %a{:name => "end"}

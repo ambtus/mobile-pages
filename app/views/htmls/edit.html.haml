@@ -3,5 +3,5 @@
 %h1=title
 .content
   = form_for @page do |f|
-    .button= f.submit "Update Raw HTML"
-    = text_area_tag :pasted, @page.raw_html, :rows => 10, :cols => 80
+    = f.submit "Update Raw HTML"
+    = text_area_tag :pasted, @page.raw_html, :rows => 10, :cols => 33

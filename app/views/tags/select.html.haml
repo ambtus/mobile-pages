@@ -6,5 +6,5 @@
     = hidden_field_tag(:page_id, @page.id)
     .filters
       = select_tag("page[tag_ids][]", options_from_collection_for_select(Tag.ordered, 'id', 'name', selected = @page.tags.map(&:id)), :multiple => true)
-    .button= submit_tag "Update Tags"
+    =submit_tag "Update Tags"
     =render "add"

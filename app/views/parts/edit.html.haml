@@ -6,4 +6,5 @@
     .parent= hinted_text_field_tag :add_parent, @parent_title, Page::PARENT_PLACEHOLDER, :size => 33
     .title= text_field_tag :title, @page.title, :size => 33
     .parts= text_area_tag :url_list, @page.url_list, :rows => @page.parts.size + 2, :cols => 33
-    .button= submit_tag "Update"
+    %br
+    = submit_tag "Update"

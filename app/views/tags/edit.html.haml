@@ -7,15 +7,14 @@
   = form_for @tag.becomes(Tag) do |f|
     Change name:
     = hinted_text_field_tag 'tag[name]', @tag.name, "Name"
-    .button= f.submit "Update"
+    %br
+    = f.submit "Update"
     %br
     = label_tag :change, "Change type:"
     = select_tag :change, options_for_select(Tag.types, @tag.type)
-    %br
-    .button= f.submit "Change"
+    = f.submit "Change"
     - unless (@tag.class.names - [@tag.name]).blank?
       %br
       = label_tag :merge, "Merge into:"
       = select_tag :merge, options_for_select([nil] + @tag.class.names - [@tag.name])
-      %br
-      .button= f.submit "Merge"
+      = f.submit "Merge"

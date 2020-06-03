@@ -3,6 +3,6 @@
 %h1=title
 .content
   = form_for @page do |f|
-    .button= f.submit "Preview Text"
+    = f.submit "Preview Text"
     = hidden_field_tag(:section, @section_number)
-    = text_area_tag :edited, @section, :rows => 30, :cols => 80
+    = text_area_tag :edited, @section, :rows => 30, :cols => 33

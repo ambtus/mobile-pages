@@ -6,7 +6,7 @@ end
 
 class Array
 
-  def join_hr; reject(&:blank?).join("<hr>"); end
+  def join_hr; reject(&:blank?).join('<hr width="80%"/>'); end
 
   def join_comma; reject(&:blank?).join(", "); end
 

@@ -21,10 +21,10 @@
 = hinted_text_area_tag 'page[notes]', page.notes, "Notes", :rows => 1, :cols => 33
 %br
 - if called_by == "multiple"
-  = hinted_text_field_tag 'page[base_url]', page.base_url, Page::BASE_URL_PLACEHOLDER, :maxlength => 255, :size => 80
+  = hinted_text_field_tag 'page[base_url]', page.base_url, Page::BASE_URL_PLACEHOLDER, :maxlength => 255, :size => 33
   %br
-  = hinted_text_field_tag 'page[url_substitutions]', page.url_substitutions, Page::URL_SUBSTITUTIONS_PLACEHOLDER, :maxlength => 255, :size => 80
+  = hinted_text_field_tag 'page[url_substitutions]', page.url_substitutions, Page::URL_SUBSTITUTIONS_PLACEHOLDER, :maxlength => 255, :size => 33
   %br
-  = hinted_text_area_tag 'page[urls]', page.urls, Page::URLS_PLACEHOLDER, :rows => 10, :cols => 80
+  = hinted_text_area_tag 'page[urls]', page.urls, Page::URLS_PLACEHOLDER, :rows => 10, :cols => 33
 - else
   = hinted_text_field_tag 'page[url]', page.url, "URL", :size => 33
