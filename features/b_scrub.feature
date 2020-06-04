@@ -73,14 +73,14 @@ Feature: trim cruft off pages
       And I choose "top cruft" within ".top"
       And I choose "bottom cruft" within ".bottom"
       And I press "Scrub" within ".bottom"
-    Then the download directory should NOT exist
+    Then the download html file should NOT exist
     And I am on the page's page
       And I view the content
     Then I should NOT see "cruft"
       And I should see "stuff for part 1"
     And I am on the page's page
     When I press "Rebuild from Raw HTML"
-    Then the download directory should NOT exist
+    Then the download html file should NOT exist
       And I view the content
     Then I should see "cruft"
       And the download directory should exist
@@ -105,7 +105,7 @@ Feature: trim cruft off pages
       And I choose "top cruft" within ".top"
       And I choose "bottom cruft" within ".bottom"
       And I press "Scrub" within ".top"
-    Then the download directory should NOT exist
+    Then the download html file should NOT exist
     When I am on the page's page
       And I view the content
     Then I should see "First Part"

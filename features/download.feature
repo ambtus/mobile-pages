@@ -30,7 +30,8 @@ Feature: downloads
       And I download the epub
     When I am on the page's page
       And I press "Remove Downloads"
-    Then the download directory should NOT exist
+    Then the download html file should NOT exist
+    And the download epub file should NOT exist
 
   Scenario: Update notes removes old html
     Given a page exists with notes: "Lorem ipsum dolor"

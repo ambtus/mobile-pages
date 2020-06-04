@@ -12,7 +12,7 @@ class Page < ActiveRecord::Base
   def mypath
     prefix = case Rails.env
       when "test"; "/tmp/test/"
-      when "development"; "/tmp/development/"
+      when "development"; "/tmp/files/"
       when "production"; "/files/"
     end
     prefix + (self.id/MODULO).to_s + "/" + self.id.to_s + "/"
@@ -20,6 +20,8 @@ class Page < ActiveRecord::Base
   def mydirectory
     if Rails.env.production?
       Rails.public_path.to_s + mypath
+    elsif Rails.env.development?
+      Rails.root.to_s + mypath
     else
       mypath
     end
@@ -739,6 +741,7 @@ class Page < ActiveRecord::Base
 
   def remove_outdated_downloads(recurse = false)
     FileUtils.rm_rf(self.download_dir)
+    FileUtils.mkdir_p(self.download_dir)
     self.parent.remove_outdated_downloads(true) if self.parent
     self.parts.each { |part| part.remove_outdated_downloads(true) unless recurse}
   end

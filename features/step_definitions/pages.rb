@@ -2,6 +2,10 @@ Given("I have no pages") do
   Page.delete_all
 end
 
+Given("the page's directory is missing") do
+  FileUtils.rm_rf(Page.first.mydirectory)
+end
+
 # create many identical pages
 Given("{int} pages exist") do |count|
   count.times do |i|

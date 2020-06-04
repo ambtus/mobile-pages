@@ -66,3 +66,12 @@ Feature: basic stuff
     When I press "Refetch"
     When I view the content
     Then I should see "Retrieved from the web" within ".content"
+
+  Scenario: refetch after moving directory
+    Given a page exists with url: "http://test.sidrasue.com/test.html"
+    And the page's directory is missing
+    When I am on the page's page
+    And I follow "Refetch"
+      When I press "Refetch"
+    When I view the content
+    Then I should see "Retrieved from the web"

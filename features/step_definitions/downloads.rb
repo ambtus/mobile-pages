@@ -10,6 +10,10 @@ Then("the download html file should exist") do
   assert File.exists?("#{Page.first.download_basename}.html")
 end
 
+Then("the download html file should NOT exist") do
+  assert !File.exists?("#{Page.first.download_basename}.html")
+end
+
 Then("the download epub file should exist") do
   assert File.exists?("#{Page.first.download_basename}.epub")
 end
