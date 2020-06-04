@@ -74,3 +74,9 @@ Feature: ao3 specific stuff
   When I am on the homepage
   Then I should NOT see "theirsThe"
   But I should see "He is theirs The clones have nothing"
+
+  Scenario: quotes in notes download bug
+    Given a page exists with url: "http://archiveofourown.org/works/22989676/chapters/54962869"
+    When I am on the homepage
+    And I follow "ePub"
+    Then the download epub file should exist

@@ -186,6 +186,7 @@ GEM
     raindrops (0.19.1)
     rake (13.0.1)
     regexp_parser (1.7.0)
+    rubypants (0.7.1)
     sanitize (5.1.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.8.0)
@@ -240,6 +241,7 @@ DEPENDENCIES
   nokogiri
   quiet_safari
   rails (~> 6.0.1)
+  rubypants
   sanitize
   test-unit
   thin

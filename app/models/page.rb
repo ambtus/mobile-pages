@@ -461,10 +461,10 @@ class Page < ActiveRecord::Base
   def formatted_notes; Scrub.sanitize_html(notes); end
   def part_tag_string; tags_et_al.empty? ? "" : " (#{tags_et_al.join(', ')})"; end
 
-  # used in index view
+  # used in index view and in epub comments
   def merged_tag_string; tags_et_al.join(', ');end
-  def short_notes; Scrub.strip_html(notes).truncate(SHORT_LENGTH, separator: /\s/).html_safe; end
-  def my_short_notes; Scrub.strip_html(my_notes).truncate(SHORT_LENGTH, separator: /\s/).html_safe; end
+  def short_notes; RubyPants.new(Scrub.strip_html(notes).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
+  def my_short_notes; RubyPants.new(Scrub.strip_html(my_notes).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
 
   def add_tags_from_string(string, type="Tag")
     return if string.blank?
