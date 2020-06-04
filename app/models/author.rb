@@ -48,7 +48,7 @@ class Author < ActiveRecord::Base
   end
 
   def self.names
-    self.all.map(&:short_names).flatten.sort
+    self.all.map(&:short_names).flatten.sort_by(&:downcase)
   end
 
   def destroy_me
