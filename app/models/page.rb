@@ -926,6 +926,7 @@ class Page < ActiveRecord::Base
   def rebuild_meta
     remove_outdated_downloads
     get_meta_from_ao3(false) if ao3?
+    self.parts.map(&:rebuild_meta)
     set_wordcount
   end
 
