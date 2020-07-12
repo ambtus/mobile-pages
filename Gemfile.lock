@@ -268,5 +268,3 @@ DEPENDENCIES
   thin
   unicorn
 
-BUNDLED WITH
-   1.17.3

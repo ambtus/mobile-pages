@@ -1,15 +1,4 @@
-- unless Fandom.names.blank?
-  = label_tag :fandom, "Fandom:"
-  = select_tag :fandom, options_for_select([nil] + Fandom.names, @fandom.try(:name))
-- unless Tag.names.blank?
-  = label_tag :tag, "Tag:"
-  = select_tag :tag, options_for_select([nil] + Tag.names, @tag.try(:name))
-- unless Omitted.names.blank?
-  = label_tag :omitted, "Omitted:"
-  = select_tag :omitted, options_for_select([nil] + Omitted.names, @omitted.try(:name))
-- unless Hidden.names.blank?
-  = label_tag :hidden, "Hidden:"
-  = select_tag :hidden, options_for_select([nil] + Hidden.names, @hidden.try(:name))
+=render :partial => "tags/select"
 - unless Author.names.blank?
   = label_tag :author, "Author:"
   = select_tag :author, options_for_select([nil] + Author.names, @author_name)
