@@ -49,7 +49,6 @@ Feature: omitteds are a type of tag, and can be created and selected like tags
     Given a tag exists with name: "something"
       And I am on the homepage
       And I select "nonfiction" from "omitted"
-      And I select "something" from "tag"
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"

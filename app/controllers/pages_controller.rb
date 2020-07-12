@@ -68,7 +68,7 @@ class PagesController < ApplicationController
       else
         @page.update_attribute(:favorite, @favorite)
         @page.authors << @author if @author
-        if @tag.blank?
+        if @tag.blank? && @fandom.blank? && @hidden.blank? && @omitted.blank?
           flash[:notice] = "Page created. Please select tag(s)"
           redirect_to tag_path(@page) and return
         else
