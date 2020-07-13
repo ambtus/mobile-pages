@@ -15,7 +15,7 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select tag"
+    Then I should see "Please select fandom"
     When I fill in "tags" with "hide me"
       And I press "Add Hidden Tags"
     Then I should see "hide me" within ".hiddens"
@@ -26,34 +26,35 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select tag"
+    Then I should see "Please select fandom"
     When I select "first" from "page_tag_ids_"
       And I press "Update Tags"
     Then I should see "first" within ".hiddens"
 
-  Scenario: hidden and tag selected during create
-    Given a tag exists with name: "first"
+  Scenario: hidden and fandom selected during create
+    Given a tag exists with name: "first" AND type: "Fandom"
       And a tag exists with name: "second" AND type: "Hidden"
       And I am on the homepage
-      And I select "first" from "tag"
+      And I select "first" from "fandom"
       And I select "second" from "hidden"
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should NOT see "Please select tag"
-      And I should see "first" within ".tags"
+    Then I should NOT see "Please select fandom"
+      And I should see "first" within ".fandoms"
       And I should see "second" within ".hiddens"
 
   Scenario: hidden only selected during create
     Given a tag exists with name: "nonfiction" AND type: "Hidden"
-    Given a tag exists with name: "something"
       And I am on the homepage
       And I select "nonfiction" from "hidden"
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should NOT see "Please select tag"
-      And I should see "nonfiction" within ".hiddens"
+    Then I should see "Please select fandom"
+    When I fill in "tags" with "something"
+      And I press "Add Fandom Tags"
+      Then I should see "nonfiction" within ".hiddens"
 
   Scenario: add a hidden to a page when there are no hiddens
     Given a page exists

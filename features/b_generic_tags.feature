@@ -15,7 +15,7 @@ Feature: generic tag stuff
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select tag"
+    Then I should see "Please select fandom"
     When I fill in "tags" with "my tag"
       And I press "Add Generic Tags"
     Then I should see "my tag" within ".tags"
@@ -26,7 +26,7 @@ Feature: generic tag stuff
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select tag"
+    Then I should see "Please select fandom"
     When I select "first" from "page_tag_ids_"
       And I press "Update Tags"
     Then I should see "first" within ".tags"
@@ -38,7 +38,7 @@ Feature: generic tag stuff
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should NOT see "Please select tag"
+    Then I should see "Please select fandom"
       And I should see "first" within ".tags"
 
   Scenario: add a tag to a page when there are no tags

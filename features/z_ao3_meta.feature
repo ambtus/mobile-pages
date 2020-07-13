@@ -1,10 +1,10 @@
 Feature: ao3 specific stuff
 
   Scenario: refetching & rebuilding meta of a top level fic
-     Given a tag exists with name: "harry potter"
+     Given a tag exists with name: "harry potter" AND type: "Fandom"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/692"
-      And I select "harry potter" from "tag"
+      And I select "harry potter" from "fandom"
       And I press "Store"
       And I follow "Notes"
       And I fill in "page_notes" with "changed notes"
@@ -41,10 +41,10 @@ Feature: ao3 specific stuff
       But I should see "by Sidra" within ".notes"
 
   Scenario: ensure rebuild meta isn’t refetching
-    Given a tag exists with name: "popslash"
+    Given a tag exists with name: "popslash" AND type: "Fandom"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/68481"
-      And I select "popslash" from "tag"
+      And I select "popslash" from "fandom"
       And I press "Store"
     Then I should see "please no crossovers" within ".notes"
       And I should see "AJ/JC" within ".notes"

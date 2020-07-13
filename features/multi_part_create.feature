@@ -32,7 +32,7 @@ Feature: creating multi-part pages
      And I should see "stuff for part 1"
 
   Scenario: create a page from a list of urls with author and notes
-    Given a tag exists with name: "mytag"
+    Given a tag exists with name: "mytag" AND type: "Fandom"
     Given an author exists with name: "myauthor"
       And I am on the homepage
     When I follow "Store Multiple"
@@ -43,11 +43,11 @@ Feature: creating multi-part pages
         """
      And I fill in "page_title" with "Multiple pages from urls"
      And I fill in "page_notes" with "some notes"
-     And I select "mytag" from "tag"
+     And I select "mytag" from "fandom"
      And I select "myauthor" from "Author"
      And I press "Store"
    Then I should see "Multiple pages from urls"
-     And I should see "mytag" within ".tags"
+     And I should see "mytag" within ".fandoms"
      And I should see "some notes" within ".notes"
      And I should see "myauthor" within ".authors"
      And I should see "Part 1" within "#position_1"
@@ -59,7 +59,7 @@ Feature: creating multi-part pages
      And I should see "stuff for part 2"
 
   Scenario: create from a list of urls some of which have titles
-    Given a tag exists with name: "tag"
+    Given a tag exists with name: "tag" AND type: "Fandom"
     When I am on the homepage
       And I follow "Store Multiple"
     When I fill in "page_urls" with
@@ -69,7 +69,7 @@ Feature: creating multi-part pages
       http://test.sidrasue.com/parts/2.html##part title
       """
       And I fill in "page_title" with "my title"
-      And I select "tag" from "tag"
+      And I select "tag" from "fandom"
       And I press "Store"
     Then I should see "my title" within ".title"
     When I view the content

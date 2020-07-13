@@ -68,16 +68,16 @@ class PagesController < ApplicationController
       else
         @page.update_attribute(:favorite, @favorite)
         @page.authors << @author if @author
-        if @tag.blank? && @fandom.blank? && @hidden.blank? && @omitted.blank?
-          flash[:notice] = "Page created. Please select tag(s)"
+        @page.tags << @tag if @tag
+        @page.tags << @hidden if @hidden
+        @page.tags << @fandom if @fandom
+        @page.tags << @omitted if @omitted
+        @page.cache_tags
+        if @fandom.blank?
+          flash[:notice] = "Page created. Please select fandom(s)"
           redirect_to tag_path(@page) and return
         else
           flash[:notice] = "Page created."
-          @page.tags << @tag if @tag
-          @page.tags << @hidden if @hidden
-          @page.tags << @fandom if @fandom
-          @page.tags << @omitted if @omitted
-          @page.cache_tags
           redirect_to page_path(@page) and return
         end
       end

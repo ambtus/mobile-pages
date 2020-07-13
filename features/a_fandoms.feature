@@ -23,7 +23,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select tag"
+    Then I should see "Please select fandom"
     When I fill in "tags" with "new fandom"
       And I press "Add Fandom Tags"
     Then I should see "new fandom" within ".fandoms"
@@ -34,7 +34,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select tag"
+    Then I should see "Please select fandom"
     When I select "first" from "page_tag_ids_"
       And I press "Update Tags"
     Then I should see "first" within ".fandoms"
@@ -48,7 +48,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should NOT see "Please select tag"
+    Then I should NOT see "Please select fandom"
       And I should see "first" within ".tags"
       And I should see "second" within ".fandoms"
 
@@ -60,7 +60,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should NOT see "Please select tag"
+    Then I should NOT see "Please select fandom"
       And I should see "nonfiction" within ".fandoms"
 
   Scenario: add a fandom to a page when there are no fandoms

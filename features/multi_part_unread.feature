@@ -3,7 +3,7 @@ Feature: one part unread
   Scenario: unread part
     Given I have no pages
     Given the following pages
-     | title  | last_read  | url   | tags |
+     | title  | last_read  | url   | fandoms |
      | Filler | 2008-01-01 | http://test.sidrasue.com/long.html | one |
      | Parent | 2009-01-01 |       | two |
     When I am on the homepage
@@ -12,7 +12,7 @@ Feature: one part unread
       And I should see "medium"
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "Child"
-      And I select "one" from "tag"
+      And I select "one" from "fandom"
       And I press "Store"
       And I follow "Manage Parts"
       And I fill in "add_parent" with "Parent"
@@ -23,7 +23,7 @@ Feature: one part unread
       And I should see "unread" within "#position_1"
       And I should see "short" within ".size"
       And I should NOT see "short" within "#position_1"
-      And I should see "two" within ".tags"
+      And I should see "two" within ".fandoms"
       And I should see "one" within "#position_1"
     When I am on the homepage
     Then I should see "Filler"
@@ -33,7 +33,7 @@ Feature: one part unread
     Then I should NOT see "Parent"
     When I fill in "page_url" with "http://test.sidrasue.com/long2.html"
       And I fill in "page_title" with "Child2"
-      And I select "one" from "tag"
+      And I select "one" from "fandom"
       And I press "Store"
       And I follow "Manage Parts"
       And I fill in "add_parent" with "Parent"
@@ -43,7 +43,7 @@ Feature: one part unread
       And I should NOT see "two" within "#position_2"
       And I should see "one" within "#position_2"
     When I am on the homepage
-      And I select "one" from "tag"
+      And I select "one" from "fandom"
       And I press "Find"
     Then I should see "Filler"
       And I should NOT see "Parent"
