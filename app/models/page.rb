@@ -93,7 +93,7 @@ class Page < ActiveRecord::Base
   def self.create_from_hash(hash)
     Rails.logger.debug "DEBUG: Page.create_from_hash(#{hash})"
     tag_types = Hash.new("")
-    %w{tags hiddens fandoms omitteds}.each {|tag_type| tag_types[tag_type] = hash.delete(tag_type.to_sym) }
+    %w{tags hiddens fandoms relationships omitteds}.each {|tag_type| tag_types[tag_type] = hash.delete(tag_type.to_sym) }
     page = Page.create(hash)
     tag_types.each do |key, value|
       page.send("add_#{key}_from_string", value)
@@ -136,6 +136,7 @@ class Page < ActiveRecord::Base
     end
     pages = pages.search(:cached_tag_string, params[:tag]) if params.has_key?(:tag)
     pages = pages.search(:cached_tag_string, params[:fandom]) if params.has_key?(:fandom)
+    pages = pages.search(:cached_tag_string, params[:relationship]) if params.has_key?(:relationship)
     pages = pages.without_tag(params[:omitted]) if params.has_key?(:omitted)
     if params.has_key?(:hidden)
       pages = pages.search(:cached_hidden_string, params[:hidden])
@@ -367,7 +368,7 @@ class Page < ActiveRecord::Base
     count = parent.parts.size + 1
     self.update(:parent_id => parent.id, :position => count)
     if new
-      parent.tags << self.tags.not_hidden.not_omitted
+      parent.tags << self.tags.not_hidden.not_omitted.not_relationship
       parent.cache_tags
       parent.authors << self.authors
       parent.update_attribute(:last_read, self.last_read)
@@ -478,6 +479,7 @@ class Page < ActiveRecord::Base
   end
   def add_hiddens_from_string(string); add_tags_from_string(string, "Hidden"); end
   def add_fandoms_from_string(string); add_tags_from_string(string, "Fandom"); end
+  def add_relationships_from_string(string); add_tags_from_string(string, "Relationship"); end
   def add_omitteds_from_string(string); add_tags_from_string(string, "Omitted"); end
 
   def cache_string; self.tags.not_hidden.ordered.joined; end
@@ -775,11 +777,11 @@ class Page < ActiveRecord::Base
   def download_author_string; hidden? ? "" : all_authors_string; end
   ## --tags
   ## if it's hidden, then the hidden tags are the only tags
-  ## if it's not hidden, then add size and unread (if not read) to not-fandom tags
+  ## if it's not hidden, then add size and unread (if not read) to not-series tags
   ## if it's a part, add the parent's tags
   def download_tags;
     [(unread? ? UNREAD : ""),
-     *tags.not_fandom.map(&:name),
+     *tags.not_fandom.not_relationship.map(&:name),
      ]
   end
   def all_tags;
@@ -789,17 +791,29 @@ class Page < ActiveRecord::Base
   end
   def download_tag_string; hidden? ? cached_hidden_string : "#{size}, #{all_tags.join_comma}"; end
   ## --series
-  ## if it's a crossover, then replace the fandom tags
+  ## if it has exactly one relationship, then use that
+  ## else if it has more than one fandom, then use "crossover"
+  ## else use the fandom
   def all_fandoms;
     my_fandoms = tags.fandom
     my_parents_fandoms = self.parent_id.blank? ? [] : self.parent.all_fandoms
     (my_fandoms + my_parents_fandoms).pulverize
   end
-  def fandom_name
-    all_fandoms.present? ? all_fandoms.first.name : ""
+  def all_relationships;
+    my_relationships = tags.relationship
+    my_parents_relationships = self.parent_id.blank? ? [] : self.parent.all_relationships
+    (my_relationships + my_parents_relationships).pulverize
   end
+  def fandom_name; all_fandoms.present? ? all_fandoms.first.name : ""; end
+  def relationship_name; all_relationships.present? ? all_relationships.first.name : ""; end
   def crossover?; all_fandoms.size > 1; end
-  def download_fandom_string; crossover? ? "crossover" : fandom_name; end
+  def download_fandom_string
+    if all_relationships.size == 1
+      relationship_name
+    else
+      crossover? ? "crossover" : fandom_name;
+    end
+  end
   ## --comments
   ## if it's hidden, then put the authors (if they exist) into the comments with the hidden tags
   def hidden_comment_string
@@ -808,14 +822,15 @@ class Page < ActiveRecord::Base
     "by #{all_authors_string}, #{hidden_string}"
   end
   def all_tags_for_comments
-    my_tags = self.tags.fandom + self.tags.generic
+    my_tags = self.tags.fandom.by_name + self.tags.relationship.by_name + self.tags.generic.by_name
     my_parents_tags = self.parent_id.blank? ? [] : self.parent.all_tags_for_comments
     (my_tags + my_parents_tags).pulverize
   end
   def all_tags_for_comments_string
     fandoms = all_tags_for_comments.select{|t| t.type == "Fandom"}
+    relationships = all_tags_for_comments.select{|t| t.type == "Relationship"}
     generics = all_tags_for_comments.select{|t| t.type == ""}
-    (fandoms + generics).map(&:name).join_comma
+    (fandoms + relationships + generics).map(&:name).join_comma
   end
   def download_comment_string
     [

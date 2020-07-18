@@ -22,6 +22,9 @@ Then("I should have no omitteds") do
   assert Omitted.count == 0
 end
 
+Then("I should have no relationships") do
+  assert Relationship.count == 0
+end
 
 # create a tag
 Given /a tag exists(?: with (.*))?/ do |fields|
@@ -50,6 +53,15 @@ end
 Then("the page should NOT have any fandom tags") do
   Page.first.tags.fandom.empty?
 end
+
+Then("the page should NOT have any relationship tags") do
+  Page.first.tags.relationship.empty?
+end
+
+Then("the page should NOT have any not relationship tags") do
+  Page.first.tags.not_relationship.empty?
+end
+
 
 Then("the page should NOT have any omitted tags") do
   Page.first.tags.omitted.empty?

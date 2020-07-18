@@ -31,6 +31,7 @@
       = link_to "Refetch", refetch_path(@page)
   .tags= @page.generic_string
   .fandoms= @page.fandom_string
+  .relationships= @page.relationship_string
   .omitteds= @page.omitted_string
   .hiddens= @page.hidden_string
   .authors= @page.author_string
