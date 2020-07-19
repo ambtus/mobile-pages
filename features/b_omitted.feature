@@ -27,7 +27,7 @@ Feature: omitteds are a type of tag, and can be created and selected like tags
       And I fill in "page_title" with "New Title"
       And I press "Store"
     Then I should see "Please select fandom"
-    When I select "first" from "page_tag_ids_"
+    When I select "first" from "page_omitted_ids_"
       And I press "Update Tags"
     Then I should see "first" within ".omitteds"
 
@@ -73,7 +73,7 @@ Feature: omitteds are a type of tag, and can be created and selected like tags
     And a page exists
     When I am on the page's page
       And I edit its tags
-      And I select "work in progress" from "page_tag_ids_"
+      And I select "work in progress" from "page_omitted_ids_"
       And I press "Update Tags"
     Then I should see "work in progress" within ".omitteds"
 
@@ -151,12 +151,12 @@ Feature: omitteds are a type of tag, and can be created and selected like tags
       Then I should NOT see "not omitted"
       And I should NOT see "Merge"
 
-  Scenario: change omitted to generic tag
+  Scenario: change omitted to trope tag
     Given a page exists with omitteds: "will be visible"
     When I am on the page's page
       Then I should see "will be visible" within ".omitteds"
     When I am on the edit tag page for "will be visible"
-      And I select "" from "change"
+      And I select "Trope" from "change"
       And I press "Change"
     When I am on the page's page
       Then I should see "will be visible" within ".tags"
@@ -165,7 +165,7 @@ Feature: omitteds are a type of tag, and can be created and selected like tags
       Then I should be able to select "will be visible" from "tag"
       But I should NOT be able to select "will be visible" from "omitted"
 
-  Scenario: change generic to omitted tag
+  Scenario: change trope to omitted tag
     Given a page exists with tags: "will be omitted"
     When I am on the page's page
       Then I should see "will be omitted" within ".tags"

@@ -36,7 +36,9 @@ class TagsController < ApplicationController
       @tag.destroy_me
       redirect_to tags_path
     elsif params[:commit] == "Change"
-      @tag.update_attribute(:type, params[:change])
+      type = params[:change]
+      type = "" if type == "Trope"
+      @tag.update_attribute(:type, type)
       @tag.pages.map(&:cache_tags)
       redirect_to tags_path
     elsif params[:commit] == "Update"
@@ -50,7 +52,12 @@ class TagsController < ApplicationController
   def create
     @page = Page.find(params[:page_id])
     if params[:commit] == "Update Tags"
-      tag_ids = params[:page][:tag_ids] if params[:page]
+      tag_ids = []
+      Tag.types.each do |type|
+        symbol = "#{type.downcase}_ids".to_sym
+        tag_ids = tag_ids + params[:page][symbol] if (params[:page] && params[:page][symbol])
+      end
+      Rails.logger.debug "DEBUG: replacing tags for #{@page.id} with #{tag_ids}"
       @page.tag_ids = tag_ids
       @page.cache_tags
     elsif params[:commit].match /Add (.*) Tags/

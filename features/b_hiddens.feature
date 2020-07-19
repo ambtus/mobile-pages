@@ -27,7 +27,7 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       And I fill in "page_title" with "New Title"
       And I press "Store"
     Then I should see "Please select fandom"
-    When I select "first" from "page_tag_ids_"
+    When I select "first" from "page_hidden_ids_"
       And I press "Update Tags"
     Then I should see "first" within ".hiddens"
 
@@ -73,7 +73,7 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
     And a page exists
     When I am on the page's page
       And I edit its tags
-      And I select "work in progress" from "page_tag_ids_"
+      And I select "work in progress" from "page_hidden_ids_"
       And I press "Update Tags"
     Then I should see "work in progress" within ".hiddens"
 
@@ -151,12 +151,12 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       Then I should NOT see "not hidden"
       And I should NOT see "Merge"
 
-  Scenario: change hidden to generic tag
+  Scenario: change hidden to trope tag
     Given a page exists with hiddens: "will be visible"
     When I am on the page's page
       Then I should see "will be visible" within ".hiddens"
     When I am on the edit tag page for "will be visible"
-      And I select "" from "change"
+      And I select "Trope" from "change"
       And I press "Change"
     When I am on the page's page
       Then I should see "will be visible" within ".tags"
@@ -165,7 +165,7 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       Then I should be able to select "will be visible" from "tag"
       But I should NOT be able to select "will be visible" from "hidden"
 
-  Scenario: change generic to hidden tag
+  Scenario: change trope to hidden tag
     Given a page exists with tags: "will be hidden"
     When I am on the page's page
       Then I should see "will be hidden" within ".tags"

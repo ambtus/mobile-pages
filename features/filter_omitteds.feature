@@ -33,7 +33,7 @@ Feature: pages with omitted tags are filtered in by default. During search, anyt
       And I should NOT see "Alice in Wonderland"
       But I should see "The Mysterious Affair at Styles"
 
-  Scenario: change omitted to generic tag
+  Scenario: change omitted to trope tag
     Given I have no tags
     And a page exists with omitteds: "sad"
     When I am on the homepage
@@ -41,7 +41,7 @@ Feature: pages with omitted tags are filtered in by default. During search, anyt
     When I am on the page's page
       Then I should see "sad" within ".omitteds"
     When I am on the edit tag page for "sad"
-      And I select "" from "change"
+      And I select "Trope" from "change"
       And I press "Change"
     When I am on the homepage
     Then I should be able to select "sad" from "tag"
@@ -49,7 +49,7 @@ Feature: pages with omitted tags are filtered in by default. During search, anyt
     When I am on the page's page
       Then I should see "sad" within ".tags"
 
-  Scenario: change generic to omitted tag
+  Scenario: change trope to omitted tag
     Given I have no tags
     And a page exists with tags: "sad"
     When I am on the homepage

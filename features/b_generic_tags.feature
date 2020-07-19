@@ -1,11 +1,11 @@
-Feature: generic tag stuff
+Feature: trope tag stuff
 
   Scenario: strip tag whitespace and sort
     Given a page exists
     When I am on the page's page
       And I edit its tags
       And I fill in "tags" with "  funny,  joy  joy,happy happy  "
-      And I press "Add Generic Tags"
+      And I press "Add Trope Tags"
     Then I should see "funny, happy happy, joy joy" within ".tags"
 
   Scenario: no tags exist during create
@@ -17,7 +17,7 @@ Feature: generic tag stuff
       And I press "Store"
     Then I should see "Please select fandom"
     When I fill in "tags" with "my tag"
-      And I press "Add Generic Tags"
+      And I press "Add Trope Tags"
     Then I should see "my tag" within ".tags"
 
   Scenario: no tags selected during create
@@ -27,7 +27,7 @@ Feature: generic tag stuff
       And I fill in "page_title" with "New Title"
       And I press "Store"
     Then I should see "Please select fandom"
-    When I select "first" from "page_tag_ids_"
+    When I select "first" from "page_trope_ids_"
       And I press "Update Tags"
     Then I should see "first" within ".tags"
 
@@ -46,7 +46,7 @@ Feature: generic tag stuff
     When I am on the page's page
       And I edit its tags
     When I fill in "tags" with "classic, children's"
-      And I press "Add Generic Tags"
+      And I press "Add Trope Tags"
     Then I should see "classic" within ".tags"
       And I should see "children's" within ".tags"
     When I am on the homepage
@@ -58,7 +58,7 @@ Feature: generic tag stuff
     And a page exists
     When I am on the page's page
     When I edit its tags
-      And I select "fantasy" from "page_tag_ids_"
+      And I select "fantasy" from "page_trope_ids_"
       And I press "Update Tags"
     Then I should see "fantasy" within ".tags"
 
@@ -68,7 +68,7 @@ Feature: generic tag stuff
     Then I should see "classic" within ".tags"
     When I edit its tags
       And I fill in "tags" with "something, children's"
-      And I press "Add Generic Tags"
+      And I press "Add Trope Tags"
     Then I should see "children's, classic, something" within ".tags"
     When I am on the homepage
     Then I should be able to select "classic" from "tag"

@@ -48,7 +48,7 @@ Feature: pages with hidden tags are filtered out by default. During search, anyt
       But I should NOT see "The Mysterious Affair at Styles"
       And I should NOT see "Alice in Wonderland"
 
-  Scenario: change hidden to generic tag
+  Scenario: change hidden to trope tag
     Given I have no tags
     And a page exists with hiddens: "will be visible"
     When I am on the homepage
@@ -57,7 +57,7 @@ Feature: pages with hidden tags are filtered out by default. During search, anyt
     When I am on the page's page
       Then I should see "will be visible" within ".hiddens"
     When I am on the edit tag page for "will be visible"
-      And I select "" from "change"
+      And I select "Trope" from "change"
       And I press "Change"
     When I am on the homepage
       Then I should NOT see "No pages found"
@@ -66,7 +66,7 @@ Feature: pages with hidden tags are filtered out by default. During search, anyt
     When I am on the page's page
       Then I should see "will be visible" within ".tags"
 
-  Scenario: change generic to hidden tag
+  Scenario: change trope to hidden tag
     Given I have no tags
     And a page exists with tags: "to be hidden"
     When I am on the homepage

@@ -27,7 +27,7 @@ Feature: relationships are a type of tag, and can be created and selected like t
       And I fill in "page_title" with "New Title"
       And I press "Store"
     Then I should see "Please select fandom"
-    When I select "first" from "page_tag_ids_"
+    When I select "first" from "page_relationship_ids_"
       And I press "Update Tags"
     Then I should see "first" within ".relationships"
 
@@ -72,7 +72,7 @@ Feature: relationships are a type of tag, and can be created and selected like t
     And a page exists
     When I am on the page's page
       And I edit its tags
-      And I select "John/Rodney" from "page_tag_ids_"
+      And I select "John/Rodney" from "page_relationship_ids_"
       And I press "Update Tags"
     Then I should see "John/Rodney" within ".relationships"
 
@@ -164,7 +164,7 @@ Feature: relationships are a type of tag, and can be created and selected like t
       Then I should be able to select "Harry Potter" from "fandom"
       But I should NOT be able to select "Harry Potter" from "relationship"
 
-  Scenario: change generic to relationship tag
+  Scenario: change trope to relationship tag
     Given a page exists with tags: "snarry"
     When I am on the page's page
       Then I should see "snarry" within ".tags"

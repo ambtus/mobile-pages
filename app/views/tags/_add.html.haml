@@ -2,5 +2,4 @@
 = hinted_text_field_tag :tags, params[:tags], Tag::NEW_PLACEHOLDER, :maxlength => 255, :size => 33
 %br
 -Tag.types.each do |type|
-  -type = "Generic" if type.blank?
   = submit_tag "Add #{type} Tags"

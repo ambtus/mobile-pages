@@ -450,12 +450,12 @@ class Page < ActiveRecord::Base
   def unread?; last_read.blank?; end
 
   # used in show view
-  def generic_string; self.tags.generic.by_name.joined; end
-  Tag.types.reject(&:blank?).each do |type|
+  Tag.types.each do |type|
     define_method(type.downcase + "_string") do
       self.tags.where(type: type).by_name.joined
     end
   end
+  def trope_string; self.tags.trope.by_name.joined; end #then redefine trope_string
   def author_string; self.authors.joined; end
   def favorite_string; self.favorite_names.join(", "); end
   def size_string; "#{self.size} (#{ActionController::Base.helpers.number_with_delimiter(self.wordcount)} words)"; end
@@ -471,7 +471,7 @@ class Page < ActiveRecord::Base
 
   def add_tags_from_string(string, type="Tag")
     return if string.blank?
-    type = "Tag" if type == "Generic"
+    type = "Tag" if type == "Trope"
     string.split(",").each do |tag|
       self.tags << type.constantize.find_or_create_by(name: tag.squish)
     end
@@ -482,7 +482,7 @@ class Page < ActiveRecord::Base
   def add_relationships_from_string(string); add_tags_from_string(string, "Relationship"); end
   def add_omitteds_from_string(string); add_tags_from_string(string, "Omitted"); end
 
-  def cache_string; self.tags.not_hidden.ordered.joined; end
+  def cache_string; self.tags.not_hidden.joined; end
   def cache_tags
     Rails.logger.debug "DEBUG: cache_tags for #{self.id} tags: #{cache_string}, hiddens: #{hidden_string}"
     self.update(cached_tag_string: cache_string, cached_hidden_string: hidden_string)
@@ -520,7 +520,7 @@ class Page < ActiveRecord::Base
     ].compact
   end
 
-  def tags_et_al_names; et_al_names + tags.ordered.map(&:name); end
+  def tags_et_al_names; et_al_names + tags.by_name.map(&:name); end
   def tags_et_al
     mine = self.tags_et_al_names
     if self.parent
@@ -822,15 +822,15 @@ class Page < ActiveRecord::Base
     "by #{all_authors_string}, #{hidden_string}"
   end
   def all_tags_for_comments
-    my_tags = self.tags.fandom.by_name + self.tags.relationship.by_name + self.tags.generic.by_name
+    my_tags = self.tags.fandom.by_name + self.tags.relationship.by_name + self.tags.trope.by_name
     my_parents_tags = self.parent_id.blank? ? [] : self.parent.all_tags_for_comments
     (my_tags + my_parents_tags).pulverize
   end
   def all_tags_for_comments_string
     fandoms = all_tags_for_comments.select{|t| t.type == "Fandom"}
     relationships = all_tags_for_comments.select{|t| t.type == "Relationship"}
-    generics = all_tags_for_comments.select{|t| t.type == ""}
-    (fandoms + relationships + generics).map(&:name).join_comma
+    tropes = all_tags_for_comments.select{|t| t.type == ""}
+    (fandoms + relationships + tropes).map(&:name).join_comma
   end
   def download_comment_string
     [

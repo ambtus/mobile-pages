@@ -1,12 +1,9 @@
 -content_for(:title, "Tags")
--type = ""
-%h2 Generic Tags
-- Tag.ordered.each do |tag|
-  -unless tag.type == type
-    -type = tag.type
-    %h2 #{type} Tags
-  %p
-    edit
-    = link_to "#{tag.name}", edit_tag_path(tag)
-    =surround "(", ")" do
-      = link_to "#{tag.pages.count} #{'page'.pluralize(tag.pages.count)}", pages_path(tag.class.name.downcase.to_sym => tag.name)
+-Tag.types.each do |type|
+  %h2 #{type} Tags
+  -Tag.send(type.downcase).by_name.each do |tag|
+    %p
+      edit
+      = link_to "#{tag.name}", edit_tag_path(tag)
+      =surround "(", ")" do
+        = link_to "#{tag.pages.count} #{'page'.pluralize(tag.pages.count)}", pages_path(tag.class.name.downcase.to_sym => tag.name)

@@ -35,7 +35,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
       And I fill in "page_title" with "New Title"
       And I press "Store"
     Then I should see "Please select fandom"
-    When I select "first" from "page_tag_ids_"
+    When I select "first" from "page_fandom_ids_"
       And I press "Update Tags"
     Then I should see "first" within ".fandoms"
 
@@ -79,7 +79,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     And a page exists
     When I am on the page's page
       And I edit its tags
-      And I select "SGA" from "page_tag_ids_"
+      And I select "SGA" from "page_fandom_ids_"
       And I press "Update Tags"
     Then I should see "SGA" within ".fandoms"
 
@@ -152,12 +152,12 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
       Then I should NOT see "not fandom"
       And I should NOT see "Merge"
 
-  Scenario: change fandom to generic tag
+  Scenario: change fandom to trope tag
     Given a page exists with fandoms: "not a fandom"
     When I am on the page's page
       Then I should see "not a fandom" within ".fandoms"
     When I am on the edit tag page for "not a fandom"
-      And I select "" from "change"
+      And I select "Trope" from "change"
       And I press "Change"
     When I am on the page's page
       Then I should see "not a fandom" within ".tags"
@@ -166,7 +166,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     Then I should be able to select "not a fandom" from "tag"
     But I should NOT be able to select "not a fandom" from "fandom"
 
-  Scenario: change generic to fandom tag
+  Scenario: change trope to fandom tag
     Given a page exists with tags: "will be fandom"
     When I am on the page's page
       Then I should see "will be fandom" within ".tags"

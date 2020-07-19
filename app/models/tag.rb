@@ -6,21 +6,23 @@ class Tag < ActiveRecord::Base
   validates_uniqueness_of :name, :case_sensitive => false
 
   def self.types
-    ["", "Fandom", "Relationship", "Omitted", "Hidden"]
+    ["Fandom", "Relationship", "Trope", "Omitted", "Hidden"]
   end
 
   scope :by_name, -> { order('tags.name asc') }
-  scope :ordered, -> { order('tags.type asc').order('tags.name asc') }
-  scope :generic, -> { where(type: '') }
-  scope :hidden, -> { where(type: 'Hidden') }
-  scope :not_hidden, -> { where.not(type: 'Hidden') }
+
+  scope :trope, -> { where(type: '') }
   scope :fandom, -> { where(type: 'Fandom') }
-  scope :not_fandom, -> { where.not(type: 'Fandom') }
-  scope :omitted, -> { where(type: 'Omitted') }
-  scope :not_omitted, -> { where.not(type: 'Omitted') }
-  scope :joined, -> { map(&:name).join(", ") }
   scope :relationship, -> { where(type: 'Relationship') }
+  scope :hidden, -> { where(type: 'Hidden') }
+  scope :omitted, -> { where(type: 'Omitted') }
+
+  scope :not_fandom, -> { where.not(type: 'Fandom') }
   scope :not_relationship, -> { where.not(type: 'Relationship') }
+  scope :not_hidden, -> { where.not(type: 'Hidden') }
+  scope :not_omitted, -> { where.not(type: 'Omitted') }
+
+  scope :joined, -> { map(&:name).join(", ") }
 
   before_validation :remove_placeholder
 
@@ -35,7 +37,7 @@ class Tag < ActiveRecord::Base
   end
 
   def self.names
-    self.generic.by_name.map(&:name)
+    self.trope.by_name.map(&:name)
   end
 
   def destroy_me
