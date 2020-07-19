@@ -1065,6 +1065,7 @@ private
       if self.ao3? && !self.url.match(/chapter/)
         self.get_meta_from_ao3
         self.get_chapters_from_ao3
+        self.set_wordcount
       else
         self.fetch
       end
