@@ -191,8 +191,8 @@ class Page < ActiveRecord::Base
     (self.parts.first && self.parts.first.url && self.parts.first.url.match(/archiveofourown/))
   end
   def ao3_url; self.url || self.parts.first.url.split("/chapter").first; end
-  def ao3_chapter?; self.url.match(/chapters/); end
-
+  def ao3_chapter?; self.url && self.url.match(/chapters/); end
+  def ao3_series?; self.parts.first && self.parts.first.raw_html.blank?; end
 
   def fetch
     remove_outdated_downloads
@@ -889,7 +889,13 @@ class Page < ActiveRecord::Base
     mp_authors.each {|a| self.authors << a}
     unless non_mp_authors.empty?
       byline = "by #{non_mp_authors.join(", ")}"
-      self.notes = self.notes ? [byline,notes].join("\n\n") : byline
+      if self.notes.blank?
+        self.notes = byline
+      elsif !self.notes.match(byline)
+        self.notes = [byline,notes].join("\n\n")
+      else
+        return self.notes
+      end
       self.update_attribute(:notes, self.notes) unless self.new_record?
       self.notes
     end
@@ -954,8 +960,13 @@ class Page < ActiveRecord::Base
         Rails.logger.debug "DEBUG: build meta from raw html for #{self.id}"
         doc = Nokogiri::HTML(raw_html)
       else
-        Rails.logger.debug "DEBUG: build meta from raw html of first part #{parts.first.id}"
-        doc = Nokogiri::HTML(parts.first.raw_html)
+        if ao3_series?
+          Rails.logger.debug "DEBUG: build meta from raw html of first part of first  part #{parts.first.parts.first.id}"
+          doc = Nokogiri::HTML(parts.first.parts.first.raw_html)
+        else
+          Rails.logger.debug "DEBUG: build meta from raw html of first part #{parts.first.id}"
+          doc = Nokogiri::HTML(parts.first.raw_html)
+        end
       end
     end
 
@@ -968,8 +979,12 @@ class Page < ActiveRecord::Base
         self.title = ao3_single_chapter_fic_title(doc) || ao3_doc_title(doc)
       end
     else
-      Rails.logger.debug "DEBUG: getting work title for #{self.id}"
-      self.title = ao3_doc_title(doc)
+      if ao3_series?
+        Rails.logger.debug "DEBUG: keeping title #{self.title} for #{self.id}"
+      else
+        Rails.logger.debug "DEBUG: getting work title for #{self.id}"
+        self.title = ao3_doc_title(doc)
+      end
     end
 
     doc_summary = Scrub.sanitize_html(doc.css(".summary blockquote")).children.to_html
@@ -986,7 +1001,11 @@ class Page < ActiveRecord::Base
     elsif self.parts.empty? # this is a single chapter work
       self.notes = [doc_summary, doc_notes, doc_tags, doc_relationships].join_hr
     else # this is the enclosing doc
-      self.notes = [doc_summary, doc_tags, doc_relationships].join_hr
+      if self.ao3_series? && self.notes.present?
+        Rails.logger.debug "DEBUG: not changing present notes for series #{self.id}"
+      else
+        self.notes = [doc_summary, doc_tags, doc_relationships].join_hr
+      end
     end
 
     # don't get authors for subparts and get after notes for byline
