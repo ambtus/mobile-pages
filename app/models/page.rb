@@ -98,7 +98,11 @@ class Page < ActiveRecord::Base
     tag_types.each do |key, value|
       page.send("add_#{key}_from_string", value)
     end
-    Rails.logger.debug "DEBUG: created page with tags: [#{page.tags.joined}] and authors: #{page.authors.map(&:true_name)}"
+    if hash[:last_read] # update parts and self
+      page.parts.each {|p| p.update_attribute(:last_read, hash[:last_read])}
+      page.update_attribute(:last_read, hash[:last_read])
+    end
+    Rails.logger.debug "DEBUG: created page with tags: [#{page.tags.joined}] and authors: #{page.authors.map(&:true_name)} and last_read: #{page.last_read}"
     page
   end
 
@@ -313,6 +317,8 @@ class Page < ActiveRecord::Base
     remove.each do |old_part_id|
       Page.find(old_part_id).destroy
     end
+
+    self.update_last_read
     self.set_wordcount
   end
 
@@ -371,8 +377,12 @@ class Page < ActiveRecord::Base
       parent.tags << self.tags.not_hidden.not_omitted.not_relationship
       parent.cache_tags
       parent.authors << self.authors
-      parent.update_attribute(:last_read, self.last_read)
       parent.update_attribute(:favorite, self.favorite)
+    else
+      Rails.logger.debug "DEBUG: updating parent last read #{parent.last_read}? mine is #{self.last_read}"
+      if self.unread? || (parent.read? && self.last_read > parent.last_read)
+        parent.update_attribute(:last_read, self.last_read)
+      end
     end
     parent.set_wordcount(false)
     return parent
@@ -416,18 +426,23 @@ class Page < ActiveRecord::Base
     return self
   end
 
-  def update_rating(interesting_string, nice_string, update_children=true, update_parent=true)
-    self.last_read = Time.now
+  def rate(interesting_string, nice_string, update_parent = true)
     self.interesting = interesting_string.to_i
     self.nice = nice_string.to_i
     self.favorite = interesting + nice
-    update_read_after
-    self.parent.update_rating(interesting_string, nice_string, false, true) if self.parent && update_parent
-    self.parts.each {|p| p.update_rating(interesting_string, nice_string, true, false)} if update_children
+    self.update_read_after
+    self.parts.each do |part|
+      part.rate(interesting_string, nice_string, false)
+    end
+    if self.parent && update_parent
+      parent.update_last_read
+    end
     return self.favorite
   end
 
   def update_read_after
+    self.last_read = Time.now
+    Rails.logger.debug "DEBUG: part last read: #{self.last_read}"
     rating = self.favorite
     if rating == 0
       self.read_after = Time.now + 6.months
@@ -436,6 +451,17 @@ class Page < ActiveRecord::Base
     end
     self.save
   end
+
+  def update_last_read
+    last_reads = self.parts.map(&:last_read)
+    if last_reads.include?(nil)
+      self.update_attribute(:last_read, nil)
+    else
+      self.update_attribute(:last_read, last_reads.sort.last)
+    end
+    Rails.logger.debug "DEBUG: parent last read: #{self.last_read}"
+  end
+
 
 
   def add_author_string=(string)
@@ -448,6 +474,7 @@ class Page < ActiveRecord::Base
   end
 
   def unread?; last_read.blank?; end
+  def read?; last_read.present?; end
 
   # used in show view
   Tag.types.each do |type|

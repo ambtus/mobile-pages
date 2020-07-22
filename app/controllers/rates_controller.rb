@@ -3,6 +3,7 @@ class RatesController < ApplicationController
     @page = Page.find(params[:id])
   end
   def create
+    Rails.logger.debug "DEBUG: Rate.create(#{params.to_unsafe_h.symbolize_keys})"
     page = Page.find(params[:page_id])
     interesting = params[:interesting]
     nice = params[:nice]
@@ -12,7 +13,7 @@ class RatesController < ApplicationController
           flash[:alert] = "You must select both ratings"
           redirect_to rate_path(page) and return
         end
-        rating = page.update_rating(interesting, nice)
+        rating = page.rate(interesting, nice)
         if rating == 0
           flash[:notice] = "#{page.title} set for reading again in 6 months"
         else
@@ -21,18 +22,10 @@ class RatesController < ApplicationController
         redirect_to pages_url
       when "Rate unfinished"
         if interesting && nice
-          page.update_rating(interesting, nice)
+          page.rate(interesting, nice)
         end
         page.make_unfinished
         flash[:notice] = "#{page.title} set to 'unfinished'"
-        redirect_to pages_url
-      when "Rate part"
-        unless interesting && nice
-          flash[:alert] = "You must select both ratings"
-          redirect_to rate_path(page) and return
-        end
-        page.update_rating(interesting, nice, true, false)
-        flash[:notice] = "#{page.parent.title} reading date unchanged"
         redirect_to pages_url
     end
   end

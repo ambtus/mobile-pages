@@ -11,28 +11,6 @@ Feature: adding parents and children and siblings
     When I follow "Page 1" within "#position_1"
     Then I follow "Parent" within ".parent"
 
-   Scenario: add parent to read part
-    Given a page exists with last_read: "2009-01-01"
-      And I am on the page's page
-   Then I should NOT see "unread" within ".last_read"
-   When I follow "Manage Parts"
-     And I fill in "add_parent" with "Parent"
-     And I press "Update"
-   When I am on the homepage
-   Then I should see "Parent" within "#position_1"
-   Then I should NOT see "unread" within "#position_1"
-
-   Scenario: add parent to unread part
-    Given a page exists
-      And I am on the page's page
-   Then I should see "unread" within ".last_read"
-   When I follow "Manage Parts"
-     And I fill in "add_parent" with "Parent"
-     And I press "Update"
-   When I am on the homepage
-   Then I should see "Parent" within "#position_1"
-   Then I should see "unread" within "#position_1"
-
   Scenario: can't add a page to an ambiguous parent
     Given I have no pages
     Given a page exists with title: "Ambiguous1"
@@ -156,49 +134,6 @@ Feature: adding parents and children and siblings
     When I am on the homepage
     Then I should see "New Parent" within "#position_1"
       And I should see "Page 1" within "#position_2"
-
-        Scenario: non-matching last reads
-    Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND last_read: "2009-01-01"
-    When I am on the page's page
-      And I follow "Part 2" within "#position_2"
-      And I follow "Rate"
-      And I choose "boring"
-      And I choose "very sweet"
-    And I press "Rate"
-   When I am on the page's page
-   Then last read should be today
-     And I should see "unread" within "#position_1"
-     And I should NOT see "2014-" within "#position_2"
-     And I should NOT see "unread" within "#position_2"
-
-   Scenario: add unread part to read parent
-    Given a page exists with title: "Multi" AND urls: "http://test.sidrasue.com/parts/1.html"
-      And I am on the homepage
-   Then I should see "Multi" within "#position_1"
-   Then I should see "unread" within "#position_1"
-   When I follow "Rate"
-      And I choose "very interesting"
-      And I choose "sweet enough"
-    And I press "Rate"
-   Then I should NOT see "unread" within "#position_1"
-   When I follow "Multi"
-     And I follow "Manage Parts"
-     And I fill in "url_list" with
-       """
-       http://test.sidrasue.com/parts/1.html
-       http://test.sidrasue.com/parts/2.html
-       """
-     And I press "Update"
-   When I am on the homepage
-   Then I should see "Multi" within "#position_1"
-     And I should NOT see "unread" within "#position_1"
-   When I follow "Multi" within "#position_1"
-     And I follow "Part 1" within "#position_1"
-   Then I should NOT see "unread" within ".last_read"
-   When I am on the homepage
-   When I follow "Multi"
-     And I follow "Part 2" within "#position_2"
-   Then I should see "unread" within ".last_read"
 
   Scenario: refetch original html for parts
     Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"

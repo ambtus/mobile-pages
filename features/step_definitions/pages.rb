@@ -37,7 +37,7 @@ Given("pages with all possible ratings exist") do
   3.times do |interesting|
     3.times do |nice|
       p = Page.create(:title => "page" + interesting.to_s + nice.to_s)
-      p.update_rating(interesting.to_s, nice.to_s)
+      p.rate(interesting.to_s, nice.to_s)
     end
   end
 end
