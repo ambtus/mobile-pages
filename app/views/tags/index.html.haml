@@ -1,6 +1,10 @@
 -content_for(:title, "Tags")
 -Tag.types.each do |type|
-  %h2 #{type} Tags
+  %h2{id: type}
+    #{type}
+    -Tag.types.without(type).each do |type|
+      ="|"
+      =link_to type, anchor: type
   -Tag.send(type.downcase).by_name.each do |tag|
     %p
       edit
