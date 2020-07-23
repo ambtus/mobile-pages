@@ -10,6 +10,7 @@ class Tag < ActiveRecord::Base
   end
 
   scope :by_name, -> { order('tags.name asc') }
+  scope :by_type, -> { order('tags.type desc') }
 
   scope :trope, -> { where(type: '') }
   scope :fandom, -> { where(type: 'Fandom') }

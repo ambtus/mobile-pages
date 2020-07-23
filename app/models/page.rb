@@ -548,7 +548,7 @@ class Page < ActiveRecord::Base
     ].compact
   end
 
-  def tags_et_al_names; et_al_names + tags.by_name.map(&:name); end
+  def tags_et_al_names; et_al_names + tags.by_type.by_name.map(&:name); end
   def tags_et_al
     mine = self.tags_et_al_names
     if self.parent
