@@ -512,6 +512,7 @@ class Page < ActiveRecord::Base
   def cache_string; self.tags.not_hidden.joined; end
   def cache_tags
     Rails.logger.debug "DEBUG: cache_tags for #{self.id} tags: #{cache_string}, hiddens: #{hidden_string}"
+    self.remove_outdated_downloads
     self.update(cached_tag_string: cache_string, cached_hidden_string: hidden_string)
   end
 
@@ -926,6 +927,7 @@ class Page < ActiveRecord::Base
       self.update_attribute(:notes, self.notes) unless self.new_record?
       self.notes
     end
+    self.remove_outdated_downloads
   end
 
   def ao3_doc_title(doc); doc.xpath("//h2").last.children.text.strip rescue "empty title"; end

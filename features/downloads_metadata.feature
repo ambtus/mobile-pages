@@ -50,3 +50,28 @@ Feature: downloads metadata
     And the download epub command for "Part 2" should include tags: "medium"
     But the download epub command for "Part 2" should NOT include tags: "long"
     And the download epub command for "Part 2" should include comments: "medium"
+
+  Scenario: tag changes => download tags change
+    Given a page exists with tags: "tag1"
+    When I am on the page's page
+      And I download the epub
+    Then the download epub file should exist
+      And the download epub command should include tags: "tag1"
+
+    When I am on the edit tag page for "tag1"
+    And I fill in "tag_name" with "fandom1"
+    And I press "Update"
+    Then the download epub file should NOT exist
+    When I am on the page's page
+      And I download the epub
+    Then the download epub file should exist
+      And the download epub command should include tags: "fandom1"
+
+    When I am on the edit tag page for "fandom1"
+      And I select "Fandom" from "change"
+      And I press "Change"
+    Then the download epub file should NOT exist
+    When I am on the page's page
+      And I download the epub
+    Then the download epub file should exist
+      And the download epub command should include series: "fandom1"
