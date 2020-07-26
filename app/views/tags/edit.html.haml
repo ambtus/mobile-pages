@@ -11,7 +11,7 @@
     = f.submit "Update"
     %br
     = label_tag :change, "Change type:"
-    = select_tag :change, options_for_select(Tag.types, @tag.type)
+    = select_tag :change, options_for_select(Tag.types, @tag.type_name)
     = f.submit "Change"
     - unless (@tag.class.names - [@tag.name]).blank?
       %br

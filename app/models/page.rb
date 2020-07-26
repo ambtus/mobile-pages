@@ -157,13 +157,9 @@ class Page < ActiveRecord::Base
         pages.order('last_read DESC')
       when "random"
         # when I want random fics, unless I'm deliberately asking for them
-        unless params[:unread] == "yes"
-          # I don't want unread ones, or ones that have been recently read
+        unless params[:unread] == "yes" || params[:favorite] == "unfinished"
+          # I don't want unread or unfinished ones, or ones that have been recently read
           pages = pages.where('pages.last_read < ?', 6.months.ago)
-        end
-        unless params[:favorite] == "unfinished"
-          # and I don't want unfinished ones
-          pages = pages.where.not(stars: 9)
         end
         pages.order(Arel.sql('RAND()'))
       when "last_created"

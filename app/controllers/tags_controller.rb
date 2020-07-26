@@ -38,8 +38,9 @@ class TagsController < ApplicationController
     elsif params[:commit] == "Change"
       type = params[:change]
       type = "" if type == "Trope"
+      rechache = (type == "Hidden" || @tag.type == "Hidden")
       @tag.update_attribute(:type, type)
-      @tag.pages.map(&:cache_tags)
+      rechache ? @tag.pages.map(&:cache_tags) : @tag.pages.map(&:remove_outdated_downloads)
       redirect_to tags_path
     elsif params[:commit] == "Update"
       @tag.update_attribute(:name, params[:tag][:name])

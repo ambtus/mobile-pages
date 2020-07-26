@@ -157,7 +157,8 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I am on the page's page
       Then I should see "not a fandom" within ".fandoms"
     When I am on the edit tag page for "not a fandom"
-      And I select "Trope" from "change"
+      Then "Fandom" should be selected in "change"
+    When I select "Trope" from "change"
       And I press "Change"
     When I am on the page's page
       Then I should see "not a fandom" within ".tags"
@@ -171,6 +172,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I am on the page's page
       Then I should see "will be fandom" within ".tags"
     When I am on the edit tag page for "will be fandom"
+      Then "Trope" should be selected in "change"
       And I select "Fandom" from "change"
       And I press "Change"
     When I am on the page's page
@@ -184,6 +186,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I am on the page's page
       Then I should see "will be visible" within ".hiddens"
     When I am on the edit tag page for "will be visible"
+      Then "Hidden" should be selected in "change"
       And I select "Fandom" from "change"
       And I press "Change"
     When I am on the page's page
@@ -195,6 +198,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I am on the page's page
       Then I should see "will be hidden" within ".fandoms"
     When I am on the edit tag page for "will be hidden"
+      Then "Fandom" should be selected in "change"
       And I select "Hidden" from "change"
       And I press "Change"
     When I am on the page's page

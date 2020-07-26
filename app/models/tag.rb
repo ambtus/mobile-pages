@@ -9,14 +9,6 @@ class Tag < ActiveRecord::Base
     ["Fandom", "Relationship", "Trope", "Rating", "Omitted", "Hidden"]
   end
 
-  def self.rating_types
-    ["Rating", "Omitted", "Hidden"]
-  end
-
-  def self.category_types
-    ["Fandom", "Relationship", "Trope"]
-  end
-
   scope :by_name, -> { order('tags.name asc') }
   scope :by_type, -> { order('tags.type desc') }
 
@@ -45,6 +37,10 @@ class Tag < ActiveRecord::Base
 
   def strip_whitespace
     self.name.squish!
+  end
+
+  def type_name
+    type.blank? ? "Trope" : type
   end
 
   def self.names
