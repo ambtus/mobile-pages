@@ -22,6 +22,10 @@ Then("I should have no omitteds") do
   assert Omitted.count == 0
 end
 
+Then("I should have no ratings") do
+  assert Rating.count == 0
+end
+
 Then("I should have no relationships") do
   assert Relationship.count == 0
 end
@@ -58,10 +62,17 @@ Then("the page should NOT have any relationship tags") do
   Page.first.tags.relationship.empty?
 end
 
+Then("the page should NOT have any rating tags") do
+  Page.first.tags.rating.empty?
+end
+
 Then("the page should NOT have any not relationship tags") do
   Page.first.tags.not_relationship.empty?
 end
 
+Then("the page should NOT have any not rating tags") do
+  Page.first.tags.not_rating.empty?
+end
 
 Then("the page should NOT have any omitted tags") do
   Page.first.tags.omitted.empty?

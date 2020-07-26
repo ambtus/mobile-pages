@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_24_182143) do
+ActiveRecord::Schema.define(version: 2020_07_24_135353) do
 
   create_table "authors", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
@@ -34,17 +34,15 @@ ActiveRecord::Schema.define(version: 2020_05_24_182143) do
     t.datetime "updated_at"
     t.integer "wordcount"
     t.string "size"
-    t.integer "favorite", limit: 2, default: 10
+    t.integer "stars", limit: 2, default: 10
     t.integer "ultimate_parent_id"
     t.integer "sanitize_version", limit: 2, default: 1, null: false
     t.string "cached_tag_string", default: "", null: false
-    t.integer "interesting"
-    t.integer "nice"
     t.text "my_notes"
     t.string "cached_hidden_string", default: "", null: false
-    t.index ["favorite"], name: "index_pages_on_favorite"
     t.index ["parent_id"], name: "index_pages_on_parent_id"
     t.index ["size"], name: "index_pages_on_size"
+    t.index ["stars"], name: "index_pages_on_stars"
     t.index ["ultimate_parent_id"], name: "index_pages_on_ultimate_parent_id"
   end
 

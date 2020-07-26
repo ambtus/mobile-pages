@@ -28,3 +28,10 @@ Feature: random page
       And I press "Find"
     Then I should NOT see "No pages found"
 
+  Scenario: don’t find unfinished random pages
+    Given a page exists with stars: 9
+    When I am on the homepage
+    When I choose "sort_by_random"
+      And I press "Find"
+    Then I should see "No pages found"
+

@@ -1,22 +1,20 @@
 - content_for :title do
   = "Rate " + @page.title
 
-.title= @page.title
-.rate= "Please rate (converted to #{Page::DURATION} for next suggested read date)"
+.title Rate #{@page.title}
+-if @page.parent
+  .stars
+    Parent stars:
+    =@page.parent.stars
 .form
   = form_tag :rates do
     = hidden_field_tag(:page_id, @page.id)
-    = label_tag :interesting, "How interesting was it?"
-    - ['very interesting', 'interesting enough', 'boring'].each_with_index do |choice, index|
-      %br
-      = radio_button_tag :interesting, index, @page.interesting == index
-      = label_tag "interesting_#{index}", choice
+    = label_tag :stars, "Stars:"
     %br
-    = label_tag :nice, "How sweet was it?"
-    - ['very sweet', 'sweet enough', 'stressful'].each_with_index do |choice, index|
+    - 5.times.reverse_each do |int|
+      -choice = (int+1).to_s
+      =radio_button_tag :stars, choice, @stars == choice
+      =label_tag "stars_#{choice}", choice
       %br
-      = radio_button_tag :nice, index, @page.nice == index
-      = label_tag "nice_#{index}", choice
-    %br
     = submit_tag "Rate"
     = submit_tag "Rate unfinished"

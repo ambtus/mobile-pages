@@ -5,8 +5,7 @@ Feature: last_read (also unread)
     When I am on the page's page
     Then I should see "unread" within ".last_read"
     When I follow "Rate"
-      And I choose "boring"
-      And I choose "stressful"
+      And I choose "1"
     And I press "Rate"
     Then last read should be today
 
@@ -15,8 +14,7 @@ Feature: last_read (also unread)
     When I am on the page's page
     Then I should see "2008-01-01" within ".last_read"
     When I follow "Rate"
-      And I choose "boring"
-      And I choose "stressful"
+      And I choose "1"
     And I press "Rate"
     Then I should NOT see "2008-01-01"
     And last read should be today
@@ -52,8 +50,7 @@ Feature: last_read (also unread)
     When I am on the page's page
       And I follow "Part 2" within "#position_2"
       And I follow "Rate"
-      And I choose "boring"
-      And I choose "very sweet"
+      And I choose "3"
     And I press "Rate"
    Then last read should be today
    When I am on the page's page
@@ -75,14 +72,16 @@ Feature: last_read (also unread)
        http://test.sidrasue.com/parts/3.html
        """
      And I press "Update"
+   Then I should see "unread" within ".last_read"
+     And I should see "2009-01-01" within "#position_1"
+     And I should NOT see "2009-01-01" within "#position_2"
+     And I should NOT see "unread" within "#position_2"
    When I am on the homepage
    Then I should see "unread" within "#position_1"
     And I should NOT see "2009-01-01" within "#position_1"
-   When I follow "Multi"
-      And I follow "Part 2"
+   When I follow "Part 2"
       And I follow "Rate"
-      And I choose "boring"
-      And I choose "very sweet"
+      And I choose "3"
     And I press "Rate"
     When I am on the homepage
    Then I should see "unread" within "#position_1"
@@ -96,8 +95,7 @@ Feature: last_read (also unread)
     When I follow "Part 3"
     Then I should see "unread" within ".last_read"
     When I follow "Rate"
-      And I choose "interesting"
-      And I choose "very sweet"
+      And I choose "5"
     And I press "Rate"
     When I am on the homepage
    Then I should NOT see "unread" within "#position_1"

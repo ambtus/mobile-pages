@@ -7,6 +7,9 @@
 - unless Tag.names.blank?
   = label_tag :tag, "Tag:"
   = select_tag :tag, options_for_select([nil] + Tag.names, @tag.try(:name))
+- unless Rating.names.blank?
+  = label_tag :rating, "Rating:"
+  = select_tag :rating, options_for_select([nil] + Rating.names, @rating.try(:name))
 - unless Omitted.names.blank?
   = label_tag :omitted, "Omitted:"
   = select_tag :omitted, options_for_select([nil] + Omitted.names, @omitted.try(:name))

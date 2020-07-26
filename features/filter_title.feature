@@ -75,8 +75,7 @@ Feature: filter on titles
        And I should see "Page 15"
      But I should NOT see "Page 16"
      When I follow "Rate" within "#position_2"
-      And I choose "very interesting"
-      And I choose "very sweet"
+      And I choose "5"
      And I press "Rate"
      When I am on the homepage
      Then I should see "Page 16"

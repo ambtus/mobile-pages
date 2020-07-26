@@ -39,7 +39,8 @@ Feature: trope tag stuff
       And I fill in "page_title" with "New Title"
       And I press "Store"
     Then I should see "Please select fandom"
-      And I should see "first" within ".tags"
+      When I press "Update Tags"
+      Then I should see "first" within ".tags"
 
   Scenario: add a tag to a page when there are no tags
     Given a page exists

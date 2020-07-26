@@ -22,12 +22,13 @@ Feature: downloads metadata
     But the download epub command should NOT include comments: "unread"
 
   Scenario: long and has been read
-    Given a page exists with last_read: "2014-01-01" AND url: "http://test.sidrasue.com/long.html"
+    Given a page exists with last_read: "2014-01-01" AND url: "http://test.sidrasue.com/long.html" AND stars: "5"
     Then the download epub command should include tags: "medium"
     But the download epub command should NOT include tags: "unread"
     And the download epub command should NOT include tags: "2014"
     And the download epub command should include comments: "medium"
     But the download epub command should NOT include comments: "2014"
+    And the download epub command should include rating: "10"
 
   Scenario: part titles shouldn't have size
     Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3"
@@ -39,7 +40,7 @@ Feature: downloads metadata
      But I should NOT see "Part 1 (medium)" within "h2"
 
   Scenario: part epubs should have all metadata from parent except size
-    Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3" AND fandoms: "harry potter" AND tags: "AU" AND add_author_string: "my author"
+    Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3" AND fandoms: "harry potter" AND tags: "AU" AND add_author_string: "my author" AND stars: "4"
     Then the download epub command for "Part 2" should include series: "harry potter"
     But the download epub command for "Part 2" should NOT include tags: "harry potter"
     And the download epub command for "Part 2" should include tags: "AU"
@@ -50,6 +51,7 @@ Feature: downloads metadata
     And the download epub command for "Part 2" should include tags: "medium"
     But the download epub command for "Part 2" should NOT include tags: "long"
     And the download epub command for "Part 2" should include comments: "medium"
+    And the download epub command should include rating: "8"
 
   Scenario: tag changes => download tags change
     Given a page exists with tags: "tag1"

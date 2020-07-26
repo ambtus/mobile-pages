@@ -34,7 +34,6 @@ class Page < ActiveRecord::Base
     "#{mypath}#{DOWNLOADS}/#{download_title}#{format}".gsub(' ', '%20')
   end
 
-  DURATION = "years"
   UNREAD = "unread"
   SHORT_LENGTH = 160 # truncate at this many characters
   LIMIT = 15 # number of pages to show in index
@@ -93,7 +92,7 @@ class Page < ActiveRecord::Base
   def self.create_from_hash(hash)
     Rails.logger.debug "DEBUG: Page.create_from_hash(#{hash})"
     tag_types = Hash.new("")
-    %w{tags hiddens fandoms relationships omitteds}.each {|tag_type| tag_types[tag_type] = hash.delete(tag_type.to_sym) }
+    %w{tags hiddens fandoms relationships ratings omitteds}.each {|tag_type| tag_types[tag_type] = hash.delete(tag_type.to_sym) }
     page = Page.create(hash)
     tag_types.each do |key, value|
       page.send("add_#{key}_from_string", value)
@@ -112,22 +111,16 @@ class Page < ActiveRecord::Base
     pages = pages.where('pages.last_read is not null') if params[:unread] == "no" || params[:sort_by] == "last_read"
     case params[:favorite]
       when "yes"
-        pages = pages.where(:favorite => [0,1])
-        pages = pages.where('pages.last_read is not null')
+        pages = pages.where(:stars => 5)
+      when "best"
+        pages = pages.where(:stars => [5,4])
       when "good"
-        pages = pages.where(:favorite => 2)
-      when "either"
-        pages = pages.where(:favorite => [0,1,2])
-        pages = pages.where('pages.last_read is not null')
-      when "neither"
-        pages = pages.where('pages.favorite != ?', 0)
-        pages = pages.where('pages.favorite != ?', 1)
-        pages = pages.where('pages.favorite != ?', 2)
+        pages = pages.where(:stars => [5,4,3])
+      when "bad"
+        pages = pages.where(:stars => [2,1])
       when "unfinished"
-        pages = pages.where(:favorite => 9)
+        pages = pages.where(:stars => 9)
     end
-    pages = pages.where(:nice => [0]) if params[:find] == "sweet" || params[:find] == "both"
-    pages = pages.where(:interesting => [0]) if params[:find] == "interesting" || params[:find] == "both"
     pages = pages.where(:size => "short") if params[:size] == "short"
     pages = pages.where(:size => "medium") if params[:size] == "medium"
     pages = pages.where(:size => "long") if params[:size] == "long"
@@ -141,6 +134,7 @@ class Page < ActiveRecord::Base
     pages = pages.search(:cached_tag_string, params[:tag]) if params.has_key?(:tag)
     pages = pages.search(:cached_tag_string, params[:fandom]) if params.has_key?(:fandom)
     pages = pages.search(:cached_tag_string, params[:relationship]) if params.has_key?(:relationship)
+    pages = pages.search(:cached_tag_string, params[:rating]) if params.has_key?(:rating)
     pages = pages.without_tag(params[:omitted]) if params.has_key?(:omitted)
     if params.has_key?(:hidden)
       pages = pages.search(:cached_hidden_string, params[:hidden])
@@ -167,14 +161,9 @@ class Page < ActiveRecord::Base
           # I don't want unread ones, or ones that have been recently read
           pages = pages.where('pages.last_read < ?', 6.months.ago)
         end
-        unless params[:find] == "none"
-          # and I don't want stressful or boring ones
-          pages = pages.where(:nice => [0,1,nil])
-          pages = pages.where(:interesting => [0,1,nil])
-        end
         unless params[:favorite] == "unfinished"
           # and I don't want unfinished ones
-          pages = pages.where('pages.favorite != ?', 9)
+          pages = pages.where.not(stars: 9)
         end
         pages.order(Arel.sql('RAND()'))
       when "last_created"
@@ -377,7 +366,7 @@ class Page < ActiveRecord::Base
       parent.tags << self.tags.not_hidden.not_omitted.not_relationship
       parent.cache_tags
       parent.authors << self.authors
-      parent.update_attribute(:favorite, self.favorite)
+      parent.update_attribute(:stars, self.stars)
     else
       Rails.logger.debug "DEBUG: updating parent last read #{parent.last_read}? mine is #{self.last_read}"
       if self.unread? || (parent.read? && self.last_read > parent.last_read)
@@ -414,40 +403,36 @@ class Page < ActiveRecord::Base
   def make_unfinished
     latest = Page.where(:parent_id => nil).order(:read_after).last.read_after + 1.day || Date.tomorrow
     self.update_attribute(:read_after, latest)
-    self.update_attribute(:favorite, 9)
-    if self.parent
-      parent = self.parent
-      parent.update_attribute(:read_after, latest) if parent
-      parent.update_attribute(:favorite, 9) if parent
-      grandparent = parent.parent if parent
-      grandparent.update_attribute(:read_after, latest) if grandparent
-      grandparent.update_attribute(:favorite, 9) if grandparent
-    end
+    self.update_attribute(:stars, 9)
+    self.update(:last_read => Time.now)
+    self.update_read_after
     return self
   end
 
-  def rate(interesting_string, nice_string, update_parent = true)
-    self.interesting = interesting_string.to_i
-    self.nice = nice_string.to_i
-    self.favorite = interesting + nice
+  def rate(stars, update_parent = true, update_children = true)
+    self.stars = stars.to_i
+    self.update(:last_read => Time.now)
     self.update_read_after
-    self.parts.each do |part|
-      part.rate(interesting_string, nice_string, false)
-    end
-    if self.parent && update_parent
-      parent.update_last_read
-    end
-    return self.favorite
+    self.parts.each {|part| part.rate(stars, false, true)} if update_children
+    if self.parent && update_parent; parent.update_last_read; end
+    return self.stars
   end
 
   def update_read_after
-    self.last_read = Time.now
     Rails.logger.debug "DEBUG: part last read: #{self.last_read}"
-    rating = self.favorite
-    if rating == 0
+    rating = self.stars
+    if rating == 5
       self.read_after = Time.now + 6.months
-    else
-      self.read_after = Time.now + rating.send(DURATION)
+    elsif rating == 4
+      self.read_after = Time.now + 1.year
+    elsif rating == 3
+      self.read_after = Time.now + 2.years
+    elsif rating == 2
+      self.read_after = Time.now + 3.years
+    elsif rating == 1
+      self.read_after = Time.now + 4.years
+    elsif rating == 9
+      self.read_after = Time.now + 5.years
     end
     self.save
   end
@@ -458,6 +443,8 @@ class Page < ActiveRecord::Base
       self.update_attribute(:last_read, nil)
     else
       self.update_attribute(:last_read, last_reads.sort.last)
+      self.update_attribute(:stars, self.parts.map(&:stars).sort.last)
+      self.update_read_after
     end
     Rails.logger.debug "DEBUG: parent last read: #{self.last_read}"
   end
@@ -484,7 +471,6 @@ class Page < ActiveRecord::Base
   end
   def trope_string; self.tags.trope.by_name.joined; end #then redefine trope_string
   def author_string; self.authors.joined; end
-  def favorite_string; self.favorite_names.join(", "); end
   def size_string; "#{self.size} (#{ActionController::Base.helpers.number_with_delimiter(self.wordcount)} words)"; end
   def last_read_string; unread? ? UNREAD : last_read.to_date; end
   def my_formatted_notes; Scrub.sanitize_html(my_notes); end
@@ -507,6 +493,7 @@ class Page < ActiveRecord::Base
   def add_hiddens_from_string(string); add_tags_from_string(string, "Hidden"); end
   def add_fandoms_from_string(string); add_tags_from_string(string, "Fandom"); end
   def add_relationships_from_string(string); add_tags_from_string(string, "Relationship"); end
+  def add_ratings_from_string(string); add_tags_from_string(string, "Rating"); end
   def add_omitteds_from_string(string); add_tags_from_string(string, "Omitted"); end
 
   def cache_string; self.tags.not_hidden.joined; end
@@ -516,34 +503,26 @@ class Page < ActiveRecord::Base
     self.update(cached_tag_string: cache_string, cached_hidden_string: hidden_string)
   end
 
-  def favorite_names
-    names = case self.favorite
-      when 0
-        if self.last_read
-          ["favorite"]
-        else
-          []
-        end
-      when 1
-        ["favorite"]
-      when 2
-        ["good"]
-      when 9
-        ["unfinished"]
-      else
-        []
+  def unfinished?; stars == 9; end
+  def unrated?; stars == 10; end
+  def stars?; [5,4,3,2,1].include?(self.stars); end
+  def star_string
+    if stars?
+      "#{stars} " + "stars".pluralize(stars)
+    elsif unfinished?
+      "unfinished"
+    elsif unrated?
+      nil
+    else
+      Rails.logger.debug "DEBUG: stars are #{self.stars}, should be 5,4,3,2,1,9,or 10"
+      "unknown"
     end
-    names = names + ["sweet"] if nice == 0
-    names = names + ["interesting"] if interesting == 0
-    names = names + ["stressful"] if nice == 2
-    names = names + ["boring"] if interesting == 2
-    names.sort.compact
   end
 
   def et_al_names
     [
       (self.authors.empty? ? nil : "by #{author_string}"),
-      *self.favorite_names,
+      star_string,
       (self.last_read.blank? ? "unread" : self.last_read.to_date),
     ].compact
   end
@@ -864,7 +843,6 @@ class Page < ActiveRecord::Base
     [
       hidden_comment_string,
       all_tags_for_comments_string,
-      favorite_string,
       size_string,
       my_short_notes,
       short_notes,
@@ -875,6 +853,9 @@ class Page < ActiveRecord::Base
     string = %Q{--title "#{self.title}"}
     unless self.download_author_string.blank?
       string = string + %Q{ --authors "#{self.download_author_string}"}
+    end
+    if self.stars?
+      string = string + %Q{ --rating "#{self.stars*2}" }
     end
     unless self.download_tag_string.blank?
       string = string + %Q{ --tags "#{self.download_tag_string}"}

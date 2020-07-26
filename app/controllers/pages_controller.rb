@@ -17,6 +17,7 @@ class PagesController < ApplicationController
     @tag = Tag.find_by_name(params[:tag]) if params[:tag]
     @fandom = Fandom.find_by_name(params[:fandom]) if params[:fandom]
     @relationship = Relationship.find_by_name(params[:relationship]) if params[:relationship]
+    @rating = Rating.find_by_name(params[:rating]) if params[:rating]
     @omitted = Omitted.find_by_name(params[:omitted]) if params[:omitted]
     @hidden = Hidden.find_by_name(params[:hidden]) if params[:hidden]
     @author_name = params[:author] if params[:author]
@@ -38,6 +39,7 @@ class PagesController < ApplicationController
       build_route[:hidden] = params[:hidden] unless params[:hidden].blank?
       build_route[:fandom] = params[:fandom] unless params[:fandom].blank?
       build_route[:relationship] = params[:relationship] unless params[:relationship].blank?
+      build_route[:rating] = params[:rating] unless params[:rating].blank?
       build_route[:omitted] = params[:omitted] unless params[:omitted].blank?
       build_route[:sort_by] = params[:sort_by] unless (params[:sort_by].blank? || params[:sort_by] == "read_after")
       build_route[:size] = params[:size] unless (params[:size].blank? || params[:size] == "any")
@@ -57,26 +59,25 @@ class PagesController < ApplicationController
     @hidden = Hidden.find_by_name(params[:hidden])
     @fandom = Fandom.find_by_name(params[:fandom])
     @relationship = Relationship.find_by_name(params[:relationship])
+    @rating = Rating.find_by_name(params[:rating])
     @omitted = Omitted.find_by_name(params[:omitted])
     @author_name = params[:author] unless params[:author].blank?
     @author = Author.find_by_short_name(params[:author])
-    @favorite = params[:favorite]
     @find = params[:find]
     if @page.save
       if !@page.errors[:base].blank?
         @errors = @page.errors
         @page.destroy
         @page = Page.new(params[:page])
-        @page.favorite = true if params[:favorite] == "favorite"
       else
-        @page.update_attribute(:favorite, @favorite)
         @page.authors << @author if @author
         @page.tags << @tag if @tag
         @page.tags << @hidden if @hidden
         @page.tags << @fandom if @fandom
         @page.tags << @omitted if @omitted
         @page.tags << @relationship if @relationship
-       @page.cache_tags
+        @page.tags << @rating if @rating
+        @page.cache_tags
         if @fandom.blank?
           flash[:notice] = "Page created. Please select fandom(s)"
           redirect_to tag_path(@page) and return

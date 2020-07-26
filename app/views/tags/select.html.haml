@@ -1,11 +1,18 @@
 - content_for :title do
   = "Select tags for " + @page.title
-.title= @page.title
-.tags
+.title= "Select tags for " + @page.title
+-if @page.parent
+  .tags
+    Parent tags:
+    =@page.parent.tags.by_type.by_name.joined
+.form
   = form_tag tags_path do
     = hidden_field_tag(:page_id, @page.id)
     .filters
       -Tag.types.each do |type|
+        =type + ":"
+        %br
         = select_tag("page[#{type.downcase}_ids][]", options_from_collection_for_select(Tag.send(type.downcase).by_name, 'id', 'name', selected = @page.tags.send(type.downcase).map(&:id)), :multiple => true)
+        %br
     =submit_tag "Update Tags"
     =render "add"

@@ -6,7 +6,15 @@ class Tag < ActiveRecord::Base
   validates_uniqueness_of :name, :case_sensitive => false
 
   def self.types
-    ["Fandom", "Relationship", "Trope", "Omitted", "Hidden"]
+    ["Fandom", "Relationship", "Trope", "Rating", "Omitted", "Hidden"]
+  end
+
+  def self.rating_types
+    ["Rating", "Omitted", "Hidden"]
+  end
+
+  def self.category_types
+    ["Fandom", "Relationship", "Trope"]
   end
 
   scope :by_name, -> { order('tags.name asc') }
@@ -17,11 +25,13 @@ class Tag < ActiveRecord::Base
   scope :relationship, -> { where(type: 'Relationship') }
   scope :hidden, -> { where(type: 'Hidden') }
   scope :omitted, -> { where(type: 'Omitted') }
+  scope :rating, -> { where(type: 'Rating') }
 
   scope :not_fandom, -> { where.not(type: 'Fandom') }
   scope :not_relationship, -> { where.not(type: 'Relationship') }
   scope :not_hidden, -> { where.not(type: 'Hidden') }
   scope :not_omitted, -> { where.not(type: 'Omitted') }
+  scope :not_rating, -> { where.not(type: 'Rating') }
 
   scope :joined, -> { map(&:name).join(", ") }
 

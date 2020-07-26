@@ -89,6 +89,14 @@ When("I choose {string} within {string}") do |field, parent|
   within(parent) { choose(field) }
 end
 
+Then("{string} should be checked") do |checked|
+  assert page.has_checked_field?(checked: checked)
+end
+
+Then("nothing should be checked") do
+  assert page.has_no_checked_field?
+end
+
 Then("{string} should be selected in {string}") do |selected, dropdown|
   assert page.has_select?(dropdown, selected: selected)
 end

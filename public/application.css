@@ -34,7 +34,8 @@ hr {
 .hiddens { background-color: #CCC; }
 .omitteds { background-color: #F55; }
 .authors { background-color: #CFF; }
-.favorite { background-color: #E9F; }
+.stars { background-color: #E9F; }
+.ratings { background-color: #E9C; }
 .size { background-color: #C9F; }
 .last_read { background-color: #F99; }
 .my_notes { background-color: #F00; }
