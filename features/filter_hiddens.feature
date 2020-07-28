@@ -14,7 +14,7 @@ Feature: pages with hidden tags are filtered out by default. During search, anyt
 
   Scenario: hidden by default with tags
     Given the following pages
-      | title                            | tags  | hiddens |
+      | title                            | tropes  | hiddens |
       | The Mysterious Affair at Styles  | mystery                 | hide |
       | Alice in Wonderland              | children                | hide, go away |
       | The Boxcar Children              | mystery, children       | |
@@ -36,7 +36,7 @@ Feature: pages with hidden tags are filtered out by default. During search, anyt
 
   Scenario: find by tag and hidden
     Given the following pages
-      | title                            | tags  | hiddens |
+      | title                            | tropes  | hiddens |
       | The Mysterious Affair at Styles  | mystery | |
       | Alice in Wonderland              |         | children |
       | The Boxcar Children              | mystery | children |
@@ -68,7 +68,7 @@ Feature: pages with hidden tags are filtered out by default. During search, anyt
 
   Scenario: change trope to hidden tag
     Given I have no tags
-    And a page exists with tags: "to be hidden"
+    And a page exists with tropes: "to be hidden"
     When I am on the homepage
       Then I should NOT see "No pages found"
       And I should see "Page 1"

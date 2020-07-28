@@ -165,7 +165,7 @@ Feature: ratings are a type of tag, and can be created and selected like tags
       But I should NOT be able to select "Harry Potter" from "rating"
 
   Scenario: change trope to rating tag
-    Given a page exists with tags: "cute"
+    Given a page exists with tropes: "cute"
     When I am on the page's page
       Then I should see "cute" within ".tags"
     When I am on the edit tag page for "cute"

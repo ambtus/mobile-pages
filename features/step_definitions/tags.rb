@@ -14,6 +14,10 @@ Then("I should have no hiddens") do
   assert Hidden.count == 0
 end
 
+Then("I should have no infos") do
+  assert Info.count == 0
+end
+
 Then("I should have no fandoms") do
   assert Fandom.count == 0
 end
@@ -45,6 +49,13 @@ Given /^the following tags?$/ do |table|
   table.hashes.each { |hash| Tag.create(hash) }
 end
 
+Then("the page should NOT have any not info tags") do
+  Page.first.tags.not_info.empty?
+end
+
+Then("the page should NOT have any info tags") do
+  Page.first.tags.info.empty?
+end
 
 Then("the page should NOT have any not hidden tags") do
   Page.first.tags.not_hidden.empty?

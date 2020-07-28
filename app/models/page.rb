@@ -92,11 +92,9 @@ class Page < ActiveRecord::Base
   def self.create_from_hash(hash)
     Rails.logger.debug "DEBUG: Page.create_from_hash(#{hash})"
     tag_types = Hash.new("")
-    %w{tags hiddens fandoms relationships ratings omitteds}.each {|tag_type| tag_types[tag_type] = hash.delete(tag_type.to_sym) }
+    Tag.types.each {|tag_type| tag_types[tag_type] = hash.delete(tag_type.downcase.pluralize.to_sym) }
     page = Page.create(hash)
-    tag_types.each do |key, value|
-      page.send("add_#{key}_from_string", value)
-    end
+    tag_types.each {|key, value| page.send("add_tags_from_string", value, key)}
     if hash[:last_read] # update parts and self
       page.parts.each {|p| p.update_attribute(:last_read, hash[:last_read])}
       page.update_attribute(:last_read, hash[:last_read])
@@ -135,6 +133,7 @@ class Page < ActiveRecord::Base
     pages = pages.search(:cached_tag_string, params[:fandom]) if params.has_key?(:fandom)
     pages = pages.search(:cached_tag_string, params[:relationship]) if params.has_key?(:relationship)
     pages = pages.search(:cached_tag_string, params[:rating]) if params.has_key?(:rating)
+    pages = pages.search(:cached_tag_string, params[:info]) if params.has_key?(:info)
     pages = pages.without_tag(params[:omitted]) if params.has_key?(:omitted)
     if params.has_key?(:hidden)
       pages = pages.search(:cached_hidden_string, params[:hidden])
@@ -359,7 +358,7 @@ class Page < ActiveRecord::Base
     count = parent.parts.size + 1
     self.update(:parent_id => parent.id, :position => count)
     if new
-      parent.tags << self.tags.not_hidden.not_omitted.not_relationship
+      parent.tags << self.tags.not_hidden.not_omitted.not_relationship.not_info
       parent.cache_tags
       parent.authors << self.authors
       parent.update_attribute(:stars, self.stars)
@@ -486,11 +485,6 @@ class Page < ActiveRecord::Base
     end
     self.cache_tags
   end
-  def add_hiddens_from_string(string); add_tags_from_string(string, "Hidden"); end
-  def add_fandoms_from_string(string); add_tags_from_string(string, "Fandom"); end
-  def add_relationships_from_string(string); add_tags_from_string(string, "Relationship"); end
-  def add_ratings_from_string(string); add_tags_from_string(string, "Rating"); end
-  def add_omitteds_from_string(string); add_tags_from_string(string, "Omitted"); end
 
   def cache_string; self.tags.not_hidden.joined; end
   def cache_tags
@@ -784,7 +778,7 @@ class Page < ActiveRecord::Base
   ## if it's a part, add the parent's tags
   def download_tags;
     [(unread? ? UNREAD : ""),
-     *tags.not_fandom.not_relationship.map(&:name),
+     *tags.not_fandom.not_relationship.not_info.map(&:name),
      ]
   end
   def all_tags;

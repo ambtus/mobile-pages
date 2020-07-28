@@ -1,7 +1,7 @@
 Feature: an ebook with a hidden tag is also hidden from marvin
 
   Scenario: epub download hidden page; author and tag and fandom strings are empty
-    Given a page exists with hiddens: "hide me" AND tags: "my tag" AND add_author_string: "my author" AND fandoms: "my fandom"
+    Given a page exists with hiddens: "hide me" AND tropes: "my tag" AND add_author_string: "my author" AND fandoms: "my fandom"
     Then the download epub command should include tags: "hide me"
     But the download epub command should NOT include tags: "my tag"
     But the download epub command should include comments: "my tag"
@@ -11,7 +11,7 @@ Feature: an ebook with a hidden tag is also hidden from marvin
     But the download epub command should include comments: "my fandom"
 
   Scenario: epub of a parent omits hidden part but author and tag strings populated. epub download of a hidden part as standalone: author and tag strings are empty but are in comments
-    Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3" AND tags: "show me" AND add_author_string: "my author"
+    Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3" AND tropes: "show me" AND add_author_string: "my author"
     When I am on the page with title "Part 2"
       And I edit its tags
       And I fill in "tags" with "hide me"

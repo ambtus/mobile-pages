@@ -168,7 +168,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     But I should NOT be able to select "not a fandom" from "fandom"
 
   Scenario: change trope to fandom tag
-    Given a page exists with tags: "will be fandom"
+    Given a page exists with tropes: "will be fandom"
     When I am on the page's page
       Then I should see "will be fandom" within ".tags"
     When I am on the edit tag page for "will be fandom"

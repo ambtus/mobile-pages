@@ -20,6 +20,7 @@ class PagesController < ApplicationController
     @rating = Rating.find_by_name(params[:rating]) if params[:rating]
     @omitted = Omitted.find_by_name(params[:omitted]) if params[:omitted]
     @hidden = Hidden.find_by_name(params[:hidden]) if params[:hidden]
+    @info = Info.find_by_name(params[:info]) if params[:info]
     @author_name = params[:author] if params[:author]
     Rails.logger.debug "DEBUG: Page.filter(#{params.to_unsafe_h.symbolize_keys})"
     @pages = Page.filter(params)
@@ -41,7 +42,8 @@ class PagesController < ApplicationController
       build_route[:relationship] = params[:relationship] unless params[:relationship].blank?
       build_route[:rating] = params[:rating] unless params[:rating].blank?
       build_route[:omitted] = params[:omitted] unless params[:omitted].blank?
-      build_route[:sort_by] = params[:sort_by] unless (params[:sort_by].blank? || params[:sort_by] == "read_after")
+      build_route[:info] = params[:info] unless params[:info].blank?
+     build_route[:sort_by] = params[:sort_by] unless (params[:sort_by].blank? || params[:sort_by] == "read_after")
       build_route[:size] = params[:size] unless (params[:size].blank? || params[:size] == "any")
       build_route[:favorite] = params[:favorite] unless (params[:favorite].blank? || params[:favorite] == "any")
       build_route[:find] = params[:find] unless (params[:find].blank? || params[:find] == "none")
@@ -61,6 +63,7 @@ class PagesController < ApplicationController
     @relationship = Relationship.find_by_name(params[:relationship])
     @rating = Rating.find_by_name(params[:rating])
     @omitted = Omitted.find_by_name(params[:omitted])
+    @info = Info.find_by_name(params[:info])
     @author_name = params[:author] unless params[:author].blank?
     @author = Author.find_by_short_name(params[:author])
     @find = params[:find]
@@ -77,6 +80,7 @@ class PagesController < ApplicationController
         @page.tags << @omitted if @omitted
         @page.tags << @relationship if @relationship
         @page.tags << @rating if @rating
+        @page.tags << @info if @info
         @page.cache_tags
         if @fandom.blank?
           flash[:notice] = "Page created. Please select fandom(s)"

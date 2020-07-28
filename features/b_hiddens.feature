@@ -166,7 +166,7 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       But I should NOT be able to select "will be visible" from "hidden"
 
   Scenario: change trope to hidden tag
-    Given a page exists with tags: "will be hidden"
+    Given a page exists with tropes: "will be hidden"
     When I am on the page's page
       Then I should see "will be hidden" within ".tags"
     When I am on the edit tag page for "will be hidden"

@@ -165,7 +165,7 @@ Feature: relationships are a type of tag, and can be created and selected like t
       But I should NOT be able to select "Harry Potter" from "relationship"
 
   Scenario: change trope to relationship tag
-    Given a page exists with tags: "snarry"
+    Given a page exists with tropes: "snarry"
     When I am on the page's page
       Then I should see "snarry" within ".tags"
     When I am on the edit tag page for "snarry"

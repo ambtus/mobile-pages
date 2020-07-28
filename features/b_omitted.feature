@@ -166,7 +166,7 @@ Feature: omitteds are a type of tag, and can be created and selected like tags
       But I should NOT be able to select "will be visible" from "omitted"
 
   Scenario: change trope to omitted tag
-    Given a page exists with tags: "will be omitted"
+    Given a page exists with tropes: "will be omitted"
     When I am on the page's page
       Then I should see "will be omitted" within ".tags"
     When I am on the edit tag page for "will be omitted"

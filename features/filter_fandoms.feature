@@ -2,7 +2,7 @@ Feature: filtering on fandoms
 
   Scenario: find by fandom
     Given the following pages
-      | title                  | fandoms    | tags     |
+      | title                  | fandoms    | tropes   |
       | Lord of the Rings      | fantasy    | adult    |
       | The Hobbit             | fantasy    | children |
       | Nancy Drew             | mystery    | children |

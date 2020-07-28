@@ -1,7 +1,7 @@
 Feature: an ebook with a relationship tag is collected by series (not subjects) for marvin
 
   Scenario: one relationship, no fandoms => relationship in series
-    Given a page exists with relationships: "snarry" AND tags: "AU"
+    Given a page exists with relationships: "snarry" AND tropes: "AU"
     Then the download epub command should include series: "snarry"
     And the download epub command should include tags: "AU"
     But the download epub command should NOT include tags: "snarry"

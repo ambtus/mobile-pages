@@ -2,7 +2,7 @@ Feature: filtering on relationships
 
   Scenario: find by relationship
     Given the following pages
-      | title                  | relationships    | tags     |
+      | title                  | relationships    | tropes     |
       | Mirror of Maybe        | snarry           | au       |
       | A Nick in Time         | snarry           | kidfic   |
       | A Single Love          | Harry/Tom        | kidfic   |
