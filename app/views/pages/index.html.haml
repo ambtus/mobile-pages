@@ -31,6 +31,7 @@
     - if @pages
       - @pages.each_with_index do |page, index|
         .page{:id => "position_#{index+1}"}
+          .parent=link_to page.parent.title, page_path(page.parent) if page.parent
           .title= link_to page.title, page_path(page)
           .views
             = link_to "Rate", rate_path(page)

@@ -36,10 +36,15 @@ Feature: other mult-part tests
       | Parent1 | http://test.sidrasue.com/parts/*.html | 1   |
       | Parent2 | http://test.sidrasue.com/parts/*.html | 2 3 |
      When I am on the homepage
-     Then I should see "Parent1" within ".title"
-      And I fill in "page_title" with "Part 2"
+     Then I should see "Parent1" within "#position_1"
+     And I should see "Parent2" within "#position_2"
+     When I fill in "page_title" with "Part 2"
       And I press "Find"
-     Then I should see "Part 2" within ".title"
+     Then I should see "Part 2" within "#position_1"
+       And I should see "Parent2" within "#position_1"
+       But I should NOT see "Part 3" within "#position_1"
+       And I should NOT see "Part 1"
+       And I should NOT see "Parent1"
 
   Scenario: new parent for an existing page should have the same last read date
     Given the following pages
