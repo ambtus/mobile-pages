@@ -22,7 +22,6 @@ class PagesController < ApplicationController
     @hidden = Hidden.find_by_name(params[:hidden]) if params[:hidden]
     @info = Info.find_by_name(params[:info]) if params[:info]
     @author_name = params[:author] if params[:author]
-    Rails.logger.debug "DEBUG: Page.filter(#{params.to_unsafe_h.symbolize_keys})"
     @pages = Page.filter(params)
     flash.now[:alert] = "No pages found" if @pages.to_a.empty?
   end

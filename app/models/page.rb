@@ -9,6 +9,18 @@ class Page < ActiveRecord::Base
     end;1
   end
 
+  def self.remove_all_duplicate_tags
+    Page.where.not(parent_id: nil).each do |page|
+      page.remove_duplicate_tags
+    end
+  end
+
+  def remove_duplicate_tags
+    dups = self.tags & self.parent.tags
+    self.tags.delete(dups)
+    self.cache_tags
+  end
+
   def mypath
     prefix = case Rails.env
       when "test"; "/tmp/test/"
@@ -104,7 +116,10 @@ class Page < ActiveRecord::Base
   end
 
   def self.filter(params={})
+    Rails.logger.debug "DEBUG: Page.filter(#{params})"
     pages = Page.all
+    # ignore parts if not filtering on anything
+    pages = pages.where(:parent_id => nil) if params == {"controller"=>"pages", "action"=>"index"}
     pages = pages.where(:last_read => nil) if params[:unread] == "yes"
     pages = pages.where('pages.last_read is not null') if params[:unread] == "no" || params[:sort_by] == "last_read"
     case params[:favorite]
@@ -119,6 +134,8 @@ class Page < ActiveRecord::Base
       when "unfinished"
         pages = pages.where(:stars => 9)
     end
+    # ignore parts if filtering on size
+    pages = pages.where(:parent_id => nil) if params[:size]
     pages = pages.where(:size => "short") if params[:size] == "short"
     pages = pages.where(:size => "medium") if params[:size] == "medium"
     pages = pages.where(:size => "long") if params[:size] == "long"
@@ -141,23 +158,15 @@ class Page < ActiveRecord::Base
       pages = pages.where(:cached_hidden_string => "")
     end
     pages = pages.with_author(params[:author]) if params.has_key?(:author)
-    # can only find parts by title, notes, my_notes, url, last_created.
-    unless params[:title] || params[:notes] || params[:my_notes] || params[:url] ||
-           #no on unread parts. leaving it here in case I change my mind
-           #params[:unread] == "yes" ||
-           params[:sort_by] == "last_created"
-      # all other searches find parents only
-      pages = pages.where(:parent_id => nil)
-    end
     pages = case params[:sort_by]
       when "last_read"
         pages.order('last_read ASC')
       when "recently_read"
         pages.order('last_read DESC')
       when "random"
-        # when I want random fics, unless I'm deliberately asking for them
+        # when I want random fics -- unless I'm deliberately asking for them --
+        # I don't want unread or unfinished ones, or ones that have been recently read
         unless params[:unread] == "yes" || params[:favorite] == "unfinished"
-          # I don't want unread or unfinished ones, or ones that have been recently read
           pages = pages.where('pages.last_read < ?', 6.months.ago)
         end
         pages.order(Arel.sql('RAND()'))
@@ -491,6 +500,7 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "DEBUG: cache_tags for #{self.id} tags: #{cache_string}, hiddens: #{hidden_string}"
     self.remove_outdated_downloads
     self.update(cached_tag_string: cache_string, cached_hidden_string: hidden_string)
+    self.parts.map(&:remove_duplicate_tags)
   end
 
   def unfinished?; stars == 9; end
