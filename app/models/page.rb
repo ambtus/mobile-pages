@@ -16,6 +16,7 @@ class Page < ActiveRecord::Base
   end
 
   def remove_duplicate_tags
+    return unless self.parent #TODO raise error or at least log a problem
     dups = self.tags & self.parent.tags
     self.tags.delete(dups)
     self.cache_tags
@@ -122,6 +123,8 @@ class Page < ActiveRecord::Base
     pages = pages.where(:parent_id => nil) if params == {"controller"=>"pages", "action"=>"index"}
     pages = pages.where(:last_read => nil) if params[:unread] == "yes"
     pages = pages.where('pages.last_read is not null') if params[:unread] == "no" || params[:sort_by] == "last_read"
+    # ignore parts if filtering on stars
+    pages = pages.where(:parent_id => nil) if params[:favorite]
     case params[:favorite]
       when "yes"
         pages = pages.where(:stars => 5)
