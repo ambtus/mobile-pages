@@ -29,12 +29,18 @@
         = link_to "Edit Raw HTML", edit_html_path(@page)
       = link_to "Scrub", scrub_path(@page)
       = link_to "Refetch", refetch_path(@page)
-  .fandoms= @page.fandom_string
-  .relationships= @page.relationship_string
+  .fandoms
+    -@page.tags.fandom.by_name.each do |fandom|
+      =link_to fandom.name, pages_path(fandom: fandom.name)
+  .relationships
+    -@page.tags.relationship.by_name.each do |relationship|
+      =link_to relationship.name, pages_path(relationship: relationship.name)
   .tags= @page.trope_string
   .omitteds= @page.omitted_string
   .hiddens= @page.hidden_string
-  .authors= @page.author_string
+  .authors
+    -@page.authors.by_name.each do |author|
+      =link_to author.name, pages_path(author: author.true_name)
   .stars= @page.star_string
   .ratings= @page.rating_string
   .size=@page.size_string

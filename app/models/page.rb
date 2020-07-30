@@ -460,9 +460,10 @@ class Page < ActiveRecord::Base
 
   def add_author_string=(string)
     return if string.blank?
-    string.split(",").each do |author|
-      new = Author.find_or_create_by(name: author.squish)
-      self.authors << new
+    string.split(",").each do |possible|
+      author = Author.find_by_short_name(possible)
+      author = Author.find_or_create_by(name: possible.squish) unless author
+      self.authors << author
     end
     self.authors
   end

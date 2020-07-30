@@ -29,7 +29,7 @@ Feature: author stuff
     When I want to edit the authors
       And I fill in "authors" with "charles dodgson"
       And I press "Add Authors"
-    Then I should see "lewis carroll & charles dodgson" within ".authors"
+    Then I should see "charles dodgson lewis carroll" within ".authors"
     When I am on the homepage
     Then I should be able to select "charles dodgson" from "Author"
 

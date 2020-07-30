@@ -14,7 +14,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
       And I edit its tags
       And I fill in "tags" with "  nonfiction,  audio  book,save for   later  "
       And I press "Add Fandom Tags"
-    Then I should see "audio book, nonfiction, save for later" within ".fandoms"
+    Then I should see "audio book nonfiction save for later" within ".fandoms"
 
   Scenario: no tags exist during create
     Given I am on the homepage
@@ -69,7 +69,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
       And I edit its tags
     When I fill in "tags" with "Star Wars, Harry Potter"
       And I press "Add Fandom Tags"
-    Then I should see "Harry Potter, Star Wars" within ".fandoms"
+    Then I should see "Harry Potter Star Wars" within ".fandoms"
     When I am on the homepage
     Then I should be able to select "Star Wars" from "Fandom"
     And I should be able to select "Harry Potter" from "Fandom"
@@ -90,7 +90,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I edit its tags
       And I fill in "tags" with "meta, reviews"
       And I press "Add Fandom Tags"
-    Then I should see "meta, nonfiction, reviews" within ".fandoms"
+    Then I should see "meta nonfiction reviews" within ".fandoms"
     When I am on the homepage
     Then I should be able to select "meta" from "Fandom"
 

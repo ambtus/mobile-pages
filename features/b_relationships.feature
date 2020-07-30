@@ -6,7 +6,7 @@ Feature: relationships are a type of tag, and can be created and selected like t
       And I edit its tags
       And I fill in "tags" with "  Stiles & the Sheriff,  Stiles/Peter,Peter  & the Sheriff  "
       And I press "Add Relationship Tags"
-    Then I should see "Peter & the Sheriff, Stiles & the Sheriff, Stiles/Peter" within ".relationships"
+    Then I should see "Peter & the Sheriff Stiles & the Sheriff Stiles/Peter" within ".relationships"
 
   Scenario: no tags exist during create
     Given I am on the homepage
@@ -62,7 +62,7 @@ Feature: relationships are a type of tag, and can be created and selected like t
       And I edit its tags
     When I fill in "tags" with "Severus & the Twins, Harry/Snape"
       And I press "Add Relationship Tags"
-    Then I should see "Harry/Snape, Severus & the Twins" within ".relationships"
+    Then I should see "Harry/Snape Severus & the Twins" within ".relationships"
     When I am on the homepage
     Then I should be able to select "Severus & the Twins" from "Relationship"
     Then I should be able to select "Harry/Snape" from "Relationship"
@@ -83,7 +83,7 @@ Feature: relationships are a type of tag, and can be created and selected like t
     When I edit its tags
       And I fill in "tags" with "John & Teyla, Teyla/Ronan"
       And I press "Add Relationship Tags"
-    Then I should see "John & Teyla, John/Rodney, Teyla/Ronan" within ".relationships"
+    Then I should see "John & Teyla John/Rodney Teyla/Ronan" within ".relationships"
     When I am on the homepage
     Then I should be able to select "John & Teyla" from "Relationship"
       And I should be able to select "John/Rodney" from "Relationship"
