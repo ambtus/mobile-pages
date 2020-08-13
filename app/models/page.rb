@@ -497,8 +497,8 @@ class Page < ActiveRecord::Base
 
   # used in index view and in epub comments
   def merged_tag_string; tags_et_al.join(', ');end
-  def short_notes; RubyPants.new(Scrub.strip_html(notes).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
-  def my_short_notes; RubyPants.new(Scrub.strip_html(my_notes).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
+  def short_notes; RubyPants.new(Scrub.sanitize_and_strip(notes).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
+  def my_short_notes; RubyPants.new(Scrub.sanitize_and_strip(my_notes).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
 
   def add_tags_from_string(string, type="Tag")
     return if string.blank?

@@ -45,3 +45,13 @@ Feature: stuff to do with notes
      Then I should NOT see "This is not" within ".notes"
      But I should see "is not"
      And "html" should link to "http://some.domain.com"
+
+  Scenario: scrub numerous tildas to hr
+    Given a page exists with notes: "<p>Sorry it took so long, I suck at romantic stuff.<br />~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p><p>Cheers!</p>"
+    When I am on the homepage
+      Then I should see "Sorry it took so long, I suck at romantic stuff. Cheers!"
+      And I should NOT see "~~~"
+    When I am on the page's page
+      Then I should see "Sorry it took so long, I suck at romantic stuff."
+      And I should NOT see "~~~"
+

@@ -54,6 +54,8 @@ module Scrub
 
   def self.strip_html(html); Sanitize.fragment(html).squish; end
 
+  def self.sanitize_and_strip(html); strip_html(sanitize_html(html)); end
+
   # sanitize
   def self.sanitize_html(html)
     return html unless html.is_a? String
@@ -86,11 +88,13 @@ module Scrub
     html.gsub!(/<p>\s*<\/p>/, "")
     # remove empty divs
     html.gsub!(/<div>\s*<\/div>/, "")
+    # common section designation
+    html.gsub!(/_{5,}/, '<hr />')
+    # less common section designation
+    html.gsub!(/~{10,}/, '<hr />')
     # remove stray paragraphs around sections
     html.gsub!(/<p><hr \/>/, '<hr />')
     html.gsub!(/<hr \/><\/p>/, '<hr />')
-    # common section designations
-    html.gsub!(/_{5,}/, '<hr />')
     # condense multiple sections
     html.gsub!(/(<hr \/>){2,}/, '<hr />')
     # style sections
