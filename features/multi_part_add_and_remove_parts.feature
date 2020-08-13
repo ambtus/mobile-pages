@@ -45,8 +45,8 @@ Feature: adding parents and children and siblings
     Given a page exists with title: "Single" AND url: "http://test.sidrasue.com/parts/3.html"
     And a page exists with title: "Multi" AND base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
     When I am on the homepage
-    Then I should see "Single"
-    And I should see "Multi"
+    Then I should see "Single" within "#position_1"
+    And I should see "Multi" within "#position_2"
     When I follow "Single"
       And I follow "Manage Parts"
       And I fill in "add_parent" with "Multi"
@@ -61,6 +61,16 @@ Feature: adding parents and children and siblings
     When I view the content
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
+      And I should see "stuff for part 3"
+    When I am on the page with title "Part 2"
+      And I press "Make Single"
+    When I am on the homepage
+    Then I should see "Multi" within "#position_1"
+    And I should see "Part 1 | 3. Single"
+    And I should see "Part 2" within "#position_2"
+    When I view the content
+    Then I should see "stuff for part 1"
+      And I should NOT see "stuff for part 2"
       And I should see "stuff for part 3"
 
   Scenario: add a part to a page with content
@@ -149,4 +159,3 @@ Feature: adding parents and children and siblings
     When I view the content
     Then I should see "stuff for part 2"
     And I should see "stuff for part 1"
-

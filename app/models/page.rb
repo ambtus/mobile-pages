@@ -348,6 +348,16 @@ class Page < ActiveRecord::Base
     list.join("\n")
   end
 
+  def make_single
+    Rails.logger.debug "DEBUG: removing #{self.parent_id} from #{self.id}"
+    return unless parent
+    parent = self.parent
+    self.tags << parent.tags
+    self.cache_tags
+    self.authors << parent.authors
+    self.update_attribute(:parent_id, nil)
+  end
+
   def add_parent(title)
     parent=Page.find_by_title(title)
     Rails.logger.debug "DEBUG: parent #{title} found? #{parent.is_a?(Page)}"

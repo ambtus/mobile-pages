@@ -8,6 +8,7 @@
     = submit_tag "Rebuild from Scrubbed HTML"
     = submit_tag "Remove Downloads"
     = submit_tag "Rebuild Meta"
+    = submit_tag "Make Single" if @page.parent
 .parent= link_to @page.parent.title, page_path(@page.parent) if @page.parent
 .page
   .title=h @page.title

@@ -121,6 +121,9 @@ class PagesController < ApplicationController
       when "Rebuild Meta"
         @page.rebuild_meta
         flash[:notice] = "Rebuilt Meta"
+      when "Make Single"
+        @page.make_single
+        flash[:notice] = "Made Single"
       when "Update Raw HTML"
         @page.raw_html = params[:pasted]
         flash[:notice] = "Raw HTML updated."
