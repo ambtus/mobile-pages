@@ -5,7 +5,7 @@
   = label_tag :relationship, "Relationship:"
   = select_tag :relationship, options_for_select([nil] + Relationship.names, @relationship.try(:name))
 - unless Tag.names.blank?
-  = label_tag :tag, "Tag:"
+  = label_tag :tag, "Trope:"
   = select_tag :tag, options_for_select([nil] + Tag.names, @tag.try(:name))
 - unless Rating.names.blank?
   = label_tag :rating, "Rating:"
