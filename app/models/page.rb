@@ -459,7 +459,7 @@ class Page < ActiveRecord::Base
     if last_reads.include?(nil)
       self.update_attribute(:last_read, nil)
     else
-      self.update_attribute(:last_read, last_reads.sort.last)
+      self.update_attribute(:last_read, last_reads.sort.first)
       self.update_attribute(:stars, self.parts.map(&:stars).sort.last)
       self.update_read_after
     end

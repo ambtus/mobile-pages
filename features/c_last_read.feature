@@ -52,10 +52,10 @@ Feature: last_read (also unread)
       And I follow "Rate"
       And I choose "3"
     And I press "Rate"
-   Then last read should be today
    When I am on the page's page
-     And I should see "2009-01-01" within "#position_1"
-     And I should NOT see "2009-01-01" within "#position_2"
+     Then I should see "2009-01-01" within ".last_read"
+     And I should NOT see "2009-01-01" within "#position_1"
+     And I should see today within "#position_2"
      And I should NOT see "unread" within "#position_2"
 
    Scenario: add unread part(s) to parent with read parts makes parent unread, rating one leaves parent unread, rating both updates parent
@@ -91,6 +91,7 @@ Feature: last_read (also unread)
      And I should see "2009-01-01" within "#position_1"
      And I should NOT see "unread" within "#position_2"
      And I should NOT see "2009-01-01" within "#position_2"
+     And I should see today within "#position_2"
      And I should NOT see "unread" within "#position_3"
     When I follow "Part 3"
     Then I should see "unread" within ".last_read"
@@ -99,4 +100,4 @@ Feature: last_read (also unread)
     And I press "Rate"
     When I am on the homepage
    Then I should NOT see "unread" within "#position_1"
-    And I should NOT see "2009-01-01" within "#position_1"
+    And I should see "2009-01-01" within "#position_1"

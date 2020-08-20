@@ -84,6 +84,11 @@ Then("last read should be today") do
   assert Page.first.last_read.to_date == Date.current
 end
 
+Then('I should see today within {string}') do |string|
+  within(string) { assert assert_text(Date.current.to_s) }
+end
+
+
 Then("the part titles should be stored as {string}") do |title_string|
    assert Page.first.parts.map(&:title).join(" & ") == title_string
 end
