@@ -52,8 +52,9 @@
 .parts
   - @page.parts.each do |part|
     .part{:id => "position_#{part.position}"}
-      = link_to h(part.visible_part_title), page_path(part)
-      = part.part_tag_string
+      = part.title_prefix
+      = link_to h(part.title), page_path(part)
+      = part.title_suffix
       = link_to "Rate", rate_path(part)
       = link_to "EPUB", download_url_for_page(part, ".epub")
       = link_to "HTML", download_url_for_page(part, ".html")

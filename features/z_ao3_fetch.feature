@@ -23,7 +23,7 @@ Feature: ao3 specific stuff
       And I select "harry potter" from "fandom"
       And I press "Store"
     Then I should see "Time Was, Time Is"
-      And I should see "short (1,581 words)" within ".size"
+      And I should see "short: 1,581 words" within ".size"
       And I should see "by Sidra" within ".notes"
       And I should see "Using time-travel" within ".notes"
       And I should see "abandoned, Mary Sue" within ".notes"

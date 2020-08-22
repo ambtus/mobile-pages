@@ -30,16 +30,25 @@ Feature: downloads metadata
     But the download epub command should NOT include comments: "2014"
     And the download epub command should include rating: "10"
 
-  Scenario: part titles shouldn't have size or info
-    Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3" AND infos: "informational"
+  Scenario: download part titles shouldn't have size or info or stars or last read
+    Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3"
     Then the download epub command should include tags: "long"
       And the download epub command should include comments: "long"
     When I am on the page's page
+      And I follow "Part 1"
+      And I follow "Rate"
+      And I choose "5"
+    And I press "Rate"
+    When I fill in "tags" with "scrub"
+      And I press "Add Info Tags"
+    When I am on the page's page
     And I view the content
      Then I should see "Part 1" within "h2"
-     But I should NOT see "medium"
+     And I should NOT see "medium" within "h2"
      And I should NOT see "long"
-     And I should NOT see "informational"
+     And I should NOT see "scrub" within "h2"
+     And I should NOT see "5 stars" within "h2"
+     And I should NOT see today within "h2"
 
   Scenario: part epubs should have all metadata from parent except size and info
     Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3" AND fandoms: "harry potter" AND infos: "informational" AND tropes: "AU" AND add_author_string: "my author" AND stars: "4"

@@ -57,7 +57,7 @@ Feature: adding parents and children and siblings
       And I should see "3. Single"
     When I am on the homepage
     Then I should see "Multi" within ".title"
-    And I should see "Part 1 | Part 2 | 3. Single"
+    And I should see "Part 1 | Part 2 | Single"
     When I view the content
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
@@ -66,7 +66,7 @@ Feature: adding parents and children and siblings
       And I press "Make Single"
     When I am on the homepage
     Then I should see "Multi" within "#position_1"
-    And I should see "Part 1 | 3. Single"
+    And I should see "Part 1 | Single"
     And I should see "Part 2" within "#position_2"
     When I view the content
     Then I should see "stuff for part 1"

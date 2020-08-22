@@ -100,8 +100,8 @@ Feature: trim cruft off pages
       And the download directory should exist
     When I am on the page's page
       And I follow "Scrub"
-      And I follow "Scrub 1. First Part"
-      And I follow "Scrub 1. SubPart"
+      And I follow "Scrub First Part"
+      And I follow "Scrub SubPart"
       And I choose "top cruft" within ".top"
       And I choose "bottom cruft" within ".bottom"
       And I press "Scrub" within ".top"

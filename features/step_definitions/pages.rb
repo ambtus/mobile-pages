@@ -88,6 +88,10 @@ Then('I should see today within {string}') do |string|
   within(string) { assert assert_text(Date.current.to_s) }
 end
 
+Then('I should NOT see today within {string}') do |string|
+  within(string) { assert assert_no_text(Date.current.to_s)}
+end
+
 
 Then("the part titles should be stored as {string}") do |title_string|
    assert Page.first.parts.map(&:title).join(" & ") == title_string

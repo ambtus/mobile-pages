@@ -489,14 +489,12 @@ class Page < ActiveRecord::Base
   end
   def trope_string; self.tags.trope.by_name.joined; end #then redefine trope_string
   def author_string; self.authors.joined; end
-  def size_string; "#{self.size} (#{ActionController::Base.helpers.number_with_delimiter(self.wordcount)} words)"; end
+  def size_string; "#{self.size}: #{ActionController::Base.helpers.number_with_delimiter(self.wordcount)} words"; end
   def last_read_string; unread? ? UNREAD : last_read.to_date; end
   def my_formatted_notes; Scrub.sanitize_html(my_notes); end
   def formatted_notes; Scrub.sanitize_html(notes); end
-  def part_tag_string; tags_et_al.empty? ? "" : " (#{tags_et_al.join(', ')})"; end
 
   # used in index view and in epub comments
-  def merged_tag_string; tags_et_al.join(', ');end
   def short_notes; RubyPants.new(Scrub.sanitize_and_strip(notes).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
   def my_short_notes; RubyPants.new(Scrub.sanitize_and_strip(my_notes).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
 
@@ -533,32 +531,33 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def et_al_names
-    [
-      (self.authors.empty? ? nil : "by #{author_string}"),
-      star_string,
-      (self.last_read.blank? ? "unread" : self.last_read.to_date),
-    ].compact
-  end
+  def title_prefix; title.match(position.to_s) ? "" : "#{position}. "; end
 
-  def tags_et_al_names; et_al_names + tags.by_type.by_name.map(&:name); end
-  def tags_et_al
-    mine = self.tags_et_al_names
+  def unread_string; unread? ? UNREAD : ""; end
+  def short_diff_strings; [author_string, unread_string, *tags.not_info.by_type.by_name.map(&:name)].reject(&:blank?); end
+  def long_diff_strings; [author_string, last_read_string, star_string, size_string, *tags.by_type.by_name.map(&:name)].reject(&:blank?); end
+
+  def show_title_diffs
+    mine = long_diff_strings
     if self.parent
-      mine = mine - self.parent.tags_et_al_names
+      mine = mine - parent.long_diff_strings
+    end
+    mine
+  end
+  def merged_tag_string; show_title_diffs.join(', '); end
+
+  def download_title_diffs
+    mine = short_diff_strings
+    if self.parent
+      mine = mine - parent.short_diff_strings
     end
     mine
   end
 
-  def visible_part_title
-    if title.match(position.to_s)
-      title
-    else
-      "#{position}. #{title}"
-    end
-  end
+  def title_suffix; show_title_diffs.empty? ? "" : " (#{merged_tag_string})"; end
+  def download_suffix; download_title_diffs.empty? ? "" : " (#{download_title_diffs.join(', ')})"; end
 
-  def title_with_tags; visible_part_title + part_tag_string; end
+  def download_part_title; title_prefix + title + download_suffix; end
 
   def section(number)
     body = Nokogiri::HTML(self.edited_html).xpath('//body').first
