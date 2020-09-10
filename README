@@ -24,6 +24,9 @@ calibre command line tools (http://calibre-ebook.com/download)
 
 === required configuration
 
+mkdir log
+mkdir tmp
+
 cp config/database.example config/database.yml
 cp config/initializers/my_websites.example config/initializers/my_websites.rb
 cp config/initializers/session_store.example config/initializers/session_store.rb
