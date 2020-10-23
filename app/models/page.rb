@@ -437,7 +437,10 @@ class Page < ActiveRecord::Base
     self.update(:last_read => Time.now)
     self.update_read_after
     self.parts.each {|part| part.rate(stars, false, true)} if update_children
-    if self.parent && update_parent; parent.update_last_read; end
+    if self.parent && update_parent
+       parent.update_last_read
+       parent.parent.update_last_read if parent.parent
+    end
     return self.stars
   end
 

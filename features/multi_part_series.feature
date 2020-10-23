@@ -145,3 +145,27 @@ Feature: third level hierarchy
     And I follow "Part 2" within "#position_2"
     Then "Original" should link to "http://test.sidrasue.com/parts/4.html"
 
+   Scenario: rating a single unread child sets parent and grandparent to read
+    Given I have no pages
+    And a page exists with title: "Parent" AND urls: "http://test.sidrasue.com/parts/1.html" AND last_read: "2009-01-01"
+   When I am on the homepage
+   And I follow "Parent"
+     And I follow "Manage Parts"
+     And I fill in "add_parent" with "Grandparent"
+     And I fill in "url_list" with
+       """
+       http://test.sidrasue.com/parts/1.html
+       http://test.sidrasue.com/parts/2.html
+       """
+     And I press "Update"
+   Then I should see "unread" within ".last_read"
+    And I should NOT see "2009-01-01"
+   When I follow "Parent"
+   Then I should see "2009-01-01" within "#position_1"
+   When I follow "Part 2"
+      And I follow "Rate"
+      And I choose "3"
+    And I press "Rate"
+    When I am on the homepage
+   Then I should NOT see "unread" within "#position_1"
+    And I should see "2009-01-01" within "#position_1"
