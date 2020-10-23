@@ -14,7 +14,8 @@ Feature: filter on tags
       But I should NOT see "Alice in Wonderland"
 
   Scenario: find after merging
-    Given a page exists with tropes: "better name"
+    Given I have no pages
+    And a page exists with tropes: "better name"
       And a page exists with title: "should be found" AND tropes: "bad name"
     When I am on the edit tag page for "bad name"
       And I select "better name" from "merge"

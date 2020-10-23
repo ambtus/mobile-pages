@@ -77,7 +77,8 @@ Feature: relationships are a type of tag, and can be created and selected like t
     Then I should see "John/Rodney" within ".relationships"
 
   Scenario: add a relationship to a page which already has relationships
-    Given a page exists with relationships: "John/Rodney"
+    Given I have no pages
+    And a page exists with relationships: "John/Rodney"
     When I am on the page's page
     Then I should see "John/Rodney" within ".relationships"
     When I edit its tags
@@ -90,7 +91,8 @@ Feature: relationships are a type of tag, and can be created and selected like t
       And I should be able to select "Teyla/Ronan" from "Relationship"
 
    Scenario: new parent for an existing page should NOT have the same relationship
-    Given a page exists with relationships: "Peter/Stiles"
+    Given I have no pages
+    And a page exists with relationships: "Peter/Stiles"
     When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
@@ -134,7 +136,8 @@ Feature: relationships are a type of tag, and can be created and selected like t
       But I should see "Page 1"
 
   Scenario: merge two tags
-    Given a tag exists with name: "Fred/George" AND type: "Relationship"
+    Given I have no pages
+    And a tag exists with name: "Fred/George" AND type: "Relationship"
       And a page exists with relationships: "twincest"
     When I am on the edit tag page for "twincest"
       And I select "Fred/George" from "merge"
@@ -151,7 +154,8 @@ Feature: relationships are a type of tag, and can be created and selected like t
       And I should NOT see "Merge"
 
   Scenario: change relationship to fandom tag
-    Given a page exists with relationships: "Harry Potter"
+    Given I have no pages
+    And a page exists with relationships: "Harry Potter"
     When I am on the page's page
       Then I should see "Harry Potter" within ".relationships"
     When I am on the edit tag page for "Harry Potter"
@@ -165,7 +169,8 @@ Feature: relationships are a type of tag, and can be created and selected like t
       But I should NOT be able to select "Harry Potter" from "relationship"
 
   Scenario: change trope to relationship tag
-    Given a page exists with tropes: "snarry"
+    Given I have no pages
+    And a page exists with tropes: "snarry"
     When I am on the page's page
       Then I should see "snarry" within ".tags"
     When I am on the edit tag page for "snarry"

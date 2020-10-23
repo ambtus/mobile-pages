@@ -13,7 +13,8 @@ Feature: author stuff
       And I should be able to select "lewis carroll" from "Author"
 
   Scenario: add an existing author to a page
-    Given a page exists
+    Given I have no pages
+    And a page exists
       And an author exists with name: "lewis carroll"
     When I am on the page's page
     Then I should NOT see "lewis carroll" within ".authors"
@@ -23,7 +24,8 @@ Feature: author stuff
     Then I should see "lewis carroll" within ".authors"
 
   Scenario: add another author to a page
-    Given a page exists with add_author_string: "lewis carroll"
+    Given I have no pages
+    And a page exists with add_author_string: "lewis carroll"
     When I am on the page's page
     Then I should see "lewis carroll" within ".authors"
     When I want to edit the authors
@@ -34,7 +36,8 @@ Feature: author stuff
     Then I should be able to select "charles dodgson" from "Author"
 
   Scenario: new parent for an existing page should have the same author
-    Given a page exists with add_author_string: "newbie"
+    Given I have no pages
+    And a page exists with add_author_string: "newbie"
     When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
@@ -53,7 +56,8 @@ Feature: author stuff
       Then I should see "Edit author: jane"
 
   Scenario: delete an author
-    Given a page exists with add_author_string: "jane"
+    Given I have no pages
+    And a page exists with add_author_string: "jane"
     When I am on the edit author page for "jane"
     And I follow "Destroy"
     When I press "Yes"
@@ -63,7 +67,8 @@ Feature: author stuff
       But I should see "by jane" within ".notes"
 
   Scenario: edit the author name
-    Given a page exists with add_author_string: "jane"
+    Given I have no pages
+    And a page exists with add_author_string: "jane"
     When I am on the edit author page for "jane"
     And I fill in "author_name" with "June"
     And I press "Update"
@@ -71,7 +76,8 @@ Feature: author stuff
       Then I should see "June" within ".authors"
 
   Scenario: add an AKA
-    Given a page exists with add_author_string: "jane"
+    Given I have no pages
+    And a page exists with add_author_string: "jane"
     When I am on the edit author page for "jane"
     And I fill in "author_name" with "jane (june)"
     And I press "Update"

@@ -1,7 +1,8 @@
 Feature: hiddens are a type of tag, and can be created and selected like tags
 
   Scenario: strip hidden whitespace and sort
-    Given a page exists
+    Given I have no pages
+    And a page exists
     When I am on the page's page
       And I edit its tags
       And I fill in "tags" with "  nonfiction,  audio  book,save for   later  "
@@ -57,7 +58,8 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       Then I should see "nonfiction" within ".hiddens"
 
   Scenario: add a hidden to a page when there are no hiddens
-    Given a page exists
+    Given I have no pages
+    And a page exists
     When I am on the page's page
       And I edit its tags
     When I fill in "tags" with "nonfiction, audio book"
@@ -69,7 +71,8 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
     Then I should be able to select "audio book" from "Hidden"
 
   Scenario: select a hidden for a page when there are hiddens
-    Given a tag exists with name: "work in progress" AND type: "Hidden"
+    Given I have no pages
+    And a tag exists with name: "work in progress" AND type: "Hidden"
     And a page exists
     When I am on the page's page
       And I edit its tags
@@ -78,7 +81,8 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
     Then I should see "work in progress" within ".hiddens"
 
   Scenario: add a hidden to a page which already has hiddens
-    Given a page exists with hiddens: "nonfiction"
+    Given I have no pages
+    And a page exists with hiddens: "nonfiction"
     When I am on the page's page
     Then I should see "nonfiction" within ".hiddens"
     When I edit its tags
@@ -91,7 +95,8 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       And I should be able to select "wip" from "Hidden"
 
    Scenario: new parent for an existing page should NOT have the same hidden
-    Given a page exists with hiddens: "nonfiction"
+    Given I have no pages
+    And a page exists with hiddens: "nonfiction"
     When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
@@ -135,7 +140,8 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       But I should see "Page 1"
 
   Scenario: merge two tags
-    Given a tag exists with name: "better name" AND type: "Hidden"
+    Given I have no pages
+    And a tag exists with name: "better name" AND type: "Hidden"
       And a page exists with hiddens: "bad name"
     When I am on the edit tag page for "bad name"
       And I select "better name" from "merge"
@@ -152,7 +158,8 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       And I should NOT see "Merge"
 
   Scenario: change hidden to trope tag
-    Given a page exists with hiddens: "will be visible"
+    Given I have no pages
+    And a page exists with hiddens: "will be visible"
     When I am on the page's page
       Then I should see "will be visible" within ".hiddens"
     When I am on the edit tag page for "will be visible"
@@ -166,7 +173,8 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       But I should NOT be able to select "will be visible" from "hidden"
 
   Scenario: change trope to hidden tag
-    Given a page exists with tropes: "will be hidden"
+    Given I have no pages
+    And a page exists with tropes: "will be hidden"
     When I am on the page's page
       Then I should see "will be hidden" within ".tags"
     When I am on the edit tag page for "will be hidden"

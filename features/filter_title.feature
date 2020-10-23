@@ -46,7 +46,8 @@ Feature: filter on titles
       And I should NOT see "Page 1"
 
   Scenario: limit number of found pages
-    Given 16 pages exist
+    Given I have no pages
+    And 16 pages exist
      When I am on the homepage
      Then I should see "Page 1"
        And I should see "Page 2"

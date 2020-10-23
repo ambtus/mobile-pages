@@ -1,7 +1,8 @@
 Feature: clean up html from web
 
   Scenario: CDATA
-    Given a page exists with url: "http://test.sidrasue.com/112b.html"
+    Given I have no pages
+    And a page exists with url: "http://test.sidrasue.com/112b.html"
     When I am on the page's page
       And I view the content
     Then I should see "A Single Love"
@@ -15,7 +16,8 @@ Feature: clean up html from web
     But my page named "Quotes" should NOT contain "&quot;"
 
   Scenario: pasted html file gets cleaned
-    Given a page exists with url: "http://test.sidrasue.com/test.html"
+    Given I have no pages
+    And a page exists with url: "http://test.sidrasue.com/test.html"
     When I am on the page's page
      And I follow "Edit Raw HTML"
     When I fill in "pasted" with
@@ -32,7 +34,8 @@ Feature: clean up html from web
        And I should NOT see "email Vera"
 
    Scenario: fanfiction Share button gets cleaned
-     Given a page exists with url: "http://www.fanfiction.net/s/5853866/1/Counting"
+     Given I have no pages
+     And a page exists with url: "http://www.fanfiction.net/s/5853866/1/Counting"
      When I am on the page's page
       And I view the content
      Then I should see "Skip. Skip."

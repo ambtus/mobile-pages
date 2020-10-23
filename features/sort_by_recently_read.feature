@@ -1,6 +1,7 @@
 Feature: last_read (also unread)
 
   Scenario: find recently read page if no pages
+    Given I have no pages
     When I am on the homepage
     When I choose "sort_by_recently_read"
       And I press "Find"

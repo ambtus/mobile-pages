@@ -1,7 +1,8 @@
 Feature: get more
 
   Scenario: if there are no more pages
-    Given 10 pages exist
+    Given I have no pages
+    And 10 pages exist
     When I am on the homepage
     Then I should see "Page 1" within "#position_1"
       And I should see "Page 10" within "#position_10"
@@ -10,7 +11,8 @@ Feature: get more
       And I should NOT see "Page 1"
 
   Scenario: get two and then three sets of pages
-    Given 31 pages exist
+    Given I have no pages
+    And 31 pages exist
     When I am on the homepage
     Then I should see "Page 1" within "#position_1"
       And I should see "Page 15" within "#position_15"

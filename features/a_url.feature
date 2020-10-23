@@ -16,7 +16,8 @@ Feature: url stuff
       And I should NOT see "Page created"
 
   Scenario: url with surrounding whitespace okay
-    Given a page exists with url: " http://test.sidrasue.com/test.html"
+    Given I have no pages
+    And a page exists with url: " http://test.sidrasue.com/test.html"
     When I am on the page's page
       And I view the content
     Then I should see "Retrieved from the web"

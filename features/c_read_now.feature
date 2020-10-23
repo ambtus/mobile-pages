@@ -13,7 +13,8 @@ Feature: read_after order
       And I should see "Page 1" within "#position_2"
 
   Scenario: Read a page and make it first
-    Given 2 pages exist
+    Given I have no pages
+    And 2 pages exist
     When I am on the homepage
     Then I should see "Page 1" within "#position_1"
       And I should see "Page 2" within "#position_2"

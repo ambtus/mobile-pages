@@ -10,7 +10,8 @@ Feature: numbering parts with a parent (visible, but not stored)
      And I should NOT see "2. Part 2"
 
   Scenario: yes numbers when does not end in a number
-    Given I am on the homepage
+    Given I have no pages
+    And I am on the homepage
     When I follow "Store Multiple"
       And I fill in "page_urls" with
         """
@@ -26,7 +27,8 @@ Feature: numbering parts with a parent (visible, but not stored)
      But the part titles should be stored as "One & Two"
 
   Scenario: no numbers when already includes the same number
-    Given I am on the homepage
+    Given I have no pages
+    And I am on the homepage
     When I follow "Store Multiple"
       And I fill in "page_urls" with
         """

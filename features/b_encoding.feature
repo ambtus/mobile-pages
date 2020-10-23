@@ -33,19 +33,22 @@ Scenario Outline: encodings
     And my page named "Linefeed" should NOT contain "&#13;"
 
   Scenario: utf8
-    Given a page exists with url: "http://test.sidrasue.com/sbutf8.html"
+    Given I have no pages
+    And a page exists with url: "http://test.sidrasue.com/sbutf8.html"
     When I am on the page's page
       And I view the content
     Then I should see "“H"
 
   Scenario: utf8 in parts
-    Given a page exists with url: "http://test.sidrasue.com/sbutf8.html"
+    Given I have no pages
+    And a page exists with url: "http://test.sidrasue.com/sbutf8.html"
     When I am on the page's page
       And I view the content
     Then I should see "“H"
 
   Scenario: latin1
-    Given a page exists with url: "http://test.sidrasue.com/1252.html"
+    Given I have no pages
+    And a page exists with url: "http://test.sidrasue.com/1252.html"
     When I am on the page's page
       And I view the content
     Then I should see "“H"

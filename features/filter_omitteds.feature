@@ -1,7 +1,8 @@
 Feature: pages with omitted tags are filtered in by default. During search, anything with a omitted is found unless it is chosen from omitteds, in which case it is NOT found
 
   Scenario: shown by default
-    Given a page exists with omitteds: "sad"
+    Given I have no pages
+    And a page exists with omitteds: "sad"
     When I am on the homepage
     Then I should NOT see "No pages found"
       And I should see "Page 1"
@@ -10,7 +11,8 @@ Feature: pages with omitted tags are filtered in by default. During search, anyt
       Then I should see "sad" within ".omitteds"
 
   Scenario: omitted when selected
-    Given a page exists with omitteds: "sad"
+    Given I have no pages
+    And a page exists with omitteds: "sad"
     And a page exists with title: "not sad"
     When I am on the homepage
       Then I should see "Page 1"
@@ -34,7 +36,8 @@ Feature: pages with omitted tags are filtered in by default. During search, anyt
       But I should see "The Mysterious Affair at Styles"
 
   Scenario: change omitted to trope tag
-    Given I have no tags
+    Given I have no pages
+    And I have no tags
     And a page exists with omitteds: "sad"
     When I am on the homepage
     Then I should be able to select "sad" from "omitted"
@@ -50,7 +53,8 @@ Feature: pages with omitted tags are filtered in by default. During search, anyt
       Then I should see "sad" within ".tags"
 
   Scenario: change trope to omitted tag
-    Given I have no tags
+    Given I have no pages
+    And I have no tags
     And a page exists with tropes: "sad"
     When I am on the homepage
       Then I should NOT see "No pages found"

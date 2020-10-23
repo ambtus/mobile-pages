@@ -78,7 +78,8 @@ Feature: infos are a type of tag
     Then I should see "split" within ".info"
 
   Scenario: add a info to a page which already has infos
-    Given a page exists with infos: "bowlderize"
+    Given I have no pages
+    And a page exists with infos: "bowlderize"
     When I am on the page's page
     Then I should see "bowlderize" within ".info"
     When I edit its tags
@@ -91,7 +92,8 @@ Feature: infos are a type of tag
       And I should be able to select "downloaded" from "Info"
 
    Scenario: new parent for an existing page should NOT have the same info
-    Given a page exists with infos: "bowlderize"
+    Given I have no pages
+    And a page exists with infos: "bowlderize"
     When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
@@ -135,7 +137,8 @@ Feature: infos are a type of tag
       But I should see "Page 1"
 
   Scenario: merge two tags
-    Given a tag exists with name: "better name" AND type: "Info"
+    Given I have no pages
+    And a tag exists with name: "better name" AND type: "Info"
       And a page exists with infos: "bad name"
     When I am on the edit tag page for "bad name"
       And I select "better name" from "merge"
@@ -152,7 +155,8 @@ Feature: infos are a type of tag
       And I should NOT see "Merge"
 
   Scenario: change info to trope tag
-    Given a page exists with infos: "will be visible"
+    Given I have no pages
+    And a page exists with infos: "will be visible"
     When I am on the page's page
       Then I should see "will be visible" within ".info"
     When I am on the edit tag page for "will be visible"
@@ -166,7 +170,8 @@ Feature: infos are a type of tag
       But I should NOT be able to select "will be visible" from "info"
 
   Scenario: change trope to info tag
-    Given a page exists with tropes: "will be info"
+    Given I have no pages
+    And a page exists with tropes: "will be info"
     When I am on the page's page
       Then I should see "will be info" within ".tags"
     When I am on the edit tag page for "will be info"

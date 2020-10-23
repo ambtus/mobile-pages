@@ -1,7 +1,8 @@
 Feature: other mult-part tests
 
   Scenario: download part
-    Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html"
+    Given I have no pages
+    And a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html"
     When I am on the page's page
       And I view the content
     Then I should see "stuff for part 1"

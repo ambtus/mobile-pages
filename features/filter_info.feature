@@ -14,7 +14,8 @@ Feature: filter on info tags
       But I should NOT see "Alice in Wonderland"
 
   Scenario: find after merging
-    Given a page exists with infos: "better name"
+    Given I have no pages
+    And a page exists with infos: "better name"
       And a page exists with title: "should be found" AND infos: "bad name"
     When I am on the edit tag page for "bad name"
       And I select "better name" from "merge"

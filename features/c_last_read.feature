@@ -10,7 +10,8 @@ Feature: last_read (also unread)
     Then last read should be today
 
   Scenario: after rate a read page, change it's last read date
-    Given a page exists with last_read: "2008-01-01"
+    Given I have no pages
+    And a page exists with last_read: "2008-01-01"
     When I am on the page's page
     Then I should see "2008-01-01" within ".last_read"
     When I follow "Rate"
@@ -34,7 +35,8 @@ Feature: last_read (also unread)
     Then I should see "unread" within ".last_read"
 
   Scenario: new parent for a read page should have last read date
-    Given a page exists with last_read: "2008-01-01"
+    Given I have no pages
+    And a page exists with last_read: "2008-01-01"
     When I am on the page's page
     Then I should see "2008-01-01" within ".last_read"
     When I follow "Manage Parts"
@@ -46,7 +48,8 @@ Feature: last_read (also unread)
       And I should NOT see "2008-01-01" within "#position_1"
 
   Scenario: rating a part updates the parent and the part but not the sibling
-    Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND last_read: "2009-01-01"
+    Given I have no pages
+    And a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND last_read: "2009-01-01"
     When I am on the page's page
       And I follow "Part 2" within "#position_2"
       And I follow "Rate"
@@ -59,7 +62,8 @@ Feature: last_read (also unread)
      And I should NOT see "unread" within "#position_2"
 
    Scenario: add unread part(s) to parent with read parts makes parent unread, rating one leaves parent unread, rating both updates parent
-    Given a page exists with title: "Multi" AND urls: "http://test.sidrasue.com/parts/1.html" AND last_read: "2009-01-01"
+    Given I have no pages
+    And a page exists with title: "Multi" AND urls: "http://test.sidrasue.com/parts/1.html" AND last_read: "2009-01-01"
     When I am on the homepage
     Then I should NOT see "unread" within "#position_1"
     And I should see "2009-01-01" within "#position_1"

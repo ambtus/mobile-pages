@@ -77,7 +77,8 @@ Feature: ratings are a type of tag, and can be created and selected like tags
     Then I should see "cute" within ".ratings"
 
   Scenario: add a rating to a page which already has ratings
-    Given a page exists with ratings: "funny"
+    Given I have no pages
+    And a page exists with ratings: "funny"
     When I am on the page's page
     Then I should see "funny" within ".ratings"
     When I edit its tags
@@ -90,7 +91,8 @@ Feature: ratings are a type of tag, and can be created and selected like tags
       And I should be able to select "loved" from "Rating"
 
    Scenario: new parent for an existing page should have the same rating
-    Given a page exists with ratings: "loved"
+    Given I have no pages
+    And a page exists with ratings: "loved"
     When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
@@ -134,7 +136,8 @@ Feature: ratings are a type of tag, and can be created and selected like tags
       But I should see "Page 1"
 
   Scenario: merge two tags
-    Given a tag exists with name: "cute" AND type: "Rating"
+    Given I have no pages
+    And a tag exists with name: "cute" AND type: "Rating"
       And a page exists with ratings: "funny"
     When I am on the edit tag page for "funny"
       And I select "cute" from "merge"
@@ -151,7 +154,8 @@ Feature: ratings are a type of tag, and can be created and selected like tags
       And I should NOT see "Merge"
 
   Scenario: change rating to fandom tag
-    Given a page exists with ratings: "Harry Potter"
+    Given I have no pages
+    And a page exists with ratings: "Harry Potter"
     When I am on the page's page
       Then I should see "Harry Potter" within ".ratings"
     When I am on the edit tag page for "Harry Potter"
@@ -165,7 +169,8 @@ Feature: ratings are a type of tag, and can be created and selected like tags
       But I should NOT be able to select "Harry Potter" from "rating"
 
   Scenario: change trope to rating tag
-    Given a page exists with tropes: "cute"
+    Given I have no pages
+    And a page exists with tropes: "cute"
     When I am on the page's page
       Then I should see "cute" within ".tags"
     When I am on the edit tag page for "cute"

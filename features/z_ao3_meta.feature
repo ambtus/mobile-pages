@@ -1,6 +1,8 @@
 Feature: ao3 specific stuff
 
   Scenario: refetching & rebuilding meta of a top level fic
+    Given I have no pages
+    And I have no tags
      Given a tag exists with name: "harry potter" AND type: "Fandom"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/692"
@@ -59,6 +61,8 @@ Feature: ao3 specific stuff
 
 
   Scenario: ensure rebuild meta isn’t refetching
+    Given I have no pages
+    And I have no tags
     Given a tag exists with name: "popslash" AND type: "Fandom"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/68481"
@@ -96,13 +100,15 @@ Feature: ao3 specific stuff
       And I should NOT see "testing notes" within ".notes"
 
   Scenario: formatting notes
-  Given a page exists with url: "https://archiveofourown.org/works/23477578"
+  Given I have no pages
+  And a page exists with url: "https://archiveofourown.org/works/23477578"
   When I am on the homepage
   Then I should NOT see "theirsThe"
   But I should see "He is theirs The clones have nothing"
 
   Scenario: quotes in notes download bug
-    Given a page exists with url: "http://archiveofourown.org/works/22989676/chapters/54962869"
+    Given I have no pages
+    And a page exists with url: "http://archiveofourown.org/works/22989676/chapters/54962869"
     When I am on the homepage
     And I follow "ePub"
     Then the download epub file should exist

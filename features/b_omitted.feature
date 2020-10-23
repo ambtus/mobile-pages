@@ -78,7 +78,8 @@ Feature: omitteds are a type of tag, and can be created and selected like tags
     Then I should see "work in progress" within ".omitteds"
 
   Scenario: add an omitted to a page which already has omitteds
-    Given a page exists with omitteds: "nonfiction"
+    Given I have no pages
+    And a page exists with omitteds: "nonfiction"
     When I am on the page's page
     Then I should see "nonfiction" within ".omitteds"
     When I edit its tags
@@ -91,7 +92,8 @@ Feature: omitteds are a type of tag, and can be created and selected like tags
       And I should be able to select "wip" from "Omitted"
 
    Scenario: new parent for an existing page should NOT have the same omitted
-    Given a page exists with omitteds: "nonfiction"
+    Given I have no pages
+    And a page exists with omitteds: "nonfiction"
     When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
@@ -135,7 +137,8 @@ Feature: omitteds are a type of tag, and can be created and selected like tags
       But I should see "Page 1"
 
   Scenario: merge two tags
-    Given a tag exists with name: "better name" AND type: "Omitted"
+    Given I have no pages
+    And a tag exists with name: "better name" AND type: "Omitted"
       And a page exists with omitteds: "bad name"
     When I am on the edit tag page for "bad name"
       And I select "better name" from "merge"
@@ -152,7 +155,8 @@ Feature: omitteds are a type of tag, and can be created and selected like tags
       And I should NOT see "Merge"
 
   Scenario: change omitted to trope tag
-    Given a page exists with omitteds: "will be visible"
+    Given I have no pages
+    And a page exists with omitteds: "will be visible"
     When I am on the page's page
       Then I should see "will be visible" within ".omitteds"
     When I am on the edit tag page for "will be visible"
@@ -166,7 +170,8 @@ Feature: omitteds are a type of tag, and can be created and selected like tags
       But I should NOT be able to select "will be visible" from "omitted"
 
   Scenario: change trope to omitted tag
-    Given a page exists with tropes: "will be omitted"
+    Given I have no pages
+    And a page exists with tropes: "will be omitted"
     When I am on the page's page
       Then I should see "will be omitted" within ".tags"
     When I am on the edit tag page for "will be omitted"

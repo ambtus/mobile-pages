@@ -1,7 +1,8 @@
 Feature: trim cruft off pages
 
  Scenario: remove bottom when one automatically removed surrounding div
-  Given a page exists with url: "http://test.sidrasue.com/divs.html"
+  Given I have no pages
+  And a page exists with url: "http://test.sidrasue.com/divs.html"
   When I am on the page's page
     And I follow "Scrub"
   When I choose "3rd" within ".bottom"
@@ -12,7 +13,8 @@ Feature: trim cruft off pages
   But I should NOT see "3rd"
 
  Scenario: remove top when one automatically removed surrounding blockquote
-  Given a page exists with url: "http://test.sidrasue.com/blockquote.html"
+  Given I have no pages
+  And a page exists with url: "http://test.sidrasue.com/blockquote.html"
   When I am on the page's page
     And I follow "Scrub"
   When I choose "1st" within ".top"
@@ -23,7 +25,8 @@ Feature: trim cruft off pages
   But I should NOT see "1st"
 
  Scenario Outline: strip beginning and end
-  Given a page exists with url: "<url>"
+  Given I have no pages
+  And a page exists with url: "<url>"
   When I am on the page's page
     And I follow "Scrub"
   When I choose "<unwanted1>" within ".top"
@@ -47,7 +50,8 @@ Feature: trim cruft off pages
 
   Scenario: trim when many headers and short fic
             also recover from trimming too much
-    Given a page exists with url: "http://test.sidrasue.com/headers.html"
+    Given I have no pages
+    And a page exists with url: "http://test.sidrasue.com/headers.html"
     When I am on the page's page
       And I follow "Scrub"
       And I choose "third header" within ".top"
@@ -62,7 +66,8 @@ Feature: trim cruft off pages
 
   Scenario: trim a parent page
        also rebuild all children from raw
-    Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
+    Given I have no pages
+    And a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
     And I am on the page's page
     When I view the content
     Then I should see "cruft"
@@ -115,7 +120,8 @@ Feature: trim cruft off pages
     And I should NOT see "bottom cruft"
 
   Scenario: show number of nodes
-  Given a page exists with url: "http://test.sidrasue.com/div.html"
+  Given I have no pages
+  And a page exists with url: "http://test.sidrasue.com/div.html"
   When I am on the page's page
     And I follow "Scrub"
   Then I should see "4 nodes"

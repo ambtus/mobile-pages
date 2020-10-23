@@ -37,7 +37,8 @@ Feature: author stuff
     Then I should see "jane (aka)" within ".authors"
 
   Scenario: merge two authors
-    Given a page exists with add_author_string: "jane" AND title: "Page 2"
+    Given I have no pages
+    And a page exists with add_author_string: "jane" AND title: "Page 2"
       And a page exists with add_author_string: "aka"
     When I am on the edit author page for "aka"
       And I select "jane" from "merge"

@@ -49,7 +49,8 @@ Feature: pages with hidden tags are filtered out by default. During search, anyt
       And I should NOT see "Alice in Wonderland"
 
   Scenario: change hidden to trope tag
-    Given I have no tags
+    Given I have no pages
+    And I have no tags
     And a page exists with hiddens: "will be visible"
     When I am on the homepage
       Then I should see "No pages found"
@@ -67,7 +68,8 @@ Feature: pages with hidden tags are filtered out by default. During search, anyt
       Then I should see "will be visible" within ".tags"
 
   Scenario: change trope to hidden tag
-    Given I have no tags
+    Given I have no pages
+    And I have no tags
     And a page exists with tropes: "to be hidden"
     When I am on the homepage
       Then I should NOT see "No pages found"

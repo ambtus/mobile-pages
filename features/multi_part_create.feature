@@ -1,7 +1,8 @@
 Feature: creating multi-part pages
 
   Scenario: children should NOT show up on front page by themselves
-    Given a page exists with title: "Parent" AND urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html"
+    Given I have no pages
+    And a page exists with title: "Parent" AND urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html"
     When I am on the homepage
     Then I should see "Parent" within ".title"
     And I should see "Part 1 | Part 2" within ".part_links"
@@ -139,7 +140,8 @@ Feature: creating multi-part pages
 
 
   Scenario: should NOT be able to store using a pasted html file
-    Given a page exists with url: "http://test.sidrasue.com/test.html"
+    Given I have no pages
+    And a page exists with url: "http://test.sidrasue.com/test.html"
     When I am on the page's page
       Then I should NOT see "Part 1"
       But I should see "Edit Raw HTML"

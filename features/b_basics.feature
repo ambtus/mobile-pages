@@ -52,7 +52,8 @@ Feature: basic stuff
      And "Original" should link to "http://test.sidrasue.com/test.html"
 
   Scenario: refetch original html
-    Given a page exists with url: "http://test.sidrasue.com/test.html"
+    Given I have no pages
+    And a page exists with url: "http://test.sidrasue.com/test.html"
     When I am on the page's page
       Then "Original" should link to "http://test.sidrasue.com/test.html"
       And I follow "Edit Raw HTML"
@@ -68,7 +69,8 @@ Feature: basic stuff
     Then I should see "Retrieved from the web" within ".content"
 
   Scenario: refetch after moving directory
-    Given a page exists with url: "http://test.sidrasue.com/test.html"
+    Given I have no pages
+    And a page exists with url: "http://test.sidrasue.com/test.html"
     And the page's directory is missing
     When I am on the page's page
     And I follow "Refetch"

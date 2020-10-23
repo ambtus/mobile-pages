@@ -1,7 +1,8 @@
 Feature: third level hierarchy
 
   Scenario: create from a list of urls with some titles
-    When I am on the homepage
+    Given I have no pages
+    And I am on the homepage
       And I follow "Store Multiple"
     When I fill in "page_urls" with
       """

@@ -4,7 +4,8 @@ Feature: tools to enable onscreen content editing
     Given a page exists with url: "http://test.sidrasue.com/short.html"
 
   Scenario: section editing first section and recover from editing too much
-    Given a page exists with url: "http://test.sidrasue.com/long.html"
+    Given I have no pages
+    And a page exists with url: "http://test.sidrasue.com/long.html"
     When I am on the page's page
       And I want to edit the text
     Then I should NOT see "New Content"
@@ -29,7 +30,8 @@ Feature: tools to enable onscreen content editing
 
 
   Scenario: section editing mid section
-    Given a page exists with url: "http://test.sidrasue.com/long.html"
+    Given I have no pages
+    And a page exists with url: "http://test.sidrasue.com/long.html"
     When I am on the page's page
       And I want to edit the text
     Then I should NOT see "New Content"
@@ -48,7 +50,8 @@ Feature: tools to enable onscreen content editing
       And I should NOT see "Nulla facilisi. Suspendisse non lectus in nisl varius dapibus."
 
   Scenario: section editing last section
-    Given a page exists with url: "http://test.sidrasue.com/long.html"
+    Given I have no pages
+    And a page exists with url: "http://test.sidrasue.com/long.html"
     When I am on the page's page
       And I want to edit the text
     Then I should NOT see "New Content"

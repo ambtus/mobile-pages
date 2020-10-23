@@ -1,7 +1,8 @@
 Feature: audiobook
 
   Scenario: audiobook sections
-    Given a page exists with url: "http://test.sidrasue.com/long.html"
+    Given I have no pages
+    And a page exists with url: "http://test.sidrasue.com/long.html"
     When I am on the page's page
       And I want to edit the text
       Then I should see "Lorem ipsum dolor"
@@ -23,7 +24,8 @@ Feature: audiobook
    Then I should see "Text" within "#position_1"
 
   Scenario: audiobook created adds the audio tag and updates last read
-    Given a page exists with last_read: "2014-01-01"
+    Given I have no pages
+    And a page exists with last_read: "2014-01-01"
     When I am on the page's page
     Then I should see "2014" within ".last_read"
     Then I should NOT see "audio"

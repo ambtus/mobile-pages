@@ -64,7 +64,8 @@ Feature: trope tag stuff
     Then I should see "fantasy" within ".tags"
 
   Scenario: add a tag to a page which already has tags
-    Given a page exists with tropes: "classic"
+    Given I have no pages
+    And a page exists with tropes: "classic"
     When I am on the page's page
     Then I should see "classic" within ".tags"
     When I edit its tags
@@ -77,7 +78,8 @@ Feature: trope tag stuff
       And I should be able to select "children's" from "tag"
 
   Scenario: new parent for an existing page should have the same tag
-    Given a page exists with tropes: "tag"
+    Given I have no pages
+    And a page exists with tropes: "tag"
     When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "add_parent" with "New Parent"
@@ -107,7 +109,9 @@ Feature: trope tag stuff
     But I should NOT be able to select "fantasy" from "tag"
 
   Scenario: delete a tag
-    Given a page exists with tropes: "science fiction"
+    Given I have no pages
+    And I have no tags
+    And a page exists with tropes: "science fiction"
     When I am on the edit tag page for "science fiction"
     And I follow "Destroy"
     When I press "Yes"
@@ -117,7 +121,9 @@ Feature: trope tag stuff
       But I should see "Page 1"
 
   Scenario: merge two tags
-    Given a tag exists with name: "better name"
+    Given I have no pages
+    And I have no tags
+    And a tag exists with name: "better name"
       And a page exists with tropes: "bad name"
     When I am on the edit tag page for "bad name"
       And I select "better name" from "merge"

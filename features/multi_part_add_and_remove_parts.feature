@@ -74,7 +74,8 @@ Feature: adding parents and children and siblings
       And I should see "stuff for part 3"
 
   Scenario: add a part to a page with content
-    Given a page exists with url: "http://test.sidrasue.com/test.html"
+    Given I have no pages
+    And a page exists with url: "http://test.sidrasue.com/test.html"
     When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "url_list" with
@@ -106,7 +107,8 @@ Feature: adding parents and children and siblings
       And I should see "stuff for part 2"
 
   Scenario: remove a part from an existing page with parts
-    Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3"
+    Given I have no pages
+    And a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3"
     When I am on the page's page
       And I follow "Manage Parts"
       And I fill in "url_list" with
@@ -122,7 +124,8 @@ Feature: adding parents and children and siblings
       And I should see "stuff for part 3"
 
        Scenario: add a part updates the parent's read_after but add a parent doesn't
-    Given a page exists with url: "http://test.sidrasue.com/parts/1.html" AND read_after: "2050-01-01"
+    Given I have no pages
+    And a page exists with url: "http://test.sidrasue.com/parts/1.html" AND read_after: "2050-01-01"
       And a page exists with title: "Page 2" AND url: "http://test.sidrasue.com/parts/2.html" AND read_after: "2050-01-02"
     When I am on the homepage
     Then I should see "Page 1" within "#position_1"
@@ -146,7 +149,8 @@ Feature: adding parents and children and siblings
       And I should see "Page 1" within "#position_2"
 
   Scenario: refetch original html for parts
-    Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
+    Given I have no pages
+    And a page exists with urls: "http://test.sidrasue.com/parts/1.html"
     When I am on the page's page
     When I follow "Refetch" within ".edits"
     Then the "url_list" field should contain "http://test.sidrasue.com/parts/1.html"

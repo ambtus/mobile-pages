@@ -8,7 +8,8 @@ Feature: stuff to do with notes
    Then I should NOT see "Notes" within ".notes"
 
   Scenario: long notes should be truncated at word boundaries in lists
-    Given a page exists with notes: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id turpis pretium ante malesuada pulvinar. Phasellus nullam. Lorem ipsum dolor sit amet consectetur adipiscing elit. Integer id turpis pretium ante malesuada pulvinar. Phasellus nullam."
+   Given I have no pages
+   And a page exists with notes: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id turpis pretium ante malesuada pulvinar. Phasellus nullam. Lorem ipsum dolor sit amet consectetur adipiscing elit. Integer id turpis pretium ante malesuada pulvinar. Phasellus nullam."
     When I am on the page's page
      Then I should see "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id turpis pretium ante malesuada pulvinar. Phasellus nullam. Lorem ipsum dolor sit amet consectetur adipiscing elit. Integer id turpis pretium ante malesuada pulvinar. Phasellus nullam." within ".notes"
    When I am on the homepage
@@ -28,7 +29,8 @@ Feature: stuff to do with notes
     Then I should see "testing notes" within ".notes"
 
   Scenario: edit notes on a page with a note
-    Given a page exists with notes: "some basic notes"
+    Given I have no pages
+    And a page exists with notes: "some basic notes"
       And I am on the page's page
     Then I should see "some basic notes" within ".notes"
     When I follow "Notes"
@@ -38,7 +40,8 @@ Feature: stuff to do with notes
       And I should NOT see "some basic notes" within ".notes"
 
   Scenario: html notes should be shown as truncated text in lists
-    Given a page exists with notes: "<p>This</p><p>is not</p><p>actually<p>a very long</p><p>note<br />(once you take out the <a href='http://some.domain.com'>html</a>)<br /></p>"
+    Given I have no pages
+    And a page exists with notes: "<p>This</p><p>is not</p><p>actually<p>a very long</p><p>note<br />(once you take out the <a href='http://some.domain.com'>html</a>)<br /></p>"
    When I am on the homepage
      Then I should see "This is not actually a very long note (once you take out the html)" within ".notes"
     When I am on the page's page
@@ -47,7 +50,8 @@ Feature: stuff to do with notes
      And "html" should link to "http://some.domain.com"
 
   Scenario: scrub numerous tildas to hr
-    Given a page exists with notes: "<p>Sorry it took so long, I suck at romantic stuff.<br />~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p><p>Cheers!</p>"
+    Given I have no pages
+    And a page exists with notes: "<p>Sorry it took so long, I suck at romantic stuff.<br />~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p><p>Cheers!</p>"
     When I am on the homepage
       Then I should see "Sorry it took so long, I suck at romantic stuff. Cheers!"
       And I should NOT see "~~~"

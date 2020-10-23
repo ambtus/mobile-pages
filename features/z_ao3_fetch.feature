@@ -1,7 +1,8 @@
 Feature: ao3 specific stuff
 
   Scenario: grab single page
-    Given a tag exists with name: "popslash" AND type: "Fandom"
+    Given I have no pages
+    And a tag exists with name: "popslash" AND type: "Fandom"
       And an author exists with name: "Sidra"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/68481"
@@ -17,7 +18,8 @@ Feature: ao3 specific stuff
       And I should NOT see "by Sidra" within ".notes"
 
   Scenario: grab chaptered page
-    Given a tag exists with name: "harry potter" AND type: "Fandom"
+    Given I have no pages
+    And a tag exists with name: "harry potter" AND type: "Fandom"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/692"
       And I select "harry potter" from "fandom"
@@ -39,7 +41,8 @@ Feature: ao3 specific stuff
    But the part titles should be stored as "Where am I? & Hogwarts"
 
   Scenario: ao3 with and without chapter titles
-    Given I am on the homepage
+    Given I have no pages
+    And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/310586"
       And I press "Store"
     When I am on the page with title "Open the Door"
@@ -50,7 +53,8 @@ Feature: ao3 specific stuff
    But the part titles should be stored as "Chapter 1 & Ours"
 
   Scenario: refetch from ao3 when it used to be somewhere else
-    Given a page exists with title: "Counting" AND url: "https://www.fanfiction.net/s/5853866/1/Counting"
+    Given I have no pages
+    And a page exists with title: "Counting" AND url: "https://www.fanfiction.net/s/5853866/1/Counting"
       And I am on the page with title "Counting"
       # Then I should see "ambtus" # TODO after add grabbing author from fanfiction
       And I should NOT see "lauriegilbert"
@@ -68,7 +72,8 @@ Feature: ao3 specific stuff
       Then I should see "Skip."
 
   Scenario: deliberately fetch only one chapter
-    Given a tag exists with name: "harry potter" AND type: "Fandom"
+    Given I have no pages
+    And a tag exists with name: "harry potter" AND type: "Fandom"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/692/chapters/803"
       And I select "harry potter" from "fandom"
@@ -81,7 +86,8 @@ Feature: ao3 specific stuff
       And I should NOT see "giving up on nanowrimo"
 
   Scenario: refetch one chapter from ao3
-    Given a tag exists with name: "harry potter" AND type: "Fandom"
+    Given I have no pages
+    And a tag exists with name: "harry potter" AND type: "Fandom"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/692/chapters/803"
       And I select "harry potter" from "fandom"
@@ -110,7 +116,8 @@ Feature: ao3 specific stuff
       And I should see "Amy woke slowly"
 
   Scenario: fetch more chapters from ao3
-    Given a tag exists with name: "harry potter" AND type: "Fandom"
+    Given I have no pages
+    And a tag exists with name: "harry potter" AND type: "Fandom"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/692/chapters/803"
       And I select "harry potter" from "fandom"
@@ -131,7 +138,8 @@ Feature: ao3 specific stuff
       Then I should see "1. Where am I?" within "#position_1"
 
   Scenario: refetching top level fic shouldn't change chapter titles if i've modified them
-     Given a tag exists with name: "harry potter" AND type: "Fandom"
+    Given I have no pages
+     And a tag exists with name: "harry potter" AND type: "Fandom"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/works/692"
       And I select "harry potter" from "fandom"
@@ -147,14 +155,16 @@ Feature: ao3 specific stuff
     Then I should see "Hogwarts (abandoned)" within "#position_2"
 
   Scenario: finding page stored with https
-    Given a page exists with url: "https://archiveofourown.org/works/68481"
+    Given I have no pages
+    And a page exists with url: "https://archiveofourown.org/works/68481"
     When I am on the homepage
       And I fill in "page_url" with "http://archiveofourown.org/works/68481"
       And I press "Find"
     Then I should see "I Drive Myself Crazy" within "#position_1"
 
   Scenario: finding page stored with http
-    Given a page exists with url: "http://archiveofourown.org/works/68481"
+    Given I have no pages
+    And a page exists with url: "http://archiveofourown.org/works/68481"
     When I am on the homepage
       And I fill in "page_url" with "https://archiveofourown.org/works/68481"
       And I press "Find"

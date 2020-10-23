@@ -84,7 +84,8 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     Then I should see "SGA" within ".fandoms"
 
   Scenario: add a fandom to a page which already has fandoms
-    Given a page exists with fandoms: "nonfiction"
+    Given I have no pages
+    And a page exists with fandoms: "nonfiction"
     When I am on the page's page
     Then I should see "nonfiction" within ".fandoms"
     When I edit its tags
@@ -95,6 +96,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     Then I should be able to select "meta" from "Fandom"
 
    Scenario: new parent for an existing page should have the same fandom
+    Given I have no pages
     Given a page exists with fandoms: "nonfiction"
     When I am on the page's page
       And I follow "Manage Parts"
@@ -126,7 +128,8 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
       And I should be able to select "speculative fiction" from "fandom"
 
   Scenario: delete a fandom
-    Given a page exists with fandoms: "Twilight"
+    Given I have no tags
+    And a page exists with fandoms: "Twilight"
     When I am on the edit tag page for "Twilight"
     And I follow "Destroy"
     When I press "Yes"
@@ -136,7 +139,9 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
       But I should see "Page 1"
 
   Scenario: merge two tags
-    Given a tag exists with name: "better name" AND type: "Fandom"
+    Given I have no tags
+    And I have no pages
+    And a tag exists with name: "better name" AND type: "Fandom"
       And a page exists with fandoms: "bad name"
     When I am on the edit tag page for "bad name"
       And I select "better name" from "merge"
@@ -146,14 +151,17 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     And I should see "better name" within ".fandoms"
 
   Scenario: don’t allow merge if not the same type
-    Given a tag exists with name: "not fandom"
+    Given I have no tags
+    And a tag exists with name: "not fandom"
     Given a tag exists with name: "bad name" AND type: "Fandom"
     When I am on the edit tag page for "bad name"
       Then I should NOT see "not fandom"
       And I should NOT see "Merge"
 
   Scenario: change fandom to trope tag
-    Given a page exists with fandoms: "not a fandom"
+    Given I have no tags
+    And I have no pages
+    And a page exists with fandoms: "not a fandom"
     When I am on the page's page
       Then I should see "not a fandom" within ".fandoms"
     When I am on the edit tag page for "not a fandom"
@@ -168,7 +176,9 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     But I should NOT be able to select "not a fandom" from "fandom"
 
   Scenario: change trope to fandom tag
-    Given a page exists with tropes: "will be fandom"
+    Given I have no tags
+    And I have no pages
+    And a page exists with tropes: "will be fandom"
     When I am on the page's page
       Then I should see "will be fandom" within ".tags"
     When I am on the edit tag page for "will be fandom"
@@ -182,7 +192,9 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     But I should NOT be able to select "will be fandom" from "tag"
 
   Scenario: change hidden to fandom tag
-    Given a page exists with hiddens: "will be visible"
+    Given I have no tags
+    And I have no pages
+    And a page exists with hiddens: "will be visible"
     When I am on the page's page
       Then I should see "will be visible" within ".hiddens"
     When I am on the edit tag page for "will be visible"
@@ -194,7 +206,9 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
       And the page should NOT have any hidden tags
 
   Scenario: change fandom to hidden tag
-    Given a page exists with fandoms: "will be hidden"
+    Given I have no tags
+    And I have no pages
+    And a page exists with fandoms: "will be hidden"
     When I am on the page's page
       Then I should see "will be hidden" within ".fandoms"
     When I am on the edit tag page for "will be hidden"

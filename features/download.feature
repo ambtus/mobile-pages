@@ -34,7 +34,8 @@ Feature: downloads
     And the download epub file should NOT exist
 
   Scenario: Update notes removes old html
-    Given a page exists with notes: "Lorem ipsum dolor"
+    Given I have no pages
+    And a page exists with notes: "Lorem ipsum dolor"
     When I am on the page's page
      When I view the content
     Then I should see "Lorem ipsum dolor"
@@ -48,7 +49,8 @@ Feature: downloads
       And I should see "On Assignment for Dumbledore"
 
   Scenario: my notes do go in html (and epub)
-    Given a page exists with my_notes: "Lorem ipsum dolor"
+    Given I have no pages
+    And a page exists with my_notes: "Lorem ipsum dolor"
     When I am on the page's page
      When I view the content
     Then I should see "Lorem ipsum dolor"

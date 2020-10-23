@@ -1,20 +1,23 @@
 Feature: downloads metadata
 
   Scenario: epub page; author and tag strings are populated
-    Given a page exists with tropes: "my tag" AND add_author_string: "my author"
+    Given I have no pages
+    And a page exists with tropes: "my tag" AND add_author_string: "my author"
     Then the download epub command should include tags: "my tag"
     And the download epub command should include authors: "my author"
     And the download epub command should NOT include comments: "my author"
     But the download epub command should include comments: "my tag"
 
   Scenario: do not put aka in author tag for epub
-    Given a page exists with add_author_string: "my author (AKA)"
+    Given I have no pages
+    And a page exists with add_author_string: "my author (AKA)"
     And the download epub command should include authors: "my author"
     But the download epub command should NOT include authors: "AKA"
     And the download epub command should NOT include comments: "my author (AKA)"
 
   Scenario: short and has a tag
-    Given a page exists with tropes: "tag1"
+    Given I have no pages
+    And a page exists with tropes: "tag1"
     And the download epub command should include tags: "tag1"
     And the download epub command should include tags: "short"
     And the download epub command should include tags: "unread"
@@ -22,7 +25,8 @@ Feature: downloads metadata
     But the download epub command should NOT include comments: "unread"
 
   Scenario: long and has been read
-    Given a page exists with last_read: "2014-01-01" AND url: "http://test.sidrasue.com/long.html" AND stars: "5"
+    Given I have no pages
+    And a page exists with last_read: "2014-01-01" AND url: "http://test.sidrasue.com/long.html" AND stars: "5"
     Then the download epub command should include tags: "medium"
     But the download epub command should NOT include tags: "unread"
     And the download epub command should NOT include tags: "2014"
@@ -31,7 +35,8 @@ Feature: downloads metadata
     And the download epub command should include rating: "10"
 
   Scenario: download part titles shouldn't have size or info or stars or last read
-    Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3"
+    Given I have no pages
+    And a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3"
     Then the download epub command should include tags: "long"
       And the download epub command should include comments: "long"
     When I am on the page's page
@@ -51,7 +56,8 @@ Feature: downloads metadata
      And I should NOT see today within "h2"
 
   Scenario: part epubs should have all metadata from parent except size and info
-    Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3" AND fandoms: "harry potter" AND infos: "informational" AND tropes: "AU" AND add_author_string: "my author" AND stars: "4"
+    Given I have no pages
+    And a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3" AND fandoms: "harry potter" AND infos: "informational" AND tropes: "AU" AND add_author_string: "my author" AND stars: "4"
     Then the download epub command for "Part 2" should include series: "harry potter"
     But the download epub command for "Part 2" should NOT include tags: "harry potter"
     And the download epub command for "Part 2" should include tags: "AU"
@@ -67,7 +73,8 @@ Feature: downloads metadata
     But the download epub command for "Part 2" should NOT include comments: "informational"
 
   Scenario: tag changes => download tags change
-    Given a page exists with tropes: "tag1"
+    Given I have no pages
+    And a page exists with tropes: "tag1"
     When I am on the page's page
       And I download the epub
     Then the download epub file should exist
