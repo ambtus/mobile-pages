@@ -157,6 +157,8 @@ class Page < ActiveRecord::Base
     pages = pages.without_tag(params[:omitted]) if params.has_key?(:omitted)
     if params.has_key?(:hidden)
       pages = pages.search(:cached_hidden_string, params[:hidden])
+    elsif params.has_key?(:url)
+      # do not constrain on cached_hidden_string if finding by url
     else
       pages = pages.where(:cached_hidden_string => "")
     end
