@@ -194,7 +194,11 @@ class Page < ActiveRecord::Base
   end
   def ao3_url; self.url || self.parts.first.url.split("/chapter").first; end
   def ao3_chapter?; self.url && self.url.match(/chapters/); end
-  def ao3_series?; self.parts.first && self.parts.first.raw_html.blank?; end
+  def ao3_series?
+     self.url.blank? &&
+     self.parts.present? &&
+     self.parts.first.ao3? && ! self.parts.first.ao3_chapter?
+  end
 
   def fetch
     remove_outdated_downloads
@@ -985,7 +989,7 @@ class Page < ActiveRecord::Base
         Rails.logger.debug "DEBUG: build meta from raw html for #{self.id}"
         doc = Nokogiri::HTML(raw_html)
       else
-        if ao3_series?
+        if ao3_series? && parts.first.raw_html.blank? && parts.first.parts.present?
           Rails.logger.debug "DEBUG: build meta from raw html of first part of first  part #{parts.first.parts.first.id}"
           doc = Nokogiri::HTML(parts.first.parts.first.raw_html)
         else

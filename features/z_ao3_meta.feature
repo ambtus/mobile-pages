@@ -44,8 +44,10 @@ Feature: ao3 specific stuff
     When I follow "Manage Parts"
       And I fill in "add_parent" with "Series"
       And I press "Update"
+      Then I should see "Series" within ".title"
     And I press "Rebuild Meta"
-      Then I should see "by Sidra" within ".notes"
+      Then I should see "Series" within ".title"
+      And I should see "by Sidra" within ".notes"
       And I should see "Time Was" within "#position_1"
       And I should NOT see "by Sidra" within "#position_1"
     When I follow "Notes"
@@ -98,6 +100,12 @@ Feature: ao3 specific stuff
     When I press "Rebuild Meta"
     Then I should NOT see "AJ/JC" within ".notes"
       And I should NOT see "testing notes" within ".notes"
+    When I follow "Manage Parts"
+      And I fill in "add_parent" with "Series"
+      And I press "Update"
+      Then I should see "Series" within ".title"
+    When I press "Rebuild Meta"
+      Then I should see "Series" within ".title"
 
   Scenario: formatting notes
   Given I have no pages
