@@ -336,6 +336,12 @@ class Page < ActiveRecord::Base
 
   def parts; Page.order(:position).where(["parent_id = ?", id]); end
 
+  def next_part
+    return nil unless parent
+    my_index = parent.parts.find_index(self)
+    parent.parts[my_index+1]
+  end
+
   def not_hidden_parts; parts.select{|part| part.cached_hidden_string.blank?}; end
 
   def url_list

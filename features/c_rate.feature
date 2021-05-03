@@ -20,7 +20,7 @@ Feature: 5 star ratings (plus unfinished which uses 9)
     And I press "Rate unfinished"
     Then I should NOT see "stars ignored"
       And I should see "marked 'unfinished'"
-    When I am on the page's page
+    And I follow "Page 1"
     Then I should see "unfinished"
     And the read after date should be 5 years from now
     When I follow "Rate"
@@ -34,7 +34,7 @@ Feature: 5 star ratings (plus unfinished which uses 9)
     And I press "Rate unfinished"
     Then I should see "stars ignored"
       And I should see "marked 'unfinished'"
-    When I am on the page's page
+    And I follow "Page 1"
     Then I should see "unfinished"
     And I should NOT see "5 stars"
     And the read after date should be 5 years from now
@@ -48,7 +48,7 @@ Feature: 5 star ratings (plus unfinished which uses 9)
       And I choose "5"
     And I press "Rate"
     Then I should see "set for reading again in 6 months"
-    When I am on the page's page
+    And I follow "Page 1"
     Then I should see "5 stars"
     When I follow "Rate"
       Then "stars_5" should be checked
@@ -60,7 +60,7 @@ Feature: 5 star ratings (plus unfinished which uses 9)
       And I choose "4"
     And I press "Rate"
     Then I should see "set for reading again "
-    When I am on the page's page
+    And I follow "Page 1"
     Then I should see "4 stars"
     And the read after date should be 1 years from now
     When I follow "Rate"
@@ -73,7 +73,7 @@ Feature: 5 star ratings (plus unfinished which uses 9)
       And I choose "3"
     And I press "Rate"
     Then I should see "set for reading again "
-    When I am on the page's page
+    And I follow "Page 1"
     Then I should see "3 stars"
     And the read after date should be 2 years from now
 
@@ -84,7 +84,7 @@ Feature: 5 star ratings (plus unfinished which uses 9)
       And I choose "2"
     And I press "Rate"
     Then I should see "set for reading again "
-    When I am on the page's page
+    And I follow "Page 1"
     Then I should see "2 stars"
     And the read after date should be 3 years from now
 
@@ -95,7 +95,7 @@ Feature: 5 star ratings (plus unfinished which uses 9)
       And I choose "1"
     And I press "Rate"
     Then I should see "set for reading again "
-    When I am on the page's page
+    And I follow "Page 1"
     Then I should see "1 stars"
     And the read after date should be 4 years from now
 
@@ -119,3 +119,4 @@ Feature: 5 star ratings (plus unfinished which uses 9)
       And I choose "1"
     And I press "Rate"
     Then the read after date should be 1 years from now
+    And I follow "Part 2"

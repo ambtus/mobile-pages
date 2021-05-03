@@ -26,7 +26,7 @@ Feature: third level hierarchy
     When I follow "Part the first"
       Then I should see "subpart title" within "#position_1"
       And I should see "Part 2" within "#position_2"
-    When I follow "Part 2"
+    When I follow "Part 2" within "#position_2"
       Then "Original" should link to "http://test.sidrasue.com/parts/2.html"
     When I am on the page's page
     And I follow "Part 2"

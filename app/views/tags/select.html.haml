@@ -1,6 +1,8 @@
 - content_for :title do
   = "Select tags for " + @page.title
-.title= "Select tags for " + @page.title
+.title
+  Select tags for
+  = link_to @page.title, page_path(@page)
 -if @page.parent
   .tags
     Parent tags:

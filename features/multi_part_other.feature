@@ -14,6 +14,17 @@ Feature: other mult-part tests
     Then I should see "stuff for part 1"
     And I should NOT see "stuff for part 2"
 
+  Scenario: link to next part from part
+    Given I have no pages
+    And a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html"
+    When I am on the homepage
+    And I follow "Page 1"
+      And I follow "Part 1"
+      And I follow "Part 2"
+    And I view the content
+    Then I should see "stuff for part 2"
+    And I should NOT see "stuff for part 1"
+
   Scenario: reorder the parts on an existing page with parts
     Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
     When I am on the page's page
