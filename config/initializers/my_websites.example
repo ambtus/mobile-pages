@@ -74,6 +74,7 @@ module MyWebsites
     else
       body.children
     end
+    return html if result.blank?
     result.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
   end
 
