@@ -33,10 +33,3 @@ Feature: clean up html from web
      Then I should see "The beginning"
        And I should NOT see "email Vera"
 
-   Scenario: fanfiction Share button gets cleaned
-     Given I have no pages
-     And a page exists with url: "http://www.fanfiction.net/s/5853866/1/Counting"
-     When I am on the page's page
-      And I view the content
-     Then I should see "Skip. Skip."
-      But I should NOT see "Share"

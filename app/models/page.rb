@@ -200,7 +200,16 @@ class Page < ActiveRecord::Base
      self.parts.first.ao3? && ! self.parts.first.ao3_chapter?
   end
 
+  def ff?
+    (self.url && self.url.match(/fanfiction.net/)) ||
+    (self.parts.first && self.parts.first.url && self.parts.first.url.match(/fanfiction.net/))
+  end
+
   def fetch
+    if ff?
+      self.raw_html = "edit raw html manually" if self.raw_html.blank?
+      return
+    end
     remove_outdated_downloads
     remove_outdated_edits
     begin
@@ -217,11 +226,12 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "DEBUG: refetch_ao3 #{self.id}"
     if ao3_chapter?
       self.fetch
+      self.get_meta_from_ao3(false)
     else
       get_chapters_from_ao3
       self.set_wordcount
+      get_meta_from_ao3
     end
-    get_meta_from_ao3
   end
 
   def parts_from_urls(url_title_list, refetch=false)

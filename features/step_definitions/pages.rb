@@ -14,6 +14,15 @@ Given("{int} pages exist") do |count|
   end
 end
 
+Given /^my ff.net page exists$/ do
+  page = Page.new
+  page.title = "Counting"
+  page.save
+  page.url =  "https://www.fanfiction.net/s/5853866/1/Counting"
+  page.save
+  page.raw_html = File.open(Rails.root + "features/html/counting.html", 'r:utf-8') { |f| f.read }
+end
+
 # create a page
 Given /a page exists(?: with (.*))?/ do |fields|
   fields.blank? ? hash = {} : hash = fields.create_hash

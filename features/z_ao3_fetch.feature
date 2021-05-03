@@ -52,25 +52,6 @@ Feature: ao3 specific stuff
       But I should NOT see "1. Chapter 1"
    But the part titles should be stored as "Chapter 1 & Ours"
 
-  Scenario: refetch from ao3 when it used to be somewhere else
-    Given I have no pages
-    And a page exists with title: "Counting" AND url: "https://www.fanfiction.net/s/5853866/1/Counting"
-      And I am on the page with title "Counting"
-      # Then I should see "ambtus" # TODO after add grabbing author from fanfiction
-      And I should NOT see "lauriegilbert"
-      When I view the content
-      Then I should see "Skip."
-    When I am on the page with title "Counting"
-      And I follow "Refetch" within ".edits"
-    When I fill in "url" with "http://archiveofourown.org/works/688"
-      And I press "Refetch"
-    Then I should see "by Sidra"
-      And I should NOT see "ambtus"
-      And I should see "Skipping Stones"
-      And I should see "thanks to lauriegilbert"
-      When I view the content
-      Then I should see "Skip."
-
   Scenario: deliberately fetch only one chapter
     Given I have no pages
     And a tag exists with name: "harry potter" AND type: "Fandom"
