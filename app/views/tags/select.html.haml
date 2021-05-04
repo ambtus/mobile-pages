@@ -5,7 +5,8 @@
   = link_to @page.title, page_path(@page)
 -if @page.parent
   .tags
-    Parent tags:
+    =link_to "Parent", page_path(@page.parent)
+    tags:
     =@page.parent.tags.by_type.by_name.joined
 .form
   = form_tag tags_path do
