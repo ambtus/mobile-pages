@@ -8,11 +8,7 @@ class TagsController < ApplicationController
       render :destroy and return
     end
     @page = Page.find(params[:id])
-    if Tag.count == 0 || params[:add]
-      render :new
-    else
-      render :select
-    end
+    render :select
   end
   def edit
     @tag = Tag.find(params[:id])
