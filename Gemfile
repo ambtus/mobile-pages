@@ -25,5 +25,5 @@ gem 'haml'
 gem 'nokogiri'
 gem 'rubypants'
 gem 'sanitize'
-gem 'mechanize'
+gem 'mechanize', ">= 2.7.7"
 
