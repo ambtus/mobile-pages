@@ -14,13 +14,22 @@ Given("{int} pages exist") do |count|
   end
 end
 
-Given /^my ff.net page exists$/ do
+Given /^counting exists$/ do
   page = Page.new
   page.title = "Counting"
   page.save
   page.url =  "https://www.fanfiction.net/s/5853866/1/Counting"
   page.save
   page.raw_html = File.open(Rails.root + "features/html/counting.html", 'r:utf-8') { |f| f.read }
+end
+
+Given /^part6 exists$/ do
+  page = Page.new
+  page.title = "Part 6"
+  page.save
+  page.url =  "https://www.fanfiction.net/s/5409165/6/It-s-For-a-Good-Cause-I-Swear"
+  page.save
+  page.raw_html = File.open(Rails.root + "features/html/part6.html", 'r:utf-8') { |f| f.read }
 end
 
 # create a page

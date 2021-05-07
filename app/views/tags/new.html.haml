@@ -1,8 +1,0 @@
-- content_for :title do
-  = "New tags for " + @page.title
-
-.title= @page.title
-.tags
-  = form_tag tags_path do
-    = hidden_field_tag(:page_id, @page.id)
-    =render "add"

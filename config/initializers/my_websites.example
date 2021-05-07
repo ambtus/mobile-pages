@@ -51,7 +51,6 @@ module MyWebsites
         body.at('article.b-singlepost-body').children
       end
     when /fanfiction.net/
-      body.search("span").each { |node| node.remove }
       body.at('div#storytext')
     when /archiveofourown/
       body.search(".landmark").each { |node| node.remove }

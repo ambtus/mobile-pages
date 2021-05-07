@@ -15,7 +15,7 @@ Feature: ff.net specific stuff
 
    Scenario: fanfiction.net can't be refetched
      Given I have no pages
-     And my ff.net page exists
+     And counting exists
     When I am on the page with title "Counting"
       And I view the content
      Then I should see "Skip. Skip."
@@ -38,18 +38,28 @@ Feature: ff.net specific stuff
 
    Scenario: fanfiction Share button gets cleaned
      Given I have no pages
-     And my ff.net page exists
+     And counting exists
     When I am on the page with title "Counting"
       And I view the content
      Then I should see "Skip. Skip."
       But I should NOT see "Share"
 
+   Scenario: fanfiction underline spans don't get cleaned
+     Given I have no pages
+     And part6 exists
+    When I am on the page with title "Part 6"
+      And I view the content
+      Then I should NOT see "But I so I ,"
+     But I should see "But I wasn't so I didn't,"
+
   Scenario: refetch from ao3 when it used to be somewhere else
     Given I have no pages
-     And my ff.net page exists
+     And counting exists
       And I am on the page with title "Counting"
       # Then I should see "ambtus" # TODO after add grabbing author from fanfiction
-      And I should NOT see "lauriegilbert"
+      # And I should see "2 connected drabbles" # TODO after add grabbing description from fanfiction
+      Then I should NOT see "ambtus"
+      And I should NOT see "2 connected drabbles."
       When I view the content
       Then I should see "Skip."
     When I am on the page with title "Counting"
