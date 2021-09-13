@@ -1,7 +1,12 @@
 source 'http://rubygems.org'
 
 gem 'bundler'
-gem 'rails', '~>6.0.3'
+
+## TODO change from ~> to >= before next update
+gem "nokogiri", "~> 1.11.4"
+gem "addressable", "~> 2.8.0"
+gem 'rails', '~> 6.0.4.1'
+
 gem 'mysql2'
 
 gem 'unicorn', group: :production
@@ -22,7 +27,7 @@ end
 
 gem 'escape_utils'
 gem 'haml'
-gem 'nokogiri'
+
 gem 'rubypants'
 gem 'sanitize'
 gem 'mechanize', ">= 2.7.7"
