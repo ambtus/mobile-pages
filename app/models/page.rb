@@ -974,7 +974,7 @@ class Page < ActiveRecord::Base
       count = 1
       chapter_list.each do |element|
         title = element.text
-        url = "http://archiveofourown.org" + element['href']
+        url = "https://archiveofourown.org" + element['href']
         chapter = Page.find_by(url: url)
         if chapter
           if chapter.position == count && chapter.parent_id == self.id
@@ -985,6 +985,7 @@ class Page < ActiveRecord::Base
           end
         else
           Rails.logger.debug "DEBUG: chapter does not yet exist, creating #{title} in position #{count}"
+          sleep 5
           Page.create(:title => title, :url => url, :position => count, :parent_id => self.id)
         end
         count = count.next
