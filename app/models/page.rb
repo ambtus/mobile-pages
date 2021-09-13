@@ -975,7 +975,7 @@ class Page < ActiveRecord::Base
       chapter_list.each do |element|
         title = element.text
         url = "https://archiveofourown.org" + element['href']
-        chapter = Page.find_by(url: url)
+        chapter = Page.find_by(url: url) || Page.find_by(url: "http://archiveofourown.org" + element['href'])
         if chapter
           if chapter.position == count && chapter.parent_id == self.id
             Rails.logger.debug "DEBUG: chapter already exists, skipping #{chapter.id} in position #{count}"
