@@ -4,7 +4,7 @@
   = form_for @page do |f|
     = hidden_field_tag :count, @count
     = label_tag :sort_by, "Sort by:"
-    - ['random', 'last_read', 'last_created', 'read_after', 'recently_read'].each do |choice|
+    - ['random', 'last_read', 'last_created', 'read_after', 'recently_read','longest', 'shortest' ].each do |choice|
       = radio_button_tag :sort_by, choice, @sort_by == choice
       = label_tag "sort_by_#{choice}", choice.humanize.downcase
     %br

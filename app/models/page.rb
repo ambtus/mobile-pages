@@ -177,6 +177,10 @@ class Page < ActiveRecord::Base
         pages.order(Arel.sql('RAND()'))
       when "last_created"
         pages.order('created_at DESC')
+      when "longest"
+        pages.order('wordcount DESC')
+      when "shortest"
+        pages.order('wordcount ASC')
       else
         pages.order('read_after ASC')
     end
