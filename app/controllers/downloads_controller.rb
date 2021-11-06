@@ -33,14 +33,14 @@ protected
     return if File.exists?("#{@page.download_basename}.html")
 
     # write to file
-    File.open("#{@page.download_basename}.html", 'w') {|f| f.write(render_to_string(:template => "downloads/show", :formats => [:html], :layout => 'downloads.html'))}
+    File.open("#{@page.download_basename}.html", 'w') {|f| f.write(render_to_string(:template => "downloads/show", :formats => [:html], :layout => 'downloads'))}
   end
 
   def render_sections
     return if File.exists?("#{@page.download_basename}.read")
 
     # write to file
-    File.open("#{@page.download_basename}.read", 'w') {|f| f.write(render_to_string(:template => "downloads/read", :formats => [:html], :layout => 'downloads.html'))}
+    File.open("#{@page.download_basename}.read", 'w') {|f| f.write(render_to_string(:template => "downloads/read", :formats => [:html], :layout => 'downloads'))}
   end
 
 end

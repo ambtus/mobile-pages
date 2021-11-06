@@ -92,7 +92,7 @@ class PagesController < ApplicationController
     else
       @errors = @page.errors
     end
-    flash[:alert] = @errors.collect {|e, m| "#{e.to_s.humanize unless e == "Base"} #{m}"}.join(" and  ")
+    flash[:alert] = @errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == "Base"} #{error.message}"}.join(" and  ")
   end
 
   def update

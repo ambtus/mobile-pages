@@ -2,11 +2,8 @@ source 'http://rubygems.org'
 
 gem 'bundler'
 
-## TODO change from ~> to >= before next update
-gem "nokogiri", "~> 1.11.4"
-gem "addressable", "~> 2.8.0"
-gem 'rails', '~> 6.0.4.1'
-
+gem 'rails'
+gem 'nokogiri'
 gem 'mysql2'
 
 gem 'unicorn', group: :production

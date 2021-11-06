@@ -33,8 +33,8 @@ Feature: an ebook with a hidden tag is also hidden from marvin
     When I am on the page with title "Part 2"
       And I view the content
       Then I should see "stuff for part 2"
-    And the download epub command for "part 2" should NOT include tags: "show me"
-    But the download epub command for "part 2" should include tags: "hide me"
-    And the download epub command for "part 2" should NOT include authors: "my author"
-    And the download epub command for "part 2" should include comments: "by my author"
-    And the download epub command for "part 2" should include comments: "show me"
+    And the download epub command for "Part 2" should NOT include tags: "show me"
+    But the download epub command for "Part 2" should include tags: "hide me"
+    And the download epub command for "Part 2" should NOT include authors: "my author"
+    And the download epub command for "Part 2" should include comments: "by my author"
+    And the download epub command for "Part 2" should include comments: "show me"

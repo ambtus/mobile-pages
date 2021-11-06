@@ -67,7 +67,7 @@ Feature: filter on titles
      But I should NOT see "Page 2"
        And I should NOT see "Page 6"
        And I should NOT see "Page 9"
-     When I fill in "page_title" with "page"
+     When I fill in "page_title" with "Page"
        And I press "Find"
      Then I should see "Page 1"
        And I should see "Page 2"
