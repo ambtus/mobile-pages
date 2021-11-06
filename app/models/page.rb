@@ -953,7 +953,7 @@ class Page < ActiveRecord::Base
     self.remove_outdated_downloads
   end
 
-  def ao3_doc_title(doc); doc.xpath("//h2").last.children.text.strip rescue "empty title"; end
+  def ao3_doc_title(doc); doc.xpath("//div[@id='workskin']").xpath("//h2").first.children.text.strip rescue "empty title"; end
   def ao3_single_chapter_fic_title(doc)
     doc.css(".chapter .title").children.last.text.strip.gsub(": ","") rescue nil
   end
