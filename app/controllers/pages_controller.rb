@@ -124,6 +124,11 @@ class PagesController < ApplicationController
       when "Make Single"
         @page.make_single
         flash[:notice] = "Made Single"
+      when "Uncollect"
+        @page.parts.map(&:make_single)
+        @page.destroy
+        flash[:notice] = "Uncollected"
+        redirect_to root_path and return
       when "Update Raw HTML"
         @page.raw_html = params[:pasted]
         flash[:notice] = "Raw HTML updated."

@@ -9,6 +9,7 @@
     = submit_tag "Remove Downloads"
     = submit_tag "Rebuild Meta"
     = submit_tag "Make Single" if @page.parent
+    = submit_tag "Uncollect" unless @page.parts.empty?
 .parent= link_to @page.parent.title, page_path(@page.parent) if @page.parent
 .part= link_to @page.next_part.title, page_path(@page.next_part) if @page.next_part
 .page
