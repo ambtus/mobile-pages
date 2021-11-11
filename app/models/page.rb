@@ -113,7 +113,7 @@ class Page < ActiveRecord::Base
 
   validates_presence_of :title, :message => "can't be blank or 'Title'"
   validates_format_of :url, :with => URI.regexp, :allow_blank => true
-  validates_uniqueness_of :url, :allow_blank => true, :case_sensitive => false
+  validates_uniqueness_of :url, :allow_blank => true
 
   after_create :initial_fetch
 
