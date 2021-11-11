@@ -8,6 +8,7 @@ class PagesController < ApplicationController
     @page.notes = params[:notes] if params[:notes]
     @page.my_notes = params[:my_notes] if params[:my_notes]
     @page.url = params[:url] if params[:url]
+    @type = params[:type] || "any"
     @sort_by = params[:sort_by] || "read_after"
     @size = params[:size] || "any"
     @unread = params[:unread] || "either"
@@ -42,7 +43,8 @@ class PagesController < ApplicationController
       build_route[:rating] = params[:rating] unless params[:rating].blank?
       build_route[:omitted] = params[:omitted] unless params[:omitted].blank?
       build_route[:info] = params[:info] unless params[:info].blank?
-     build_route[:sort_by] = params[:sort_by] unless (params[:sort_by].blank? || params[:sort_by] == "read_after")
+      build_route[:type] = params[:type] unless (params[:type].blank? || params[:type] == "any")
+      build_route[:sort_by] = params[:sort_by] unless (params[:sort_by].blank? || params[:sort_by] == "read_after")
       build_route[:size] = params[:size] unless (params[:size].blank? || params[:size] == "any")
       build_route[:favorite] = params[:favorite] unless (params[:favorite].blank? || params[:favorite] == "any")
       build_route[:find] = params[:find] unless (params[:find].blank? || params[:find] == "none")
@@ -72,6 +74,7 @@ class PagesController < ApplicationController
         @page.destroy
         @page = Page.new(params[:page])
       else
+        @page.convert_to_type
         @page.authors << @author if @author
         @page.tags << @tag if @tag
         @page.tags << @hidden if @hidden

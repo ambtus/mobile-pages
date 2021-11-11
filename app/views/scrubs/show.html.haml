@@ -6,7 +6,7 @@
   remove above the top selection and below the bottom selection
 %a{:href => "#end"} Jump to end
 .form
-  = form_for @page do |f|
+  = form_for @page.becomes(Page) do |f|
     .top
       = @page.nodes.size.to_s + " nodes"
       = f.submit "Scrub"

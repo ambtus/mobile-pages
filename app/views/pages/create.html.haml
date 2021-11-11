@@ -1,7 +1,7 @@
 - content_for :title do
   = "Page create error"
 .form
-  = form_for @page do |f|
+  = form_for @page.becomes(Page) do |f|
     = render :partial => "pages/create", :locals => {:page => @page, :called_by => "error", :tag => @tag, :author => @author }
     = f.submit "Store", :name => "Store"
 = link_to "Store Multiple", new_part_path

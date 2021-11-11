@@ -3,6 +3,22 @@
 class Page < ActiveRecord::Base
   MODULO = 300  # files in a single directory
 
+  def convert_to_type
+    return unless type.nil?
+    parts.map(&:convert_to_type) unless parts.empty?
+    should_be = if parts.empty?
+      "Chapter"
+      elsif parts.map(&:type).uniq == ["Chapter"]
+        "Book"
+      elsif (parts.map(&:type).uniq - ["Chapter", "Book"]).empty?
+        "Series"
+      else
+        "Collection"
+      end
+    update!(type: should_be)
+    should_be
+  end
+
   def self.remove_all_downloads
     self.all.each do |page|
       page.remove_outdated_downloads
@@ -119,6 +135,7 @@ class Page < ActiveRecord::Base
   def self.filter(params={})
     Rails.logger.debug "DEBUG: Page.filter(#{params})"
     pages = Page.all
+    pages = pages.where(:type => (params[:type] == "none" ? nil : params[:type])) if params[:type]
     # ignore parts if not filtering on anything
     pages = pages.where(:parent_id => nil) if params == {"controller"=>"pages", "action"=>"index"}
     pages = pages.where(:last_read => nil) if params[:unread] == "yes"

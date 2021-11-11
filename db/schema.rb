@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_06_140521) do
+ActiveRecord::Schema.define(version: 2021_11_09_144311) do
 
   create_table "authors", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 2021_11_06_140521) do
     t.string "cached_tag_string", default: "", null: false
     t.text "my_notes", size: :medium
     t.string "cached_hidden_string", default: "", null: false
+    t.string "type"
     t.index ["parent_id"], name: "index_pages_on_parent_id"
     t.index ["size"], name: "index_pages_on_size"
     t.index ["stars"], name: "index_pages_on_stars"

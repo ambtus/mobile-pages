@@ -1,7 +1,7 @@
 - content_for :title do
   =@page.title
 .form
-  = form_for @page do
+  = form_for @page.becomes(Page) do
     = submit_tag "Read Now"
     = submit_tag "Read Later"
     = submit_tag "Rebuild from Raw HTML"

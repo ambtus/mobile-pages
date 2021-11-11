@@ -1,8 +1,13 @@
 - content_for :title do
   = @title
 .form
-  = form_for @page do |f|
+  = form_for @page.becomes(Page) do |f|
     = hidden_field_tag :count, @count
+    = label_tag :type, "Type:"
+    - ['Collection', 'Series', 'Book', 'Chapter', 'none', 'any'].each do |choice|
+      = radio_button_tag :type, choice, @type == choice
+      = label_tag "type_#{choice}", choice
+    %br
     = label_tag :sort_by, "Sort by:"
     - ['random', 'last_read', 'last_created', 'read_after', 'recently_read','longest', 'shortest' ].each do |choice|
       = radio_button_tag :sort_by, choice, @sort_by == choice

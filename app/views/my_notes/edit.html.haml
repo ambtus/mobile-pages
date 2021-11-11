@@ -2,6 +2,6 @@
 -content_for(:title, title)
 .title=title
 .notes
-  = form_for @page do |f|
+  = form_for @page.becomes(Page) do |f|
     = f.submit "Update"
     = f.text_area :my_notes, :rows => 10, :cols => 33

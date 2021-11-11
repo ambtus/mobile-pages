@@ -4,5 +4,5 @@
 
 #page=raw @page.read_html
 .form
-  = form_for @page do
+  = form_for @page.becomes(Page) do
     = submit_tag "Audiobook created"
