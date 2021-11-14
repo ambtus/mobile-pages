@@ -162,7 +162,7 @@ class Page < ActiveRecord::Base
     pages = pages.where(:size => "long") if params[:size] == "long"
     pages = pages.where(:size => ["medium", "long"]) if params[:size] == "either"
     [:title, :notes, :my_notes].each do |attrib|
-      pages = pages.search(attrib, params[attrib]) if params.has_key?(attrib)
+      pages = pages.search_insensitive(attrib, params[attrib]) if params.has_key?(attrib)
     end
     if params.has_key?(:url) # strip the https? in case it was stored under the other
       pages = pages.search(:url, params[:url].sub(/^https?/, ''))
@@ -1106,6 +1106,12 @@ private
     query = "%#{string}%"
     where("pages.#{symbol.to_s} LIKE ?",query)
   end
+
+  def self.search_insensitive(symbol, string)
+    query = "%#{string.downcase}%"
+    where("LOWER(pages.#{symbol.to_s}) LIKE ?", query)
+  end
+
 
   def self.without_tag(string)
     query = "%#{string}%"

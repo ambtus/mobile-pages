@@ -81,3 +81,15 @@ Feature: filter on titles
      When I am on the homepage
      Then I should see "Page 16"
      But I should NOT see "Page 2"
+
+    Scenario: case insensitive title search
+    Given 16 pages exist
+      And a page exists with title: "The Blue Book" AND url: "http://test.sidrasue.com/test.html"
+    When I am on the homepage
+      Then I should NOT see "The Blue Book"
+    When I fill in "page_title" with "blue book"
+     And I press "Find"
+    Then I should see "The Blue Book"
+
+
+
