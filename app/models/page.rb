@@ -123,12 +123,13 @@ class Page < ActiveRecord::Base
     tag_types = Hash.new("")
     Tag.types.each {|tag_type| tag_types[tag_type] = hash.delete(tag_type.downcase.pluralize.to_sym) }
     page = Page.create(hash)
+    page.convert_to_type
     tag_types.each {|key, value| page.send("add_tags_from_string", value, key)}
     if hash[:last_read] # update parts and self
       page.parts.each {|p| p.update_attribute(:last_read, hash[:last_read])}
       page.update_attribute(:last_read, hash[:last_read])
     end
-    Rails.logger.debug "DEBUG: created page with tags: [#{page.tags.joined}] and authors: #{page.authors.map(&:true_name)} and last_read: #{page.last_read}"
+    Rails.logger.debug "DEBUG: created page with tags: [#{page.tags.joined}] and authors: #{page.authors.map(&:true_name)} and last_read: #{page.last_read} and type: #{page.type}"
     page
   end
 
