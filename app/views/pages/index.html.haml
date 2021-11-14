@@ -50,13 +50,6 @@
             = link_to "HTML", download_url_for_page(page, ".html")
             = link_to "Text", download_url_for_page(page, ".read") if page.parts.empty?
             = link_to "Original", page.url unless page.url.blank?
-          .part_links
-            -page.not_hidden_parts[0,5].each_with_index do |part,index|
-              ="|" unless index == 0
-              = link_to h(part.title), page_path(part)
-            -if page.parts.size > 5
-              ="|"
-              = link_to "More Parts", page_path(page)
           .tags=page.merged_tag_string
           .my_notes=page.my_short_notes
           .notes=simple_format page.short_notes

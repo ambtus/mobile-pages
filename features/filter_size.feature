@@ -31,9 +31,6 @@ Feature: page size
       And I should NOT see "Short"
       And I should NOT see "Medium"
       And I should NOT see "Epic"
-      And I should see "Part 1 | Part 2"
-      And I should NOT see "More Parts"
-      And I should NOT see "Part 4 | Part 5"
     When I choose "size_long"
       And I press "Find"
     Then I should see "Novel" within "#position_1"
@@ -41,7 +38,3 @@ Feature: page size
       And I should NOT see "Short"
       And I should NOT see "Medium"
       And I should NOT see "Long"
-      And I should see "Part 4 | Part 5 | More Parts"
-    When I follow "More Parts"
-      Then I should see "Epic"
-

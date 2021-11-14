@@ -83,7 +83,8 @@ Feature: last_read (also unread)
    When I am on the homepage
    Then I should see "unread" within "#position_1"
     And I should NOT see "2009-01-01" within "#position_1"
-   When I follow "Part 2"
+  When I follow "Multi"
+   And I follow "Part 2"
       And I follow "Rate"
       And I choose "3"
     And I press "Rate"

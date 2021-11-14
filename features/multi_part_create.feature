@@ -5,8 +5,7 @@ Feature: creating multi-part pages
     And a page exists with title: "Parent" AND urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html"
     When I am on the homepage
     Then I should see "Parent" within ".title"
-    And I should see "Part 1 | Part 2" within ".part_links"
-    Then I should NOT see "Part 1" within ".title"
+    Then I should NOT see "Part 1"
 
   Scenario: holder page for parts is okay
     Given I am on the homepage
@@ -127,8 +126,6 @@ Feature: creating multi-part pages
         """
      And I fill in "page_title" with "Parent"
      And I press "Store"
-   When I am on the homepage
-   Then I should see "Child 1 | Child 2"
    When I am on the page with title "Parent"
    Then I should see "Parent" within ".title"
    And I should see "Child 1" within "#position_1"
