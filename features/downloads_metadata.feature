@@ -1,11 +1,11 @@
 Feature: downloads metadata
 
-  Scenario: short and has an info tag (not displayed)
+  Scenario: drabble and has an info tag (not displayed)
     Given a page exists with infos: "tag1"
     And the download epub command should NOT include tags: "tag1"
-    And the download epub command should include tags: "short"
+    And the download epub command should include tags: "drabble"
     And the download epub command should include tags: "unread"
-    And the download epub command should include comments: "short"
+    And the download epub command should include comments: "drabble"
     But the download epub command should NOT include comments: "tag1"
 
   Scenario: epub page; author and tag strings are populated
@@ -23,13 +23,13 @@ Feature: downloads metadata
     But the download epub command should NOT include authors: "AKA"
     And the download epub command should NOT include comments: "my author (AKA)"
 
-  Scenario: short and has a tag
+  Scenario: drabble and has a tag
     Given I have no pages
     And a page exists with tropes: "tag1"
     And the download epub command should include tags: "tag1"
-    And the download epub command should include tags: "short"
+    And the download epub command should include tags: "drabble"
     And the download epub command should include tags: "unread"
-    And the download epub command should include comments: "tag1, short"
+    And the download epub command should include comments: "tag1, drabble"
     But the download epub command should NOT include comments: "unread"
 
   Scenario: long and has been read

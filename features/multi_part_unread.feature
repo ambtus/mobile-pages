@@ -27,8 +27,8 @@ Feature: one part unread
       And I should NOT see "Parent with that title has content"
       And I should see "unread" within ".last_read"
       And I should NOT see "unread" within "#position_1"
-      And I should see "short" within ".size"
-      And I should NOT see "short" within "#position_1"
+      And I should see "drabble" within ".size"
+      And I should NOT see "drabble" within "#position_1"
       And I should see "two" within ".fandoms"
       And I should NOT see "two" within "#position_1"
 

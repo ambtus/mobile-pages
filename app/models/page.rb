@@ -67,10 +67,12 @@ class Page < ActiveRecord::Base
   SHORT_LENGTH = 160 # truncate at this many characters
   LIMIT = 15 # number of pages to show in index
 
-  SIZES = ["short", "medium", "long", "any"]
+  SIZES = ["drabble", "short", "medium", "long", "epic"]
 
-  SHORT_WC =   7500
-  MED_WC   =  30000
+  DRABBLE_MAX = 300
+  SHORT_MAX =  3000
+  MED_MAX   = 30000
+  LONG_MAX = 300000
 
   def set_wordcount(recount=true)
     if self.parts.size > 0
@@ -87,16 +89,18 @@ class Page < ActiveRecord::Base
       } if body
       self.wordcount = count
     end
-    self.size = "short"
+    self.size = "drabble"
     if self.wordcount
-      self.size = "medium" if wordcount > SHORT_WC
-      self.size = "long" if wordcount > MED_WC
+      self.size = "short" if wordcount > DRABBLE_MAX
+      self.size = "medium" if wordcount > SHORT_MAX
+      self.size = "long" if wordcount > MED_MAX
+      self.size = "epic" if wordcount > LONG_MAX
     end
     self.save
   end
 
   BASE_URL_PLACEHOLDER = "Base URL: use * as replacement placeholder"
-  URL_SUBSTITUTIONS_PLACEHOLDER = "URL substitutions, space separated replacements or inclusive integer range n-m"
+  URL_SUBSTITUTIONS_PLACEHOLDER = "replacements: space separated or range n-m"
   URLS_PLACEHOLDER = "Alternatively: full URLs for parts, one per line"
   PARENT_PLACEHOLDER = "Enter name of existing or new (unique name) parent"
 
@@ -157,10 +161,9 @@ class Page < ActiveRecord::Base
     end
     # ignore parts if filtering on size
     pages = pages.where(:parent_id => nil) if params[:size]
-    pages = pages.where(:size => "short") if params[:size] == "short"
-    pages = pages.where(:size => "medium") if params[:size] == "medium"
-    pages = pages.where(:size => "long") if params[:size] == "long"
-    pages = pages.where(:size => ["medium", "long"]) if params[:size] == "either"
+    pages = pages.where(:size => params[:size]) if SIZES.include?(params[:size])
+    pages = pages.where(:size => ["short", "drabble"]) if params[:size] == "shorter"
+    pages = pages.where(:size => ["long", "epic"]) if params[:size] == "longer"
     [:title, :notes, :my_notes].each do |attrib|
       pages = pages.search_insensitive(attrib, params[attrib]) if params.has_key?(attrib)
     end
