@@ -6,6 +6,10 @@ class Page < ActiveRecord::Base
   def convert_to_type
     return unless type.nil?
     parts.map(&:convert_to_type) unless parts.empty?
+    set_type
+  end
+
+  def set_type
     should_be = if parts.empty?
       "Chapter"
       elsif parts.map(&:type).uniq == ["Chapter"]
@@ -364,6 +368,7 @@ class Page < ActiveRecord::Base
   def next_part
     return nil unless parent
     my_index = parent.parts.find_index(self)
+    return nil if my_index.nil?
     parent.parts[my_index+1]
   end
 
@@ -1023,6 +1028,7 @@ class Page < ActiveRecord::Base
     get_meta_from_ao3(false) if ao3?
     self.parts.map(&:rebuild_meta)
     set_wordcount
+    set_type
   end
 
   def get_meta_from_ao3(refetch=true)

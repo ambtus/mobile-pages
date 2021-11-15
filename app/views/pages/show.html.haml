@@ -10,10 +10,20 @@
     = submit_tag "Rebuild Meta"
     = submit_tag "Make Single" if @page.parent
     = submit_tag "Uncollect" unless @page.parts.empty?
-.parent= link_to @page.parent.title, page_path(@page.parent) if @page.parent
-.part= link_to @page.next_part.title, page_path(@page.next_part) if @page.next_part
+-if @page.parent
+  .parent
+    Parent:
+    = link_to @page.parent.title, page_path(@page.parent)
+    (#{@page.parent.type})
+-if @page.next_part
+  .part
+    Next:
+    = link_to @page.next_part.title, page_path(@page.next_part)
+    (#{@page.next_part.type})
 .page
-  .title=h @page.title
+  .title
+    =h @page.title
+    (#{@page.type})
   .views
     = link_to "Rate", rate_path(@page)
     = link_to "ePub", download_url_for_page(@page, ".epub")
