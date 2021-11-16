@@ -20,7 +20,7 @@ class PartsController < ApplicationController
     url_list = params[:url_list]
     if url_list != @page.url_list
       @page.parts_from_urls(params[:url_list])
-      flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == "Base"} #{error.message}"}.join(" and  ")
+      flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
     end
     if params[:add_parent] && params[:add_parent] != NEW_PARENT_TITLE && params[:add_parent] != @page.parent.try(:title)
       @page = @page.add_parent(params[:add_parent])

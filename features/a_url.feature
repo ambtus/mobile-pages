@@ -13,6 +13,7 @@ Feature: url stuff
       And I fill in "page_url" with "http://w.sidrasue.com/tests/test.html"
       And I press "Store"
     Then I should see "couldn't resolve host name" within "#flash_alert"
+      But I should NOT see "Base"
       And I should NOT see "Page created"
 
   Scenario: url with surrounding whitespace okay

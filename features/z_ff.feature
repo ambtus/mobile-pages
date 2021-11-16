@@ -31,6 +31,7 @@ Feature: ff.net specific stuff
     Then the "url" field should contain "https://www.fanfiction.net/s/5853866/1/Counting"
     When I press "Refetch"
     Then I should see "can't refetch from fanfiction.net"
+    But I should NOT see "Base"
     When I view the content
     Then I should see "system down" within ".content"
      And I should NOT see "Skip. Skip."

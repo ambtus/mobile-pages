@@ -21,7 +21,7 @@ class RefetchesController < ApplicationController
     else
       @page.parts_from_urls(params[:url_list], true)
     end
-    flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == "Base"} #{error.message}"}.join(" and  ")
+    flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
     redirect_to page_path(@page)
   end
 end
