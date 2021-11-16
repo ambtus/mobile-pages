@@ -284,9 +284,8 @@ class Page < ActiveRecord::Base
     end
 
     if parts.include?(self.url)
-      parent = Page.create(:title => self.title)
-    else
-      parent = self
+      self.errors.add(:url_list, "can’t include your own url")
+      return false
     end
 
     Rails.logger.debug "DEBUG: find or create parts #{parts}"
@@ -297,10 +296,11 @@ class Page < ActiveRecord::Base
       position = parts.index(part) + 1
       title = "Part #{position}" if title.blank?
       page = Page.find_by(url: url) unless url.blank?
-      page = Page.find_by(title: title, parent_id: parent.id) unless page
+      page = Page.find_by(title: title, parent_id: self.id) unless page
       if page.blank?
-        page = Page.create(:url=>url, :title=>title, :parent_id=>parent.id, :position => position)
-        parent.update_attribute(:read_after, Time.now) if parent.read_after > Time.now
+        page = Page.create(:url=>url, :title=>title, :parent_id=>self.id, :position => position)
+        page.set_type
+        self.update_attribute(:read_after, Time.now) if self.read_after > Time.now
       else
         if page.url == url
           page.fetch if refetch
@@ -310,7 +310,7 @@ class Page < ActiveRecord::Base
         end
         page.update_attribute(:position, position)
         page.update_attribute(:title, title)
-        page.update_attribute(:parent_id, parent.id)
+        page.update_attribute(:parent_id, self.id)
       end
       new_part_ids << page.id
     end
@@ -335,8 +335,9 @@ class Page < ActiveRecord::Base
       if page.blank?
         Rails.logger.debug "DEBUG: creating new page"
         page = Page.create(:url=>url, :title=>title, :parent_id=>part.id, :position => position)
+        page.set_type
         part.update_attribute(:read_after, Time.now) if part.read_after > Time.now
-        parent.update_attribute(:read_after, Time.now) if parent.read_after > Time.now
+        self.update_attribute(:read_after, Time.now) if self.read_after > Time.now
       else
         Rails.logger.debug "DEBUG: updating page #{page.id}"
         if page.url == url
@@ -349,6 +350,7 @@ class Page < ActiveRecord::Base
         page.update_attribute(:title, title)
         page.update_attribute(:position, position)
       end
+      part.set_type
       new_subpart_ids << page.id
     end
     Rails.logger.debug "DEBUG: subparts found or created: #{new_subpart_ids}"
@@ -361,6 +363,7 @@ class Page < ActiveRecord::Base
 
     self.update_last_read
     self.set_wordcount
+    self.set_type
   end
 
   def parts; Page.order(:position).where(["parent_id = ?", id]); end
@@ -443,6 +446,7 @@ class Page < ActiveRecord::Base
       end
     end
     parent.set_wordcount(false)
+    parent.set_type
     return parent
   end
 

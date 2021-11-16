@@ -6,9 +6,10 @@ Feature: adding parents and children and siblings
       And I follow "Manage Parts"
       And I fill in "add_parent" with "Parent"
       And I press "Update"
-    Then I should see "Parent" within ".title"
+    Then I should see "Parent (Book)" within ".title"
       And I should see "Page 1" within "#position_1"
     When I follow "Page 1" within "#position_1"
+    Then I should see "Page 1 (Chapter)" within ".title"
     Then I follow "Parent" within ".parent"
 
   Scenario: can't add a page to an ambiguous parent
@@ -75,7 +76,7 @@ Feature: adding parents and children and siblings
       And I should NOT see "stuff for part 2"
       And I should see "stuff for part 3"
 
-  Scenario: add a part to a page with content
+  Scenario: can't add a part to a page with content
     Given I have no pages
     And a page exists with url: "http://test.sidrasue.com/test.html"
     When I am on the page's page
@@ -86,11 +87,8 @@ Feature: adding parents and children and siblings
         http://test.sidrasue.com/styled.html
         """
       And I press "Update"
-    Then I should see "Page 1" within ".parent"
-    When I am on the homepage
-      And I follow "Page 1" within "#position_1"
-    Then I should see "Part 1" within "#position_1"
-      And I should see "Part 2" within "#position_2"
+    Then I should see "can’t include your own url"
+    And I should see "Page 1 (Chapter)" within ".title"
 
   Scenario: add a new part to an existing page with parts
     Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
@@ -102,10 +100,11 @@ Feature: adding parents and children and siblings
         http://test.sidrasue.com/parts/2.html
         """
       And I press "Update"
-    Then I should see "Part 2"
-      And I should see "Part 1"
-    When I view the content
-    Then I should see "stuff for part 1"
+    Then I should see "Page 1 (Book)"
+    Then I should see "Part 1"
+      When I follow "Part 2"
+      Then I should see "Part 2 (Chapter)" within ".title"
+    And I view the content
       And I should see "stuff for part 2"
 
   Scenario: remove a part from an existing page with parts

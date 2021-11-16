@@ -14,14 +14,14 @@ class RefetchesController < ApplicationController
       if @page.ao3?
         @page.refetch_ao3
       elsif @page.ff?
-        flash[:alert] = "can't refetch from fanfiction.net"
+        @page.errors.add(:base, "can't refetch from fanfiction.net")
       else
         @page.fetch
       end
     else
       @page.parts_from_urls(params[:url_list], true)
     end
-    flash[:alert] = @page.errors[:url] unless @page.errors[:url].blank?
+    flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == "Base"} #{error.message}"}.join(" and  ")
     redirect_to page_path(@page)
   end
 end
