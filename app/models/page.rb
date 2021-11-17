@@ -1009,7 +1009,7 @@ class Page < ActiveRecord::Base
       chapter_list.each do |element|
         title = element.text
         url = "https://archiveofourown.org" + element['href']
-        chapter = Page.find_by(url: url) || Page.find_by(url: "http://archiveofourown.org" + element['href'])
+        chapter = Chapter.find_by(url: url) || Chapter.find_by(url: "http://archiveofourown.org" + element['href'])
         if chapter
           if chapter.position == count && chapter.parent_id == self.id
             Rails.logger.debug "DEBUG: chapter already exists, skipping #{chapter.id} in position #{count}"
@@ -1020,7 +1020,7 @@ class Page < ActiveRecord::Base
         else
           Rails.logger.debug "DEBUG: chapter does not yet exist, creating #{title} in position #{count}"
           sleep 5
-          Page.create(:title => title, :url => url, :position => count, :parent_id => self.id)
+          Chapter.create(:title => title, :url => url, :position => count, :parent_id => self.id)
         end
         count = count.next
       end
