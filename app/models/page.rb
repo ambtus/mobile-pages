@@ -11,7 +11,7 @@ class Page < ActiveRecord::Base
 
   def set_type
     should_be = if parts.empty?
-      "Chapter"
+        parent_id.nil? ? "Single" : "Chapter"
       elsif parts.map(&:type).uniq == ["Chapter"]
         "Book"
       elsif (parts.map(&:type).uniq - ["Chapter", "Book"]).empty?
@@ -445,6 +445,7 @@ class Page < ActiveRecord::Base
         parent.update_attribute(:last_read, self.last_read)
       end
     end
+    self.update!(type: "Chapter") if self.type == "Single"
     parent.set_wordcount(false)
     parent.set_type
     return parent

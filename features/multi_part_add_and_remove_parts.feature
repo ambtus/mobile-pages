@@ -88,7 +88,7 @@ Feature: adding parents and children and siblings
         """
       And I press "Update"
     Then I should see "can’t include your own url"
-    And I should see "Page 1 (Chapter)" within ".title"
+    And I should see "Page 1 (Single)" within ".title"
 
   Scenario: add a new part to an existing page with parts
     Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
