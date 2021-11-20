@@ -217,24 +217,16 @@ class Page < ActiveRecord::Base
     "#{self.id}-#{self.download_title}"
   end
 
-  def ao3?
-    (self.url && self.url.match(/archiveofourown/)) ||
-    (self.parts.first && self.parts.first.url && self.parts.first.url.match(/archiveofourown/))
-  end
+  def ao3?; self.url && self.url.match(/archiveofourown/); end
   def ao3_url; self.url || self.parts.first.url.split("/chapter").first; end
   def ao3_chapter?; self.url && self.url.match(/chapters/); end
-  def ao3_series?
-     self.url.blank? &&
-     self.parts.present? &&
-     self.parts.first.ao3? && ! self.parts.first.ao3_chapter?
-  end
 
   def ff?
     (self.url && self.url.match(/fanfiction.net/)) ||
     (self.parts.first && self.parts.first.url && self.parts.first.url.match(/fanfiction.net/))
   end
 
-  def fetch
+  def fetch_raw
     if ff?
       self.raw_html = "edit raw html manually" if self.raw_html.blank?
       return
@@ -242,24 +234,11 @@ class Page < ActiveRecord::Base
     remove_outdated_downloads
     remove_outdated_edits
     begin
-      self.raw_html = Scrub.fetch(self.url)
+      self.raw_html = Scrub.fetch_html(self.url)
     rescue Mechanize::ResponseCodeError
       self.errors.add(:base, "error retrieving content")
     rescue SocketError
       self.errors.add(:base, "couldn't resolve host name")
-    end
-    self.get_meta_from_ao3 if self.ao3?
-  end
-
-  def refetch_ao3
-    Rails.logger.debug "DEBUG: refetch_ao3 #{self.id}"
-    if ao3_chapter?
-      self.fetch
-      self.get_meta_from_ao3(false)
-    else
-      get_chapters_from_ao3
-      self.set_wordcount
-      get_meta_from_ao3
     end
   end
 
@@ -303,10 +282,10 @@ class Page < ActiveRecord::Base
         self.update_attribute(:read_after, Time.now) if self.read_after > Time.now
       else
         if page.url == url
-          page.fetch if refetch
+          page.fetch_raw if refetch
         else
           page.update_attribute(:url, url)
-          page.fetch
+          page.fetch_raw
         end
         page.update_attribute(:position, position)
         page.update_attribute(:title, title)
@@ -341,10 +320,10 @@ class Page < ActiveRecord::Base
       else
         Rails.logger.debug "DEBUG: updating page #{page.id}"
         if page.url == url
-          page.fetch if refetch
+          page.fetch_raw if refetch
         else
           page.update_attribute(:url, url)
-          page.fetch
+          page.fetch_raw
         end
         page.update_attribute(:parent_id, part.id)
         page.update_attribute(:title, title)
@@ -822,13 +801,14 @@ class Page < ActiveRecord::Base
   ## Download helper methods
 
   def remove_outdated_downloads(recurse = false)
-    FileUtils.rm_rf(self.download_dir)
-    FileUtils.mkdir_p(self.download_dir)
+    FileUtils.rm_rf(self.download_dir) if self.id
+    FileUtils.mkdir_p(self.download_dir) if self.id
     self.parent.remove_outdated_downloads(true) if self.parent
     self.parts.each { |part| part.remove_outdated_downloads(true) unless recurse}
   end
 
   def remove_outdated_edits
+    return unless self.id
     FileUtils.rm_f(self.scrubbed_html_file_name)
     FileUtils.rm_f(self.edited_html_file_name)
   end
@@ -984,121 +964,12 @@ class Page < ActiveRecord::Base
     self.remove_outdated_downloads
   end
 
-  def ao3_doc_title(doc); doc.xpath("//div[@id='workskin']").xpath("//h2").first.children.text.strip rescue "empty title"; end
-  def ao3_single_chapter_fic_title(doc)
-    doc.css(".chapter .title").children.last.text.strip.gsub(": ","") rescue nil
-  end
-  def ao3_chapter_title(doc, position)
-    chapter_title = doc.css(".chapter .title").children.last.text.strip rescue nil
-    if chapter_title.blank?
-      "Chapter #{position}"
-    else
-      chapter_title.gsub(/^: /,"")
-    end
-  end
-
-  def get_chapters_from_ao3
-    Rails.logger.debug "DEBUG: getting chapters from ao3 for #{self.id}"
-    doc = Nokogiri::HTML(Scrub.fetch(self.url + "/navigate"))
-    chapter_list = doc.xpath("//ol//a")
-    Rails.logger.debug "DEBUG: chapter list for #{self.id}: #{chapter_list}"
-    if chapter_list.size == 1
-      Rails.logger.debug "DEBUG: only one chapter"
-      self.fetch
-    else
-      count = 1
-      chapter_list.each do |element|
-        title = element.text
-        url = "https://archiveofourown.org" + element['href']
-        chapter = Chapter.find_by(url: url) || Chapter.find_by(url: "http://archiveofourown.org" + element['href'])
-        if chapter
-          if chapter.position == count && chapter.parent_id == self.id
-            Rails.logger.debug "DEBUG: chapter already exists, skipping #{chapter.id} in position #{count}"
-          else
-            Rails.logger.debug "DEBUG: chapter already exists, updating #{chapter.id} with position #{count}"
-            chapter.update(position: count, parent_id: self.id)
-          end
-        else
-          Rails.logger.debug "DEBUG: chapter does not yet exist, creating #{title} in position #{count}"
-          sleep 5
-          Chapter.create(:title => title, :url => url, :position => count, :parent_id => self.id)
-        end
-        count = count.next
-      end
-    end
-  end
-
   def rebuild_meta
     remove_outdated_downloads
     get_meta_from_ao3(false) if ao3?
     self.parts.map(&:rebuild_meta)
     set_wordcount
     set_type
-  end
-
-  def get_meta_from_ao3(refetch=true)
-    if refetch
-      Rails.logger.debug "DEBUG: fetching meta from ao3 for #{self.url}"
-      doc = Nokogiri::HTML(Scrub.fetch(self.url))
-    else
-      if parts.empty?
-        Rails.logger.debug "DEBUG: build meta from raw html for #{self.id}"
-        doc = Nokogiri::HTML(raw_html)
-      else
-        if ao3_series? && parts.first.raw_html.blank? && parts.first.parts.present?
-          Rails.logger.debug "DEBUG: build meta from raw html of first part of first  part #{parts.first.parts.first.id}"
-          doc = Nokogiri::HTML(parts.first.parts.first.raw_html)
-        else
-          Rails.logger.debug "DEBUG: build meta from raw html of first part #{parts.first.id}"
-          doc = Nokogiri::HTML(parts.first.raw_html)
-        end
-      end
-    end
-
-    if self.ao3_chapter?  # if this is a chapter
-      if position
-        Rails.logger.debug "DEBUG: getting chapter title for #{self.id} at position #{position}"
-        self.title = ao3_chapter_title(doc, position)
-      else
-        Rails.logger.debug "DEBUG: getting title for standalone single chapter #{self.id}"
-        self.title = ao3_single_chapter_fic_title(doc) || ao3_doc_title(doc)
-      end
-    else
-      if ao3_series?
-        Rails.logger.debug "DEBUG: keeping title #{self.title} for #{self.id}"
-      else
-        Rails.logger.debug "DEBUG: getting work title for #{self.id}"
-        self.title = ao3_doc_title(doc)
-      end
-    end
-
-    doc_summary = Scrub.sanitize_html(doc.css(".summary blockquote")).children.to_html
-    doc_notes = Scrub.sanitize_html(doc.css(".notes blockquote")).children.to_html
-    doc_relationships = doc.css(".relationship a").map(&:text).join(", ")  rescue nil
-    doc_tags = doc.css(".freeform a").map(&:text).join(", ")  rescue nil
-
-    if self.ao3_chapter? && self.parent # if this is a chapter but not a deliberately single chapter
-      if position == 1
-        self.notes = doc_notes
-      else
-        self.notes = [doc_summary, doc_notes].join_hr
-      end
-    elsif self.parts.empty? # this is a single chapter work
-      self.notes = [doc_summary, doc_notes, doc_tags, doc_relationships].join_hr
-    else # this is the enclosing doc
-      if self.ao3_series? && self.notes.present?
-        Rails.logger.debug "DEBUG: not changing present notes for series #{self.id}"
-      else
-        self.notes = [doc_summary, doc_tags, doc_relationships].join_hr
-      end
-    end
-
-    # don't get authors for subparts and get after notes for byline
-    unless self.parent
-      add_author(doc.css(".byline a").map(&:text).join(", "))
-    end
-
-    self.save
   end
 
 #TODO
@@ -1149,16 +1020,34 @@ private
     self.sanitize_version = Scrub.sanitize_version
   end
 
+  def ao3_type
+    if self.url.match(/chapters/)
+      self.parent_id.nil? ? Single : Chapter
+    elsif self.url.match(/works/)
+      Book
+    elsif self.url.match(/series/)
+      Series
+    else
+      Collection
+    end
+  end
+
   def initial_fetch
+    Rails.logger.debug "DEBUG: initial fetch for #{self.inspect}"
+
     FileUtils.rm_rf(mydirectory) # make sure directory is empty for testing
     FileUtils.mkdir_p(download_dir) # make sure directory exists
     if !self.url.blank?
-      if self.ao3? && !self.url.match(/chapter/)
-        self.get_meta_from_ao3
-        self.get_chapters_from_ao3
-        self.set_wordcount
+      if self.ao3?
+        if type.nil?
+          page = self.becomes!(self.ao3_type)
+          Rails.logger.debug "DEBUG: page became #{page.type}"
+        else
+          page = self
+        end
+        page.fetch_ao3
       else
-        self.fetch
+        self.fetch_raw
       end
     elsif !self.base_url.blank?
       count = 1
@@ -1171,7 +1060,7 @@ private
       array.each do |sub|
         title = "Part " + count.to_s
         url = self.base_url.gsub(/\*/, sub.to_s)
-        Page.create(:title => title, :url => url, :position => count, :parent_id => self.id)
+        Chapter.create(:title => title, :url => url, :position => count, :parent_id => self.id)
         count = count.next
       end
       self.set_wordcount

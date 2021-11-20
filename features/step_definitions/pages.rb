@@ -9,13 +9,13 @@ end
 # create many identical pages
 Given("{int} pages exist") do |count|
   count.times do |i|
-    Page.create(title: "Page #{(i+1)}")
+    Single.create(title: "Page #{(i+1)}")
     Kernel::sleep 1
   end
 end
 
 Given /^counting exists$/ do
-  page = Page.new
+  page = Single.new
   page.title = "Counting"
   page.save
   page.url =  "https://www.fanfiction.net/s/5853866/1/Counting"
@@ -24,7 +24,7 @@ Given /^counting exists$/ do
 end
 
 Given /^part6 exists$/ do
-  page = Page.new
+  page = Single.new
   page.title = "Part 6"
   page.save
   page.url =  "https://www.fanfiction.net/s/5409165/6/It-s-For-a-Good-Cause-I-Swear"
@@ -95,6 +95,10 @@ Then /^my page named "([^\"]*)" should contain "([^\"]*)"$/ do |title, string|
 end
 Then /^my page named "([^\"]*)" should NOT contain "([^\"]*)"$/ do |title, string|
   assert_no_match Regexp.new(string), Page.find_by_title(title).edited_html
+end
+
+Then('my page named {string} should have {int} parts') do |string, int|
+  assert Page.find_by_title(string).parts.size == int
 end
 
 Then("last read should be today") do

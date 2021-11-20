@@ -123,7 +123,7 @@ module Scrub
   end
 
 
-  def self.fetch(url)
+  def self.fetch_html(url)
     return if url.blank?
     agent = Mechanize.new { |a| a.log = Logger.new("#{Rails.root}/log/mechanize.log") }
     auth = MyWebsites.getpwd(url)

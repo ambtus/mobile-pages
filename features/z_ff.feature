@@ -57,10 +57,9 @@ Feature: ff.net specific stuff
     Given I have no pages
      And counting exists
       And I am on the page with title "Counting"
+      Then I should see "Counting (Single)" within ".title"
       # Then I should see "ambtus" # TODO after add grabbing author from fanfiction
       # And I should see "2 connected drabbles" # TODO after add grabbing description from fanfiction
-      Then I should NOT see "ambtus"
-      And I should NOT see "2 connected drabbles."
       When I view the content
       Then I should see "Skip."
     When I am on the page with title "Counting"
@@ -69,7 +68,7 @@ Feature: ff.net specific stuff
       And I press "Refetch"
     Then I should see "by Sidra"
       And I should NOT see "ambtus"
-      And I should see "Skipping Stones"
+      And I should see "Skipping Stones (Single)" within ".title"
       And I should see "thanks to lauriegilbert"
       When I view the content
       Then I should see "Skip."

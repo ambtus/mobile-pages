@@ -12,11 +12,11 @@ class RefetchesController < ApplicationController
     elsif @page.parts.blank? || @page.ao3?
       @page.update_attribute(:url, params[:url])
       if @page.ao3?
-        @page.refetch_ao3
+        @page.fetch_ao3
       elsif @page.ff?
         @page.errors.add(:base, "can't refetch from fanfiction.net")
       else
-        @page.fetch
+        @page.fetch_raw
       end
     else
       @page.parts_from_urls(params[:url_list], true)
