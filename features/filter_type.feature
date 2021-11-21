@@ -4,7 +4,7 @@ Feature: filter by type
     Given I have no pages
       And a page exists with title: "One-shot" AND url: "http://test.sidrasue.com/short.html"
       And a page exists with title: "Novel" AND base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2"
-      And a page exists with title: "Trilogy" AND urls: "##Alpha,http://test.sidrasue.com/parts/1.html###Prologue,##Beta,http://test.sidrasue.com/parts/5.html###Epilogue"
+      And I have a Trilogy
     When I am on the homepage
       Then I should see "One-shot"
       And I should see "Novel"

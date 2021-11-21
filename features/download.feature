@@ -62,32 +62,36 @@ Feature: downloads
      When I view the content
     Then I should see "On Assignment for Dumbledore"
 
-  Scenario: two and three levels
+  Scenario: two and three levels (h3 & h4)
+    Given I have no pages
     When I am on the homepage
-    When I follow "Store Multiple"
+      And I follow "Store Multiple"
       And I fill in "page_urls" with
         """
         ##Child 1
-        http://test.sidrasue.com/parts/1.html###Boo
-        http://test.sidrasue.com/parts/2.html###Hiss
         http://test.sidrasue.com/parts/3.html##Child 2
         """
-     And I fill in "page_title" with "Parent"
-     And I press "Store"
-   When I am on the page with title "Parent"
-   When I view the content
-     Then I should see "Boo" within "h3"
-   When I am on the page with title "Child 1"
+      And I fill in "page_title" with "Parent"
+      And I press "Store"
+      And I follow "Parent"
+      And I follow "Child 1"
       And I follow "Manage Parts"
       And I fill in "url_list" with
         """
         http://test.sidrasue.com/parts/1.html##Boo
-        ##Hiss
-        http://test.sidrasue.com/parts/2.html###Critique
-        http://test.sidrasue.com/parts/3.html###Blame
+        ##Grandchild
         """
-      And I press "Update"
+     And I press "Update"
+     And I follow "Grandchild"
+      And I follow "Manage Parts"
+      And I fill in "url_list" with
+        """
+        http://test.sidrasue.com/parts/2.html##Hiss
+        """
+     And I press "Update"
    When I am on the page with title "Parent"
-   When I view the content
-     Then I should see "Critique" within "h4"
+     And I view the content
+     Then I should see "Child 1" within "h2"
+     And I should see "Boo" within "h3"
+     And I should see "Hiss" within "h4"
 

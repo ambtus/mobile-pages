@@ -64,8 +64,7 @@ Feature: trim cruft off pages
     And I view the content
     Then I should see "header"
 
-  Scenario: trim a parent page
-       also rebuild all children from raw
+  Scenario: trim a parent page and rebuild all children from raw
     Given I have no pages
     And a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
     And I am on the page's page
@@ -91,30 +90,27 @@ Feature: trim cruft off pages
       And the download directory should exist
 
   Scenario: trim a sub-part
-    Given a page exists
+    Given I have no pages
+    And a page exists with urls: "http://test.sidrasue.com/parts/1.html"
     When I am on the page's page
       And I follow "Manage Parts"
-      And I fill in "url_list" with
-        """
-        ##First Part
-        http://test.sidrasue.com/parts/1.html###SubPart
-        """
+      And I fill in "add_parent" with "Parent"
       And I press "Update"
       And I view the content
     Then I should see "cruft"
       And the download directory should exist
-    When I am on the page's page
+   When I am on the page with title "Parent"
       And I follow "Scrub"
-      And I follow "Scrub First Part"
-      And I follow "Scrub SubPart"
+      And I follow "Scrub Page 1"
+      And I follow "Scrub Part 1"
       And I choose "top cruft" within ".top"
       And I choose "bottom cruft" within ".bottom"
       And I press "Scrub" within ".top"
     Then the download html file should NOT exist
-    When I am on the page's page
+   When I am on the page with title "Parent"
       And I view the content
-    Then I should see "First Part"
-      And I should see "SubPart"
+    Then I should see "Page 1"
+      And I should see "Part 1"
       And I should see "stuff for part 1"
     But I should NOT see "top cruft"
     And I should NOT see "bottom cruft"

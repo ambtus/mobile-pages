@@ -117,9 +117,8 @@ Feature: creating multi-part pages
     When I follow "Store Multiple"
       And I fill in "page_urls" with
         """
+
         ##Child 1
-        http://test.sidrasue.com/parts/1.html###Boo
-        http://test.sidrasue.com/parts/2.html
 
         http://test.sidrasue.com/parts/3.html##Child 2
 
@@ -130,10 +129,6 @@ Feature: creating multi-part pages
    Then I should see "Parent" within ".title"
    And I should see "Child 1" within "#position_1"
    And I should see "Child 2" within "#position_2"
-   And I should NOT see "Boo"
-   When I follow "Child 1"
-   Then I should see "Boo" within "#position_1"
-   And I should see "Part 2" within "#position_2"
 
 
   Scenario: should be able to edit html if it's a Single

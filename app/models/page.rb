@@ -279,22 +279,18 @@ class Page < ActiveRecord::Base
 
   def parts_from_urls(url_title_list, refetch=false)
     old_part_ids = self.parts.map(&:id)
-    old_subpart_ids = self.parts.collect{|p| p.parts.map(&:id)}.flatten
-    Rails.logger.debug "DEBUG: my old parts #{old_part_ids} and subparts #{old_subpart_ids}"
+    Rails.logger.debug "DEBUG: my old parts #{old_part_ids}"
 
     new_part_ids = []
-    new_subpart_ids = []
 
     lines = url_title_list.split(/[\r\n]/).select {|l| l.chomp}.map(&:squish) - [""]
 
-    parts_with_subparts = lines.select {|l| l.match("^##") && !l.match("###")}
+    parts_with_subparts = lines.select {|l| l.match("^##")}
 
     if parts_with_subparts.blank?
       parts = lines.select {|l| !l.match("^#")}
-      subparts = []
     else
-      parts = lines.select {|l| l.match("##") && !l.match("###")}
-      subparts = lines.select {|l| l.match("###") || !l.match("#")}
+      parts = lines.select {|l| l.match("##")}
     end
 
     if parts.include?(self.url)
@@ -335,46 +331,7 @@ class Page < ActiveRecord::Base
     end
     Rails.logger.debug "DEBUG: parts found or created: #{new_part_ids}"
 
-    Rails.logger.debug "DEBUG: find or create subparts #{subparts}"
-    subparts.each do |subpart|
-      url = title = position = nil
-      part_string = (lines[0..lines.index(subpart)] & parts).last
-      part_index = parts.index(part_string)
-      position = lines.index(subpart) - lines.index(part_string)
-      Rails.logger.debug "DEBUG: part_index: #{part_index} position: #{position}"
-      part = Page.find(new_part_ids[part_index])
-      url = subpart.sub(/#.*/, "")
-      title = subpart.sub(/.*#/, "") if subpart.match("#")
-      title = "Part #{position}" if title.blank?
-      page = if url.blank?
-        part.parts.find {|p| p.title.match(title) }
-      else
-        page = Page.find_by(url: url)
-      end
-      if page.blank?
-        Rails.logger.debug "DEBUG: creating new page"
-        page = Page.create(:url=>url, :title=>title, :parent_id=>part.id, :position => position)
-        page.set_type
-        part.update_attribute(:read_after, Time.now) if part.read_after > Time.now
-        self.update_attribute(:read_after, Time.now) if self.read_after > Time.now
-      else
-        Rails.logger.debug "DEBUG: updating page #{page.id}"
-        if page.url == url
-          page.fetch_raw if refetch
-        else
-          page.update_attribute(:url, url)
-          page.fetch_raw
-        end
-        page.update_attribute(:parent_id, part.id)
-        page.update_attribute(:title, title)
-        page.update_attribute(:position, position)
-      end
-      part.set_type
-      new_subpart_ids << page.id
-    end
-    Rails.logger.debug "DEBUG: subparts found or created: #{new_subpart_ids}"
-
-    remove = old_part_ids + old_subpart_ids - new_part_ids - new_subpart_ids
+    remove = old_part_ids - new_part_ids
     Rails.logger.debug "DEBUG: removing deleted parts and subparts #{remove}"
     remove.each do |old_part_id|
       Page.find(old_part_id).destroy
@@ -409,14 +366,6 @@ class Page < ActiveRecord::Base
         list << line
       else
         list << "##" + part.title
-        part.parts.each do |subpart|
-          line = subpart.url
-          unless subpart.title.match(partregexp)
-            line = "" unless line
-            line = line + "###" + subpart.title
-          end
-          list << line
-        end
       end
     end
     list.join("\n")

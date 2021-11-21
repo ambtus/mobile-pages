@@ -7,17 +7,31 @@ Feature: third level hierarchy
     When I fill in "page_urls" with
       """
       ##Part the first
-      http://test.sidrasue.com/parts/1.html###subpart title
-      http://test.sidrasue.com/parts/2.html
 
       http://test.sidrasue.com/parts/3.html##Part 2
 
       ##Third Part
+      """
+    And I fill in "page_title" with "Page 1"
+    And I press "Store"
+    And I follow "Page 1"
+    And I follow "Part the first"
+    And I follow "Manage Parts"
+    And I fill in "url_list" with
+      """
+      http://test.sidrasue.com/parts/1.html##subpart title
+      http://test.sidrasue.com/parts/2.html
+      """
+    And I press "Update"
+    And I follow "Part 2"
+    And I follow "Third Part"
+    And I follow "Manage Parts"
+    And I fill in "url_list" with
+      """
       http://test.sidrasue.com/parts/4.html
       http://test.sidrasue.com/parts/5.html
       """
-      And I fill in "page_title" with "Page 1"
-      And I press "Store"
+      And I press "Update"
     When I am on the page's page
     Then I should see "Page 1" within ".title"
     And I should see "Part the first" within "#position_1"
@@ -52,34 +66,45 @@ Feature: third level hierarchy
       And I view the content
     Then I should see "Page 1" within "h4"
 
-  Scenario: create by adding subpart headings
-    Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3"
+  Scenario: create by adding subpart headings and then moving the originals
+    Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3 4"
       And I am on the page's page
     When I follow "Manage Parts"
-      And I fill in "title" with "Now I'm a Grandparent"
       And I fill in "url_list" with
         """
         ##Parent1
-        http://test.sidrasue.com/parts/1.html
+        http://test.sidrasue.com/parts/1.html##Part 1
+        http://test.sidrasue.com/parts/2.html##Part 2
         ##Parent2
-        http://test.sidrasue.com/parts/2.html
-        http://test.sidrasue.com/parts/3.html
+        http://test.sidrasue.com/parts/3.html##Part 3
+        http://test.sidrasue.com/parts/4.html##Part 4
         """
       And I press "Update"
-    Then I should see "Now I'm a Grandparent" within ".title"
-      And I should see "Parent1" within "#position_1"
-      And I should see "Parent2" within "#position_2"
-    When I follow "Parent1" within "#position_1"
-      Then I should see "Part 1" within "#position_1"
-    When I view the content for part 1
-      Then I should see "stuff for part 1"
-    When I am on the page with title "Now I'm a Grandparent"
-      And I follow "Parent2" within "#position_2"
-    Then I should see "Part 1"
-      And I should see "Part 2"
-    When I view the content
-    Then I should see "stuff for part 2"
-      And I should see "stuff for part 3"
+    Then I should see "Parent1" within "#position_1"
+    And I should see "Parent2" within "#position_4"
+    When I follow "Parent1"
+      And I follow "Manage Parts"
+      And I fill in "url_list" with
+        """
+        http://test.sidrasue.com/parts/1.html##Part 1
+        http://test.sidrasue.com/parts/2.html##Part 2
+        """"
+      And I press "Update"
+    When I follow "Parent2"
+      And I follow "Manage Parts"
+      And I fill in "url_list" with
+        """
+        http://test.sidrasue.com/parts/3.html##Part 3
+        http://test.sidrasue.com/parts/4.html##Part 4
+        """"
+      And I press "Update"
+    When I am on the homepage
+    And I choose "type_Chapter"
+      And I press "Find"
+    Then I should see "Part 1 of Parent1" within "#position_1"
+    And I should see "Part 2 of Parent1" within "#position_2"
+    And I should see "Part 3 of Parent2" within "#position_3"
+    And I should see "Part 4 of Parent2" within "#position_4"
 
   Scenario: add a parent to a page with parts
     Given I have no pages
@@ -119,13 +144,10 @@ Feature: third level hierarchy
         """
         ##Parent1
         ##Parent2
-        http://test.sidrasue.com/parts/3.html
         ##Parent3
         """
       And I press "Update"
       And I follow "Parent2" within "#position_2"
-    Then I should see "Part 1" within "#position_1"
-      And I should NOT see "Part 2"
     When I follow "Manage Parts"
       And I fill in "url_list" with
         """

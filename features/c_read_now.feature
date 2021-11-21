@@ -26,11 +26,11 @@ Feature: read_after order
 
   Scenario: Find a part or subpart and make it first
     Given I have no pages
+      And I have a series with read_after "2009-01-03"
       And the following pages
         | title  | urls | read_after |
         | Single |      | 2009-01-01 |
         | Parent | http://test.sidrasue.com/parts/1.html | 2009-01-02 |
-        | Grandparent | ##Parent1,##Parent2,http://test.sidrasue.com/parts/5.html###Subpart | 2009-01-03 |
     When I am on the homepage
     Then I should see "Single" within "#position_1"
       And I should see "Parent" within "#position_2"

@@ -14,15 +14,6 @@ Given("{int} pages exist") do |count|
   end
 end
 
-Given /^counting exists$/ do
-  page = Single.new
-  page.title = "Counting"
-  page.save
-  page.url =  "https://www.fanfiction.net/s/5853866/1/Counting"
-  page.save
-  page.raw_html = File.open(Rails.root + "features/html/counting.html", 'r:utf-8') { |f| f.read }
-end
-
 Given /^part6 exists$/ do
   page = Page.new
   page.title = "Part 6"
@@ -42,7 +33,6 @@ end
 
 # create one or more different pages
 Given /^the following pages?$/ do |table|
-  Page.delete_all
   # table is a Cucumber::Ast::Table
   table.hashes.each do |hash|
     hash['urls'] =  hash['urls'].split(',').join("\r") if hash['urls']
