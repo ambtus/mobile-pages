@@ -9,18 +9,53 @@ class Page < ActiveRecord::Base
     set_type
   end
 
+  def ao3_type
+    if self.url.match(/chapters/)
+      self.parent ? Chapter : Single
+    elsif self.url.match(/works/)
+      self.parts.size == 0 ? Single : Book
+    elsif self.url.match(/series/)
+      Series
+    else
+      Collection
+    end
+  end
+
+  def initial_ao3_type
+    if self.url.match(/chapters/)
+      self.parent ? Chapter : Single
+    elsif self.url.match(/works/)
+      Book
+    elsif self.url.match(/series/)
+      Series
+    else
+      Collection
+    end
+  end
+
   def set_type
-    should_be = if parts.empty?
+    Rails.logger.debug "DEBUG: setting type for #{self.inspect}"
+    if ao3?
+      self.becomes!(self.ao3_type)
+      Rails.logger.debug "DEBUG: ao3 type set to #{self.type}"
+      self.type
+    else
+      should_be = if parts.empty?
         parent_id.nil? ? "Single" : "Chapter"
       elsif parts.map(&:type).uniq == ["Chapter"]
+        Rails.logger.debug "DEBUG: part types: #{parts.map(&:type).uniq}"
         "Book"
-      elsif (parts.map(&:type).uniq - ["Chapter", "Book"]).empty?
+      elsif (parts.map(&:type).uniq - ["Single", "Book"]).empty?
+        Rails.logger.debug "DEBUG: part types: #{parts.map(&:type).uniq}"
         "Series"
       else
+        Rails.logger.debug "DEBUG: part types: #{parts.map(&:type).uniq}"
         "Collection"
       end
-    update!(type: should_be)
-    should_be
+      update!(type: should_be)
+      Rails.logger.debug "DEBUG: non-ao3 type set to #{should_be}"
+      should_be
+    end
   end
 
   def self.remove_all_downloads
@@ -273,23 +308,28 @@ class Page < ActiveRecord::Base
       url = part.sub(/#.*/, "")
       title = part.sub(/.*#/, "") if part.match("#")
       position = parts.index(part) + 1
-      title = "Part #{position}" if title.blank?
-      page = Page.find_by(url: url) unless url.blank?
-      page = Page.find_by(title: title, parent_id: self.id) unless page
+      page = if url.blank?
+        Page.find_by(title: title, parent_id: self.id)
+      else
+        Page.find_by(url: url)
+      end
       if page.blank?
+        title = "Part #{position}" if title.blank?
+        Rails.logger.debug "DEBUG: didn’t find #{part}"
         page = Page.create(:url=>url, :title=>title, :parent_id=>self.id, :position => position)
         page.set_type
+        Rails.logger.debug "DEBUG: created #{page.reload.inspect}"
         self.update_attribute(:read_after, Time.now) if self.read_after > Time.now
       else
+        Rails.logger.debug "DEBUG: found #{part}"
         if page.url == url
           page.fetch_raw if refetch
         else
           page.update_attribute(:url, url)
           page.fetch_raw
         end
-        page.update_attribute(:position, position)
-        page.update_attribute(:title, title)
-        page.update_attribute(:parent_id, self.id)
+        page.update!(position: position, parent_id: self.id)
+        page.update!(title: title) if title
       end
       new_part_ids << page.id
     end
@@ -390,6 +430,7 @@ class Page < ActiveRecord::Base
     self.cache_tags
     self.authors << parent.authors
     self.update_attribute(:parent_id, nil)
+    self.set_type
   end
 
   def add_parent(title)
@@ -965,11 +1006,18 @@ class Page < ActiveRecord::Base
   end
 
   def rebuild_meta
+    Rails.logger.debug "DEBUG: rebuilding meta for #{self.inspect}"
     remove_outdated_downloads
-    get_meta_from_ao3(false) if ao3?
+    if ao3?
+      page = self.becomes!(self.ao3_type)
+      Rails.logger.debug "DEBUG: page is #{page.inspect}"
+      page.get_meta_from_ao3(false)
+    else
+      set_type
+    end
+    Rails.logger.debug "DEBUG: type is #{self.type}"
     self.parts.map(&:rebuild_meta)
     set_wordcount
-    set_type
   end
 
 #TODO
@@ -1020,27 +1068,15 @@ private
     self.sanitize_version = Scrub.sanitize_version
   end
 
-  def ao3_type
-    if self.url.match(/chapters/)
-      self.parent_id.nil? ? Single : Chapter
-    elsif self.url.match(/works/)
-      Book
-    elsif self.url.match(/series/)
-      Series
-    else
-      Collection
-    end
-  end
-
   def initial_fetch
     Rails.logger.debug "DEBUG: initial fetch for #{self.inspect}"
-
     FileUtils.rm_rf(mydirectory) # make sure directory is empty for testing
     FileUtils.mkdir_p(download_dir) # make sure directory exists
+
     if !self.url.blank?
       if self.ao3?
         if type.nil?
-          page = self.becomes!(self.ao3_type)
+          page = self.becomes!(self.initial_ao3_type)
           Rails.logger.debug "DEBUG: page became #{page.type}"
         else
           page = self

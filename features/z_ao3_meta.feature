@@ -77,6 +77,7 @@ Feature: ao3 specific stuff
       And I press "Update"
     Then I should see "testing notes" within ".notes"
       And I should NOT see "AJ/JC" within ".notes"
+      And I should NOT see "Make the Yuletide Gay" within ".notes"
     When I follow "Edit Raw HTML"
      And I fill in "pasted" with ""
      And I press "Update Raw HTML"

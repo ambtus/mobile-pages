@@ -9,7 +9,7 @@ end
 # create many identical pages
 Given("{int} pages exist") do |count|
   count.times do |i|
-    Single.create(title: "Page #{(i+1)}")
+    Page.create(title: "Page #{(i+1)}")
     Kernel::sleep 1
   end
 end
@@ -24,7 +24,7 @@ Given /^counting exists$/ do
 end
 
 Given /^part6 exists$/ do
-  page = Single.new
+  page = Page.new
   page.title = "Part 6"
   page.save
   page.url =  "https://www.fanfiction.net/s/5409165/6/It-s-For-a-Good-Cause-I-Swear"

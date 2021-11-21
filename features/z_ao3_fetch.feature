@@ -5,7 +5,7 @@ Feature: ao3 specific stuff
     And a tag exists with name: "popslash" AND type: "Fandom"
       And an author exists with name: "Sidra"
       And I am on the homepage
-    When I fill in "page_url" with "http://archiveofourown.org/works/68481"
+    When I fill in "page_url" with "https://archiveofourown.org/works/68481"
       And I select "popslash" from "fandom"
       And I press "Store"
     Then I should NOT see "Title can't be blank"
@@ -21,7 +21,7 @@ Feature: ao3 specific stuff
     Given I have no pages
     And a tag exists with name: "harry potter" AND type: "Fandom"
       And I am on the homepage
-    When I fill in "page_url" with "http://archiveofourown.org/works/692"
+    When I fill in "page_url" with "https://archiveofourown.org/works/692"
       And I select "harry potter" from "fandom"
       And I press "Store"
     Then I should see "Time Was, Time Is (Book)" within ".title"
@@ -56,14 +56,23 @@ Feature: ao3 specific stuff
       And I should see "Skipping Stones" within "#position_1"
       And I should see "The Flower" within "#position_2"
     When I follow "Skipping Stones"
-      Then I should see "Skipping Stones (Single)" within ".title"
-      Then I should NOT see "by Sidra" within ".notes"
-
+      Then I should see "Parent: Counting Drabbles (Series)"
+      And I should see "Next: The Flower [sequel to Skipping Stones] (Single)"
+      And I should see "Skipping Stones (Single)" within ".title"
+      And I should NOT see "by Sidra" within ".notes"
+    When I press "Rebuild Meta"
+      Then I should see "Skipping Stones (Single)"
+      And I should NOT see "by Sidra" within ".notes"
+    When I follow "Counting Drabbles"
+      And I press "Rebuild Meta"
+      Then I should see "Counting Drabbles (Series)"
+    When I follow "The Flower"
+      Then I should see "The Flower [sequel to Skipping Stones] (Single)"
 
   Scenario: ao3 with and without chapter titles
     Given I have no pages
     And I am on the homepage
-    When I fill in "page_url" with "http://archiveofourown.org/works/310586"
+    When I fill in "page_url" with "https://archiveofourown.org/works/310586"
       And I press "Store"
     When I am on the page with title "Open the Door"
      And I view the content
@@ -76,7 +85,7 @@ Feature: ao3 specific stuff
     Given I have no pages
     And a tag exists with name: "harry potter" AND type: "Fandom"
       And I am on the homepage
-    When I fill in "page_url" with "http://archiveofourown.org/works/692/chapters/803"
+    When I fill in "page_url" with "https://archiveofourown.org/works/692/chapters/803"
       And I select "harry potter" from "fandom"
       And I press "Store"
     Then I should see "Where am I? (Single)" within ".title"
@@ -90,7 +99,7 @@ Feature: ao3 specific stuff
     Given I have no pages
     And a tag exists with name: "harry potter" AND type: "Fandom"
       And I am on the homepage
-    When I fill in "page_url" with "http://archiveofourown.org/works/692/chapters/803"
+    When I fill in "page_url" with "https://archiveofourown.org/works/692/chapters/803"
       And I select "harry potter" from "fandom"
       And I press "Store"
       Then I should see "Where am I? (Single)" within ".title"
@@ -107,7 +116,7 @@ Feature: ao3 specific stuff
       And I should NOT see "Amy woke slowly"
     When I am on the page with title "Where am I?"
       And I follow "Refetch"
-      Then the "url" field should contain "http://archiveofourown.org/works/692/chapters/803"
+      Then the "url" field should contain "https://archiveofourown.org/works/692/chapters/803"
     When I press "Refetch"
       Then I should see "Where am I?" within ".title"
       And I should NOT see "1."
@@ -121,29 +130,31 @@ Feature: ao3 specific stuff
     Given I have no pages
     And a tag exists with name: "harry potter" AND type: "Fandom"
       And I am on the homepage
-    When I fill in "page_url" with "http://archiveofourown.org/works/692/chapters/803"
+    When I fill in "page_url" with "https://archiveofourown.org/works/692/chapters/803"
       And I select "harry potter" from "fandom"
       And I press "Store"
       Then I should see "Where am I? (Single)" within ".title"
     When I follow "Manage Parts"
      And I fill in "add_parent" with "Parent"
      And I press "Update"
+    Then I should see "Parent (Book)" within ".title"
     And I follow "Where am I?"
       Then I should see "Where am I? (Chapter)" within ".title"
     When I follow "Parent"
       And I follow "Refetch"
     Then I should see "archiveofourown.org/works/692/chapters/803" within "#url_list"
     When I am on the homepage
-      And I fill in "page_url" with "http://archiveofourown.org/works/692"
+      And I fill in "page_url" with "https://archiveofourown.org/works/692"
       And I press "Find"
     Then I should see "Where am I? of Parent"
       When I select "harry potter" from "fandom"
       And I press "Store"
     Then I should NOT see "Url has already been taken"
+      And I should see "Time Was, Time Is (Book)" within ".title"
       And I should see "Where am I?" within "#position_1"
       And I should see "Hogwarts" within "#position_2"
     When I am on the homepage
-      And I fill in "page_url" with "http://archiveofourown.org/works/692"
+      And I fill in "page_url" with "https://archiveofourown.org/works/692"
       And I press "Find"
     Then I should see "Where am I? of Time Was, Time Is"
     And I should NOT see "Where am I? of Parent"
@@ -154,7 +165,7 @@ Feature: ao3 specific stuff
     Given I have no pages
      And a tag exists with name: "harry potter" AND type: "Fandom"
       And I am on the homepage
-    When I fill in "page_url" with "http://archiveofourown.org/works/692"
+    When I fill in "page_url" with "https://archiveofourown.org/works/692"
       And I select "harry potter" from "fandom"
       And I press "Store"
       And I follow "Hogwarts"
@@ -171,15 +182,80 @@ Feature: ao3 specific stuff
     Given I have no pages
     And a page exists with url: "https://archiveofourown.org/works/68481"
     When I am on the homepage
-      And I fill in "page_url" with "http://archiveofourown.org/works/68481"
+      And I fill in "page_url" with "https://archiveofourown.org/works/68481"
       And I press "Find"
     Then I should see "I Drive Myself Crazy" within "#position_1"
 
   Scenario: finding page stored with http
     Given I have no pages
-    And a page exists with url: "http://archiveofourown.org/works/68481"
+    And a page exists with url: "https://archiveofourown.org/works/68481"
     When I am on the homepage
       And I fill in "page_url" with "https://archiveofourown.org/works/68481"
       And I press "Find"
     Then I should see "I Drive Myself Crazy" within "#position_1"
 
+
+  Scenario: adding a url to a Work
+    Given I have no pages
+    And a tag exists with name: "harry potter" AND type: "Fandom"
+      And I am on the homepage
+    When I fill in "page_url" with "https://archiveofourown.org/works/692/chapters/803"
+      And I select "harry potter" from "fandom"
+      And I press "Store"
+      Then I should see "Where am I? (Single)" within ".title"
+    When I follow "Manage Parts"
+     And I fill in "add_parent" with "Parent"
+     And I press "Update"
+      And I follow "Refetch"
+    Then I should see "archiveofourown.org/works/692/chapters/803" within "#url_list"
+    And the "url" field should contain "https://archiveofourown.org/works/692"
+    When I press "Refetch"
+    Then I should see "Time Was, Time Is (Book)" within ".title"
+    When I follow "Where am I?"
+      Then I should see "Where am I? (Chapter)" within ".title"
+
+  Scenario: not creating an ao3 work from a set of Singles
+    Given I have no pages
+    And a tag exists with name: "harry potter" AND type: "Fandom"
+      And I am on the homepage
+    When I fill in "page_url" with "https://archiveofourown.org/works/692/chapters/803"
+      And I select "harry potter" from "fandom"
+      And I press "Store"
+      Then I should see "Where am I? (Single)" within ".title"
+    When I follow "Manage Parts"
+     And I fill in "add_parent" with "Parent"
+     And I press "Update"
+    Then I should see "Parent (Book)" within ".title"
+    And I should see "Where am I?" within "#position_1"
+    When I follow "Refetch"
+    Then I should see "archiveofourown.org/works/692/chapters/803" within "#url_list"
+    When I fill in "url" with ""
+      And I fill in "url_list" with
+        """
+        https://archiveofourown.org/works/692/chapters/803
+        https://archiveofourown.org/works/692/chapters/804
+        """
+    And I press "Refetch"
+    Then I should see "Parent (Book)" within ".title"
+    When I follow "Where am I?"
+      Then I should see "Where am I? (Chapter)" within ".title"
+      And I should see "Next: Hogwarts (Chapter)"
+
+  Scenario: adding a url to a Series
+    Given I have no pages
+    And a tag exists with name: "harry potter" AND type: "Fandom"
+      And I am on the homepage
+    When I fill in "page_url" with "https://archiveofourown.org/works/688"
+      And I select "harry potter" from "fandom"
+      And I press "Store"
+      Then I should see "Skipping Stones (Single)" within ".title"
+    When I follow "Manage Parts"
+     And I fill in "add_parent" with "Parent"
+     And I press "Update"
+    Then I should see "Parent (Book)" within ".title"
+    When I follow "Refetch"
+    And I fill in "url" with "https://archiveofourown.org/series/46"
+    And I press "Refetch"
+    Then I should see "Counting Drabbles (Series)" within ".title"
+    When I follow "The Flower"
+      Then I should see "The Flower [sequel to Skipping Stones] (Single)" within ".title"

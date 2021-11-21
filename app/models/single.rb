@@ -19,12 +19,14 @@ class Single < Page
     doc_tags = doc.css(".freeform a").map(&:text).join(", ")  rescue nil
     self.notes = [doc_summary, doc_notes, doc_tags, doc_relationships].join_hr
 
+    Rails.logger.debug "DEBUG: notes: #{self.notes}"
+
     # don't add authors for books in a series
     unless self.parent
       add_author(doc.css(".byline a").map(&:text).join(", "))
     end
 
-    self.save
+    self.save!
   end
 
   def fetch_ao3

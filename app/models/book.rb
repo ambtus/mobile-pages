@@ -6,6 +6,9 @@ class Book < Page
     if refetch
       Rails.logger.debug "DEBUG: fetching meta from ao3 for #{self.url}"
       doc = Nokogiri::HTML(Scrub.fetch_html(self.url))
+    elsif make_single?(parts.size)
+      Rails.logger.debug "DEBUG: not getting meta for Book because was made Single"
+      return false
     else
       Rails.logger.debug "DEBUG: build meta from raw html of first part #{parts.first.id}"
       doc = Nokogiri::HTML(parts.first.raw_html)
@@ -33,11 +36,7 @@ class Book < Page
     doc = Nokogiri::HTML(Scrub.fetch_html(self.url + "/navigate"))
     chapter_list = doc.xpath("//ol//a")
     Rails.logger.debug "DEBUG: chapter list for #{self.id}: #{chapter_list}"
-    if chapter_list.size == 1
-      Rails.logger.debug "DEBUG: only one chapter"
-      page = self.becomes!(Single)
-      Rails.logger.debug "DEBUG: page became #{page.type}"
-      page.fetch_ao3
+    if make_single?(chapter_list.size)
       return false
     else
       count = 1
@@ -66,6 +65,18 @@ class Book < Page
   def fetch_ao3
     Rails.logger.debug "DEBUG: fetch_ao3 work #{self.id}"
     self.get_chapters_from_ao3 && get_meta_from_ao3(false)
+    return self
   end
 
+  def make_single?(size)
+    if size == 1 || size == 0
+      Rails.logger.debug "DEBUG: only one chapter"
+      page = self.becomes!(Single)
+      Rails.logger.debug "DEBUG: page became #{page.type}"
+      page.fetch_ao3
+      return true
+    else
+      return false
+    end
+  end
 end

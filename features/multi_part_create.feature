@@ -136,15 +136,17 @@ Feature: creating multi-part pages
    And I should see "Part 2" within "#position_2"
 
 
-  Scenario: should NOT be able to store using a pasted html file
+  Scenario: should be able to edit html if it's a Single
     Given I have no pages
     And a page exists with url: "http://test.sidrasue.com/test.html"
     When I am on the page's page
-      Then I should NOT see "Part 1"
-      But I should see "Edit Raw HTML"
+      Then I should see "Page 1 (Single)"
+      And I should see "Edit Raw HTML"
       And I should see "Edit Scrubbed HTML"
+
+  Scenario: should NOT be able to edit html if it's a Book
     Given a page exists with urls: "http://test.sidrasue.com/test.html"
     When I am on the page's page
-      Then I should see "Part 1"
+    Then I should see "Page 1 (Book)"
       And I should NOT see "Edit Raw HTML"
       And I should NOT see "Edit Scrubbed HTML"

@@ -5,13 +5,16 @@ class RefetchesController < ApplicationController
   def create
     @page = Page.find(params[:page_id])
     if params[:commit] == "Refetch Meta"
+      Rails.logger.debug "DEBUG: refetching meta for #{@page.id}"
       @page.parts.each do |part|
         part.get_meta_from_ao3
       end
       @page.get_meta_from_ao3
-    elsif @page.parts.blank? || @page.ao3?
-      @page.update_attribute(:url, params[:url])
+    elsif params[:url].present?
+      @page.update!(url: params[:url])
+      Rails.logger.debug "DEBUG: refetching all for #{@page.id} url: #{@page.url}"
       if @page.ao3?
+        @page = @page.becomes!(@page.ao3_type)
         @page.fetch_ao3
       elsif @page.ff?
         @page.errors.add(:base, "can't refetch from fanfiction.net")
@@ -19,7 +22,8 @@ class RefetchesController < ApplicationController
         @page.fetch_raw
       end
     else
-      @page.parts_from_urls(params[:url_list], true)
+      Rails.logger.debug "DEBUG: refetching all for #{@page.id} url_list: #{params[:url_list]}"
+      @page.parts_from_urls(params[:url_list])
     end
     flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
     redirect_to page_path(@page)

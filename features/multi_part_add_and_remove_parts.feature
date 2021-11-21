@@ -93,6 +93,7 @@ Feature: adding parents and children and siblings
   Scenario: add a new part to an existing page with parts
     Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
     When I am on the page's page
+    Then I should see "Page 1 (Book)"
       And I follow "Manage Parts"
       And I fill in "url_list" with
         """
@@ -115,14 +116,14 @@ Feature: adding parents and children and siblings
       And I fill in "url_list" with
         """
         http://test.sidrasue.com/parts/1.html
-        http://test.sidrasue.com/parts/3.html
+        http://test.sidrasue.com/parts/2.html
         """
       And I press "Update"
       And I should NOT see "Part 3"
       And I view the content
     Then I should see "stuff for part 1"
-      But I should NOT see "stuff for part 2"
-      And I should see "stuff for part 3"
+      And I should see "stuff for part 2"
+      But I should NOT see "stuff for part 3"
 
        Scenario: add a part updates the parent's read_after but add a parent doesn't
     Given I have no pages

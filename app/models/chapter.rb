@@ -22,6 +22,7 @@ class Chapter < Page
 
     Rails.logger.debug "DEBUG: getting chapter title for #{self.id} at position #{position}"
     self.title = ao3_chapter_title(doc, position)
+    Rails.logger.debug "DEBUG: chapter title: #{self.title}"
 
     doc_summary = Scrub.sanitize_html(doc.css(".summary blockquote")).children.to_html
     doc_notes = Scrub.sanitize_html(doc.css(".notes blockquote")).children.to_html
@@ -34,7 +35,7 @@ class Chapter < Page
       self.notes = [doc_summary, doc_notes].join_hr
     end
 
-    self.save
+    self.save!
   end
 
   def fetch_ao3

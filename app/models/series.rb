@@ -2,7 +2,7 @@
 
 class Series < Page
 
-  def fetch_ao3
+  def get_meta_from_ao3(refetch=true)
     Rails.logger.debug "DEBUG: fetch_ao3 series #{self.id}"
     html = Scrub.fetch_html(self.url)
     doc = Nokogiri::HTML(html)
@@ -38,14 +38,18 @@ class Series < Page
     self.notes = [doc_summary, doc_notes].compact.join_hr
 
     add_author(doc_authors) if doc_authors
+    return html.scan(/work-(\d+)/).flatten.uniq
 
-    Rails.logger.debug "DEBUG: getting works from ao3 for #{self.id}"
-    work_list = html.scan(/work-(\d+)/).flatten.uniq
+  end
+
+  def fetch_ao3
+    work_list = get_meta_from_ao3
     Rails.logger.debug "DEBUG: work list for #{self.id}: #{work_list}"
     work_list.each_with_index do |work_id, index|
       count = index + 1
       url = "https://archiveofourown.org/works/#{work_id}"
-      work = Book.find_by(url: url) || Book.find_by(url: "http://archiveofourown.org/works/#{work_id}")
+      possibles = Page.search(:url, url.sub(/^https?/, ''))
+      work = possibles.first if possibles.size == 1
       if work
         if work.position == count && work.parent_id == self.id
           Rails.logger.debug "DEBUG: work already exists, skipping #{work.id} in position #{count}"
