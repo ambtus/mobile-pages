@@ -34,7 +34,7 @@ class Page < ActiveRecord::Base
   end
 
   def set_type
-    Rails.logger.debug "DEBUG: setting type for #{self.inspect}"
+    # Rails.logger.debug "DEBUG: setting type for #{self.inspect}"
     if ao3?
       self.becomes!(self.ao3_type)
       Rails.logger.debug "DEBUG: ao3 type set to #{self.type}"
@@ -314,7 +314,7 @@ class Page < ActiveRecord::Base
         Rails.logger.debug "DEBUG: didn’t find #{part}"
         page = Page.create(:url=>url, :title=>title, :parent_id=>self.id, :position => position)
         page.set_type
-        Rails.logger.debug "DEBUG: created #{page.reload.inspect}"
+        # Rails.logger.debug "DEBUG: created #{page.reload.inspect}"
         self.update_attribute(:read_after, Time.now) if self.read_after > Time.now
       else
         Rails.logger.debug "DEBUG: found #{part}"
@@ -332,9 +332,9 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "DEBUG: parts found or created: #{new_part_ids}"
 
     remove = old_part_ids - new_part_ids
-    Rails.logger.debug "DEBUG: removing deleted parts and subparts #{remove}"
+    Rails.logger.debug "DEBUG: removing deleted parts #{remove}"
     remove.each do |old_part_id|
-      Page.find(old_part_id).destroy
+      Page.find(old_part_id).make_single
     end
 
     self.update_last_read
@@ -955,11 +955,11 @@ class Page < ActiveRecord::Base
   end
 
   def rebuild_meta
-    Rails.logger.debug "DEBUG: rebuilding meta for #{self.inspect}"
+    # Rails.logger.debug "DEBUG: rebuilding meta for #{self.inspect}"
     remove_outdated_downloads
     if ao3?
       page = self.becomes!(self.ao3_type)
-      Rails.logger.debug "DEBUG: page is #{page.inspect}"
+      # Rails.logger.debug "DEBUG: page is #{page.inspect}"
       page.get_meta_from_ao3(false)
     else
       set_type
@@ -1018,8 +1018,9 @@ private
   end
 
   def initial_fetch
-    Rails.logger.debug "DEBUG: initial fetch for #{self.inspect}"
-    FileUtils.rm_rf(mydirectory) # make sure directory is empty for testing
+    # Rails.logger.debug "DEBUG: initial fetch for #{self.inspect}"
+   Rails.logger.debug "DEBUG: initial fetch for #{self.title}"
+   FileUtils.rm_rf(mydirectory) # make sure directory is empty for testing
     FileUtils.mkdir_p(download_dir) # make sure directory exists
 
     if !self.url.blank?

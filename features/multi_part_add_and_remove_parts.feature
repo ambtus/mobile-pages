@@ -124,6 +124,11 @@ Feature: adding parents and children and siblings
     Then I should see "stuff for part 1"
       And I should see "stuff for part 2"
       But I should NOT see "stuff for part 3"
+    When I am on the homepage
+      When I choose "type_Chapter"
+      Then I should see "Part 3"
+      But I should NOT see "Part 3 of Page 1"
+
 
        Scenario: add a part updates the parent's read_after but add a parent doesn't
     Given I have no pages

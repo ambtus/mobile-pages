@@ -39,8 +39,8 @@ class Book < Page
     if make_single?(chapter_list.size)
       return false
     else
-      count = 1
-      chapter_list.each do |element|
+      chapter_list.each_with_index do |element, index|
+        count = index + 1
         title = element.text
         url = "https://archiveofourown.org" + element['href']
         chapter = Chapter.find_by(url: url) || Chapter.find_by(url: "http://archiveofourown.org" + element['href'])
@@ -54,9 +54,8 @@ class Book < Page
         else
           Rails.logger.debug "DEBUG: chapter does not yet exist, creating #{title} in position #{count}"
           Chapter.create(:title => title, :url => url, :position => count, :parent_id => self.id)
+          sleep 5 unless count == chapter_list.size
         end
-        count = count.next
-        sleep 5
       end
     end
     set_wordcount
