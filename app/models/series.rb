@@ -21,16 +21,18 @@ class Series < Page
     doc_notes = nil
     doc.css('#inner dt').each do |dt|
       ct = dt.xpath('count(following-sibling::dt)')
+      Rails.logger.debug "DEBUG: ct: #{ct.inspect}"
       dds = dt.xpath("following-sibling::dd[count(following-sibling::dt)=#{ct}]")
+      Rails.logger.debug "DEBUG: dds: #{dds.inspect}"
       case dt.text
       when "Creator:"
         doc_authors = dds.map(&:text).join(", ")
         Rails.logger.debug "DEBUG: found authors: #{doc_authors}"
       when "Description:"
-        doc_summary = Scrub.sanitize_html(dds.xpath("//blockquote").first.children.to_html)
+        doc_summary = Scrub.sanitize_html(dds.children.children.to_html)
         Rails.logger.debug "DEBUG: found description: #{doc_summary}"
       when "Notes:"
-        doc_notes = Scrub.sanitize_html(dds.xpath("//blockquote").last.children.to_html)
+        doc_notes = Scrub.sanitize_html(dds.children.children.to_html)
         Rails.logger.debug "DEBUG: found notes: #{doc_notes}"
       end
     end
@@ -38,6 +40,9 @@ class Series < Page
     self.notes = [doc_summary, doc_notes].compact.join_hr
 
     add_author(doc_authors) if doc_authors
+
+    self.save!
+
     return html.scan(/work-(\d+)/).flatten.uniq
 
   end
