@@ -63,9 +63,13 @@ class Book < Page
   end
 
   def fetch_ao3
-    Rails.logger.debug "DEBUG: fetch_ao3 work #{self.id}"
-    self.get_chapters_from_ao3 && get_meta_from_ao3(false)
-    return self
+    if self.id
+      Rails.logger.debug "DEBUG: fetch_ao3 work #{self.id}"
+      self.get_chapters_from_ao3 && get_meta_from_ao3(false)
+    else
+      Rails.logger.debug "DEBUG: fetch_ao3 work #{self.url}"
+      get_meta_from_ao3 && self.get_chapters_from_ao3
+    end
   end
 
   def make_single?(size)
