@@ -55,6 +55,15 @@ class Series < Page
       url = "https://archiveofourown.org/works/#{work_id}"
       possibles = Page.search(:url, url.sub(/^https?/, ''))
       work = possibles.first if possibles.size == 1
+      if possibles.size > 1
+        possibles.each do |p|
+          if p.parent && p.parent.ao3_url == url
+           Rails.logger.debug "DEBUG: selecting #{p.parent.title}"
+           work = p.parent
+           break
+          end
+        end
+      end
       if work
         if work.position == count && work.parent_id == self.id
           Rails.logger.debug "DEBUG: work already exists, skipping #{work.id} in position #{count}"
