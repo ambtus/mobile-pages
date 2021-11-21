@@ -11,7 +11,9 @@ class Single < Page
       doc = Nokogiri::HTML(raw_html)
     end
 
-    self.title = doc.css(".chapter .title").children.last.text.strip.gsub(": ","") rescue doc.xpath("//div[@id='workskin']").xpath("//h2").first.children.text.strip rescue "empty title"
+    chapter_title = doc.css(".chapter .title").children.last.text.strip.gsub(": ","") rescue nil
+    work_title = doc.xpath("//div[@id='workskin']").xpath("//h2").first.children.text.strip rescue "can’t find title"
+    self.title = chapter_title.blank? ? work_title : chapter_title
 
     doc_summary = Scrub.sanitize_html(doc.css(".summary blockquote")).children.to_html
     doc_notes = Scrub.sanitize_html(doc.css(".notes blockquote")).children.to_html
