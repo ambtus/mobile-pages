@@ -926,12 +926,12 @@ class Page < ActiveRecord::Base
 
   def add_author(string)
     return if string.blank?
-    try = string.split(" (").first
-    tries = try.split(", ")
+    tries = string.split(", ")
     mp_authors = []
     non_mp_authors = []
     tries.each do |t|
-      found = Author.where('name like ?', "%#{t}%")
+      try = t.split(" (").first
+      found = Author.where('name like ?', "%#{try}%")
       if found.blank?
         non_mp_authors << t
       else

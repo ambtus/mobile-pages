@@ -104,3 +104,27 @@ Feature: ao3 specific stuff
     When I am on the homepage
     And I follow "ePub"
     Then the download epub file should exist
+
+  Scenario: multiple authors
+  Given I have no pages
+  And a page exists with url: "https://archiveofourown.org/works/29253276/chapters/71833074"
+  When I am on the homepage
+    And I follow "edge of providence"
+    Then I should see "by adiduck (book_people), whimsicalimages" within ".notes"
+  Given an author exists with name: "book_people (adiduck)"
+    And I press "Rebuild Meta"
+    Then I should see "by whimsicalimages" within ".notes"
+    And I should see "book_people" within ".authors"
+  Given I have no authors
+  And an author exists with name: "adiduck (book_people)"
+      And I press "Rebuild Meta"
+    Then I should see "by whimsicalimages" within ".notes"
+    And I should see "adiduck" within ".authors"
+  Given I have no authors
+  # The following isn't by design. it's just a limitation of how i store author names
+  And an author exists with name: "book_people"
+      And I press "Rebuild Meta"
+    Then I should see "by adiduck (book_people), whimsicalimages" within ".notes"
+    And I should NOT see "book_people" within ".authors"
+
+
