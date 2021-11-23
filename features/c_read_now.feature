@@ -1,4 +1,4 @@
-Feature: read_after order
+Feature: read_after order (also checking first_created)
 
   Scenario: Add a page and make it first
     Given a page exists
@@ -11,6 +11,9 @@ Feature: read_after order
       Then I should see "Set to Read Now"
       And I should see "Page 2" within "#position_1"
       And I should see "Page 1" within "#position_2"
+    When I choose "sort_by_first_created"
+      And I press "Find"
+    Then I should see "Page 1" within "#position_1"
 
   Scenario: Read a page and make it first
     Given I have no pages
@@ -23,6 +26,9 @@ Feature: read_after order
     When I am on the homepage
     Then I should see "Page 2" within "#position_1"
       And I should see "Page 1" within "#position_2"
+    When I choose "sort_by_first_created"
+      And I press "Find"
+    Then I should see "Page 1" within "#position_1"
 
   Scenario: Find a part or subpart and make it first
     Given I have no pages
@@ -50,4 +56,7 @@ Feature: read_after order
     Then I should see "Grandparent" within "#position_1"
       And I should see "Parent" within "#position_2"
       And I should see "Single" within "#position_3"
+    When I choose "sort_by_first_created"
+      And I press "Find"
+    Then I should see "Grandparent" within "#position_1"
 

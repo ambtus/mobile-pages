@@ -7,7 +7,7 @@ Feature: random page
     Then I should see "No pages"
 
   Scenario: find a random page
-    Given a page exists with last_read: "2008-01-01"
+    Given a page exists
     When I am on the homepage
     When I choose "sort_by_random"
       And I press "Find"
@@ -16,6 +16,7 @@ Feature: random page
   Scenario: don’t find unread random pages
     Given a page exists
     When I am on the homepage
+    And I choose "unread_no"
     When I choose "sort_by_random"
       And I press "Find"
     Then I should see "No pages found"
@@ -32,6 +33,7 @@ Feature: random page
     Given a page exists with stars: "9"
     When I am on the homepage
     When I choose "sort_by_random"
+    And I choose "stars_better"
       And I press "Find"
     Then I should see "No pages found"
 
@@ -39,6 +41,6 @@ Feature: random page
     Given a page exists with stars: "9"
     When I am on the homepage
     When I choose "sort_by_random"
-      And I choose "favorite_unfinished"
+      And I choose "stars_unfinished"
       And I press "Find"
     Then I should NOT see "No pages found"

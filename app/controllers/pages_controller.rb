@@ -9,10 +9,10 @@ class PagesController < ApplicationController
     @page.my_notes = params[:my_notes] if params[:my_notes]
     @page.url = params[:url] if params[:url]
     @type = params[:type] || "any"
-    @sort_by = params[:sort_by] || "read_after"
+    @sort_by = params[:sort_by] || "default"
     @size = params[:size] || "any"
     @unread = params[:unread] || "either"
-    @favorite = params[:favorite] || "any"
+    @stars = params[:stars] || "any"
     @find = params[:find] || "none"
     @tags = Tag.all.map(&:name)
     @tag = Tag.find_by_name(params[:tag]) if params[:tag]
@@ -44,9 +44,9 @@ class PagesController < ApplicationController
       build_route[:omitted] = params[:omitted] unless params[:omitted].blank?
       build_route[:info] = params[:info] unless params[:info].blank?
       build_route[:type] = params[:type] unless (params[:type].blank? || params[:type] == "any")
-      build_route[:sort_by] = params[:sort_by] unless (params[:sort_by].blank? || params[:sort_by] == "read_after")
+      build_route[:sort_by] = params[:sort_by] unless (params[:sort_by].blank? || params[:sort_by] == "default")
       build_route[:size] = params[:size] unless (params[:size].blank? || params[:size] == "any")
-      build_route[:favorite] = params[:favorite] unless (params[:favorite].blank? || params[:favorite] == "any")
+      build_route[:stars] = params[:stars] unless (params[:stars].blank? || params[:stars] == "any")
       build_route[:find] = params[:find] unless (params[:find].blank? || params[:find] == "none")
       build_route[:unread] = params[:unread] unless (params[:unread].blank? || params[:unread] == "either")
       if params[:page]

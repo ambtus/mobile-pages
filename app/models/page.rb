@@ -180,41 +180,43 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "DEBUG: Page.filter(#{params})"
     pages = Page.all
     pages = pages.where(:type => (params[:type] == "none" ? nil : params[:type])) if params[:type]
-    # ignore parts if not filtering on anything
-    pages = pages.where(:parent_id => nil) if params == {"controller"=>"pages", "action"=>"index"}
-    pages = pages.where(:last_read => nil) if params[:unread] == "yes"
-    pages = pages.where('pages.last_read is not null') if params[:unread] == "no" || params[:sort_by] == "last_read"
-    # ignore parts if filtering on stars
-    pages = pages.where(:parent_id => nil) if params[:favorite]
-    case params[:favorite]
-      when "yes"
-        pages = pages.where(:stars => 5)
-      when "best"
-        pages = pages.where(:stars => [5,4])
-      when "good"
-        pages = pages.where(:stars => [5,4,3])
-      when "bad"
-        pages = pages.where(:stars => [2,1])
-      when "unfinished"
-        pages = pages.where(:stars => 9)
+
+    # ignore parts unless asking for a type or a url or a title or a fandom or sorting on last_created
+    # TODO should this be an if, instead of an unless? blacklist or whitelist?
+    unless params[:type] || params[:url] || params[:title] || params[:fandom] || params[:sort_by] == "last_created"
+      pages = pages.where(:parent_id => nil)
     end
     # ignore parts if filtering on size
     pages = pages.where(:parent_id => nil) if params[:size]
+
+    pages = pages.where(:last_read => nil) if params[:unread] == "yes"
+    pages = pages.where('pages.last_read is not null') if params[:unread] == "no"
+
+    pages = pages.where(:stars => params[:stars]) unless params[:stars].to_i == 0
+    pages = pages.where(:stars => [5,4]) if params[:stars] == "better"
+    pages = pages.where(:stars => [2,1]) if params[:stars] == "worse"
+    pages = pages.where(:stars => [9]) if params[:stars] == "unfinished"
+
     pages = pages.where(:size => params[:size]) if SIZES.include?(params[:size])
     pages = pages.where(:size => ["short", "drabble"]) if params[:size] == "shorter"
     pages = pages.where(:size => ["long", "epic"]) if params[:size] == "longer"
+
     [:title, :notes, :my_notes].each do |attrib|
       pages = pages.search_insensitive(attrib, params[attrib]) if params.has_key?(attrib)
     end
+
     if params.has_key?(:url) # strip the https? in case it was stored under the other
       pages = pages.search(:url, params[:url].sub(/^https?/, ''))
     end
+
     pages = pages.search(:cached_tag_string, params[:tag]) if params.has_key?(:tag)
     pages = pages.search(:cached_tag_string, params[:fandom]) if params.has_key?(:fandom)
     pages = pages.search(:cached_tag_string, params[:relationship]) if params.has_key?(:relationship)
     pages = pages.search(:cached_tag_string, params[:rating]) if params.has_key?(:rating)
     pages = pages.search(:cached_tag_string, params[:info]) if params.has_key?(:info)
+
     pages = pages.without_tag(params[:omitted]) if params.has_key?(:omitted)
+
     if params.has_key?(:hidden)
       pages = pages.search(:cached_hidden_string, params[:hidden])
     elsif params.has_key?(:url)
@@ -222,21 +224,21 @@ class Page < ActiveRecord::Base
     else
       pages = pages.where(:cached_hidden_string => "")
     end
+
     pages = pages.with_author(params[:author]) if params.has_key?(:author)
+
     pages = case params[:sort_by]
       when "last_read"
-        pages.order('last_read ASC')
-      when "recently_read"
         pages.order('last_read DESC')
+      when "first_read"
+        pages = pages.where('pages.last_read is not null')
+        pages.order('last_read ASC')
       when "random"
-        # when I want random fics -- unless I'm deliberately asking for them --
-        # I don't want unread or unfinished ones, or ones that have been recently read
-        unless params[:unread] == "yes" || params[:favorite] == "unfinished"
-          pages = pages.where('pages.last_read < ?', 6.months.ago)
-        end
         pages.order(Arel.sql('RAND()'))
       when "last_created"
         pages.order('created_at DESC')
+      when "first_created"
+        pages.order('created_at ASC')
       when "longest"
         pages.order('wordcount DESC')
       when "shortest"
@@ -244,13 +246,12 @@ class Page < ActiveRecord::Base
       else
         pages.order('read_after ASC')
     end
+
     start = params[:count].to_i
     pages.group(:id).limit(start + LIMIT)[start..-1]
   end
 
-  def to_param
-    "#{self.id}-#{self.download_title}"
-  end
+  def to_param; "#{self.id}-#{self.download_title}"; end
 
   def ao3?; self.url && self.url.match(/archiveofourown/); end
   def ao3_url; self.url || self.parts.first.url.split("/chapter").first; end

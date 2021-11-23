@@ -44,7 +44,7 @@ Feature: filter/find
     # find favorite by tag
     When I am on the homepage
       And I select "children" from "tag"
-      And I choose "favorite_best"
+      And I choose "stars_better"
       And I press "Find"
     Then I should see "Harry Potter"
       And I should NOT see "The Boxcar Children"
@@ -53,7 +53,7 @@ Feature: filter/find
       And I should NOT see "Murder on the Orient Express"
     # find favorite by author
     When I am on the homepage
-    When I choose "favorite_best"
+    When I choose "stars_better"
       And I select "agatha christie" from "Author"
       And I press "Find"
     Then I should see "The Mysterious Affair at Styles"
@@ -83,12 +83,12 @@ Feature: filter/find
     # find favorite by author
     When I am on the homepage
       And I select "agatha christie" from "Author"
-      And I choose "favorite_good"
+      And I choose "stars_3"
       And I press "Find"
     Then I should see "Another Mystery"
       And I should NOT see "Nancy Drew"
-      And I should see "The Mysterious Affair at Styles"
-      And I should see "Murder on the Orient Express"
+      And I should NOT see "The Mysterious Affair at Styles"
+      And I should NOT see "Murder on the Orient Express"
 
   Scenario: Find page by url
     Given the following pages

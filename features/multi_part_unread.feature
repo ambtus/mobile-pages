@@ -56,6 +56,5 @@ Feature: one part unread
       And I select "one" from "fandom"
       And I press "Find"
     Then I should see "Filler" within "#position_1"
-      And I should see "Parent" within "#position_2"
-      And I should see "Child2" within "#position_2"
+      And I should see "Child2 of Parent" within "#position_2"
       And I should NOT see "Child1"
