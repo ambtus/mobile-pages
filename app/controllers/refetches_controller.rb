@@ -10,6 +10,9 @@ class RefetchesController < ApplicationController
         part.get_meta_from_ao3
       end
       @page.get_meta_from_ao3
+    elsif @page.ao3? && @page.is_a?(Single) && !@page.ao3_chapter?
+        @page = @page.becomes!(Book)
+        @page.fetch_ao3
     elsif params[:url].present?
       @page.update!(url: params[:url])
       Rails.logger.debug "DEBUG: refetching all for #{@page.id} url: #{@page.url}"
