@@ -784,20 +784,22 @@ private
         self.fetch_raw
       end
     elsif !self.base_url.blank?
+      page = self.becomes!(Book)
+      Rails.logger.debug "DEBUG: page became #{page.type}"
       count = 1
-      match = self.url_substitutions.match("-")
+      match = url_substitutions.match("-")
       if match
         array = match.pre_match.to_i .. match.post_match.to_i
       else
-        array = self.url_substitutions.split
+        array = url_substitutions.split
       end
       array.each do |sub|
         title = "Part " + count.to_s
-        url = self.base_url.gsub(/\*/, sub.to_s)
-        Chapter.create(:title => title, :url => url, :position => count, :parent_id => self.id)
+        url = base_url.gsub(/\*/, sub.to_s)
+        Chapter.create(:title => title, :url => url, :position => count, :parent_id => page.id)
         count = count.next
       end
-      self.set_wordcount
+      page.set_wordcount
     elsif !self.urls.blank?
       self.parts_from_urls(self.urls)
     else
