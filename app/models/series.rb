@@ -53,7 +53,7 @@ class Series < Page
     work_list.each_with_index do |work_id, index|
       count = index + 1
       url = "https://archiveofourown.org/works/#{work_id}"
-      possibles = Page.search(:url, url.sub(/^https?/, ''))
+      possibles = Page.where("url LIKE ?", "%#{url.sub(/^https?/, '')}%")
       work = possibles.first if possibles.size == 1
       if possibles.size > 1
         possibles.each do |p|

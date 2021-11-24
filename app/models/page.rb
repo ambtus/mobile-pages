@@ -104,7 +104,6 @@ class Page < ActiveRecord::Base
 
   UNREAD = "unread"
   SHORT_LENGTH = 160 # truncate at this many characters
-  LIMIT = 15 # number of pages to show in index
 
   SIZES = ["drabble", "short", "medium", "long", "epic"]
 
@@ -176,80 +175,6 @@ class Page < ActiveRecord::Base
     page
   end
 
-  def self.filter(params={})
-    Rails.logger.debug "DEBUG: Page.filter(#{params})"
-    pages = Page.all
-    pages = pages.where(:type => (params[:type] == "none" ? nil : params[:type])) if params[:type]
-
-    # ignore parts unless asking for a type or a url or a title or a fandom or sorting on last_created
-    # TODO should this be an if, instead of an unless? blacklist or whitelist?
-    unless params[:type] || params[:url] || params[:title] || params[:fandom] || params[:sort_by] == "last_created"
-      pages = pages.where(:parent_id => nil)
-    end
-    # ignore parts if filtering on size
-    pages = pages.where(:parent_id => nil) if params[:size]
-
-    pages = pages.where(:last_read => nil) if params[:unread] == "yes"
-    pages = pages.where('pages.last_read is not null') if params[:unread] == "no"
-
-    pages = pages.where(:stars => params[:stars]) unless params[:stars].to_i == 0
-    pages = pages.where(:stars => [5,4]) if params[:stars] == "better"
-    pages = pages.where(:stars => [2,1]) if params[:stars] == "worse"
-    pages = pages.where(:stars => [9]) if params[:stars] == "unfinished"
-
-    pages = pages.where(:size => params[:size]) if SIZES.include?(params[:size])
-    pages = pages.where(:size => ["short", "drabble"]) if params[:size] == "shorter"
-    pages = pages.where(:size => ["long", "epic"]) if params[:size] == "longer"
-
-    [:title, :notes, :my_notes].each do |attrib|
-      pages = pages.search_insensitive(attrib, params[attrib]) if params.has_key?(attrib)
-    end
-
-    if params.has_key?(:url) # strip the https? in case it was stored under the other
-      pages = pages.search(:url, params[:url].sub(/^https?/, ''))
-    end
-
-    pages = pages.search(:cached_tag_string, params[:tag]) if params.has_key?(:tag)
-    pages = pages.search(:cached_tag_string, params[:fandom]) if params.has_key?(:fandom)
-    pages = pages.search(:cached_tag_string, params[:relationship]) if params.has_key?(:relationship)
-    pages = pages.search(:cached_tag_string, params[:rating]) if params.has_key?(:rating)
-    pages = pages.search(:cached_tag_string, params[:info]) if params.has_key?(:info)
-
-    pages = pages.without_tag(params[:omitted]) if params.has_key?(:omitted)
-
-    if params.has_key?(:hidden)
-      pages = pages.search(:cached_hidden_string, params[:hidden])
-    elsif params.has_key?(:url)
-      # do not constrain on cached_hidden_string if finding by url
-    else
-      pages = pages.where(:cached_hidden_string => "")
-    end
-
-    pages = pages.with_author(params[:author]) if params.has_key?(:author)
-
-    pages = case params[:sort_by]
-      when "last_read"
-        pages.order('last_read DESC')
-      when "first_read"
-        pages = pages.where('pages.last_read is not null')
-        pages.order('last_read ASC')
-      when "random"
-        pages.order(Arel.sql('RAND()'))
-      when "last_created"
-        pages.order('created_at DESC')
-      when "first_created"
-        pages.order('created_at ASC')
-      when "longest"
-        pages.order('wordcount DESC')
-      when "shortest"
-        pages.order('wordcount ASC')
-      else
-        pages.order('read_after ASC')
-    end
-
-    start = params[:count].to_i
-    pages.group(:id).limit(start + LIMIT)[start..-1]
-  end
 
   def to_param; "#{self.id}-#{self.download_title}"; end
 
@@ -984,27 +909,6 @@ class Page < ActiveRecord::Base
   end
 
 private
-
-  def self.search(symbol, string)
-    query = "%#{string}%"
-    where("pages.#{symbol.to_s} LIKE ?",query)
-  end
-
-  def self.search_insensitive(symbol, string)
-    query = "%#{string.downcase}%"
-    where("LOWER(pages.#{symbol.to_s}) LIKE ?", query)
-  end
-
-
-  def self.without_tag(string)
-    query = "%#{string}%"
-    where("pages.cached_tag_string NOT LIKE ?",query)
-  end
-
-  def self.with_author(string)
-    joins(:authors).
-    where(["authors.name LIKE ?", "%" + string + "%"])
-  end
 
   def remove_placeholders
     self.url = self.url == "URL" ? nil : self.url.try(:strip)

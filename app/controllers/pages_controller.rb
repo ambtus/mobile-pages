@@ -23,7 +23,7 @@ class PagesController < ApplicationController
     @hidden = Hidden.find_by_name(params[:hidden]) if params[:hidden]
     @info = Info.find_by_name(params[:info]) if params[:info]
     @author_name = params[:author] if params[:author]
-    @pages = Page.filter(params)
+    @pages = Filter.new(params)
     flash.now[:alert] = "No pages found" if @pages.to_a.empty?
   end
 
@@ -34,7 +34,7 @@ class PagesController < ApplicationController
   def create
     if params[:Find] || params[:Next]
       build_route = {:action => "index" , :controller => "pages"}
-      build_route[:count] = params[:count].to_i + Page::LIMIT if params[:Next]
+      build_route[:count] = params[:count].to_i + Filter::LIMIT if params[:Next]
       build_route[:author] = params[:author] unless params[:author].blank?
       build_route[:tag] = params[:tag] unless params[:tag].blank?
       build_route[:hidden] = params[:hidden] unless params[:hidden].blank?
