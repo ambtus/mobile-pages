@@ -141,7 +141,7 @@ class Page < ActiveRecord::Base
 
   before_validation :remove_placeholders
 
-  validates_presence_of :title, :message => "can't be blank or 'Title'"
+  validates_presence_of :title, :message => "can't be blank"
   validates_format_of :url, :with => URI.regexp, :allow_blank => true
   validates_uniqueness_of :url, :allow_blank => true
 
@@ -755,7 +755,6 @@ private
 
   def remove_placeholders
     self.url = self.url == "URL" ? nil : self.url.try(:strip)
-    self.title = nil if self.title == "Title" unless (self.url && self.url.match('archiveofourown'))
     self.notes = nil if self.notes == "Notes"
     self.my_notes = nil if self.my_notes == "My Notes"
     self.base_url = nil if self.base_url == BASE_URL_PLACEHOLDER
@@ -767,7 +766,7 @@ private
 
   def initial_fetch
     # Rails.logger.debug "DEBUG: initial fetch for #{self.inspect}"
-   Rails.logger.debug "DEBUG: initial fetch for #{self.title}"
+   Rails.logger.debug "DEBUG: initial fetch for #{self.title} (id: #{self.id})"
    FileUtils.rm_rf(mydirectory) # make sure directory is empty for testing
     FileUtils.mkdir_p(download_dir) # make sure directory exists
 

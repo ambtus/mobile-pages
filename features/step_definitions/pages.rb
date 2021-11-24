@@ -2,6 +2,10 @@ Given("I have no pages") do
   Page.delete_all
 end
 
+Then('I should have {int} page') do |int|
+  Page.count == int
+end
+
 Given("the page's directory is missing") do
   FileUtils.rm_rf(Page.first.mydirectory)
 end
