@@ -1,6 +1,11 @@
 # coding: utf-8
 
 module Scrub
+
+  def self.agent
+    @agent ||= Mechanize.new { |a| a.log = Logger.new("#{Rails.root}/log/mechanize.log") }
+  end
+
   def self.sanitize_version
     return 1
   end
@@ -125,25 +130,31 @@ module Scrub
 
   def self.fetch_html(url)
     return if url.blank?
-    agent = Mechanize.new { |a| a.log = Logger.new("#{Rails.root}/log/mechanize.log") }
     auth = MyWebsites.getpwd(url)
-    agent.add_auth(url, auth[:username], auth[:password]) if auth
-    content = agent.get(MyWebsites.geturl(url))
-    if content.forms.first.try(:button).try(:name) == "adult_check"
-       Rails.logger.debug "DEBUG: adult check"
-       form = content.forms.first
-       content = agent.submit(form, form.buttons.first)
+    Scrub.agent.add_auth(url, auth[:username], auth[:password]) if auth
+    if url.match("archiveofourown.org")
+       Rails.logger.debug "DEBUG: ao3 fetch"
+       content = Scrub.agent.get(url)
+       unless content.links.third.text.match(auth[:username])
+         Rails.logger.debug "DEBUG: ao3 sign in"
+         content = Scrub.agent.get("https://archiveofourown.org/users/login?restricted=true")
+         form = content.forms.first
+         username_field = form.field_with(:name => 'user[login]')
+         username_field.value = auth[:username]
+         password_field = form.field_with(:name => 'user[password]')
+         password_field.value = auth[:password]
+         content = Scrub.agent.submit(form, form.buttons.first)
+         content = Scrub.agent.get(url)
+        end
+    else
+      content = Scrub.agent.get(MyWebsites.geturl(url))
+      if content.forms.first.try(:button).try(:name) == "adult_check"
+         Rails.logger.debug "DEBUG: adult check"
+         form = content.forms.first
+         content = Scrub.agent.submit(form, form.buttons.first)
+      end
     end
-    if content.uri.to_s == "https://archiveofourown.org/users/login?restricted=true"
-       Rails.logger.debug "DEBUG: ao3 sign in"
-       form = content.forms.first
-       username_field = form.field_with(:name => 'user[login]')
-       username_field.value = auth[:username]
-       password_field = form.field_with(:name => 'user[password]')
-       password_field.value = auth[:password]
-       content = agent.submit(form, form.buttons.first)
-    end
-    return content.body.force_encoding(agent.page.encoding)
+    return content.body.force_encoding(Scrub.agent.page.encoding)
   end
 
 end

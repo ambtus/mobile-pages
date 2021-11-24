@@ -19,8 +19,6 @@ module MyWebsites
       else
         url + "?format=light"
       end
-    when /archiveofourown/
-      url + "?view_adult=true"
     when /wraithbait/
       url + "&chapter=all&action=printable"
       else url
