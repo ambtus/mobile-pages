@@ -5,8 +5,9 @@ Feature: downloads metadata
     And the download epub command should NOT include tags: "tag1"
     And the download epub command should include tags: "drabble"
     And the download epub command should include tags: "unread"
-    And the download epub command should include comments: "drabble"
+    And the download epub command should include comments: "0 words"
     But the download epub command should NOT include comments: "tag1"
+    And the download epub command should NOT include comments: "drabble"
 
   Scenario: epub page; author and tag strings are populated
     Given I have no pages
@@ -29,7 +30,7 @@ Feature: downloads metadata
     And the download epub command should include tags: "tag1"
     And the download epub command should include tags: "drabble"
     And the download epub command should include tags: "unread"
-    And the download epub command should include comments: "tag1, drabble"
+    And the download epub command should include comments: "tag1, 0 words"
     But the download epub command should NOT include comments: "unread"
 
   Scenario: long and has been read
@@ -38,7 +39,7 @@ Feature: downloads metadata
     Then the download epub command should include tags: "medium"
     But the download epub command should NOT include tags: "unread"
     And the download epub command should NOT include tags: "2014"
-    And the download epub command should include comments: "medium"
+    And the download epub command should include comments: "10,005 words"
     But the download epub command should NOT include comments: "2014"
     And the download epub command should include rating: "10"
 
@@ -46,7 +47,7 @@ Feature: downloads metadata
     Given I have no pages
     And a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3"
     Then the download epub command should include tags: "long"
-      And the download epub command should include comments: "long"
+      And the download epub command should include comments: "30,003 words"
     When I am on the page's page
       And I follow "Part 1"
       And I follow "Rate"
@@ -66,16 +67,17 @@ Feature: downloads metadata
   Scenario: part epubs should have all metadata from parent except size and info
     Given I have no pages
     And a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3" AND fandoms: "harry potter" AND infos: "informational" AND tropes: "AU" AND add_author_string: "my author" AND stars: "4"
-    Then the download epub command for "Part 2" should include series: "harry potter"
+    Then the download epub command for "Part 2" should include authors: "my author&harry potter"
     But the download epub command for "Part 2" should NOT include tags: "harry potter"
     And the download epub command for "Part 2" should include tags: "AU"
     But the download epub command for "Part 2" should NOT include series: "AU"
-    And the download epub command for "Part 2" should include comments: "harry potter, AU"
-    And the download epub command for "Part 2" should include authors: "my author"
+    And the download epub command for "Part 2" should include comments: "AU"
+    And the download epub command for "Part 2" should include authors: "my author&harry potter"
     But the download epub command for "Part 2" should NOT include comments: "my author"
+    And the download epub command for "Part 2" should NOT include comments: "harry potter"
     And the download epub command for "Part 2" should include tags: "medium"
     But the download epub command for "Part 2" should NOT include tags: "long"
-    And the download epub command for "Part 2" should include comments: "medium"
+    And the download epub command for "Part 2" should include comments: "10,001 words"
     And the download epub command should include rating: "8"
     But the download epub command for "Part 2" should NOT include tags: "informational"
     But the download epub command for "Part 2" should NOT include comments: "informational"
@@ -104,4 +106,4 @@ Feature: downloads metadata
     When I am on the page's page
       And I download the epub
     Then the download epub file should exist
-      And the download epub command should include series: "fandom1"
+      And the download epub command should include authors: "fandom1"

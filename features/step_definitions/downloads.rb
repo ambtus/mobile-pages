@@ -31,10 +31,24 @@ Then /^the download epub command should NOT include (.+): "([^"]*)"$/ do |option
 end
 
 Then /^the download epub command for "([^"]*)" should include (.+): "([^"]*)"$/ do |title, option, text|
-  assert Page.find_by_title(title).epub_command.match("--#{option} \"[^\"]*#{text}[^\"]*\"")
+  Rails.logger.debug "DEBUG: page with title #{title} should have epub with #{option} #{text}"
+  epub_tags = Page.find_by_title(title).epub_tags
+  Rails.logger.debug "DEBUG: epub_tags is #{epub_tags}"
+  match_data = epub_tags.match("--#{option} ([^-]*)")
+  Rails.logger.debug "DEBUG: match #{text} in #{match_data[1]}"
+  assert match_data[1].match(text)
 end
 
 Then /^the download epub command for "([^"]*)" should NOT include (.+): "([^"]*)"$/ do |title, option, text|
-  assert !Page.find_by_title(title).epub_command.match("--#{option} \"[^\"]*#{text}[^\"]*\"")
+  Rails.logger.debug "DEBUG: page with title #{title} should not have epub with #{option} #{text}"
+  epub_tags = Page.find_by_title(title).epub_tags
+  Rails.logger.debug "DEBUG: epub_tags is #{epub_tags}"
+  match_data = epub_tags.match("--#{option} ([^-]*)")
+  if match_data
+    Rails.logger.debug "DEBUG: do not match #{text} in #{match_data[1]}"
+    assert !match_data[1].match(text)
+  else
+    assert true
+  end
 end
 

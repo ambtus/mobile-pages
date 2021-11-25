@@ -39,25 +39,31 @@ module Download
   def download_basename
     "#{self.download_dir}#{self.download_title}"
   end
+
+  def hidden?; cached_hidden_string.present?; end
+
   ## --authors
-  ## if it's hidden, then hide the authors also
-  ## if it's not, use the short names
-  ## if it's a part, add the parent's authors
+  ## use the short names of the authors
+  ## if it's a part, add the parent's authors and fandoms
   def all_authors;
     my_authors = self.authors
     my_parents_authors = self.parent_id.blank? ? [] : self.parent.all_authors
-    (my_authors + my_parents_authors).pulverize.sort_by{|a| a.name}
+    (my_authors + my_parents_authors).pulverize
   end
-  def all_authors_string; all_authors.map(&:true_name).join(" & "); end
-  def hidden?; cached_hidden_string.present?; end
-  def download_author_string; hidden? ? "" : all_authors_string; end
+  def all_fandoms;
+    my_fandoms = tags.fandom
+    my_parents_fandoms = self.parent_id.blank? ? [] : self.parent.all_fandoms
+    (my_fandoms + my_parents_fandoms).pulverize
+  end
+  def download_author_string; (all_authors.map(&:true_name) + all_fandoms.map(&:name)).compact.join("&") || ""; end
+
   ## --tags
   ## if it's hidden, then the hidden tags are the only tags
   ## if it's not hidden, then add size and unread (if not read) to not-series tags
   ## if it's a part, add the parent's tags
   def download_tags;
     [(unread? ? Page::UNREAD : ""),
-     *tags.not_fandom.not_relationship.not_info.map(&:name),
+     *tags.not_fandom.not_info.map(&:name),
      ]
   end
   def all_tags;
@@ -66,51 +72,21 @@ module Download
     (my_tags + my_parents_tags).pulverize
   end
   def download_tag_string; hidden? ? cached_hidden_string : "#{size}, #{all_tags.join_comma}"; end
-  ## --series
-  ## if it has exactly one relationship, then use that
-  ## else if it has more than one fandom, then use "crossover"
-  ## else use the fandom
-  def all_fandoms;
-    my_fandoms = tags.fandom
-    my_parents_fandoms = self.parent_id.blank? ? [] : self.parent.all_fandoms
-    (my_fandoms + my_parents_fandoms).pulverize
-  end
-  def all_relationships;
-    my_relationships = tags.relationship
-    my_parents_relationships = self.parent_id.blank? ? [] : self.parent.all_relationships
-    (my_relationships + my_parents_relationships).pulverize
-  end
-  def fandom_name; all_fandoms.present? ? all_fandoms.first.name : ""; end
-  def relationship_name; all_relationships.present? ? all_relationships.first.name : ""; end
-  def crossover?; all_fandoms.size > 1; end
-  def download_fandom_string
-    if all_relationships.size == 1
-      relationship_name
-    else
-      crossover? ? "crossover" : fandom_name;
-    end
-  end
+
   ## --comments
-  ## if it's hidden, then put the authors (if they exist) into the comments with the hidden tags
-  def hidden_comment_string
-    return "" unless hidden?
-    return hidden_string unless all_authors_string.present?
-    "by #{all_authors_string}, #{hidden_string}"
-  end
   def all_tags_for_comments
-    my_tags = self.tags.fandom.by_name + self.tags.relationship.by_name + self.tags.trope.by_name
+    my_tags = self.tags.relationship.by_name + self.tags.trope.by_name
     my_parents_tags = self.parent_id.blank? ? [] : self.parent.all_tags_for_comments
     (my_tags + my_parents_tags).pulverize
   end
   def all_tags_for_comments_string
-    fandoms = all_tags_for_comments.select{|t| t.type == "Fandom"}
     relationships = all_tags_for_comments.select{|t| t.type == "Relationship"}
     tropes = all_tags_for_comments.select{|t| t.type == ""}
-    (fandoms + relationships + tropes).map(&:name).join_comma
+    (relationships + tropes).map(&:name).join_comma
   end
   def download_comment_string
     [
-      hidden_comment_string,
+      hidden_string,
       all_tags_for_comments_string,
       size_string,
       my_short_notes,
@@ -128,9 +104,6 @@ module Download
     end
     unless self.download_tag_string.blank?
       string = string + %Q{ --tags "#{self.download_tag_string}"}
-    end
-    if self.download_fandom_string.present? && self.cached_hidden_string.blank?
-      string = string + %Q{ --series "#{self.download_fandom_string}"}
     end
     unless self.download_comment_string.blank?
       string = string + %Q{ --comments "#{self.download_comment_string}"}

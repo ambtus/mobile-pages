@@ -429,7 +429,7 @@ class Page < ActiveRecord::Base
   end
   def trope_string; self.tags.trope.by_name.joined; end #then redefine trope_string
   def author_string; self.authors.joined; end
-  def size_string; "#{self.size}: #{ActionController::Base.helpers.number_with_delimiter(self.wordcount)} words"; end
+  def size_string; "#{ActionController::Base.helpers.number_with_delimiter(self.wordcount)} words"; end
   def last_read_string; unread? ? UNREAD : last_read.to_date; end
   def my_formatted_notes; Scrub.sanitize_html(my_notes); end
   def formatted_notes; Scrub.sanitize_html(notes); end

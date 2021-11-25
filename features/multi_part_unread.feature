@@ -27,8 +27,7 @@ Feature: one part unread
       And I should NOT see "Parent with that title has content"
       And I should see "unread" within ".last_read"
       And I should NOT see "unread" within "#position_1"
-      And I should see "drabble" within ".size"
-      And I should NOT see "drabble" within "#position_1"
+      And I should see "4 words" within ".size"
       And I should see "two" within ".fandoms"
       And I should NOT see "two" within "#position_1"
 
@@ -47,7 +46,7 @@ Feature: one part unread
       And I fill in "add_parent" with "Parent"
       And I press "Update"
     Then I should see "Parent" within ".title"
-      And I should see "medium" within ".size"
+      And I should see "10,005 words" within ".size"
       And I should NOT see "two" within "#position_2"
       And I should see "one" within "#position_2"
 
