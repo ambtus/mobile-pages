@@ -90,7 +90,8 @@ When("I choose {string} within {string}") do |field, parent|
 end
 
 Then("{string} should be checked") do |checked|
-  assert page.has_checked_field?(checked: checked)
+  Rails.logger.debug "DEBUG: should be checked: #{checked}"
+  assert page.has_checked_field?(checked)
 end
 
 Then("nothing should be checked") do

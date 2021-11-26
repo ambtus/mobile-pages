@@ -19,7 +19,7 @@
       = label_tag "unread_#{choice}", choice
     %br
     = label_tag :stars, "Stars:"
-    - ['better', 5, 4, 3, 2, 1, 'worse', 'unfinished', 'any'].each do |choice|
+    - ['better', '5', '4', '3', '2', '1', 'worse', 'unfinished', 'any'].each do |choice|
       = radio_button_tag :stars, choice, @stars == choice
       = label_tag "stars_#{choice}", choice
     %br

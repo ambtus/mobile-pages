@@ -7,6 +7,7 @@ Feature: stars
     When I choose "stars_5"
       And I press "Find"
     Then I should see "page5"
+    And "5" should be checked
     But I should NOT see "page4"
       And I should NOT see "page3"
       And I should NOT see "page2"
@@ -16,6 +17,7 @@ Feature: stars
       And I press "Find"
     Then I should see "page5"
       And I should see "page4"
+    And "better" should be checked
     But I should NOT see "page3"
       And I should NOT see "page2"
       And I should NOT see "page1"
