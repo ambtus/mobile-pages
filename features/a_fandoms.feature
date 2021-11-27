@@ -229,3 +229,12 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     And I should NOT see "陈情令"
     And I should NOT see "TV"
 
+  Scenario: Marvel Cinematic Universe
+    Given I have no tags
+    And I have no pages
+      And a tag exists with name: "Avengers/Marvel" AND type: "Fandom"
+    And a page exists with ao3_fandoms: "Marvel Cinematic Universe"
+    When I am on the page's page
+    Then I should see "Avengers/Marvel" within ".fandoms"
+    And I should NOT see "Cinematic Universe"
+

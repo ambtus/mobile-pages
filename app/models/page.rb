@@ -727,6 +727,7 @@ class Page < ActiveRecord::Base
       simple.sub!(/^The /, '')
       Rails.logger.debug "DEBUG: trying #{simple}"
       found = Fandom.where('name like ?', "%#{simple}%")
+      found = Fandom.where('name like ?', "%#{simple.split.first}%") if found.blank?
       if found.blank?
         non_mp_fandoms << simple
       else
