@@ -152,6 +152,7 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "DEBUG: Page.create_from_hash(#{hash})"
     tag_types = Hash.new("")
     Tag.types.each {|tag_type| tag_types[tag_type] = hash.delete(tag_type.downcase.pluralize.to_sym) }
+    ao3_fandoms = hash.delete(:ao3_fandoms)
     page = Page.create(hash)
     page.convert_to_type
     tag_types.each {|key, value| page.send("add_tags_from_string", value, key)}
@@ -159,6 +160,7 @@ class Page < ActiveRecord::Base
       page.parts.each {|p| p.update_attribute(:last_read, hash[:last_read])}
       page.update_attribute(:last_read, hash[:last_read])
     end
+    page.add_fandom(ao3_fandoms) if ao3_fandoms
     Rails.logger.debug "DEBUG: created page with tags: [#{page.tags.joined}] and authors: #{page.authors.map(&:true_name)} and last_read: #{page.last_read} and type: #{page.type}"
     page
   end
@@ -720,8 +722,9 @@ class Page < ActiveRecord::Base
     mp_fandoms = []
     non_mp_fandoms = []
     tries.each do |t|
-      try = t.match(/^(.+?)[-:\(]/)
-      simple = try ? try[1].strip : t
+      try = t.split(" | ").last.match(/^(.+?)[-:\(]/)
+      simple = try ? try[1].strip : t.split(" | ").last
+      simple.sub!(/^The /, '')
       Rails.logger.debug "DEBUG: trying #{simple}"
       found = Fandom.where('name like ?', "%#{simple}%")
       if found.blank?
