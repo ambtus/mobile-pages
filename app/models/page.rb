@@ -725,6 +725,7 @@ class Page < ActiveRecord::Base
       try = t.split(" | ").last.match(/^(.+?)[-:\(]/)
       simple = try ? try[1].strip : t.split(" | ").last
       simple.sub!(/^The /, '')
+      simple = I18n.transliterate(simple)
       Rails.logger.debug "DEBUG: trying #{simple}"
       found = Fandom.where('name like ?', "%#{simple}%")
       found = Fandom.where('name like ?', "%#{simple.split.first}%") if found.blank?

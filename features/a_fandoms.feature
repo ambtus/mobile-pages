@@ -238,3 +238,13 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     Then I should see "Avengers/Marvel" within ".fandoms"
     And I should NOT see "Cinematic Universe"
 
+  Scenario: 魔道祖师 - 墨香铜臭 | Módào Zǔshī - Mòxiāng Tóngxiù
+    Given I have no tags
+    And I have no pages
+      And a tag exists with name: "Untamed/MoDao ZuShi" AND type: "Fandom"
+    And a page exists with ao3_fandoms: "陈情令 | The Untamed (TV)"
+    When I am on the page's page
+    Then I should see "Untamed/MoDao ZuShi" within ".fandoms"
+    And I should NOT see "魔道祖师"
+    And I should NOT see "Mòxiāng"
+
