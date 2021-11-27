@@ -127,4 +127,35 @@ Feature: ao3 specific stuff
     Then I should see "by adiduck (book_people), whimsicalimages" within ".notes"
     And I should NOT see "book_people" within ".authors"
 
+  Scenario: fandoms
+  Given I have no pages
+  And I have no fandoms
+  And a page exists with url: "https://archiveofourown.org/works/688"
+  When I am on the homepage
+    And I follow "Skipping Stones"
+    Then I should see "Fandom: Harry Potter" within ".notes"
+    But I should NOT see "Rowling" within ".notes"
+  Given a tag exists with name: "Harry Potter" AND type: "Fandom"
+    And I press "Rebuild Meta"
+    Then I should see "Harry Potter" within ".fandoms"
+    And I should NOT see "Fandom: Harry Potter" within ".notes"
 
+
+  Scenario: multiple fandoms and author on a Single
+  Given I have no pages
+  And I have no fandoms
+  And a page exists with url: "https://archiveofourown.org/works/5720104"
+  When I am on the page with url "https://archiveofourown.org/works/5720104"
+    Then I should see "Fandom: Harry Potter, Die Hard, Robin Hood" within ".notes"
+    And I should see "by manicmea" within ".notes"
+   But I should NOT see "Rowling" within ".notes"
+    And I should NOT see "Movies" within ".notes"
+    And I should NOT see "Prince" within ".notes"
+    And I should NOT see "1991" within ".notes"
+  When a tag exists with name: "Harry Potter" AND type: "Fandom"
+  And an author exists with name: "manicmea"
+    And I press "Rebuild Meta"
+    Then I should see "Harry Potter" within ".fandoms"
+    And I should see "manicmea" within ".authors"
+    And I should see "Fandom: Die Hard, Robin Hood" within ".notes"
+    But I should NOT see "by manicmea" within ".notes"

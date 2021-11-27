@@ -6,6 +6,10 @@ Then("I have no omitteds") do
   Hidden.delete_all
 end
 
+Then("I have no fandoms") do
+  Fandom.delete_all
+end
+
 Then("I should have no tags") do
   assert Tag.count == 0
 end

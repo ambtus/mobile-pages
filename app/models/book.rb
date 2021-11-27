@@ -23,12 +23,14 @@ class Book < Page
 
     self.notes = [doc_summary, doc_tags, doc_relationships].join_hr
 
-    # don't add authors for books in a series
+    # don't add authors or fandoms for books in a series
     unless self.parent
-      add_author(doc.css(".byline a").map(&:text).join(", "))
+      add_author(doc.css(".byline a").map(&:text).join_comma)
+      add_fandom(doc.css(".fandom a").map(&:children).map(&:text).join_comma)
+      Rails.logger.debug "DEBUG: notes now: #{self.notes}"
     end
 
-    self.save
+    self.save! && self.remove_outdated_downloads
   end
 
   def get_chapters_from_ao3

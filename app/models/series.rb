@@ -41,7 +41,7 @@ class Series < Page
 
     add_author(doc_authors) if doc_authors
 
-    self.save!
+    self.save! && self.remove_outdated_downloads
 
     return html.scan(/work-(\d+)/).flatten.uniq
 

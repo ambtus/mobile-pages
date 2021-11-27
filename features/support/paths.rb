@@ -22,6 +22,12 @@ module NavigationHelpers
       raise "no page with title: #{title}" unless page
       page_path(page)
 
+    when /^the page with url "(.*)"/
+      url = $1
+      page = Page.find_by_url(url)
+      raise "no page with url: #{url}" unless page
+      page_path(page)
+
     when /^the edit tag page for "(.*)"$/
       edit_tag_path(Tag.find_by_name($1))
 

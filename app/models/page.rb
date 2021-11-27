@@ -710,17 +710,33 @@ class Page < ActiveRecord::Base
     mp_authors.each {|a| self.authors << a}
     unless non_mp_authors.empty?
       byline = "by #{non_mp_authors.join(", ")}"
-      if self.notes.blank?
-        self.notes = byline
-      elsif !self.notes.match(byline)
-        self.notes = [byline,notes].join("\n\n")
-      else
-        return self.notes
-      end
-      self.update_attribute(:notes, self.notes) unless self.new_record?
-      self.notes
+      self.notes = "<p>#{byline}</p>#{self.notes}"
     end
-    self.remove_outdated_downloads
+  end
+
+  def add_fandom(string)
+    return if string.blank?
+    tries = string.split(", ")
+    mp_fandoms = []
+    non_mp_fandoms = []
+    tries.each do |t|
+      try = t.match(/^(.+?)[-:\(]/)
+      simple = try ? try[1].strip : t
+      Rails.logger.debug "DEBUG: trying #{simple}"
+      found = Fandom.where('name like ?', "%#{simple}%")
+      if found.blank?
+        non_mp_fandoms << simple
+      else
+        Rails.logger.debug "DEBUG: adding fandom #{found.inspect}"
+        mp_fandoms << found
+      end
+    end
+    mp_fandoms.each {|f| self.tags << f}
+    unless non_mp_fandoms.empty?
+      Rails.logger.debug "DEBUG: adding non-fandom tags #{non_mp_fandoms}"
+      fandoms = "Fandom: #{non_mp_fandoms.join(", ")}"
+      self.notes = "<p>#{fandoms}</p>#{self.notes}"
+    end
   end
 
   def rebuild_meta
