@@ -27,7 +27,7 @@ class TagsController < ApplicationController
         render :edit and return
       end
       @tag.pages.each do |page|
-        page.tags << new_tag
+        page.tags << new_tag unless page.tags.include?(new_tag)
       end
       @tag.destroy_me
       redirect_to tags_path

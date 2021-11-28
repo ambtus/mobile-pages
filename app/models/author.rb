@@ -37,7 +37,7 @@ class Author < ActiveRecord::Base
     new_name = "#{true_name} (#{akas})"
     Rails.logger.debug "DEBUG: merge #{aka_author.name} into #{self.name} as #{new_name}"
     self.update_attribute(:name, new_name)
-    aka_author.pages.each {|p| p.authors << self}
+    aka_author.pages.each {|p| p.authors << self unless p.authors.include?(self)}
     aka_author.destroy
     self
   end

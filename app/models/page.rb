@@ -288,9 +288,9 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "DEBUG: removing #{self.parent_id} from #{self.id}"
     return unless parent
     parent = self.parent
-    self.tags << parent.tags
+    self.tags << parent.tags - self.tags
     self.cache_tags
-    self.authors << parent.authors
+    self.authors << parent.authors - self.authors
     self.update_attribute(:parent_id, nil)
     self.set_type
   end
@@ -317,9 +317,9 @@ class Page < ActiveRecord::Base
     count = parent.parts.size + 1
     self.update(:parent_id => parent.id, :position => count)
     if new
-      parent.tags << self.tags.not_hidden.not_omitted.not_relationship.not_info
+      parent.tags << self.tags.not_hidden.not_omitted.not_relationship.not_info - parent.tags
       parent.cache_tags
-      parent.authors << self.authors
+      parent.authors << self.authors - parent.authors
       parent.update_attribute(:stars, self.stars)
     else
       Rails.logger.debug "DEBUG: updating parent last read #{parent.last_read}? mine is #{self.last_read}"
@@ -415,7 +415,7 @@ class Page < ActiveRecord::Base
     string.split(",").each do |possible|
       author = Author.find_by_short_name(possible)
       author = Author.find_or_create_by(name: possible.squish) unless author
-      self.authors << author
+      self.authors << author unless self.authors.include?(author)
     end
     self.authors
   end
@@ -444,7 +444,8 @@ class Page < ActiveRecord::Base
     return if string.blank?
     type = "Tag" if type == "Trope"
     string.split(",").each do |tag|
-      self.tags << type.constantize.find_or_create_by(name: tag.squish)
+      typed_tag = type.constantize.find_or_create_by(name: tag.squish)
+      self.tags << typed_tag unless self.tags.include?(typed_tag)
     end
     self.cache_tags
   end
@@ -706,7 +707,7 @@ class Page < ActiveRecord::Base
       if found.blank?
         non_mp_authors << t
       else
-        mp_authors << found
+        mp_authors << found unless self.authors.include?(found)
       end
     end
     mp_authors.each {|a| self.authors << a}
@@ -732,10 +733,10 @@ class Page < ActiveRecord::Base
       if found.blank?
         non_mp_fandoms << simple
       else
-        Rails.logger.debug "DEBUG: adding fandom #{found.inspect}"
-        mp_fandoms << found
+        mp_fandoms << found unless self.tags.include?(simple)
       end
     end
+    Rails.logger.debug "DEBUG: adding fandoms #{mp_fandoms.map(&:name)}"
     mp_fandoms.each {|f| self.tags << f}
     unless non_mp_fandoms.empty?
       Rails.logger.debug "DEBUG: adding non-fandom tags #{non_mp_fandoms}"
