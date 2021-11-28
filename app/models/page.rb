@@ -160,7 +160,7 @@ class Page < ActiveRecord::Base
       page.parts.each {|p| p.update_attribute(:last_read, hash[:last_read])}
       page.update_attribute(:last_read, hash[:last_read])
     end
-    page.add_fandom(ao3_fandoms) if ao3_fandoms
+    page.add_fandom(ao3_fandoms) && page.save if ao3_fandoms
     Rails.logger.debug "DEBUG: created page with tags: [#{page.tags.joined}] and authors: #{page.authors.map(&:true_name)} and last_read: #{page.last_read} and type: #{page.type}"
     page
   end
@@ -729,7 +729,7 @@ class Page < ActiveRecord::Base
       simple = I18n.transliterate(simple)
       Rails.logger.debug "DEBUG: trying #{simple}"
       found = Fandom.where('name like ?', "%#{simple}%").first
-      found = Fandom.where('name like ?', "%#{simple.split.first}%").first if found.blank?
+      found = simple.split.collect {|w| Fandom.where('name like ?', "%#{w}%").first}.compact.first if found.blank?
       if found.blank?
         non_mp_fandoms << simple
       else
