@@ -728,18 +728,18 @@ class Page < ActiveRecord::Base
       simple.sub!(/^The /, '')
       simple = I18n.transliterate(simple)
       Rails.logger.debug "DEBUG: trying #{simple}"
-      found = Fandom.where('name like ?', "%#{simple}%")
-      found = Fandom.where('name like ?', "%#{simple.split.first}%") if found.blank?
+      found = Fandom.where('name like ?', "%#{simple}%").first
+      found = Fandom.where('name like ?', "%#{simple.split.first}%").first if found.blank?
       if found.blank?
         non_mp_fandoms << simple
       else
-        mp_fandoms << found unless self.tags.include?(simple)
+        mp_fandoms << found unless self.tags.include?(found) || mp_fandoms.include?(found)
       end
     end
     Rails.logger.debug "DEBUG: adding fandoms #{mp_fandoms.map(&:name)}"
     mp_fandoms.each {|f| self.tags << f}
     unless non_mp_fandoms.empty?
-      Rails.logger.debug "DEBUG: adding non-fandom tags #{non_mp_fandoms}"
+      Rails.logger.debug "DEBUG: adding non-tags #{non_mp_fandoms} to notes"
       fandoms = "Fandom: #{non_mp_fandoms.join(", ")}"
       self.notes = "<p>#{fandoms}</p>#{self.notes}"
     end
