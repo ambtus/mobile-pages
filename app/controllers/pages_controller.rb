@@ -75,14 +75,8 @@ class PagesController < ApplicationController
         @page = Page.new(params[:page])
       else
         @page.convert_to_type
-        @page.authors << @author if @author
-        @page.tags << @tag if @tag
-        @page.tags << @hidden if @hidden
-        @page.tags << @fandom if @fandom
-        @page.tags << @omitted if @omitted
-        @page.tags << @relationship if @relationship
-        @page.tags << @rating if @rating
-        @page.tags << @info if @info
+        @page.authors << @author if @author && !@page.authors.include?(@author)
+        @page.tags << [@tag, @hidden, @fandom, @omitted, @relationship, @rating, @info].compact - @page.tags
         @page.cache_tags
         if @fandom.blank?
           flash[:notice] = "Page created. Please select fandom(s)"
