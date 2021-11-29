@@ -100,8 +100,8 @@ class PagesController < ApplicationController
         flash[:notice] = "Set to Read Now"
         redirect_to root_path and return
       when "Read Later"
-        @page.make_last
-        flash[:notice] = "Set to Read Later"
+        @page.reset_read_after
+        flash[:notice] = "Reset read after date"
         redirect_to root_path and return
       when "Audiobook created"
         @page.make_audio

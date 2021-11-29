@@ -44,38 +44,31 @@ Given /^the following pages?$/ do |table|
   end
 end
 
-Given("pages with all possible ratings exist") do
+Given("pages with all possible stars exist") do
+  Page.create(title: "page0")
+  Page.create(title: "page1").rate(1)
+  Page.create(title: "page2h").rate(2)
+  Page.create(title: "page3").rate(3)
+  Page.create(title: "page4l").rate(4)
+  Page.create(title: "page5").rate(5)
+  Page.create(title: "page9").rate(9)
+end
+
+Given("pages with ratings and omitteds exist") do
   Page.delete_all
   interesting = Rating.find_or_create_by(name: "interesting")
   boring = Omitted.find_or_create_by(name: "boring")
   loving = Rating.find_or_create_by(name: "loving")
   hateful = Omitted.find_or_create_by(name: "hateful")
-  p = Page.create(title: "page1")
-  p.rate(1)
-  p.tags << [hateful, boring]
-  p = Page.create(title: "page2h")
-  p.rate(2)
-  p.tags << hateful
-  p = Page.create(title: "page2b")
-  p.rate(2)
-  p.tags << boring
-  p = Page.create(title: "page3")
-  p.rate(3)
-  p = Page.create(title: "page3l")
-  p.rate(3)
-  p.tags << [boring,loving]
-  p = Page.create(title: "page3h")
-  p.rate(3)
-  p.tags << [hateful,interesting]
-  p = Page.create(title: "page4l")
-  p.rate(4)
-  p.tags << loving
-  p = Page.create(title: "page4i")
-  p.rate(4)
-  p.tags << interesting
-  p = Page.create(title: "page5")
-  p.rate(5)
-  p.tags << [interesting, loving]
+  Page.find_or_create_by(title: "page1").tags << [hateful, boring]
+  Page.find_or_create_by(title: "page2h").tags << hateful
+  Page.find_or_create_by(title: "page2b").tags << boring
+  Page.find_or_create_by(title: "page3")
+  Page.find_or_create_by(title: "page3l").tags << [boring,loving]
+  Page.find_or_create_by(title: "page3h").tags << [hateful,interesting]
+  Page.find_or_create_by(title: "page4l").tags << loving
+  Page.find_or_create_by(title: "page4i").tags << interesting
+  Page.find_or_create_by(title: "page5").tags << [interesting, loving]
   Page.all.map(&:cache_tags)
 end
 

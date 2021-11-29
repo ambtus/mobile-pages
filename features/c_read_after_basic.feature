@@ -1,6 +1,6 @@
 Feature: read_after order
 
-  Scenario: Changing read after orders
+  Scenario: Changing read after order by rating a page
     Given I have no pages
     And 5 pages exist
     When I am on the homepage

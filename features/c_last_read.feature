@@ -49,17 +49,22 @@ Feature: last_read (also unread)
 
   Scenario: rating a part updates the parent and the part but not the sibling
     Given I have no pages
-    And a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND last_read: "2009-01-01"
+    And a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND last_read: "2009-01-01" AND stars: "5"
     When I am on the page's page
-      And I follow "Part 2" within "#position_2"
-      And I follow "Rate"
+    Then I should see "2009-01-01" within ".last_read"
+      And I should see "5 stars" within ".stars"
+    When I follow "Part 2" within "#position_2"
+    Then I should see "2009-01-01" within ".last_read"
+    When I follow "Rate"
       And I choose "3"
     And I press "Rate"
+      And I follow "Part 2"
+      Then I should see today within ".last_read"
    When I am on the page's page
      Then I should see "2009-01-01" within ".last_read"
-     And I should NOT see "2009-01-01" within "#position_1"
+     But I should NOT see "2009-01-01" within "#position_1"
      And I should see today within "#position_2"
-     And I should NOT see "unread" within "#position_2"
+     And I should see "3 stars" within "#position_2"
 
    Scenario: add unread part(s) to parent with read parts makes parent unread, rating one leaves parent unread, rating both updates parent
     Given I have no pages

@@ -21,7 +21,31 @@ Feature: pages with omitted tags are filtered in by default. During search, anyt
     Then I should NOT see "Page 1"
     But I should see "not sad" within "#position_1"
 
-  Scenario: find by tag and omitted
+   Scenario: filter by rating and omitted
+    Given I have no pages
+    And pages with ratings and omitteds exist
+    When I am on the homepage
+      And I select "interesting" from "rating"
+      And I select "hateful" from "omitted"
+      And I press "Find"
+    Then I should NOT see "page3"
+    And I should NOT see "page2"
+    And I should NOT see "page1"
+      But I should see "page5"
+      And I should see "page4i"
+      But I should NOT see "page4l"
+    When I am on the homepage
+      And I select "loving" from "rating"
+      And I select "boring" from "omitted"
+      And I press "Find"
+    Then I should NOT see "page3"
+     And I should NOT see "page2"
+     And I should NOT see "page1"
+      But I should see "page5"
+      And I should see "page4l"
+      But I should NOT see "page4i"
+
+  Scenario: find by trope and omitted
     Given the following pages
       | title                            | tropes    | omitteds |
       | The Mysterious Affair at Styles  | mystery |          |

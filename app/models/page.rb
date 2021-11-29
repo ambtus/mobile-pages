@@ -148,20 +148,24 @@ class Page < ActiveRecord::Base
   after_create :initial_fetch
 
   # used in tests
+  def inspect
+     regexp = /([\d-]+ \d\d:\d\d)([\d:.+ ]+)/
+     super.match(regexp) ? super.gsub(regexp, $1) : super
+  end
   def self.create_from_hash(hash)
     Rails.logger.debug "DEBUG: Page.create_from_hash(#{hash})"
     tag_types = Hash.new("")
-    Tag.types.each {|tag_type| tag_types[tag_type] = hash.delete(tag_type.downcase.pluralize.to_sym) }
+    Tag.types.each {|tt| tag_types[tt] = hash.delete(tt.downcase.pluralize.to_sym) }
     ao3_fandoms = hash.delete(:ao3_fandoms)
     page = Page.create(hash)
     page.convert_to_type
     tag_types.each {|key, value| page.send("add_tags_from_string", value, key)}
     if hash[:last_read] # update parts and self
-      page.parts.each {|p| p.update_attribute(:last_read, hash[:last_read])}
-      page.update_attribute(:last_read, hash[:last_read])
+      page.parts.each {|p| p.update_read_after(hash[:last_read].to_date)}
+      page.update_read_after(hash[:last_read].to_date)
     end
     page.add_fandom(ao3_fandoms) && page.save if ao3_fandoms
-    Rails.logger.debug "DEBUG: created page with tags: [#{page.tags.joined}] and authors: #{page.authors.map(&:true_name)} and last_read: #{page.last_read} and type: #{page.type}"
+    Rails.logger.debug "DEBUG: created test page #{page.inspect}"
     page
   end
 
@@ -344,30 +348,21 @@ class Page < ActiveRecord::Base
     end
     return self
   end
-  def make_last
-    latest = Page.where(:parent_id => nil).order(:read_after).last.read_after || Date.today
-    self.update_attribute(:read_after, latest + 1.day)
-    if self.parent
-      parent = self.parent
-      parent.update_attribute(:read_after, latest + 1.day) if parent
-      grandparent = parent.parent if parent
-      grandparent.update_attribute(:read_after, latest + 1.day) if grandparent
-    end
+
+  def reset_read_after
+    self.update_read_after(last_read)
+    parent.reset_read_after if parent
     return self
   end
 
   def make_unfinished
-    latest = Page.where(:parent_id => nil).order(:read_after).last.read_after + 1.day || Date.tomorrow
-    self.update_attribute(:read_after, latest)
     self.update_attribute(:stars, 9)
-    self.update(:last_read => Time.now)
     self.update_read_after
     return self
   end
 
   def rate(stars, update_parent = true, update_children = true)
     self.stars = stars.to_i
-    self.update(:last_read => Time.now)
     self.update_read_after
     self.parts.each {|part| part.rate(stars, false, true)} if update_children
     if self.parent && update_parent
@@ -377,23 +372,27 @@ class Page < ActiveRecord::Base
     return self.stars
   end
 
-  def update_read_after
-    Rails.logger.debug "DEBUG: part last read: #{self.last_read}"
-    rating = self.stars
-    if rating == 5
-      self.read_after = Time.now + 6.months
-    elsif rating == 4
-      self.read_after = Time.now + 1.year
-    elsif rating == 3
-      self.read_after = Time.now + 2.years
-    elsif rating == 2
-      self.read_after = Time.now + 3.years
-    elsif rating == 1
-      self.read_after = Time.now + 4.years
-    elsif rating == 9
-      self.read_after = Time.now + 5.years
+  def update_read_after(new_last_read = Time.now)
+    self.last_read = new_last_read
+    Rails.logger.debug "DEBUG: new last read: #{self.last_read}"
+    self.read_after = case stars
+      when 5
+        new_last_read + 6.months
+      when 4
+        new_last_read + 1.year
+      when 3
+        new_last_read + 2.years
+      when 2
+        new_last_read + 3.years
+      when 1
+        new_last_read + 4.years
+      when 9
+        new_last_read + 5.years
+      when 10
+        new_last_read
     end
-    self.save
+    Rails.logger.debug "DEBUG: new read after: #{self.read_after}"
+    self.save!
   end
 
   def update_last_read
@@ -401,9 +400,8 @@ class Page < ActiveRecord::Base
     if last_reads.include?(nil)
       self.update_attribute(:last_read, nil)
     else
-      self.update_attribute(:last_read, last_reads.sort.first)
       self.update_attribute(:stars, self.parts.map(&:stars).sort.last)
-      self.update_read_after
+      self.update_read_after(last_reads.sort.first)
     end
     Rails.logger.debug "DEBUG: parent last read: #{self.last_read}"
   end
