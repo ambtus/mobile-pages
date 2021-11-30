@@ -22,7 +22,7 @@ class Chapter < Page
 
     Rails.logger.debug "DEBUG: getting chapter title for #{self.id} at position #{position}"
     self.title = ao3_chapter_title(doc, position)
-    Rails.logger.debug "DEBUG: chapter title: #{self.title}"
+    Rails.logger.debug "DEBUG: ao3 chapter title: #{self.title}"
 
     doc_summary = Scrub.sanitize_html(doc.css(".summary blockquote")).children.to_html
     doc_notes = Scrub.sanitize_html(doc.css(".notes blockquote")).children.to_html

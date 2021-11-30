@@ -15,6 +15,7 @@ class Book < Page
     end
 
     self.title = doc.xpath("//div[@id='workskin']").xpath("//h2").first.children.text.strip rescue "empty title"
+    Rails.logger.debug "DEBUG: ao3 book title: #{self.title}"
 
     doc_summary = Scrub.sanitize_html(doc.css(".summary blockquote")).children.to_html
     doc_notes = Scrub.sanitize_html(doc.css(".notes blockquote")).children.to_html

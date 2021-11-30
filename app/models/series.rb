@@ -9,10 +9,10 @@ class Series < Page
 
     doc_title = doc.xpath("//div[@id='main']").xpath("//h2").first.children.text.strip rescue nil
     if doc_title
-      Rails.logger.debug "DEBUG: found title: #{doc_title}"
+      Rails.logger.debug "DEBUG: found series title: #{doc_title}"
       self.title = doc_title
     else
-      Rails.logger.debug "DEBUG: was not able to find title"
+      Rails.logger.debug "DEBUG: was not able to find series title"
       self.title = "title not found"
     end
 

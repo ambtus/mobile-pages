@@ -297,6 +297,7 @@ class Page < ActiveRecord::Base
     self.authors << parent.authors - self.authors
     self.update_attribute(:parent_id, nil)
     self.set_type
+    self.get_meta_from_ao3(false) if self.ao3?
   end
 
   def add_parent(title)
