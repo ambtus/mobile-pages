@@ -166,3 +166,18 @@ Feature: ao3 specific stuff
     Then I should see "Counting Drabbles (Series)" within ".title"
     When I follow "The Flower"
       Then I should see "The Flower [sequel to Skipping Stones] (Single)" within ".title"
+
+  Scenario: fetching a series from before all the works had urls
+    Given I have no pages
+      And Misfits exists
+    When I am on the homepage
+      And I follow "Misfit Series"
+    Then I should see "Misfit Series (Series)" within ".title"
+    When I follow "Refetch"
+      Then I should see "A Misfit Working Holiday In New York" within "#url_list"
+    When I fill in "url" with "https://archiveofourown.org/series/334075"
+    And I press "Refetch"
+    Then I should see "Misfits (Series)" within ".title"
+      Then I should see "Three Misfits in New York" within "#position_1"
+      And I should see "A Misfit Working Holiday In New York" within "#position_2"
+    And I should have 3 pages

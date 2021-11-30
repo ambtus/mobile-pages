@@ -57,10 +57,14 @@ class Series < Page
       work = possibles.first if possibles.size == 1
       if possibles.size > 1
         possibles.each do |p|
-          if p.parent && p.parent.ao3_url == url
-           Rails.logger.debug "DEBUG: selecting #{p.parent.title}"
-           work = p.parent
+          if p.parent && p.parent == self
+           Rails.logger.debug "DEBUG: selecting from first level possibles #{p.title}"
+           work = p
            break
+          elsif p.parent && p.parent && p.parent.parent == self
+            Rails.logger.debug "DEBUG: selecting from second level possibles #{p.parent.title}"
+            work = p.parent
+            break
           end
         end
       end

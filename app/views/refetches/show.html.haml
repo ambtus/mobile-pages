@@ -11,6 +11,8 @@
       .parts= text_area_tag :url_list, @page.url_list, :rows => @page.parts.size + 2, :cols => 33
       -if @page.parts.first.ao3?
         = text_field_tag :url, @page.ao3_url, :maxlength => 255, :size => 33
+      -elsif !@page.parts.first.parts.blank?
+        = text_field_tag :url, "", :maxlength => 255, :size => 33
     %br
     = submit_tag "Refetch"
     = submit_tag "Refetch Meta"

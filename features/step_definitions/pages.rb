@@ -5,6 +5,9 @@ end
 Then('I should have {int} page') do |int|
   Page.count == int
 end
+Then('I should have {int} pages') do |int|
+  Page.count == int
+end
 
 Given("the page's directory is missing") do
   FileUtils.rm_rf(Page.first.mydirectory)
