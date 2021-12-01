@@ -53,26 +53,46 @@ class Series < Page
     work_list.each_with_index do |work_id, index|
       count = index + 1
       url = "https://archiveofourown.org/works/#{work_id}"
-      possibles = Page.where("url LIKE ?", "%#{url.sub(/^https?/, '')}%")
-      work = possibles.first if possibles.size == 1
-      if possibles.size > 1
+      url_variations = [
+        url,
+        "https://archiveofourown.org/works/#{work_id}/",
+        "http://archiveofourown.org/works/#{work_id}",
+        "http://archiveofourown.org/works/#{work_id}/",
+       ]
+      work = Page.where(url: url_variations).first
+      if work.nil?
+        possibles = Page.where("url LIKE ?", "%#{url.sub(/^https?/, '')}%")
+        work = possibles.first if possibles.size == 1
+      end
+      if work && work.parent && work.parent != self
+        work = work.parent
+      end
+      if possibles && possibles.size > 1
         possibles.each do |p|
           if p.parent && p.parent == self
-           Rails.logger.debug "DEBUG: selecting from first level possibles #{p.title}"
+           Rails.logger.debug "DEBUG: selecting from my first level possibles #{p.title}"
            work = p
            break
+          elsif p.parent && p.parent.parent.nil?
+           Rails.logger.debug "DEBUG: selecting from unclaimed first level possibles #{p.parent.title}"
+           work = p.parent
+           break
           elsif p.parent && p.parent && p.parent.parent == self
-            Rails.logger.debug "DEBUG: selecting from second level possibles #{p.parent.title}"
+            Rails.logger.debug "DEBUG: selecting from my second level possibles #{p.parent.title}"
             work = p.parent
+            break
+          elsif p.parent && p.parent.parent && p.parent.parent.parent.nil?
+            Rails.logger.debug "DEBUG: selecting from unclaimed second level possibles #{p.parent.parent.title}"
+            work = p.parent.parent
             break
           end
         end
       end
       if work
         if work.position == count && work.parent_id == self.id
-          Rails.logger.debug "DEBUG: work already exists, skipping #{work.id} in position #{count}"
+          Rails.logger.debug "DEBUG: work already exists, skipping #{work.title} in position #{count}"
         else
-          Rails.logger.debug "DEBUG: work already exists, updating #{work.id} with position #{count} and parent_id #{self.id}"
+          Rails.logger.debug "DEBUG: work already exists, updating #{work.title} with position #{count} and parent_id #{self.id}"
           work.update!(position: count, parent_id: self.id)
         end
       else

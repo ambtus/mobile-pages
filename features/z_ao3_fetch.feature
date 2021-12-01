@@ -182,3 +182,31 @@ Feature: ao3 specific stuff
       Then I should see "Three Misfits in New York" within "#position_1"
       And I should see "A Misfit Working Holiday In New York" within "#position_2"
     And I should have 3 pages
+
+  Scenario: creating a series when I already have one of its singles
+    Given I have no pages
+      And a tag exists with name: "harry potter" AND type: "Fandom"
+      And Skipping Stones exists
+    When I am on the homepage
+      And I fill in "page_url" with "https://archiveofourown.org/series/46"
+      And I select "harry potter" from "fandom"
+      And I press "Store"
+    Then I should see "Counting Drabbles (Series)" within ".title"
+      And I should see "Skipping Stones" within "#position_1"
+      And I should see "The Flower" within "#position_2"
+    And I should have 3 pages
+
+  Scenario: creating a series when I already have one of its books
+    Given I have no pages
+      And Misfits exists
+    When I am on the homepage
+      And I follow "Misfit Series"
+      And I press "Uncollect"
+    Then I should have 4 pages
+    When I am on the homepage
+      And I fill in "page_url" with "https://archiveofourown.org/series/334075"
+      And I press "Store"
+      And I follow "Misfit"
+    Then I should see "Three Misfits in New York" within "#position_1"
+      And I should see "A Misfit Working Holiday In New York" within "#position_2"
+    And I should have 5 pages

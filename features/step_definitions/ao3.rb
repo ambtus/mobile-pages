@@ -63,7 +63,7 @@ end
 
 Given /^Skipping Stones exists$/ do
   page = Single.create!(title: "temp")
-  page.update!(url: "https://archiveofourown.org/works/688")
+  page.update!(url: "http://archiveofourown.org/works/688/")
   page.raw_html = File.open(Rails.root + "features/html/skipping.html", 'r:utf-8') { |f| f.read }
   page.get_meta_from_ao3(false)
 end
@@ -101,6 +101,7 @@ Given /^Misfits exists$/ do
   chapter4.update!(url: "http://archiveofourown.org/works/13765827/chapters/33586779")
   chapter4.get_meta_from_ao3(false)
   work2.get_meta_from_ao3(false)
+  work2.update!(url: "http://archiveofourown.org/works/13765827/")
 
   series.set_wordcount
 end
