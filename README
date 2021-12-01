@@ -51,3 +51,7 @@ rake db:schema:load
 == Testing
 
 rake cucumber
+
+OR (if you don't have an ao3 login in my_websites.rb)
+
+cucumber features/[a-y]*.feature
