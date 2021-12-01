@@ -479,7 +479,6 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "DEBUG: cache_tags for #{self.id} tags: #{cache_string}, hiddens: #{hidden_string}"
     self.remove_outdated_downloads
     self.update(cached_tag_string: cache_string, cached_hidden_string: hidden_string)
-    self.parts.map(&:remove_duplicate_tags)
   end
 
   def unfinished?; stars == 9; end
