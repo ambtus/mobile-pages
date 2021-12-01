@@ -431,7 +431,32 @@ class Page < ActiveRecord::Base
   def trope_string; self.tags.trope.by_name.joined; end #then redefine trope_string
   def author_string; self.authors.joined; end
   def size_string; "#{ActionController::Base.helpers.number_with_delimiter(self.wordcount)} words"; end
-  def last_read_string; unread? ? UNREAD : last_read.to_date; end
+  def last_read_string
+    if unread?
+      if parts.any?
+        if parts.map(&:last_read).any?
+          last_part_read = parts.map(&:last_read).compact.map(&:to_date).sort.first
+          Rails.logger.debug "DEBUG: last_part_read: #{last_part_read}"
+         "#{UNREAD} parts (#{last_part_read})"
+        elsif parts.map(&:parts).any?
+          subparts = parts.map(&:parts).flatten
+          if subparts.map(&:last_read).any?
+            last_subpart_read = subparts.map(&:last_read).compact.map(&:to_date).sort.first
+            Rails.logger.debug "DEBUG: last_subpart_read: #{last_subpart_read}"
+            "#{UNREAD} subparts (#{last_subpart_read})"
+          else
+            UNREAD
+          end
+        else
+          UNREAD
+        end
+      else
+        UNREAD
+      end
+    else
+      last_read.to_date
+    end
+  end
   def my_formatted_notes; Scrub.sanitize_html(my_notes); end
   def formatted_notes; Scrub.sanitize_html(notes); end
 
