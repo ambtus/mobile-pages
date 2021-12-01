@@ -78,7 +78,7 @@ class PagesController < ApplicationController
         @page.authors << @author if @author && !@page.authors.include?(@author)
         @page.tags << [@tag, @hidden, @fandom, @omitted, @relationship, @rating, @info].compact - @page.tags
         @page.cache_tags
-        if @fandom.blank?
+        if @page.tags.fandom.blank?
           flash[:notice] = "Page created. Please select fandom(s)"
           redirect_to tag_path(@page) and return
         else

@@ -6,10 +6,11 @@ Feature: ao3 specific stuff
       And an author exists with name: "Sidra"
       And I am on the homepage
     When I fill in "page_url" with "https://archiveofourown.org/works/68481"
-      And I select "popslash" from "fandom"
       And I press "Store"
     Then I should NOT see "Title can't be blank"
+    And I should NOT see "Select tags"
       And I should see "I Drive Myself Crazy (Single)" within ".title"
+      And I should see "popslash" within ".fandoms"
       And I should see "please no crossovers" within ".notes"
       And I should NOT see "Popslash" within ".notes"
       And I should see "AJ/JC" within ".notes"
