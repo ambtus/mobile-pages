@@ -2,6 +2,7 @@ class TagsController < ApplicationController
   def index
     @tags = Tag.all
   end
+
   def show
     if params[:destroy]
       @tag = Tag.find(params[:id])
@@ -10,10 +11,12 @@ class TagsController < ApplicationController
     @page = Page.find(params[:id])
     render :select
   end
+
   def edit
     @tag = Tag.find(params[:id])
     @tags = Tag.all
   end
+
   def update
     @tag = Tag.find(params[:id])
     if params[:commit] == "Merge"
@@ -38,6 +41,27 @@ class TagsController < ApplicationController
       @tag.update_attribute(:type, type)
       rechache ? @tag.pages.map(&:cache_tags) : @tag.pages.map(&:remove_outdated_downloads)
       redirect_to tags_path
+    elsif params[:commit] == "Split"
+      if params[:first_tag_name] == params[:second_tag_name]
+        flash.now[:alert] = "can't split: names must be different"
+        render :edit and return
+      end
+      new_names = Tag.find_by_name(params[:first_tag_name]).nil? && Tag.find_by_name(params[:second_tag_name]).nil?
+      if new_names
+        @tag.update!(name: params[:first_tag_name])
+        new_tag = Tag.create!(name: params[:second_tag_name], type: @tag.type )
+        @tag.pages.each{|p| p.tags << new_tag unless p.tags.include?(new_tag)}
+        @tag.pages.map(&:cache_tags)
+        redirect_to tags_path and return
+      end
+      first = Tag.find_by_name(params[:first_tag_name]) || Tag.create!(name: params[:first_tag_name], type: @tag.type)
+      second = Tag.find_by_name(params[:second_tag_name]) || Tag.create!(name: params[:second_tag_name], type: @tag.type)
+      @tag.pages.each do |page|
+        page.tags << first unless page.tags.include?(first)
+        page.tags << second unless page.tags.include?(second)
+      end
+      @tag.pages.map(&:cache_tags)
+      redirect_to tags_path and return
     elsif params[:commit] == "Update"
       @tag.update_attribute(:name, params[:tag][:name])
       @tag.pages.map(&:cache_tags)
@@ -46,6 +70,7 @@ class TagsController < ApplicationController
       render :edit
     end
   end
+
   def create
     @page = Page.find(params[:page_id])
     if params[:commit] == "Update Tags"
@@ -62,6 +87,7 @@ class TagsController < ApplicationController
     end
     redirect_to page_path(@page)
   end
+
   def destroy
     @tag = Tag.find(params[:id])
     @tag.destroy_me

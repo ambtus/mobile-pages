@@ -7,8 +7,13 @@
   = form_for @tag.becomes(Tag) do |f|
     Change name:
     = hinted_text_field_tag 'tag[name]', @tag.name, "Name"
-    %br
     = f.submit "Update"
+    %br
+    Split into:
+    = hinted_text_field_tag 'first_tag_name', @tag.name, "First Name"
+    and
+    = hinted_text_field_tag 'second_tag_name', @tag.name, "Second Name"
+    = f.submit "Split"
     %br
     = label_tag :change, "Change type:"
     = select_tag :change, options_for_select(Tag.types, @tag.type_name)
