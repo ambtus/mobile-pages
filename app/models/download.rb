@@ -75,14 +75,14 @@ module Download
 
   ## --comments
   def all_tags_for_comments
-    my_tags = self.tags.relationship.by_name + self.tags.trope.by_name
+    my_tags = self.tags.character.by_name + self.tags.trope.by_name
     my_parents_tags = self.parent_id.blank? ? [] : self.parent.all_tags_for_comments
     (my_tags + my_parents_tags).pulverize
   end
   def all_tags_for_comments_string
-    relationships = all_tags_for_comments.select{|t| t.type == "Relationship"}
+    characters = all_tags_for_comments.select{|t| t.type == "Character"}
     tropes = all_tags_for_comments.select{|t| t.type == ""}
-    (relationships + tropes).map(&:name).join_comma
+    (characters + tropes).map(&:name).join_comma
   end
   def download_comment_string
     [

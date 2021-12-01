@@ -45,9 +45,9 @@
   .fandoms
     -@page.tags.fandom.by_name.each do |fandom|
       =link_to fandom.name, pages_path(fandom: fandom.name)
-  .relationships
-    -@page.tags.relationship.by_name.each do |relationship|
-      =link_to relationship.name, pages_path(relationship: relationship.name)
+  .characters
+    -@page.tags.character.by_name.each do |character|
+      =link_to character.name, pages_path(character: character.name)
   .tags= @page.trope_string
   .omitteds= @page.omitted_string
   .hiddens= @page.hidden_string

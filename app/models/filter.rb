@@ -35,7 +35,7 @@ class Filter
       pages = pages.where("pages.url LIKE ?", "%#{params[:url].sub(/^https?/, '')}%")
     end
 
-    [:tag, :fandom, :relationship, :rating, :info].each do |tag_type|
+    [:tag, :fandom, :character, :rating, :info].each do |tag_type|
       pages = pages.where("pages.cached_tag_string LIKE ?", "%#{params[tag_type]}%") if params.has_key?(tag_type)
     end
 

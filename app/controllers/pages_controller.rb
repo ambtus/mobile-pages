@@ -17,7 +17,7 @@ class PagesController < ApplicationController
     @tags = Tag.all.map(&:name)
     @tag = Tag.find_by_name(params[:tag]) if params[:tag]
     @fandom = Fandom.find_by_name(params[:fandom]) if params[:fandom]
-    @relationship = Relationship.find_by_name(params[:relationship]) if params[:relationship]
+    @character = Character.find_by_name(params[:character]) if params[:character]
     @rating = Rating.find_by_name(params[:rating]) if params[:rating]
     @omitted = Omitted.find_by_name(params[:omitted]) if params[:omitted]
     @hidden = Hidden.find_by_name(params[:hidden]) if params[:hidden]
@@ -39,7 +39,7 @@ class PagesController < ApplicationController
       build_route[:tag] = params[:tag] unless params[:tag].blank?
       build_route[:hidden] = params[:hidden] unless params[:hidden].blank?
       build_route[:fandom] = params[:fandom] unless params[:fandom].blank?
-      build_route[:relationship] = params[:relationship] unless params[:relationship].blank?
+      build_route[:character] = params[:character] unless params[:character].blank?
       build_route[:rating] = params[:rating] unless params[:rating].blank?
       build_route[:omitted] = params[:omitted] unless params[:omitted].blank?
       build_route[:info] = params[:info] unless params[:info].blank?
@@ -61,7 +61,7 @@ class PagesController < ApplicationController
     @tag = Tag.find_by_name(params[:tag])
     @hidden = Hidden.find_by_name(params[:hidden])
     @fandom = Fandom.find_by_name(params[:fandom])
-    @relationship = Relationship.find_by_name(params[:relationship])
+    @character = Character.find_by_name(params[:character])
     @rating = Rating.find_by_name(params[:rating])
     @omitted = Omitted.find_by_name(params[:omitted])
     @info = Info.find_by_name(params[:info])
@@ -76,7 +76,7 @@ class PagesController < ApplicationController
       else
         @page.convert_to_type
         @page.authors << @author if @author && !@page.authors.include?(@author)
-        @page.tags << [@tag, @hidden, @fandom, @omitted, @relationship, @rating, @info].compact - @page.tags
+        @page.tags << [@tag, @hidden, @fandom, @omitted, @character, @rating, @info].compact - @page.tags
         @page.cache_tags
         if @page.tags.fandom.blank?
           flash[:notice] = "Page created. Please select fandom(s)"

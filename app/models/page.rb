@@ -322,7 +322,7 @@ class Page < ActiveRecord::Base
     count = parent.parts.size + 1
     self.update(:parent_id => parent.id, :position => count)
     if new
-      parent.tags << self.tags.not_hidden.not_omitted.not_relationship.not_info - parent.tags
+      parent.tags << self.tags.not_hidden.not_omitted.not_character.not_info - parent.tags
       parent.cache_tags
       parent.authors << self.authors - parent.authors
       parent.update_attribute(:stars, self.stars)

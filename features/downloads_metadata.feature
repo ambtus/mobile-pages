@@ -107,3 +107,13 @@ Feature: downloads metadata
       And I download the epub
     Then the download epub file should exist
       And the download epub command should include authors: "fandom1"
+
+  Scenario: many fandoms, many characters => characters in tags, fandom in authors
+    Given I have no pages
+    And a page exists with fandoms: "harry potter, sga" AND characters: "harry/snape, john/rodney"
+    And the download epub command should include authors: "harry potter"
+    And the download epub command should include authors: "sga"
+    And the download epub command should include tags: "harry/snape"
+    And the download epub command should include tags: "john/rodney"
+    And the download epub command should include comments: "harry/snape, john/rodney"
+    But the download epub command should NOT include comments: "harry potter"
