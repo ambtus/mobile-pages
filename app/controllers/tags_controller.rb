@@ -46,21 +46,25 @@ class TagsController < ApplicationController
         flash.now[:alert] = "can't split: names must be different"
         render :edit and return
       end
-      new_names = Tag.find_by_name(params[:first_tag_name]).nil? && Tag.find_by_name(params[:second_tag_name]).nil?
-      if new_names
+      both_new = Tag.find_by_name(params[:first_tag_name]).nil? && Tag.find_by_name(params[:second_tag_name]).nil?
+      if both_new
         @tag.update!(name: params[:first_tag_name])
         new_tag = Tag.create!(name: params[:second_tag_name], type: @tag.type )
         @tag.pages.each{|p| p.tags << new_tag unless p.tags.include?(new_tag)}
         @tag.pages.map(&:cache_tags)
         redirect_to tags_path and return
       end
-      first = Tag.find_by_name(params[:first_tag_name]) || Tag.create!(name: params[:first_tag_name], type: @tag.type)
-      second = Tag.find_by_name(params[:second_tag_name]) || Tag.create!(name: params[:second_tag_name], type: @tag.type)
+      first = Tag.find_by_name(params[:first_tag_name]) || (@tag.update(name: params[:first_tag_name]) && @tag)
+      second = Tag.find_by_name(params[:second_tag_name]) || (@tag.update(name: params[:second_tag_name]) && @tag)
       @tag.pages.each do |page|
         page.tags << first unless page.tags.include?(first)
         page.tags << second unless page.tags.include?(second)
       end
-      @tag.pages.map(&:cache_tags)
+      if @tag != first && @tag != second
+        @tag.destroy_me
+      else
+        @tag.pages.map(&:cache_tags)
+      end
       redirect_to tags_path and return
     elsif params[:commit] == "Update"
       @tag.update_attribute(:name, params[:tag][:name])

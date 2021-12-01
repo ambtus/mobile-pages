@@ -96,6 +96,33 @@ Feature: split a tag into two tags
       And I press "Find"
       Then I should see "both" within "#position_1"
 
+  Scenario: can put the name of other tags in as both names
+    Given I have no pages
+    And I have no tags
+      And a page exists with characters: "harry" AND title: "one"
+      And a page exists with characters: "severus" AND title: "other"
+      And a page exists with characters: "harry/snape" AND title: "both"
+    When I am on the edit tag page for "harry/snape"
+      And I fill in "first_tag_name" with "Severus"
+      And I fill in "second_tag_name" with "Harry"
+      And I press "Split"
+    When I am on the homepage
+    Then I should NOT be able to select "harry/snape" from "character"
+    When I select "harry" from "character"
+      And I press "Find"
+    Then I should see "one" within "#position_1"
+      And I should see "both" within "#position_2"
+      And I should see "harry, severus" within "#position_2"
+    And I should NOT see "harry/snape"
+    When I am on the homepage
+      And I select "severus" from "character"
+      And I press "Find"
+    Then I should see "other" within "#position_1"
+      And I should see "both" within "#position_2"
+    When I follow "both"
+      Then I should see "harry severus" within ".characters"
+      And I should NOT see "harry/snape"
+
   Scenario: can't put the same name in both
     And a tag exists with name: "harry/snape"
     When I am on the edit tag page for "harry/snape"
