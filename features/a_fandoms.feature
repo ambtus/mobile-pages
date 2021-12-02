@@ -275,10 +275,10 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
   Scenario: Spider-Man - All Media Types
      Given I have no tags
     And I have no pages
-    When a tag exists with name: "Spiderman" AND type: "Fandom"
+    When a tag exists with name: "Spider-man" AND type: "Fandom"
     And a page exists with ao3_fandoms: "Spider-Man - All Media Types"
     When I am on the page's page
-    Then I should see "Spiderman" within ".fandoms"
+    Then I should see "Spider-man" within ".fandoms"
 
    Scenario: Deadpool (2016) and Deadpool - All Media Types
     Given I have no tags
@@ -295,3 +295,13 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I am on the page's page
     Then I should see "Fandoms: Deadpool, Spider-Man" within ".notes"
     And I should NOT see "Deadpool, Deadpool"
+
+  Scenario: Real Genius (1985)
+     Given I have no tags
+    And I have no pages
+    When a tag exists with name: "Forgotten Realms/Drizzt" AND type: "Fandom"
+    And a page exists with ao3_fandoms: "Real Genius (1985)"
+    When I am on the page's page
+    Then I should NOT see "Forgotten Realms/Drizzt" within ".fandoms"
+    But I should see "Fandom: Real Genius" within ".notes"
+    And I should NOT see "1985" within ".notes"

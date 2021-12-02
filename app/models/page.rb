@@ -761,9 +761,10 @@ class Page < ActiveRecord::Base
       if found.blank?
         trying = simple.split(/[ -]/)
         Rails.logger.debug "DEBUG: trying #{trying}"
-        possibles = trying.collect {|w| Fandom.where('name like ?', "%#{w}%") if w.length > 3}
-        all = possibles.flatten.compact
-        found = all.first
+        possibles = trying.collect{|w| Fandom.where('name like ?', "%#{w}%") if w.length > 3}.flatten.compact
+        Rails.logger.debug "DEBUG: possible tags are #{possibles.map(&:name)}"
+        maybes = possibles.collect{|t| t unless trying.select{|w| t.name.match /\b#{w}\b/ }.empty?}
+        found = maybes.first
       end
       if found.blank?
         non_mp_fandoms << simple
