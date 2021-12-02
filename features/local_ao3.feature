@@ -199,3 +199,17 @@ Feature: ao3 testing that uses local cached files
     And I should see "manicmea" within ".authors"
     And I should see "Fandom: Die Hard, Robin Hood" within ".notes"
     But I should NOT see "by manicmea" within ".notes"
+
+  Scenario: don't over-match fandoms
+   Given I have no pages
+  And I have no fandoms
+    And Yer a Wizard exists
+    And I am on the page with title "Yer a Wizard, Drizzt"
+    Then I should see "Fandom: Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
+  And a tag exists with name: "Other Fandoms" AND type: "Fandom"
+  And a tag exists with name: "Person of Interest" AND type: "Fandom"
+    And I press "Rebuild Meta"
+    Then I should see "Fandom: Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
+  When a tag exists with name: "Forgotten Realms/Drizzt" AND type: "Fandom"
+    And I press "Rebuild Meta"
+    Then I should see "Fandom: Starlight and Shadows Series" within ".notes"

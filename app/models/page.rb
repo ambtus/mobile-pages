@@ -752,7 +752,12 @@ class Page < ActiveRecord::Base
       simple = I18n.transliterate(simple)
       Rails.logger.debug "DEBUG: trying #{simple}"
       found = Fandom.where('name like ?', "%#{simple}%").first
-      found = simple.split.collect {|w| Fandom.where('name like ?', "%#{w}%").first}.compact.first if found.blank?
+      if found.blank?
+        possibles = simple.split.collect {|w| Fandom.where('name like ?', "%#{w}%") if w.length > 3}
+        all = possibles.flatten.compact
+        Rails.logger.debug "DEBUG: using first of #{all.map(&:name)}"
+        found = all.first
+      end
       if found.blank?
         non_mp_fandoms << simple
       else
