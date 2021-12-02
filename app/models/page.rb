@@ -792,6 +792,8 @@ class Page < ActiveRecord::Base
       page = self.becomes!(self.ao3_type)
       # Rails.logger.debug "DEBUG: page is #{page.inspect}"
       page.get_meta_from_ao3(false)
+    elsif parts.any?
+      self.get_meta_from_ao3(false) if parts.first.ao3_chapter?
     else
       set_type
     end

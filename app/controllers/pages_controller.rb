@@ -118,7 +118,6 @@ class PagesController < ApplicationController
       when "Rebuild Meta"
         @page.rebuild_meta
         flash[:notice] = "Rebuilt Meta"
-        @page.reload
       when "Make Single"
         @page.make_single
         flash[:notice] = "Made Single"
