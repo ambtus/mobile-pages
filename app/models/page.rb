@@ -726,15 +726,21 @@ class Page < ActiveRecord::Base
     non_mp_authors = []
     tries.each do |t|
       try = t.split(" (").first
-      found = Author.where('name like ?', "%#{try}%")
+      Rails.logger.debug "DEBUG: trying #{try}"
+      found = Author.where('name like ?', "%#{try}%").first
       if found.blank?
         non_mp_authors << t
       else
-        mp_authors << found unless self.authors.include?(found)
+        Rails.logger.debug "DEBUG: found #{found.name}"
+        mp_authors << found unless self.authors.include?(found) || (self.parent && self.parent.authors.include?(found))
       end
     end
-    mp_authors.each {|a| self.authors << a}
+    unless mp_authors.empty?
+      Rails.logger.debug "DEBUG: adding #{mp_authors.map(&:name)} to authors"
+      mp_authors.each {|a| self.authors << a}
+    end
     unless non_mp_authors.empty?
+      Rails.logger.debug "DEBUG: adding #{non_mp_authors} to notes"
       byline = "by #{non_mp_authors.join(", ")}"
       self.notes = "<p>#{byline}</p>#{self.notes}"
     end
@@ -763,12 +769,12 @@ class Page < ActiveRecord::Base
         non_mp_fandoms << simple
       else
         Rails.logger.debug "DEBUG: found #{found.name}"
-        mp_fandoms << found unless self.tags.include?(found) || mp_fandoms.include?(found)
+        mp_fandoms << found unless self.tags.include?(found) || (self.parent && self.parent.tags.include?(found))
       end
     end
     unless mp_fandoms.empty?
-      Rails.logger.debug "DEBUG: adding #{mp_fandoms.map(&:name)} to fandoms"
-      mp_fandoms.each {|f| self.tags << f}
+      Rails.logger.debug "DEBUG: adding #{mp_fandoms.uniq.map(&:name)} to fandoms"
+      mp_fandoms.uniq.each {|f| self.tags << f}
     end
     unless non_mp_fandoms.empty?
       fandoms = non_mp_fandoms.uniq

@@ -24,16 +24,11 @@ class Single < Page
 
     Rails.logger.debug "DEBUG: notes: #{self.notes}"
 
-    # don't add authors or fandoms for singles in a series
-    unless self.parent
-      ao3_authors = doc.css(".byline a").map(&:text).join_comma
-      Rails.logger.debug "DEBUG: adding authors: #{ao3_authors}"
-      add_author(ao3_authors)
-      ao3_fandoms = doc.css(".fandom a").map(&:children).map(&:text).join_comma
-      Rails.logger.debug "DEBUG: adding fandoms: #{ao3_fandoms}"
-      add_fandom(ao3_fandoms)
-      Rails.logger.debug "DEBUG: notes now: #{self.notes}"
-    end
+    ao3_authors = doc.css(".byline a").map(&:text).join_comma
+    add_author(ao3_authors)
+    ao3_fandoms = doc.css(".fandom a").map(&:children).map(&:text).join_comma
+    add_fandom(ao3_fandoms)
+    Rails.logger.debug "DEBUG: notes now: #{self.notes}"
 
     self.save! && self.remove_outdated_downloads
   end

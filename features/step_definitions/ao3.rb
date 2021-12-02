@@ -80,6 +80,22 @@ Given /^Skipping Stones exists$/ do
   page.get_meta_from_ao3(false)
 end
 
+Given /^Counting Drabbles exists$/ do
+  series = Series.create!(title: "Counting Drabbles")
+
+  work1 = Single.create!(title: "temp", parent_id: series.id, position: 1)
+  work1.update!(url: "http://archiveofourown.org/works/688")
+  work1.raw_html = File.open(Rails.root + "features/html/skipping.html", 'r:utf-8') { |f| f.read }
+  work1.get_meta_from_ao3(false)
+
+  work2 = Single.create!(title: "temp", parent_id: series.id, position: 2)
+  work2.update!(url: "https://archiveofourown.org/works/689")
+  work2.raw_html = File.open(Rails.root + "features/html/flower.html", 'r:utf-8') { |f| f.read }
+  work2.get_meta_from_ao3(false)
+
+  series.set_wordcount
+end
+
 Given /^Alan Rickman exists$/ do
   page = Single.create!(title: "temp")
   page.update!(url: "https://archiveofourown.org/works/5720104")

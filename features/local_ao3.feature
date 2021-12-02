@@ -213,3 +213,48 @@ Feature: ao3 testing that uses local cached files
   When a tag exists with name: "Forgotten Realms/Drizzt" AND type: "Fandom"
     And I press "Rebuild Meta"
     Then I should see "Fandom: Starlight and Shadows Series" within ".notes"
+
+   Scenario: works in a series still have authors if the series doesn't
+    Given I have no pages
+    And I have no tags
+    And Counting Drabbles exists
+    And I am on the page with title "Skipping Stones"
+      Then I should see "Parent: Counting Drabbles (Series)"
+      And I should see "Next: The Flower [sequel to Skipping Stones] (Single)"
+      And I should see "Skipping Stones (Single)" within ".title"
+      And I should see "by Sidra" within ".notes"
+    When an author exists with name: "Sidra"
+    When I press "Rebuild Meta"
+      Then I should NOT see "by Sidra" within ".notes"
+      But I should see "Sidra" within ".authors"
+    When I follow "Counting Drabbles"
+      And I follow "Authors" within ".edits"
+      And I select "Sidra" from "page_author_ids_"
+      And I press "Update Authors"
+      Then I should see "Sidra" within ".authors"
+    When I follow "The Flower"
+      Then I should see "by Sidra" within ".notes"
+    When I press "Rebuild Meta"
+      Then I should NOT see "by Sidra" within ".notes"
+      And I should NOT see "Sidra" within ".authors"
+
+   Scenario: works in a series still have fandoms if the series doesn't
+    Given I have no pages
+    And I have no tags
+    And Counting Drabbles exists
+    And I am on the page with title "Skipping Stones"
+      Then I should see "Fandom: Harry Potter" within ".notes"
+    When a tag exists with name: "harry potter" AND type: "Fandom"
+    When I press "Rebuild Meta"
+      Then I should NOT see "Fandom: Harry Potter" within ".notes"
+      But I should see "harry potter" within ".fandoms"
+    When I follow "Counting Drabbles"
+      And I follow "Tags" within ".edits"
+      And I select "harry potter" from "page_fandom_ids_"
+      And I press "Update Tags"
+      Then I should see "harry potter" within ".fandoms"
+    When I follow "The Flower"
+      Then I should see "Fandom: Harry Potter" within ".notes"
+    When I press "Rebuild Meta"
+      Then I should NOT see "Fandom: Harry Potter" within ".notes"
+      And I should NOT see "harry potter" within ".fandoms"
