@@ -746,28 +746,32 @@ class Page < ActiveRecord::Base
     mp_fandoms = []
     non_mp_fandoms = []
     tries.each do |t|
-      try = t.split(" | ").last.match(/^(.+?)[-:\(]/)
-      simple = try ? try[1].strip : t.split(" | ").last
+      try = t.split(" | ").last.split(" - ").first.split(":").first.split('(').first
+      simple = try ? try.strip : t.split(" | ").last
       simple.sub!(/^The /, '')
       simple = I18n.transliterate(simple)
       Rails.logger.debug "DEBUG: trying #{simple}"
       found = Fandom.where('name like ?', "%#{simple}%").first
       if found.blank?
-        possibles = simple.split.collect {|w| Fandom.where('name like ?', "%#{w}%") if w.length > 3}
+        trying = simple.split(/[ -]/)
+        Rails.logger.debug "DEBUG: trying #{trying}"
+        possibles = trying.collect {|w| Fandom.where('name like ?', "%#{w}%") if w.length > 3}
         all = possibles.flatten.compact
-        Rails.logger.debug "DEBUG: using first of #{all.map(&:name)}"
         found = all.first
       end
       if found.blank?
         non_mp_fandoms << simple
       else
+        Rails.logger.debug "DEBUG: found #{found.name}"
         mp_fandoms << found unless self.tags.include?(found) || mp_fandoms.include?(found)
       end
     end
-    Rails.logger.debug "DEBUG: adding fandoms #{mp_fandoms.map(&:name)}"
-    mp_fandoms.each {|f| self.tags << f}
+    unless mp_fandoms.empty?
+      Rails.logger.debug "DEBUG: adding #{mp_fandoms.map(&:name)} to fandoms"
+      mp_fandoms.each {|f| self.tags << f}
+    end
     unless non_mp_fandoms.empty?
-      Rails.logger.debug "DEBUG: adding non-tags #{non_mp_fandoms} to notes"
+      Rails.logger.debug "DEBUG: adding #{non_mp_fandoms} to notes"
       fandoms = "Fandom: #{non_mp_fandoms.join(", ")}"
       self.notes = "<p>#{fandoms}</p>#{self.notes}"
     end

@@ -264,3 +264,19 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I am on the page's page
     Then I should see "Forgotten Realms/Drizzt" within ".fandoms"
     And I should NOT see "Legend of Drizzt Series"
+
+  Scenario: Spider-Man - All Media Types
+     Given I have no tags
+    And I have no pages
+    And a page exists with ao3_fandoms: "Spider-Man - All Media Types"
+    When I am on the page's page
+    Then I should see "Fandom: Spider-Man"
+
+  Scenario: Spider-Man - All Media Types
+     Given I have no tags
+    And I have no pages
+    When a tag exists with name: "Spiderman" AND type: "Fandom"
+    And a page exists with ao3_fandoms: "Spider-Man - All Media Types"
+    When I am on the page's page
+    Then I should see "Spiderman" within ".fandoms"
+
