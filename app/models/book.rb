@@ -61,6 +61,7 @@ class Book < Page
         end
       end
     end
+    update_last_read
     set_wordcount
   end
 

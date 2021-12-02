@@ -40,6 +40,18 @@ Given /^Time Was exists$/ do
   page.get_meta_from_ao3(false)
 end
 
+Given /^Time Was partially exists$/ do
+  page = Book.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/692")
+  chapter1 = Chapter.create!(title: "temp", parent_id: page.id, position: 1)
+  chapter1.raw_html = File.open(Rails.root + "features/html/where.html", 'r:utf-8') { |f| f.read }
+  chapter1.update!(url: "https://archiveofourown.org/works/692/chapters/803")
+  chapter1.get_meta_from_ao3(false)
+  chapter2 = Chapter.create!(title: "fake", parent_id: page.id, position: 2)
+  page.get_meta_from_ao3(false)
+  page.rate("3")
+end
+
 Given /^Bad Formatting exists$/ do
   page = Single.create!(title: "temp")
   page.update!(url: "https://archiveofourown.org/works/23477578")

@@ -103,7 +103,7 @@ class Series < Page
         sleep 5 unless count == work_list.size
       end
     end
-
+    update_last_read
     set_wordcount
   end
 

@@ -43,3 +43,18 @@ Feature: ao3 specific stuff
       But I should see "by Sidra" within ".notes"
       And I should NOT see "part notes" within "#position_2"
       And I should see "giving up" within "#position_2"
+
+  Scenario: adding an unread chapter to a book makes the book unread
+    Given I have no pages
+    And I have no tags
+    And Time Was partially exists
+    When I am on the homepage
+      And I follow "Time Was, Time Is"
+      Then I should see today within ".last_read"
+      But I should NOT see "unread parts" within ".last_read"
+      And I should NOT see today within "#position_1"
+    When I follow "Refetch"
+      And I press "Refetch"
+    Then I should see "unread parts" within ".last_read"
+      And I should see today within "#position_1"
+      And I should see "Hogwarts (unread"
