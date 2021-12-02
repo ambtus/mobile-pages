@@ -186,7 +186,7 @@ Feature: ao3 testing that uses local cached files
   And I have no fandoms
     And Alan Rickman exists
   When I am on the page with url "https://archiveofourown.org/works/5720104"
-    Then I should see "Fandom: Harry Potter, Die Hard, Robin Hood" within ".notes"
+    Then I should see "Fandoms: Harry Potter, Die Hard, Robin Hood" within ".notes"
     And I should see "by manicmea" within ".notes"
    But I should NOT see "Rowling" within ".notes"
     And I should NOT see "Movies" within ".notes"
@@ -197,7 +197,7 @@ Feature: ao3 testing that uses local cached files
     And I press "Rebuild Meta"
     Then I should see "Harry Potter" within ".fandoms"
     And I should see "manicmea" within ".authors"
-    And I should see "Fandom: Die Hard, Robin Hood" within ".notes"
+    And I should see "Fandoms: Die Hard, Robin Hood" within ".notes"
     But I should NOT see "by manicmea" within ".notes"
 
   Scenario: don't over-match fandoms
@@ -205,11 +205,11 @@ Feature: ao3 testing that uses local cached files
   And I have no fandoms
     And Yer a Wizard exists
     And I am on the page with title "Yer a Wizard, Drizzt"
-    Then I should see "Fandom: Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
+    Then I should see "Fandoms: Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
   And a tag exists with name: "Other Fandoms" AND type: "Fandom"
   And a tag exists with name: "Person of Interest" AND type: "Fandom"
     And I press "Rebuild Meta"
-    Then I should see "Fandom: Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
+    Then I should see "Fandoms: Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
   When a tag exists with name: "Forgotten Realms/Drizzt" AND type: "Fandom"
     And I press "Rebuild Meta"
     Then I should see "Fandom: Starlight and Shadows Series" within ".notes"

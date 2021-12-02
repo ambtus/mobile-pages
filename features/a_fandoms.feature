@@ -280,3 +280,18 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I am on the page's page
     Then I should see "Spiderman" within ".fandoms"
 
+   Scenario: Deadpool (2016) and Deadpool - All Media Types
+    Given I have no tags
+    And I have no pages
+    And a page exists with ao3_fandoms: "Deadpool (2016), Deadpool - All Media Types"
+    When I am on the page's page
+    Then I should see "Fandom: Deadpool" within ".notes"
+    And I should NOT see "Deadpool, Deadpool"
+
+   Scenario: Deadpool (2016) and Deadpool - All Media Types and Spider-Man - All Media Types
+    Given I have no tags
+    And I have no pages
+    And a page exists with ao3_fandoms: "Deadpool (2016), Deadpool - All Media Types, Spider-Man - All Media Types"
+    When I am on the page's page
+    Then I should see "Fandoms: Deadpool, Spider-Man" within ".notes"
+    And I should NOT see "Deadpool, Deadpool"

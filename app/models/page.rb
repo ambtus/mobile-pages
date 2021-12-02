@@ -771,9 +771,10 @@ class Page < ActiveRecord::Base
       mp_fandoms.each {|f| self.tags << f}
     end
     unless non_mp_fandoms.empty?
-      Rails.logger.debug "DEBUG: adding #{non_mp_fandoms} to notes"
-      fandoms = "Fandom: #{non_mp_fandoms.join(", ")}"
-      self.notes = "<p>#{fandoms}</p>#{self.notes}"
+      fandoms = non_mp_fandoms.uniq
+      Rails.logger.debug "DEBUG: adding #{fandoms} to notes"
+      suffix = fandoms.size == 1 ? "" : "s"
+      self.notes = "<p>Fandom#{suffix}: #{fandoms.join(", ")}</p>#{self.notes}"
     end
   end
 
