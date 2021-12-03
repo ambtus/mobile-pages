@@ -755,10 +755,10 @@ class Page < ActiveRecord::Base
       try = t.split(" | ").last.split(" - ").first.split(":").first.split('(').first
       simple = try ? try.strip : t.split(" | ").last
       simple.sub!(/^The /, '')
-      simple = I18n.transliterate(simple)
+      simple = I18n.transliterate(simple).delete('?')
       Rails.logger.debug "DEBUG: trying #{simple}"
       found = Fandom.where('name like ?', "%#{simple}%").first
-      if found.blank?
+      if found.blank? && simple.present?
         trying = simple.split(/[ -]/)
         Rails.logger.debug "DEBUG: trying #{trying}"
         possibles = trying.collect{|w| Fandom.where('name like ?', "%#{w}%") if w.length > 3}.flatten.compact
@@ -767,7 +767,7 @@ class Page < ActiveRecord::Base
         found = maybes.first
       end
       if found.blank?
-        non_mp_fandoms << simple
+        non_mp_fandoms << simple if simple.present?
       else
         Rails.logger.debug "DEBUG: found #{found.name}"
         mp_fandoms << found unless self.tags.include?(found) || (self.parent && self.parent.tags.include?(found))

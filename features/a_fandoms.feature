@@ -305,3 +305,12 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     Then I should NOT see "Forgotten Realms/Drizzt" within ".fandoms"
     But I should see "Fandom: Real Genius" within ".notes"
     And I should NOT see "1985" within ".notes"
+
+  Scenario: 天官赐福 - 墨香铜臭 | Tiān Guān Cì Fú - Mòxiāng Tóngxiù and 天官赐福
+    Given I have no tags
+    And I have no pages
+    And a page exists with ao3_fandoms: "天官赐福 - 墨香铜臭 | Tiān Guān Cì Fú - Mòxiāng Tóngxiù, 天官赐福"
+    When I am on the page's page
+    Then I should NOT see "Fandoms: Tian Guan Ci Fu, ????" within ".notes"
+    And I should NOT see "Fandoms: Tian Guan Ci Fu" within ".notes"
+    But I should see "Fandom: Tian Guan Ci Fu" within ".notes"
