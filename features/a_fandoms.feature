@@ -319,7 +319,9 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     Given I have no tags
     And I have no pages
     And a tag exists with name: "Star Trek" AND type: "Fandom"
+    And a tag exists with name: "Battlestar Galactica" AND type: "Fandom"
     And a tag exists with name: "Star Wars" AND type: "Fandom"
+    And a tag exists with name: "Starsky & Hutch" AND type: "Fandom"
     And a page exists with ao3_fandoms: "Star Wars - All Media Types, Star Wars Prequel Trilogy"
     When I am on the page's page
     Then I should see "Star Wars" within ".fandoms"
