@@ -314,3 +314,15 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     Then I should NOT see "Fandoms: Tian Guan Ci Fu, ????" within ".notes"
     And I should NOT see "Fandoms: Tian Guan Ci Fu" within ".notes"
     But I should see "Fandom: Tian Guan Ci Fu" within ".notes"
+
+  Scenario: star wars, not star trek
+    Given I have no tags
+    And I have no pages
+    And a tag exists with name: "Star Trek" AND type: "Fandom"
+    And a tag exists with name: "Star Wars" AND type: "Fandom"
+    And a page exists with ao3_fandoms: "Star Wars - All Media Types, Star Wars Prequel Trilogy"
+    When I am on the page's page
+    Then I should see "Star Wars" within ".fandoms"
+    But I should NOT see "Star Trek" within ".fandoms"
+    And I should NOT see "Fandom" within ".notes"
+
