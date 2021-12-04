@@ -31,3 +31,9 @@
 
 en:
   hello: "Hello world"
+
+en:
+  i18n:
+    transliterate:
+      rule:
+        ǔ: "u"

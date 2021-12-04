@@ -255,6 +255,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     And a page exists with ao3_fandoms: "魔道祖师 - 墨香铜臭 | Módào Zǔshī - Mòxiāng Tóngxiù, 陈情令 | The Untamed (TV)"
     When I am on the page's page
     Then I should see "Untamed/MoDao ZuShi" within ".fandoms"
+    And I should NOT see "Fandom: Modao Zshi" within ".notes"
 
   Scenario: Forgotten Realms and The Legend of Drizzt Series - R. A. Salvatore
     Given I have no tags
