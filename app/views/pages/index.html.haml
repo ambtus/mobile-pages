@@ -4,7 +4,7 @@
   = form_for @page.becomes(Page) do |f|
     = hidden_field_tag :count, @count
     = label_tag :type, "Type:"
-    - ['Collection', 'Series', 'Book', 'Chapter', 'Single', 'none', 'any'].each do |choice|
+    - ['Collection', 'Series', 'Book', 'Chapter', 'Single', 'none', 'all', 'any'].each do |choice|
       = radio_button_tag :type, choice, @type == choice
       = label_tag "type_#{choice}", choice
     %br

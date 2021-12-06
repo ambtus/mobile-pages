@@ -5,7 +5,7 @@ class Filter
   def self.new(params={})
     Rails.logger.debug "DEBUG: Page.filter(#{params})"
     pages = Page.all
-    pages = pages.where(:type => (params[:type] == "none" ? nil : params[:type])) if params[:type]
+    pages = pages.where(:type => (params[:type] == "none" ? nil : params[:type])) if params[:type] unless params[:type] == "all"
 
     # ignore parts unless asking for a type or a url or a title or a fandom or sorting on last_created
     # TODO should this be an if, instead of an unless? blacklist or whitelist?

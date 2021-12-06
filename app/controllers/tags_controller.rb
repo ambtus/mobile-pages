@@ -7,9 +7,16 @@ class TagsController < ApplicationController
     if params[:destroy]
       @tag = Tag.find(params[:id])
       render :destroy and return
+    elsif params[:recache]
+      @tag = Tag.find(params[:id])
+      Rails.logger.debug "DEBUG: recaching pages"
+      @tag.recache
+      render :edit and return
+    else
+      Rails.logger.debug "DEBUG: selecting tags"
+      @page = Page.find(params[:id])
+      render :select
     end
-    @page = Page.find(params[:id])
-    render :select
   end
 
   def edit

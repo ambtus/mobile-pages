@@ -6,6 +6,8 @@
   =@tag.pages.count
   ='page'.pluralize(@tag.pages.count)
   associated with it.
+  =link_to "view affected pages", pages_path(@tag.class.name.downcase.to_sym => @tag.name)
+
 %p
   Are you sure you want to destroy it?
 %p

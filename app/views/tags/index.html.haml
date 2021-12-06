@@ -7,7 +7,6 @@
       =link_to type, anchor: type
   -Tag.send(type.downcase).by_name.each do |tag|
     %p
-      edit
-      = link_to "#{tag.name}", edit_tag_path(tag)
+      = link_to "edit #{tag.name}", edit_tag_path(tag)
       =surround "(", ")" do
-        = link_to "#{tag.pages.count} #{'page'.pluralize(tag.pages.count)}", pages_path(tag.class.name.downcase.to_sym => tag.name)
+        = link_to "pages tagged with #{tag.name}", pages_path(tag.class.name.downcase.to_sym => tag.name)
