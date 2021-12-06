@@ -51,7 +51,7 @@ Given /^Time Was partially exists$/ do
   chapter2 = Chapter.create!(title: "fake")
   chapter2.add_parent(page.title)
   page.get_meta_from_ao3(false)
-  page.rate_unread(2)
+  page.rate_unread(2).cleanup
 end
 
 Given /^Bad Formatting exists$/ do

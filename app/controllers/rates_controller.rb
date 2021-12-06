@@ -16,10 +16,12 @@ class RatesController < ApplicationController
           redirect_to rate_path(page) and return
         end
         page.read_today.rate(stars).update_read_after
+        page.parent.cleanup if page.parent
         redirect_to tag_path(page)
       when "Rate unfinished"
         flash[:alert] = "Selected stars ignored" if stars
         page.make_unfinished
+        page.parent.cleanup if page.parent
         redirect_to tag_path(page)
       when "Rate all unrated parts"
         unless stars
@@ -27,11 +29,12 @@ class RatesController < ApplicationController
           redirect_to rate_path(page) and return
         end
         page.rate_unread(stars)
+        page.cleanup
         redirect_to tag_path(page)
       when "Rate all unrated parts unfinished"
         flash[:alert] = "Selected stars ignored" if stars
         page.unread_parts.map(&:make_unfinished)
-        page.update_last_read.update_stars.update_read_after
+        page.cleanup
         redirect_to tag_path(page)
     end
   end

@@ -12,17 +12,18 @@ module Download
     "#{mypath}#{DOWNLOADS}/#{download_title}#{format}".gsub(' ', '%20')
   end
 
-  def short_diff_strings; [author_string, unread_string, *tags.not_info.by_type.by_name.map(&:name)].reject(&:blank?); end
-
-  def download_title_diffs
-    mine = short_diff_strings
-    if self.parent
-      mine = mine - parent.short_diff_strings
+  def download_unread_string
+    return "" unless self.unread?
+    if parent && parent.read_parts.any?
+      self.unfinished? ? Page::UNFINISHED : Page::UNREAD
+    else
+      ""
     end
-    mine
   end
 
-  def download_suffix; download_title_diffs.empty? ? "" : " (#{download_title_diffs.join(', ')})"; end
+  def short_meta_strings; [author_string, download_unread_string, *tags.not_info.by_type.by_name.map(&:name)].reject(&:blank?); end
+
+  def download_suffix; short_meta_strings.empty? ? "" : " (#{short_meta_strings.join_comma})"; end
   def download_part_title; title_prefix + title + download_suffix; end
 
   def remove_outdated_downloads(recurse = false)

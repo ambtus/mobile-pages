@@ -266,6 +266,11 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "DEBUG: found #{unreads.size} unread parts"
     unreads
   end
+  def read_parts
+    reads = Page.where(["parent_id = ?", id]).where.not(last_read: nil)
+    Rails.logger.debug "DEBUG: found #{reads.size} read parts"
+    reads
+  end
 
   def next_part
     return nil unless parent
@@ -358,10 +363,8 @@ class Page < ActiveRecord::Base
   end
 
   def make_unfinished
+    Rails.logger.debug "DEBUG: making #{title} unfinished"
     self.update(stars: 9, last_read: nil, read_after: Date.today + 5.years)
-    parent.update_stars if parent
-    parent.update_last_read if parent
-    parent.update_read_after if parent
     return self
   end
 
@@ -373,9 +376,6 @@ class Page < ActiveRecord::Base
 
   def rate(stars)
     self.update!(stars: stars)
-    parent.update_stars if parent
-    self.update_read_after
-    parent.update_read_after if parent
     parts.each{|p| p.update!(stars: stars) && p.update_read_after} if parts.any?
     return self
   end
@@ -386,9 +386,6 @@ class Page < ActiveRecord::Base
       Rails.logger.debug "DEBUG: updating #{part.title} with stars: #{stars}"
       part.update!(last_read: Time.now, stars: stars)
     end
-    update_last_read
-    update_stars
-    update_read_after
     return self
   end
 
@@ -438,6 +435,8 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "DEBUG: new read after: #{self.read_after}"
     return self
   end
+
+  def cleanup; update_last_read.update_stars.update_read_after.remove_outdated_downloads; end
 
   def add_author_string=(string)
     return if string.blank?
