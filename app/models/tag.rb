@@ -3,7 +3,7 @@ class Tag < ActiveRecord::Base
 
   has_and_belongs_to_many :pages, -> { distinct }
   validates_presence_of :name
-  validates_uniqueness_of :name, :case_sensitive => false
+  validates_uniqueness_of :name, :case_sensitive => false, scope: :type
 
   def self.types
     ["Fandom", "Character", "Trope", "Rating", "Omitted", "Hidden", "Info"]

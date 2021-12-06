@@ -183,3 +183,15 @@ Feature: characters are a type of tag, and can be created and selected like tags
       Then I should be able to select "snarry" from "character"
       But I should NOT be able to select "snarry" from "tag"
 
+
+   Scenario: allow character and fandom tags to have the same name
+    Given I have no pages
+    And I have no tags
+    And a page exists with fandoms: "Naruto"
+    When I am on the page's page
+      Then I should see "Naruto" within ".fandoms"
+    When I edit its tags
+      And I fill in "tags" with "Naruto"
+      And I press "Add Character Tags"
+      Then I should see "Naruto" within ".fandoms"
+      And I should see "Naruto" within ".characters"
