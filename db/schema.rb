@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(version: 2021_12_01_160608) do
     t.index ["name"], name: "author_name", unique: true
   end
 
-  create_table "authors_pages", id: false, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "authors_pages", id: false, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "page_id"
     t.integer "author_id"
   end
@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(version: 2021_12_01_160608) do
     t.index ["ultimate_parent_id"], name: "index_pages_on_ultimate_parent_id"
   end
 
-  create_table "pages_tags", id: false, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "pages_tags", id: false, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "page_id"
     t.integer "tag_id"
   end
