@@ -73,14 +73,18 @@ Feature: other mult-part tests
     Then I should see "New Parent" within "#position_1"
     And I should see "2008-01-01" within "#position_1"
 
-  Scenario: parent should be able to remove duplicates
+  Scenario: parent should be able to remove duplicate tags and authors
     Given I have no pages
       And I have no tags
-      And a page exists with url: "http://test.sidrasue.com/parts/1.html" AND fandoms: "Harry Potter"
-      And a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND fandoms: "Harry Potter" AND title: "Parent"
+      And a page exists with url: "http://test.sidrasue.com/parts/1.html" AND fandoms: "Harry Potter" AND add_author_string: "JK Rowling"
+      And a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND fandoms: "Harry Potter" AND title: "Parent" AND add_author_string: "JK Rowling"
     When I am on the page with title "Parent"
-    Then I should see "Harry Potter" within ".fandoms"
-    And I should see "Harry Potter" within "#position_1"
+      Then I should see "Harry Potter" within ".fandoms"
+      And I should see "JK Rowling" within ".authors"
+      And I should see "Harry Potter" within "#position_1"
+      And I should see "JK Rowling" within "#position_1"
     When I press "Remove Duplicate Tags"
-    Then I should see "Harry Potter" within ".fandoms"
-    But I should NOT see "Harry Potter" within "#position_1"
+      Then I should see "Harry Potter" within ".fandoms"
+      And I should see "JK Rowling" within ".authors"
+      But I should NOT see "Harry Potter" within "#position_1"
+      And I should NOT see "JK Rowling" within "#position_1"

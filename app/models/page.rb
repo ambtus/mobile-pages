@@ -69,6 +69,8 @@ class Page < ActiveRecord::Base
     dups = self.tags & self.parent.tags
     self.tags.delete(dups)
     self.cache_tags
+    dups = self.authors & self.parent.authors
+    self.authors.delete(dups)
   end
 
   def mypath
