@@ -14,7 +14,6 @@ Feature: read_after order
     Then I should see "Rate Page 1"
     When I choose "2"
     And I press "Rate"
-    Then I should see "Page 1 set for reading again"
     When I am on the homepage
       And I should see "Page 2" within "#position_1"
       And I should see "Page 3" within "#position_2"
@@ -25,7 +24,6 @@ Feature: read_after order
       And I follow "Rate"
       And I choose "4"
     And I press "Rate"
-    Then I should see "Page 2 set for reading again"
     When I am on the homepage
       Then I should see "Page 3" within "#position_1"
       And I should see "Page 4" within "#position_2"
@@ -36,7 +34,6 @@ Feature: read_after order
       And I follow "Rate"
       And I choose "3"
     And I press "Rate"
-    Then I should see "Page 3 set for reading again"
     When I am on the homepage
       Then I should see "Page 4" within "#position_1"
       And I should see "Page 5" within "#position_2"
@@ -47,7 +44,6 @@ Feature: read_after order
       And I follow "Rate"
       And I choose "5"
     And I press "Rate"
-    Then I should see "Page 4 set for reading again"
     When I am on the homepage
       Then I should see "Page 5" within "#position_1"
       And I should see "Page 4" within "#position_2"
@@ -58,7 +54,6 @@ Feature: read_after order
       And I follow "Rate"
       And I choose "1"
     And I press "Rate"
-    Then I should see "Page 5 set for reading again"
     When I am on the homepage
       Then I should see "Page 4" within "#position_1"
       And I should see "Page 2" within "#position_2"

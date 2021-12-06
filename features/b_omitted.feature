@@ -91,7 +91,7 @@ Feature: omitteds are a type of tag, and can be created and selected like tags
       And I should be able to select "audio book" from "Omitted"
       And I should be able to select "wip" from "Omitted"
 
-   Scenario: new parent for an existing page should NOT have the same omitted
+   Scenario: new parent for an existing page should have the same omitted
     Given I have no pages
     And a page exists with omitteds: "nonfiction"
     When I am on the page's page
@@ -99,11 +99,12 @@ Feature: omitteds are a type of tag, and can be created and selected like tags
       And I fill in "add_parent" with "New Parent"
       And I press "Update"
     When I am on the page with title "New Parent"
-    Then I should NOT see "nonfiction" within ".omitteds"
-      But I should see "(nonfiction)" within "#position_1"
+    Then I should see "nonfiction" within ".omitteds"
+      But I should NOT see "nonfiction" within "#position_1"
     When I am on the homepage
       Then I should see "New Parent" within "#position_1"
-    But I should NOT see "nonfiction" within ".tags"
+      And I should see "nonfiction" within "#position_1"
+
 
  Scenario: list the omitteds
     Given a tag exists

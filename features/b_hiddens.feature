@@ -94,7 +94,7 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       And I should be able to select "audio book" from "Hidden"
       And I should be able to select "wip" from "Hidden"
 
-   Scenario: new parent for an existing page should NOT have the same hidden
+   Scenario: new parent for an existing page should have the same hidden
     Given I have no pages
     And a page exists with hiddens: "nonfiction"
     When I am on the page's page
@@ -102,11 +102,13 @@ Feature: hiddens are a type of tag, and can be created and selected like tags
       And I fill in "add_parent" with "New Parent"
       And I press "Update"
     When I am on the page with title "New Parent"
-    Then I should NOT see "nonfiction" within ".hiddens"
-      But I should see "(nonfiction)" within "#position_1"
+    Then I should see "nonfiction" within ".hiddens"
+      But I should NOT see "nonfiction" within "#position_1"
     When I am on the homepage
-      Then I should see "New Parent" within "#position_1"
-    But I should NOT see "nonfiction" within ".tags"
+      Then I should NOT see "New Parent"
+    When I am on the page with title "New Parent"
+      Then I should see "nonfiction" within ".hiddens"
+      But I should NOT see "nonfiction" within "#position_1"
 
  Scenario: list the hiddens
     Given a tag exists

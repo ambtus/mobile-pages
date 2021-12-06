@@ -1,8 +1,10 @@
 class RatesController < ApplicationController
+
   def show
     @page = Page.find(params[:id])
     @stars = @page.stars.to_s
   end
+
   def create
     Rails.logger.debug "DEBUG: Rate.create(#{params.to_unsafe_h.symbolize_keys})"
     page = Page.find(params[:page_id])
@@ -13,18 +15,25 @@ class RatesController < ApplicationController
           flash[:alert] = "You must select stars"
           redirect_to rate_path(page) and return
         end
-        stars = page.rate(stars)
-        if stars == 5
-          flash[:notice] = "#{page.title} set for reading again in 6 months"
-        else
-          flash[:notice] = "#{page.title} set for reading again in #{page.read_after.year}"
-        end
+        page.read_today.rate(stars).update_read_after
         redirect_to tag_path(page)
       when "Rate unfinished"
         flash[:alert] = "Selected stars ignored" if stars
         page.make_unfinished
-        flash[:notice] = "#{page.title} marked 'unfinished' and set for reading again in #{page.read_after.year}"
+        redirect_to tag_path(page)
+      when "Rate all unrated parts"
+        unless stars
+          flash[:alert] = "You must select stars"
+          redirect_to rate_path(page) and return
+        end
+        page.rate_unread(stars)
+        redirect_to tag_path(page)
+      when "Rate all unrated parts unfinished"
+        flash[:alert] = "Selected stars ignored" if stars
+        page.unread_parts.map(&:make_unfinished)
+        page.update_last_read.update_stars.update_read_after
         redirect_to tag_path(page)
     end
   end
+
 end

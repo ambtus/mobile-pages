@@ -31,27 +31,41 @@ Feature: reset read_after order
 
   Scenario: resetting part or subpart read after date resets parent read after date
     Given I have no pages
-      And the following pages
-        | title  | urls | read_after |
-        | Single |      | 2009-01-03 |
-        | Parent | http://test.sidrasue.com/parts/1.html | 2009-01-01 |
+      And I have a single with read_after "2009-01-01"
       And I have a series with read_after "2009-01-02"
+      And I have a book with read_after "2009-01-03"
     When I am on the homepage
-    Then I should see "Parent" within "#position_1"
+      Then I should see "Single" within "#position_1"
+      And I should see "Grandparent" within "#position_2"
+      And I should see "Parent" within "#position_3"
+
+    When I follow "Grandparent"
+      And I press "Read Now"
+    When I am on the homepage
+      Then I should see "Grandparent" within "#position_1"
+      And I should see "Single" within "#position_2"
+    When I follow "Parent"
+      And I press "Read Now"
+    When I am on the homepage
+      Then I should see "Parent" within "#position_1"
       And I should see "Grandparent" within "#position_2"
       And I should see "Single" within "#position_3"
+
     When I follow "Parent" within "#position_1"
       And I follow "Part 1" within "#position_1"
       And I press "Read Later"
+
     Then I should see "Grandparent" within "#position_1"
       And I should see "Single" within "#position_2"
       And I should see "Parent" within "#position_3"
+
     When I follow "Grandparent" within "#position_1"
       And I follow "Parent2" within "#position_2"
       And I follow "Subpart" within "#position_1"
-    When I press "Read Later"
-      And I am on the homepage
+      And I press "Read Later"
+
+    When I am on the homepage
     Then I should see "Single" within "#position_1"
-      And I should see "Parent" within "#position_2"
-      And I should see "Grandparent" within "#position_3"
+      And I should see "Grandparent" within "#position_2"
+      And I should see "Parent" within "#position_3"
 

@@ -1,8 +1,17 @@
 Given('I have a series with read_after {string}') do |string|
-  series = Series.create!(title: "Grandparent", read_after: string)
-  parent1 = Single.create!(title: "Parent1", parent_id: series.id, position: 1, read_after: string)
-  parent2 = Book.create!(title: "Parent2", parent_id: series.id, position: 2, read_after: string)
-  child = Chapter.create!(title: "Subpart", parent_id: parent2.id, position: 1, read_after: string)
+  series = Series.create!(title: "Grandparent", read_after: string, last_read: string.to_date - 1.year, stars: 4)
+  parent1 = Single.create!(title: "Parent1", parent_id: series.id, position: 1, read_after: string, last_read: string.to_date - 1.year, stars: 4)
+  parent2 = Book.create!(title: "Parent2", parent_id: series.id, position: 2, read_after: string, last_read: string.to_date - 1.year, stars: 4)
+  child = Chapter.create!(title: "Subpart", parent_id: parent2.id, position: 1, read_after: string, last_read: string.to_date - 1.year, stars: 4)
+end
+
+Given('I have a book with read_after {string}') do |string|
+  parent = Single.create!(title: "Parent", read_after: string, last_read: string.to_date - 1.year, stars: 4)
+  child = Chapter.create!(title: "Part 1", parent_id: parent.id, position: 1, read_after: string, last_read: string.to_date - 1.year, stars: 4)
+end
+
+Given('I have a single with read_after {string}') do |string|
+  Single.create!(title: "Single", read_after: string, last_read: string.to_date - 1.year, stars: 4)
 end
 
 Given /^counting exists$/ do
@@ -21,4 +30,15 @@ Given('I have a Trilogy') do
   child1 = Chapter.create!(title: "Prologue", parent_id: book1.id, position: 1, url: "http://test.sidrasue.com/parts/1.html")
   child2 = Chapter.create!(title: "Epilogue", parent_id: book2.id, position: 1, url: "http://test.sidrasue.com/parts/5.html")
 
+end
+
+Given('Uneven exists') do
+  parent = Book.create!(title: "Uneven")
+  4.times do |i|
+    int = i + 1
+    part = Chapter.create(title: "part #{int}", parent_id: parent.id, position: int, last_read: "2010-01-0#{int}", stars: int).update_read_after
+  end
+  parent.update_last_read.update_stars.update_read_after
+  last = Chapter.create(title: "part 5")
+  last.add_parent("Uneven")
 end

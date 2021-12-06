@@ -91,7 +91,7 @@ Feature: infos are a type of tag
       And I should be able to select "add formatting" from "Info"
       And I should be able to select "downloaded" from "Info"
 
-   Scenario: new parent for an existing page should NOT have the same info
+   Scenario: new parent for an existing page should have the same info
     Given I have no pages
     And a page exists with infos: "bowlderize"
     When I am on the page's page
@@ -99,11 +99,11 @@ Feature: infos are a type of tag
       And I fill in "add_parent" with "New Parent"
       And I press "Update"
     When I am on the page with title "New Parent"
-    Then I should NOT see "bowlderize" within ".info"
-      But I should see "(bowlderize)" within "#position_1"
+    Then I should see "bowlderize" within ".info"
+      But I should NOT see "bowlderize" within "#position_1"
     When I am on the homepage
       Then I should see "New Parent" within "#position_1"
-    But I should NOT see "bowlderize" within ".tags"
+      And I should see "bowlderize" within ".tags"
 
  Scenario: list the infos
     Given a tag exists

@@ -16,8 +16,7 @@ end
 # create many identical pages
 Given("{int} pages exist") do |count|
   count.times do |i|
-    Page.create(title: "Page #{(i+1)}")
-    Kernel::sleep 1
+    Page.create(title: "Page #{(i+1)}", last_read: "2000-01-#{i+1}")
   end
 end
 
@@ -49,12 +48,12 @@ end
 
 Given("pages with all possible stars exist") do
   Page.create(title: "page0")
-  Page.create(title: "page1").rate(1)
-  Page.create(title: "page2h").rate(2)
-  Page.create(title: "page3").rate(3)
-  Page.create(title: "page4l").rate(4)
-  Page.create(title: "page5").rate(5)
-  Page.create(title: "page9").rate(9)
+  Page.create(title: "page1").rate(1).read_today.update_read_after
+  Page.create(title: "page2h").rate(2).read_today.update_read_after
+  Page.create(title: "page3").rate(3).read_today.update_read_after
+  Page.create(title: "page4l").rate(4).read_today.update_read_after
+  Page.create(title: "page5").rate(5).read_today.update_read_after
+  Page.create(title: "page9").make_unfinished
 end
 
 Given("pages with ratings and omitteds exist") do

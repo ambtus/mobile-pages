@@ -55,7 +55,6 @@ class Page < ActiveRecord::Base
       end
       update!(type: should_be)
       Rails.logger.debug "DEBUG: non-ao3 type set to #{should_be}"
-      should_be
     end
   end
 
@@ -91,6 +90,7 @@ class Page < ActiveRecord::Base
   end
 
   UNREAD = "unread"
+  UNFINISHED = "unfinished"
   SHORT_LENGTH = 160 # truncate at this many characters
 
   SIZES = ["drabble", "short", "medium", "long", "epic"]
@@ -160,10 +160,11 @@ class Page < ActiveRecord::Base
     page = Page.create(hash)
     page.convert_to_type
     tag_types.each {|key, value| page.send("add_tags_from_string", value, key)}
-    if hash[:last_read] # update parts and self
-      page.parts.each {|p| p.update_read_after(hash[:last_read].to_date)}
-      page.update_read_after(hash[:last_read].to_date)
+    if hash[:last_read] # update read after for parts and self
+      page.unread_parts.each {|p| p.update!(last_read: hash[:last_read]) && p.update_read_after}
+      page.update_last_read.update_read_after
     end
+    page.rate(hash[:stars]).update_read_after if hash[:stars]
     page.add_fandom(ao3_fandoms) && page.save if ao3_fandoms
     Rails.logger.debug "DEBUG: created test page #{page.inspect}"
     page
@@ -260,6 +261,11 @@ class Page < ActiveRecord::Base
   end
 
   def parts; Page.order(:position).where(["parent_id = ?", id]); end
+  def unread_parts
+    unreads = Page.where(["parent_id = ?", id]).where(last_read: nil)
+    Rails.logger.debug "DEBUG: found #{unreads.size} unread parts"
+    unreads
+  end
 
   def next_part
     return nil unless parent
@@ -321,16 +327,17 @@ class Page < ActiveRecord::Base
     return "content" unless parent.raw_html.blank?
     count = parent.parts.size + 1
     self.update(:parent_id => parent.id, :position => count)
-    if new
-      parent.tags << self.tags.not_hidden.not_omitted.not_character.not_info - parent.tags
+    if new # move my tags and authors to parent
+      parent.tags << self.tags
+      self.tags.delete(self.tags)
       parent.cache_tags
-      parent.authors << self.authors - parent.authors
-      parent.update_attribute(:stars, self.stars)
-    else
-      Rails.logger.debug "DEBUG: updating parent last read #{parent.last_read}? mine is #{self.last_read}"
-      if self.unread? || (parent.read? && self.last_read > parent.last_read)
-        parent.update_attribute(:last_read, self.last_read)
-      end
+      self.cache_tags
+      parent.authors << self.authors
+      self.authors.delete(self.authors)
+      parent.update_stars
+    elsif self.unread?
+      Rails.logger.debug "DEBUG: updating parent last read"
+      parent.update_last_read
     end
     self.update!(type: "Chapter") if self.type == "Single"
     parent.set_wordcount(false)
@@ -350,64 +357,87 @@ class Page < ActiveRecord::Base
     return self
   end
 
-  def reset_read_after
-    self.update_read_after(last_read)
-    parent.reset_read_after if parent
-    return self
-  end
-
   def make_unfinished
-    self.update_attribute(:stars, 9)
-    self.update_read_after
+    self.update(stars: 9, last_read: nil, read_after: Date.today + 5.years)
+    parent.update_stars if parent
+    parent.update_last_read if parent
+    parent.update_read_after if parent
     return self
   end
 
-  def rate(stars, update_parent = true, update_children = true)
-    self.stars = stars.to_i
-    self.update_read_after
-    self.parts.each {|part| part.rate(stars, false, true)} if update_children
-    if self.parent && update_parent
-       parent.update_last_read
-       parent.parent.update_last_read if parent.parent
-    end
-    return self.stars
+  def read_today
+    self.update!(last_read: Time.now)
+    parent.update_last_read if parent
+    return self
   end
 
-  def update_read_after(new_last_read = Time.now)
-    self.last_read = new_last_read
-    Rails.logger.debug "DEBUG: new last read: #{self.last_read}"
-    self.read_after = case stars
-      when 5
-        new_last_read + 6.months
-      when 4
-        new_last_read + 1.year
-      when 3
-        new_last_read + 2.years
-      when 2
-        new_last_read + 3.years
-      when 1
-        new_last_read + 4.years
-      when 9
-        new_last_read + 5.years
-      when 10
-        new_last_read
+  def rate(stars)
+    self.update!(stars: stars)
+    parent.update_stars if parent
+    self.update_read_after
+    parent.update_read_after if parent
+    parts.each{|p| p.update!(stars: stars) && p.update_read_after} if parts.any?
+    return self
+  end
+
+  def rate_unread(stars)
+    Rails.logger.debug "DEBUG: stars for unread: #{stars}"
+    self.unread_parts.each do |part|
+      Rails.logger.debug "DEBUG: updating #{part.title} with stars: #{stars}"
+      part.update!(last_read: Time.now, stars: stars)
     end
-    Rails.logger.debug "DEBUG: new read after: #{self.read_after}"
-    self.save!
+    update_last_read
+    update_stars
+    update_read_after
+    return self
   end
 
   def update_last_read
+    return self unless parts.any?
     last_reads = self.parts.map(&:last_read)
     if last_reads.include?(nil)
-      self.update_attribute(:last_read, nil)
+      self.update!(last_read: nil)
+      Rails.logger.debug "DEBUG: unsetting last_read for #{self.title}"
     else
-      self.update_attribute(:stars, self.parts.map(&:stars).sort.last)
-      self.update_read_after(last_reads.sort.first)
+      self.update!(last_read: last_reads.sort.first)
+      Rails.logger.debug "DEBUG: new last read: #{self.last_read}"
     end
-    Rails.logger.debug "DEBUG: parent last read: #{self.last_read}"
+    return self
   end
 
+  def update_stars
+    return unless parts.any?
+    mode = parts.map(&:stars).compact.mode
+    highest = parts.map(&:stars).sort.last
+    Rails.logger.debug "DEBUG: mode: #{mode}, highest: #{highest}"
+    if mode
+      self.update!(stars: mode)
+    else
+      self.update!(stars: highest)
+    end
+    Rails.logger.debug "DEBUG: new stars: #{self.stars}"
+    return self
+  end
 
+  def update_read_after
+    Rails.logger.debug "DEBUG: last read: #{self.last_read}"
+    return self unless last_read
+    new_read_after = case stars
+      when 5
+        last_read + 6.months
+      when 4
+        last_read + 1.year
+      when 3
+        last_read + 2.years
+      when 2
+        last_read + 3.years
+      when 1
+        last_read + 4.years
+    end
+    self.update!(read_after: new_read_after)
+    Rails.logger.debug "DEBUG: new read after: #{self.read_after}"
+    return self
+  end
 
   def add_author_string=(string)
     return if string.blank?
@@ -436,8 +466,7 @@ class Page < ActiveRecord::Base
       if parts.any?
         if parts.map(&:last_read).any?
           last_part_read = parts.map(&:last_read).compact.map(&:to_date).sort.first
-          Rails.logger.debug "DEBUG: last_part_read: #{last_part_read}"
-         "#{UNREAD} parts (#{last_part_read})"
+          "#{UNREAD} parts (#{last_part_read})"
         elsif parts.map(&:parts).any?
           subparts = parts.map(&:parts).flatten
           if subparts.map(&:last_read).any?
@@ -445,13 +474,13 @@ class Page < ActiveRecord::Base
             Rails.logger.debug "DEBUG: last_subpart_read: #{last_subpart_read}"
             "#{UNREAD} subparts (#{last_subpart_read})"
           else
-            UNREAD
+            unread_string
           end
         else
-          UNREAD
+          unread_string
         end
       else
-        UNREAD
+        unread_string
       end
     else
       last_read.to_date
@@ -488,7 +517,7 @@ class Page < ActiveRecord::Base
     if stars?
       "#{stars} " + "stars".pluralize(stars)
     elsif unfinished?
-      "unfinished"
+      UNFINISHED
     elsif unrated?
       nil
     else
@@ -499,19 +528,18 @@ class Page < ActiveRecord::Base
 
   def title_prefix; title.match(position.to_s) ? "" : "#{position}. "; end
 
-  def unread_string; unread? ? UNREAD : ""; end
-  def short_diff_strings; [author_string, unread_string, *tags.not_info.by_type.by_name.map(&:name)].reject(&:blank?); end
-  def long_diff_strings; [author_string, last_read_string, star_string, size_string, *tags.by_type.by_name.map(&:name)].reject(&:blank?); end
-
-  def show_title_diffs
-    mine = long_diff_strings
-    if self.parent
-      mine = mine - parent.long_diff_strings
+  def unread_string
+    if unfinished?
+      UNFINISHED
+    elsif unread?
+      UNREAD
+    else
+      ""
     end
-    mine
   end
-  def merged_tag_string; show_title_diffs.join(', '); end
-  def title_suffix; show_title_diffs.empty? ? "" : " (#{merged_tag_string})"; end
+
+  def meta_strings; [author_string, last_read_string, star_string, size_string, *tags.by_type.by_name.map(&:name)].uniq.reject(&:blank?); end
+  def title_suffix; meta_strings.empty? ? "" : " (#{meta_strings.join_comma})"; end
 
   def section(number)
     body = Nokogiri::HTML(self.edited_html).xpath('//body').first

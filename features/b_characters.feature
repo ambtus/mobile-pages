@@ -90,7 +90,7 @@ Feature: characters are a type of tag, and can be created and selected like tags
       And I should be able to select "John/Rodney" from "Character"
       And I should be able to select "Teyla/Ronan" from "Character"
 
-   Scenario: new parent for an existing page should NOT have the same character
+   Scenario: new parent for an existing page should have the same character
     Given I have no pages
     And a page exists with characters: "Peter/Stiles"
     When I am on the page's page
@@ -98,11 +98,11 @@ Feature: characters are a type of tag, and can be created and selected like tags
       And I fill in "add_parent" with "New Parent"
       And I press "Update"
     When I am on the page with title "New Parent"
-    Then I should NOT see "Peter/Stiles" within ".characters"
-      But I should see "(Peter/Stiles)" within "#position_1"
+    Then I should see "Peter/Stiles" within ".characters"
+      And I should NOT see "Peter/Stiles" within "#position_1"
     When I am on the homepage
       Then I should see "New Parent" within "#position_1"
-    But I should NOT see "Peter/Stiles" within ".tags"
+    And I should see "Peter/Stiles" within ".tags"
 
  Scenario: list the characters
     Given a tag exists

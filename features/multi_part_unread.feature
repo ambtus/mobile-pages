@@ -31,7 +31,6 @@ Feature: parts differ in fandom and unread status from parent
       And I follow "Rate"
       And I choose "3"
     And I press "Rate"
-    Then I should see "set for reading again"
 
     When I am on the homepage
    Then I should see "unread parts (2009-01-01)" within "#position_1"
@@ -106,7 +105,7 @@ Feature: parts differ in fandom and unread status from parent
     Then I should see "Parent" within ".title"
       And I should see "unread parts (2010-01-01)" within ".last_read"
       And I should see "30,003 words" within ".size"
-      And I should see "Child1 (unread, 10,001 words)" within "#position_1"
+      And I should see "Child1 (unread, 10,001 words, two)" within "#position_1"
       And I should see "Child2 (2010-01-01, 10,001 words, one)" within "#position_2"
       And I should see "Child3 (unread, 10,001 words, one)" within "#position_3"
 
@@ -133,7 +132,6 @@ Feature: parts differ in fandom and unread status from parent
       And I follow "Rate"
       And I choose "5"
     And I press "Rate"
-    Then I should see "set for reading again in 6 months"
 
     When I am on the homepage
     Then I should see "Parent" within "#position_1"
@@ -150,7 +148,6 @@ Feature: parts differ in fandom and unread status from parent
       And I follow "Rate"
       And I choose "3"
     And I press "Rate"
-    Then I should see "set for reading again"
 
     When I am on the homepage
     Then I should see "Parent" within "#position_1"
@@ -163,7 +160,8 @@ Feature: parts differ in fandom and unread status from parent
       And I should NOT see "unread" within ".last_read"
       And I should see "two" within ".fandoms"
       And I should see today within "#position_1"
-      And I should NOT see "two" within "#position_1"
+      And I should see "two" within "#position_1"
+      And I should see "2010-01-01" within "#position_2"
       And I should see "one" within "#position_2"
       And I should NOT see today within "#position_2"
       And I should see today within "#position_3"

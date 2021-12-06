@@ -52,7 +52,7 @@ Feature: ao3 specific stuff
       And I follow "Time Was, Time Is"
       Then I should see today within ".last_read"
       But I should NOT see "unread parts" within ".last_read"
-      And I should NOT see today within "#position_1"
+      And I should see today within "#position_1"
     When I follow "Refetch"
       And I press "Refetch"
     Then I should see "unread parts" within ".last_read"

@@ -30,7 +30,7 @@ Feature: last_read (also unread)
       And I press "Update"
     Then I should see "Parent" within ".title"
       And I should see "unread" within ".last_read"
-      And I should NOT see "unread" within "#position_1"
+      And I should see "unread" within "#position_1"
     When I am on the page's page
     Then I should see "unread" within ".last_read"
 
@@ -45,7 +45,7 @@ Feature: last_read (also unread)
     Then I should see "New Parent" within ".title"
       And I should NOT see "unread"
       And I should see "2008-01-01" within ".last_read"
-      And I should NOT see "2008-01-01" within "#position_1"
+      And I should see "2008-01-01" within "#position_1"
 
   Scenario: rating a part updates the parent and the part but not the sibling
     Given I have no pages
@@ -62,7 +62,8 @@ Feature: last_read (also unread)
       Then I should see today within ".last_read"
    When I am on the page's page
      Then I should see "2009-01-01" within ".last_read"
-     But I should NOT see "2009-01-01" within "#position_1"
-     And I should see today within "#position_2"
+     And I should see "2009-01-01" within "#position_1"
+     And I should see "5 stars" within "#position_1"
+     But I should see today within "#position_2"
      And I should see "3 stars" within "#position_2"
 

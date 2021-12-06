@@ -12,6 +12,8 @@ module Download
     "#{mypath}#{DOWNLOADS}/#{download_title}#{format}".gsub(' ', '%20')
   end
 
+  def short_diff_strings; [author_string, unread_string, *tags.not_info.by_type.by_name.map(&:name)].reject(&:blank?); end
+
   def download_title_diffs
     mine = short_diff_strings
     if self.parent

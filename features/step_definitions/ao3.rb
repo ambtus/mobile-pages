@@ -47,9 +47,11 @@ Given /^Time Was partially exists$/ do
   chapter1.raw_html = File.open(Rails.root + "features/html/where.html", 'r:utf-8') { |f| f.read }
   chapter1.update!(url: "https://archiveofourown.org/works/692/chapters/803")
   chapter1.get_meta_from_ao3(false)
-  chapter2 = Chapter.create!(title: "fake", parent_id: page.id, position: 2)
+  chapter1.read_today.rate("3").update_read_after
+  chapter2 = Chapter.create!(title: "fake")
+  chapter2.add_parent(page.title)
   page.get_meta_from_ao3(false)
-  page.rate("3")
+  page.rate_unread(2)
 end
 
 Given /^Bad Formatting exists$/ do

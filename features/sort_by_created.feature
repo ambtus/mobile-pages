@@ -8,11 +8,19 @@ Feature: last created
     Then I should see "No pages"
 
   Scenario: find first and last created pages
-    Given 2 pages exist
+    When I am on the homepage
+      And I fill in "page_title" with "Page 1"
+      And I press "Store"
+      And I wait 1 second
+    When I am on the homepage
+      And I fill in "page_title" with "Page 2"
+      And I press "Store"
+      And I wait 1 second
     When I am on the homepage
       And I fill in "page_url" with "http://test.sidrasue.com/test1.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
+
     When I am on the homepage
       And I choose "sort_by_first_created"
       And I press "Find"
