@@ -72,3 +72,15 @@ Feature: other mult-part tests
     When I am on the homepage
     Then I should see "New Parent" within "#position_1"
     And I should see "2008-01-01" within "#position_1"
+
+  Scenario: parent should be able to remove duplicates
+    Given I have no pages
+      And I have no tags
+      And a page exists with url: "http://test.sidrasue.com/parts/1.html" AND fandoms: "Harry Potter"
+      And a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND fandoms: "Harry Potter" AND title: "Parent"
+    When I am on the page with title "Parent"
+    Then I should see "Harry Potter" within ".fandoms"
+    And I should see "Harry Potter" within "#position_1"
+    When I press "Remove Duplicate Tags"
+    Then I should see "Harry Potter" within ".fandoms"
+    But I should NOT see "Harry Potter" within "#position_1"
