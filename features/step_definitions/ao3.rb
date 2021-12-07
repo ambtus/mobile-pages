@@ -95,7 +95,7 @@ Given /^Counting Drabbles exists$/ do
   work2.raw_html = File.open(Rails.root + "features/html/flower.html", 'r:utf-8') { |f| f.read }
   work2.get_meta_from_ao3(false)
 
-  series.set_wordcount
+  series.cleanup
 end
 
 Given /^Alan Rickman exists$/ do
@@ -133,7 +133,7 @@ Given /^Misfits exists$/ do
   work2.get_meta_from_ao3(false)
   work2.update!(url: "http://archiveofourown.org/works/13765827/")
 
-  series.set_wordcount
+  series.cleanup
 end
 
 Given /^Yer a Wizard exists$/ do

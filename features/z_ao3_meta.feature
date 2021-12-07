@@ -58,3 +58,25 @@ Feature: ao3 specific stuff
     Then I should see "unread parts" within ".last_read"
       And I should see today within "#position_1"
       And I should see "Hogwarts (unread"
+
+   Scenario: grab a series with multiple authors
+    Given I have no pages
+      And a tag exists with name: "Good Omens" AND type: "Fandom"
+      And an author exists with name: "entanglednow"
+    When I am on the homepage
+      And I fill in "page_url" with "https://archiveofourown.org/series/2647903"
+      And I select "Good Omens" from "fandom"
+      And I select "entanglednow" from "author"
+      And I press "Store"
+    Then I should see "Into The Deep Wood (Series)" within ".title"
+      And I should see "by green_grin" within ".notes"
+      And I should see "Good Omens" within ".fandoms"
+      And I should see "entanglednow" within ".authors"
+      And I should see "1. The Waters And The Wild " within "#position_1"
+      And I should see "2. The Fruits Of The Forest" within "#position_2"
+      And I should NOT see "Good Omens) Rate" within "#position_1"
+      And I should NOT see "Good Omens) Rate" within "#position_2"
+      And I should NOT see "entanglednow" within "#position_1"
+      And I should NOT see "entanglednow" within "#position_2"
+      And I should NOT see "by green_grin" within "#position_1"
+      But I should see "by green_grin" within "#position_2"

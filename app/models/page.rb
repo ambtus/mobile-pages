@@ -103,9 +103,10 @@ class Page < ActiveRecord::Base
   LONG_MAX = 300000
 
   def set_wordcount(recount=true)
-    if self.parts.size > 0
+    Rails.logger.debug "DEBUG: #{self.title} old wordcount: #{self.wordcount} and size: #{self.size}"
+    new_wordcout = if self.parts.size > 0
       self.parts.each {|part| part.set_wordcount } if recount
-      self.wordcount = self.parts.sum(:wordcount)
+      self.parts.sum(:wordcount)
     elsif recount
       count = 0
       body = Nokogiri::HTML(self.edited_html).xpath('//body').first
@@ -115,16 +116,18 @@ class Page < ActiveRecord::Base
           count +=  words.scan(/[a-zA-Z0-9À-ÿ_]+/).size
         end
       } if body
-      self.wordcount = count
+      count
     end
-    self.size = "drabble"
-    if self.wordcount
-      self.size = "short" if wordcount > DRABBLE_MAX
-      self.size = "medium" if wordcount > SHORT_MAX
-      self.size = "long" if wordcount > MED_MAX
-      self.size = "epic" if wordcount > LONG_MAX
+    size_word = "drabble"
+    if new_wordcout
+      size_word = "short" if new_wordcout > DRABBLE_MAX
+      size_word = "medium" if new_wordcout > SHORT_MAX
+      size_word = "long" if new_wordcout > MED_MAX
+      size_word = "epic" if new_wordcout > LONG_MAX
     end
-    self.save
+    Rails.logger.debug "DEBUG: #{self.title} new wordcount: #{new_wordcout} and size: #{size_word}"
+    self.update!(wordcount: new_wordcout, size: size_word)
+    return self
   end
 
   BASE_URL_PLACEHOLDER = "Base URL: use * as replacement placeholder"
@@ -231,7 +234,7 @@ class Page < ActiveRecord::Base
       end
       if page.blank?
         title = "Part #{position}" if title.blank?
-        Rails.logger.debug "DEBUG: didn’t find #{part}"
+        Rails.logger.debug "DEBUG: didn't find #{part}"
         page = Page.create(:url=>url, :title=>title, :parent_id=>self.id, :position => position)
         page.set_type
         # Rails.logger.debug "DEBUG: created #{page.reload.inspect}"
@@ -257,8 +260,7 @@ class Page < ActiveRecord::Base
       Page.find(old_part_id).make_single
     end
 
-    self.update_last_read
-    self.set_wordcount
+    self.cleanup
     self.set_type
   end
 
@@ -405,7 +407,7 @@ class Page < ActiveRecord::Base
   end
 
   def update_stars
-    return unless parts.any?
+    return self unless parts.any?
     mode = parts.map(&:stars).compact.mode
     highest = parts.map(&:stars).sort.last
     Rails.logger.debug "DEBUG: mode: #{mode}, highest: #{highest}"
@@ -438,7 +440,7 @@ class Page < ActiveRecord::Base
     return self
   end
 
-  def cleanup; update_last_read.update_stars.update_read_after.remove_outdated_downloads; end
+  def cleanup; update_last_read.update_stars.update_read_after.remove_outdated_downloads.set_wordcount; end
 
   def add_author_string=(string)
     return if string.blank?
@@ -509,6 +511,7 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "DEBUG: cache_tags for #{self.id} tags: #{cache_string}, hiddens: #{hidden_string}"
     self.remove_outdated_downloads
     self.update(cached_tag_string: cache_string, cached_hidden_string: hidden_string)
+    self
   end
 
   def unfinished?; stars == 9; end
@@ -743,9 +746,10 @@ class Page < ActiveRecord::Base
   end
 
   def remove_outdated_edits
-    return unless self.id
+    return self unless self.id
     FileUtils.rm_f(self.scrubbed_html_file_name)
     FileUtils.rm_f(self.edited_html_file_name)
+    self
   end
 
   def add_author(string)
@@ -761,7 +765,12 @@ class Page < ActiveRecord::Base
         non_mp_authors << t
       else
         Rails.logger.debug "DEBUG: found #{found.name}"
-        mp_authors << found unless self.authors.include?(found) || (self.parent && self.parent.authors.include?(found))
+        if self.authors.include?(found) || (self.parent && self.parent.authors.include?(found))
+          Rails.logger.debug "DEBUG: won't add #{found.name} to authors"
+        else
+          Rails.logger.debug "DEBUG: will add #{found.name} to authors"
+          mp_authors << found
+        end
       end
     end
     unless mp_authors.empty?
@@ -800,7 +809,15 @@ class Page < ActiveRecord::Base
         non_mp_fandoms << simple if simple.present?
       else
         Rails.logger.debug "DEBUG: found #{found.name}"
-        mp_fandoms << found unless self.tags.include?(found) || (self.parent && self.parent.tags.include?(found))
+        Rails.logger.debug "DEBUG: #{self.parent.tags.map(&:name)}" if self.parent
+        if self.tags.include?(found)
+          Rails.logger.debug "DEBUG: won't re-add #{found.name} to tags"
+        elsif self.parent && self.parent.tags.include?(found)
+          Rails.logger.debug "DEBUG: won't duplicate parents #{found.name} in my tags"
+        else
+          Rails.logger.debug "DEBUG: will add #{found.name} to tags"
+          mp_fandoms << found
+        end
       end
     end
     unless mp_fandoms.empty?

@@ -25,7 +25,7 @@ class Series < Page
       dds = dt.xpath("following-sibling::dd[count(following-sibling::dt)=#{ct}]")
       # Rails.logger.debug "DEBUG: dds: #{dds.inspect}"
       case dt.text
-      when "Creator:"
+      when "Creator:", "Creators:"
         doc_authors = dds.map(&:text).join(", ")
         Rails.logger.debug "DEBUG: found authors: #{doc_authors}"
       when "Description:"
@@ -97,14 +97,11 @@ class Series < Page
         end
       else
         Rails.logger.debug "DEBUG: work does not yet exist, creating ao3/works/#{work_id} in position #{count} and parent_id #{self.id}"
-        book = Book.new(:url => url, :position => count, :parent_id => self.id)
-        # Rails.logger.debug "DEBUG: will create #{book.inspect}"
-        book.fetch_ao3
+        Book.create!(:url => url, :position => count, :parent_id => self.id, :title => "temp")
         sleep 5 unless count == work_list.size
       end
     end
-    update_last_read
-    set_wordcount
+    cleanup
   end
 
 end

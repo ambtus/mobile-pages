@@ -31,6 +31,7 @@ module Download
     FileUtils.mkdir_p(self.download_dir) if self.id
     self.parent.remove_outdated_downloads(true) if self.parent
     self.parts.each { |part| part.remove_outdated_downloads(true) unless recurse}
+    return self
   end
 
   # needs to be filesystem safe and not overly long

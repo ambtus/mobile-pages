@@ -29,7 +29,7 @@ class Book < Page
 
     Rails.logger.debug "DEBUG: notes now: #{self.notes}"
 
-    self.save! && self.remove_outdated_downloads
+    self.save!
   end
 
   def get_chapters_from_ao3
@@ -59,17 +59,15 @@ class Book < Page
         end
       end
     end
-    update_last_read
-    set_wordcount
   end
 
   def fetch_ao3
     if self.id
       Rails.logger.debug "DEBUG: fetch_ao3 work #{self.id}"
-      self.get_chapters_from_ao3 && get_meta_from_ao3(false)
+      get_chapters_from_ao3 && get_meta_from_ao3(false) && cleanup
     else
       Rails.logger.debug "DEBUG: fetch_ao3 work #{self.url}"
-      get_meta_from_ao3 && self.get_chapters_from_ao3
+      get_meta_from_ao3 && get_chapters_from_ao3 && cleanup
     end
   end
 

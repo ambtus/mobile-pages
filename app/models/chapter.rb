@@ -40,7 +40,7 @@ class Chapter < Page
 
   def fetch_ao3
     Rails.logger.debug "DEBUG: fetch_ao3 chapter #{self.id}"
-    self.fetch_raw && set_wordcount && get_meta_from_ao3(false)
+    fetch_raw && get_meta_from_ao3(false) && cleanup
   end
 
 

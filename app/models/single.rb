@@ -30,16 +30,16 @@ class Single < Page
     add_fandom(ao3_fandoms)
     Rails.logger.debug "DEBUG: notes now: #{self.notes}"
 
-    self.save! && self.remove_outdated_downloads
+    self.save!
   end
 
   def fetch_ao3
     if self.id
       Rails.logger.debug "DEBUG: fetch_ao3 single #{self.id}"
-      fetch_raw && set_wordcount && get_meta_from_ao3(false)
+      fetch_raw && get_meta_from_ao3(false) && cleanup
     else
       Rails.logger.debug "DEBUG: fetch_ao3 single #{self.url}"
-      get_meta_from_ao3 && fetch_raw && set_wordcount
+      get_meta_from_ao3 && fetch_raw && cleanup
     end
   end
 

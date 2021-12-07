@@ -13,7 +13,6 @@ class PagesController < ApplicationController
     @size = params[:size] || "any"
     @unread = params[:unread] || "either"
     @stars = params[:stars] || "any"
-    @find = params[:find] || "none"
     @tags = Tag.all.map(&:name)
     @tag = Tag.find_by_name(params[:tag]) if params[:tag]
     @fandom = Fandom.find_by_name(params[:fandom]) if params[:fandom]
@@ -47,7 +46,6 @@ class PagesController < ApplicationController
       build_route[:sort_by] = params[:sort_by] unless (params[:sort_by].blank? || params[:sort_by] == "default")
       build_route[:size] = params[:size] unless (params[:size].blank? || params[:size] == "any")
       build_route[:stars] = params[:stars] unless (params[:stars].blank? || params[:stars] == "any")
-      build_route[:find] = params[:find] unless (params[:find].blank? || params[:find] == "none")
       build_route[:unread] = params[:unread] unless (params[:unread].blank? || params[:unread] == "either")
       if params[:page]
         build_route[:title] = params[:page][:title] unless params[:page][:title] == "Title"
@@ -65,9 +63,10 @@ class PagesController < ApplicationController
     @rating = Rating.find_by_name(params[:rating])
     @omitted = Omitted.find_by_name(params[:omitted])
     @info = Info.find_by_name(params[:info])
+    @page.tags << [@tag, @hidden, @fandom, @omitted, @character, @rating, @info].compact
     @author_name = params[:author] unless params[:author].blank?
     @author = Author.find_by_short_name(params[:author])
-    @find = params[:find]
+    @page.authors << @author if @author
     if @page.save
       if !@page.errors[:base].blank?
         @errors = @page.errors
@@ -75,8 +74,6 @@ class PagesController < ApplicationController
         @page = Page.new(params[:page])
       else
         @page.convert_to_type
-        @page.authors << @author if @author && !@page.authors.include?(@author)
-        @page.tags << [@tag, @hidden, @fandom, @omitted, @character, @rating, @info].compact - @page.tags
         @page.cache_tags
         if @page.tags.fandom.blank?
           flash[:notice] = "Page created. Please select fandom(s)"
