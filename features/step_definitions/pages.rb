@@ -113,3 +113,9 @@ Then('the read after date should be {int} years from now') do |int|
   Rails.logger.debug "DEBUG: comparing #{Page.first.read_after.year} with #{Date.today.year} (#{diff})"
   assert diff == int
 end
+
+Then('my page named {string} should have url: {string}') do |title, url|
+  page = Page.find_by_title(title)
+  Rails.logger.debug "DEBUG: comparing #{page.url} with #{url}"
+  assert page.url == url
+end

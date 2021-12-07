@@ -5,7 +5,7 @@ Feature: ao3 specific stuff
     And a tag exists with name: "popslash" AND type: "Fandom"
       And an author exists with name: "Sidra"
       And I am on the homepage
-    When I fill in "page_url" with "https://archiveofourown.org/works/68481"
+    When I fill in "page_url" with "http://archiveofourown.org/works/68481/"
       And I press "Store"
     Then I should NOT see "Title can't be blank"
     And I should NOT see "Select tags"
@@ -17,12 +17,13 @@ Feature: ao3 specific stuff
       And I should see "Make the Yuletide Gay" within ".notes"
       And I should see "Sidra" within ".authors"
       And I should NOT see "by Sidra" within ".notes"
+    And my page named "I Drive Myself Crazy" should have url: "https://archiveofourown.org/works/68481"
 
   Scenario: grab a book
     Given I have no pages
     And a tag exists with name: "harry potter" AND type: "Fandom"
       And I am on the homepage
-    When I fill in "page_url" with "https://archiveofourown.org/works/692"
+    When I fill in "page_url" with "https://archiveofourown.org/works/692/"
       And I select "harry potter" from "fandom"
       And I press "Store"
     Then I should see "Time Was, Time Is (Book)" within ".title"
@@ -41,12 +42,13 @@ Feature: ao3 specific stuff
       And I should NOT see "Using time-travel" within ".notes"
       And I should NOT see "abandoned" within ".notes"
    But the part titles should be stored as "Where am I? & Hogwarts"
+    And my page named "Time Was, Time Is" should have url: "https://archiveofourown.org/works/692"
 
    Scenario: grab a series
     Given I have no pages
     And a tag exists with name: "harry potter" AND type: "Fandom"
       And I am on the homepage
-    When I fill in "page_url" with "https://archiveofourown.org/series/46"
+    When I fill in "page_url" with "http://archiveofourown.org/series/46"
       And I select "harry potter" from "fandom"
       And I press "Store"
     Then I should see "Counting Drabbles (Series)" within ".title"
@@ -62,6 +64,7 @@ Feature: ao3 specific stuff
       Then I should see "Parent: Counting Drabbles (Series)"
       And I should see "Next: The Flower [sequel to Skipping Stones] (Single)"
       And I should see "Skipping Stones (Single)" within ".title"
+    And my page named "Counting Drabbles" should have url: "https://archiveofourown.org/series/46"
 
   Scenario: deliberately fetch only one chapter
     Given I have no pages
@@ -76,6 +79,7 @@ Feature: ao3 specific stuff
       And I should see "Using time-travel"
       And I should NOT see "Hogwarts"
       And I should NOT see "giving up on nanowrimo"
+    And my page named "Where am I?" should have url: "https://archiveofourown.org/works/692/chapters/803"
 
   Scenario: refetch one chapter from ao3
     Given I have no pages

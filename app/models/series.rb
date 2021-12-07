@@ -53,21 +53,12 @@ class Series < Page
     work_list.each_with_index do |work_id, index|
       count = index + 1
       url = "https://archiveofourown.org/works/#{work_id}"
-      url_variations = [
-        url,
-        "https://archiveofourown.org/works/#{work_id}/",
-        "http://archiveofourown.org/works/#{work_id}",
-        "http://archiveofourown.org/works/#{work_id}/",
-       ]
-      work = Page.where(url: url_variations).first
+      work = Page.find_by_url(url)
       if work.nil?
-        possibles = Page.where("url LIKE ?", "%#{url.sub(/^https?/, '')}%")
-        work = possibles.first if possibles.size == 1
+        #do it's chapters exist?
+        possibles = Page.where("url LIKE ?", url + "/chapters/%")
       end
-      if work && work.parent && work.parent != self
-        work = work.parent
-      end
-      if possibles && possibles.size > 1
+      if possibles
         possibles.each do |p|
           if p.parent && p.parent == self
            Rails.logger.debug "DEBUG: selecting from my first level possibles #{p.title}"

@@ -4,6 +4,12 @@ class Page < ActiveRecord::Base
   MODULO = 300  # files in a single directory
   include Download
 
+  def normalize_url
+    return if self.url.blank?
+    self.url = self.url.sub(/^http:/, 'https:') if self.url.match("^http://archiveofourown.org/")
+    self.url = self.url.chop if self.url.match("^https://archiveofourown.org/") && self.url.match("/$")
+  end
+
   def convert_to_type
     return unless type.nil?
     parts.map(&:convert_to_type) unless parts.empty?
@@ -144,7 +150,7 @@ class Page < ActiveRecord::Base
   attr_accessor :url_substitutions
   attr_accessor :urls
 
-  before_validation :remove_placeholders
+  before_validation :remove_placeholders, :normalize_url
 
   validates_presence_of :title, :message => "can't be blank"
   validates_format_of :url, :with => URI.regexp, :allow_blank => true

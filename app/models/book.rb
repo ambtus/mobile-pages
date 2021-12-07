@@ -44,7 +44,7 @@ class Book < Page
         count = index + 1
         title = element.text
         url = "https://archiveofourown.org" + element['href']
-        chapter = Chapter.find_by(url: url) || Chapter.find_by(url: "http://archiveofourown.org" + element['href'])
+        chapter = Chapter.find_by(url: url)
         if chapter
           if chapter.position == count && chapter.parent_id == self.id
             Rails.logger.debug "DEBUG: chapter already exists, skipping #{chapter.id} in position #{count}"

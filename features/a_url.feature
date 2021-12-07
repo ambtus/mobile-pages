@@ -39,3 +39,4 @@ Feature: url stuff
       And I press "Store"
     Then I should see "error retrieving content" within "#flash_alert"
       And I should NOT see "Page created"
+
