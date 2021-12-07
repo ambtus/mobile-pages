@@ -1,6 +1,8 @@
 -title="Edit author: #{@author.name}"
 -content_for(:title, title)
 %h1=title
+.pages
+  %p= link_to "#{@author.pages.count} #{'page'.pluralize(@author.pages.count)}", pages_path(author: @author.true_name, :type => "all" )
 .destroy
   %p= link_to 'Destroy', author_path(@author, :destroy => true)
 %p.author
