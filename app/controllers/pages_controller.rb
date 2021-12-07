@@ -17,7 +17,6 @@ class PagesController < ApplicationController
     @size = params[:size] || "any"
     @unread = params[:unread] || "either"
     @stars = params[:stars] || "any"
-    @tags = Tag.all.map(&:name)
     @tag = Tag.find_by_name(params[:tag]) if params[:tag]
     @fandom = Fandom.find_by_name(params[:fandom]) if params[:fandom]
     @character = Character.find_by_name(params[:character]) if params[:character]
