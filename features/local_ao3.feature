@@ -79,14 +79,6 @@ Feature: ao3 testing that uses local cached files
       Then I should see "Where am I? (Chapter)" within ".title"
       And I should see "Next: Hogwarts (Chapter)"
 
-  Scenario: finding page stored with http
-    Given I have no pages
-    And I Drive Myself Crazy exists
-    When I am on the homepage
-      And I fill in "page_url" with "https://archiveofourown.org/works/68481"
-      And I press "Find"
-    Then I should see "I Drive Myself Crazy" within "#position_1"
-
   Scenario: ensure rebuild meta isn’t refetching
     Given I have no pages
       And I have no tags
