@@ -38,7 +38,7 @@ class Book < Page
 
     chapters = doc.css(".stats .chapters").children[1].text.split('/') rescue Array.new
     Rails.logger.debug "DEBUG: wip status: #{chapters}"
-    wip_switch(chapters.second == "?")
+    wip_switch(chapters.second == "?" || chapters.first != chapters.second)
   end
 
   def get_chapters_from_ao3
