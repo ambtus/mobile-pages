@@ -31,6 +31,8 @@ Feature: url stuff
       And I press "Store"
     Then I should see "Url has already been taken" within "#flash_alert"
       And I should NOT see "duplicate"
+    When I press "Find"
+      Then I should see "Original (Single)" within ".title"
 
   Scenario: page not found should display error
     When I am on the homepage
