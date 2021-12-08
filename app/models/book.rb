@@ -32,6 +32,15 @@ class Book < Page
     self.save!
   end
 
+  def get_wip_from_ao3
+    Rails.logger.debug "DEBUG: build meta from raw html of last part #{parts.last.id}"
+    doc = Nokogiri::HTML(parts.last.raw_html)
+
+    chapters = doc.css(".stats .chapters").children[1].text.split('/') rescue Array.new
+    Rails.logger.debug "DEBUG: wip status: #{chapters}"
+    wip_switch(chapters.second == "?")
+  end
+
   def get_chapters_from_ao3
     Rails.logger.debug "DEBUG: getting chapters from ao3 for #{self.id}"
     doc = Nokogiri::HTML(Scrub.fetch_html(self.url + "/navigate"))
@@ -64,10 +73,10 @@ class Book < Page
   def fetch_ao3
     if self.id
       Rails.logger.debug "DEBUG: fetch_ao3 work #{self.id}"
-      get_chapters_from_ao3 && get_meta_from_ao3(false) && cleanup
+      get_chapters_from_ao3 && get_meta_from_ao3(false) && get_wip_from_ao3 && cleanup
     else
       Rails.logger.debug "DEBUG: fetch_ao3 work #{self.url}"
-      get_meta_from_ao3 && get_chapters_from_ao3 && cleanup
+      get_meta_from_ao3 && get_chapters_from_ao3 && get_wip_from_ao3 && cleanup
     end
   end
 

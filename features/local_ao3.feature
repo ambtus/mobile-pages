@@ -9,6 +9,7 @@ Feature: ao3 testing that uses local cached files
       And I should see "2. Ours" within "#position_2"
       But I should NOT see "1. Chapter 1"
    And the part titles should be stored as "Chapter 1 & Ours"
+     And I should NOT see "WIP" within ".omitteds"
 
   Scenario: a Book of Chapters doesn’t assume it’s an ao3 Work but does ignore work notes
     Given I have no pages

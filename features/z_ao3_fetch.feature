@@ -10,6 +10,7 @@ Feature: ao3 specific stuff
     Then I should NOT see "Title can't be blank"
     And I should NOT see "Select tags"
       And I should see "I Drive Myself Crazy (Single)" within ".title"
+      And I should NOT see "WIP" within ".omitteds"
       And I should see "popslash" within ".fandoms"
       And I should see "please no crossovers" within ".notes"
       And I should NOT see "Popslash" within ".notes"
@@ -27,6 +28,7 @@ Feature: ao3 specific stuff
       And I select "harry potter" from "fandom"
       And I press "Store"
     Then I should see "Time Was, Time Is (Book)" within ".title"
+      And I should see "WIP" within ".omitteds"
       And I should see "1,581 words" within ".size"
       And I should see "by Sidra" within ".notes"
       And I should see "Using time-travel" within ".notes"
@@ -64,6 +66,7 @@ Feature: ao3 specific stuff
       Then I should see "Parent: Counting Drabbles (Series)"
       And I should see "Next: The Flower [sequel to Skipping Stones] (Single)"
       And I should see "Skipping Stones (Single)" within ".title"
+      And I should NOT see "WIP" within ".omitteds"
     And my page named "Counting Drabbles" should have url: "https://archiveofourown.org/series/46"
 
   Scenario: deliberately fetch only one chapter
@@ -74,6 +77,7 @@ Feature: ao3 specific stuff
       And I select "harry potter" from "fandom"
       And I press "Store"
     Then I should see "Where am I? (Single)" within ".title"
+      And I should see "WIP" within ".omitteds"
       And I should NOT see "1."
       And I should see "by Sidra"
       And I should see "Using time-travel"

@@ -8,6 +8,7 @@ Feature: ao3 specific stuff
     When I fill in "page_url" with "http://archiveofourown.org/works/692"
       And I select "harry potter" from "fandom"
       And I press "Store"
+    Then I should see "WIP" within ".omitteds"
       And I follow "Notes"
       And I fill in "page_notes" with "changed notes"
       And I press "Update"
@@ -58,6 +59,7 @@ Feature: ao3 specific stuff
     Then I should see "unread parts" within ".last_read"
       And I should see today within "#position_1"
       And I should see "Hogwarts (unread"
+      And I should see "WIP" within ".omitteds"
 
    Scenario: grab a series with multiple authors
     Given I have no pages

@@ -99,6 +99,7 @@ class Page < ActiveRecord::Base
 
   UNREAD = "unread"
   UNFINISHED = "unfinished"
+  WIP = "WIP"
   SHORT_LENGTH = 160 # truncate at this many characters
 
   SIZES = ["drabble", "short", "medium", "long", "epic"]
@@ -107,6 +108,15 @@ class Page < ActiveRecord::Base
   SHORT_MAX =  3000
   MED_MAX   = 30000
   LONG_MAX = 300000
+
+  def wip_tag; Omitted.find_or_create_by(name: WIP); end
+  def wip_switch(on = false)
+    if self.tags.omitted.include?(wip_tag)
+      self.tags.delete(wip_tag) unless on
+    else
+      self.tags << wip_tag && self.cache_tags if on
+    end
+  end
 
   def set_wordcount(recount=true)
     Rails.logger.debug "DEBUG: #{self.title} old wordcount: #{self.wordcount} and size: #{self.size}"
