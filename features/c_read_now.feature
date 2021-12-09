@@ -34,9 +34,9 @@ Feature: read_after order (also checking first_created)
     Given I have no pages
       And I have a series with read_after "2009-01-03"
       And the following pages
-        | title  | urls | read_after |
-        | Single |      | 2009-01-01 |
-        | Parent | http://test.sidrasue.com/parts/1.html | 2009-01-02 |
+        | title  | urls | last_read | stars |
+        | Single |      | 2008-01-01 | 4 |
+        | Parent | http://test.sidrasue.com/parts/1.html | 2008-01-02 | 4|
     When I am on the homepage
     Then I should see "Single" within "#position_1"
       And I should see "Parent" within "#position_2"

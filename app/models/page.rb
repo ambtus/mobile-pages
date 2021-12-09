@@ -171,7 +171,7 @@ class Page < ActiveRecord::Base
   # used in tests
   def inspect
      regexp = /([\d-]+ \d\d:\d\d)([\d:.+ ]+)/
-     super.match(regexp) ? super.gsub(regexp, $1) : super
+     super.match(regexp) ? super.gsub(regexp, '\1') : super
   end
   def self.create_from_hash(hash)
     Rails.logger.debug "DEBUG: Page.create_from_hash(#{hash})"
@@ -437,19 +437,23 @@ class Page < ActiveRecord::Base
   end
 
   def update_read_after
-    Rails.logger.debug "DEBUG: last read: #{self.last_read}"
-    return self unless last_read
-    new_read_after = case stars
-      when 5
-        last_read + 6.months
-      when 4
-        last_read + 1.year
-      when 3
-        last_read + 2.years
-      when 2
-        last_read + 3.years
-      when 1
-        last_read + 4.years
+    if last_read
+      Rails.logger.debug "DEBUG: last read: #{self.last_read.to_date}"
+      new_read_after = case stars
+        when 5
+          last_read + 6.months
+        when 4
+          last_read + 1.year
+        when 3
+          last_read + 2.years
+        when 2
+          last_read + 3.years
+        when 1
+          last_read + 4.years
+      end
+    else
+      Rails.logger.debug "DEBUG: created at: #{self.created_at.to_date}"
+      new_read_after = created_at
     end
     self.update!(read_after: new_read_after)
     Rails.logger.debug "DEBUG: new read after: #{self.read_after}"

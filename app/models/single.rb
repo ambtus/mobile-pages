@@ -23,7 +23,7 @@ class Single < Page
     self.notes = [doc_summary, doc_notes, doc_tags, doc_relationships].join_hr
     Rails.logger.debug "DEBUG: notes: #{self.notes}"
 
-    chapters = doc.css(".stats .chapters").children[1].text.split('/') rescue nil
+    chapters = doc.css(".stats .chapters").children[1].text.split('/') rescue Array.new
     Rails.logger.debug "DEBUG: wip status: #{chapters}"
     wip_switch(chapters.second == "?" || chapters.first != chapters.second)
 
