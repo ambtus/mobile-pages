@@ -6,8 +6,7 @@ class Page < ActiveRecord::Base
 
   def normalize_url
     return if self.url.blank?
-    self.url = self.url.sub(/^http:/, 'https:') if self.url.match("^http://archiveofourown.org/")
-    self.url = self.url.chop if self.url.match("^https://archiveofourown.org/") && self.url.match("/$")
+    self.url = self.url.normalize
   end
 
   def convert_to_type

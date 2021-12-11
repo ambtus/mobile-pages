@@ -44,3 +44,23 @@ Feature: filter/find by url
       And I fill in "page_url" with "http://test.sidrasue.com/maas.html"
       And I press "Find"
       Then I should see "The Mysterious Affair at Styles (Chapter)" within ".title"
+
+  Scenario: Find page by normalized urls
+    Given I have no pages
+    And Open the Door exists
+    When I am on the homepage
+      And I fill in "page_url" with "https://archiveofourown.org/works/310586"
+      And I press "Find"
+      Then I should see "Open the Door (Book)" within ".title"
+    When I am on the homepage
+      And I fill in "page_url" with "http://archiveofourown.org/works/310586"
+      And I press "Find"
+      Then I should see "Open the Door (Book)" within ".title"
+    When I am on the homepage
+      And I fill in "page_url" with "https://archiveofourown.org/works/310586/"
+      And I press "Find"
+      Then I should see "Open the Door (Book)" within ".title"
+    When I am on the homepage
+      And I fill in "page_url" with "http://archiveofourown.org/works/310586/"
+      And I press "Find"
+      Then I should see "Open the Door (Book)" within ".title"
