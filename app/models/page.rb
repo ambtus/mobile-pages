@@ -115,6 +115,7 @@ class Page < ActiveRecord::Base
     else
       self.tags << wip_tag && self.cache_tags if on
     end
+    return self
   end
 
   def set_wordcount(recount=true)
