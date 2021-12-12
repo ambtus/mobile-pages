@@ -86,7 +86,7 @@ Feature: parts differ in stars from parent
      And I should see "4 stars" within ".stars"
      When I follow "Rate" within ".views"
      And I choose "5"
-     And I press "Rate all unrated parts unfinished"
+     And I press "Rate unfinished"
      When I am on the page with title "Uneven"
      Then I should see "unread parts (2010-01-01)" within ".last_read"
      And I should see "unfinished" within ".stars"
@@ -96,3 +96,15 @@ Feature: parts differ in stars from parent
      And I should see "4 stars" within "#position_4"
      And I should see "unfinished" within "#position_5"
      But I should NOT see "unread" within "#position_5"
+
+   Scenario: re-rate all
+     Given I have no pages
+     And Uneven exists
+     When I am on the page with title "Uneven"
+     Then I should see "unread parts (2010-01-01)" within ".last_read"
+     When I follow "Rate" within ".views"
+     And I choose "5"
+     And I press "Rate"
+     When I am on the page with title "Uneven"
+     Then I should NOT see "2010-01-01"
+

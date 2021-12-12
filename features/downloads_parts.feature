@@ -71,7 +71,7 @@ Feature: downloads metadata
      And I should see "Part 3 (cute)"
     When I am on the page's page
       And I follow "Rate"
-      And I press "Rate all unrated parts unfinished"
+      And I press "Rate unfinished"
     When I am on the page's page
     And I view the content
      Then I should see "Part 1 (sweet)"

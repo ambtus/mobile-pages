@@ -384,7 +384,7 @@ class Page < ActiveRecord::Base
 
   def make_unfinished
     Rails.logger.debug "DEBUG: making #{title} unfinished"
-    self.update(stars: 9, last_read: nil, read_after: Date.today + 5.years)
+    self.update!(stars: 9, last_read: nil, read_after: Date.today + 5.years)
     return self
   end
 
@@ -437,6 +437,7 @@ class Page < ActiveRecord::Base
   end
 
   def update_read_after
+    return self if stars == 9
     if last_read
       Rails.logger.debug "DEBUG: last read: #{self.last_read.to_date}"
       new_read_after = case stars
