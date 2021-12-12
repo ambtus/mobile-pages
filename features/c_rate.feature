@@ -104,7 +104,8 @@ Feature: 5 star ratings (plus unfinished which uses 9)
       And I choose "4"
     And I press "Rate"
     Then the read after date should be 0 years from now
-    When I fill in "tags" with "cute, interesting"
+    When I follow "Edit Tags"
+      And I fill in "tags" with "cute, interesting"
       And I press "Add Rating Tags"
     When I follow "Parent"
       And I follow "Part 2"

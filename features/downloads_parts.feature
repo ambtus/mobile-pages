@@ -10,7 +10,8 @@ Feature: downloads metadata
       And I follow "Rate"
       And I choose "5"
     And I press "Rate"
-    When I fill in "tags" with "scrub"
+    When I follow "Edit Tags"
+      And I fill in "tags" with "scrub"
       And I press "Add Info Tags"
     When I am on the page's page
     And I view the content
@@ -50,6 +51,7 @@ Feature: downloads metadata
       And I follow "Rate"
       And I choose "5"
     And I press "Rate"
+      And I follow "Edit Tags"
       And I fill in "tags" with "cute"
       And I press "Add Rating Tags"
     When I am on the page's page
@@ -62,6 +64,7 @@ Feature: downloads metadata
       And I follow "Rate"
       And I choose "5"
     And I press "Rate"
+      And I follow "Edit Tags"
       And I fill in "tags" with "sweet"
       And I press "Add Rating Tags"
     When I am on the page's page
