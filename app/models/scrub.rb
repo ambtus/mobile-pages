@@ -77,6 +77,8 @@ module Scrub
     html.gsub!(/<a><\/a>/, "")
     # alright drives me batty
     html.gsub!(/([Aa])lright/) {|s| $1 + "ll right"}
+    # charka => chakra
+    html.gsub!(/([Cc])harka/) {|s| $1 + "hakra"}
     # extra breaks inside paragraphs
     html.gsub!(/<p><br ?\/?>/, "<p>")
     html.gsub!(/<br ?\/?><\/p>/, "</p>")

@@ -12,7 +12,9 @@
       = link_to "Tags", tags_path
       = link_to "Authors", authors_path
 
+    / flash: #{flash.collect {|n, m| n+m}}
     - flash.each do |name, msg|
+      / #{name}: #{msg}
       = content_tag :div, msg, :id => "flash_#{name}"
     -flash.clear
 
