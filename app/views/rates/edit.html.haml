@@ -3,28 +3,33 @@
 
 -if @page.parent
   .parent
-    Parent:
-    = link_to @page.parent.title, page_path(@page.parent)
-    (#{@page.parent.type})
-  .tags=@page.parent.meta_strings.join_comma
+    %p
+      Parent:
+      = link_to @page.parent.title, page_path(@page.parent)
+      (#{@page.parent.type})
+      .tags=@page.parent.tags.to_a.join_comma
 -if @page.next_part
   .part
-    Next:
-    = link_to @page.next_part.title, page_path(@page.next_part)
-    (#{@page.next_part.type})
+    %p
+      Next:
+      = link_to @page.next_part.title, page_path(@page.next_part)
+      (#{@page.next_part.type})
+      .tags=@page.next_part.tags.to_a.join_comma
 .page
-.title
-  = link_to @page.title, page_path(@page)
-  (#{@page.type})
-.views
-  .tags=@page.meta_strings.join_comma
-  .my_notes=raw @page.my_formatted_notes
-  .edits
-    = link_to "Edit My Notes", edit_my_note_path(@page)
-    = link_to "Edit Authors", author_path(@page)
-    = link_to "Edit Tags", tag_path(@page)
+  .title
+    %p
+      = link_to @page.title, page_path(@page)
+      (#{@page.type})
+      .tags=@page.meta_strings.join_comma
+  .my_notes
+    %p=raw @page.my_formatted_notes
+    %p= link_to "Edit My Notes", edit_my_note_path(@page)
+  .tags
+    %p=@page.tags.to_a.join_comma
+    %p= link_to "Edit Authors", author_path(@page)
+    %p= link_to "Edit Tags", tag_path(@page)
+
 -if @page.ao3?
   .offsite
-    =link_to "Leave Kudos or Comments on #{@page.title} (#{@page.type})",  @page.url + "#comments" if @page.url
-    %br
-    =link_to "Leave Kudos or Comments on #{@page.parts.last.title} (#{@page.parts.last.type})",  @page.parts.last.url + "#comments" if @page.parts.any?
+    %p=link_to "Leave Kudos or Comments on #{@page.title} (#{@page.type})",  @page.url + "#comments" if @page.url
+    %p=link_to "Leave Kudos or Comments on #{@page.parts.last.title} (#{@page.parts.last.type})",  @page.parts.last.url + "#comments" if @page.parts.any?
