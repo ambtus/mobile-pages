@@ -3,6 +3,7 @@ class PagesController < ApplicationController
   def index
     if params[:url]
       @page = Page.find_by_url(params[:url].normalize)
+      flash.now[:notice] = "One page found" if @pages.to_a.empty?
       render :show and return if @page
     end
     @title = "Mobile pages"

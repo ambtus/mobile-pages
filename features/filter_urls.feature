@@ -38,11 +38,13 @@ Feature: filter/find by url
     When I am on the homepage
       And I fill in "page_url" with "http://test.sidrasue.com/cc.html"
       And I press "Find"
+      Then I should see "One page found" within "#flash_notice"
       Then I should see "A Christmas Carol by Charles Dickens (Single)" within ".title"
 
     When I am on the homepage
       And I fill in "page_url" with "http://test.sidrasue.com/maas.html"
       And I press "Find"
+      Then I should see "One page found" within "#flash_notice"
       Then I should see "The Mysterious Affair at Styles (Chapter)" within ".title"
 
   Scenario: Find page by normalized urls
@@ -51,16 +53,20 @@ Feature: filter/find by url
     When I am on the homepage
       And I fill in "page_url" with "https://archiveofourown.org/works/310586"
       And I press "Find"
+      Then I should see "One page found" within "#flash_notice"
       Then I should see "Open the Door (Book)" within ".title"
     When I am on the homepage
       And I fill in "page_url" with "http://archiveofourown.org/works/310586"
       And I press "Find"
+      Then I should see "One page found" within "#flash_notice"
       Then I should see "Open the Door (Book)" within ".title"
     When I am on the homepage
       And I fill in "page_url" with "https://archiveofourown.org/works/310586/"
       And I press "Find"
+      Then I should see "One page found" within "#flash_notice"
       Then I should see "Open the Door (Book)" within ".title"
     When I am on the homepage
       And I fill in "page_url" with "http://archiveofourown.org/works/310586/"
       And I press "Find"
+      Then I should see "One page found" within "#flash_notice"
       Then I should see "Open the Door (Book)" within ".title"

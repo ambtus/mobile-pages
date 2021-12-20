@@ -13,6 +13,7 @@ class RefetchesController < ApplicationController
     elsif @page.ao3? && @page.is_a?(Single) && !@page.ao3_chapter?
         @page = @page.becomes!(Book)
         @page.fetch_ao3
+        flash[:notice] = "Refetched"
     elsif params[:url].present?
       @page.update!(url: params[:url])
       Rails.logger.debug "DEBUG: refetching all for #{@page.id} url: #{@page.url}"
@@ -24,9 +25,11 @@ class RefetchesController < ApplicationController
       else
         @page.fetch_raw
       end
+      flash[:notice] = "Refetched"
     else
       Rails.logger.debug "DEBUG: refetching all for #{@page.id} url_list: #{params[:url_list]}"
       @page.parts_from_urls(params[:url_list])
+      flash[:notice] = "Refetched"
     end
     flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
     redirect_to page_path(@page)

@@ -31,6 +31,7 @@ Feature: ff.net specific stuff
     Then the "url" field should contain "https://www.fanfiction.net/s/5853866/1/Counting"
     When I press "Refetch"
     Then I should see "can't refetch from fanfiction.net"
+    And I should NOT see "Fetched" within "#flash_notice"
     But I should NOT see "Base"
     When I view the content
     Then I should see "system down" within ".content"
@@ -66,6 +67,7 @@ Feature: ff.net specific stuff
       And I follow "Refetch" within ".edits"
     When I fill in "url" with "http://archiveofourown.org/works/688"
       And I press "Refetch"
+    Then I should see "Refetched" within "#flash_notice"
     Then I should see "by Sidra"
       And I should NOT see "ambtus"
       And I should see "Skipping Stones (Single)" within ".title"

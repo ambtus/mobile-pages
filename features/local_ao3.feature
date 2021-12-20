@@ -74,6 +74,7 @@ Feature: ao3 testing that uses local cached files
         https://archiveofourown.org/works/692/chapters/804
         """
     And I press "Refetch"
+    Then I should see "Refetched" within "#flash_notice"
     Then I should see "Parent (Book)" within ".title"
     And I should NOT see "Time Was" within ".title"
     When I follow "Where am I?" within "#position_1"

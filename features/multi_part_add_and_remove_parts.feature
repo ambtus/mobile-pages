@@ -167,6 +167,7 @@ Feature: adding parents and children and siblings
       http://test.sidrasue.com/parts/1.html
       """
       And I press "Refetch"
+    Then I should see "Refetched" within "#flash_notice"
     When I view the content
     Then I should see "stuff for part 2"
     And I should see "stuff for part 1"

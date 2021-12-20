@@ -12,6 +12,7 @@ Feature: page size
    And I follow "Refetch"
      And I fill in "url" with "http://test.sidrasue.com/8000.html"
      And I press "Refetch"
+    Then I should see "Refetched" within "#flash_notice"
    Then I should see "8,318 words" within ".size"
    When I am on the homepage
     When I choose "size_medium"

@@ -65,6 +65,7 @@ Feature: basic stuff
     When I follow "Refetch"
     Then the "url" field should contain "http://test.sidrasue.com/test.html"
     When I press "Refetch"
+      Then I should see "Refetched" within "#flash_notice"
     When I view the content
     Then I should see "Retrieved from the web" within ".content"
 
@@ -75,5 +76,6 @@ Feature: basic stuff
     When I am on the page's page
     And I follow "Refetch"
       When I press "Refetch"
+      Then I should see "Refetched" within "#flash_notice"
     When I view the content
     Then I should see "Retrieved from the web"
