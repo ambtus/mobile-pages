@@ -92,7 +92,7 @@ class Series < Page
         sleep 5 unless count == work_list.size
       end
     end
-    cleanup
+    cleanup(false)
   end
 
 end

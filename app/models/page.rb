@@ -266,6 +266,7 @@ class Page < ActiveRecord::Base
         page.update!(position: position, parent_id: self.id)
         page.update!(title: title) if title
       end
+      page.cleanup
       new_part_ids << page.id
     end
     Rails.logger.debug "DEBUG: parts found or created: #{new_part_ids}"
@@ -276,7 +277,7 @@ class Page < ActiveRecord::Base
       Page.find(old_part_id).make_single
     end
 
-    self.cleanup
+    self.cleanup(false)
     self.set_type
   end
 
@@ -461,7 +462,7 @@ class Page < ActiveRecord::Base
     return self
   end
 
-  def cleanup; update_last_read.update_stars.update_read_after.remove_outdated_downloads.set_wordcount(false); end
+  def cleanup(recount = true); update_last_read.update_stars.update_read_after.remove_outdated_downloads.set_wordcount(recount); end
 
   def add_author_string=(string)
     return if string.blank?

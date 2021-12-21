@@ -73,10 +73,10 @@ class Book < Page
   def fetch_ao3
     if self.id
       Rails.logger.debug "DEBUG: fetch_ao3 work #{self.id}"
-      get_chapters_from_ao3 && get_meta_from_ao3(false) && get_wip_from_ao3 && cleanup
+      get_chapters_from_ao3 && get_meta_from_ao3(false) && get_wip_from_ao3 && cleanup(false)
     else
       Rails.logger.debug "DEBUG: fetch_ao3 work #{self.url}"
-      get_meta_from_ao3 && get_chapters_from_ao3 && get_wip_from_ao3 && cleanup
+      get_meta_from_ao3 && get_chapters_from_ao3 && get_wip_from_ao3 && cleanup(false)
     end
   end
 
