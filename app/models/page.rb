@@ -461,7 +461,7 @@ class Page < ActiveRecord::Base
     return self
   end
 
-  def cleanup; update_last_read.update_stars.update_read_after.remove_outdated_downloads.set_wordcount; end
+  def cleanup; update_last_read.update_stars.update_read_after.remove_outdated_downloads.set_wordcount(false); end
 
   def add_author_string=(string)
     return if string.blank?
