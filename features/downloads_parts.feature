@@ -51,7 +51,7 @@ Feature: downloads metadata
       And I follow "Rate"
       And I choose "5"
     And I press "Rate"
-      And I follow "Edit Tags"
+      And I follow "Edit Tags for Part 3"
       And I fill in "tags" with "cute"
       And I press "Add Rating Tags"
     When I am on the page's page
@@ -64,7 +64,7 @@ Feature: downloads metadata
       And I follow "Rate"
       And I choose "5"
     And I press "Rate"
-      And I follow "Edit Tags"
+      And I follow "Edit Tags for Part 1"
       And I fill in "tags" with "sweet"
       And I press "Add Rating Tags"
     When I am on the page's page

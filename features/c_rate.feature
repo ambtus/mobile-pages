@@ -19,10 +19,10 @@ Feature: 5 star ratings (plus unfinished which uses 9)
     When I follow "Rate"
     And I press "Rate unfinished"
     Then I should NOT see "stars ignored"
-    And I follow "Page 1"
-    Then I should see "unfinished"
+    But I should see "unfinished"
     And the read after date should be 5 years from now
-    When I follow "Rate"
+    When I am on the page's page
+    And I follow "Rate"
     Then nothing should be checked
 
   Scenario: rate unfinished with extraneous stars
@@ -32,10 +32,10 @@ Feature: 5 star ratings (plus unfinished which uses 9)
     And I choose "5"
     And I press "Rate unfinished"
     Then I should see "stars ignored"
-    And I follow "Page 1"
     Then I should see "unfinished"
     And I should NOT see "5 stars"
     And the read after date should be 5 years from now
+    When I am on the page's page
     When I follow "Rate"
     Then nothing should be checked
 
@@ -45,9 +45,9 @@ Feature: 5 star ratings (plus unfinished which uses 9)
     When I follow "Rate"
       And I choose "5"
     And I press "Rate"
-    And I follow "Page 1"
     Then I should see "5 stars"
-    When I follow "Rate"
+    When I am on the page's page
+    And I follow "Rate"
       Then "stars_5" should be checked
 
   Scenario: rate a book 4 stars (better)
@@ -56,10 +56,10 @@ Feature: 5 star ratings (plus unfinished which uses 9)
     When I follow "Rate"
       And I choose "4"
     And I press "Rate"
-    And I follow "Page 1"
     Then I should see "4 stars"
     And the read after date should be 1 years from now
-    When I follow "Rate"
+    When I am on the page's page
+    And I follow "Rate"
       Then "stars_4" should be checked
 
   Scenario: rate a book 3 stars (good)
@@ -68,7 +68,6 @@ Feature: 5 star ratings (plus unfinished which uses 9)
     When I follow "Rate"
       And I choose "3"
     And I press "Rate"
-    And I follow "Page 1"
     Then I should see "3 stars"
     And the read after date should be 2 years from now
 
@@ -78,7 +77,6 @@ Feature: 5 star ratings (plus unfinished which uses 9)
     When I follow "Rate"
       And I choose "2"
     And I press "Rate"
-    And I follow "Page 1"
     Then I should see "2 stars"
     And the read after date should be 3 years from now
 
@@ -88,7 +86,6 @@ Feature: 5 star ratings (plus unfinished which uses 9)
     When I follow "Rate"
       And I choose "1"
     And I press "Rate"
-    And I follow "Page 1"
     Then I should see "1 stars"
     And the read after date should be 4 years from now
 
@@ -104,7 +101,7 @@ Feature: 5 star ratings (plus unfinished which uses 9)
       And I choose "4"
     And I press "Rate"
     Then the read after date should be 0 years from now
-    When I follow "Edit Tags"
+    When I follow "Edit Tags for Part 1"
       And I fill in "tags" with "cute, interesting"
       And I press "Add Rating Tags"
     When I follow "Parent"
@@ -113,4 +110,17 @@ Feature: 5 star ratings (plus unfinished which uses 9)
       And I choose "1"
     And I press "Rate"
     Then the read after date should be 1 years from now
-    And I follow "Part 2"
+
+  Scenario: rate previously rated as unfinished with extraneous stars
+    Given a page exists with last_read: "2009-01-01" AND stars: "4"
+    When I am on the page's page
+    And I follow "Rate"
+      Then "stars_4" should be checked
+    When I press "Rate unfinished"
+    Then I should see "stars ignored"
+    And I should see "unfinished"
+    And I should NOT see "4 stars"
+    And the read after date should be 5 years from now
+    When I am on the page's page
+    When I follow "Rate"
+    Then nothing should be checked

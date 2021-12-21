@@ -185,11 +185,14 @@ Feature: third level hierarchy
 
    When I follow "Parent"
    Then I should see "2009-01-01" within "#position_1"
+   And I should see "unread" within "#position_2"
    When I follow "Part 2"
       And I follow "Rate"
       And I choose "3"
     And I press "Rate"
-    And I press "Remove Duplicate Tags"
-    Then I should see "Parent" within ".title"
-   Then I should NOT see "unread" within ".last_read"
+
+   When I am on the page with title "Grandparent"
+   Then I should NOT see "unread" within "#position_1"
+    And I should see "2009-01-01" within "#position_1"
     And I should see "2009-01-01" within ".last_read"
+    And I should NOT see "unread parts" within ".last_read"

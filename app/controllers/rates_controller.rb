@@ -17,7 +17,10 @@ class RatesController < ApplicationController
         end
         page.read_today.rate(stars).update_read_after
         page.parts.each {|p| p.update(last_read: Time.now)} if page.parts.any?
-        page.parent.cleanup(false) if page.parent
+        if page.parent
+          page.parent.cleanup(false)
+          page.parent.parent.cleanup(false) if page.parent.parent
+        end
         redirect_to edit_rate_path(page)
       when "Rate unfinished"
         flash[:alert] = "Selected stars ignored" if stars

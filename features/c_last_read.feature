@@ -58,7 +58,6 @@ Feature: last_read (also unread)
     When I follow "Rate"
       And I choose "3"
     And I press "Rate"
-      And I follow "Part 2"
       Then I should see today within ".last_read"
    When I am on the page's page
      Then I should see "2009-01-01" within ".last_read"

@@ -1,43 +1,52 @@
 - content_for :title do
   = "After Rating " + @page.title
 
-
 .page
   .title
-    = link_to @page.title, page_path(@page)
-  .my_notes
-    =raw @page.my_formatted_notes
-    = link_to "Edit My Notes", edit_my_note_path(@page)
-  .authors
-    by
-    =@page.authors.map(&:name).join_comma
-    = link_to "Edit Authors", author_path(@page)
-  .tags
-    -if @page.parent
-      Parent tags:
-      =@page.parent.tags.map(&:name).join_comma
-      %br
-    -if @page.tags.any?
-      My tags:
-      =@page.tags.map(&:name).join_comma
-      %br
-    = link_to "Edit Tags", tag_path(@page)
-    -if @page.parent
-      = form_for @page.parent.becomes(Page) do |f|
-        = submit_tag "Remove Duplicate Tags"
-
+    =@page.title
+  .stars= @page.star_string
+  .ratings= @page.rating_string
+  .last_read
+    last read:
+    =@page.last_read_string
+    %br
+    set to read again: #{@page.read_after.to_date}
 
 -if @page.ao3?
   .offsite
     -if @page.parts.any?
       =link_to "Leave Kudos or Comments on #{@page.parts.last.title}",  @page.parts.last.url + "#comments"
+      of #{@page.title}
     -elsif @page.url
       =link_to "Leave Kudos or Comments on #{@page.title}",  @page.url + "#comments"
+
+.my_notes
+  =raw @page.my_formatted_notes
+  %br
+  = link_to "Edit My Notes", edit_my_note_path(@page)
+.tags
+  -if @page.parent
+    Parent tags:
+    =@page.parent.tags.map(&:name).join_comma
+    %br
+    = link_to "Edit Tags for #{@page.parent.title}", tag_path(@page.parent)
+    %br
+  My tags:
+  -if @page.tags.any?
+    =@page.tags.map(&:name).join_comma
+  %br
+  = link_to "Edit Tags for #{@page.title}", tag_path(@page)
+  -if @page.parent && (@page.tags & @page.parent.tags).any?
+    = form_for @page.parent.becomes(Page) do |f|
+      = submit_tag "Remove Duplicate Tags"
+
+
 
 -if @page.next_part
   .part
     Next:
     = link_to @page.next_part.title, page_path(@page.next_part)
-    .tags=@page.next_part.tags.map(&:name).join_comma
+    = link_to "#{@page.next_part.title} ePub", download_url_for_page(@page, ".epub")
     = form_for @page.next_part.becomes(Page) do |f|
+      Set #{@page.next_part.title} to
       = submit_tag "Read Now"
