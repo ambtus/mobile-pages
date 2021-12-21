@@ -1,35 +1,43 @@
 - content_for :title do
   = "After Rating " + @page.title
 
--if @page.parent
-  .parent
-    %p
-      Parent:
-      = link_to @page.parent.title, page_path(@page.parent)
-      (#{@page.parent.type})
-      .tags=@page.parent.tags.to_a.join_comma
--if @page.next_part
-  .part
-    %p
-      Next:
-      = link_to @page.next_part.title, page_path(@page.next_part)
-      (#{@page.next_part.type})
-      .tags=@page.next_part.tags.to_a.join_comma
+
 .page
   .title
-    %p
-      = link_to @page.title, page_path(@page)
-      (#{@page.type})
-      .tags=@page.meta_strings.join_comma
+    = link_to @page.title, page_path(@page)
   .my_notes
-    %p=raw @page.my_formatted_notes
-    %p= link_to "Edit My Notes", edit_my_note_path(@page)
+    =raw @page.my_formatted_notes
+    = link_to "Edit My Notes", edit_my_note_path(@page)
+  .authors
+    by
+    =@page.authors.map(&:name).join_comma
+    = link_to "Edit Authors", author_path(@page)
   .tags
-    %p=@page.tags.to_a.join_comma
-    %p= link_to "Edit Authors", author_path(@page)
-    %p= link_to "Edit Tags", tag_path(@page)
+    -if @page.parent
+      Parent tags:
+      =@page.parent.tags.map(&:name).join_comma
+      %br
+    -if @page.tags.any?
+      My tags:
+      =@page.tags.map(&:name).join_comma
+      %br
+    = link_to "Edit Tags", tag_path(@page)
+    -if @page.parent
+      = form_for @page.parent.becomes(Page) do |f|
+        = submit_tag "Remove Duplicate Tags"
+
 
 -if @page.ao3?
   .offsite
-    %p=link_to "Leave Kudos or Comments on #{@page.title} (#{@page.type})",  @page.url + "#comments" if @page.url
-    %p=link_to "Leave Kudos or Comments on #{@page.parts.last.title} (#{@page.parts.last.type})",  @page.parts.last.url + "#comments" if @page.parts.any?
+    -if @page.parts.any?
+      =link_to "Leave Kudos or Comments on #{@page.parts.last.title}",  @page.parts.last.url + "#comments"
+    -elsif @page.url
+      =link_to "Leave Kudos or Comments on #{@page.title}",  @page.url + "#comments"
+
+-if @page.next_part
+  .part
+    Next:
+    = link_to @page.next_part.title, page_path(@page.next_part)
+    .tags=@page.next_part.tags.map(&:name).join_comma
+    = form_for @page.next_part.becomes(Page) do |f|
+      = submit_tag "Read Now"

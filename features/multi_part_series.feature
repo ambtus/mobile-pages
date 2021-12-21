@@ -189,6 +189,7 @@ Feature: third level hierarchy
       And I follow "Rate"
       And I choose "3"
     And I press "Rate"
-    And I follow "Parent"
+    And I press "Remove Duplicate Tags"
+    Then I should see "Parent" within ".title"
    Then I should NOT see "unread" within ".last_read"
     And I should see "2009-01-01" within ".last_read"
