@@ -1,9 +1,14 @@
 - content_for :title do
   = "After Rating " + @page.title
 
+-if @page.parent
+  .parent
+    Parent:
+    =link_to @page.parent.title, page_path(@page.parent)
+
 .page
   .title
-    =@page.title
+    =link_to @page.title, page_path(@page)
   .stars= @page.star_string
   .ratings= @page.rating_string
   .last_read
