@@ -34,6 +34,6 @@ class RefetchesController < ApplicationController
     flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
     flash[:notice] = @notice
     Rails.logger.debug "DEBUG: flash: #{flash.collect {|n, m| n+m}}"
-    render "pages/show"
+    redirect_to :controller => 'pages', :action => 'show', :id => @page.id
   end
 end

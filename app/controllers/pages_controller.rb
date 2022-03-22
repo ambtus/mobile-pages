@@ -32,10 +32,6 @@ class PagesController < ApplicationController
     flash.now[:alert] = "No pages found" if @pages.to_a.empty?
   end
 
-  def show
-    @page = Page.find(params[:id])
-  end
-
   def create
     if params[:Find] || params[:Next]
       build_route = {:action => "index" , :controller => "pages"}
@@ -95,9 +91,23 @@ class PagesController < ApplicationController
     flash[:alert] = @errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
   end
 
+  def show
+    @page = Page.find(params[:id])
+    @count = params[:count].to_i
+    last = @count + Filter::LIMIT
+    @page_parts = Page.where(:parent_id => @page.id).limit(last)[@count..-1]
+    @next = @page.parts.size > last
+    Rails.logger.debug "DEBUG: page parts #{@count} to #{last}"
+  end
+
   def update
     @page = Page.find(params[:id])
+    @count = params[:count].to_i
     case params[:commit]
+      when "Next Parts"
+        @count = params[:count].to_i + Filter::LIMIT
+      when "Last Parts"
+        @count = @page.parts.size - Filter::LIMIT
       when "Read Now"
         @page.make_first
         flash[:notice] = "Set to Read Now"
@@ -156,6 +166,10 @@ class PagesController < ApplicationController
         @page.edit_section(params[:section].to_i,params[:new])
         redirect_to @page.download_url(".read") and return
     end
+    last = @count + Filter::LIMIT
+    @next = @page.parts.size > last
+    @page_parts = Page.where(:parent_id => @page.id).limit(last)[@count..-1]
+    Rails.logger.debug "DEBUG: page parts #{@count} to #{last}"
     render :show
   end
 
