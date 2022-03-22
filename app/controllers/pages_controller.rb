@@ -95,7 +95,7 @@ class PagesController < ApplicationController
     @page = Page.find(params[:id])
     @count = params[:count].to_i
     last = @count + Filter::LIMIT
-    @page_parts = Page.where(:parent_id => @page.id).limit(last)[@count..-1]
+    @page_parts = @page.parts.limit(last)[@count..-1]
     @next = @page.parts.size > last
     Rails.logger.debug "DEBUG: page parts #{@count} to #{last}"
   end
@@ -168,7 +168,7 @@ class PagesController < ApplicationController
     end
     last = @count + Filter::LIMIT
     @next = @page.parts.size > last
-    @page_parts = Page.where(:parent_id => @page.id).limit(last)[@count..-1]
+    @page_parts = @page.parts.limit(last)[@count..-1]
     Rails.logger.debug "DEBUG: page parts #{@count} to #{last}"
     render :show
   end

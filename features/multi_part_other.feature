@@ -105,3 +105,15 @@ Feature: other mult-part tests
     Then I should see "Part 137"
     And I should see "Part 151"
     But I should NOT see "Part 136"
+
+  Scenario: show parent shows parts by position, not created order
+    Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
+    When I am on the page's page
+      And I follow "Manage Parts"
+      And I fill in "url_list" with
+        """
+        http://test.sidrasue.com/parts/2.html
+        http://test.sidrasue.com/parts/1.html
+        """
+      And I press "Update"
+    Then "Part 2" should come before "Part 1"

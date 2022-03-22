@@ -73,6 +73,10 @@ Then("I should see {string}") do |text|
   assert_text(text)
 end
 
+Then("{string} should come before {string}") do |first, second|
+  assert page.body.index(first) < page.body.index(second)
+end
+
 Then("I should NOT see {string}") do |text|
   assert_no_text(text)
 end
