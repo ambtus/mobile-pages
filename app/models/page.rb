@@ -330,6 +330,7 @@ class Page < ActiveRecord::Base
     self.update_attribute(:parent_id, nil)
     self.set_type
     self.get_meta_from_ao3(false) if self.ao3?
+    self.wip_switch if self.ao3_chapter?
   end
 
   def add_parent(title)

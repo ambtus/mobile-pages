@@ -20,6 +20,7 @@ Feature: ao3 testing that uses local cached files
       Then I should see "Where am I? (Single)" within ".title"
       And I should see "Using time-travel"
       And I should see "written for"
+      And I should NOT see "WIP" within ".omitteds"
     When I follow "Manage Parts"
      And I fill in "add_parent" with "Parent"
      And I press "Update"
@@ -45,10 +46,12 @@ Feature: ao3 testing that uses local cached files
       And Time Was exists
     When I am on the homepage
       And I follow "Time Was, Time Is"
+      Then I should see "WIP" within ".omitteds"
       And I press "Uncollect"
     When I am on the homepage
     And I follow "Hogwarts" within "#position_2"
       Then I should see "Hogwarts (Single)" within ".title"
+     And I should NOT see "WIP" within ".omitteds"
     When I follow "Manage Parts"
      And I fill in "add_parent" with "Parent"
      And I press "Update"

@@ -38,6 +38,7 @@ Given /^Time Was exists$/ do
   chapter2.update!(url: "https://archiveofourown.org/works/692/chapters/804")
   chapter2.get_meta_from_ao3(false)
   page.get_meta_from_ao3(false)
+  page.get_wip_from_ao3
 end
 
 Given /^Time Was partially exists$/ do
