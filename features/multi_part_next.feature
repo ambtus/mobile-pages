@@ -1,6 +1,6 @@
 Feature: show only 15 of multi-parts (and bugs)
 
-  Scenario: show parent only shows 15 parts
+  Scenario: show parent only shows 15 parts and refetching shows the last
      Given I have no pages
     Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-151"
     When I am on the page's page
@@ -13,6 +13,11 @@ Feature: show only 15 of multi-parts (and bugs)
     Then I should see "Part 31"
     But I should NOT see "Part 46"
     When I press "Last Parts"
+    Then I should see "Part 137"
+    And I should see "Part 151"
+    But I should NOT see "Part 136"
+    When I follow "Refetch"
+    And I press "Refetch"
     Then I should see "Part 137"
     And I should see "Part 151"
     But I should NOT see "Part 136"

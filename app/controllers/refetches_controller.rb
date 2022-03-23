@@ -34,6 +34,7 @@ class RefetchesController < ApplicationController
     flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
     flash[:notice] = @notice
     Rails.logger.debug "DEBUG: flash: #{flash.collect {|n, m| n+m}}"
-    redirect_to :controller => 'pages', :action => 'show', :id => @page.id
+    @count = @page.parts.size > Filter::LIMIT ? @page.parts.size - Filter::LIMIT : 0
+    render 'pages/show'
   end
 end

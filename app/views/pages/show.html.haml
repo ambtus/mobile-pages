@@ -1,5 +1,7 @@
 - content_for :title do
   =@page.title
+-last = @count + Filter::LIMIT
+-Rails.logger.debug "DEBUG: page parts #{@count} to #{last} of #{@page.parts.size}"
 .form
   = form_for @page.becomes(Page) do
     = submit_tag "Read Now"
@@ -7,11 +9,11 @@
     = submit_tag "Rebuild from Raw HTML"
     = submit_tag "Rebuild from Scrubbed HTML"
     = submit_tag "Remove Downloads"
-    = submit_tag "Remove Duplicate Tags" unless @page_parts.blank?
+    = submit_tag "Remove Duplicate Tags" unless @page.parts.blank?
     = submit_tag "Rebuild Meta"
     = submit_tag "Make Single" if @page.parent
-    = submit_tag "Uncollect" unless @page_parts.blank?
-    -if @next
+    = submit_tag "Uncollect" unless @page.parts.blank?
+    -if @page.parts.size > last
       = hidden_field_tag :count, @count
       = submit_tag "Next Parts"
       = submit_tag "Last Parts"
@@ -33,7 +35,7 @@
     = link_to "Rate", rate_path(@page)
     = link_to "ePub", download_url_for_page(@page, ".epub")
     = link_to "HTML", download_url_for_page(@page, ".html")
-    = link_to "Text", download_url_for_page(@page, ".read") if @page_parts.blank?
+    = link_to "Text", download_url_for_page(@page, ".read") if @page.parts.blank?
     = link_to "Original", @page.url unless @page.url.blank?
     .edits
       = link_to "My Notes", edit_my_note_path(@page)
@@ -42,7 +44,7 @@
       = link_to "Tags", tag_path(@page)
       %br
       = link_to "Manage Parts", edit_part_path(@page)
-      - if @page_parts.blank?
+      - if @page.parts.blank?
         = link_to "Edit Scrubbed HTML", edit_html_path(@page, format: "scrubbed")
         = link_to "Edit Raw HTML", edit_html_path(@page)
       = link_to "Scrub", scrub_path(@page)
@@ -66,9 +68,9 @@
   .info= @page.info_string
   .my_notes=raw @page.my_formatted_notes
   .notes=raw @page.formatted_notes
-.parts
-  -unless @page_parts.blank?
-    - @page_parts.each do |part|
+-unless @page.parts.blank?
+  .parts
+    - @page.parts.limit(last)[@count..-1].each do |part|
       .part{:id => "position_#{part.position}"}
         = part.title_prefix
         = link_to h(part.title), page_path(part)

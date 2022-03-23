@@ -5,7 +5,8 @@ class PagesController < ApplicationController
       @page = Page.find_by_url(params[:url].normalize)
       if @page
         flash[:notice] = "One page found"
-        redirect_to :action => 'show', :id => @page.id and return
+        @count = 0
+        render :show
       end
     end
     @title = "Mobile pages"
@@ -94,10 +95,6 @@ class PagesController < ApplicationController
   def show
     @page = Page.find(params[:id])
     @count = params[:count].to_i
-    last = @count + Filter::LIMIT
-    @page_parts = @page.parts.limit(last)[@count..-1]
-    @next = @page.parts.size > last
-    Rails.logger.debug "DEBUG: page parts #{@count} to #{last}"
   end
 
   def update
@@ -166,10 +163,6 @@ class PagesController < ApplicationController
         @page.edit_section(params[:section].to_i,params[:new])
         redirect_to @page.download_url(".read") and return
     end
-    last = @count + Filter::LIMIT
-    @next = @page.parts.size > last
-    @page_parts = @page.parts.limit(last)[@count..-1]
-    Rails.logger.debug "DEBUG: page parts #{@count} to #{last}"
     render :show
   end
 
