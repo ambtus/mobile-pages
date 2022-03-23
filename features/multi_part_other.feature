@@ -89,31 +89,3 @@ Feature: other mult-part tests
       But I should NOT see "Harry Potter" within "#position_1"
       And I should NOT see "JK Rowling" within "#position_1"
 
-  Scenario: show parent only shows 15 parts
-     Given I have no pages
-    Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-151"
-    When I am on the page's page
-    Then I should see "Part 1"
-    But I should NOT see "Part 16"
-    When I press "Next Parts"
-    Then I should see "Part 16"
-    But I should NOT see "Part 31"
-    When I press "Next Parts"
-    Then I should see "Part 31"
-    But I should NOT see "Part 46"
-    When I press "Last Parts"
-    Then I should see "Part 137"
-    And I should see "Part 151"
-    But I should NOT see "Part 136"
-
-  Scenario: show parent shows parts by position, not created order
-    Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
-    When I am on the page's page
-      And I follow "Manage Parts"
-      And I fill in "url_list" with
-        """
-        http://test.sidrasue.com/parts/2.html
-        http://test.sidrasue.com/parts/1.html
-        """
-      And I press "Update"
-    Then "Part 2" should come before "Part 1"

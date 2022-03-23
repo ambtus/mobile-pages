@@ -4,8 +4,8 @@ class PagesController < ApplicationController
     if params[:url]
       @page = Page.find_by_url(params[:url].normalize)
       if @page
-        flash.now[:notice] = "One page found"
-        render :show and return
+        flash[:notice] = "One page found"
+        redirect_to :action => 'show', :id => @page.id and return
       end
     end
     @title = "Mobile pages"
