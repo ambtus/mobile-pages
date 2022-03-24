@@ -214,6 +214,7 @@ class Page < ActiveRecord::Base
     rescue SocketError
       self.errors.add(:base, "couldn't resolve host name")
     end
+    return self
   end
 
   def parts_from_urls(url_title_list, refetch=false)
@@ -255,18 +256,19 @@ class Page < ActiveRecord::Base
         page.set_type
         # Rails.logger.debug "DEBUG: created #{page.reload.inspect}"
         self.update_attribute(:read_after, Time.now) if self.read_after > Time.now
+        page.set_wordcount
       else
         Rails.logger.debug "DEBUG: found #{part}"
         if page.url == url
-          page.fetch_raw if refetch
+          page.fetch_raw.remove_outdated_downloads.set_wordcount if refetch
         else
-          page.update_attribute(:url, url)
-          page.fetch_raw
+          page.update!(:url, url)
+          page.fetch_raw.remove_outdated_downloads.set_wordcount
         end
-        page.update!(position: position, parent_id: self.id)
-        page.update!(title: title) if title
+        page.update!(position: position) if page.position != position
+        page.update!(parent_id: self.id) if page.parent_id != self.id
+        page.update!(title: title) if title && page.title != title
       end
-      page.cleanup
       new_part_ids << page.id
     end
     Rails.logger.debug "DEBUG: parts found or created: #{new_part_ids}"
@@ -277,7 +279,7 @@ class Page < ActiveRecord::Base
       Page.find(old_part_id).make_single
     end
 
-    self.cleanup(false)
+    self.update_last_read.update_stars.remove_outdated_downloads.set_wordcount(false)
     self.set_type
   end
 

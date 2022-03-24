@@ -26,11 +26,10 @@ module Download
   def download_suffix; short_meta_strings.empty? ? "" : " (#{short_meta_strings.join_comma})"; end
   def download_part_title; title_prefix + title + download_suffix; end
 
-  def remove_outdated_downloads(recurse = false)
+  def remove_outdated_downloads
     FileUtils.rm_rf(self.download_dir) if self.id
     FileUtils.mkdir_p(self.download_dir) if self.id
-    self.parent.remove_outdated_downloads(true) if self.parent
-    self.parts.each { |part| part.remove_outdated_downloads(true) unless recurse}
+    self.parent.remove_outdated_downloads if self.parent
     return self
   end
 
