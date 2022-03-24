@@ -5,13 +5,14 @@ class Book < Page
   def get_meta_from_ao3(refetch=true)
     if refetch
       Rails.logger.debug "DEBUG: fetching meta from ao3 for #{self.url}"
-      doc = Nokogiri::HTML(Scrub.fetch_html(self.url))
+      tags_doc = doc = Nokogiri::HTML(Scrub.fetch_html(self.url))
     elsif make_single?(parts.size)
       Rails.logger.debug "DEBUG: not getting meta for Book because was made Single"
       return false
     else
-      Rails.logger.debug "DEBUG: build meta from raw html of first part #{parts.first.id}"
+      Rails.logger.debug "DEBUG: build meta from raw html of first and last parts"
       doc = Nokogiri::HTML(parts.first.raw_html)
+      tags_doc = Nokogiri::HTML(parts.last.raw_html)
     end
 
     self.title = doc.xpath("//div[@id='workskin']").xpath("//h2").first.children.text.strip rescue "empty title"
@@ -19,8 +20,8 @@ class Book < Page
 
     doc_summary = Scrub.sanitize_html(doc.css(".summary blockquote")).children.to_html
     doc_notes = Scrub.sanitize_html(doc.css(".notes blockquote")).children.to_html
-    doc_relationships = doc.css(".relationship a").map(&:text).join(", ")  rescue nil
-    doc_tags = doc.css(".freeform a").map(&:text).join(", ")  rescue nil
+    doc_relationships = tags_doc.css(".relationship a").map(&:text).join(", ")  rescue nil
+    doc_tags = tags_doc.css(".freeform a").map(&:text).join(", ")  rescue nil
 
     self.notes = [doc_summary, doc_tags, doc_relationships].join_hr
 
