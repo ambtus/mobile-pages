@@ -333,6 +333,36 @@ class Page < ActiveRecord::Base
     self.wip_switch if self.ao3_chapter?
   end
 
+  def refetch_meta
+    self.parts.each do |part|
+      part.get_meta_from_ao3
+    end
+    self.get_meta_from_ao3
+  end
+
+  def refetch(passed_url)
+    if ao3? && is_a?(Single) && !ao3_chapter?
+      self.becomes!(Book)
+      self.fetch_ao3
+    else
+      update!(url: passed_url) if passed_url.present?
+      Rails.logger.debug "DEBUG: refetching all for #{id} url: #{self.url}"
+      if ao3?
+        page = becomes!(ao3_type)
+        page.fetch_ao3
+      elsif ff?
+        errors.add(:base, "can't refetch from fanfiction.net")
+      else
+        fetch_raw
+      end
+    end
+  end
+
+  def refetch_parts(url_list)
+    Rails.logger.debug "DEBUG: refetching all for #{self.id} url_list: #{url_list}"
+    self.parts_from_urls(url_list)
+  end
+
   def add_parent(title)
     parent=Page.find_by_title(title)
     Rails.logger.debug "DEBUG: parent #{title} found? #{parent.is_a?(Page)}"

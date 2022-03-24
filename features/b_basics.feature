@@ -69,6 +69,29 @@ Feature: basic stuff
     When I view the content
     Then I should see "Retrieved from the web" within ".content"
 
+  Scenario: refetch original html from homepage
+    Given I have no pages
+    And a page exists with url: "http://test.sidrasue.com/test.html"
+    When I am on the page's page
+      And I follow "Edit Raw HTML"
+      And I fill in "pasted" with "system down"
+      And I press "Update Raw HTML"
+    When I am on the homepage
+      And I fill in "page_url" with "http://test.sidrasue.com/test.html"
+      And I press "Refetch"
+      Then I should see "Refetched" within "#flash_notice"
+    When I view the content
+    Then I should see "Retrieved from the web" within ".content"
+
+  Scenario: refetch fails
+    Given I have no pages
+    When I am on the homepage
+      And I fill in "page_url" with "http://test.sidrasue.com/test.html"
+      And I press "Refetch"
+      Then I should NOT see "Refetched"
+    But I should see "Page not found. Find or Store instead." within "#flash_alert"
+
+
   Scenario: refetch after moving directory
     Given I have no pages
     And a page exists with url: "http://test.sidrasue.com/test.html"

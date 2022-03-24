@@ -58,6 +58,20 @@ class PagesController < ApplicationController
       end
       redirect_to(build_route) and return
     end
+    if params[:Refetch]
+      @page = Page.find_by_url(params[:page][:url].normalize)
+      if @page
+        flash[:notice] = "Refetched"
+        @page.refetch(@page.url)
+        @count = @page.parts.size > Filter::LIMIT ? @page.parts.size - Filter::LIMIT : 0
+        render :show and return
+      else
+        flash[:alert] = "Page not found. Find or Store instead."
+        @page = Page.new(params[:page].permit!)
+        render :index and return
+      end
+      return
+    end
     @page = Page.new(params[:page].permit!)
     @tag = Tag.find_by_name(params[:tag])
     @hidden = Hidden.find_by_name(params[:hidden])

@@ -32,8 +32,9 @@
     %br
     = f.submit "Find", :name => "Find"
     = f.submit "Store", :name => "Store"
+    = f.submit "Refetch", :name => "Refetch"
     = link_to("Store Multiple", new_part_path)
-    - if @pages
+    - unless @pages.blank?
       - @pages.each_with_index do |page, index|
         .page{:id => "position_#{index+1}"}
           .title
