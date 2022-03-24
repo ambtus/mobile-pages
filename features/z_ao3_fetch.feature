@@ -231,6 +231,7 @@ Feature: ao3 specific stuff
       And I follow "Where am I"
       Then I should see "Where am I? (Single)" within ".title"
       And I should see "5" within ".stars"
+      And I should see "WIP" within ".omitteds"
       And I should see "harry potter" within ".fandoms"
       And I should see "Sidra" within ".authors"
       And I should NOT see "unread"
