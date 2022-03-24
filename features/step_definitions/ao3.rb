@@ -19,6 +19,14 @@ Given /^Where am I exists$/ do
   page.get_meta_from_ao3(false)
 end
 
+Given /^Where am I existed and was read$/ do
+  page = Single.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/692")
+  page.raw_html = File.open(Rails.root + "features/html/where.html", 'r:utf-8') { |f| f.read }
+  page.get_meta_from_ao3(false)
+  page.read_today.rate(5).update_read_after
+end
+
 Given /^I Drive Myself Crazy exists$/ do
   page = Single.create!(title: "temp")
   page.update!(url: "https://archiveofourown.org/works/68481")

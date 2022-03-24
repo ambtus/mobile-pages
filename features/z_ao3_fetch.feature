@@ -221,3 +221,31 @@ Feature: ao3 specific stuff
     Then I should see "Three Misfits in New York" within "#position_1"
       And I should see "A Misfit Working Holiday In New York" within "#position_2"
     And I should have 5 pages
+
+  Scenario: refetching a one-page Single into a Book
+    Given I have no pages
+      And a tag exists with name: "harry potter" AND type: "Fandom"
+      And an author exists with name: "Sidra"
+      And Where am I existed and was read
+    When I am on the homepage
+      And I follow "Where am I"
+      Then I should see "Where am I? (Single)" within ".title"
+      And I should see "5" within ".stars"
+      And I should see "harry potter" within ".fandoms"
+      And I should see "Sidra" within ".authors"
+      And I should NOT see "unread"
+      And last read should be today
+    When I follow "Refetch"
+      Then the "url" field should contain "https://archiveofourown.org/works/692"
+    When I press "Refetch"
+    Then I should see "Refetched" within "#flash_notice"
+    And I follow "Time Was, Time Is" within ".parent"
+    Then I should see "unread parts"
+    And I should see "harry potter" within ".fandoms"
+    And I should see "Sidra" within ".authors"
+    And I should see "Where am I?" within "#position_1"
+    And I should see "5" within "#position_1"
+    But I should NOT see "harry potter" within "#position_1"
+    But I should NOT see "Sidra" within "#position_1"
+    And I should see "Hogwarts" within "#position_2"
+    And I should see "unread" within "#position_2"

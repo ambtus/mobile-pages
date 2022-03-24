@@ -342,8 +342,10 @@ class Page < ActiveRecord::Base
 
   def refetch(passed_url)
     if ao3? && is_a?(Single) && !ao3_chapter?
-      self.becomes!(Book)
-      self.fetch_ao3
+      parent = Book.create!(title: "temp")
+      self.make_me_a_chapter(parent)
+      parent.update!(url: passed_url) && parent.fetch_ao3
+      self.remove_duplicate_tags
     else
       update!(url: passed_url) if passed_url.present?
       Rails.logger.debug "DEBUG: refetching all for #{id} url: #{self.url}"
