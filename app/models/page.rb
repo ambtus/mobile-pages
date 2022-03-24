@@ -217,6 +217,24 @@ class Page < ActiveRecord::Base
     return self
   end
 
+  def add_part(part_url)
+    position = parts.last.position + 1
+    page = Page.find_by(url: part_url)
+    if page.blank?
+      title = "Part #{position}"
+      page = Page.create(:url=>part_url, :title=>title, :parent_id=>self.id, :position => position)
+      page.set_type
+      # Rails.logger.debug "DEBUG: created #{page.reload.inspect}"
+      self.update_attribute(:read_after, Time.now) if self.read_after > Time.now
+      page.set_wordcount
+    else
+      Rails.logger.debug "DEBUG: found #{part}"
+      page.update!(position: position) if page.position != position
+      page.update!(parent_id: self.id) if page.parent_id != self.id
+    end
+    self.update_last_read.update_stars.remove_outdated_downloads.set_wordcount(false)
+  end
+
   def parts_from_urls(url_title_list, refetch=false)
     old_part_ids = self.parts.map(&:id)
     Rails.logger.debug "DEBUG: my old parts #{old_part_ids}"

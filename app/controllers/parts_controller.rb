@@ -6,17 +6,27 @@ class PartsController < ApplicationController
   end
   def edit
     @page = Page.find(params[:id])
-    @title = "Edit parts for #{@page.title}"
-    if @page.parent
-      @parent_title = @page.parent.title
+    if params[:add]
+      @title = "Add part to #{@page.title}"
+      render "add"
     else
-      @parent_title = NEW_PARENT_TITLE
+      @title = "Edit parts for #{@page.title}"
+      if @page.parent
+        @parent_title = @page.parent.title
+      else
+        @parent_title = NEW_PARENT_TITLE
+      end
     end
   end
   def create
     @page = Page.find(params[:page_id])
     title = params[:title]
     @page.update_attribute(:title, title) if title && title != @page.title
+    if params[:add_url]
+      @page.add_part(params[:add_url])
+      flash[:notice] = "Part added"
+      redirect_to page_path(@page) and return
+    end
     url_list = params[:url_list]
     if url_list != @page.url_list
       @page.parts_from_urls(params[:url_list])

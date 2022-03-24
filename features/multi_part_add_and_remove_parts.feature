@@ -90,7 +90,7 @@ Feature: adding parents and children and siblings
     Then I should see "can’t include your own url"
     And I should see "Page 1 (Single)" within ".title"
 
-  Scenario: add a new part to an existing page with parts
+  Scenario: add new parts to an existing parent
     Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
     When I am on the page's page
     Then I should see "Page 1 (Book)"
@@ -99,14 +99,35 @@ Feature: adding parents and children and siblings
         """
         http://test.sidrasue.com/parts/1.html
         http://test.sidrasue.com/parts/2.html
+        http://test.sidrasue.com/parts/3.html
         """
       And I press "Update"
     Then I should see "Page 1 (Book)"
-    Then I should see "Part 1"
+    And I should see "Part 1"
+    And I should see "Part 3"
       When I follow "Part 2"
       Then I should see "Part 2 (Chapter)" within ".title"
-    And I view the content
-      And I should see "stuff for part 2"
+    When I view the content
+      Then I should see "stuff for part 2"
+    When I am on the page's page
+      And I follow "Add Part"
+    Then the "add_url" field should contain "http://test.sidrasue.com/parts/3.html"
+
+  Scenario: add a single part to an existing parent
+    Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
+    When I am on the page's page
+    Then I should see "Page 1 (Book)"
+      And I follow "Add Part"
+    Then the "add_url" field should contain "http://test.sidrasue.com/parts/1.html"
+    When I fill in "add_url" with "http://test.sidrasue.com/parts/2.html"
+      And I press "Add"
+    Then I should see "Page 1 (Book)"
+    And I should see "Part added"
+    And I should see "Part 1"
+      When I follow "Part 2"
+      Then I should see "Part 2 (Chapter)" within ".title"
+    When I view the content
+      Then I should see "stuff for part 2"
 
   Scenario: remove a part from an existing page with parts
     Given I have no pages
@@ -171,3 +192,4 @@ Feature: adding parents and children and siblings
     When I view the content
     Then I should see "stuff for part 2"
     And I should see "stuff for part 1"
+

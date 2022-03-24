@@ -44,6 +44,7 @@
       = link_to "Tags", tag_path(@page)
       %br
       = link_to "Manage Parts", edit_part_path(@page)
+      = link_to "Add Part", edit_part_path(@page, add: "one")
       - if @page.parts.blank?
         = link_to "Edit Scrubbed HTML", edit_html_path(@page, format: "scrubbed")
         = link_to "Edit Raw HTML", edit_html_path(@page)
