@@ -56,7 +56,7 @@ class Author < ActiveRecord::Base
     Rails.logger.debug "DEBUG: moving author to note for #{pages.size} pages"
     pages.each do |page|
       Rails.logger.debug "DEBUG: moving author to note for page #{id}"
-      new_note = ["by #{self.name}", page.notes].join_hr
+      new_note = ["Author: #{self.name}", page.notes].join_hr
       page.update_attribute(:notes, new_note)
     end
     self.destroy

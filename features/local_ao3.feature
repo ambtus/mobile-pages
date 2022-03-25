@@ -94,7 +94,7 @@ Feature: ao3 testing that uses local cached files
     Then I should see "please no crossovers" within "#position_1"
       And I should see "AJ/JC" within "#position_1"
       And I should see "Make the Yuletide Gay" within "#position_1"
-      And I should see "by Sidra" within "#position_1"
+      And I should see "Author: Sidra" within "#position_1"
     When I follow "I Drive Myself Crazy"
       And I follow "Notes"
       And I fill in "page_notes" with "testing notes"
@@ -103,11 +103,11 @@ Feature: ao3 testing that uses local cached files
       And I should NOT see "please no crossovers" within ".notes"
       And I should NOT see "AJ/JC" within ".notes"
       And I should NOT see "Make the Yuletide Gay" within ".notes"
-      And I should NOT see "by Sidra" within ".notes"
+      And I should NOT see "Author: Sidra" within ".notes"
     Given an author exists with name: "Sidra"
       And I press "Rebuild Meta"
     Then I should see "Sidra" within ".authors"
-      And I should NOT see "by Sidra" within ".notes"
+      And I should NOT see "Author: Sidra" within ".notes"
       And I should see "please no crossovers" within ".notes"
       And I should see "AJ/JC" within ".notes"
       And I should see "Make the Yuletide Gay" within ".notes"
@@ -148,21 +148,22 @@ Feature: ao3 testing that uses local cached files
     And Multi Authors exists
   When I am on the homepage
     And I follow "edge of providence"
-    Then I should see "by adiduck (book_people), whimsicalimages" within ".notes"
+    Then I should see "Authors: adiduck (book_people), whimsicalimages" within ".notes"
+    And I should NOT see "Other Authors" within ".notes"
   Given an author exists with name: "book_people (adiduck)"
     And I press "Rebuild Meta"
-    Then I should see "by whimsicalimages" within ".notes"
+    Then I should see "Other Author: whimsicalimages" within ".notes"
     And I should see "book_people" within ".authors"
   Given I have no authors
   And an author exists with name: "adiduck (book_people)"
       And I press "Rebuild Meta"
-    Then I should see "by whimsicalimages" within ".notes"
+    Then I should see "Other Author: whimsicalimages" within ".notes"
     And I should see "adiduck" within ".authors"
   Given I have no authors
   # The following isn't by design. it's just a limitation of how i store author names
   And an author exists with name: "book_people"
       And I press "Rebuild Meta"
-    Then I should see "by adiduck (book_people), whimsicalimages" within ".notes"
+    Then I should see "Authors: adiduck (book_people), whimsicalimages" within ".notes"
     And I should NOT see "book_people" within ".authors"
 
   Scenario: fandoms
@@ -184,7 +185,7 @@ Feature: ao3 testing that uses local cached files
     And Alan Rickman exists
   When I am on the page with url "https://archiveofourown.org/works/5720104"
     Then I should see "Fandoms: Harry Potter, Die Hard, Robin Hood" within ".notes"
-    And I should see "by manicmea" within ".notes"
+    And I should see "Author: manicmea" within ".notes"
    But I should NOT see "Rowling" within ".notes"
     And I should NOT see "Movies" within ".notes"
     And I should NOT see "Prince" within ".notes"
@@ -195,7 +196,7 @@ Feature: ao3 testing that uses local cached files
     Then I should see "Harry Potter" within ".fandoms"
     And I should see "manicmea" within ".authors"
     And I should see "Fandoms: Die Hard, Robin Hood" within ".notes"
-    But I should NOT see "by manicmea" within ".notes"
+    But I should NOT see "manicmea" within ".notes"
 
   Scenario: don't over-match fandoms
    Given I have no pages
@@ -219,10 +220,10 @@ Feature: ao3 testing that uses local cached files
       Then I should see "Parent: Counting Drabbles (Series)"
       And I should see "Next: The Flower [sequel to Skipping Stones] (Single)"
       And I should see "Skipping Stones (Single)" within ".title"
-      And I should see "by Sidra" within ".notes"
+      And I should see "Author: Sidra" within ".notes"
     When an author exists with name: "Sidra"
     When I press "Rebuild Meta"
-      Then I should NOT see "by Sidra" within ".notes"
+      Then I should NOT see "Author: Sidra" within ".notes"
       But I should see "Sidra" within ".authors"
     When I follow "Counting Drabbles"
       And I follow "Authors" within ".edits"
@@ -230,9 +231,9 @@ Feature: ao3 testing that uses local cached files
       And I press "Update Authors"
       Then I should see "Sidra" within ".authors"
     When I follow "The Flower"
-      Then I should see "by Sidra" within ".notes"
+      Then I should see "Author: Sidra" within ".notes"
     When I press "Rebuild Meta"
-      Then I should NOT see "by Sidra" within ".notes"
+      Then I should NOT see "Author: Sidra" within ".notes"
       And I should NOT see "Sidra" within ".authors"
 
    Scenario: works in a series still have fandoms if the series doesn't

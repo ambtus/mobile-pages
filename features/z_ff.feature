@@ -68,7 +68,7 @@ Feature: ff.net specific stuff
     When I fill in "url" with "http://archiveofourown.org/works/688"
       And I press "Refetch"
     Then I should see "Refetched" within "#flash_notice"
-    Then I should see "by Sidra"
+    Then I should see "Author: Sidra"
       And I should NOT see "ambtus"
       And I should see "Skipping Stones (Single)" within ".title"
       And I should see "thanks to lauriegilbert"

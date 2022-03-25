@@ -539,25 +539,26 @@ class Page < ActiveRecord::Base
   def trope_string; self.tags.trope.by_name.joined; end #then redefine trope_string
   def author_string; self.authors.joined; end
   def parts_string
-    parts.blank? ? "" : " (#{parts.size} parts)"
+    suffix = parts.size == 1 ? "" : "s"
+    parts.blank? ? "" : " (#{parts.size} part#{suffix})"
   end
   def size_string; "#{ActionController::Base.helpers.number_with_delimiter(self.wordcount)} words" + parts_string; end
   def last_read_string
     if unread?
       if parts.any?
         if parts.map(&:last_read).any?
-          all = parts.size
-          unread = all - parts.map(&:last_read).compact.size
+          unread = parts.size - parts.map(&:last_read).compact.size
+          suffix = unread.size == 1 ? "" : "s"
           last_part_read = parts.map(&:last_read).compact.map(&:to_date).sort.first
-          "#{unread} #{UNREAD} parts (#{last_part_read})"
+          "#{unread} #{UNREAD} part#{suffix} (#{last_part_read})"
         elsif parts.map(&:parts).any?
           subparts = parts.map(&:parts).flatten
           if subparts.map(&:last_read).any?
-            all = subparts.size
-            unread = all - subparts.map(&:last_read).compact.size
+            unread = subparts.size - subparts.map(&:last_read).compact.size
+            suffix = unread.size == 1 ? "" : "s"
             last_subpart_read = subparts.map(&:last_read).compact.map(&:to_date).sort.first
             Rails.logger.debug "DEBUG: last_subpart_read: #{last_subpart_read}"
-            "#{unread} #{UNREAD} subparts (#{last_subpart_read})"
+            "#{unread} #{UNREAD} subpart#{suffix} (#{last_subpart_read})"
           else
             unread_string
           end
@@ -860,8 +861,11 @@ class Page < ActiveRecord::Base
       mp_authors.each {|a| self.authors << a}
     end
     unless non_mp_authors.empty?
+      suffix = non_mp_authors.size == 1 ? "" : "s"
+      tagged_authors = self.authors + (self.parent ? self.parent.authors : [])
+      by = tagged_authors.empty? ? "Author" : "Other Author"
       Rails.logger.debug "DEBUG: adding #{non_mp_authors} to notes"
-      byline = "by #{non_mp_authors.join(", ")}"
+      byline = "#{by}#{suffix}: #{non_mp_authors.join(", ")}"
       self.notes = "<p>#{byline}</p>#{self.notes}"
     end
   end
@@ -910,7 +914,7 @@ class Page < ActiveRecord::Base
       fandoms = non_mp_fandoms.uniq
       Rails.logger.debug "DEBUG: adding #{fandoms} to notes"
       suffix = fandoms.size == 1 ? "" : "s"
-      self.notes = "<p>Fandom#{suffix}: #{fandoms.join(", ")}</p>#{self.notes}"
+      self.notes = "<p>Other Fandom#{suffix}: #{fandoms.join(", ")}</p>#{self.notes}"
     end
   end
 

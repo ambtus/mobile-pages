@@ -7,7 +7,7 @@ Feature: adding parents and children and siblings
       And I fill in "add_parent" with "Parent"
       And I press "Update"
     Then I should see "Parent (Book)" within ".title"
-      And I should see "(1 parts)" within ".size"
+      And I should see "(1 part)" within ".size"
       And I should see "Page 1" within "#position_1"
     When I follow "Page 1" within "#position_1"
     Then I should see "Page 1 (Chapter)" within ".title"
@@ -97,7 +97,7 @@ Feature: adding parents and children and siblings
     Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
     When I am on the page's page
     Then I should see "Page 1 (Book)"
-      And I should see "(1 parts)" within ".size"
+      And I should see "(1 part)" within ".size"
       And I follow "Manage Parts"
       And I fill in "url_list" with
         """
@@ -122,7 +122,7 @@ Feature: adding parents and children and siblings
     Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
     When I am on the page's page
     Then I should see "Page 1 (Book)"
-      And I should see "(1 parts)" within ".size"
+      And I should see "(1 part)" within ".size"
       And I follow "Add Part"
     Then the "add_url" field should contain "http://test.sidrasue.com/parts/1.html"
     When I fill in "add_url" with "http://test.sidrasue.com/parts/2.html"
