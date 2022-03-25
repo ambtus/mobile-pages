@@ -66,8 +66,6 @@
   .ratings= @page.rating_string
   .size
     =@page.size_string
-    - if @page.parts.any?
-      (#{@page.parts.count} parts)
   .last_read=@page.last_read_string
   .info= @page.info_string
   .my_notes=raw @page.my_formatted_notes
