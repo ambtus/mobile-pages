@@ -7,6 +7,7 @@ Feature: adding parents and children and siblings
       And I fill in "add_parent" with "Parent"
       And I press "Update"
     Then I should see "Parent (Book)" within ".title"
+      And I should see "(1 parts)" within ".size"
       And I should see "Page 1" within "#position_1"
     When I follow "Page 1" within "#position_1"
     Then I should see "Page 1 (Chapter)" within ".title"
@@ -48,11 +49,13 @@ Feature: adding parents and children and siblings
     When I am on the homepage
     Then I should see "Single" within "#position_1"
     And I should see "Multi" within "#position_2"
+    And I should see "2 parts" within "#position_2"
     When I follow "Single"
       And I follow "Manage Parts"
       And I fill in "add_parent" with "Multi"
       And I press "Update"
     Then I should see "Page added to this parent"
+      And I should see "3 parts" within ".size"
       And I should see "Part 1"
       And I should see "Part 2"
       And I should see "3. Single"
@@ -94,6 +97,7 @@ Feature: adding parents and children and siblings
     Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
     When I am on the page's page
     Then I should see "Page 1 (Book)"
+      And I should see "(1 parts)" within ".size"
       And I follow "Manage Parts"
       And I fill in "url_list" with
         """
@@ -103,6 +107,7 @@ Feature: adding parents and children and siblings
         """
       And I press "Update"
     Then I should see "Page 1 (Book)"
+      And I should see "(3 parts)" within ".size"
     And I should see "Part 1"
     And I should see "Part 3"
       When I follow "Part 2"
@@ -117,11 +122,13 @@ Feature: adding parents and children and siblings
     Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
     When I am on the page's page
     Then I should see "Page 1 (Book)"
+      And I should see "(1 parts)" within ".size"
       And I follow "Add Part"
     Then the "add_url" field should contain "http://test.sidrasue.com/parts/1.html"
     When I fill in "add_url" with "http://test.sidrasue.com/parts/2.html"
       And I press "Add"
     Then I should see "Page 1 (Book)"
+      And I should see "(2 parts)" within ".size"
     And I should see "Part added"
     And I should see "Part 1"
       When I follow "Part 2"
@@ -133,6 +140,7 @@ Feature: adding parents and children and siblings
     Given I have no pages
     And a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3"
     When I am on the page's page
+      Then I should see "(3 parts)" within ".size"
       And I follow "Manage Parts"
       And I fill in "url_list" with
         """
@@ -140,6 +148,7 @@ Feature: adding parents and children and siblings
         http://test.sidrasue.com/parts/2.html
         """
       And I press "Update"
+      Then I should see "(2 parts)" within ".size"
       And I should NOT see "Part 3"
       And I view the content
     Then I should see "stuff for part 1"
