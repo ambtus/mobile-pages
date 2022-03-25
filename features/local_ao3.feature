@@ -255,3 +255,11 @@ Feature: ao3 testing that uses local cached files
     When I press "Rebuild Meta"
       Then I should NOT see "Fandom: Harry Potter" within ".notes"
       And I should NOT see "harry potter" within ".fandoms"
+
+  Scenario: single of work should have work title, not chapter title
+    Given I have no pages
+      And I have no tags
+      And Fuuinjutsu exists
+      When I am on the homepage
+      Then I should NOT see "Chapter 1"
+      But I should see "Fuuinjutsu+Chakra+Bonds+Clones, Should not be mixed by Uzumakis"

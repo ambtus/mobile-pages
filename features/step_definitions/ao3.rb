@@ -27,6 +27,13 @@ Given /^Where am I existed and was read$/ do
   page.read_today.rate(5).update_read_after
 end
 
+Given /^Fuuinjutsu exists$/ do
+  page = Single.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/36425557")
+  page.raw_html = File.open(Rails.root + "features/html/Fuuinjutsu.html", 'r:utf-8') { |f| f.read }
+  page.get_meta_from_ao3(false)
+end
+
 Given /^I Drive Myself Crazy exists$/ do
   page = Single.create!(title: "temp")
   page.update!(url: "https://archiveofourown.org/works/68481")

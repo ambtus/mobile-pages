@@ -12,8 +12,11 @@ class Single < Page
     end
 
     chapter_title = doc.css(".chapter .title").children.last.text.strip.gsub(": ","") rescue nil
+    Rails.logger.debug "DEBUG: ao3 single chapter title: #{chapter_title}"
     work_title = doc.xpath("//div[@id='workskin']").xpath("//h2").first.children.text.strip rescue "can’t find title"
-    self.title = chapter_title.blank? ? work_title : chapter_title
+    Rails.logger.debug "DEBUG: ao3 single work title: #{work_title}"
+    chapter_title = work_title if chapter_title.blank?
+    self.title = ao3_chapter? ? chapter_title : work_title
     Rails.logger.debug "DEBUG: ao3 single title: #{self.title}"
 
     doc_summary = Scrub.sanitize_html(doc.css(".summary blockquote")).children.to_html

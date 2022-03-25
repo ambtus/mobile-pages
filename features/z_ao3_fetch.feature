@@ -228,8 +228,8 @@ Feature: ao3 specific stuff
       And an author exists with name: "Sidra"
       And Where am I existed and was read
     When I am on the homepage
-      And I follow "Where am I"
-      Then I should see "Where am I? (Single)" within ".title"
+      And I follow "Time Was, Time Is"
+      Then I should see "Time Was, Time Is (Single)" within ".title"
       And I should see "5" within ".stars"
       And I should see "WIP" within ".omitteds"
       And I should see "harry potter" within ".fandoms"
