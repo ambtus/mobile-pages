@@ -538,7 +538,10 @@ class Page < ActiveRecord::Base
   end
   def trope_string; self.tags.trope.by_name.joined; end #then redefine trope_string
   def author_string; self.authors.joined; end
-  def size_string; "#{ActionController::Base.helpers.number_with_delimiter(self.wordcount)} words"; end
+  def parts_string
+    parts.blank? ? "" : " (#{parts.size} parts)"
+  end
+  def size_string; "#{ActionController::Base.helpers.number_with_delimiter(self.wordcount)} words" + parts_string; end
   def last_read_string
     if unread?
       if parts.any?
@@ -546,7 +549,7 @@ class Page < ActiveRecord::Base
           all = parts.size
           unread = all - parts.map(&:last_read).compact.size
           last_part_read = parts.map(&:last_read).compact.map(&:to_date).sort.first
-          "#{unread} of #{all} parts #{UNREAD} (#{last_part_read})"
+          "#{unread} #{UNREAD} parts (#{last_part_read})"
         elsif parts.map(&:parts).any?
           subparts = parts.map(&:parts).flatten
           if subparts.map(&:last_read).any?
@@ -554,7 +557,7 @@ class Page < ActiveRecord::Base
             unread = all - subparts.map(&:last_read).compact.size
             last_subpart_read = subparts.map(&:last_read).compact.map(&:to_date).sort.first
             Rails.logger.debug "DEBUG: last_subpart_read: #{last_subpart_read}"
-            "#{unread} of #{all} subparts #{UNREAD} (#{last_subpart_read})"
+            "#{unread} #{UNREAD} subparts (#{last_subpart_read})"
           else
             unread_string
           end

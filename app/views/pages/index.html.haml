@@ -53,8 +53,6 @@
             = link_to "Original", page.url unless page.url.blank?
           .tags
             =page.meta_strings.join_comma
-            - if page.parts.any?
-              (#{page.parts.count} parts)
           .my_notes=page.my_short_notes
           .notes=simple_format page.short_notes
       = f.submit "Next", :name => "Next"

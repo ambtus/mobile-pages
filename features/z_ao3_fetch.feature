@@ -241,7 +241,7 @@ Feature: ao3 specific stuff
     When I press "Refetch"
     Then I should see "Refetched" within "#flash_notice"
     And I follow "Time Was, Time Is" within ".parent"
-    Then I should see "parts unread"
+    Then I should see "1 unread parts"
     And I should see "harry potter" within ".fandoms"
     And I should see "Sidra" within ".authors"
     And I should see "Where am I?" within "#position_1"
