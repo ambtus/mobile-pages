@@ -4,14 +4,14 @@ Feature: parts differ in stars from parent
      Given I have no pages
      And Uneven exists
      When I am on the page with title "Uneven"
-     Then I should see "unread parts (2010-01-01)" within ".last_read"
+     Then I should see "1 of 5 parts unread (2010-01-01)" within ".last_read"
      And I should see "4 stars" within ".stars"
      When I follow "Rate" within "#position_5"
      And I choose "3"
      And I press "Rate"
      When I am on the page with title "Uneven"
      Then I should see "2010-01-01" within ".last_read"
-       But I should NOT see "unread parts"
+       But I should NOT see "parts unread"
      And I should see "3 stars" within ".stars"
      And I should see "1 star" within "#position_1"
      And I should see "2 stars" within "#position_2"
@@ -23,14 +23,12 @@ Feature: parts differ in stars from parent
      Given I have no pages
      And Uneven exists
      When I am on the page with title "Uneven"
-     Then I should see "unread parts (2010-01-01)" within ".last_read"
-     And I should see "4 stars" within ".stars"
      When I follow "Rate" within "#position_5"
      And I choose "5"
      And I press "Rate"
      When I am on the page with title "Uneven"
      Then I should see "2010-01-01" within ".last_read"
-       But I should NOT see "unread parts"
+       But I should NOT see "parts unread"
      And I should see "5 stars" within ".stars"
      And I should see "1 star" within "#position_1"
      And I should see "2 stars" within "#position_2"
@@ -43,12 +41,10 @@ Feature: parts differ in stars from parent
      Given I have no pages
      And Uneven exists
      When I am on the page with title "Uneven"
-     Then I should see "unread parts (2010-01-01)" within ".last_read"
-     And I should see "4 stars" within ".stars"
      When I follow "Rate" within "#position_5"
      And I press "Rate unfinished"
      When I am on the page with title "Uneven"
-     Then I should see "unread parts (2010-01-01)" within ".last_read"
+     Then I should see "1 of 5 parts unread (2010-01-01)" within ".last_read"
      And I should see "unfinished" within ".stars"
      And I should see "1 star" within "#position_1"
      And I should see "2 stars" within "#position_2"
@@ -62,14 +58,12 @@ Feature: parts differ in stars from parent
      Given I have no pages
      And Uneven exists
      When I am on the page with title "Uneven"
-     Then I should see "unread parts (2010-01-01)" within ".last_read"
-     And I should see "4 stars" within ".stars"
      When I follow "Rate" within ".views"
      And I choose "5"
      And I press "Rate all unrated parts"
      When I am on the page with title "Uneven"
      Then I should see "2010-01-01" within ".last_read"
-       But I should NOT see "unread parts"
+       But I should NOT see "parts unread"
      And I should see "5 stars" within ".stars"
      And I should see "1 star" within "#position_1"
      And I should see "2 stars" within "#position_2"
@@ -82,13 +76,11 @@ Feature: parts differ in stars from parent
      Given I have no pages
      And Uneven exists
      When I am on the page with title "Uneven"
-     Then I should see "unread parts (2010-01-01)" within ".last_read"
-     And I should see "4 stars" within ".stars"
      When I follow "Rate" within ".views"
      And I choose "5"
      And I press "Rate unfinished"
      When I am on the page with title "Uneven"
-     Then I should see "unread parts (2010-01-01)" within ".last_read"
+     Then I should see "1 of 5 parts unread (2010-01-01)" within ".last_read"
      And I should see "unfinished" within ".stars"
      And I should see "1 star" within "#position_1"
      And I should see "2 stars" within "#position_2"
@@ -101,7 +93,6 @@ Feature: parts differ in stars from parent
      Given I have no pages
      And Uneven exists
      When I am on the page with title "Uneven"
-     Then I should see "unread parts (2010-01-01)" within ".last_read"
      When I follow "Rate" within ".views"
      And I choose "5"
      And I press "Rate"

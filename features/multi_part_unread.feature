@@ -15,7 +15,7 @@ Feature: parts differ in fandom and unread status from parent
        http://test.sidrasue.com/parts/3.html
        """
      And I press "Update"
-   Then I should see "unread parts (2009-01-01)" within ".last_read"
+   Then I should see "2 of 3 parts unread (2009-01-01)" within ".last_read"
      And I should see "2009-01-01" within "#position_1"
      And I should see "unread" within "#position_2"
      And I should see "unread" within "#position_3"
@@ -23,7 +23,7 @@ Feature: parts differ in fandom and unread status from parent
    When I am on the homepage
    And I choose "unread_yes"
       And I press "Find"
-   Then I should see "unread parts (2009-01-01)" within "#position_1"
+   Then I should see "2 of 3 parts unread (2009-01-01)" within "#position_1"
     And the page should NOT contain css "#position_2"
 
   When I follow "Multi"
@@ -33,11 +33,11 @@ Feature: parts differ in fandom and unread status from parent
     And I press "Rate"
 
     When I am on the homepage
-   Then I should see "unread parts (2009-01-01)" within "#position_1"
+   Then I should see "1 of 3 parts unread (2009-01-01)" within "#position_1"
     And I should NOT see today within "#position_1"
 
    When I follow "Multi" within "#position_1"
-     Then I should see "unread parts (2009-01-01)" within ".last_read"
+     Then I should see "1 of 3 parts unread (2009-01-01)" within ".last_read"
      And I should see "2009-01-01" within "#position_1"
      And I should NOT see "unread" within "#position_2"
      And I should see today within "#position_2"
@@ -78,7 +78,7 @@ Feature: parts differ in fandom and unread status from parent
     Then I should see "Parent" within ".title"
       And I should NOT see "Parent with that title has content"
       And I should see "unread" within ".last_read"
-      And I should NOT see "unread parts" within ".last_read"
+      And I should NOT see "parts unread" within ".last_read"
 
     # find parent with unread part
     When I am on the homepage
@@ -103,7 +103,7 @@ Feature: parts differ in fandom and unread status from parent
       And I press "Update"
 
     Then I should see "Parent" within ".title"
-      And I should see "unread parts (2010-01-01)" within ".last_read"
+      And I should see "2 of 3 parts unread (2010-01-01)" within ".last_read"
       And I should see "30,003 words" within ".size"
       And I should see "Child1 (unread, 10,001 words, two)" within "#position_1"
       And I should see "Child2 (2010-01-01, 10,001 words, one)" within "#position_2"
@@ -123,7 +123,7 @@ Feature: parts differ in fandom and unread status from parent
      And I select "two" from "fandom"
       And I press "Find"
     Then I should see "Parent" within "#position_1"
-      And I should see "unread parts" within "#position_1"
+      And I should see "parts unread" within "#position_1"
       And I should see "Child1 of Parent" within "#position_2"
       And the page should NOT contain css "#position_3"
 
@@ -135,7 +135,7 @@ Feature: parts differ in fandom and unread status from parent
 
     When I am on the homepage
     Then I should see "Parent" within "#position_1"
-      And I should see "unread parts (2010-01-01)" within "#position_1"
+      And I should see "parts unread (2010-01-01)" within "#position_1"
       And I should NOT see today within "#position_1"
       And the page should NOT contain css "#position_2"
 

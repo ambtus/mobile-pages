@@ -543,14 +543,18 @@ class Page < ActiveRecord::Base
     if unread?
       if parts.any?
         if parts.map(&:last_read).any?
+          all = parts.size
+          unread = all - parts.map(&:last_read).compact.size
           last_part_read = parts.map(&:last_read).compact.map(&:to_date).sort.first
-          "#{UNREAD} parts (#{last_part_read})"
+          "#{unread} of #{all} parts #{UNREAD} (#{last_part_read})"
         elsif parts.map(&:parts).any?
           subparts = parts.map(&:parts).flatten
           if subparts.map(&:last_read).any?
+            all = subparts.size
+            unread = all - subparts.map(&:last_read).compact.size
             last_subpart_read = subparts.map(&:last_read).compact.map(&:to_date).sort.first
             Rails.logger.debug "DEBUG: last_subpart_read: #{last_subpart_read}"
-            "#{UNREAD} subparts (#{last_subpart_read})"
+            "#{unread} of #{all} subparts #{UNREAD} (#{last_subpart_read})"
           else
             unread_string
           end

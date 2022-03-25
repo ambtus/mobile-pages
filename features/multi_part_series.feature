@@ -180,8 +180,8 @@ Feature: third level hierarchy
        http://test.sidrasue.com/parts/2.html
        """
      And I press "Update"
-   Then I should see "unread subparts (2009-01-01)" within ".last_read"
-     And I should see "unread parts (2009-01-01)" within "#position_1"
+   Then I should see "1 of 2 subparts unread (2009-01-01)" within ".last_read"
+     And I should see "1 of 2 parts unread (2009-01-01)" within "#position_1"
 
    When I follow "Parent"
    Then I should see "2009-01-01" within "#position_1"
@@ -195,4 +195,4 @@ Feature: third level hierarchy
    Then I should NOT see "unread" within "#position_1"
     And I should see "2009-01-01" within "#position_1"
     And I should see "2009-01-01" within ".last_read"
-    And I should NOT see "unread parts" within ".last_read"
+    And I should NOT see "parts unread" within ".last_read"
