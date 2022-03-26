@@ -14,7 +14,6 @@ Feature: third level hierarchy
       """
     And I fill in "page_title" with "Page 1"
     And I press "Store"
-    And I follow "Page 1"
     And I follow "Part the first"
     And I follow "Manage Parts"
     And I fill in "url_list" with

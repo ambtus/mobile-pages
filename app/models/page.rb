@@ -99,6 +99,7 @@ class Page < ActiveRecord::Base
   UNREAD = "unread"
   UNFINISHED = "unfinished"
   WIP = "WIP"
+  OTHER = "Other Fandom"
   SHORT_LENGTH = 160 # truncate at this many characters
 
   SIZES = ["drabble", "short", "medium", "long", "epic"]
@@ -115,6 +116,19 @@ class Page < ActiveRecord::Base
     else
       self.tags << wip_tag && self.cache_tags if on
     end
+    return self
+  end
+
+  def fandoms; tags.fandom; end
+  def other_fandom_tag; Fandom.find_or_create_by(name: OTHER); end
+  def other_fandom_present?; self.fandoms.include?(other_fandom_tag);end
+  def toggle_other_fandom
+    if other_fandom_present?
+      self.tags.delete(other_fandom_tag)
+    else
+      self.tags << other_fandom_tag
+    end
+    self.cache_tags
     return self
   end
 
@@ -341,13 +355,13 @@ class Page < ActiveRecord::Base
   end
 
   def make_single
-    Rails.logger.debug "DEBUG: removing #{self.parent_id} from #{self.id}"
+    Rails.logger.debug "DEBUG: removing #{self.id} from #{self.parent_id}"
     return unless parent
     parent = self.parent
     self.tags << parent.tags - self.tags
     self.cache_tags
     self.authors << parent.authors - self.authors
-    self.update_attribute(:parent_id, nil)
+    self.update(parent_id: nil, position: nil)
     self.set_type
     self.get_meta_from_ao3(false) if self.ao3?
     self.wip_switch if self.ao3_chapter?
@@ -366,6 +380,7 @@ class Page < ActiveRecord::Base
       self.make_me_a_chapter(parent)
       parent.update!(url: passed_url) && parent.fetch_ao3
       self.remove_duplicate_tags
+      self.get_meta_from_ao3(false)
     else
       update!(url: passed_url) if passed_url.present?
       Rails.logger.debug "DEBUG: refetching all for #{id} url: #{self.url}"
@@ -895,11 +910,13 @@ class Page < ActiveRecord::Base
         non_mp_fandoms << simple if simple.present?
       else
         Rails.logger.debug "DEBUG: found #{found.name}"
-        Rails.logger.debug "DEBUG: #{self.parent.tags.map(&:name)}" if self.parent
         if self.tags.include?(found)
           Rails.logger.debug "DEBUG: won't re-add #{found.name} to tags"
         elsif self.parent && self.parent.tags.include?(found)
-          Rails.logger.debug "DEBUG: won't duplicate parents #{found.name} in my tags"
+          Rails.logger.debug "DEBUG: won't duplicate parent's #{found.name} in my tags"
+        elsif self.other_fandom_present? # use other fandom tag to prevent false positives
+           Rails.logger.debug "DEBUG: will NOT add #{found.name} to tags: add to notes instead"
+           non_mp_fandoms << simple if simple.present?
         else
           Rails.logger.debug "DEBUG: will add #{found.name} to tags"
           mp_fandoms << found

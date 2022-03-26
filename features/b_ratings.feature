@@ -15,8 +15,9 @@ Feature: ratings are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select fandom"
-    When I fill in "tags" with "interesting"
+    Then I should see "Page created with Other Fandom"
+    When I edit its tags
+      And I fill in "tags" with "interesting"
       And I press "Add Rating Tags"
     Then I should see "interesting" within ".ratings"
 
@@ -26,8 +27,9 @@ Feature: ratings are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select fandom"
-    When I select "first" from "page_rating_ids_"
+    Then I should see "Page created with Other Fandom"
+    When I edit its tags
+      And I select "first" from "page_rating_ids_"
       And I press "Update Tags"
     Then I should see "first" within ".ratings"
 
@@ -51,10 +53,8 @@ Feature: ratings are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select fandom"
-    When I fill in "tags" with "something"
-      And I press "Add Fandom Tags"
-      Then I should see "sweet" within ".ratings"
+    Then I should see "Page created with Other Fandom"
+      And I should see "sweet" within ".ratings"
 
   Scenario: add a rating to a page when there are no ratings
     Given a page exists

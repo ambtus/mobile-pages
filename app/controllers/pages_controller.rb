@@ -91,14 +91,14 @@ class PagesController < ApplicationController
         @page = Page.new(params[:page])
       else
         @page.convert_to_type
-        @page.cache_tags
-        if @page.tags.fandom.blank?
-          flash[:notice] = "Page created. Please select fandom(s)"
-          redirect_to tag_path(@page) and return
+        if @page.fandoms.blank?
+          flash[:notice] = "Page created with #{Page::OTHER}"
+          @page.toggle_other_fandom
         else
           flash[:notice] = "Page created."
-          redirect_to page_path(@page) and return
+          @page.cache_tags
         end
+        redirect_to page_path(@page) and return
       end
     else
       @errors = @page.errors
@@ -147,6 +147,9 @@ class PagesController < ApplicationController
       when "Rebuild Meta"
         @page.rebuild_meta
         flash[:notice] = "Rebuilt Meta"
+      when "Toggle #{Page::OTHER}"
+        @page.toggle_other_fandom
+        flash[:notice] = "Toggled #{Page::OTHER}"
       when "Make Single"
         @page.make_single
         flash[:notice] = "Made Single"

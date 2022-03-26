@@ -15,8 +15,9 @@ Feature: trope tag stuff
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select fandom"
-    When I fill in "tags" with "my tag"
+    Then I should see "Page created with Other Fandom"
+    When I edit its tags
+      And I fill in "tags" with "my tag"
       And I press "Add Trope Tags"
     Then I should see "my tag" within ".tags"
 
@@ -26,8 +27,9 @@ Feature: trope tag stuff
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select fandom"
-    When I select "first" from "page_trope_ids_"
+    Then I should see "Page created with Other Fandom"
+    When I edit its tags
+      And I select "first" from "page_trope_ids_"
       And I press "Update Tags"
     Then I should see "first" within ".tags"
 
@@ -38,9 +40,8 @@ Feature: trope tag stuff
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select fandom"
-      When I press "Update Tags"
-      Then I should see "first" within ".tags"
+    Then I should see "Page created with Other Fandom"
+      And I should see "first" within ".tags"
 
   Scenario: add a tag to a page when there are no tags
     Given a page exists

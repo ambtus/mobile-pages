@@ -56,10 +56,9 @@ class Single < Page
   def make_me_a_chapter(parent)
     doc = Nokogiri::HTML(Scrub.fetch_html(self.url + "/navigate"))
     my_info = doc.xpath("//ol//a").first
-    new_title = my_info.text
     chapter_url = "https://archiveofourown.org" + my_info['href']
-    Rails.logger.debug "DEBUG: making #{self.title} into a chapter of #{parent.id} with #{new_title} and #{chapter_url}"
-    update!(title: new_title, url: chapter_url, parent_id: parent.id, position: 1, type: Chapter)
+    Rails.logger.debug "DEBUG: making #{self.title} into a chapter of #{parent.id} with #{chapter_url}"
+    update!(url: chapter_url, parent_id: parent.id, position: 1, type: Chapter)
   end
 
 end

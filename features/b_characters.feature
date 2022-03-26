@@ -15,8 +15,10 @@ Feature: characters are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select fandom"
-    When I fill in "tags" with "Jim/Blair"
+    Then I should see "Page created with Other Fandom"
+    And I should see "Other Fandom" within ".fandoms"
+    When I edit its tags
+      And I fill in "tags" with "Jim/Blair"
       And I press "Add Character Tags"
     Then I should see "Jim/Blair" within ".characters"
 
@@ -26,8 +28,9 @@ Feature: characters are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select fandom"
-    When I select "first" from "page_character_ids_"
+    Then I should see "Page created with Other Fandom"
+    When I edit its tags
+      And I select "first" from "page_character_ids_"
       And I press "Update Tags"
     Then I should see "first" within ".characters"
 
@@ -40,7 +43,7 @@ Feature: characters are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should NOT see "Please select fandom"
+    Then I should see "Page created."
       And I should see "first" within ".fandoms"
       And I should see "second" within ".characters"
 
@@ -51,10 +54,8 @@ Feature: characters are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select fandom"
-    When I fill in "tags" with "something"
-      And I press "Add Fandom Tags"
-      Then I should see "Sam & Dean" within ".characters"
+    Then I should see "Page created with Other Fandom"
+      And I should see "Sam & Dean" within ".characters"
 
   Scenario: add a character to a page when there are no characters
     Given a page exists

@@ -213,14 +213,15 @@ Feature: ao3 specific stuff
     When I am on the homepage
       And I follow "Misfit Series"
       And I press "Uncollect"
-    Then I should have 4 pages
+    Then I should have 6 pages
     When I am on the homepage
       And I fill in "page_url" with "https://archiveofourown.org/series/334075"
       And I press "Store"
-      And I follow "Misfit"
-    Then I should see "Three Misfits in New York" within "#position_1"
+      Then I should see "Page created with Other Fandom"
+      And I should see "Misfits (Series)" within ".title"
+    And I should see "Three Misfits in New York" within "#position_1"
       And I should see "A Misfit Working Holiday In New York" within "#position_2"
-    And I should have 5 pages
+    And I should have 7 pages
 
   Scenario: refetching a one-page Single into a Book
     Given I have no pages

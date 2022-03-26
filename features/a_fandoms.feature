@@ -23,10 +23,8 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select fandom"
-    When I fill in "tags" with "new fandom"
-      And I press "Add Fandom Tags"
-    Then I should see "new fandom" within ".fandoms"
+    Then I should see "Page created with Other Fandom"
+    And I should see "Other Fandom" within ".fandoms"
 
   Scenario: no tags selected during create
     Given a tag exists with name: "first" AND type: "Fandom"
@@ -34,10 +32,9 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select fandom"
-    When I select "first" from "page_fandom_ids_"
-      And I press "Update Tags"
-    Then I should see "first" within ".fandoms"
+    Then I should see "Page created with Other Fandom"
+    And I should see "Other Fandom" within ".fandoms"
+    And I should NOT see "first" within ".fandoms"
 
   Scenario: fandom and other tag selected during create
     Given a tag exists with name: "first"
@@ -48,7 +45,8 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should NOT see "Please select fandom"
+    Then I should NOT see "Page created with Other Fandom"
+    But I should see "Page created."
       And I should see "first" within ".tags"
       And I should see "second" within ".fandoms"
 
@@ -60,7 +58,8 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should NOT see "Please select fandom"
+    Then I should NOT see "Page created with Other Fandom"
+    But I should see "Page created."
       And I should see "nonfiction" within ".fandoms"
 
   Scenario: add a fandom to a page when there are no fandoms
@@ -131,12 +130,14 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     Given I have no tags
     And a page exists with fandoms: "Twilight"
     When I am on the edit tag page for "Twilight"
-    And I follow "Destroy"
-    When I press "Yes"
-    Then I should have no fandoms
+    Then I should see "1 page with that tag"
+    When I follow "Destroy"
+    And I press "Yes"
     When I am on the homepage
       Then I should NOT see "Twilight"
-      But I should see "Page 1"
+      But I should see "Other Fandom"
+      When I follow "Page 1"
+      Then I should see "Other Fandom" within ".fandoms"
 
   Scenario: merge two tags
     Given I have no tags

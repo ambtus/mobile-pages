@@ -166,25 +166,33 @@ Feature: ao3 testing that uses local cached files
     Then I should see "Authors: adiduck (book_people), whimsicalimages" within ".notes"
     And I should NOT see "book_people" within ".authors"
 
-  Scenario: fandoms
+  Scenario: toggle Other Fandom
   Given I have no pages
-  And I have no fandoms
+  And I have no tags
     And Skipping Stones exists
   When I am on the homepage
     And I follow "Skipping Stones"
-    Then I should see "Fandom: Harry Potter" within ".notes"
+    Then I should see "Other Fandom" within ".fandoms"
+    And I should see "Fandom: Harry Potter" within ".notes"
     But I should NOT see "Rowling" within ".notes"
   Given a tag exists with name: "Harry Potter" AND type: "Fandom"
     And I press "Rebuild Meta"
+    Then I should NOT see "Harry Potter" within ".fandoms"
+    But I should see "Other Fandom" within ".fandoms"
+    And I should see "Fandom: Harry Potter" within ".notes"
+  When I press "Toggle Other Fandom"
+    Then I should NOT see "Other Fandom" within ".fandoms"
+    And I should NOT see "Harry Potter" within ".fandoms"
+  When I press "Rebuild Meta"
     Then I should see "Harry Potter" within ".fandoms"
-    And I should NOT see "Fandom: Harry Potter" within ".notes"
 
   Scenario: multiple fandoms and author on a Single
   Given I have no pages
   And I have no fandoms
     And Alan Rickman exists
   When I am on the page with url "https://archiveofourown.org/works/5720104"
-    Then I should see "Fandoms: Harry Potter, Die Hard, Robin Hood" within ".notes"
+    Then I should see "Other Fandom" within ".fandoms"
+    And I should see "Fandoms: Harry Potter, Die Hard, Robin Hood" within ".notes"
     And I should see "Author: manicmea" within ".notes"
    But I should NOT see "Rowling" within ".notes"
     And I should NOT see "Movies" within ".notes"
@@ -192,6 +200,7 @@ Feature: ao3 testing that uses local cached files
     And I should NOT see "1991" within ".notes"
   When a tag exists with name: "Harry Potter" AND type: "Fandom"
   And an author exists with name: "manicmea"
+  When I press "Toggle Other Fandom"
     And I press "Rebuild Meta"
     Then I should see "Harry Potter" within ".fandoms"
     And I should see "manicmea" within ".authors"
@@ -203,14 +212,31 @@ Feature: ao3 testing that uses local cached files
   And I have no fandoms
     And Yer a Wizard exists
     And I am on the page with title "Yer a Wizard, Drizzt"
-    Then I should see "Fandoms: Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
-  And a tag exists with name: "Other Fandoms" AND type: "Fandom"
-  And a tag exists with name: "Person of Interest" AND type: "Fandom"
+    Then I should see "Other Fandom" within ".fandoms"
+    And I should see "Other Fandoms: Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
+  When a tag exists with name: "Person of Interest" AND type: "Fandom"
+    And I press "Toggle Other Fandom"
+    Then I should NOT see "Other Fandom" within ".fandoms"
     And I press "Rebuild Meta"
-    Then I should see "Fandoms: Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
+    Then I should NOT see "Other Fandom" within ".fandoms"
+    And I should see "Other Fandoms: Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
   When a tag exists with name: "Forgotten Realms/Drizzt" AND type: "Fandom"
     And I press "Rebuild Meta"
-    Then I should see "Fandom: Starlight and Shadows Series" within ".notes"
+    Then I should see "Forgotten Realms/Drizzt" within ".fandoms"
+    And I should see "Other Fandom: Starlight and Shadows Series" within ".notes"
+
+  Scenario: don't match fandoms if Other Fandoms tag exists
+   Given I have no pages
+  And I have no fandoms
+    And Yer a Wizard exists
+    And a tag exists with name: "Person of Interest" AND type: "Fandom"
+  When I am on the page with title "Yer a Wizard, Drizzt"
+    Then I should see "Fandoms: Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
+    And I should see "Other Fandom" within ".fandoms"
+  When a tag exists with name: "Forgotten Realms/Drizzt" AND type: "Fandom"
+    And I press "Rebuild Meta"
+    Then I should NOT see "Forgotten Realms/Drizzt" within ".fandoms"
+    And I should see "Fandoms: Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
 
    Scenario: works in a series still have authors if the series doesn't
     Given I have no pages
@@ -241,8 +267,10 @@ Feature: ao3 testing that uses local cached files
     And I have no tags
     And Counting Drabbles exists
     And I am on the page with title "Skipping Stones"
+    Then I should see "Other Fandom" within ".fandoms"
       Then I should see "Fandom: Harry Potter" within ".notes"
     When a tag exists with name: "harry potter" AND type: "Fandom"
+    And I press "Toggle Other Fandom"
     When I press "Rebuild Meta"
       Then I should NOT see "Fandom: Harry Potter" within ".notes"
       But I should see "harry potter" within ".fandoms"

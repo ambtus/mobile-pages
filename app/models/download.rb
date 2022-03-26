@@ -54,7 +54,7 @@ module Download
     (my_authors + my_parents_authors).pulverize
   end
   def all_fandoms;
-    my_fandoms = tags.fandom
+    my_fandoms = self.fandoms
     my_parents_fandoms = self.parent_id.blank? ? [] : self.parent.all_fandoms
     (my_fandoms + my_parents_fandoms).pulverize
   end

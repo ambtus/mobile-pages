@@ -73,7 +73,6 @@ Feature: downloads
         """
       And I fill in "page_title" with "Parent"
       And I press "Store"
-      And I follow "Parent"
       And I follow "Child 1"
       And I follow "Manage Parts"
       And I fill in "url_list" with

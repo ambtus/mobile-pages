@@ -70,7 +70,7 @@ Then("the page should NOT have any hidden tags") do
 end
 
 Then("the page should NOT have any fandom tags") do
-  Page.first.tags.fandom.empty?
+  Page.first.fandoms.empty?
 end
 
 Then("the page should NOT have any character tags") do

@@ -11,6 +11,7 @@
     = submit_tag "Remove Downloads"
     = submit_tag "Remove Duplicate Tags" unless @page.parts.blank?
     = submit_tag "Rebuild Meta"
+    = submit_tag "Toggle #{Page::OTHER}"
     = submit_tag "Make Single" if @page.parent
     = submit_tag "Uncollect" unless @page.parts.blank?
     -if @page.parts.size > last
@@ -51,7 +52,7 @@
       = link_to "Scrub", scrub_path(@page)
       = link_to "Refetch", refetch_path(@page)
   .fandoms
-    -@page.tags.fandom.by_name.each do |fandom|
+    -@page.fandoms.by_name.each do |fandom|
       =link_to fandom.name, pages_path(fandom: fandom.name)
   .characters
     -@page.tags.character.by_name.each do |character|

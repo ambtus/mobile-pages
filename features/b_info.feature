@@ -15,8 +15,9 @@ Feature: infos are a type of tag
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select fandom"
-    When I fill in "tags" with "fix me"
+    Then I should see "Page created with Other Fandom"
+    When I edit its tags
+      And I fill in "tags" with "fix me"
       And I press "Add Info Tags"
     Then I should see "fix me" within ".info"
 
@@ -26,8 +27,9 @@ Feature: infos are a type of tag
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select fandom"
-    When I select "first" from "page_info_ids_"
+    Then I should see "Page created with Other Fandom"
+    When I edit its tags
+      And I select "first" from "page_info_ids_"
       And I press "Update Tags"
     Then I should see "first" within ".info"
 
@@ -40,7 +42,7 @@ Feature: infos are a type of tag
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should NOT see "Please select fandom"
+    Then I should see "Page created."
       And I should see "first" within ".fandoms"
       And I should see "second" within ".info"
 
@@ -51,10 +53,8 @@ Feature: infos are a type of tag
     When I fill in "page_url" with "http://test.sidrasue.com/test.html"
       And I fill in "page_title" with "New Title"
       And I press "Store"
-    Then I should see "Please select fandom"
-    When I fill in "tags" with "something"
-      And I press "Add Fandom Tags"
-      Then I should see "bowlderize" within ".info"
+    Then I should see "Page created with Other Fandom"
+      And I should see "bowlderize" within ".info"
 
   Scenario: add a info to a page when there are no infos
     Given a page exists
