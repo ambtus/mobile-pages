@@ -2,11 +2,9 @@ Given("I have no pages") do
   Page.delete_all
 end
 
-Then('I should have {int} page') do |int|
-  Page.count == int
-end
-Then('I should have {int} pages') do |int|
-  Page.count == int
+Then('I should have {int} page(s)') do |int|
+  Rails.logger.debug "DEBUG: currently have #{Page.count} pages"
+  assert Page.count == int
 end
 
 Given("the page's directory is missing") do

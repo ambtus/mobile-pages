@@ -192,7 +192,7 @@ Feature: ao3 specific stuff
     Then I should see "Misfits (Series)" within ".title"
       Then I should see "Three Misfits in New York" within "#position_1"
       And I should see "A Misfit Working Holiday In New York" within "#position_2"
-    And I should have 3 pages
+    And I should have 7 pages
 
   Scenario: creating a series when I already have one of its singles
     Given I have no pages

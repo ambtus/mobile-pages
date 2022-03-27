@@ -2,13 +2,15 @@ Feature: stuff to do with titles
 
   Scenario: fill title in url box by mistake
     Given I am on the homepage
-    When I fill in "page_url" with "Title of the Fic"
+    And I have no pages
+    When I fill in "page_url" with "Title"
       And I press "Store"
-    Then I should NOT see "Title can't be blank"
-      And I should have 1 page
+    Then I should see "Url is invalid"
+      And I should have 0 pages
 
-  Scenario: fill title in url box with Title
+  Scenario: fill in title with Title
     Given I am on the homepage
+    And I have no pages
     When I fill in "page_title" with "Title"
       And I press "Store"
     Then I should NOT see "Title can't be blank or 'Title'"
