@@ -26,7 +26,7 @@ Feature: filter/find
     # find unread by tag
     When I am on the homepage
       And I select "children" from "tag"
-      And I choose "unread_yes"
+      And I choose "unread_all"
       And I press "Find"
     Then I should see "The Boxcar Children"
       And I should NOT see "Nancy Drew"
@@ -35,7 +35,7 @@ Feature: filter/find
 
     # find unread by author
     When I am on the homepage
-    When I choose "unread_yes"
+    When I choose "unread_all"
       And I select "agatha christie" from "Author"
       And I press "Find"
     Then I should NOT see "Murder on the Orient Express"
@@ -65,7 +65,7 @@ Feature: filter/find
       And I should NOT see "Harry Potter"
     # find not unread (i.e. read)
     When I am on the homepage
-    When I choose "unread_no"
+    When I choose "unread_none"
       And I press "Find"
     Then I should see "Murder on the Orient Express"
       And I should NOT see "The Boxcar Children"
@@ -74,7 +74,7 @@ Feature: filter/find
       And I should see "Nancy Drew"
     # find not unread by author
     When I am on the homepage
-    When I choose "unread_no"
+    When I choose "unread_none"
       And I select "agatha christie" from "Author"
       And I press "Find"
     Then I should see "Murder on the Orient Express"

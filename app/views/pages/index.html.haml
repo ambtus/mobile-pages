@@ -14,7 +14,7 @@
       = label_tag "sort_by_#{choice}", choice.humanize.downcase
     %br
     = label_tag :unread, "Unread:"
-    - ['yes', 'no', 'either'].each do |choice|
+    - ['all', 'any', 'parts', 'none', 'either'].each do |choice|
       = radio_button_tag :unread, choice, @unread == choice
       = label_tag "unread_#{choice}", choice
     %br

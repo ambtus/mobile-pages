@@ -57,7 +57,7 @@ Feature: ao3 specific stuff
     When I follow "Refetch"
       And I press "Refetch"
     Then I should see "Refetched" within "#flash_notice"
-    Then I should see "1 unread parts" within ".last_read"
+    Then I should see "1 unread part" within ".last_read"
       And I should see today within "#position_1"
       And I should see "Hogwarts (unread"
       And I should see "WIP" within ".omitteds"

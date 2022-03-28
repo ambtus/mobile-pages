@@ -54,6 +54,32 @@ Given("pages with all possible stars exist") do
   Page.create(title: "page9").make_unfinished
 end
 
+Given("pages with all possible unreads exist") do
+  Single.create(title: "not read single")
+  Single.create(title: "yes read single",).rate(5).read_today.update_read_after
+  book1 = Book.create(title: "not read book")
+  Chapter.create(title: "not read chapter", parent_id: book1.id)
+  book2 = Book.create(title: "yes read book")
+  Chapter.create(title: "yes read chapter", parent_id: book2.id).rate(5).read_today.update_read_after
+  book2.cleanup.update_read_after
+  book3 = Book.create(title: "partially read book")
+  Chapter.create(title: "not read chapter", parent_id: book3.id)
+  Chapter.create(title: "yes read chapter", parent_id: book3.id).rate(5).read_today.update_read_after
+  book2.cleanup.update_read_after
+  series1 = Series.create(title: "not read series")
+  book4 = Book.create(title: "another not read book", parent_id: series1.id)
+  Chapter.create(title: "another not read chapter", parent_id: book4.id)
+  series2 = Series.create(title: "partially read series")
+  book5 = Book.create(title: "another partially read book", parent_id: series2.id)
+  Chapter.create(title: "yet another not read chapter", parent_id: book5.id)
+  Chapter.create(title: "another read chapter", parent_id: book5.id).rate(5).read_today.update_read_after
+  series2.cleanup.update_read_after
+  series3 = Series.create(title: "yes read series")
+  book6 = Book.create(title: "another read book", parent_id: series3.id)
+  Chapter.create(title: "another read chapter", parent_id: book6.id).rate(5).read_today.update_read_after
+  series3.cleanup.update_read_after
+end
+
 Given("pages with ratings and omitteds exist") do
   Page.delete_all
   interesting = Rating.find_or_create_by(name: "interesting")

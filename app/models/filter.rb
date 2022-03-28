@@ -15,8 +15,10 @@ class Filter
     # ignore parts if filtering on size
     pages = pages.where(:parent_id => nil) if params[:size]
 
-    pages = pages.where(:last_read => nil) if params[:unread] == "yes"
-    pages = pages.where('pages.last_read is not null') if params[:unread] == "no"
+    pages = pages.where(:last_read => nil) if params[:unread] == "all"
+    pages = pages.where(:last_read => [nil, Page::UNREAD_PARTS_DATE]) if params[:unread] == "any"
+    pages = pages.where(:last_read => Page::UNREAD_PARTS_DATE) if params[:unread] == "parts"
+    pages = pages.where.not(:last_read => [nil, Page::UNREAD_PARTS_DATE]) if params[:unread] == "none"
 
     pages = pages.where(:stars => params[:stars]) unless params[:stars].to_i == 0
     pages = pages.where(:stars => [5,4]) if params[:stars] == "better"

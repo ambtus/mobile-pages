@@ -97,6 +97,7 @@ class Page < ActiveRecord::Base
   end
 
   UNREAD = "unread"
+  UNREAD_PARTS_DATE = Date.new(1967) # year first fanzine published. couldn't have read before that ;)
   UNFINISHED = "unfinished"
   WIP = "WIP"
   OTHER = "Other Fandom"
@@ -246,7 +247,8 @@ class Page < ActiveRecord::Base
       page.update!(position: position) if page.position != position
       page.update!(parent_id: self.id) if page.parent_id != self.id
     end
-    self.update_last_read.update_stars.remove_outdated_downloads.set_wordcount(false)
+    self.cleanup(false)
+    self.parent.cleanup(false) if parent
   end
 
   def parts_from_urls(url_title_list, refetch=false)
@@ -317,12 +319,12 @@ class Page < ActiveRecord::Base
 
   def parts; Page.order(:position).where(["parent_id = ?", id]); end
   def unread_parts
-    unreads = Page.where(["parent_id = ?", id]).where(last_read: nil)
+    unreads = parts.where(:last_read => [nil, UNREAD_PARTS_DATE])
     Rails.logger.debug "DEBUG: found #{unreads.size} unread parts"
     unreads
   end
   def read_parts
-    reads = Page.where(["parent_id = ?", id]).where.not(last_read: nil)
+    reads = parts.where.not(:last_read => [nil, UNREAD_PARTS_DATE])
     Rails.logger.debug "DEBUG: found #{reads.size} read parts"
     reads
   end
@@ -429,10 +431,9 @@ class Page < ActiveRecord::Base
       parent.authors << self.authors
       self.authors.delete(self.authors)
       parent.update_stars
-    elsif self.unread?
-      Rails.logger.debug "DEBUG: updating parent last read"
-      parent.update_last_read
     end
+    Rails.logger.debug "DEBUG: updating parent last read"
+    parent.update_last_read
     self.update!(type: "Chapter") if self.type == "Single"
     parent.set_wordcount(false)
     parent.set_type
@@ -482,12 +483,11 @@ class Page < ActiveRecord::Base
     return self unless parts.any?
     last_reads = self.parts.map(&:last_read)
     if last_reads.include?(nil)
-      self.update!(last_read: nil)
-      Rails.logger.debug "DEBUG: unsetting last_read for #{self.title}"
+      self.update!(last_read: UNREAD_PARTS_DATE)
     else
       self.update!(last_read: last_reads.sort.first)
-      Rails.logger.debug "DEBUG: new last read: #{self.last_read}"
     end
+    Rails.logger.debug "DEBUG: new last read: #{self.last_read}"
     return self
   end
 
@@ -530,7 +530,7 @@ class Page < ActiveRecord::Base
     return self
   end
 
-  def cleanup(recount = true); update_last_read.update_stars.update_read_after.remove_outdated_downloads.set_wordcount(recount); end
+  def cleanup(recount = true); update_last_read.update_stars.remove_outdated_downloads.set_wordcount(recount); end
 
   def add_author_string=(string)
     return if string.blank?
@@ -543,7 +543,16 @@ class Page < ActiveRecord::Base
   end
 
   def unread?; last_read.blank?; end
-  def read?; last_read.present?; end
+  def read?
+     answer = last_read.present? && last_read != UNREAD_PARTS_DATE
+     Rails.logger.debug "DEBUG: read? #{last_read} #{answer}"
+     return answer
+  end
+  def unread_parts?
+     answer = last_read == UNREAD_PARTS_DATE
+     Rails.logger.debug "DEBUG: unread_parts? #{last_read} #{answer}"
+     return answer
+  end
 
   # used in show view
   Tag.types.each do |type|
@@ -557,34 +566,36 @@ class Page < ActiveRecord::Base
     suffix = parts.size == 1 ? "" : "s"
     parts.blank? ? "" : " (#{parts.size} part#{suffix})"
   end
-  def size_string; "#{ActionController::Base.helpers.number_with_delimiter(self.wordcount)} words" + parts_string; end
+  def size_string
+     "#{ActionController::Base.helpers.number_with_delimiter(self.wordcount)} words" + parts_string
+  end
+
   def last_read_string
-    if unread?
-      if parts.any?
-        if parts.map(&:last_read).any?
-          unread = parts.size - parts.map(&:last_read).compact.size
-          suffix = unread.size == 1 ? "" : "s"
-          last_part_read = parts.map(&:last_read).compact.map(&:to_date).sort.first
-          "#{unread} #{UNREAD} part#{suffix} (#{last_part_read})"
-        elsif parts.map(&:parts).any?
-          subparts = parts.map(&:parts).flatten
-          if subparts.map(&:last_read).any?
-            unread = subparts.size - subparts.map(&:last_read).compact.size
-            suffix = unread.size == 1 ? "" : "s"
-            last_subpart_read = subparts.map(&:last_read).compact.map(&:to_date).sort.first
-            Rails.logger.debug "DEBUG: last_subpart_read: #{last_subpart_read}"
-            "#{unread} #{UNREAD} subpart#{suffix} (#{last_subpart_read})"
-          else
-            unread_string
-          end
-        else
-          unread_string
-        end
-      else
-        unread_string
-      end
-    else
+    if read?
+      Rails.logger.debug "DEBUG: last read #{last_read.to_date}"
       last_read.to_date
+    elsif unread_parts?
+      suffix = unread_parts.size == 1 ? "" : "s"
+      initial_string = "#{unread_parts.size} #{UNREAD} part#{suffix}"
+      unless read_parts.empty?
+        Rails.logger.debug "DEBUG: read parts"
+        read_dates = read_parts.map(&:last_read)
+      else
+        Rails.logger.debug "DEBUG: no read parts, searching subparts"
+        subparts = parts.map(&:parts).flatten
+        read_dates = subparts.map(&:last_read).compact
+        read_dates.delete(UNREAD_PARTS_DATE)
+      end
+      if read_dates.empty?
+        Rails.logger.debug "DEBUG: all parts & subparts last read never"
+        initial_string
+      else
+        Rails.logger.debug "DEBUG: last read dates: #{read_dates}"
+        initial_string + " (#{read_dates.sort.first.to_date})"
+      end
+    elsif unread?
+      Rails.logger.debug "DEBUG: last read never"
+      unread_string
     end
   end
   def my_formatted_notes; Scrub.sanitize_html(my_notes); end

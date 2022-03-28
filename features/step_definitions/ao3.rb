@@ -73,7 +73,7 @@ Given /^Time Was partially exists$/ do
   chapter2 = Chapter.create!(title: "fake")
   chapter2.add_parent(page.title)
   page.get_meta_from_ao3(false)
-  page.rate_unread(2).cleanup
+  page.rate_unread(2).cleanup.update_read_after
   page.fandoms.blank? ? page.toggle_other_fandom : page.cache_tags
 end
 
@@ -124,7 +124,7 @@ Given /^Counting Drabbles exists$/ do
   work2.get_meta_from_ao3(false)
   work2.fandoms.blank? ? work2.toggle_other_fandom : work2.cache_tags
 
-  series.cleanup
+  series.cleanup.update_read_after
 end
 
 Given /^Alan Rickman exists$/ do
@@ -165,7 +165,7 @@ Given /^Misfits exists$/ do
   work2.update!(url: "https://archiveofourown.org/works/13765827")
   work2.fandoms.blank? ? work2.toggle_other_fandom : work2.cache_tags
 
-  series.cleanup
+  series.cleanup.update_read_after
 end
 
 Given /^Yer a Wizard exists$/ do

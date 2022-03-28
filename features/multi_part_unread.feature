@@ -21,7 +21,7 @@ Feature: parts differ in fandom and unread status from parent
      And I should see "unread" within "#position_3"
 
    When I am on the homepage
-   And I choose "unread_yes"
+   And I choose "unread_any"
       And I press "Find"
    Then I should see "2 unread parts (2009-01-01)" within "#position_1"
     And the page should NOT contain css "#position_2"
@@ -33,11 +33,11 @@ Feature: parts differ in fandom and unread status from parent
     And I press "Rate"
 
     When I am on the homepage
-   Then I should see "1 unread parts (2009-01-01)" within "#position_1"
+   Then I should see "1 unread part (2009-01-01)" within "#position_1"
     And I should NOT see today within "#position_1"
 
    When I follow "Multi" within "#position_1"
-   Then I should see "1 unread parts (2009-01-01)" within ".last_read"
+   Then I should see "1 unread part (2009-01-01)" within ".last_read"
      And I should see "2009-01-01" within "#position_1"
      And I should NOT see "unread" within "#position_2"
      And I should see today within "#position_2"
@@ -62,7 +62,7 @@ Feature: parts differ in fandom and unread status from parent
      | Child3 |  | http://test.sidrasue.com/long3.html | one |
 
     When I am on the homepage
-      And I choose "unread_yes"
+      And I choose "unread_any"
       And I press "Find"
     Then I should see "Child1" within "#position_1"
       And I should see "unread" within "#position_1"
@@ -82,7 +82,7 @@ Feature: parts differ in fandom and unread status from parent
 
     # find parent with unread part
     When I am on the homepage
-    And I choose "unread_yes"
+    And I choose "unread_any"
       And I press "Find"
     Then I should see "Parent" within "#position_1"
       And I should see "unread" within "#position_1"
@@ -111,7 +111,7 @@ Feature: parts differ in fandom and unread status from parent
 
     # find a part with a parent with different fandom
     When I am on the homepage
-     And I choose "unread_yes"
+     And I choose "unread_any"
      And I select "one" from "fandom"
       And I press "Find"
     Then I should see "Child3 of Parent" within "#position_1"
@@ -119,7 +119,7 @@ Feature: parts differ in fandom and unread status from parent
 
     # find a part with a parent with same fandom
     When I am on the homepage
-     And I choose "unread_yes"
+     And I choose "unread_any"
      And I select "two" from "fandom"
       And I press "Find"
     Then I should see "Parent" within "#position_1"
@@ -135,7 +135,7 @@ Feature: parts differ in fandom and unread status from parent
 
     When I am on the homepage
     Then I should see "Parent" within "#position_1"
-      And I should see "1 unread parts (2010-01-01)" within "#position_1"
+      And I should see "1 unread part (2010-01-01)" within "#position_1"
       And I should NOT see today within "#position_1"
       And the page should NOT contain css "#position_2"
 
