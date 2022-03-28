@@ -482,7 +482,9 @@ class Page < ActiveRecord::Base
   def update_last_read
     return self unless parts.any?
     last_reads = self.parts.map(&:last_read)
-    if last_reads.include?(nil)
+    if last_reads.compact.empty?
+      self.update!(last_read: nil)
+    elsif last_reads.include?(nil)
       self.update!(last_read: UNREAD_PARTS_DATE)
     else
       self.update!(last_read: last_reads.sort.first)
