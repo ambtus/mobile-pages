@@ -25,7 +25,8 @@ class PartsController < ApplicationController
     if params[:add_url]
       @page.add_part(params[:add_url])
       flash[:notice] = "Part added"
-      redirect_to page_path(@page) and return
+      @count = @page.parts.size > Page::LIMIT ? @page.parts.size - Page::LIMIT : 0
+      render 'pages/show' and return
     end
     url_list = params[:url_list]
     if url_list != @page.url_list

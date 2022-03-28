@@ -1,6 +1,6 @@
 class Filter
 
-  LIMIT = 15 # number of pages to show in index
+  LIMIT = 10 # number of pages to show in index
 
   def self.new(params={})
     Rails.logger.debug "DEBUG: Page.filter(#{params})"

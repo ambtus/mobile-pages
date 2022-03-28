@@ -5,22 +5,26 @@ Feature: show only 15 of multi-parts (and bugs)
     Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-151"
     When I am on the page's page
     Then I should see "Part 1"
+    But I should NOT see "Part 6"
+
+    When I press "Next Parts"
+    Then I should see "Part 6"
+    But I should NOT see "Part 11"
+
+    When I press "Next Parts"
+    Then I should see "Part 11"
     But I should NOT see "Part 16"
-    When I press "Next Parts"
-    Then I should see "Part 16"
-    But I should NOT see "Part 31"
-    When I press "Next Parts"
-    Then I should see "Part 31"
-    But I should NOT see "Part 46"
     When I press "Last Parts"
-    Then I should see "Part 137"
+
+    Then I should see "Part 147"
     And I should see "Part 151"
-    But I should NOT see "Part 136"
+    But I should NOT see "Part 146"
+
     When I follow "Refetch"
     And I press "Refetch"
-    Then I should see "Part 137"
+    Then I should see "Part 147"
     And I should see "Part 151"
-    But I should NOT see "Part 136"
+    But I should NOT see "Part 146"
 
   Scenario: show parent shows parts by position, not created order
     Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
@@ -42,3 +46,4 @@ Feature: show only 15 of multi-parts (and bugs)
     And I press "Find"
       Then I should see "1. Where am I?" within "#position_1"
       And I should see "2. Hogwarts" within "#position_2"
+

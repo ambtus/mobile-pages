@@ -14,7 +14,7 @@ end
 # create many identical pages
 Given("{int} pages exist") do |count|
   count.times do |i|
-    Page.create(title: "Page #{(i+1)}", last_read: "2000-01-#{i+1}")
+    Page.create(title: "Page #{(i+1)}", read_after: "2000-01-#{i+1}")
   end
 end
 

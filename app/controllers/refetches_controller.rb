@@ -19,7 +19,7 @@ class RefetchesController < ApplicationController
     flash[:notice] = @notice
     Rails.logger.debug "DEBUG: flash: #{flash.collect {|n, m| n+m}}"
     @page = Page.find(params[:page_id]) # in case its class changed during refetch
-    @count = @page.parts.size > Filter::LIMIT ? @page.parts.size - Filter::LIMIT : 0
+    @count = @page.parts.size > Page::LIMIT ? @page.parts.size - Page::LIMIT : 0
     render 'pages/show'
   end
 end

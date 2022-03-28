@@ -63,7 +63,7 @@ class PagesController < ApplicationController
       if @page
         flash[:notice] = "Refetched"
         @page.refetch(@page.url)
-        @count = @page.parts.size > Filter::LIMIT ? @page.parts.size - Filter::LIMIT : 0
+        @count = @page.parts.size > Page::LIMIT ? @page.parts.size - Page::LIMIT : 0
         render :show and return
       else
         flash[:alert] = "Page not found. Find or Store instead."
@@ -116,9 +116,9 @@ class PagesController < ApplicationController
     @count = params[:count].to_i
     case params[:commit]
       when "Next Parts"
-        @count = params[:count].to_i + Filter::LIMIT
+        @count = params[:count].to_i + Page::LIMIT
       when "Last Parts"
-        @count = @page.parts.size - Filter::LIMIT
+        @count = @page.parts.size - Page::LIMIT
       when "Read Now"
         @page.make_first
         flash[:notice] = "Set to Read Now"

@@ -4,6 +4,8 @@ class Page < ActiveRecord::Base
   MODULO = 300  # files in a single directory
   include Download
 
+  LIMIT = 5 # number of parts to show at a time
+
   def normalize_url
     return if self.url.blank?
     self.url = self.url.normalize

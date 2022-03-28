@@ -1,6 +1,6 @@
 - content_for :title do
   =@page.title
--last = @count + Filter::LIMIT
+-last = @count + Page::LIMIT
 -Rails.logger.debug "DEBUG: page parts #{@count} to #{last} of #{@page.parts.size}"
 .form
   = form_for @page.becomes(Page) do
