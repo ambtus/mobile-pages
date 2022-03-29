@@ -23,7 +23,7 @@ Feature: tools to enable onscreen content editing
       Then I should see "New Content"
       And I should NOT see "Lorem ipsum dolor sit amet"
     When I am on the page's page
-    When I press "Rebuild from Scrubbed HTML"
+    When I press "Rebuild from Raw HTML"
     And I view the content
     Then I should see "Lorem ipsum dolor sit amet"
       And I should NOT see "New Content"

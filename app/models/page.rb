@@ -750,6 +750,7 @@ class Page < ActiveRecord::Base
     else
       self.raw_html = self.raw_html
     end
+    return self
   end
 
   ## Clean html includes all the original text
