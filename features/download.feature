@@ -94,3 +94,9 @@ Feature: downloads
      And I should see "Boo" within "h3"
      And I should see "Hiss" within "h4"
 
+  Scenario: epub image bug
+    Given I have no pages
+    And The Picture exists
+    When I am on the homepage
+     And I follow "ePub" within "#position_1"
+    Then the epub html contents for "The Picture" should contain "https://i.imgur.com"

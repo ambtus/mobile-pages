@@ -190,3 +190,10 @@ Given /^Yer a Wizard exists$/ do
   page.get_meta_from_ao3(false)
   page.fandoms.blank? ? page.toggle_other_fandom : page.cache_tags
 end
+
+Given /^The Picture exists$/ do
+  page = Single.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/9381749/chapters/21239633")
+  page.raw_html = File.open(Rails.root + "features/html/picture.html", 'r:utf-8') { |f| f.read }
+  page.get_meta_from_ao3(false)
+end

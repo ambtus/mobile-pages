@@ -18,6 +18,16 @@ Then("the download epub file should exist") do
   assert File.exists?("#{Page.first.download_basename}.epub")
 end
 
+Then('the epub html contents for {string} should contain {string}') do |title, string|
+  zipfile_name = "#{Page.find_by_title(title).download_basename}.epub"
+  Rails.logger.debug "DEBUG: epub filename: #{zipfile_name}"
+  html = Zip::File.open(zipfile_name) do |zip_file|
+    html_files = zip_file.glob('*.html')
+    html_files.map(&:get_input_stream).map(&:read).join
+  end
+  assert html.match(string)
+end
+
 Then("the download epub file should NOT exist") do
   assert !File.exists?("#{Page.first.download_basename}.epub")
 end

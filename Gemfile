@@ -20,6 +20,7 @@ group :test do
   gem 'cucumber'
   gem 'launchy'    # So you can do Then show me the page
   gem 'test-unit'
+  gem 'rubyzip'  # So you can inspect epub files
 end
 
 gem 'escape_utils'
