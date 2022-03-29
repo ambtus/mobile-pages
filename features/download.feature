@@ -99,4 +99,11 @@ Feature: downloads
     And The Picture exists
     When I am on the homepage
      And I follow "ePub" within "#position_1"
-    Then the epub html contents for "The Picture" should contain "https://i.imgur.com"
+    Then the epub html contents for "The Picture" should contain "Ki1qR8E.png"
+
+  Scenario: another epub image bug
+    Given I have no pages
+    And Prologue exists
+    When I am on the homepage
+     And I follow "ePub" within "#position_1"
+    Then the epub html contents for "PrologueAfter the World Burns" should contain "coverhigh.jpg"

@@ -5,21 +5,21 @@
   =render :partial => "downloads/notes", :locals => {:page => @page}
 - if @page.parts.empty?
   %h2{:style=> "page-break-before:always", :class => "chapter"}=@page.title
-  .content=raw @page.edited_html
+  .content=raw @page.epub_html
 - else
   - @page.not_hidden_parts.each do |first_level|
     %h2{:style=> "page-break-before:always", :class => "chapter"}=first_level.download_part_title
     =render :partial => "downloads/notes", :locals => {:page => first_level}
     - if first_level.parts.empty?
-      .content=raw first_level.edited_html
+      .content=raw first_level.epub_html
     - else
       - first_level.not_hidden_parts.each do |second_level|
         %h3{:style=> "page-break-before:always", :class => "chapter"}=second_level.download_part_title
         =render :partial => "downloads/notes", :locals => {:page => second_level}
         - if second_level.parts.empty?
-          .content=raw second_level.edited_html
+          .content=raw second_level.epub_html
         - else
           - second_level.not_hidden_parts.each do |third_level|
             %h4{:style=> "page-break-before:always", :class => "chapter"}=third_level.download_part_title
             =render :partial => "downloads/notes", :locals => {:page => third_level}
-            .content=raw third_level.edited_html
+            .content=raw third_level.epub_html

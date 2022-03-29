@@ -834,6 +834,14 @@ class Page < ActiveRecord::Base
     end
   end
 
+  ### epub html is what I use for conversion
+  ### ebook-convert silently drops all http images, so might as well try https
+  ### even if https doesn't exist, I'm no worse off than before
+
+  def epub_html
+    edited_html.gsub('http://', 'https://')
+  end
+
   ### Read html is what I would read for an audio book, and also how I edit
 
   def read_html
