@@ -154,3 +154,9 @@ Then('my page named {string} should have url: {string}') do |title, url|
   Rails.logger.debug "DEBUG: comparing #{page.url} with #{url}"
   assert page.url == url
 end
+
+
+Given('a page with very long notes exists') do
+  string = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "*10
+  Page.create(title: "Page 1", notes: string)
+end

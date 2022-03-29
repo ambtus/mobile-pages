@@ -1,0 +1,7 @@
+-title = "Notes for #{@page.title}"
+-content_for(:title, title)
+.title
+  Notes for
+  =link_to @page.title, page_path(@page)
+.notes
+  =raw @page.formatted_notes

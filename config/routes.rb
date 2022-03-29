@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   resources :authors
   resources :tags
   resources :htmls, :only => ['edit']
-  resources :notes, :only => ['edit']
+  resources :notes, :only => ['edit', 'show']
   resources :my_notes, :only => ['edit']
   resources :pages
   resources :parts, :only => ['new', 'edit', 'create']

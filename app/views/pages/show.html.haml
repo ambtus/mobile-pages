@@ -63,7 +63,9 @@
   .last_read=@page.last_read_string
   .info= @page.info_string
   .my_notes=raw @page.my_formatted_notes
-  .notes=raw @page.formatted_notes
+  .notes
+    =raw @page.medium_notes
+    =link_to "full notes", note_path(@page.id) if @page.notes.present? && @page.notes.length > Page::MEDIUM_LENGTH
 -unless @page.parts.blank?
   -last = @count + Page::LIMIT
   -Rails.logger.debug "DEBUG: page parts #{@count} to #{last} of #{@page.parts.size}"

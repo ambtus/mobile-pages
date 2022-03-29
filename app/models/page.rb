@@ -104,6 +104,7 @@ class Page < ActiveRecord::Base
   WIP = "WIP"
   OTHER = "Other Fandom"
   SHORT_LENGTH = 160 # truncate at this many characters
+  MEDIUM_LENGTH = 480
 
   SIZES = ["drabble", "short", "medium", "long", "epic"]
 
@@ -605,7 +606,14 @@ class Page < ActiveRecord::Base
   def my_formatted_notes; Scrub.sanitize_html(my_notes); end
   def formatted_notes; Scrub.sanitize_html(notes); end
 
+  # used in show view
+  def medium_notes
+    return "" if notes.blank?
+    Scrub.sanitize_html(notes).truncate(MEDIUM_LENGTH, separator: /\s/).html_safe
+  end
+
   # used in index view and in epub comments
+  # RubyPants turns quotes into smart quotes which don't mess up the epub command
   def short_notes; RubyPants.new(Scrub.sanitize_and_strip(notes).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
   def my_short_notes; RubyPants.new(Scrub.sanitize_and_strip(my_notes).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
 

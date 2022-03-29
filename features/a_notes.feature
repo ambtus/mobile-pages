@@ -59,3 +59,14 @@ Feature: stuff to do with notes
       Then I should see "Sorry it took so long, I suck at romantic stuff."
       And I should NOT see "~~~"
 
+  Scenario: very long notes are truncated in show
+    Given I have no pages
+    And a page with very long notes exists
+    When I am on the homepage
+    Then I should see "consectetur…" within ".notes"
+    When I am on the page's page
+    Then I should see "sit..." within ".notes"
+    When I follow "full notes"
+    Then I should NOT see "..."
+    And I should NOT see "…"
+
