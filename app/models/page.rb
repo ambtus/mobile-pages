@@ -783,6 +783,7 @@ class Page < ActiveRecord::Base
     else
       FileUtils.rm_f(edited_html_file_name)
     end
+    return self
   end
 
   ### scrubbing (removing top and bottom nodes) is done on clean text

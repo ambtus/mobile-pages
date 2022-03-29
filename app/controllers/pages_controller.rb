@@ -134,7 +134,7 @@ class PagesController < ApplicationController
         @page.make_audio
         flash[:notice] = "Tagged as audio book and marked as read today"
       when "Rebuild from Raw HTML"
-        @page.rebuild_clean_from_raw.rebuild_edited_from_clean
+        @page.rebuild_clean_from_raw.rebuild_edited_from_clean.rebuild_meta
         flash[:notice] = "Rebuilt from Raw HTML"
       when "Remove Downloads"
         @page.remove_outdated_downloads

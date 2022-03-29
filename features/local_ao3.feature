@@ -125,6 +125,25 @@ Feature: ao3 testing that uses local cached files
       And I should NOT see "AJ/JC" within ".notes"
       And I should NOT see "testing notes" within ".notes"
 
+  Scenario: rebuild from raw should rebuild meta
+    Given I have no pages
+      And I have no tags
+      And I have no authors
+      And a tag exists with name: "popslash" AND type: "Fandom"
+       And I Drive Myself Crazy exists
+    When I am on the homepage
+    When I follow "I Drive Myself Crazy"
+      And I follow "Notes"
+      And I fill in "page_notes" with "testing notes"
+      And I press "Update"
+    Then I should see "testing notes" within ".notes"
+    Given an author exists with name: "Sidra"
+      And I press "Rebuild from Raw HTML"
+    Then I should see "Sidra" within ".authors"
+      And I should NOT see "Author: Sidra" within ".notes"
+      And I should see "please no crossovers" within ".notes"
+      And I should NOT see "testing notes" within ".notes"
+
   Scenario: formatting notes
     Given I have no pages
     And Bad Formatting exists
