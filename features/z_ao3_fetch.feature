@@ -251,3 +251,14 @@ Feature: ao3 specific stuff
     But I should NOT see "Sidra" within "#position_1"
     And I should see "Hogwarts" within "#position_2"
     And I should see "unread" within "#position_2"
+
+  Scenario: refetching a read Series should show it as unread
+    Given I have no pages
+      And Counting Drabbles partially exists
+    When I am on the homepage
+      Then last read should be today
+      And I should NOT see "unread" within "#position_1"
+    When I fill in "page_url" with "https://archiveofourown.org/series/46"
+      And I press "Refetch"
+    Then I should see "1 unread part" within ".last_read"
+

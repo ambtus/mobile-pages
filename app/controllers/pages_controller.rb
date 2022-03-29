@@ -63,6 +63,7 @@ class PagesController < ApplicationController
       if @page
         flash[:notice] = "Refetched"
         @page.refetch(@page.url)
+        @page = Page.find(@page.id) # rather than reload, in case its class changed
         @count = @page.parts.size > Page::LIMIT ? @page.parts.size - Page::LIMIT : 0
         render :show and return
       else

@@ -127,6 +127,21 @@ Given /^Counting Drabbles exists$/ do
   series.cleanup.update_read_after
 end
 
+Given /^Counting Drabbles partially exists$/ do
+  series = Series.create!(title: "Counting Drabbles")
+  series.update!(url: "https://archiveofourown.org/series/46")
+  fandom = Fandom.create!(name: "Harry Potter")
+  series.tags << fandom
+
+  work1 = Single.create!(title: "temp", parent_id: series.id, position: 1)
+  work1.update!(url: "https://archiveofourown.org/works/688")
+  work1.raw_html = File.open(Rails.root + "features/html/skipping.html", 'r:utf-8') { |f| f.read }
+  work1.get_meta_from_ao3(false)
+  work1.read_today.rate(5).update_read_after
+
+  series.cleanup.update_read_after
+end
+
 Given /^Alan Rickman exists$/ do
   page = Single.create!(title: "temp")
   page.update!(url: "https://archiveofourown.org/works/5720104")
