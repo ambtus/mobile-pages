@@ -839,7 +839,7 @@ class Page < ActiveRecord::Base
   ### even if https doesn't exist, I'm no worse off than before
 
   def epub_html
-    edited_html.gsub('http://', 'https://')
+    edited_html.gsub('img src="http://', 'img src="https://')
   end
 
   ### Read html is what I would read for an audio book, and also how I edit

@@ -107,3 +107,12 @@ Feature: downloads
     When I am on the homepage
      And I follow "ePub" within "#position_1"
     Then the epub html contents for "PrologueAfter the World Burns" should contain "coverhigh.jpg"
+
+  Scenario: regular hrefs should still link
+    Given a page exists
+    When I am on the page's page
+     And I follow "Edit Raw HTML"
+    When I fill in "pasted" with 'This is a <a href="http://test.sidrasue.com/parts/1.html">test</a>!'
+      And I press "Update Raw HTML"
+    When I view the content
+      Then "test" should link to "http://test.sidrasue.com/parts/1.html"
