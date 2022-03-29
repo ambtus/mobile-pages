@@ -20,11 +20,19 @@ Feature: show only 15 of multi-parts (and bugs)
     And I should see "Part 151"
     But I should NOT see "Part 146"
 
+    When I press "Previous Parts"
+    Then I should see "Part 146"
+    But I should NOT see "Part 147"
+
     When I follow "Refetch"
     And I press "Refetch"
     Then I should see "Part 147"
     And I should see "Part 151"
     But I should NOT see "Part 146"
+
+    When I press "First Parts"
+    Then I should see "Part 1"
+    But I should NOT see "Part 6"
 
   Scenario: show parent shows parts by position, not created order
     Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"

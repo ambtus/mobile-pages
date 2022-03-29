@@ -120,6 +120,10 @@ class PagesController < ApplicationController
         @count = params[:count].to_i + Page::LIMIT
       when "Last Parts"
         @count = @page.parts.size - Page::LIMIT
+      when "Previous Parts"
+        @count = @count < Page::LIMIT ? 0 : @count - Page::LIMIT
+      when "First Parts"
+        @count = 0
       when "Read Now"
         @page.make_first
         flash[:notice] = "Set to Read Now"

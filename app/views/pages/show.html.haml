@@ -1,7 +1,5 @@
 - content_for :title do
   =@page.title
--last = @count + Page::LIMIT
--Rails.logger.debug "DEBUG: page parts #{@count} to #{last} of #{@page.parts.size}"
 .form
   = form_for @page.becomes(Page) do
     = submit_tag "Read Now"
@@ -13,10 +11,6 @@
     = submit_tag "Toggle #{Page::OTHER}"
     = submit_tag "Make Single" if @page.parent
     = submit_tag "Uncollect" unless @page.parts.blank?
-    -if @page.parts.size > last
-      = hidden_field_tag :count, @count
-      = submit_tag "Next Parts"
-      = submit_tag "Last Parts"
 -if @page.parent
   .parent
     Parent:
@@ -71,6 +65,8 @@
   .my_notes=raw @page.my_formatted_notes
   .notes=raw @page.formatted_notes
 -unless @page.parts.blank?
+  -last = @count + Page::LIMIT
+  -Rails.logger.debug "DEBUG: page parts #{@count} to #{last} of #{@page.parts.size}"
   .parts
     - @page.parts.limit(last)[@count..-1].each do |part|
       .part{:id => "position_#{part.position}"}
@@ -84,3 +80,10 @@
         = link_to "Original", part.url unless part.url.blank?
         %span.my_notes=part.my_short_notes
         %span.notes=part.short_notes
+  .form
+    = form_for @page.becomes(Page) do
+      = hidden_field_tag :count, @count
+      = submit_tag "First Parts" if @count > 0
+      = submit_tag "Previous Parts" if @count > 0
+      = submit_tag "Next Parts" if @page.parts.size > last
+      = submit_tag "Last Parts" if @page.parts.size > last
