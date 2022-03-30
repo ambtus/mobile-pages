@@ -35,9 +35,11 @@ class Single < Page
     end
 
     ao3_authors = doc.css(".byline a").map(&:text).join_comma
-    add_author(ao3_authors)
     ao3_fandoms = doc.css(".fandom a").map(&:children).map(&:text).join_comma
+
     add_fandom(ao3_fandoms)
+    add_author(ao3_authors)
+
     Rails.logger.debug "DEBUG: notes now: #{self.notes}"
 
     self.save!
