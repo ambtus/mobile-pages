@@ -23,7 +23,7 @@ class Single < Page
     doc_notes = Scrub.sanitize_html(doc.css(".notes blockquote")).children.to_html
     doc_relationships = doc.css(".relationship a").map(&:text).join(", ")  rescue nil
     doc_tags = doc.css(".freeform a").map(&:text).join(", ")  rescue nil
-    self.notes = [doc_summary, doc_notes, doc_tags, doc_relationships].join_hr
+    self.notes = [doc_relationships, doc_summary, doc_tags, doc_notes].join_hr
     Rails.logger.debug "DEBUG: notes: #{self.notes}"
 
     if ao3_chapter?

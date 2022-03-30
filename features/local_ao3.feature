@@ -147,11 +147,10 @@ Feature: ao3 testing that uses local cached files
   Scenario: formatting notes
     Given I have no pages
     And Bad Formatting exists
-      When I am on the homepage
+    When I am on the homepage
       Then I should NOT see "theirsThe"
       But I should see "He is theirs The clones have nothing"
-    When I follow "He is ours"
-      And I view the content
+    When I view the content
       Then I should NOT see "doesnâ€™t"
       But I should see "It doesn’t always work"
 

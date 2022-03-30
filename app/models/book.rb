@@ -23,7 +23,7 @@ class Book < Page
     doc_relationships = tags_doc.css(".relationship a").map(&:text).join(", ")  rescue nil
     doc_tags = tags_doc.css(".freeform a").map(&:text).join(", ")  rescue nil
 
-    self.notes = [doc_summary, doc_tags, doc_relationships].join_hr
+    self.notes = [doc_relationships, doc_summary, doc_tags, doc_notes].join_hr
 
     add_author(doc.css(".byline a").map(&:text).join_comma)
     add_fandom(doc.css(".fandom a").map(&:children).map(&:text).join_comma)

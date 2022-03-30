@@ -12,8 +12,8 @@ module NavigationHelpers
       '/'
 
     when /^the page's page/
-      page = Page.find_by_title("Page 1")
-      raise "no page with title: Page 1" unless page
+      page = Page.find_by_title("Page 1") || Page.first
+      raise "no pages" unless page
       page_path(page)
 
     when /^the page with title "(.*)"/

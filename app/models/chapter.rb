@@ -26,8 +26,6 @@ class Chapter < Page
 
     doc_summary = Scrub.sanitize_html(doc.css(".summary blockquote")).children.to_html
     doc_notes = Scrub.sanitize_html(doc.css(".notes blockquote")).children.to_html
-    doc_relationships = doc.css(".relationship a").map(&:text).join(", ")  rescue nil
-    doc_tags = doc.css(".freeform a").map(&:text).join(", ")  rescue nil
 
     if position == 1
       self.notes = doc_notes
