@@ -906,16 +906,15 @@ class Page < ActiveRecord::Base
     end
     unless mp_authors.empty?
       Rails.logger.debug "DEBUG: adding #{mp_authors.map(&:name)} to authors"
-      mp_authors.each {|a| self.authors << a}
+      mp_authors.uniq.each {|a| self.authors << a}
     end
     unless non_mp_authors.empty?
-      suffix = non_mp_authors.size == 1 ? "" : "s"
       tagged_authors = self.authors + (self.parent ? self.parent.authors : [])
-      by = tagged_authors.empty? ? "Author" : "Other Author"
+      by = tagged_authors.empty? ? "by" : "et al"
       Rails.logger.debug "DEBUG: adding #{non_mp_authors} to notes"
-      byline = "#{by}#{suffix}: #{non_mp_authors.join(", ")}"
-      self.notes = "<p>#{byline}</p>#{self.notes}"
+      self.notes = "<p>#{by}: #{non_mp_authors.join(", ")}</p>#{self.notes}"
     end
+    return self
   end
 
   def add_fandom(string)
@@ -963,9 +962,9 @@ class Page < ActiveRecord::Base
     unless non_mp_fandoms.empty?
       fandoms = non_mp_fandoms.uniq
       Rails.logger.debug "DEBUG: adding #{fandoms} to notes"
-      suffix = fandoms.size == 1 ? "" : "s"
-      self.notes = "<p>Other Fandom#{suffix}: #{fandoms.join(", ")}</p>#{self.notes}"
+      self.notes = "<p>#{fandoms.join(", ")}</p>#{self.notes}"
     end
+    return self
   end
 
   def rebuild_meta

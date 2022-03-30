@@ -52,14 +52,15 @@ class Author < ActiveRecord::Base
   end
 
   def destroy_me
-    pages = self.pages
-    Rails.logger.debug "DEBUG: moving author to note for #{pages.size} pages"
-    pages.each do |page|
-      Rails.logger.debug "DEBUG: moving author to note for page #{id}"
-      new_note = ["Author: #{self.name}", page.notes].join_hr
-      page.update_attribute(:notes, new_note)
-    end
+    page_ids = self.pages.map(&:id)
+    name = self.name
+    Rails.logger.debug "DEBUG: moving author to note for #{page_ids.size} pages"
     self.destroy
+    page_ids.each do |id|
+      Rails.logger.debug "DEBUG: moving author to note for page #{id}"
+      page = Page.find(id)
+      page.add_author(name).save!
+    end
   end
 
 end

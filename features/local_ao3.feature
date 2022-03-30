@@ -94,7 +94,7 @@ Feature: ao3 testing that uses local cached files
     Then I should see "please no crossovers" within "#position_1"
       And I should see "AJ/JC" within "#position_1"
       And I should see "Make the Yuletide Gay" within "#position_1"
-      And I should see "Author: Sidra" within "#position_1"
+      And I should see "by: Sidra" within "#position_1"
     When I follow "I Drive Myself Crazy"
       And I follow "Notes"
       And I fill in "page_notes" with "testing notes"
@@ -103,11 +103,11 @@ Feature: ao3 testing that uses local cached files
       And I should NOT see "please no crossovers" within ".notes"
       And I should NOT see "AJ/JC" within ".notes"
       And I should NOT see "Make the Yuletide Gay" within ".notes"
-      And I should NOT see "Author: Sidra" within ".notes"
+      And I should NOT see "by: Sidra" within ".notes"
     Given an author exists with name: "Sidra"
       And I press "Rebuild Meta"
     Then I should see "Sidra" within ".authors"
-      And I should NOT see "Author: Sidra" within ".notes"
+      And I should NOT see "by: Sidra" within ".notes"
       And I should see "please no crossovers" within ".notes"
       And I should see "AJ/JC" within ".notes"
       And I should see "Make the Yuletide Gay" within ".notes"
@@ -140,7 +140,7 @@ Feature: ao3 testing that uses local cached files
     Given an author exists with name: "Sidra"
       And I press "Rebuild from Raw HTML"
     Then I should see "Sidra" within ".authors"
-      And I should NOT see "Author: Sidra" within ".notes"
+      And I should NOT see "by: Sidra" within ".notes"
       And I should see "please no crossovers" within ".notes"
       And I should NOT see "testing notes" within ".notes"
 
@@ -166,22 +166,23 @@ Feature: ao3 testing that uses local cached files
     And Multi Authors exists
   When I am on the homepage
     And I follow "edge of providence"
-    Then I should see "Authors: adiduck (book_people), whimsicalimages" within ".notes"
-    And I should NOT see "Other Authors" within ".notes"
+    Then I should see "by: adiduck (book_people), whimsicalimages" within ".notes"
+    And I should NOT see "et al" within ".notes"
   Given an author exists with name: "book_people (adiduck)"
     And I press "Rebuild Meta"
-    Then I should see "Other Author: whimsicalimages" within ".notes"
+    Then I should see "et al: whimsicalimages" within ".notes"
     And I should see "book_people" within ".authors"
   Given I have no authors
   And an author exists with name: "adiduck (book_people)"
       And I press "Rebuild Meta"
-    Then I should see "Other Author: whimsicalimages" within ".notes"
+    Then I should see "et al: whimsicalimages" within ".notes"
     And I should see "adiduck" within ".authors"
-  Given I have no authors
+
   # The following isn't by design. it's just a limitation of how i store author names
+  Given I have no authors
   And an author exists with name: "book_people"
       And I press "Rebuild Meta"
-    Then I should see "Authors: adiduck (book_people), whimsicalimages" within ".notes"
+    Then I should see "by: adiduck (book_people), whimsicalimages" within ".notes"
     And I should NOT see "book_people" within ".authors"
 
   Scenario: toggle Other Fandom
@@ -191,13 +192,13 @@ Feature: ao3 testing that uses local cached files
   When I am on the homepage
     And I follow "Skipping Stones"
     Then I should see "Other Fandom" within ".fandoms"
-    And I should see "Fandom: Harry Potter" within ".notes"
+    And I should see "Harry Potter" within ".notes"
     But I should NOT see "Rowling" within ".notes"
   Given a tag exists with name: "Harry Potter" AND type: "Fandom"
     And I press "Rebuild Meta"
     Then I should NOT see "Harry Potter" within ".fandoms"
     But I should see "Other Fandom" within ".fandoms"
-    And I should see "Fandom: Harry Potter" within ".notes"
+    And I should see "Harry Potter" within ".notes"
   When I press "Toggle Other Fandom"
     Then I should NOT see "Other Fandom" within ".fandoms"
     And I should NOT see "Harry Potter" within ".fandoms"
@@ -210,8 +211,8 @@ Feature: ao3 testing that uses local cached files
     And Alan Rickman exists
   When I am on the page with url "https://archiveofourown.org/works/5720104"
     Then I should see "Other Fandom" within ".fandoms"
-    And I should see "Fandoms: Harry Potter, Die Hard, Robin Hood" within ".notes"
-    And I should see "Author: manicmea" within ".notes"
+    And I should see "Harry Potter, Die Hard, Robin Hood" within ".notes"
+    And I should see "by: manicmea" within ".notes"
    But I should NOT see "Rowling" within ".notes"
     And I should NOT see "Movies" within ".notes"
     And I should NOT see "Prince" within ".notes"
@@ -222,7 +223,7 @@ Feature: ao3 testing that uses local cached files
     And I press "Rebuild Meta"
     Then I should see "Harry Potter" within ".fandoms"
     And I should see "manicmea" within ".authors"
-    And I should see "Fandoms: Die Hard, Robin Hood" within ".notes"
+    And I should see "Die Hard, Robin Hood" within ".notes"
     But I should NOT see "manicmea" within ".notes"
 
   Scenario: don't over-match fandoms
@@ -231,17 +232,17 @@ Feature: ao3 testing that uses local cached files
     And Yer a Wizard exists
     And I am on the page with title "Yer a Wizard, Drizzt"
     Then I should see "Other Fandom" within ".fandoms"
-    And I should see "Other Fandoms: Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
+    And I should see "Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
   When a tag exists with name: "Person of Interest" AND type: "Fandom"
     And I press "Toggle Other Fandom"
     Then I should NOT see "Other Fandom" within ".fandoms"
     And I press "Rebuild Meta"
     Then I should NOT see "Other Fandom" within ".fandoms"
-    And I should see "Other Fandoms: Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
+    And I should see "Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
   When a tag exists with name: "Forgotten Realms/Drizzt" AND type: "Fandom"
     And I press "Rebuild Meta"
     Then I should see "Forgotten Realms/Drizzt" within ".fandoms"
-    And I should see "Other Fandom: Starlight and Shadows Series" within ".notes"
+    And I should see "Starlight and Shadows Series" within ".notes"
 
   Scenario: don't match fandoms if Other Fandoms tag exists
    Given I have no pages
@@ -249,12 +250,12 @@ Feature: ao3 testing that uses local cached files
     And Yer a Wizard exists
     And a tag exists with name: "Person of Interest" AND type: "Fandom"
   When I am on the page with title "Yer a Wizard, Drizzt"
-    Then I should see "Fandoms: Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
+    Then I should see "Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
     And I should see "Other Fandom" within ".fandoms"
   When a tag exists with name: "Forgotten Realms/Drizzt" AND type: "Fandom"
     And I press "Rebuild Meta"
     Then I should NOT see "Forgotten Realms/Drizzt" within ".fandoms"
-    And I should see "Fandoms: Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
+    And I should see "Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
 
    Scenario: works in a series still have authors if the series doesn't
     Given I have no pages
@@ -264,10 +265,10 @@ Feature: ao3 testing that uses local cached files
       Then I should see "Parent: Counting Drabbles (Series)"
       And I should see "Next: The Flower [sequel to Skipping Stones] (Single)"
       And I should see "Skipping Stones (Single)" within ".title"
-      And I should see "Author: Sidra" within ".notes"
+      And I should see "by: Sidra" within ".notes"
     When an author exists with name: "Sidra"
     When I press "Rebuild Meta"
-      Then I should NOT see "Author: Sidra" within ".notes"
+      Then I should NOT see "by: Sidra" within ".notes"
       But I should see "Sidra" within ".authors"
     When I follow "Counting Drabbles"
       And I follow "Authors" within ".edits"
@@ -275,9 +276,9 @@ Feature: ao3 testing that uses local cached files
       And I press "Update Authors"
       Then I should see "Sidra" within ".authors"
     When I follow "The Flower"
-      Then I should see "Author: Sidra" within ".notes"
+      Then I should see "by: Sidra" within ".notes"
     When I press "Rebuild Meta"
-      Then I should NOT see "Author: Sidra" within ".notes"
+      Then I should NOT see "by: Sidra" within ".notes"
       And I should NOT see "Sidra" within ".authors"
 
    Scenario: works in a series still have fandoms if the series doesn't
@@ -286,11 +287,11 @@ Feature: ao3 testing that uses local cached files
     And Counting Drabbles exists
     And I am on the page with title "Skipping Stones"
     Then I should see "Other Fandom" within ".fandoms"
-      Then I should see "Fandom: Harry Potter" within ".notes"
+      Then I should see "Harry Potter" before "Harry Potter/Unknown" within ".notes"
     When a tag exists with name: "harry potter" AND type: "Fandom"
     And I press "Toggle Other Fandom"
     When I press "Rebuild Meta"
-      Then I should NOT see "Fandom: Harry Potter" within ".notes"
+      Then I should NOT see "Harry Potter" before "Harry Potter/Unknown" within ".notes"
       But I should see "harry potter" within ".fandoms"
     When I follow "Counting Drabbles"
       And I follow "Tags" within ".edits"
@@ -298,9 +299,9 @@ Feature: ao3 testing that uses local cached files
       And I press "Update Tags"
       Then I should see "harry potter" within ".fandoms"
     When I follow "The Flower"
-      Then I should see "Fandom: Harry Potter" within ".notes"
+      Then I should see "Harry Potter" within ".notes"
     When I press "Rebuild Meta"
-      Then I should NOT see "Fandom: Harry Potter" within ".notes"
+      Then I should NOT see "Harry Potter" before "Harry Potter/Unknown" within ".notes"
       And I should NOT see "harry potter" within ".fandoms"
 
   Scenario: single of work should have work title, not chapter title

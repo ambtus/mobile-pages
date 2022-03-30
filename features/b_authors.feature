@@ -64,7 +64,7 @@ Feature: author stuff
     Then I should have no authors
     When I am on the page's page
       Then I should NOT see "jane" within ".authors"
-      But I should see "Author: jane" within ".notes"
+      But I should see "by: jane" within ".notes"
 
   Scenario: edit the author name
     Given I have no pages

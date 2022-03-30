@@ -89,6 +89,19 @@ Then("I should NOT see {string} within {string}") do |text, parent|
   within(parent) { assert_no_text(text) }
 end
 
+Then('I should see {string} before {string} within {string}') do |string1, string2, parent|
+  text = Regexp.new(string1 + '
+' + string2)
+  within(parent) { assert assert_text(text) }
+end
+
+Then('I should NOT see {string} before {string} within {string}') do |string1, string2, parent|
+  text = Regexp.new(string1 + '
+' + string2)
+  within(parent) { assert_no_text(text) }
+end
+
+
 When("I choose {string}") do |field|
   choose(field)
 end

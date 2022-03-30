@@ -134,10 +134,11 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     When I follow "Destroy"
     And I press "Yes"
     When I am on the homepage
-      Then I should NOT see "Twilight"
-      But I should see "Other Fandom"
+    Then I should NOT be able to select "Twilight" from "fandom"
+      But I should be able to select "Other Fandom" from "fandom"
       When I follow "Page 1"
       Then I should see "Other Fandom" within ".fandoms"
+      And I should see "Twilight" within ".notes"
 
   Scenario: merge two tags
     Given I have no tags
@@ -256,7 +257,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     And a page exists with ao3_fandoms: "魔道祖师 - 墨香铜臭 | Módào Zǔshī - Mòxiāng Tóngxiù, 陈情令 | The Untamed (TV)"
     When I am on the page's page
     Then I should see "Untamed/MoDao ZuShi" within ".fandoms"
-    And I should NOT see "Fandom: Modao Zshi" within ".notes"
+    And I should NOT see "Modao Zshi" within ".notes"
 
   Scenario: Forgotten Realms and The Legend of Drizzt Series - R. A. Salvatore
     Given I have no tags
@@ -272,7 +273,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     And I have no pages
     And a page exists with ao3_fandoms: "Spider-Man - All Media Types"
     When I am on the page's page
-    Then I should see "Fandom: Spider-Man"
+    Then I should see "Spider-Man"
 
   Scenario: Spider-Man - All Media Types
      Given I have no tags
@@ -287,7 +288,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     And I have no pages
     And a page exists with ao3_fandoms: "Deadpool (2016), Deadpool - All Media Types"
     When I am on the page's page
-    Then I should see "Fandom: Deadpool" within ".notes"
+    Then I should see "Deadpool" within ".notes"
     And I should NOT see "Deadpool, Deadpool"
 
    Scenario: Deadpool (2016) and Deadpool - All Media Types and Spider-Man - All Media Types
@@ -295,7 +296,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     And I have no pages
     And a page exists with ao3_fandoms: "Deadpool (2016), Deadpool - All Media Types, Spider-Man - All Media Types"
     When I am on the page's page
-    Then I should see "Fandoms: Deadpool, Spider-Man" within ".notes"
+    Then I should see "Deadpool, Spider-Man" within ".notes"
     And I should NOT see "Deadpool, Deadpool"
 
   Scenario: Real Genius (1985)
@@ -305,7 +306,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     And a page exists with ao3_fandoms: "Real Genius (1985)"
     When I am on the page's page
     Then I should NOT see "Forgotten Realms/Drizzt" within ".fandoms"
-    But I should see "Fandom: Real Genius" within ".notes"
+    But I should see "Real Genius" within ".notes"
     And I should NOT see "1985" within ".notes"
 
   Scenario: 天官赐福 - 墨香铜臭 | Tiān Guān Cì Fú - Mòxiāng Tóngxiù and 天官赐福
@@ -313,9 +314,9 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
     And I have no pages
     And a page exists with ao3_fandoms: "天官赐福 - 墨香铜臭 | Tiān Guān Cì Fú - Mòxiāng Tóngxiù, 天官赐福"
     When I am on the page's page
-    Then I should NOT see "Fandoms: Tian Guan Ci Fu, ????" within ".notes"
-    And I should NOT see "Fandoms: Tian Guan Ci Fu" within ".notes"
-    But I should see "Fandom: Tian Guan Ci Fu" within ".notes"
+    Then I should NOT see "Tian Guan Ci Fu, ????" within ".notes"
+    And I should NOT see "Tiān Guān Cì Fú" within ".notes"
+    But I should see "Tian Guan Ci Fu" within ".notes"
 
   Scenario: star wars, not star trek
     Given I have no tags
