@@ -204,3 +204,10 @@ Given /^Prologue exists$/ do
   page.raw_html = File.open(Rails.root + "features/html/prologue.html", 'r:utf-8') { |f| f.read }
   page.get_meta_from_ao3(false)
 end
+
+Given('Wheel exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/1115355")
+  page.raw_html = File.open(Rails.root + "features/html/wheel.html", 'r:utf-8') { |f| f.read }
+  page.get_meta_from_ao3(false)
+end

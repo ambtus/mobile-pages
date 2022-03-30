@@ -311,3 +311,13 @@ Feature: ao3 testing that uses local cached files
       When I am on the homepage
       Then I should NOT see "Chapter 1"
       But I should see "Fuuinjutsu+Chakra+Bonds+Clones, Should not be mixed by Uzumakis"
+
+  Scenario: no author or fandom or relationships shouldn't get empty paragraph
+    Given I have no pages
+      And an author exists with name: "esama"
+    When a tag exists with name: "Harry Potter" AND type: "Fandom"
+      And Wheel exists
+    When I am on the homepage
+      Then I should NOT see "; Harry has been thinking"
+      But I should see "Harry has been thinking"
+
