@@ -56,7 +56,7 @@ Feature: stuff to do with my notes
     Given I have no pages
     And a page exists with my_notes: "<p>This</p><p>is not</p><p>actually<p>a very long</p><p>note<br />(once you take out the <a href='http://some.domain.com'>html</a>)<br /></p>"
    When I am on the homepage
-     Then I should see "This is not actually a very long note (once you take out the html)" within ".my_notes"
+     Then I should see "This; is not; actually; a very long; note (once you take out the html)" within ".my_notes"
     When I am on the page's page
      ## This ¶ is not
      Then I should NOT see "This is not" within ".my_notes"

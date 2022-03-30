@@ -57,7 +57,7 @@ module Scrub
     nodeset.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
   end
 
-  def self.strip_html(html); Sanitize.fragment(html).squish; end
+  def self.strip_html(html); Sanitize.fragment(html).gsub(/\s{2,}/, "; ").strip; end
 
   def self.sanitize_and_strip(html); strip_html(sanitize_html(html)); end
 

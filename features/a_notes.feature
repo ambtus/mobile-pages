@@ -43,7 +43,7 @@ Feature: stuff to do with notes
     Given I have no pages
     And a page exists with notes: "<p>This</p><p>is not</p><p>actually<p>a very long</p><p>note<br />(once you take out the <a href='http://some.domain.com'>html</a>)<br /></p>"
    When I am on the homepage
-     Then I should see "This is not actually a very long note (once you take out the html)" within ".notes"
+     Then I should see "This; is not; actually; a very long; note (once you take out the html)" within ".notes"
     When I am on the page's page
      Then I should NOT see "This is not" within ".notes"
      But I should see "is not"
@@ -53,7 +53,7 @@ Feature: stuff to do with notes
     Given I have no pages
     And a page exists with notes: "<p>Sorry it took so long, I suck at romantic stuff.<br />~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p><p>Cheers!</p>"
     When I am on the homepage
-      Then I should see "Sorry it took so long, I suck at romantic stuff. Cheers!"
+      Then I should see "Sorry it took so long, I suck at romantic stuff.; Cheers!"
       And I should NOT see "~~~"
     When I am on the page's page
       Then I should see "Sorry it took so long, I suck at romantic stuff."

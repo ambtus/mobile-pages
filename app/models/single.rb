@@ -21,8 +21,8 @@ class Single < Page
 
     doc_summary = Scrub.sanitize_html(doc.css(".summary blockquote")).children.to_html
     doc_notes = Scrub.sanitize_html(doc.css(".notes blockquote")).children.to_html
-    doc_relationships = doc.css(".relationship a").map(&:text).join(", ")  rescue nil
-    doc_tags = doc.css(".freeform a").map(&:text).join(", ")  rescue nil
+    doc_relationships = doc.css(".relationship a").map(&:text).to_p  rescue nil
+    doc_tags = doc.css(".freeform a").map(&:text).to_p  rescue nil
     self.notes = [doc_relationships, doc_summary, doc_tags, doc_notes].join_hr
     Rails.logger.debug "DEBUG: notes: #{self.notes}"
 
