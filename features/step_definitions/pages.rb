@@ -160,3 +160,11 @@ Given('a page with very long notes exists') do
   string = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "*10
   Page.create(title: "Page 1", notes: string)
 end
+
+Then('the notes should NOT include {string}') do |string|
+  assert_no_match Regexp.new(string), Page.first.notes
+end
+
+Then('the notes should include {string}') do |string|
+  assert_match Regexp.new(string), Page.first.notes
+end

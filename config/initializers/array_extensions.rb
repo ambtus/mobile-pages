@@ -12,7 +12,7 @@ class Array
 
   def pulverize; flatten.reject(&:blank?).uniq; end
 
-  def to_p; "<p>#{join_comma}</p>"; end
+  def to_p; join_comma.blank? ? nil : "<p>#{join_comma}</p>"; end
 
   def mode
     return first if size == 1

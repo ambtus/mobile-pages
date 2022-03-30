@@ -3,7 +3,7 @@ class Filter
   LIMIT = 10 # number of pages to show in index
 
   def self.new(params={})
-    Rails.logger.debug "DEBUG: Page.filter(#{params})"
+    Rails.logger.debug "DEBUG: Filter.new(#{params})"
     pages = Page.all
     pages = pages.where(:type => (params[:type] == "none" ? nil : params[:type])) if params[:type] unless params[:type] == "all"
 

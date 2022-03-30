@@ -320,4 +320,5 @@ Feature: ao3 testing that uses local cached files
     When I am on the homepage
       Then I should NOT see "; Harry has been thinking"
       But I should see "Harry has been thinking"
-
+    And the notes should NOT include "<p></p><hr width=\"80%\"/> <p>Harry has been thinking"
+    But the notes should include "<p>Harry has been thinking"
