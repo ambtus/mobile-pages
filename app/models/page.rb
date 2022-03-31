@@ -141,7 +141,7 @@ class Page < ActiveRecord::Base
     new_wordcout = if self.parts.size > 0
       self.parts.each {|part| part.set_wordcount } if recount
       self.parts.sum(:wordcount)
-    elsif recount
+    elsif recount && !self.is_a?(Series)
       count = 0
       body = Nokogiri::HTML(self.edited_html).xpath('//body').first
       body.traverse { |node|
@@ -226,10 +226,13 @@ class Page < ActiveRecord::Base
     remove_outdated_downloads
     remove_outdated_edits
     begin
+      Rails.logger.debug "DEBUG: fetching raw html from #{self.url}"
       self.raw_html = Scrub.fetch_html(self.url)
     rescue Mechanize::ResponseCodeError
+      Rails.logger.debug "DEBUG: content unavailable"
       self.errors.add(:base, "error retrieving content")
     rescue SocketError
+      Rails.logger.debug "DEBUG: host unavailable"
       self.errors.add(:base, "couldn't resolve host name")
     end
     return self
@@ -535,7 +538,9 @@ class Page < ActiveRecord::Base
     return self
   end
 
-  def cleanup(recount = true); update_last_read.update_stars.remove_outdated_downloads.set_wordcount(recount); end
+  def cleanup(recount = true)
+    update_last_read.update_stars.remove_outdated_downloads.set_wordcount(recount)
+  end
 
   def add_author_string=(string)
     return if string.blank?
@@ -910,9 +915,9 @@ class Page < ActiveRecord::Base
     end
     unless non_mp_authors.empty?
       tagged_authors = self.authors + (self.parent ? self.parent.authors : [])
-      by = tagged_authors.empty? ? "by" : "et al"
+      by = tagged_authors.empty? ? "by" : "et al:"
       Rails.logger.debug "DEBUG: adding #{non_mp_authors} to notes"
-      self.notes = "<p>#{by}: #{non_mp_authors.join(", ")}</p>#{self.notes}"
+      self.notes = "<p>#{by} #{non_mp_authors.join(", ")}</p>#{self.notes}"
     end
     return self
   end

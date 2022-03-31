@@ -148,6 +148,7 @@ class PagesController < ApplicationController
         flash[:notice] = "Removed Dupes"
       when "Rebuild Meta"
         @page.rebuild_meta
+        @page = Page.find(@page.id) # in case something changed
         flash[:notice] = "Rebuilt Meta"
       when "Toggle #{Page::OTHER}"
         @page.toggle_other_fandom

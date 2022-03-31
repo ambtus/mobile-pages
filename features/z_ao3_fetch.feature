@@ -17,7 +17,7 @@ Feature: ao3 specific stuff
       And I should see "AJ/JC" within ".notes"
       And I should see "Make the Yuletide Gay" within ".notes"
       And I should see "Sidra" within ".authors"
-      And I should NOT see "by: Sidra" within ".notes"
+      And I should NOT see "by Sidra" within ".notes"
     And my page named "I Drive Myself Crazy" should have url: "https://archiveofourown.org/works/68481"
 
   Scenario: grab a book
@@ -30,7 +30,7 @@ Feature: ao3 specific stuff
     Then I should see "Time Was, Time Is (Book)" within ".title"
       And I should see "WIP" within ".omitteds"
       And I should see "1,581 words" within ".size"
-      And I should see "by: Sidra" within ".notes"
+      And I should see "by Sidra" within ".notes"
       And I should see "Using time-travel" within ".notes"
       And I should see "abandoned, Mary Sue" within ".notes"
       And I should see "Where am I?"
@@ -40,7 +40,7 @@ Feature: ao3 specific stuff
       And I should see "2. Hogwarts" within "#position_2"
     When I follow "Hogwarts"
       Then I should see "Hogwarts (Chapter)" within ".title"
-      Then I should NOT see "by: Sidra" within ".notes"
+      Then I should NOT see "by Sidra" within ".notes"
       And I should NOT see "Using time-travel" within ".notes"
       And I should NOT see "abandoned" within ".notes"
    But the part titles should be stored as "Where am I? & Hogwarts"
@@ -51,13 +51,12 @@ Feature: ao3 specific stuff
     And a tag exists with name: "harry potter" AND type: "Fandom"
       And I am on the homepage
     When I fill in "page_url" with "http://archiveofourown.org/series/46"
-      And I select "harry potter" from "fandom"
       And I press "Store"
     Then I should see "Counting Drabbles (Series)" within ".title"
       And I should see "200 words" within ".size"
-      And I should see "by: Sidra" within ".notes"
+      And I should see "by Sidra" within ".notes"
       And I should see "harry potter" within ".fandoms"
-      And I should NOT see "Other: Harry Potter" within ".notes"
+      Then I should NOT see "Harry Potter" before "Harry Potter/Unknown" within ".notes"
       And I should see "Implied snarry" within ".notes"
       And I should see "thanks to lauriegilbert!" within ".notes"
       And I should see "1. Skipping Stones" within "#position_1"
@@ -79,7 +78,7 @@ Feature: ao3 specific stuff
     Then I should see "Where am I? (Single)" within ".title"
       And I should NOT see "WIP" within ".omitteds"
       And I should NOT see "1."
-      And I should see "by: Sidra"
+      And I should see "by Sidra"
       And I should see "Using time-travel"
       And I should NOT see "Hogwarts"
       And I should NOT see "giving up on nanowrimo"
@@ -98,7 +97,7 @@ Feature: ao3 specific stuff
       And I fill in "page_notes" with "changed notes"
       And I press "Update"
     Then I should see "changed notes" within ".notes"
-      And I should NOT see "by: Sidra" within ".notes"
+      And I should NOT see "by Sidra" within ".notes"
     And I follow "Edit Raw HTML"
       And I fill in "pasted" with "oops"
       And I press "Update Raw HTML"
@@ -112,7 +111,7 @@ Feature: ao3 specific stuff
     Then I should see "Refetched" within "#flash_notice"
       Then I should see "Where am I?" within ".title"
       And I should NOT see "1."
-      And I should see "by: Sidra" within ".notes"
+      And I should see "by Sidra" within ".notes"
       And I should NOT see "changed notes" within ".notes"
       And I should NOT see "WIP" within ".omitteds"
       When I view the content
@@ -163,9 +162,9 @@ Feature: ao3 specific stuff
     And a tag exists with name: "harry potter" AND type: "Fandom"
       And I am on the homepage
     When I fill in "page_url" with "https://archiveofourown.org/works/688"
-      And I select "harry potter" from "fandom"
       And I press "Store"
       Then I should see "Skipping Stones (Single)" within ".title"
+      And I should see "harry potter" within ".fandoms"
     When I follow "Manage Parts"
      And I fill in "add_parent" with "Parent"
      And I press "Update"
@@ -175,8 +174,14 @@ Feature: ao3 specific stuff
     And I press "Refetch"
     Then I should see "Refetched" within "#flash_notice"
     Then I should see "Counting Drabbles (Series)" within ".title"
+      And I should see "harry potter" within ".fandoms"
+    When I follow "Skipping Stones"
+      Then I should NOT see "Harry Potter" before "Harry Potter/Unknown" within ".notes"
+      And I should NOT see "harry potter" within ".fandoms"
     When I follow "The Flower"
       Then I should see "The Flower [sequel to Skipping Stones] (Single)" within ".title"
+      And I should NOT see "Harry Potter" before "Harry Potter/Unknown" within ".notes"
+      And I should NOT see "harry potter" within ".fandoms"
 
   Scenario: fetching a series from before all the works had urls
     Given I have no pages
@@ -198,14 +203,20 @@ Feature: ao3 specific stuff
     Given I have no pages
       And a tag exists with name: "harry potter" AND type: "Fandom"
       And Skipping Stones exists
+    When I am on the page's page
+      Then I should see "harry potter" within ".fandoms"
     When I am on the homepage
       And I fill in "page_url" with "https://archiveofourown.org/series/46"
-      And I select "harry potter" from "fandom"
       And I press "Store"
     Then I should see "Counting Drabbles (Series)" within ".title"
+      And I should see "harry potter" within ".fandoms"
       And I should see "Skipping Stones" within "#position_1"
-      And I should see "The Flower" within "#position_2"
+       And I should see "by Sidra; Harry Potter/Unknown;" within "#position_1"
+     And I should see "The Flower" within "#position_2"
     And I should have 3 pages
+      When I follow "Skipping Stones"
+      Then I should NOT see "harry potter" within ".fandoms"
+      And I should NOT see "Harry Potter" before "Harry Potter/Unknown" within ".notes"
 
   Scenario: creating a series when I already have one of its books
     Given I have no pages
@@ -254,11 +265,36 @@ Feature: ao3 specific stuff
 
   Scenario: refetching a read Series should show it as unread
     Given I have no pages
+    And I have no tags
+    And I have no authors
       And Counting Drabbles partially exists
+    Then last read should be today
     When I am on the homepage
-      Then last read should be today
-      And I should NOT see "unread" within "#position_1"
-    When I fill in "page_url" with "https://archiveofourown.org/series/46"
+      Then I should NOT see "unread" within "#position_1"
+    When I follow "Counting Drabbles"
+      Then I should see "100 words" within ".size"
+      And I should see "by Sidra" within ".notes"
+      And I should see "Harry Potter" within ".notes"
+      And I should see "Implied snarry" within ".notes"
+      And I should see "thanks to lauriegilbert!" within ".notes"
+      And I should see "1. Skipping Stones" within "#position_1"
+      And I should see "by Sidra; Harry Potter; Harry Potter/Unknown;" within "#position_1"
+     And I should NOT see "The Flower"
+    When I am on the homepage
+      And I fill in "page_url" with "https://archiveofourown.org/series/46"
       And I press "Refetch"
     Then I should see "1 unread part" within ".last_read"
+      And I should see "2. The Flower" within "#position_2"
+      And I should see "200 words" within ".size"
+    But I should NOT see "Harry Potter" before "Harry Potter" within ".notes"
 
+  Scenario: refetching a Series before storing index as raw HTML
+    Given I have no pages
+    And I have no authors
+      And Misfits exists
+      And Misfits has a URL
+    When I am on the homepage
+      And I follow "Misfit Series"
+      And I press "Rebuild Meta"
+    Then I should see "Misfits (Series)" within ".title"
+    And I should see "by Morraine" before "Teen Wolf, Captain America, Avengers, Iron Man, Thor" within ".notes"

@@ -111,6 +111,8 @@ end
 
 Given /^Counting Drabbles exists$/ do
   series = Series.create!(title: "Counting Drabbles")
+  series.update!(url: "https://archiveofourown.org/series/46")
+  series.raw_html = File.open(Rails.root + "features/html/drabbles.html", 'r:utf-8') { |f| f.read }
 
   work1 = Single.create!(title: "temp", parent_id: series.id, position: 1)
   work1.update!(url: "https://archiveofourown.org/works/688")
@@ -124,22 +126,21 @@ Given /^Counting Drabbles exists$/ do
   work2.get_meta_from_ao3(false)
   work2.fandoms.blank? ? work2.toggle_other_fandom : work2.cache_tags
 
-  series.cleanup.update_read_after
+  series.get_meta_from_ao3(false).update_read_after
 end
 
 Given /^Counting Drabbles partially exists$/ do
   series = Series.create!(title: "Counting Drabbles")
   series.update!(url: "https://archiveofourown.org/series/46")
-  fandom = Fandom.create!(name: "Harry Potter")
-  series.tags << fandom
+  series.raw_html = File.open(Rails.root + "features/html/partial.html", 'r:utf-8') { |f| f.read }
 
   work1 = Single.create!(title: "temp", parent_id: series.id, position: 1)
   work1.update!(url: "https://archiveofourown.org/works/688")
   work1.raw_html = File.open(Rails.root + "features/html/skipping.html", 'r:utf-8') { |f| f.read }
-  work1.get_meta_from_ao3(false)
+  work1.set_wordcount.get_meta_from_ao3(false)
   work1.read_today.rate(5).update_read_after
 
-  series.cleanup.update_read_after
+  series.get_meta_from_ao3(false).set_wordcount(false).update_read_after
 end
 
 Given /^Alan Rickman exists$/ do
@@ -149,7 +150,6 @@ Given /^Alan Rickman exists$/ do
   page.get_meta_from_ao3(false)
   page.fandoms.blank? ? page.toggle_other_fandom : page.cache_tags
 end
-
 
 Given /^Misfits exists$/ do
   series = Series.create!(title: "Misfit Series")
@@ -182,6 +182,12 @@ Given /^Misfits exists$/ do
 
   series.cleanup.update_read_after
 end
+
+Given('Misfits has a URL') do
+  page = Series.first
+  page.update!(url: "https://archiveofourown.org/series/334075")
+end
+
 
 Given /^Yer a Wizard exists$/ do
   page = Single.create!(title: "temp")

@@ -25,12 +25,16 @@ class Book < Page
 
     self.notes = [doc_relationships, doc_summary, doc_tags, doc_notes].join_hr
 
-    add_fandom(doc.css(".fandom a").map(&:children).map(&:text).join_comma)
+    add_fandom(my_fandoms.join_comma)
     add_author(doc.css(".byline a").map(&:text).join_comma)
 
     Rails.logger.debug "DEBUG: notes now: #{self.notes}"
 
     self.save!
+  end
+
+  def my_fandoms
+    (parts.first.my_fandoms + parts.second.my_fandoms).uniq
   end
 
   def get_wip_from_ao3

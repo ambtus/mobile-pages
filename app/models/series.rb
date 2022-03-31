@@ -3,9 +3,13 @@
 class Series < Page
 
   def get_meta_from_ao3(refetch=true)
-    Rails.logger.debug "DEBUG: fetch_ao3 series #{self.id}"
-    html = Scrub.fetch_html(self.url)
-    doc = Nokogiri::HTML(html)
+    if refetch || raw_html.blank?
+      Rails.logger.debug "DEBUG: fetching raw html from ao3 for #{self.url}"
+      self.raw_html = Scrub.fetch_html(self.url)
+    else
+      Rails.logger.debug "DEBUG: building meta from previous raw html"
+    end
+    doc = Nokogiri::HTML(self.raw_html)
 
     doc_title = doc.xpath("//div[@id='main']").xpath("//h2").first.children.text.strip rescue nil
     if doc_title
@@ -39,16 +43,22 @@ class Series < Page
 
     self.notes = [doc_summary, doc_notes].compact.join_hr
 
+    Rails.logger.debug "DEBUG: get fandoms from raw html of first and last parts"
+    both = (parts.first.my_fandoms + parts.last.my_fandoms).uniq.join_comma
+    Rails.logger.debug "DEBUG: first & last possibles: #{both}"
+    add_fandom(both)
+
+    parts.map(&:remove_duplicate_tags)
+
     add_author(doc_authors) if doc_authors
 
+    Rails.logger.debug "DEBUG: notes now: #{self.notes}"
+
     self.save! && self.remove_outdated_downloads
-
-    return html.scan(/work-(\d+)/).flatten.uniq
-
   end
 
-  def fetch_ao3
-    work_list = get_meta_from_ao3
+  def get_works_from_ao3
+    work_list = raw_html.scan(/work-(\d+)/).flatten.uniq
     Rails.logger.debug "DEBUG: work list for #{self.id}: #{work_list}"
     work_list.each_with_index do |work_id, index|
       count = index + 1
@@ -88,11 +98,16 @@ class Series < Page
         end
       else
         Rails.logger.debug "DEBUG: work does not yet exist, creating ao3/works/#{work_id} in position #{count} and parent_id #{self.id}"
-        Book.create!(:url => url, :position => count, :parent_id => self.id, :title => "temp")
+        Book.create!(:url => url, :position => count, :parent_id => self.id, :title => "temp").set_wordcount
         sleep 5 unless count == work_list.size
       end
     end
     cleanup(false)
+  end
+
+  def fetch_ao3
+    Rails.logger.debug "DEBUG: fetch_ao3 series #{self.id}"
+    fetch_raw && get_works_from_ao3 && get_meta_from_ao3(false) && cleanup
   end
 
 end
