@@ -27,13 +27,18 @@ class Chapter < Page
     doc_summary = Scrub.sanitize_html(doc.css(".summary blockquote")).children.to_html
     doc_notes = Scrub.sanitize_html(doc.css(".notes blockquote")).children.to_html
 
-    if position == 1
-      self.notes = doc_notes
-    else
-      self.notes = [doc_summary, doc_notes].join_hr
+    self.notes =
+      if position == 1
+        if self.parent.ao3?
+          ""
+        else
+          doc_notes
+        end
+      else
+        [doc_summary, doc_notes].join_hr
     end
-
     self.save!
+    return self
   end
 
   def fetch_ao3

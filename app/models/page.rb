@@ -387,8 +387,8 @@ class Page < ActiveRecord::Base
       parent = Book.create!(title: "temp")
       self.make_me_a_chapter(parent)
       parent.update!(url: passed_url) && parent.fetch_ao3
-      self.remove_duplicate_tags
-      self.get_meta_from_ao3(false)
+      me = Chapter.find(self.id).get_meta_from_ao3(false)
+      me.remove_duplicate_tags
     else
       update!(url: passed_url) if passed_url.present?
       Rails.logger.debug "DEBUG: refetching all for #{id} url: #{self.url}"
