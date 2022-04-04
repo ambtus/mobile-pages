@@ -2,7 +2,7 @@
 - unless Author.names.blank?
   = label_tag :author, "Author:"
   = select_tag :author, options_for_select([nil] + Author.names, @author_name)
-  %br
+%br
 = hinted_text_field_tag 'page[title]', page.title, "Title", :size => 33
 %br
 = hinted_text_area_tag 'page[my_notes]', page.my_notes, "My Notes", :rows => 1, :cols => 33
