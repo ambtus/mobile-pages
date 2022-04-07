@@ -1,93 +1,178 @@
 Feature: filter/find
 
-  Scenario: filter on mix of author, tag, and state
-    Given the following pages
-      | title                            | add_author_string        | tropes            | stars    | last_read  |
-      | The Mysterious Affair at Styles  | agatha christie          | mystery           | 4        | 2009-01-01 |
-      | Nancy Drew                       | Carolyn Keene            | mystery, children | 2        | 2009-02-01 |
-      | The Boxcar Children              | Gertrude Chandler Warner | mystery, children |          |            |
-      | Harry Potter                     | rowling                  | mystery, children | 4        | 2010-01-01 |
-      | Murder on the Orient Express     | agatha christie          | mystery           | 5        | 2011-01-01 |
-      | Another Mystery                  | agatha christie          | mystery           | 3        | 2009-01-02 |
-      | To Read Mystery                  | agatha christie          | mystery           |          |            |
-      | Still More Mysteries             | agatha christie          | mystery, short stories | 2   | 2009-01-04 |
-    # Find all by author
-    When I am on the homepage
-      And I select "agatha christie" from "Author"
-      And I select "mystery" from "tag"
-      And I press "Find"
-    Then I should see "The Mysterious Affair at Styles"
-      And I should see "Murder on the Orient Express"
-      And I should see "Another Mystery"
-      And I should see "To Read Mystery"
-      And I should see "Still More Mysteries"
-      And I should NOT see "Nancy Drew"
-      And I should NOT see "The Boxcar Children"
-    # find unread by tag
-    When I am on the homepage
-      And I select "children" from "tag"
-      And I choose "unread_all"
-      And I press "Find"
-    Then I should see "The Boxcar Children"
-      And I should NOT see "Nancy Drew"
-      And I should NOT see "Harry Potter"
-      And I should NOT see "To Read Mystery"
+Scenario: find by character and trope
+  Given the following pages
+    | title                  | characters       | tropes   |
+    | Mirror of Maybe        | snarry           | au       |
+    | A Nick in Time         | snarry           | kidfic   |
+    | A Single Love          | Harry/Tom        | kidfic   |
+ When I am on the homepage
+    And I select "snarry" from "character"
+    And I select "kidfic" from "tag"
+    And I press "Find"
+  Then I should see "A Nick in Time"
+    But I should NOT see "Mirror of Maybe"
+    And I should NOT see "A Single Love"
 
-    # find unread by author
-    When I am on the homepage
-    When I choose "unread_all"
-      And I select "agatha christie" from "Author"
-      And I press "Find"
-    Then I should NOT see "Murder on the Orient Express"
-      And I should NOT see "The Mysterious Affair at Styles"
-      And I should NOT see "The Boxcar Children"
-      And I should see "To Read Mystery"
-    # find favorite by tag
-    When I am on the homepage
-      And I select "children" from "tag"
-      And I choose "stars_better"
-      And I press "Find"
-    Then I should see "Harry Potter"
-      And I should NOT see "The Boxcar Children"
-      And I should NOT see "Nancy Drew"
-      And I should NOT see "The Mysterious Affair at Styles"
-      And I should NOT see "Murder on the Orient Express"
-    # find favorite by author
-    When I am on the homepage
-    When I choose "stars_better"
-      And I select "agatha christie" from "Author"
-      And I press "Find"
-    Then I should see "The Mysterious Affair at Styles"
-      And I should see "Murder on the Orient Express"
-      And I should NOT see "Still More Mysteries"
-      And I should NOT see "Another Mystery"
-      And I should NOT see "To Read Mystery"
-      And I should NOT see "Harry Potter"
-    # find not unread (i.e. read)
-    When I am on the homepage
-    When I choose "unread_none"
-      And I press "Find"
-    Then I should see "Murder on the Orient Express"
-      And I should NOT see "The Boxcar Children"
-      But I should see "The Mysterious Affair at Styles"
-      And I should NOT see "To Read Mystery"
-      And I should see "Nancy Drew"
-    # find not unread by author
-    When I am on the homepage
-    When I choose "unread_none"
-      And I select "agatha christie" from "Author"
-      And I press "Find"
-    Then I should see "Murder on the Orient Express"
-      And I should see "The Mysterious Affair at Styles"
-      And I should NOT see "To Read Mystery"
-      And I should NOT see "Nancy Drew"
-    # find favorite by author
-    When I am on the homepage
-      And I select "agatha christie" from "Author"
-      And I choose "stars_3"
-      And I press "Find"
-    Then I should see "Another Mystery"
-      And I should NOT see "Nancy Drew"
-      And I should NOT see "The Mysterious Affair at Styles"
-      And I should NOT see "Murder on the Orient Express"
+Scenario: find by fandom and trope
+  Given the following pages
+    | title                  | fandoms    | tropes   |
+    | Lord of the Rings      | fantasy    | adult    |
+    | The Hobbit             | fantasy    | children |
+    | Nancy Drew             | mystery    | children |
+  When I am on the homepage
+    And I select "fantasy" from "fandom"
+    And I select "children" from "tag"
+    And I press "Find"
+  Then I should NOT see "Lord of the Rings"
+    And I should NOT see "Nancy Drew"
+    But I should see "The Hobbit" within "#position_1"
+
+Scenario: find by fandom and hidden
+  Given the following pages
+    | title                            | fandoms                 | hiddens       |
+    | The Mysterious Affair at Styles  | mystery                 | hide          |
+    | Alice in Wonderland              | children                | hide, go away |
+    | The Boxcar Children              | mystery, children       |               |
+  When I am on the homepage
+    And I select "mystery" from "Fandom"
+    And I select "hide" from "Hidden"
+    And I press "Find"
+  Then I should see "The Mysterious Affair at Styles"
+    But I should NOT see "Alice in Wonderland"
+    And I should NOT see "The Boxcar Children"
+
+Scenario: Find by author and fandom
+  Given the following pages
+    | title                 | add_author_string | fandoms                |
+    | The Mysterious Affair | agatha christie   | mystery                |
+    | Nancy Drew            | Carolyn Keene     | mystery, children      |
+    | Not a Mystery         | agatha christie   | horror                 |
+    | Still More Mysteries  | agatha christie   | mystery, short stories |
+  When I am on the homepage
+    And I select "agatha christie" from "Author"
+    And I select "mystery" from "fandom"
+    And I press "Find"
+  Then I should see "The Mysterious Affair"
+    And I should see "Still More Mysteries"
+    But I should NOT see "Nancy Drew"
+    And I should NOT see "Not a Mystery"
+
+Scenario: Find by unread and fandom
+   Given the following pages
+      | title               | fandoms  | stars | last_read  |
+      | Nancy Drew          | children | 2     | 2009-02-01 |
+      | The Boxcar Children | children |       |            |
+      | To Read Mystery     | mystery  |       |            |
+  When I am on the homepage
+    And I select "children" from "fandom"
+    And I choose "unread_all"
+    And I press "Find"
+  Then I should see "The Boxcar Children"
+    But I should NOT see "To Read Mystery"
+    And I should NOT see "Nancy Drew"
+
+Scenario: Find by unread and author
+   Given the following pages
+      | title                | add_author_string        | stars| last_read  |
+      | The Mysterious Affair| agatha christie          | 4    | 2009-01-01 |
+      | The Boxcar Children  | Gertrude Chandler Warner | 3    | 2009-02-01 |
+      | To Read Mystery      | agatha christie          |      |            |
+      | Orient Express       | agatha christie          | 2    | 2009-03-01 |
+      | Surprise Island      | Gertrude Chandler Warner |      |            |
+  When I am on the homepage
+    And I select "agatha christie" from "Author"
+    And I choose "unread_all"
+    And I press "Find"
+  Then I should see "To Read Mystery"
+    But I should NOT see "The Mysterious Affair"
+    And I should NOT see "The Boxcar Children"
+    And I should NOT see "Orient Express"
+    And I should NOT see "Surprise Island"
+
+Scenario: Find by read and author
+   Given the following pages
+      | title                | add_author_string        | stars| last_read  |
+      | The Mysterious Affair| agatha christie          | 4    | 2009-01-01 |
+      | The Boxcar Children  | Gertrude Chandler Warner | 3    | 2009-02-01 |
+      | To Read Mystery      | agatha christie          |      |            |
+      | Orient Express       | agatha christie          | 2    | 2009-03-01 |
+      | Surprise Island      | Gertrude Chandler Warner |      |            |
+  When I am on the homepage
+    And I select "agatha christie" from "Author"
+    And I choose "unread_none"
+    And I press "Find"
+  Then I should see "The Mysterious Affair"
+    And I should see "Orient Express"
+    But I should NOT see "To Read Mystery"
+    And I should NOT see "Surprise Island"
+    And I should NOT see "The Boxcar Children"
+
+Scenario: Find by stars and info
+   Given the following pages
+      | title                | infos    | stars | last_read  |
+      | The Mysterious Affair| mystery  | 4     | 2009-01-01 |
+      | Nancy Drew           | children | 2     | 2009-02-01 |
+      | The Boxcar Children  | children | 4     | 2009-03-01 |
+  When I am on the homepage
+    And I select "children" from "info"
+    And I choose "stars_better"
+    And I press "Find"
+  Then I should see "The Boxcar Children"
+    But I should NOT see "Nancy Drew"
+    And I should NOT see "The Mysterious Affair"
+
+Scenario: Find by stars and author
+   Given the following pages
+      | title                | add_author_string | stars | last_read  |
+      | The Mysterious Affair| agatha christie   | 4     | 2009-01-01 |
+      | Nancy Drew           | Carolyn Keene     | 2     | 2009-02-01 |
+      | Orient Express       | agatha christie   | 2     | 2009-03-01 |
+  When I am on the homepage
+  When I choose "stars_worse"
+    And I select "agatha christie" from "Author"
+    And I press "Find"
+  Then I should see "Orient Express"
+    But I should NOT see "The Mysterious Affair"
+    And I should NOT see "Nancy Drew"
+
+Scenario: filter by rating and omitted
+  Given pages with ratings and omitteds exist
+  When I am on the homepage
+    And I select "interesting" from "rating"
+    And I select "hateful" from "omitted"
+    And I press "Find"
+  Then I should NOT see "page3"
+    And I should NOT see "page2"
+    And I should NOT see "page1"
+    But I should see "page5"
+    And I should see "page4i"
+    But I should NOT see "page4l"
+
+Scenario: filter by rating and omitted
+  Given pages with ratings and omitteds exist
+  When I am on the homepage
+    And I select "loving" from "rating"
+    And I select "boring" from "omitted"
+    And I press "Find"
+  Then I should NOT see "page3"
+    And I should NOT see "page2"
+    And I should NOT see "page1"
+    But I should see "page5"
+    And I should see "page4l"
+    But I should NOT see "page4i"
+
+Scenario: find by trope and omitted
+  Given the following pages
+    | title                            | tropes    | omitteds |
+    | The Mysterious Affair at Styles  | mystery   |          |
+    | Alice in Wonderland              |           | children |
+    | The Boxcar Children              | mystery   | children |
+  When I am on the homepage
+    And I select "mystery" from "tag"
+    And I select "children" from "omitted"
+    And I press "Find"
+  Then I should NOT see "The Boxcar Children"
+    And I should NOT see "Alice in Wonderland"
+    But I should see "The Mysterious Affair at Styles"
 

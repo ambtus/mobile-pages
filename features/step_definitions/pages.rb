@@ -15,6 +15,7 @@ end
 Given("{int} pages exist") do |count|
   count.times do |i|
     Page.create(title: "Page #{(i+1)}", read_after: "2000-01-#{i+1}")
+    Kernel::sleep 1 if i<1  # sorting on created by for 2 page
   end
 end
 
@@ -52,6 +53,16 @@ Given("pages with all possible stars exist") do
   Page.create(title: "page4l").rate(4).read_today.update_read_after
   Page.create(title: "page5").rate(5).read_today.update_read_after
   Page.create(title: "page9").make_unfinished
+end
+
+Given("pages with all possible sizes exist") do
+  Page.create(title: "Drabble", url: "http://test.sidrasue.com/test.html")
+  Page.create(title: "Short", url: "http://test.sidrasue.com/short.html")
+  Page.create(title: "Medium", url: "http://test.sidrasue.com/long.html")
+  Page.create(title: "Long", url: "http://test.sidrasue.com/40000.html")
+  Page.create(title: "Medium2", base_url: "http://test.sidrasue.com/medium*.html", url_substitutions: "1-5")
+  Page.create(title: "Long2", base_url: "http://test.sidrasue.com/long*.html", url_substitutions: "1-9")
+  Page.create(title: "Epic", base_url: "http://test.sidrasue.com/epic/epic*.html", url_substitutions: "1-9")
 end
 
 Given("pages with all possible unreads exist") do
@@ -138,15 +149,30 @@ Then('I should NOT see today within {string}') do |string|
   within(string) { assert assert_no_text(Date.current.to_s)}
 end
 
+Then('I should NOT see today') do
+  assert_no_text(Date.current.to_s)
+end
+
 
 Then("the part titles should be stored as {string}") do |title_string|
    assert Page.first.parts.map(&:title).join(" & ") == title_string
 end
 
-Then('the read after date should be {int} years from now') do |int|
+Then('the read after date should be {int} year(s) from now') do |int|
   diff = Page.first.read_after.year - Date.today.year
   Rails.logger.debug "DEBUG: comparing #{Page.first.read_after.year} with #{Date.today.year} (#{diff})"
   assert diff == int
+end
+
+Then('the read after date should be 6 months from now') do
+  diff = Page.first.read_after.month - Date.today.month
+  Rails.logger.debug "DEBUG: comparing #{Page.first.read_after.year} with #{Date.today.year} (#{diff})"
+  assert diff.abs == 6
+end
+
+Then('the read after date should be {string}') do |string|
+  Rails.logger.debug "DEBUG: comparing #{Page.first.read_after} with #{string}"
+  assert Page.first.read_after == string
 end
 
 Then('my page named {string} should have url: {string}') do |title, url|
@@ -167,4 +193,9 @@ end
 
 Then('the notes should include {string}') do |string|
   assert_match Regexp.new(string), Page.first.notes
+end
+
+Given('system down exists') do
+  page = Page.create!(url: "http://test.sidrasue.com/test.html", title: "Test")
+  page.raw_html = "system down"
 end

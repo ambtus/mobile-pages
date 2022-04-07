@@ -1,126 +1,101 @@
-Feature: 5 star ratings (plus unfinished which uses 9)
+Feature: 5 star ratings
 
-  Scenario: new rating page
-    Given a page exists
-    When I am on the page's page
-    When I follow "Rate"
-    Then I should see "Stars"
-
-  Scenario: error if don't select stars before rating
-    Given a page exists
-    When I am on the page's page
-    When I follow "Rate"
-    And I press "Rate"
-    Then I should see "You must select stars"
-
-  Scenario: rate unfinished
-    Given a page exists
-    When I am on the page's page
-    When I follow "Rate"
-    And I press "Rate unfinished"
-    Then I should NOT see "stars ignored"
-    But I should see "unfinished"
-    And the read after date should be 5 years from now
-    When I am on the page's page
+Scenario: new rating page
+  Given a page exists
+  When I am on the page's page
     And I follow "Rate"
-    Then nothing should be checked
+  Then I should see "Stars"
 
-  Scenario: rate unfinished with extraneous stars
-    Given a page exists
-    When I am on the page's page
-    When I follow "Rate"
+Scenario: error if don't select stars before rating
+  Given a page exists
+  When I am on the page's page
+    And I follow "Rate"
+    And I press "Rate"
+  Then I should see "You must select stars"
+
+Scenario: rate a book 5 stars (best)
+  Given a page exists
+  When I am on the page's page
+    And I follow "Rate"
     And I choose "5"
-    And I press "Rate unfinished"
-    Then I should see "stars ignored"
-    Then I should see "unfinished"
-    And I should NOT see "5 stars"
-    And the read after date should be 5 years from now
-    When I am on the page's page
-    When I follow "Rate"
-    Then nothing should be checked
-
-  Scenario: rate a book 5 stars (best)
-    Given a page exists
-    When I am on the page's page
-    When I follow "Rate"
-      And I choose "5"
     And I press "Rate"
-    Then I should see "5 stars"
-    When I am on the page's page
+  Then I should see "5 stars"
+    And the read after date should be 6 months from now
+
+Scenario: stars propagate
+  Given a page exists
+  When I am on the page's page
     And I follow "Rate"
-      Then "stars_5" should be checked
-
-  Scenario: rate a book 4 stars (better)
-    Given a page exists
-    When I am on the page's page
-    When I follow "Rate"
-      And I choose "4"
+    And I choose "5"
     And I press "Rate"
-    Then I should see "4 stars"
-    And the read after date should be 1 years from now
-    When I am on the page's page
+    And I am on the page's page
     And I follow "Rate"
-      Then "stars_4" should be checked
+  Then "stars_5" should be checked
 
-  Scenario: rate a book 3 stars (good)
-    Given a page exists
-    When I am on the page's page
-    When I follow "Rate"
-      And I choose "3"
+Scenario: rate a book 4 stars (better)
+  Given a page exists
+  When I am on the page's page
+    And I follow "Rate"
+    And I choose "4"
     And I press "Rate"
-    Then I should see "3 stars"
+  Then I should see "4 stars"
+    And the read after date should be 1 year from now
+
+Scenario: rate a book 3 stars (good)
+  Given a page exists
+  When I am on the page's page
+    And I follow "Rate"
+    And I choose "3"
+    And I press "Rate"
+  Then I should see "3 stars"
     And the read after date should be 2 years from now
 
-  Scenario: rate a book 2 stars (bad)
-    Given a page exists
-    When I am on the page's page
-    When I follow "Rate"
-      And I choose "2"
+Scenario: rate a book 2 stars (bad)
+  Given a page exists
+  When I am on the page's page
+    And I follow "Rate"
+    And I choose "2"
     And I press "Rate"
-    Then I should see "2 stars"
+  Then I should see "2 stars"
     And the read after date should be 3 years from now
 
-   Scenario: rate a book 1 star (very bad)
-    Given a page exists
-    When I am on the page's page
-    When I follow "Rate"
-      And I choose "1"
+ Scenario: rate a book 1 star (very bad)
+  Given a page exists
+  When I am on the page's page
+    And I follow "Rate"
+    And I choose "1"
     And I press "Rate"
-    Then I should see "1 stars"
+  Then I should see "1 star"
+    # FIXME - suffix on star
+    # And I should NOT see "stars"
     And the read after date should be 4 years from now
 
-  Scenario: rate part
-    Given the following pages
-      | title  | base_url                              | url_substitutions |
-      | Parent | http://test.sidrasue.com/parts/*.html | 1 2 |
-    Then the read after date should be 0 years from now
-    When I am on the homepage
-      And I follow "Parent"
-      And I follow "Part 1"
-      And I follow "Rate"
-      And I choose "4"
-    And I press "Rate"
-    Then the read after date should be 0 years from now
-    When I follow "Edit Tags for Part 1"
-      And I fill in "tags" with "cute, interesting"
-      And I press "Add Rating Tags"
-    When I follow "Parent"
-      And I follow "Part 2"
-      And I follow "Rate"
-      And I choose "1"
-    And I press "Rate"
-    Then the read after date should be 1 years from now
+Scenario: check before rate part
+  Given a page exists with title: "Parent" AND base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-2"
+  Then the read after date should be 0 years from now
 
-  Scenario: rate previously rated as unfinished with extraneous stars
-    Given a page exists with last_read: "2009-01-01" AND stars: "4"
-    When I am on the page's page
+Scenario: rate one part leaves parent read after unchanged
+  Given a page exists with title: "Parent" AND base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-2"
+  When I am on the homepage
+    And I follow "Parent"
+    And I follow "Part 1"
     And I follow "Rate"
-      Then "stars_4" should be checked
-    When I press "Rate unfinished"
-    Then I should see "stars ignored"
-    And I should see "unfinished"
-    And I should NOT see "4 stars"
-    And the read after date should be 5 years from now
-    When I am on the page's page
-    When I follow "Rate"
-    Then nothing should be checked
+    And I choose "4"
+    And I press "Rate"
+  Then the read after date should be 0 years from now
+
+Scenario: rate both parts changes parent read after date based on best part
+  Given a page exists with title: "Parent" AND base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-2"
+  When I am on the homepage
+    And I follow "Parent"
+    And I follow "Part 1"
+    And I follow "Rate"
+    And I choose "4"
+    And I press "Rate"
+    And I follow "Parent"
+    And I follow "Part 2"
+    And I follow "Rate"
+    And I choose "1"
+    And I press "Rate"
+  Then the read after date should be 1 years from now
+

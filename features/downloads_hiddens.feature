@@ -1,9 +1,9 @@
-Feature: an ebook with a hidden tag is also hidden from marvin
+Feature: an ebook with a hidden tag is also hidden from marvin's tag collections
+         but author and fandom still show on cover
 
-  Scenario: epub download hidden page; tag strings are empty, but authors still includes authors & fandoms
-    Given I have no pages
-    And a page exists with hiddens: "hide me" AND tropes: "my tag" AND add_author_string: "my author" AND fandoms: "my fandom"
-    Then the download epub command should include tags: "hide me"
+Scenario: epub download hidden page => tag strings are empty, but authors still includes authors & fandoms
+  Given a page exists with hiddens: "hide me" AND tropes: "my tag" AND add_author_string: "my author" AND fandoms: "my fandom"
+  Then the download epub command should include tags: "hide me"
     But the download epub command should NOT include tags: "my tag"
     But the download epub command should include comments: "my tag"
     And the download epub command should include authors: "my author"
@@ -11,30 +11,35 @@ Feature: an ebook with a hidden tag is also hidden from marvin
     But the download epub command should NOT include comments: "my author"
     And the download epub command should NOT include comments: "my fandom"
 
-  Scenario: epub of a parent omits hidden part but author and tag strings populated. epub download of a hidden part as standalone: tag strings are empty but are in comments
-    Given I have no pages
-    And a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3" AND tropes: "show me" AND add_author_string: "my author"
-    When I am on the page with title "Part 2"
-      And I edit its tags
-      And I fill in "tags" with "hide me"
-      And I press "Add Hidden Tags"
-    When I am on the homepage
-      Then I should NOT see "Part 2"
-    When I am on the page's page
-      Then I should see "Part 2"
-      And I should see "hide me" within "#position_2"
-    When I view the content
-      Then I should NOT see "Part 2"
-      And I should NOT see "hide me"
-      And I should NOT see "stuff for part 2"
+Scenario: epub parent of hidden part hides hidden part
+  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3" AND tropes: "show me" AND add_author_string: "my author" AND fandoms: "my fandom"
+  When I am on the page with title "Part 2"
+    And I edit its tags
+    And I fill in "tags" with "hide me"
+    And I press "Add Hidden Tags"
+    And I follow "Page 1"
+    And I follow "ePub"
+  Then the epub html contents for "Page 1" should NOT contain "Part 2"
+    And the epub html contents for "Page 1" should NOT contain "stuff for part 2"
     And the download epub command should include tags: "show me"
-    But the download epub command should NOT include tags: "hide me"
-    And the download epub command should include authors: "my author"
-    When I am on the page with title "Part 2"
-      And I view the content
-      Then I should see "stuff for part 2"
-    And the download epub command for "Part 2" should NOT include tags: "show me"
-    But the download epub command for "Part 2" should include tags: "hide me"
+    And the download epub command should NOT include tags: "hide me"
+
+Scenario: epub download hidden part as standalone => other tag strings are empty, but author and fandom aren't
+  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3" AND tropes: "show me" AND add_author_string: "my author" AND fandoms: "my fandom"
+  When I am on the page with title "Part 2"
+    And I edit its tags
+    And I fill in "tags" with "hide me"
+    And I press "Add Hidden Tags"
+    And I edit its tags
+    And I fill in "tags" with "devil"
+    And I press "Add Character Tags"
+    And I follow "ePub"
+  Then the epub html contents for "Part 2" should contain "stuff for part 2"
+    And the epub html contents for "Part 2" should contain "Part 2"
+    And the download epub command for "Part 2" should include tags: "hide me"
     And the download epub command for "Part 2" should include authors: "my author"
-    And the download epub command for "Part 2" should NOT include comments: "my author"
-    And the download epub command for "Part 2" should include comments: "show me"
+    And the download epub command for "Part 2" should include authors: "my fandom"
+    But the download epub command for "Part 2" should NOT include tags: "devil"
+    And the download epub command for "Part 2" should NOT include tags: "show me"
+    But the download epub command for "Part 2" should include comments: "show me"
+    And the download epub command for "Part 2" should include comments: "devil"

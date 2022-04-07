@@ -2,6 +2,11 @@ Then("I have no tags") do
   Tag.delete_all
 end
 
+Then('I should have {int} tag(s)') do |int|
+  Rails.logger.debug "DEBUG: curent tags: #{Tag.all.map(&:name)}"
+  assert Tag.count==int
+end
+
 Then("I have no omitteds") do
   Hidden.delete_all
 end

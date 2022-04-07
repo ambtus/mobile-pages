@@ -1,57 +1,65 @@
-Feature: show only 15 of multi-parts (and bugs)
+Feature: show only 5 parts at a time
 
-  Scenario: show parent only shows 15 parts and refetching shows the last
-     Given I have no pages
-    Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-151"
-    When I am on the page's page
-    Then I should see "Part 1"
+Scenario: show parent only shows 5 parts
+  Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-21"
+  When I am on the page's page
+  Then I should see "Part 1"
+    And I should see "Part 5"
     But I should NOT see "Part 6"
 
-    When I press "Next Parts"
-    Then I should see "Part 6"
+Scenario: first next
+  Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-21"
+  When I am on the page's page
+    And I press "Next Parts"
+  Then I should see "Part 6"
+    And I should see "Part 10"
     But I should NOT see "Part 11"
+    And I should NOT see "Part 5"
 
-    When I press "Next Parts"
-    Then I should see "Part 11"
+Scenario: second next
+  Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-21"
+  When I am on the page's page
+    And I press "Next Parts"
+    And I press "Next Parts"
+  Then I should see "Part 11"
+    And I should see "Part 15"
     But I should NOT see "Part 16"
-    When I press "Last Parts"
+    And I should NOT see "Part 10"
 
-    Then I should see "Part 147"
-    And I should see "Part 151"
-    But I should NOT see "Part 146"
+Scenario: last
+  Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-21"
+  When I am on the page's page
+    And I press "Last Parts"
+  Then I should see "Part 21"
+    And I should see "Part 17"
+    But I should NOT see "Part 16"
 
-    When I press "Previous Parts"
-    Then I should see "Part 146"
-    But I should NOT see "Part 147"
+Scenario: previous
+  Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-21"
+  When I am on the page's page
+    And I press "Last Parts"
+    And I press "Previous Parts"
+  Then I should see "Part 16"
+    And I should see "Part 12"
+    But I should NOT see "Part 11"
+    And I should NOT see "Part 17"
 
-    When I follow "Refetch"
+Scenario: refetch shows last
+  Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-21"
+  When I am on the page's page
+    And I follow "Refetch"
     And I press "Refetch"
-    Then I should see "Part 147"
-    And I should see "Part 151"
-    But I should NOT see "Part 146"
+  Then I should see "Part 21"
+    And I should see "Part 17"
+    But I should NOT see "Part 16"
 
-    When I press "First Parts"
-    Then I should see "Part 1"
+Scenario: first
+  Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-21"
+  When I am on the page's page
+    And I follow "Refetch"
+    And I press "Refetch"
+    And I press "First Parts"
+  Then I should see "Part 1"
+    And I should see "Part 5"
     But I should NOT see "Part 6"
-
-  Scenario: show parent shows parts by position, not created order
-    Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
-    When I am on the page's page
-      And I follow "Manage Parts"
-      And I fill in "url_list" with
-        """
-        http://test.sidrasue.com/parts/2.html
-        http://test.sidrasue.com/parts/1.html
-        """
-      And I press "Update"
-    Then "Part 2" should come before "Part 1"
-
-  Scenario: find by url shows parts
-    Given I have no pages
-      And Time Was exists
-      And I am on the homepage
-    When I fill in "page_url" with "https://archiveofourown.org/works/692/"
-    And I press "Find"
-      Then I should see "1. Where am I?" within "#position_1"
-      And I should see "2. Hogwarts" within "#position_2"
 

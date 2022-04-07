@@ -1,58 +1,85 @@
 Feature: filter by type
 
-  Scenario: filter on types
-    Given I have no pages
-      And a page exists with title: "One-shot" AND url: "http://test.sidrasue.com/short.html"
-      And a page exists with title: "Novel" AND base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2"
-      And I have a Trilogy
-    When I am on the homepage
-      Then I should see "One-shot"
-      And I should see "Novel"
-      And I should see "Trilogy"
-      But I should NOT see "Part 1 of Novel"
-      And I should NOT see "Alpha of Trilogy"
-      And I should NOT see "Prologue"
-      And I should NOT see "Epilogue"
-    When I choose "type_none"
-      And I press "Find"
-      Then I should see "No pages found"
-    When I choose "type_Single"
-      And I press "Find"
-      Then I should see "One-shot"
-      And I should NOT see "Part 1 of Novel"
-      And I should NOT see "Part 2 of Novel"
-      And I should NOT see "Prologue of Alpha of Trilogy"
-      And I should NOT see "Epilogue of Beta of Trilogy"
-    When I choose "type_Chapter"
-      And I press "Find"
-      Then I should NOT see "One-shot"
-      And I should see "Part 1 of Novel"
-      And I should see "Part 2 of Novel"
-      And I should see "Prologue of Alpha of Trilogy"
-      And I should see "Epilogue of Beta of Trilogy"
-    When I choose "type_Book"
-      And I press "Find"
-      Then I should see "Novel"
-      And I should see "Alpha of Trilogy"
-      And I should see "Beta of Trilogy"
-      But I should NOT see "One-shot"
-      And I should NOT see "Part 1 of Novel"
-      And I should NOT see "Prologue of Alpha"
-    When I choose "type_Series"
-      And I press "Find"
-      Then I should see "Trilogy"
-      But I should NOT see "One-shot"
-      And I should NOT see "Novel"
-      And I should NOT see "Alpha of Trilogy"
+Scenario: check before filter (default)
+  Given pages with all possible types exist
+  When I am on the homepage
+  Then I should see "One-shot" within "#position_1"
+    And I should see "Novel" within "#position_2"
+    And I should see "Trilogy" within "#position_3"
+    And I should see "Life's Work" within "#position_4"
+    And the page should NOT contain css "#position_5"
 
-    When I choose "type_all"
-      And I press "Find"
-    Then I should see "One-shot"
-      And I should see "Novel"
-      And I should see "Trilogy"
-      And I should see "Part 1 of Novel"
-      And I should see "Part 2 of Novel"
-      And I should see "Alpha of Trilogy"
-      And I should see "Beta of Trilogy"
-      And I should see "Prologue of Alpha of Trilogy"
-      And I should see "Epilogue of Beta of Trilogy"
+Scenario: find untyped pages
+  Given pages with all possible types exist
+  When I am on the homepage
+    And I choose "type_none"
+    And I press "Find"
+  Then I should see "No pages found"
+
+Scenario: find singles
+  Given pages with all possible types exist
+  When I am on the homepage
+    And I choose "type_Single"
+    And I press "Find"
+  Then I should see "One-shot" within "#position_1"
+    And I should see "First of Life's Work" within "#position_2"
+    And the page should NOT contain css "#position_3"
+
+Scenario: find chapters
+  Given pages with all possible types exist
+  When I am on the homepage
+    And I choose "type_Chapter"
+    And I press "Find"
+  Then I should see "Part 1 of Novel" within "#position_1"
+    And I should see "Part 2 of Novel" within "#position_2"
+    And I should see "Prologue of Alpha of Trilogy" within "#position_3"
+    And I should see "Epilogue of Beta of Trilogy" within "#position_4"
+    And I should see "Part 1 of Second of Life's Work" within "#position_5"
+    And I should see "Part 2 of Second of Life's Work" within "#position_6"
+    And the page should NOT contain css "#position_7"
+
+Scenario: find books
+  Given pages with all possible types exist
+  When I am on the homepage
+    And I choose "type_Book"
+    And I press "Find"
+  Then I should see "Novel" within "#position_1"
+    And I should see "Alpha of Trilogy" within "#position_2"
+    And I should see "Beta of Trilogy" within "#position_3"
+    And I should see "Second of Life's Work" within "#position_4"
+    And I should see "Fourth of Third of Life's Work" within "#position_5"
+    And I should see "Fifth of Third of Life's Work" within "#position_6"
+    And the page should NOT contain css "#position_7"
+
+Scenario: find series
+  Given pages with all possible types exist
+  When I am on the homepage
+    And I choose "type_Series"
+    And I press "Find"
+  Then I should see "Trilogy" within "#position_1"
+    And I should see "Third of Life's Work" within "#position_2"
+    And the page should NOT contain css "#position_3"
+
+Scenario: find collections
+  Given pages with all possible types exist
+  When I am on the homepage
+    And I choose "type_Collection"
+    And I press "Find"
+  Then I should see "Life's Work" within "#position_1"
+    And the page should NOT contain css "#position_2"
+
+Scenario: find everything
+  Given pages with all possible types exist
+  When I am on the homepage
+    And I choose "type_all"
+    And I press "Find"
+  Then I should see "One-shot" within "#position_1"
+    And I should see "Novel" within "#position_2"
+    And I should see "Part 1 of Novel" within "#position_3"
+    And I should see "Part 2 of Novel" within "#position_4"
+    And I should see "Trilogy" within "#position_5"
+    And I should see "Alpha of Trilogy" within "#position_6"
+    And I should see "Beta of Trilogy" within "#position_7"
+    And I should see "Prologue of Alpha of Trilogy" within "#position_8"
+    And I should see "Epilogue of Beta of Trilogy" within "#position_9"
+    And I should see "Life's Work" within "#position_10"

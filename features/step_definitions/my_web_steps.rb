@@ -149,9 +149,14 @@ When("I download the epub") do
 end
 
 Then("{string} should link to {string}") do |link_text, link_url|
-  assert page.find_link(link_text)['href'] == link_url
+  actual = page.find_link(link_text)['href']
+  Rails.logger.debug "DEBUG: link: #{actual} should be #{link_url}"
+  assert actual == link_url
 end
 
+Then('the page should have title {string}') do |string|
+  assert page.has_title? string
+end
 
 # When("I go back") do
 #   case Capybara::current_driver
