@@ -16,6 +16,12 @@ Scenario: html is a "download"
     And the download html file should exist
     And the download epub file should NOT exist
 
+Scenario: link to page in downloaded html
+  Given a page exists
+  When I am on the page's page
+    And I view the content
+  Then "Page 1" should link to itself
+
 Scenario: epub downloads
   Given a page exists
   When I am on the page's page
@@ -38,6 +44,7 @@ Scenario: notes go into html downloads
   When I am on the page's page
     And I view the content
   Then I should see "Lorem ipsum dolor"
+    And there should NOT be a horizontal rule
 
 Scenario: Update notes removes old html downloads
   Given a page exists with notes: "Lorem ipsum dolor"
@@ -55,6 +62,7 @@ Scenario: my notes do go in html
   When I am on the page's page
      And I view the content
   Then I should see "Lorem ipsum dolor"
+    And there should NOT be a horizontal rule
 
 Scenario: update my notes removes old html downloads
   Given a page exists with my_notes: "Lorem ipsum dolor"
@@ -67,36 +75,11 @@ Scenario: update my notes removes old html downloads
   Then I should see "On Assignment for Dumbledore"
     And I should NOT see "Lorem ipsum dolor"
 
-Scenario: two and three levels (h3 & h4)
-  Given I am on the homepage
-  When I follow "Store Multiple"
-    And I fill in "page_urls" with
-      """
-      ##Child 1
-      http://test.sidrasue.com/parts/3.html##Child 2
-      """
-    And I fill in "page_title" with "Parent"
-    And I press "Store"
-    And I follow "Child 1"
-    And I follow "Manage Parts"
-    And I fill in "url_list" with
-      """
-      http://test.sidrasue.com/parts/1.html##Boo
-      ##Grandchild
-      """
-    And I press "Update"
-    And I follow "Grandchild"
-    And I follow "Manage Parts"
-    And I fill in "url_list" with
-      """
-      http://test.sidrasue.com/parts/2.html##Hiss
-      """
-    And I press "Update"
-    And I am on the page with title "Parent"
-    And I view the content
-  Then I should see "Child 1" within "h2"
-    And I should see "Boo" within "h3"
-    And I should see "Hiss" within "h4"
+Scenario: hr between notes and my notes
+  Given a page exists with notes: "Lorem ipsum dolor" AND my_notes: "abc123"
+  When I am on the page's page
+     And I view the content
+  Then there should be a horizontal rule
 
 Scenario: epub image bug
   Given The Picture exists

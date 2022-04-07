@@ -6,6 +6,45 @@ Scenario: download part titles should not have unread if all parts unread
     And I view the content
   Then I should NOT see "unread"
 
+Scenario: link to parts in downloaded html
+  Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1-2"
+  When I am on the page's page
+    And I view the content
+  Then "Page 1" should link to itself
+    And "Part 1" should link to itself
+    And "Part 2" should link to itself
+
+Scenario: two and three levels (h3 & h4)
+  Given I am on the homepage
+  When I follow "Store Multiple"
+    And I fill in "page_urls" with
+      """
+      ##Child 1
+      http://test.sidrasue.com/parts/3.html##Child 2
+      """
+    And I fill in "page_title" with "Parent"
+    And I press "Store"
+    And I follow "Child 1"
+    And I follow "Manage Parts"
+    And I fill in "url_list" with
+      """
+      http://test.sidrasue.com/parts/1.html##Boo
+      ##Grandchild
+      """
+    And I press "Update"
+    And I follow "Grandchild"
+    And I follow "Manage Parts"
+    And I fill in "url_list" with
+      """
+      http://test.sidrasue.com/parts/2.html##Hiss
+      """
+    And I press "Update"
+    And I am on the page with title "Parent"
+    And I view the content
+  Then I should see "Child 1" within "h2"
+    And I should see "Boo" within "h3"
+    And I should see "Hiss" within "h4"
+
 Scenario: download part titles
   Given a tag exists with name: "rating tag" AND type: "Rating"
     And a tag exists with name: "info tag" AND type: "Info"

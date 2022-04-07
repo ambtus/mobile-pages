@@ -205,3 +205,10 @@ Given('Silent Sobs exists') do
   page.notes = File.open(Rails.root + "features/html/silent.html", 'r:utf-8') { |f| f.read }
   page.save!
 end
+
+Then('{string} should link to itself') do |string|
+  href = page.find_link(string)['href']
+  itself = Page.find_by_title(string)
+  Rails.logger.debug "DEBUG: link: page #{itself.id} should be at #{href}"
+  assert href == "/pages/#{itself.id}"
+end

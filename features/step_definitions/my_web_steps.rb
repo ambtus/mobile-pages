@@ -101,6 +101,13 @@ Then('I should NOT see {string} before {string} within {string}') do |string1, s
   within(parent) { assert_no_text(text) }
 end
 
+Then('there should be a horizontal rule') do
+  assert page.html.include?('<hr>')
+end
+
+Then('there should NOT be a horizontal rule') do
+  assert !page.html.include?('<hr>')
+end
 
 When("I choose {string}") do |field|
   choose(field)

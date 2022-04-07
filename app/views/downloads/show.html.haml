@@ -1,14 +1,13 @@
 - content_for :title do
   = @page.title
+%h1{:style=> "page-break-before:always", :class => "chapter"}=link_to @page.title, page_path(@page)
 -unless @page.notes.blank? && @page.my_notes.blank?
-  %h2{:class => "chapter"} Notes
   =render :partial => "downloads/notes", :locals => {:page => @page}
 - if @page.parts.empty?
-  %h2{:style=> "page-break-before:always", :class => "chapter"}=@page.title
   .content=raw @page.epub_html
 - else
   - @page.not_hidden_parts.each do |first_level|
-    %h2{:style=> "page-break-before:always", :class => "chapter"}=first_level.download_part_title
+    %h2{:style=> "page-break-before:always", :class => "chapter"}=link_to first_level.download_part_title, page_path(first_level)
     =render :partial => "downloads/notes", :locals => {:page => first_level}
     - if first_level.parts.empty?
       .content=raw first_level.epub_html
