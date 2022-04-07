@@ -614,7 +614,7 @@ class Page < ActiveRecord::Base
   # used in show view
   def medium_notes
     return "" if notes.blank?
-    Scrub.sanitize_html(notes).truncate(MEDIUM_LENGTH, separator: /\s/).html_safe
+    Scrub.sanitize_html(notes.truncate(MEDIUM_LENGTH, separator: /\s/)).html_safe
   end
 
   # used in index view and in epub comments

@@ -199,3 +199,9 @@ Given('system down exists') do
   page = Page.create!(url: "http://test.sidrasue.com/test.html", title: "Test")
   page.raw_html = "system down"
 end
+
+Given('Silent Sobs exists') do
+  page = Single.create!(title: "Silent Sobs")
+  page.notes = File.open(Rails.root + "features/html/silent.html", 'r:utf-8') { |f| f.read }
+  page.save!
+end

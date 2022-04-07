@@ -117,3 +117,7 @@ Scenario: very long notes are not truncated in note's view
     And I should NOT see "…"
     But I should see "consectetur"
 
+Scenario: full notes link bug
+  Given Silent Sobs exists
+  When I am on the page's page
+  Then I follow "full notes"
