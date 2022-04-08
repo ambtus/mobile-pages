@@ -45,23 +45,33 @@
       = link_to "Scrub", scrub_path(@page)
       = link_to "Refetch", refetch_path(@page)
   .fandoms
-    -@page.fandoms.by_name.each do |fandom|
-      =link_to fandom.name, pages_path(fandom: fandom.name)
+    -@page.fandoms.by_name.each do |tag|
+      =link_to tag.name, pages_path(fandom: tag.name)
   .characters
-    -@page.tags.character.by_name.each do |character|
-      =link_to character.name, pages_path(character: character.name)
-  .tags= @page.trope_string
-  .omitteds= @page.omitted_string
-  .hiddens= @page.hidden_string
+    -@page.tags.character.by_name.each do |tag|
+      =link_to tag.name, pages_path(character: tag.name)
+  .tags
+    -@page.tags.trope.by_name.each do |tag|
+      =link_to tag.name, pages_path(tag: tag.name)
+  .omitteds
+    -@page.tags.omitted.by_name.each do |tag|
+      =link_to tag.name, pages_path(omitted: tag.name)
+  .hiddens
+    -@page.tags.hidden.by_name.each do |tag|
+      =link_to tag.name, pages_path(hidden: tag.name)
+  .info
+    -@page.tags.info.by_name.each do |tag|
+      =link_to tag.name, pages_path(info: tag.name)
+  .ratings
+    -@page.tags.rating.by_name.each do |tag|
+      =link_to tag.name, pages_path(rating: tag.name)
   .authors
     -@page.authors.by_name.each do |author|
       =link_to author.name, pages_path(author: author.true_name)
   .stars= @page.star_string
-  .ratings= @page.rating_string
   .size
     =@page.size_string
   .last_read=@page.last_read_string
-  .info= @page.info_string
   .my_notes=raw @page.my_formatted_notes
   .notes
     =raw @page.medium_notes

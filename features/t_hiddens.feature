@@ -6,10 +6,14 @@ Scenario: strip whitespace and sort
     And I edit its tags
     And I fill in "tags" with "  xyz &   789,  abc/123,lmn   & 345  "
     And I press "Add Hidden Tags"
-    ## FIXME hiddens should be find urls, like other tags, not comma separated
-  #Then I should see "abc/123 lmn & 345 xyz & 789" within ".hiddens"
-    #And "xyz & 789" should link to "/pages?hiddens=xyz+%2F+789"
-  Then I should see "abc/123, lmn & 345, xyz & 789" within ".hiddens"
+  Then I should see "abc/123 lmn & 345 xyz & 789" within ".hiddens"
+    And "xyz & 789" should link to "/pages?hidden=xyz+%26+789"
+
+Scenario: link to tag on show should find page on index
+  Given a page exists with hiddens: "lmn123"
+  When I am on the page's page
+    And I follow "lmn123"
+  Then I should see "Page 1" within "#position_1"
 
 Scenario: no tags exist during create
   Given I am on the homepage
@@ -58,8 +62,7 @@ Scenario: add hiddens to a page which already has hiddens sorts alphabetically
     And I edit its tags
     And I fill in "tags" with "xyz123, abc123"
     And I press "Add Hidden Tags"
-    #FIXME should be links, not comma separated text
-  Then I should see "abc123, lmn123, xyz123" within ".hiddens"
+  Then I should see "abc123 lmn123 xyz123" within ".hiddens"
 
 Scenario: new parent for an existing page should have the same hidden (not duped)
   Given a page exists with hiddens: "abc123"

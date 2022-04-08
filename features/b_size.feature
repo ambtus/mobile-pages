@@ -64,8 +64,6 @@ Scenario: new size of parent
     And I fill in "url" with "http://test.sidrasue.com/8000.html"
     And I press "Refetch"
     And I follow "Page 1" within ".parent"
-    # FIXME shouldn't need to press rebuild
-    And I press "Rebuild Meta"
   Then I should see "78,325 words" within ".size"
 
 Scenario: new size of part
@@ -79,5 +77,4 @@ Scenario: new size of part
   When I choose "size_medium"
   And I choose "type_Chapter"
     And I press "Find"
-    # FIXME - if i deliberately choose chapter, i should get it
-  #Then I should see "Part 1 of Page 1" within "#position_1"
+  Then I should see "Part 1 of Page 1" within "#position_1"

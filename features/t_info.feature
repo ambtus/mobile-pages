@@ -6,10 +6,14 @@ Scenario: strip whitespace and sort
     And I edit its tags
     And I fill in "tags" with "  xyz &   789,  abc/123,lmn   & 345  "
     And I press "Add Info Tags"
-    ## FIXME infos should be find urls, like other tags, not comma separated
-  #Then I should see "abc/123 lmn & 345 xyz & 789" within ".info"
-    #And "abc/123" should link to "/pages?info=abc%2F123"
-  Then I should see "abc/123, lmn & 345, xyz & 789" within ".info"
+  Then I should see "abc/123 lmn & 345 xyz & 789" within ".info"
+    And "abc/123" should link to "/pages?info=abc%2F123"
+
+Scenario: link to tag on show should find page on index
+  Given a page exists with infos: "lmn123"
+  When I am on the page's page
+    And I follow "lmn123"
+  Then I should see "Page 1" within "#position_1"
 
 Scenario: no tags exist during create
   Given I am on the homepage
@@ -57,9 +61,7 @@ Scenario: add infos to a page which already has infos sorts alphabetically
     And I edit its tags
     And I fill in "tags" with "xyz123, abc123"
     And I press "Add Info Tags"
-    ## FIXME infos should be find urls, like other tags, not comma separated
-  #Then I should see "abc123 lmn123 xyz123" within ".info"
-  Then I should see "abc123, lmn123, xyz123" within ".info"
+  Then I should see "abc123 lmn123 xyz123" within ".info"
 
  Scenario: new parent for an existing page should have the same info (no dupes)
   Given a page exists with infos: "abc123"

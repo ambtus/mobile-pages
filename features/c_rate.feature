@@ -66,8 +66,7 @@ Scenario: rate a book 2 stars (bad)
     And I choose "1"
     And I press "Rate"
   Then I should see "1 star"
-    # FIXME - suffix on star
-    # And I should NOT see "stars"
+    And I should NOT see "stars"
     And the read after date should be 4 years from now
 
 Scenario: check before rate part

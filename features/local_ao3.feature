@@ -117,13 +117,11 @@ Scenario: Other Fandom prevents fandom matching
   Then I should see "Other Fandom" within ".fandoms"
     And I should see "Harry Potter" before "Harry Potter/Unknown" within ".notes"
 
-# FIXME? should toggling other fandom perform the rebuild meta automatically?
 Scenario: toggling Other Fandom allows fandom matching
   Given Skipping Stones exists
     And a tag exists with name: "Harry Potter" AND type: "Fandom"
   When I am on the page's page
     And I press "Toggle Other Fandom"
-    And I press "Rebuild Meta"
   Then I should see "Harry Potter" within ".fandoms"
     And I should NOT see "Harry Potter" before "Harry Potter/Unknown" within ".notes"
 
@@ -174,13 +172,6 @@ Scenario: works in a series still have authors in notes even if the series doesn
     And I should see "Next: The Flower [sequel to Skipping Stones] (Single)"
     And I should see "Skipping Stones (Single)" within ".title"
     And I should see "by Sidra" within ".notes"
-
-Scenario: works in a series still have authors in Authors even if the series doesn't
-  Given an author exists with name: "Sidra"
-    And Counting Drabbles exists
-    And I am on the page with title "Skipping Stones"
-  Then I should NOT see "by Sidra" within ".notes"
-    But I should see "Sidra" within ".authors"
 
 Scenario: works in a series still have fandoms in notes even if the series doesn't
   Given Counting Drabbles exists

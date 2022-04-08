@@ -63,9 +63,8 @@ Scenario: grab a series with multiple authors
     And I should see "2. The Fruits Of The Forest" within "#position_2"
     And I should NOT see "Good Omens) Rate" within "#position_1"
     And I should NOT see "Good Omens) Rate" within "#position_2"
-## FIXME - shouldn't have duplicate authors
-   # And I should NOT see "entanglednow" within "#position_1"
-   # And I should NOT see "entanglednow" within "#position_2"
+    And I should NOT see "entanglednow" within "#position_1"
+    And I should NOT see "entanglednow" within "#position_2"
     And I should NOT see "et al: green_grin" within "#position_1"
     But I should see "et al: green_grin" within "#position_2"
 
@@ -76,9 +75,8 @@ Scenario: works in a series should not have duplicate tags
     And I fill in "page_url" with "https://archiveofourown.org/series/46"
     And I press "Store"
   Then I should see "Sidra" within ".authors"
-## FIXME - shouldn't have duplicate authors
-#    But I should NOT see "Sidra" within "#position_1"
-#    And I should NOT see "Sidra" within "#position_2"
+    But I should NOT see "Sidra" within "#position_1"
+    And I should NOT see "Sidra" within "#position_2"
     And I should see "harry potter" within ".fandoms"
     But I should NOT see "harry potter" within "#position_1"
     But I should NOT see "harry potter" within "#position_2"

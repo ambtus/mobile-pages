@@ -398,7 +398,8 @@ class Page < ActiveRecord::Base
       elsif ff?
         errors.add(:base, "can't refetch from fanfiction.net")
       else
-        fetch_raw
+        fetch_raw.remove_outdated_downloads.set_wordcount
+        self.parent.set_wordcount(false) if self.parent
       end
     end
   end
@@ -431,13 +432,11 @@ class Page < ActiveRecord::Base
     self.update(:parent_id => parent.id, :position => count)
     if new # move my tags and authors to parent
       parent.tags << self.tags
-      self.tags.delete(self.tags)
       parent.cache_tags
-      self.cache_tags
       parent.authors << self.authors
-      self.authors.delete(self.authors)
       parent.update_stars
     end
+    self.remove_duplicate_tags
     Rails.logger.debug "DEBUG: updating parent last read"
     parent.update_last_read
     self.update!(type: "Chapter") if self.type == "Single"
@@ -495,7 +494,7 @@ class Page < ActiveRecord::Base
     else
       self.update!(last_read: last_reads.sort.first)
     end
-    Rails.logger.debug "DEBUG: new last read: #{self.last_read}"
+    #Rails.logger.debug "DEBUG: new last read: #{self.last_read}"
     return self
   end
 
@@ -509,7 +508,7 @@ class Page < ActiveRecord::Base
     else
       self.update!(stars: highest)
     end
-    Rails.logger.debug "DEBUG: new stars: #{self.stars}"
+    #Rails.logger.debug "DEBUG: new stars: #{self.stars}"
     return self
   end
 
@@ -555,12 +554,12 @@ class Page < ActiveRecord::Base
   def unread?; last_read.blank?; end
   def read?
      answer = last_read.present? && last_read != UNREAD_PARTS_DATE
-     Rails.logger.debug "DEBUG: read? #{last_read} #{answer}"
+     #Rails.logger.debug "DEBUG: read? #{last_read} #{answer}"
      return answer
   end
   def unread_parts?
      answer = last_read == UNREAD_PARTS_DATE
-     Rails.logger.debug "DEBUG: unread_parts? #{last_read} #{answer}"
+     #Rails.logger.debug "DEBUG: unread_parts? #{last_read} #{answer}"
      return answer
   end
 
@@ -582,29 +581,29 @@ class Page < ActiveRecord::Base
 
   def last_read_string
     if read?
-      Rails.logger.debug "DEBUG: last read #{last_read.to_date}"
+      #Rails.logger.debug "DEBUG: last read #{last_read.to_date}"
       last_read.to_date
     elsif unread_parts?
       suffix = unread_parts.size == 1 ? "" : "s"
       initial_string = "#{unread_parts.size} #{UNREAD} part#{suffix}"
       unless read_parts.empty?
-        Rails.logger.debug "DEBUG: read parts"
+        #Rails.logger.debug "DEBUG: read parts"
         read_dates = read_parts.map(&:last_read)
       else
-        Rails.logger.debug "DEBUG: no read parts, searching subparts"
+        #Rails.logger.debug "DEBUG: no read parts, searching subparts"
         subparts = parts.map(&:parts).flatten
         read_dates = subparts.map(&:last_read).compact
         read_dates.delete(UNREAD_PARTS_DATE)
       end
       if read_dates.empty?
-        Rails.logger.debug "DEBUG: all parts & subparts last read never"
+        #Rails.logger.debug "DEBUG: all parts & subparts last read never"
         initial_string
       else
-        Rails.logger.debug "DEBUG: last read dates: #{read_dates}"
+        #Rails.logger.debug "DEBUG: last read dates: #{read_dates}"
         initial_string + " (#{read_dates.sort.first.to_date})"
       end
     elsif unread?
-      Rails.logger.debug "DEBUG: last read never"
+      #Rails.logger.debug "DEBUG: last read never"
       unread_string
     end
   end
@@ -645,7 +644,7 @@ class Page < ActiveRecord::Base
   def stars?; [5,4,3,2,1].include?(self.stars); end
   def star_string
     if stars?
-      "#{stars} " + "stars".pluralize(stars)
+      "#{stars} " + "star".pluralize(stars)
     elsif unfinished?
       UNFINISHED
     elsif unrated?

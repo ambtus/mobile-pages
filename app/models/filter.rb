@@ -12,8 +12,8 @@ class Filter
     unless params[:type] || params[:url] || params[:title] || params[:fandom] || params[:sort_by] == "last_created"
       pages = pages.where(:parent_id => nil)
     end
-    # ignore parts if filtering on size
-    pages = pages.where(:parent_id => nil) if params[:size]
+    # ignore parts if filtering on size unless you've chosen a type
+    pages = pages.where(:parent_id => nil) if params[:size] && !params[:type]
 
     pages = pages.where(:last_read => nil) if params[:unread] == "all"
     pages = pages.where(:last_read => [nil, Page::UNREAD_PARTS_DATE]) if params[:unread] == "any"
@@ -45,8 +45,6 @@ class Filter
 
     if params.has_key?(:hidden)
       pages = pages.where("pages.cached_hidden_string LIKE ?", "%#{params[:hidden]}%")
-    elsif params.has_key?(:url)
-      # do not constrain on cached_hidden_string if finding by url
     else
       pages = pages.where(:cached_hidden_string => "")
     end

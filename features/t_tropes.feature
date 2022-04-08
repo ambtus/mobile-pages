@@ -6,10 +6,15 @@ Scenario: strip whitespace and sort
     And I edit its tags
     And I fill in "tags" with "  xyz &   789,  abc/123,lmn   & 345  "
     And I press "Add Trope Tags"
-    ## FIXME tropes should be find urls, like other tags, not comma separated
-  #Then I should see "abc/123 lmn & 345 xyz & 789" within ".tags"
-    #And "xyz & 789" should link to "/pages?tropes=xyz+%2F+789"
-  Then I should see "abc/123, lmn & 345, xyz & 789" within ".tags"
+  Then I should see "abc/123 lmn & 345 xyz & 789" within ".tags"
+    And "xyz & 789" should link to "/pages?tag=xyz+%26+789"
+
+Scenario: link to tag on show should find page on index
+  Given a page exists with tropes: "lmn123"
+  When I am on the page's page
+    And I follow "lmn123"
+  Then I should see "Page 1" within "#position_1"
+
 
 Scenario: no tags exist during create
   Given I am on the homepage
@@ -58,8 +63,7 @@ Scenario: add tropes to a page which already has tropes sorts alphabetically
     And I edit its tags
     And I fill in "tags" with "xyz123, abc123"
     And I press "Add Trope Tags"
-    #FIXME should be links, not comma separated text
-  Then I should see "abc123, lmn123, xyz123" within ".tags"
+  Then I should see "abc123 lmn123 xyz123" within ".tags"
 
 Scenario: new parent for an existing page should have the same trope (not duped)
   Given a page exists with tropes: "abc123"

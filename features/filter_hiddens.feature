@@ -121,8 +121,7 @@ Scenario: find by url should NOT find hidden if it's part of the filter
     And I fill in "page_url" with "test.sidrasue.com"
     And I press "Find"
   Then I should see "The Call of the Wild"
-    # FIXME: find by url should only find hidden if it's caught by "One page found"
-    #But I should NOT see "A Christmas Carol"
+    But I should NOT see "A Christmas Carol"
 
 Scenario: change part to hidden
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3" AND tropes: "show me" AND add_author_string: "my author"
@@ -135,5 +134,4 @@ Scenario: change part to hidden
     And I press "Find"
   Then I should see "Part 1"
     And I should see "Part 3"
-    # FIXME: find by url should only find hidden if it's caught by "One page found"
-    #But I should NOT see "Part 2"
+    But I should NOT see "Part 2"

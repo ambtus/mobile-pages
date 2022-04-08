@@ -48,11 +48,11 @@ class Series < Page
     Rails.logger.debug "DEBUG: first & last possibles: #{both}"
     add_fandom(both)
 
-    parts.map(&:remove_duplicate_tags)
-
     add_author(doc_authors) if doc_authors
 
     Rails.logger.debug "DEBUG: notes now: #{self.notes}"
+
+    parts.map(&:remove_duplicate_tags)
 
     self.save! && self.remove_outdated_downloads
   end

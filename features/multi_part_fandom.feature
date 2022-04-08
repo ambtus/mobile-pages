@@ -12,8 +12,7 @@ Scenario: add part with same fandoms
     And I press "Update"
   Then I should see "Parent" within ".title"
     And I should see "two" within ".fandoms"
-    ##FIXME - remove duplicate tags when adding parent
-    #But I should NOT see "two" within "#position_1"
+    But I should NOT see "two" within "#position_1"
 
 Scenario: add part with different fandoms
   Given the following pages
@@ -46,7 +45,7 @@ Scenario: find a part with a parent with different fandom
   Then I should see "Child2 of Parent" within "#position_1"
     And the page should NOT contain css "#position_2"
 
-Scenario: find a part with a parent with same fandom
+Scenario: cannot find a part with a parent with same fandom (no dupes)
   Given the following pages
     | title  | url                                 | fandoms |
     | Parent |                                     | two |
@@ -61,5 +60,5 @@ Scenario: find a part with a parent with same fandom
     And I select "two" from "fandom"
     And I press "Find"
   Then I should see "Parent" within "#position_1"
-    And I should see "Child1 of Parent" within "#position_2"
-    And the page should NOT contain css "#position_3"
+    But I should NOT see "Child1 of Parent"
+    And the page should NOT contain css "#position_2"

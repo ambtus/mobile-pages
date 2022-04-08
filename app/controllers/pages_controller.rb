@@ -151,7 +151,7 @@ class PagesController < ApplicationController
         @page = Page.find(@page.id) # in case something changed
         flash[:notice] = "Rebuilt Meta"
       when "Toggle #{Page::OTHER}"
-        @page.toggle_other_fandom
+        @page.toggle_other_fandom.rebuild_meta
         flash[:notice] = "Toggled #{Page::OTHER}"
       when "Make Single"
         @page.make_single

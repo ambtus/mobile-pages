@@ -8,6 +8,12 @@ Scenario: fandom tag not in tag dropdown
     But I should be able to select "yes fandom" from "fandom"
     And I should be able to select "not fandom" from "tag"
 
+Scenario: link to tag on show should find page on index
+  Given a page exists with fandoms: "lmn123"
+  When I am on the page's page
+    And I follow "lmn123"
+  Then I should see "Page 1" within "#position_1"
+
 Scenario: strip fandom whitespace and sort
   Given a page exists
   When I am on the page's page

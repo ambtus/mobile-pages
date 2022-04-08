@@ -9,6 +9,12 @@ Scenario: strip whitespace and sort
   Then I should see "abc/123 lmn & 345 xyz & 789" within ".characters"
     And "abc/123" should link to "/pages?character=abc%2F123"
 
+Scenario: link to tag on show should find page on index
+  Given a page exists with characters: "lmn123"
+  When I am on the page's page
+    And I follow "lmn123"
+  Then I should see "Page 1" within "#position_1"
+
 Scenario: no tags exist during create
   Given I am on the homepage
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
