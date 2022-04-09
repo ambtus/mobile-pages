@@ -3,7 +3,7 @@ Feature: audiobook
 Scenario: audiobook sections
   Given a page exists with url: "http://test.sidrasue.com/long.html"
   When I am on the page's page
-    And I want to edit the text
+    And I edit the text
   Then I should see "Lorem ipsum dolor"
     And I should see "SLOW DOWN"
     And I should see "1"
@@ -31,7 +31,7 @@ Scenario: audiobook created updates last read and adds audio tag
 Scenario: audiobook created updates last read and adds audio tag
   Given a page exists with last_read: "2014-01-01"
   When I am on the page's page
-    And I want to edit the text
+    And I edit the text
     And I press "Audiobook created"
     And I am on the page's page
   Then I should see "audio" within ".tags"

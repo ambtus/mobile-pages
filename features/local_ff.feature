@@ -59,7 +59,7 @@ Scenario: fanfiction Share button gets cleaned
     But I should NOT see "Share"
 
 Scenario: fanfiction underline spans don't get cleaned
-  Given part6 exists
+  Given underline spans exists
   When I am on the page with title "Part 6"
     And I view the content
   Then I should NOT see "But I so I ,"

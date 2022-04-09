@@ -26,7 +26,7 @@ Scenario: no tags exist during create
   Then I should see "abc123" within ".hiddens"
 
 Scenario: no tags selected during create
-  Given a tag exists with name: "abc123" AND type: "Hidden"
+  Given "abc123" is a "Hidden"
   When I am on the homepage
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I fill in "page_title" with "New Title"
@@ -37,7 +37,7 @@ Scenario: no tags selected during create
   Then I should see "abc123" within ".hiddens"
 
 Scenario: hidden selected during create
-  Given a tag exists with name: "abc123" AND type: "Hidden"
+  Given "abc123" is a "Hidden"
   When I am on the homepage
     And I select "abc123" from "hidden"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
@@ -74,13 +74,13 @@ Scenario: new parent for an existing page should have the same hidden (not duped
     But I should NOT see "abc123" within "#position_1"
 
 Scenario: hiddens are editable
-  Given a tag exists with name: "abc123" AND type: "Hidden"
+  Given "abc123" is a "Hidden"
   When I am on the tags page
     And I follow "abc123"
   Then I should see "Edit tag: abc123"
 
 Scenario: edit the hidden name
-  Given a tag exists with name: "abc123" AND type: "Hidden"
+  Given "abc123" is a "Hidden"
   When I am on the edit tag page for "abc123"
     And I fill in "tag_name" with "xyz987"
     And I press "Update"
@@ -99,7 +99,7 @@ Scenario: delete a hidden
     But I should see "Page 1"
 
 Scenario: merge two tags
-  Given a tag exists with name: "abc123" AND type: "Hidden"
+  Given "abc123" is a "Hidden"
     And a page exists with hiddens: "xyz987"
   When I am on the edit tag page for "xyz987"
     And I select "abc123" from "merge"
@@ -109,8 +109,8 @@ Scenario: merge two tags
     But I should see "abc123" within ".hiddens"
 
 Scenario: don’t allow merge if not the same type
-  Given a tag exists with name: "abc123"
-    And a tag exists with name: "xyz987" AND type: "Hidden"
+  Given "abc123" is a tag
+    And "xyz987" is a "Hidden"
   When I am on the edit tag page for "xyz987"
   Then I should NOT see "abc123"
     And I should NOT see "Merge"

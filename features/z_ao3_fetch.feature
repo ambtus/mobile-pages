@@ -1,8 +1,8 @@
 Feature: ao3 specific stuff
 
 Scenario: grab a single
-  Given a tag exists with name: "popslash" AND type: "Fandom"
-    And an author exists with name: "Sidra"
+  Given "popslash" is a "Fandom"
+    And "Sidra" is an author
     And I am on the homepage
   When I fill in "page_url" with "http://archiveofourown.org/works/68481/"
     And I press "Store"
@@ -20,7 +20,7 @@ Scenario: grab a single
     And my page named "I Drive Myself Crazy" should have url: "https://archiveofourown.org/works/68481"
 
 Scenario: grab a book
-  Given a tag exists with name: "harry potter" AND type: "Fandom"
+  Given "harry potter" is a "Fandom"
     And I am on the homepage
   When I fill in "page_url" with "https://archiveofourown.org/works/692/"
     And I select "harry potter" from "fandom"
@@ -39,7 +39,7 @@ Scenario: grab a book
     And my page named "Time Was, Time Is" should have url: "https://archiveofourown.org/works/692"
 
  Scenario: grab a series
-  Given a tag exists with name: "harry potter" AND type: "Fandom"
+  Given "harry potter" is a "Fandom"
     And I am on the homepage
   When I fill in "page_url" with "http://archiveofourown.org/series/46"
     And I press "Store"
@@ -55,7 +55,7 @@ Scenario: grab a book
     And my page named "Counting Drabbles" should have url: "https://archiveofourown.org/series/46"
 
 Scenario: deliberately fetch only one chapter
-  Given a tag exists with name: "harry potter" AND type: "Fandom"
+  Given "harry potter" is a "Fandom"
     And I am on the homepage
     And I fill in "page_url" with "https://archiveofourown.org/works/692/chapters/803"
     And I select "harry potter" from "fandom"
@@ -70,7 +70,7 @@ Scenario: deliberately fetch only one chapter
     And my page named "Where am I?" should have url: "https://archiveofourown.org/works/692/chapters/803"
 
 Scenario: refetch Single
-  Given a tag exists with name: "harry potter" AND type: "Fandom"
+  Given "harry potter" is a "Fandom"
     And Where am I exists
     And I am on the page with title "Where am I?"
     And I follow "Notes"
@@ -130,7 +130,7 @@ Scenario: fetching a series from before all the works had urls
     And I should have 7 pages
 
 Scenario: storing a series when I already have one of its singles
-  Given a tag exists with name: "harry potter" AND type: "Fandom"
+  Given "harry potter" is a "Fandom"
     And Skipping Stones exists
   When I am on the homepage
     And I fill in "page_url" with "https://archiveofourown.org/series/46"
@@ -157,8 +157,8 @@ Scenario: creating a series when I already have its books
     And I should have 7 pages
 
 Scenario: refetching a one-page Single into a Book
-  Given a tag exists with name: "harry potter" AND type: "Fandom"
-    And an author exists with name: "Sidra"
+  Given "harry potter" is a "Fandom"
+    And "Sidra" is an author
     And Where am I existed and was read
   When I am on the page with title "Time Was, Time Is"
     And I follow "Refetch"

@@ -1,8 +1,8 @@
 Feature: fandoms are a type of tag, and can be created and selected like tags
 
 Scenario: fandom tag not in tag dropdown
-  Given a tag exists with name: "not fandom"
-    And a tag exists with name: "yes fandom" AND type: "Fandom"
+  Given "not fandom" is a tag
+    And "yes fandom" is a "Fandom"
   When I am on the homepage
   Then I should NOT be able to select "yes fandom" from "tag"
     But I should be able to select "yes fandom" from "fandom"
@@ -32,7 +32,7 @@ Scenario: no tags exist during create
     And I should see "Other Fandom" within ".fandoms"
 
 Scenario: no tags selected during create
-  Given a tag exists with name: "first" AND type: "Fandom"
+  Given "first" is a "Fandom"
     And I am on the homepage
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I fill in "page_title" with "New Title"
@@ -42,8 +42,8 @@ Scenario: no tags selected during create
     And I should NOT see "first" within ".fandoms"
 
 Scenario: fandom and other tag selected during create
-  Given a tag exists with name: "first"
-    And a tag exists with name: "second" AND type: "Fandom"
+  Given "first" is a tag
+    And "second" is a "Fandom"
     And I am on the homepage
     And I select "first" from "tag"
     And I select "second" from "fandom"
@@ -56,8 +56,8 @@ Scenario: fandom and other tag selected during create
     And I should see "second" within ".fandoms"
 
 Scenario: fandom only selected during create
-  Given a tag exists with name: "nonfiction" AND type: "Fandom"
-    And a tag exists with name: "something"
+  Given "nonfiction" is a "Fandom"
+    And "something" is a tag
     And I am on the homepage
     And I select "nonfiction" from "fandom"
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
@@ -86,7 +86,7 @@ Scenario: add a fandom to a page makes the fandom selectable
     And I should be able to select "Harry Potter" from "Fandom"
 
 Scenario: select a fandom for a page when there are fandoms
-  Given a tag exists with name: "SGA" AND type: "Fandom"
+  Given "SGA" is a "Fandom"
     And a page exists
   When I am on the page's page
     And I edit its tags
@@ -138,18 +138,18 @@ Scenario: new parent for an existing page should have the same fandom
     But I should NOT see "nonfiction" within ".parts"
 
 Scenario: list the fandoms
-  Given a tag exists with name: "Harry Potter" AND type: "Fandom"
+  Given "Harry Potter" is a "Fandom"
   When I am on the tags page
   Then I should see "Harry Potter"
 
 Scenario: edit a fandoms
-  Given a tag exists with name: "Harry Potter" AND type: "Fandom"
+  Given "Harry Potter" is a "Fandom"
   When I am on the tags page
     And I follow "Harry Potter"
   Then I should see "Edit tag: Harry Potter"
 
 Scenario: change the fandom name
-  Given a tag exists with name: "fantasy" AND type: "Fandom"
+  Given "fantasy" is a "Fandom"
   When I am on the edit tag page for "fantasy"
     And I fill in "tag_name" with "speculative fiction"
     And I press "Update"
@@ -184,7 +184,7 @@ Scenario: deleted fandom puts moves fandom to other fandom on page
     And I should see "Twilight" within ".notes"
 
 Scenario: merge two tags
-  Given a tag exists with name: "better name" AND type: "Fandom"
+  Given "better name" is a "Fandom"
     And a page exists with fandoms: "bad name"
   When I am on the edit tag page for "bad name"
     And I select "better name" from "merge"
@@ -194,8 +194,8 @@ Scenario: merge two tags
     And I should see "better name" within ".fandoms"
 
 Scenario: don’t allow merge if not the same type
-  Given a tag exists with name: "not fandom"
-    And a tag exists with name: "bad name" AND type: "Fandom"
+  Given "not fandom" is a tag
+    And "bad name" is a "Fandom"
   When I am on the edit tag page for "bad name"
   Then I should NOT see "not fandom"
     And I should NOT see "Merge"
@@ -320,7 +320,7 @@ Scenario: change fandom to hidden tag part 4
     But I should see "No pages found"
 
 Scenario: 陈情令 | The Untamed (TV)
-  Given a tag exists with name: "Untamed/MoDao ZuShi" AND type: "Fandom"
+  Given "Untamed/MoDao ZuShi" is a "Fandom"
     And a page exists with ao3_fandoms: "陈情令 | The Untamed (TV)"
   When I am on the page's page
   Then I should see "Untamed/MoDao ZuShi" within ".fandoms"
@@ -328,14 +328,14 @@ Scenario: 陈情令 | The Untamed (TV)
     And I should NOT see "TV"
 
 Scenario: Marvel Cinematic Universe
-  Given a tag exists with name: "Avengers/Marvel" AND type: "Fandom"
+  Given "Avengers/Marvel" is a "Fandom"
     And a page exists with ao3_fandoms: "Marvel Cinematic Universe"
   When I am on the page's page
   Then I should see "Avengers/Marvel" within ".fandoms"
     And I should NOT see "Cinematic Universe"
 
 Scenario: 魔道祖师 - 墨香铜臭 | Módào Zǔshī - Mòxiāng Tóngxiù
-  Given a tag exists with name: "Untamed/MoDao ZuShi" AND type: "Fandom"
+  Given "Untamed/MoDao ZuShi" is a "Fandom"
     And a page exists with ao3_fandoms: "陈情令 | The Untamed (TV)"
   When I am on the page's page
   Then I should see "Untamed/MoDao ZuShi" within ".fandoms"
@@ -343,14 +343,14 @@ Scenario: 魔道祖师 - 墨香铜臭 | Módào Zǔshī - Mòxiāng Tóngxiù
     And I should NOT see "Mòxiāng"
 
 Scenario: 魔道祖师 - 墨香铜臭 | Módào Zǔshī - Mòxiāng Tóngxiù, 陈情令 | The Untamed (TV)
-  Given a tag exists with name: "Untamed/MoDao ZuShi" AND type: "Fandom"
+  Given "Untamed/MoDao ZuShi" is a "Fandom"
     And a page exists with ao3_fandoms: "魔道祖师 - 墨香铜臭 | Módào Zǔshī - Mòxiāng Tóngxiù, 陈情令 | The Untamed (TV)"
   When I am on the page's page
   Then I should see "Untamed/MoDao ZuShi" within ".fandoms"
     And I should NOT see "Modao Zshi" within ".notes"
 
 Scenario: Forgotten Realms and The Legend of Drizzt Series - R. A. Salvatore
-  Given a tag exists with name: "Forgotten Realms/Drizzt" AND type: "Fandom"
+  Given "Forgotten Realms/Drizzt" is a "Fandom"
     And a page exists with ao3_fandoms: "Forgotten Realms, The Legend of Drizzt Series - R. A. Salvatore"
   When I am on the page's page
   Then I should see "Forgotten Realms/Drizzt" within ".fandoms"
@@ -362,7 +362,7 @@ Scenario: Spider-Man - All Media Types part 1
   Then I should see "Spider-Man" within ".notes"
 
 Scenario: Spider-Man - All Media Types part 2
-  Given a tag exists with name: "Spider-man" AND type: "Fandom"
+  Given "Spider-man" is a "Fandom"
     And a page exists with ao3_fandoms: "Spider-Man - All Media Types"
   When I am on the page's page
   Then I should see "Spider-man" within ".fandoms"
@@ -381,7 +381,7 @@ Scenario: Deadpool (2016) and Deadpool and Spider-Man
     But I should NOT see "Deadpool, Deadpool"
 
 Scenario: Real Genius (1985)
-  Given a tag exists with name: "Forgotten Realms/Drizzt" AND type: "Fandom"
+  Given "Forgotten Realms/Drizzt" is a "Fandom"
     And a page exists with ao3_fandoms: "Real Genius (1985)"
   When I am on the page's page
   Then I should NOT see "Forgotten Realms/Drizzt" within ".fandoms"
@@ -396,10 +396,10 @@ Scenario: 天官赐福 - 墨香铜臭 | Tiān Guān Cì Fú - Mòxiāng Tóngxi�
     But I should see "Tian Guan Ci Fu" within ".notes"
 
 Scenario: star wars, not star trek
-  Given a tag exists with name: "Star Trek" AND type: "Fandom"
-    And a tag exists with name: "Battlestar Galactica" AND type: "Fandom"
-    And a tag exists with name: "Starsky & Hutch" AND type: "Fandom"
-    And a tag exists with name: "Star Wars" AND type: "Fandom"
+  Given "Star Trek" is a "Fandom"
+    And "Battlestar Galactica" is a "Fandom"
+    And "Starsky & Hutch" is a "Fandom"
+    And "Star Wars" is a "Fandom"
     And a page exists with ao3_fandoms: "Star Wars - All Media Types, Star Wars Prequel Trilogy"
   When I am on the page's page
   Then I should see "Star Wars" within ".fandoms"

@@ -26,7 +26,7 @@ Scenario: no tags exist during create
   Then I should see "abc123" within ".info"
 
 Scenario: no tags selected during create
-  Given a tag exists with name: "abc123" AND type: "Info"
+  Given "abc123" is an "Info"
   When I am on the homepage
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I fill in "page_title" with "New Title"
@@ -37,7 +37,7 @@ Scenario: no tags selected during create
   Then I should see "abc123" within ".info"
 
 Scenario: info selected during create
-  Given a tag exists with name: "abc123" AND type: "Info"
+  Given "abc123" is an "Info"
   When I am on the homepage
     And I select "abc123" from "info"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
@@ -74,13 +74,13 @@ Scenario: add infos to a page which already has infos sorts alphabetically
     And I should NOT see "abc123" within "#position_1"
 
 Scenario: info tags are editable
-  Given a tag exists with name: "abc123" AND type: "Info"
+  Given "abc123" is an "Info"
   When I am on the tags page
     And I follow "abc123"
     Then I should see "Edit tag: abc123"
 
 Scenario: edit the info name
-  Given a tag exists with name: "abc123" AND type: "Info"
+  Given "abc123" is an "Info"
   When I am on the edit tag page for "abc123"
     And I fill in "tag_name" with "xyz987"
     And I press "Update"
@@ -98,7 +98,7 @@ Scenario: delete a info tag
   Then I should NOT see "nobody"
 
 Scenario: merge two tags
-  Given a tag exists with name: "abc123" AND type: "Info"
+  Given "abc123" is an "Info"
     And a page exists with infos: "xyz987"
   When I am on the edit tag page for "xyz987"
     And I select "abc123" from "merge"
@@ -108,7 +108,7 @@ Scenario: merge two tags
     And I should see "abc123" within ".info"
 
 Scenario: don’t allow merge if not the same type
-  Given a tag exists with name: "abc123"
+  Given "abc123" is a tag
     And a page exists with infos: "xyz987"
   When I am on the edit tag page for "xyz987"
     Then I should NOT see "abc123"

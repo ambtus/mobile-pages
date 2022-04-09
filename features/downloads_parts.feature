@@ -46,8 +46,8 @@ Scenario: two and three levels (h3 & h4)
     And I should see "Hiss" within "h4"
 
 Scenario: download part titles
-  Given a tag exists with name: "rating tag" AND type: "Rating"
-    And a tag exists with name: "info tag" AND type: "Info"
+  Given "rating tag" is a "Rating"
+    And "info tag" is an "Info"
     And a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3"
   When I am on the page's page
     And I follow "Part 1"

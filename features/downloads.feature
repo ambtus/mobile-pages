@@ -44,7 +44,7 @@ Scenario: notes go into html downloads
   When I am on the page's page
     And I view the content
   Then I should see "Lorem ipsum dolor"
-    And there should NOT be a horizontal rule
+    And I should NOT see a horizontal rule
 
 Scenario: Update notes removes old html downloads
   Given a page exists with notes: "Lorem ipsum dolor"
@@ -62,7 +62,7 @@ Scenario: my notes do go in html
   When I am on the page's page
      And I view the content
   Then I should see "Lorem ipsum dolor"
-    And there should NOT be a horizontal rule
+    And I should NOT see a horizontal rule
 
 Scenario: update my notes removes old html downloads
   Given a page exists with my_notes: "Lorem ipsum dolor"
@@ -79,7 +79,7 @@ Scenario: hr between notes and my notes
   Given a page exists with notes: "Lorem ipsum dolor" AND my_notes: "abc123"
   When I am on the page's page
      And I view the content
-  Then there should be a horizontal rule
+  Then I should see a horizontal rule
 
 Scenario: epub image bug
   Given The Picture exists

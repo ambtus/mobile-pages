@@ -9,7 +9,7 @@ Scenario: editing name from edit author page updates its pages
   Then I should see "jane (june)" within ".authors"
 
 Scenario: adding an AKA to an author adds both authors to index page
-  Given an author exists with name: "jane"
+  Given "jane" is an author
   When I am on the edit author page for "jane"
     And I fill in "author_name" with "jane (june)"
     And I press "Update"
@@ -21,7 +21,7 @@ Scenario: adding an AKA to an author adds both authors to index page
 Scenario: editing the name from the page's edit author page
   Given a page exists
   When I am on the page's page
-    And I want to edit the authors
+    And I edit the authors
     And I fill in "authors" with "lewis carroll (charles dodgson)"
     And I press "Add Authors"
     And I am on the homepage
@@ -32,13 +32,13 @@ Scenario: editing the name from the page's edit author page
 Scenario: adding an author with aka from the page's edit author page shows both
   Given a page exists
   When I am on the page's page
-    And I want to edit the authors
+    And I edit the authors
     And I fill in "authors" with "lewis carroll (charles dodgson)"
     And I press "Add Authors"
   Then I should see "lewis carroll (charles dodgson)" within ".authors"
 
 Scenario: creating a page with the original from the homepage shows both on page
-  Given an author exists with name: "lewis carroll (charles dodgson)"
+  Given "lewis carroll (charles dodgson)" is an author
   When I am on the homepage
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I select "lewis carroll" from "Author"
@@ -46,7 +46,7 @@ Scenario: creating a page with the original from the homepage shows both on page
   Then I should see "lewis carroll (charles dodgson)" within ".authors"
 
 Scenario: creating a page with the aka from the homepage shows both on page
-  Given an author exists with name: "lewis carroll (charles dodgson)"
+  Given "lewis carroll (charles dodgson)" is an author
   When I am on the homepage
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I select "charles dodgson" from "Author"

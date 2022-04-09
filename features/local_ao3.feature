@@ -36,7 +36,7 @@ Scenario: rebuild meta shouldn't refetch
 
 Scenario: rebuild from raw should also rebuild meta
   Given I Drive Myself Crazy exists
-    And an author exists with name: "Sidra"
+    And "Sidra" is an author
   When I am on the homepage
     And I follow "I Drive Myself Crazy"
     And I follow "Notes"
@@ -74,21 +74,21 @@ Scenario: multiple authors - none in Authors
     And I should NOT see "et al" within ".notes"
 
 Scenario: multiple authors - some in Authors
-  Given an author exists with name: "adiduck (book_people)"
+  Given "adiduck (book_people)" is an author
     And Multi Authors exists
   When I am on the page's page
   Then I should see "adiduck (book_people)" within ".authors"
     And I should see "et al: whimsicalimages" within ".notes"
 
 Scenario: multiple authors - reversed in Authors
-  Given an author exists with name: "book_people (adiduck)"
+  Given "book_people (adiduck)" is an author
     And Multi Authors exists
   When I am on the page's page
   Then I should see "book_people (adiduck)" within ".authors"
     And I should see "et al: whimsicalimages" within ".notes"
 
 Scenario: multiple authors - primary in Authors
-  Given an author exists with name: "adiduck"
+  Given "adiduck" is an author
     And Multi Authors exists
   When I am on the page's page
   Then I should see "adiduck" within ".authors"
@@ -97,7 +97,7 @@ Scenario: multiple authors - primary in Authors
 
 # FIXME - current limitation given how i store author names
 Scenario: multiple authors - aka in Authors
-  Given an author exists with name: "book_people"
+  Given "book_people" is an author
     And Multi Authors exists
   When I am on the page's page
   Then I should see "by adiduck (book_people), whimsicalimages" within ".notes"
@@ -111,7 +111,7 @@ Scenario: Other Fandom if fandom doesn't exists
 
 Scenario: Other Fandom prevents fandom matching
   Given Skipping Stones exists
-    And a tag exists with name: "Harry Potter" AND type: "Fandom"
+    And "Harry Potter" is a "Fandom"
   When I am on the page's page
     And I press "Rebuild Meta"
   Then I should see "Other Fandom" within ".fandoms"
@@ -119,7 +119,7 @@ Scenario: Other Fandom prevents fandom matching
 
 Scenario: toggling Other Fandom allows fandom matching
   Given Skipping Stones exists
-    And a tag exists with name: "Harry Potter" AND type: "Fandom"
+    And "Harry Potter" is a "Fandom"
   When I am on the page's page
     And I press "Toggle Other Fandom"
   Then I should see "Harry Potter" within ".fandoms"
@@ -137,7 +137,7 @@ Scenario: multiple fandoms and author on a Single
     And I should NOT see "1991" within ".notes"
 
 Scenario: some fandoms match
-  Given a tag exists with name: "Harry Potter" AND type: "Fandom"
+  Given "Harry Potter" is a "Fandom"
     And Alan Rickman exists
   When I am on the page's page
   Then I should see "Harry Potter" within ".fandoms"
@@ -151,14 +151,14 @@ Scenario: check before don't over-match
     And I should see "Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
 
 Scenario: don't over-match "of" in fandoms
-  Given a tag exists with name: "Person of Interest" AND type: "Fandom"
+  Given "Person of Interest" is a "Fandom"
     And Yer a Wizard exists
     And I am on the page's page
   Then I should NOT see "Person of Interest" within ".fandoms"
     And I should see "Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
 
 Scenario: matching double-fandoms
-  Given a tag exists with name: "Forgotten Realms/Drizzt" AND type: "Fandom"
+  Given "Forgotten Realms/Drizzt" is a "Fandom"
     And Yer a Wizard exists
     And I am on the page's page
   Then I should see "Forgotten Realms/Drizzt" within ".fandoms"
@@ -186,8 +186,8 @@ Scenario: single of work should have work title, not chapter title
     But I should see "Fuuinjutsu+Chakra+Bonds+Clones, Should not be mixed by Uzumakis"
 
 Scenario: no author or fandom or relationships shouldn't get empty paragraph
-  Given an author exists with name: "esama"
-    And a tag exists with name: "Harry Potter" AND type: "Fandom"
+  Given "esama" is an author
+    And "Harry Potter" is a "Fandom"
     And Wheel exists
   When I am on the homepage
     Then I should NOT see "; Harry has been thinking"
@@ -196,13 +196,13 @@ Scenario: no author or fandom or relationships shouldn't get empty paragraph
     But the notes should include "<p>Harry has been thinking"
 
  Scenario: series should get their fandoms from the works
-  Given a tag exists with name: "harry potter" AND type: "Fandom"
+  Given "harry potter" is a "Fandom"
     And Counting Drabbles exists
   When I am on the page's page
   Then I should see "harry potter" within ".fandoms"
 
 Scenario: meta on second chapter of book
-  Given a tag exists with name: "harry potter" AND type: "Fandom"
+  Given "harry potter" is a "Fandom"
     And Time Was exists
   When I am on the page with title "Hogwarts"
     Then I should see "Hogwarts (Chapter)" within ".title"
@@ -212,7 +212,7 @@ Scenario: meta on second chapter of book
     But the part titles should be stored as "Where am I? & Hogwarts"
 
 Scenario: meta on first book of series
-  Given a tag exists with name: "harry potter" AND type: "Fandom"
+  Given "harry potter" is a "Fandom"
     And Counting Drabbles exists
   When I am on the page with title "Skipping Stones"
     Then I should see "Parent: Counting Drabbles (Series)"
@@ -221,14 +221,14 @@ Scenario: meta on first book of series
     And I should NOT see "WIP" within ".omitteds"
 
 Scenario: fetch one chapter from ao3
-  Given a tag exists with name: "harry potter" AND type: "Fandom"
+  Given "harry potter" is a "Fandom"
     And Where am I exists
     And I am on the page with title "Where am I?"
    Then I should see "Where am I? (Single)" within ".title"
     And I should NOT see "WIP" within ".omitteds"
 
 Scenario: edit one chapter from ao3
-  Given a tag exists with name: "harry potter" AND type: "Fandom"
+  Given "harry potter" is a "Fandom"
     And Where am I exists
   When I am on the page with title "Where am I?"
     And I follow "Notes"
@@ -244,7 +244,7 @@ Scenario: edit one chapter from ao3
     And I should NOT see "Sidra"
 
 Scenario: refetch url
-  Given a tag exists with name: "harry potter" AND type: "Fandom"
+  Given "harry potter" is a "Fandom"
     And Where am I exists
     And I am on the page with title "Where am I?"
   When I follow "Refetch"
@@ -282,8 +282,8 @@ Scenario: check before creating a series when I already have one of its books
   Then I should have 6 pages
 
 Scenario: check before refetching a one-page Single into a Book
-  Given a tag exists with name: "harry potter" AND type: "Fandom"
-    And an author exists with name: "Sidra"
+  Given "harry potter" is a "Fandom"
+    And "Sidra" is an author
     And Where am I existed and was read
   When I am on the page with title "Time Was, Time Is"
   Then I should see "Time Was, Time Is (Single)" within ".title"
@@ -297,8 +297,8 @@ Scenario: check before refetching a one-page Single into a Book
     And last read should be today
 
 Scenario: check before refetching a one-page Single into a Book
-  Given a tag exists with name: "harry potter" AND type: "Fandom"
-    And an author exists with name: "Sidra"
+  Given "harry potter" is a "Fandom"
+    And "Sidra" is an author
     And Where am I existed and was read
   When I am on the page with title "Time Was, Time Is"
     And I follow "Refetch"

@@ -1,7 +1,7 @@
 Feature: split a tag into two tags
 
 Scenario: split a tag
-  Given a tag exists with name: "harry/snape"
+  Given "harry/snape" is a tag
   When I am on the edit tag page for "harry/snape"
     And I fill in "first_tag_name" with "Harry"
     And I fill in "second_tag_name" with "Severus"
@@ -103,7 +103,7 @@ Scenario: can put the name of other tags in as both names
     And I should NOT see "Harry"
 
 Scenario: can't put the same name in both
-  Given a tag exists with name: "harry/snape"
+  Given "harry/snape" is a tag
   When I am on the edit tag page for "harry/snape"
     And I fill in "first_tag_name" with "harry"
     And I fill in "second_tag_name" with "harry"

@@ -18,17 +18,14 @@ When("I wait {int} second") do |time|
   Kernel::sleep time
 end
 
-## Page whens (TODO: move to pages.rb?)
-
 When("I edit its tags") do
   within(".edits") { click_link("Tags") }
 end
 
-## TODO rewrite: I edit the text/authors
-When("I want to edit the text") do
+When("I edit the text") do
   within(".views") {click_link("Text")}
 end
-When("I want to edit the authors") do
+When("I edit the authors") do
   within(".edits") {click_link("Authors")}
 end
 
@@ -43,9 +40,6 @@ end
 When("I download the epub") do
   within(".views") {click_link("ePub")}
 end
-
-
-## FIXME "A step description should never contain regexen, CSS or XPath selectors, any kind of code or data structure." ~JONAS NICKLAS
 
 When("I fill in {string} with {string}") do |field, value|
   fill_in(field, :with => value)

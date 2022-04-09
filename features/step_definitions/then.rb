@@ -15,18 +15,15 @@ Then("I should NOT see {string}") do |text|
   assert_no_text(text)
 end
 
-## FIXME rewrite: I should see {string} before {string}
-Then("{string} should come before {string}") do |first, second|
+Then("I should see {string} before {string}") do |first, second|
   assert page.body.index(first) < page.body.index(second)
 end
 
-## FIXME rewrite: I should see a horizontal rule
-Then('there should be a horizontal rule') do
+Then('I should see a horizontal rule') do
   assert page.html.include?('<hr>')
 end
 
-## FIXME rewrite: I should NOT see a horizontal rule
-Then('there should NOT be a horizontal rule') do
+Then('I should NOT see a horizontal rule') do
   assert !page.html.include?('<hr>')
 end
 
@@ -54,8 +51,6 @@ Then('{string} should link to itself') do |string|
   Rails.logger.debug "DEBUG: link: page #{itself.id} should be at #{href}"
   assert href == "/pages/#{itself.id}"
 end
-
-## FIXME "A step description should never contain regexen, CSS or XPath selectors, any kind of code or data structure." ~JONAS NICKLAS
 
 Then("the {string} field should contain {string}") do |field, text|
   assert page.has_field?(field, with: text)

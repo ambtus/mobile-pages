@@ -30,8 +30,8 @@ Scenario: create from a list of urls
    And I should see "stuff for part 2"
 
 Scenario: create a page from a list of urls with author and tags and notes
-  Given a tag exists with name: "mytag" AND type: "Fandom"
-    And an author exists with name: "myauthor"
+  Given "mytag" is a "Fandom"
+    And "myauthor" is an author
   When I am on the homepage
     And I follow "Store Multiple"
     And I fill in "page_urls" with
@@ -126,5 +126,5 @@ Scenario: parent shows parts by position, not created order
       http://test.sidrasue.com/parts/1.html
       """
     And I press "Update"
-  Then "Part 2" should come before "Part 1"
+  Then I should see "Part 2" before "Part 1"
 

@@ -1,18 +1,18 @@
 Feature: author stuff
 
-Scenario: add a new author to a page
+Scenario: add authors to a page
   Given a page exists
   When I am on the page's page
-    And I want to edit the authors
+    And I edit the authors
     And I fill in "authors" with "lewis carroll, charles dodgson"
     And I press "Add Authors"
   Then I should see "lewis carroll" within ".authors"
     And I should see "charles dodgson" within ".authors"
 
-Scenario: add a new author to a page makes authors selectable for others
+Scenario: create authors by adding them to a page
   Given a page exists
   When I am on the page's page
-    And I want to edit the authors
+    And I edit the authors
     And I fill in "authors" with "lewis carroll, charles dodgson"
     And I press "Add Authors"
     And I am on the homepage
@@ -21,15 +21,9 @@ Scenario: add a new author to a page makes authors selectable for others
 
 Scenario: add an existing author to a page
   Given a page exists
-    And an author exists with name: "lewis carroll"
+    And "lewis carroll" is an author
   When I am on the page's page
-  Then I should NOT see "lewis carroll" within ".authors"
-
-Scenario: add an existing author to a page
-  Given a page exists
-    And an author exists with name: "lewis carroll"
-  When I am on the page's page
-    And I want to edit the authors
+    And I edit the authors
     And I select "lewis carroll" from "page_author_ids_"
     And I press "Update Authors"
   Then I should see "lewis carroll" within ".authors"
@@ -37,12 +31,7 @@ Scenario: add an existing author to a page
 Scenario: add another author to a page
   Given a page exists with add_author_string: "lewis carroll"
   When I am on the page's page
-  Then I should see "lewis carroll" within ".authors"
-
-Scenario: add another author to a page
-  Given a page exists with add_author_string: "lewis carroll"
-  When I am on the page's page
-    And I want to edit the authors
+    And I edit the authors
     And I fill in "authors" with "charles dodgson"
     And I press "Add Authors"
   Then I should see "charles dodgson lewis carroll" within ".authors"
@@ -50,7 +39,7 @@ Scenario: add another author to a page
 Scenario: add another author to a page
   Given a page exists with add_author_string: "lewis carroll"
   When I am on the page's page
-    And I want to edit the authors
+    And I edit the authors
     And I fill in "authors" with "charles dodgson"
     And I press "Add Authors"
     And I am on the homepage
@@ -67,8 +56,8 @@ Scenario: new parent for an existing page should have the same author
     But I should NOT see "newbie" within ".parts"
 
 Scenario: list the authors
-  Given an author exists with name: "jane"
-    And an author exists with name: "bob"
+  Given "jane" is an author
+    And "bob" is an author
   When I am on the authors page
   Then I should see "jane"
     And I should see "bob"
@@ -76,7 +65,7 @@ Scenario: list the authors
     Then I should see "Edit author: jane"
 
 Scenario: edit an author
-  Given an author exists with name: "jane"
+  Given "jane" is an author
   When I am on the authors page
     And I follow "jane"
   Then I should see "Edit author: jane"

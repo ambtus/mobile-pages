@@ -80,8 +80,7 @@ Given("pages with ratings and omitteds exist") do
   Page.all.map(&:cache_tags)
 end
 
-## FIXME - name it by its bug, not its title
-Given /^part6 exists$/ do
+Given /^underline spans exists$/ do
   page = Page.new
   page.title = "Part 6"
   page.save
@@ -89,8 +88,8 @@ Given /^part6 exists$/ do
   page.save
   page.raw_html = File.open(Rails.root + "features/html/part6.html", 'r:utf-8') { |f| f.read }
 end
-## FIXME - name it by its bug, not its title
-Given('Silent Sobs exists') do
+
+Given('link in notes exists') do
   page = Single.create!(title: "Silent Sobs")
   page.notes = File.open(Rails.root + "features/html/silent.html", 'r:utf-8') { |f| f.read }
   page.save!
@@ -105,9 +104,6 @@ Given('system down exists') do
   page = Page.create!(url: "http://test.sidrasue.com/test.html", title: "Test")
   page.raw_html = "system down"
 end
-
-
-## FIXME "A step description should never contain regexen, CSS or XPath selectors, any kind of code or data structure." ~JONAS NICKLAS
 
 Given /a page exists(?: with (.*))?/ do |fields|
   fields.blank? ? hash = {} : hash = fields.create_hash

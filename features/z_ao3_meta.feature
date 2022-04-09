@@ -1,7 +1,7 @@
 Feature: ao3 specific stuff
 
 Scenario: refetching & rebuilding meta of a top level fic
-  Given a tag exists with name: "harry potter" AND type: "Fandom"
+  Given "harry potter" is a "Fandom"
     And I am on the homepage
   When I fill in "page_url" with "http://archiveofourown.org/works/692"
     And I press "Store"
@@ -50,8 +50,8 @@ Scenario: adding an unread chapter to a book makes the book unread
     And I should see "WIP" within ".omitteds"
 
 Scenario: grab a series with multiple authors
-  Given a tag exists with name: "Good Omens" AND type: "Fandom"
-    And an author exists with name: "entanglednow"
+  Given "Good Omens" is a "Fandom"
+    And "entanglednow" is an author
   When I am on the homepage
     And I fill in "page_url" with "https://archiveofourown.org/series/2647903"
     And I press "Store"
@@ -69,8 +69,8 @@ Scenario: grab a series with multiple authors
     But I should see "et al: green_grin" within "#position_2"
 
 Scenario: works in a series should not have duplicate tags
-  Given an author exists with name: "Sidra"
-    And a tag exists with name: "harry potter" AND type: "Fandom"
+  Given "Sidra" is an author
+    And "harry potter" is a "Fandom"
   When I am on the homepage
     And I fill in "page_url" with "https://archiveofourown.org/series/46"
     And I press "Store"
@@ -82,7 +82,7 @@ Scenario: works in a series should not have duplicate tags
     But I should NOT see "harry potter" within "#position_2"
 
 Scenario: getting series by adding parent and then refetching should not duplicate tags
-  Given a tag exists with name: "harry potter" AND type: "Fandom"
+  Given "harry potter" is a "Fandom"
     And Skipping Stones exists
     And I am on the page's page
   When I follow "Manage Parts"

@@ -44,8 +44,8 @@ Scenario: create a page from a single url
   Then "Original" should link to "http://test.sidrasue.com/test.html"
 
 Scenario: create a page from a single url with author and fandom and notes
-  Given a tag exists with name: "mytag" AND type: "Fandom"
-    And an author exists with name: "myauthor"
+  Given "mytag" is a "Fandom"
+    And "myauthor" is an author
   When I am on the homepage
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I fill in "page_notes" with "some notes"

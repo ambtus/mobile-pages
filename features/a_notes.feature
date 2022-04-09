@@ -118,6 +118,6 @@ Scenario: very long notes are not truncated in note's view
     But I should see "consectetur"
 
 Scenario: full notes link bug
-  Given Silent Sobs exists
+  Given link in notes exists
   When I am on the page's page
   Then I follow "full notes"
