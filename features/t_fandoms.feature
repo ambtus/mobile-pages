@@ -218,7 +218,6 @@ Scenario: change fandom to trope tag part 3
     And I press "Change"
     And I am on the page's page
  Then I should see "not a fandom" within ".tags"
-    And the page should NOT have any fandom tags
 
 Scenario: change fandom to trope tag part 4
   Given a page exists with fandoms: "not a fandom"
@@ -282,7 +281,6 @@ Scenario: change hidden to fandom tag part 4
     And I press "Change"
     And I am on the page's page
   Then I should see "will be visible" within ".fandoms"
-    And the page should NOT have any hidden tags
 
 Scenario: change hidden to fandom tag part 5
   Given a page exists with hiddens: "will be visible"

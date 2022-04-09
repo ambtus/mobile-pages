@@ -97,7 +97,6 @@ Scenario: delete a rating
     And I am on the homepage
   Then I should NOT see "abc123"
     But I should see "Page 1"
-    And I should have no ratings
 
 Scenario: merge two tags
   Given a tag exists with name: "abc123" AND type: "Rating"
@@ -123,7 +122,6 @@ Scenario: change rating to trope tag
     And I press "Change"
     And I am on the page's page
   Then I should see "abc123" within ".tags"
-    And I should have no ratings
 
 Scenario: change trope to rating tag
   Given a page exists with tropes: "abc123"

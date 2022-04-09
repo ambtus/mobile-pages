@@ -96,7 +96,6 @@ Scenario: delete a character tag
     And I press "Yes"
     And I am on the page's page
   Then I should NOT see "nobody"
-    And I should have no characters
 
 Scenario: merge two tags
   Given a tag exists with name: "abc123" AND type: "Character"
@@ -122,7 +121,6 @@ Scenario: change character to fandom
     And I press "Change"
     And I am on the page's page
   Then I should see "Harry Potter" within ".fandoms"
-    And I should have no characters
 
 Scenario: change fandom to character
   Given a page exists with fandoms: "Harry Potter"

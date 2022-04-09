@@ -1,10 +1,9 @@
 Feature: tools to enable onscreen content editing
 
 Scenario: should be able to edit html if it's a Single
-  Given I have no pages
-  And a page exists with url: "http://test.sidrasue.com/test.html"
+  Given a page exists with url: "http://test.sidrasue.com/test.html"
   When I am on the page's page
-    Then I should see "Page 1 (Single)"
+  Then I should see "Page 1 (Single)"
     And I should see "Edit Raw HTML"
     And I should see "Edit Scrubbed HTML"
 

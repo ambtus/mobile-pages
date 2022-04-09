@@ -1,23 +1,3 @@
-Then("the download directory should exist") do
-  assert File.exists?(Page.first.download_dir)
-end
-
-Then("the download directory should NOT exist") do
-  assert !File.exists?(Page.first.download_dir)
-end
-
-Then("the download html file should exist") do
-  assert File.exists?("#{Page.first.download_basename}.html")
-end
-
-Then("the download html file should NOT exist") do
-  assert !File.exists?("#{Page.first.download_basename}.html")
-end
-
-Then("the download epub file should exist") do
-  assert File.exists?("#{Page.first.download_basename}.epub")
-end
-
 Then('the epub html contents for {string} should contain {string}') do |title, string|
   zipfile_name = "#{Page.find_by_title(title).download_basename}.epub"
   Rails.logger.debug "DEBUG: epub filename: #{zipfile_name}"
@@ -38,9 +18,8 @@ Then('the epub html contents for {string} should NOT contain {string}') do |titl
   assert_no_match string, html
 end
 
-Then("the download epub file should NOT exist") do
-  assert !File.exists?("#{Page.first.download_basename}.epub")
-end
+## FIXME? now that I can inspect the actual epub,
+## should I check that instead of the command to create it?
 
 Then /^the download epub command should include (.+): "([^"]*)"$/ do |option, text|
   assert Page.first.epub_command.match("--#{option} \"[^\"]*#{text}[^\"]*\"")

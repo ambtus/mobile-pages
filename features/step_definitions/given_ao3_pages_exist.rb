@@ -188,7 +188,6 @@ Given('Misfits has a URL') do
   page.update!(url: "https://archiveofourown.org/series/334075")
 end
 
-
 Given /^Yer a Wizard exists$/ do
   page = Single.create!(title: "temp")
   page.update!(url: "https://archiveofourown.org/works/35386909")

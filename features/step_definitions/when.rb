@@ -24,9 +24,12 @@ When("I edit its tags") do
   within(".edits") { click_link("Tags") }
 end
 
-## TODO rewrite: I edit the text
+## TODO rewrite: I edit the text/authors
 When("I want to edit the text") do
   within(".views") {click_link("Text")}
+end
+When("I want to edit the authors") do
+  within(".edits") {click_link("Authors")}
 end
 
 When("I view the content") do
