@@ -106,8 +106,7 @@ Scenario: merge two tags
     And I select "abc123" from "merge"
     And I press "Merge"
     And I am on the page's page
-  Then I should NOT see "xyz987"
-    But I should see "abc123" within ".tags"
+  Then I should see "abc123 (xyz987)" within ".tags"
 
 Scenario: don’t allow merge if not the same type
   Given "abc123" is a "Fandom"

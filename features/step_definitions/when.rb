@@ -22,23 +22,23 @@ When("I edit its tags") do
   within(".edits") { click_link("Tags") }
 end
 
+## TODO - make the following match above
+## edit its NOT edit the
 When("I edit the text") do
   within(".views") {click_link("Text")}
 end
 When("I edit the authors") do
   within(".edits") {click_link("Authors")}
 end
-
+When("I download the epub") do
+  within(".views") {click_link("ePub")}
+end
 When("I view the content") do
   within(".views") {click_link("HTML")}
 end
 
 When("I view the content for part {int}") do |int|
   within("#position_#{int}") {click_link("HTML")}
-end
-
-When("I download the epub") do
-  within(".views") {click_link("ePub")}
 end
 
 When("I fill in {string} with {string}") do |field, value|

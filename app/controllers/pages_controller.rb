@@ -21,13 +21,13 @@ class PagesController < ApplicationController
     @size = params[:size] || "any"
     @unread = params[:unread] || "either"
     @stars = params[:stars] || "any"
-    @tag = Tag.find_by_name(params[:tag]) if params[:tag]
-    @fandom = Fandom.find_by_name(params[:fandom]) if params[:fandom]
-    @character = Character.find_by_name(params[:character]) if params[:character]
-    @rating = Rating.find_by_name(params[:rating]) if params[:rating]
-    @omitted = Omitted.find_by_name(params[:omitted]) if params[:omitted]
-    @hidden = Hidden.find_by_name(params[:hidden]) if params[:hidden]
-    @info = Info.find_by_name(params[:info]) if params[:info]
+    @tag_name = params[:tag] if params[:tag]
+    @fandom_name = params[:fandom] if params[:fandom]
+    @character_name = params[:character] if params[:character]
+    @rating_name = params[:rating] if params[:rating]
+    @omitted_name = params[:omitted] if params[:omitted]
+    @hidden_name = params[:hidden] if params[:hidden]
+    @info_name = params[:info] if params[:info]
     @author_name = params[:author] if params[:author]
     @pages = Filter.new(params)
     flash.now[:alert] = "No pages found" if @pages.to_a.empty?
@@ -74,13 +74,13 @@ class PagesController < ApplicationController
       return
     end
     @page = Page.new(params[:page].permit!)
-    @tag = Tag.find_by_name(params[:tag])
-    @hidden = Hidden.find_by_name(params[:hidden])
-    @fandom = Fandom.find_by_name(params[:fandom])
-    @character = Character.find_by_name(params[:character])
-    @rating = Rating.find_by_name(params[:rating])
-    @omitted = Omitted.find_by_name(params[:omitted])
-    @info = Info.find_by_name(params[:info])
+    @tag = Tag.find_by_short_name(params[:tag])
+    @hidden = Hidden.find_by_short_name(params[:hidden])
+    @fandom = Fandom.find_by_short_name(params[:fandom])
+    @character = Character.find_by_short_name(params[:character])
+    @rating = Rating.find_by_short_name(params[:rating])
+    @omitted = Omitted.find_by_short_name(params[:omitted])
+    @info = Info.find_by_short_name(params[:info])
     @page.tags << [@tag, @hidden, @fandom, @omitted, @character, @rating, @info].compact
     @author_name = params[:author] unless params[:author].blank?
     @author = Author.find_by_short_name(params[:author])

@@ -27,19 +27,16 @@ class TagsController < ApplicationController
   def update
     @tag = Tag.find(params[:id])
     if params[:commit] == "Merge"
-      new_tag = Tag.find_by_name(params[:merge])
-      if new_tag == @tag
+      true_tag = Tag.find_by_short_name(params[:merge])
+      if true_tag == @tag
         flash.now[:alert] = "can't merge with self"
         render :edit and return
       end
-      if new_tag.nil?
+      if true_tag.nil?
         flash.now[:alert] = "can't merge with non-existant tag"
         render :edit and return
       end
-      @tag.pages.each do |page|
-        page.tags << new_tag unless page.tags.include?(new_tag)
-      end
-      @tag.destroy_me
+      true_tag.add_aka(@tag)
       redirect_to tags_path
     elsif params[:commit] == "Change"
       type = params[:change]

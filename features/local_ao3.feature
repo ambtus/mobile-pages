@@ -157,11 +157,19 @@ Scenario: don't over-match "of" in fandoms
   Then I should NOT see "Person of Interest" within ".fandoms"
     And I should see "Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
 
-Scenario: matching double-fandoms
-  Given "Forgotten Realms/Drizzt" is a "Fandom"
+Scenario: do match Drizzt (as aka)
+  Given "Forgotten Realms (Drizzt)" is a "Fandom"
     And Yer a Wizard exists
     And I am on the page's page
-  Then I should see "Forgotten Realms/Drizzt" within ".fandoms"
+  Then I should see "Forgotten Realms (Drizzt)" within ".fandoms"
+    And I should see "Starlight and Shadows Series" within ".notes"
+    But I should NOT see "Legend of Drizzt Series" within ".notes"
+
+Scenario: do match Drizzt (as first)
+  Given "Drizzt (Forgotten Realms)" is a "Fandom"
+    And Yer a Wizard exists
+    And I am on the page's page
+  Then I should see "Drizzt (Forgotten Realms)" within ".fandoms"
     And I should see "Starlight and Shadows Series" within ".notes"
     But I should NOT see "Legend of Drizzt Series" within ".notes"
 

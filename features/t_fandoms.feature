@@ -184,14 +184,13 @@ Scenario: deleted fandom puts moves fandom to other fandom on page
     And I should see "Twilight" within ".notes"
 
 Scenario: merge two tags
-  Given "better name" is a "Fandom"
-    And a page exists with fandoms: "bad name"
-  When I am on the edit tag page for "bad name"
-    And I select "better name" from "merge"
+  Given "abc123" is a "Fandom"
+    And a page exists with fandoms: "xyz987"
+  When I am on the edit tag page for "xyz987"
+    And I select "abc123" from "merge"
     And I press "Merge"
     And I am on the page's page
-  Then I should NOT see "bad name"
-    And I should see "better name" within ".fandoms"
+  Then I should see "abc123 (xyz987)" within ".fandoms"
 
 Scenario: don’t allow merge if not the same type
   Given "not fandom" is a tag
@@ -318,92 +317,4 @@ Scenario: change fandom to hidden tag part 4
     And I am on the homepage
   Then I should have 1 page
     But I should see "No pages found"
-
-Scenario: 陈情令 | The Untamed (TV)
-  Given "Untamed/MoDao ZuShi" is a "Fandom"
-    And a page exists with ao3_fandoms: "陈情令 | The Untamed (TV)"
-  When I am on the page's page
-  Then I should see "Untamed/MoDao ZuShi" within ".fandoms"
-    And I should NOT see "陈情令"
-    And I should NOT see "TV"
-
-Scenario: Marvel Cinematic Universe
-  Given "Avengers/Marvel" is a "Fandom"
-    And a page exists with ao3_fandoms: "Marvel Cinematic Universe"
-  When I am on the page's page
-  Then I should see "Avengers/Marvel" within ".fandoms"
-    And I should NOT see "Cinematic Universe"
-
-Scenario: 魔道祖师 - 墨香铜臭 | Módào Zǔshī - Mòxiāng Tóngxiù
-  Given "Untamed/MoDao ZuShi" is a "Fandom"
-    And a page exists with ao3_fandoms: "陈情令 | The Untamed (TV)"
-  When I am on the page's page
-  Then I should see "Untamed/MoDao ZuShi" within ".fandoms"
-    And I should NOT see "魔道祖师"
-    And I should NOT see "Mòxiāng"
-
-Scenario: 魔道祖师 - 墨香铜臭 | Módào Zǔshī - Mòxiāng Tóngxiù, 陈情令 | The Untamed (TV)
-  Given "Untamed/MoDao ZuShi" is a "Fandom"
-    And a page exists with ao3_fandoms: "魔道祖师 - 墨香铜臭 | Módào Zǔshī - Mòxiāng Tóngxiù, 陈情令 | The Untamed (TV)"
-  When I am on the page's page
-  Then I should see "Untamed/MoDao ZuShi" within ".fandoms"
-    And I should NOT see "Modao Zshi" within ".notes"
-
-Scenario: Forgotten Realms and The Legend of Drizzt Series - R. A. Salvatore
-  Given "Forgotten Realms/Drizzt" is a "Fandom"
-    And a page exists with ao3_fandoms: "Forgotten Realms, The Legend of Drizzt Series - R. A. Salvatore"
-  When I am on the page's page
-  Then I should see "Forgotten Realms/Drizzt" within ".fandoms"
-    And I should NOT see "Legend of Drizzt Series"
-
-Scenario: Spider-Man - All Media Types part 1
-  Given a page exists with ao3_fandoms: "Spider-Man - All Media Types"
-  When I am on the page's page
-  Then I should see "Spider-Man" within ".notes"
-
-Scenario: Spider-Man - All Media Types part 2
-  Given "Spider-man" is a "Fandom"
-    And a page exists with ao3_fandoms: "Spider-Man - All Media Types"
-  When I am on the page's page
-  Then I should see "Spider-man" within ".fandoms"
-    But I should NOT see "Spider-Man" within ".notes"
-
-Scenario: Deadpool (2016) and Deadpool - All Media Types part 1
-  Given a page exists with ao3_fandoms: "Deadpool (2016), Deadpool - All Media Types"
-  When I am on the page's page
-  Then I should see "Deadpool" within ".notes"
-    But I should NOT see "Deadpool, Deadpool"
-
-Scenario: Deadpool (2016) and Deadpool and Spider-Man
-  Given a page exists with ao3_fandoms: "Deadpool (2016), Deadpool - All Media Types, Spider-Man - All Media Types"
-  When I am on the page's page
-  Then I should see "Deadpool, Spider-Man" within ".notes"
-    But I should NOT see "Deadpool, Deadpool"
-
-Scenario: Real Genius (1985)
-  Given "Forgotten Realms/Drizzt" is a "Fandom"
-    And a page exists with ao3_fandoms: "Real Genius (1985)"
-  When I am on the page's page
-  Then I should NOT see "Forgotten Realms/Drizzt" within ".fandoms"
-    But I should see "Real Genius" within ".notes"
-    And I should NOT see "1985" within ".notes"
-
-Scenario: 天官赐福 - 墨香铜臭 | Tiān Guān Cì Fú - Mòxiāng Tóngxiù and 天官赐福
-  Given a page exists with ao3_fandoms: "天官赐福 - 墨香铜臭 | Tiān Guān Cì Fú - Mòxiāng Tóngxiù, 天官赐福"
-  When I am on the page's page
-  Then I should NOT see "Tian Guan Ci Fu, ????" within ".notes"
-    And I should NOT see "Tiān Guān Cì Fú" within ".notes"
-    But I should see "Tian Guan Ci Fu" within ".notes"
-
-Scenario: star wars, not star trek
-  Given "Star Trek" is a "Fandom"
-    And "Battlestar Galactica" is a "Fandom"
-    And "Starsky & Hutch" is a "Fandom"
-    And "Star Wars" is a "Fandom"
-    And a page exists with ao3_fandoms: "Star Wars - All Media Types, Star Wars Prequel Trilogy"
-  When I am on the page's page
-  Then I should see "Star Wars" within ".fandoms"
-    But I should NOT see "Star Trek"
-    And I should NOT see "Battlestar"
-    And I should NOT see "Starsky"
 

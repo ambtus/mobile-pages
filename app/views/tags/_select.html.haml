@@ -1,21 +1,21 @@
 - unless Fandom.names.blank?
   = label_tag :fandom, "Fandom:"
-  = select_tag :fandom, options_for_select([nil] + Fandom.names, @fandom.try(:name))
+  = select_tag :fandom, options_for_select([nil] + Fandom.names, @fandom_name)
 - unless Character.names.blank?
   = label_tag :character, "Character:"
-  = select_tag :character, options_for_select([nil] + Character.names, @character.try(:name))
+  = select_tag :character, options_for_select([nil] + Character.names, @character_name)
 - unless Tag.names.blank?
   = label_tag :tag, "Trope:"
-  = select_tag :tag, options_for_select([nil] + Tag.names, @tag.try(:name))
+  = select_tag :tag, options_for_select([nil] + Tag.names, @tag_name)
 - unless Rating.names.blank?
   = label_tag :rating, "Rating:"
-  = select_tag :rating, options_for_select([nil] + Rating.names, @rating.try(:name))
+  = select_tag :rating, options_for_select([nil] + Rating.names, @rating_name)
 - unless Omitted.names.blank?
   = label_tag :omitted, "Omitted:"
-  = select_tag :omitted, options_for_select([nil] + Omitted.names, @omitted.try(:name))
+  = select_tag :omitted, options_for_select([nil] + Omitted.names, @omitted_name)
 - unless Hidden.names.blank?
   = label_tag :hidden, "Hidden:"
-  = select_tag :hidden, options_for_select([nil] + Hidden.names, @hidden.try(:name))
+  = select_tag :hidden, options_for_select([nil] + Hidden.names, @hidden_name)
 - unless Info.names.blank?
   = label_tag :info, "Info:"
-  = select_tag :info, options_for_select([nil] + Info.names, @info.try(:name))
+  = select_tag :info, options_for_select([nil] + Info.names, @info_name)

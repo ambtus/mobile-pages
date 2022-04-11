@@ -1,9 +1,5 @@
 class Fandom < Tag
 
-  def self.names
-    self.by_name.map(&:name)
-  end
-
   def destroy_me
     page_ids = self.pages.map(&:id)
     name = self.name

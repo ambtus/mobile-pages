@@ -45,8 +45,40 @@ class Tag < ActiveRecord::Base
     type.blank? ? "Trope" : type
   end
 
+  def self.scope_name
+    self.name == "Tag" ? "trope" : self.name.downcase
+  end
+
+  def short_names
+    if name.match(/([^\(]*) \((.*)\)/)
+      true_name, aka_string = [$1, $2]
+      akas = aka_string.split(", ")
+      [true_name, *akas]
+    else
+      [name]
+    end
+  end
+
+  def self.find_by_short_name(short)
+    return nil if short.blank?
+    self.where(["name LIKE ?", "%" + short + "%"]).first
+  end
+
+  def add_aka(aka_tag)
+    all_names = (self.short_names + aka_tag.short_names).uniq.join_comma
+    true_name, akas = all_names.split(', ')
+    new_name = "#{true_name} (#{akas})"
+    Rails.logger.debug "DEBUG: merge #{aka_tag.name} into #{self.name} as #{new_name}"
+    self.update_attribute(:name, new_name)
+    page_ids = aka_tag.pages.map(&:id)
+    aka_tag.pages.each {|p| p.tags << self unless p.tags.include?(self)}
+    aka_tag.destroy
+    page_ids.each {|id| Page.find(id).cache_tags}
+    self
+  end
+
   def self.names
-    self.trope.by_name.map(&:name)
+    self.send(scope_name).map(&:short_names).flatten.sort_by(&:downcase)
   end
 
   def recache(ids=self.pages.map(&:id))

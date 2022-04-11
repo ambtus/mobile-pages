@@ -104,8 +104,7 @@ Scenario: merge two tags
     And I select "abc123" from "merge"
     And I press "Merge"
     And I am on the page's page
-  Then I should NOT see "xyz987"
-    And I should see "abc123" within ".characters"
+  Then I should see "abc123 (xyz987)" within ".characters"
 
 Scenario: don’t allow merge if not the same type
   Given "abc123" is a tag

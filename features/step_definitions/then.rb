@@ -178,3 +178,7 @@ end
 Then('the notes should include {string}') do |string|
   assert_match Regexp.new(string), Page.first.notes
 end
+
+Then('the notes should be empty') do
+  assert Page.first.notes.blank?
+end

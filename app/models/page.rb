@@ -625,7 +625,8 @@ class Page < ActiveRecord::Base
     return if string.blank?
     type = "Tag" if type == "Trope"
     string.split(",").each do |tag|
-      typed_tag = type.constantize.find_or_create_by(name: tag.squish)
+      typed_tag = type.constantize.find_by_short_name(tag.squish)
+      typed_tag = type.constantize.find_or_create_by(name: tag.squish) unless typed_tag
       self.tags << typed_tag unless self.tags.include?(typed_tag)
     end
     self.cache_tags
