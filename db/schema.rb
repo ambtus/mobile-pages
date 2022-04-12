@@ -10,28 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_06_175056) do
-
-  create_table "authors", id: :integer, charset: "utf8", options: "ENGINE=MyISAM", force: :cascade do |t|
-    t.string "name"
-    t.index ["name"], name: "author_name", unique: true
-  end
-
-  create_table "authors_pages", id: false, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
-    t.integer "page_id"
-    t.integer "author_id"
-  end
-
+ActiveRecord::Schema[7.0].define(version: 2022_04_11_133519) do
   create_table "pages", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", options: "ENGINE=MyISAM", force: :cascade do |t|
     t.string "url"
     t.string "title"
     t.text "notes", size: :medium
     t.integer "parent_id"
     t.integer "position"
-    t.datetime "last_read"
-    t.datetime "read_after"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "last_read", precision: nil
+    t.datetime "read_after", precision: nil
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "wordcount"
     t.string "size"
     t.integer "stars", limit: 2, default: 10
@@ -47,7 +36,7 @@ ActiveRecord::Schema.define(version: 2021_12_06_175056) do
     t.index ["ultimate_parent_id"], name: "index_pages_on_ultimate_parent_id"
   end
 
-  create_table "pages_tags", id: false, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "pages_tags", id: false, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "page_id"
     t.integer "tag_id"
   end

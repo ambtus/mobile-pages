@@ -53,8 +53,8 @@ Scenario: new parent for an existing page should have the same last read date
     And I should see "2008-01-01" within "#position_1"
 
 Scenario: parent should be able to remove duplicate tags and authors
-  Given a page exists with url: "http://test.sidrasue.com/parts/1.html" AND fandoms: "Harry Potter, SGA" AND add_author_string: "JK Rowling"
-    And a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND fandoms: "Harry Potter" AND title: "Parent" AND add_author_string: "JK Rowling"
+  Given a page exists with url: "http://test.sidrasue.com/parts/1.html" AND fandoms: "Harry Potter, SGA" AND authors: "JK Rowling"
+    And a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND fandoms: "Harry Potter" AND title: "Parent" AND authors: "JK Rowling"
   When I am on the page with title "Parent"
     And I press "Remove Duplicate Tags"
   Then I should NOT see "Harry Potter" within "#position_1"

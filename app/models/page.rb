@@ -11,12 +11,6 @@ class Page < ActiveRecord::Base
     self.url = self.url.normalize
   end
 
-  def convert_to_type
-    return unless type.nil?
-    parts.map(&:convert_to_type) unless parts.empty?
-    set_type
-  end
-
   def ao3_type
     if self.url.match(/chapters/)
       self.parent ? Chapter : Single
@@ -42,11 +36,11 @@ class Page < ActiveRecord::Base
   end
 
   def set_type
-    # Rails.logger.debug "DEBUG: setting type for #{self.inspect}"
+    #Rails.logger.debug "DEBUG: setting type for #{self.inspect}"
     if ao3?
-      self.becomes!(self.ao3_type)
-      Rails.logger.debug "DEBUG: ao3 type set to #{self.type}"
-      self.type
+      page = self.becomes(self.ao3_type)
+      Rails.logger.debug "DEBUG: ao3 type set to #{page.type}"
+      self.update_columns type: page.type
     else
       should_be = if parts.empty?
         parent_id.nil? ? "Single" : "Chapter"
@@ -60,8 +54,8 @@ class Page < ActiveRecord::Base
         Rails.logger.debug "DEBUG: part types: #{parts.map(&:type).uniq}"
         "Collection"
       end
-      update!(type: should_be)
       Rails.logger.debug "DEBUG: non-ao3 type set to #{should_be}"
+      self.update_columns type: should_be
     end
   end
 
@@ -76,8 +70,6 @@ class Page < ActiveRecord::Base
     dups = self.tags & self.parent.tags
     self.tags.delete(dups)
     self.cache_tags
-    dups = self.authors & self.parent.authors
-    self.authors.delete(dups)
   end
 
   def mypath
@@ -123,6 +115,8 @@ class Page < ActiveRecord::Base
     return self
   end
 
+  def authors; tags.author; end
+
   def fandoms; tags.fandom; end
   def other_fandom_tag; Fandom.find_or_create_by(name: OTHER); end
   def other_fandom_present?; self.fandoms.include?(other_fandom_tag);end
@@ -160,7 +154,7 @@ class Page < ActiveRecord::Base
       size_word = "epic" if new_wordcout > LONG_MAX
     end
     Rails.logger.debug "DEBUG: #{self.title} new wordcount: #{new_wordcout} and size: #{size_word}"
-    self.update!(wordcount: new_wordcout, size: size_word)
+    self.update_columns wordcount: new_wordcout, size: size_word
     return self
   end
 
@@ -197,8 +191,7 @@ class Page < ActiveRecord::Base
     Tag.types.each {|tt| tag_types[tt] = hash.delete(tt.downcase.pluralize.to_sym) }
     ao3_fandoms = hash.delete(:ao3_fandoms)
     page = Page.create(hash)
-    page.convert_to_type
-    tag_types.each {|key, value| page.send("add_tags_from_string", value, key)}
+    tag_types.compact.each {|key, value| page.send("add_tags_from_string", value, key)}
     if hash[:last_read] # update read after for parts and self
       page.unread_parts.each {|p| p.update!(last_read: hash[:last_read]) && p.update_read_after}
       page.update_last_read.update_read_after
@@ -368,7 +361,6 @@ class Page < ActiveRecord::Base
     parent = self.parent
     self.tags << parent.tags - self.tags
     self.cache_tags
-    self.authors << parent.authors - self.authors
     self.update(parent_id: nil, position: nil)
     self.set_type
     self.get_meta_from_ao3(false) if self.ao3?
@@ -433,7 +425,6 @@ class Page < ActiveRecord::Base
     if new # move my tags and authors to parent
       parent.tags << self.tags
       parent.cache_tags
-      parent.authors << self.authors
       parent.update_stars
     end
     self.remove_duplicate_tags
@@ -541,16 +532,6 @@ class Page < ActiveRecord::Base
     update_last_read.update_stars.remove_outdated_downloads.set_wordcount(recount)
   end
 
-  def add_author_string=(string)
-    return if string.blank?
-    string.split(",").each do |possible|
-      author = Author.find_by_short_name(possible)
-      author = Author.find_or_create_by(name: possible.squish) unless author
-      self.authors << author unless self.authors.include?(author)
-    end
-    self.authors
-  end
-
   def unread?; last_read.blank?; end
   def read?
      answer = last_read.present? && last_read != UNREAD_PARTS_DATE
@@ -624,6 +605,7 @@ class Page < ActiveRecord::Base
   def add_tags_from_string(string, type="Tag")
     return if string.blank?
     type = "Tag" if type == "Trope"
+    Rails.logger.debug "DEBUG: adding #{type} #{string}"
     string.split(",").each do |tag|
       typed_tag = type.constantize.find_by_short_name(tag.squish)
       typed_tag = type.constantize.find_or_create_by(name: tag.squish) unless typed_tag
@@ -890,34 +872,33 @@ class Page < ActiveRecord::Base
 
   def add_author(string)
     return if string.blank?
-    tries = string.split(", ")
-    mp_authors = []
-    non_mp_authors = []
-    tries.each do |t|
-      try = t.split(" (").first
-      Rails.logger.debug "DEBUG: trying #{try}"
-      found = Author.where('name like ?', "%#{try}%").first
-      if found.blank?
-        non_mp_authors << t
-      else
-        Rails.logger.debug "DEBUG: found #{found.name}"
-        if self.authors.include?(found) || (self.parent && self.parent.authors.include?(found))
-          Rails.logger.debug "DEBUG: won't add #{found.name} to authors"
-        else
-          Rails.logger.debug "DEBUG: will add #{found.name} to authors"
-          mp_authors << found
+    existing = []
+    non_existing = []
+    singles = string.split(", ")
+    singles.each do |single|
+      found = nil
+      possibles = single.gsub("(", ",").gsub(")", "").split(",")
+      possibles.each do |try|
+        Rails.logger.debug "DEBUG: trying '#{try}'"
+        found = Author.find_by_short_name(try.strip)
+        if found
+          Rails.logger.debug "DEBUG: found #{try}"
+          existing << found
+          break
         end
       end
+      non_existing << single unless found
     end
-    unless mp_authors.empty?
-      Rails.logger.debug "DEBUG: adding #{mp_authors.map(&:name)} to authors"
-      mp_authors.uniq.each {|a| self.authors << a}
+    unless existing.empty?
+      Rails.logger.debug "DEBUG: adding #{existing.map(&:name)} to authors"
+      existing.uniq.each {|a| self.tags << a unless self.all_authors.include?(a)}
+      self.cache_tags
     end
-    unless non_mp_authors.empty?
+    unless non_existing.empty?
       tagged_authors = self.authors + (self.parent ? self.parent.authors : [])
       by = tagged_authors.empty? ? "by" : "et al:"
-      Rails.logger.debug "DEBUG: adding #{non_mp_authors} to notes"
-      self.notes = "<p>#{by} #{non_mp_authors.join(", ")}</p>#{self.notes}"
+      Rails.logger.debug "DEBUG: adding #{non_existing} to notes"
+      self.update notes: "<p>#{by} #{non_existing.join(", ")}</p>#{self.notes}"
     end
     return self
   end
@@ -925,8 +906,8 @@ class Page < ActiveRecord::Base
   def add_fandom(string)
     return if string.blank?
     tries = string.split(", ")
-    mp_fandoms = []
-    non_mp_fandoms = []
+    existing = []
+    non_existing = []
     tries.each do |t|
       try = t.split(" | ").last.split(" - ").first.split(":").first.split('(').first
       simple = try ? try.strip : t.split(" | ").last
@@ -944,7 +925,7 @@ class Page < ActiveRecord::Base
         found = maybes.compact.mode
       end
       if found.blank?
-        non_mp_fandoms << simple if simple.present?
+        non_existing << simple if simple.present?
       else
         Rails.logger.debug "DEBUG: found #{found.name}"
         if self.tags.include?(found)
@@ -953,21 +934,22 @@ class Page < ActiveRecord::Base
           Rails.logger.debug "DEBUG: won't duplicate parent's #{found.name} in my tags"
         elsif self.other_fandom_present? # use other fandom tag to prevent false positives
            Rails.logger.debug "DEBUG: will NOT add #{found.name} to tags: add to notes instead"
-           non_mp_fandoms << simple if simple.present?
+           non_existing << simple if simple.present?
         else
           Rails.logger.debug "DEBUG: will add #{found.name} to tags"
-          mp_fandoms << found
+          existing << found
         end
       end
     end
-    unless mp_fandoms.empty?
-      Rails.logger.debug "DEBUG: adding #{mp_fandoms.uniq.map(&:name)} to fandoms"
-      mp_fandoms.uniq.each {|f| self.tags << f}
+    unless existing.empty?
+      Rails.logger.debug "DEBUG: adding #{existing.uniq.map(&:name)} to fandoms"
+      existing.uniq.each {|f| self.tags << f}
+      self.cache_tags
     end
-    unless non_mp_fandoms.empty?
-      fandoms = non_mp_fandoms.uniq
+    unless non_existing.empty?
+      fandoms = non_existing.uniq
       Rails.logger.debug "DEBUG: adding #{fandoms} to notes"
-      self.notes = "<p>#{fandoms.join(", ")}</p>#{self.notes}"
+      self.update notes: "<p>#{fandoms.join(", ")}</p>#{self.notes}"
     end
     return self
   end
@@ -1017,8 +999,8 @@ private
 
   def initial_fetch
     # Rails.logger.debug "DEBUG: initial fetch for #{self.inspect}"
-   Rails.logger.debug "DEBUG: initial fetch for #{self.title} (id: #{self.id})"
-   FileUtils.rm_rf(mydirectory) # make sure directory is empty for testing
+    Rails.logger.debug "DEBUG: initial fetch for #{self.title} (id: #{self.id})"
+    FileUtils.rm_rf(mydirectory) # make sure directory is empty for testing
     FileUtils.mkdir_p(download_dir) # make sure directory exists
 
     if !self.url.blank?
@@ -1034,8 +1016,6 @@ private
         self.fetch_raw
       end
     elsif !self.base_url.blank?
-      page = self.becomes!(Book)
-      Rails.logger.debug "DEBUG: page became #{page.type}"
       count = 1
       match = url_substitutions.match("-")
       if match
@@ -1043,18 +1023,21 @@ private
       else
         array = url_substitutions.split
       end
+      self.type = "Book"
+      self.save!
       array.each do |sub|
         title = "Part " + count.to_s
         url = base_url.gsub(/\*/, sub.to_s)
-        Chapter.create(:title => title, :url => url, :position => count, :parent_id => page.id)
+        Chapter.create(:title => title, :url => url, :position => count, :parent_id => self.id)
         count = count.next
       end
-      page.set_wordcount
+      self.set_wordcount
     elsif !self.urls.blank?
       self.parts_from_urls(self.urls)
     else
       self.set_wordcount
     end
+    self.set_type unless self.type
   end
 
 

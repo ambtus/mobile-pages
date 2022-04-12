@@ -58,7 +58,7 @@ module Download
     my_parents_fandoms = self.parent_id.blank? ? [] : self.parent.all_fandoms
     (my_fandoms + my_parents_fandoms).pulverize
   end
-  def download_author_string; (all_authors.map(&:true_name) + all_fandoms.map(&:name)).compact.join("&") || ""; end
+  def download_author_string; (all_authors.map(&:base_name) + all_fandoms.map(&:base_name)).compact.join("&") || ""; end
 
   ## --tags
   ## if it's hidden, then the hidden tags are the only tags
@@ -66,7 +66,7 @@ module Download
   ## if it's a part, add the parent's tags
   def download_tags;
     [(unread? ? Page::UNREAD : ""),
-     *tags.not_fandom.not_info.map(&:name),
+     *tags.not_fandom.not_info.not_author.map(&:name),
      ]
   end
   def all_tags;

@@ -36,7 +36,7 @@ Scenario: rebuild meta shouldn't refetch
 
 Scenario: rebuild from raw should also rebuild meta
   Given I Drive Myself Crazy exists
-    And "Sidra" is an author
+    And "Sidra" is an "Author"
   When I am on the homepage
     And I follow "I Drive Myself Crazy"
     And I follow "Notes"
@@ -74,34 +74,34 @@ Scenario: multiple authors - none in Authors
     And I should NOT see "et al" within ".notes"
 
 Scenario: multiple authors - some in Authors
-  Given "adiduck (book_people)" is an author
+  Given "adiduck (book_people)" is an "Author"
     And Multi Authors exists
   When I am on the page's page
   Then I should see "adiduck (book_people)" within ".authors"
     And I should see "et al: whimsicalimages" within ".notes"
 
 Scenario: multiple authors - reversed in Authors
-  Given "book_people (adiduck)" is an author
+  Given "book_people (adiduck)" is an "Author"
     And Multi Authors exists
   When I am on the page's page
   Then I should see "book_people (adiduck)" within ".authors"
     And I should see "et al: whimsicalimages" within ".notes"
 
 Scenario: multiple authors - primary in Authors
-  Given "adiduck" is an author
+  Given "adiduck" is an "Author"
     And Multi Authors exists
   When I am on the page's page
   Then I should see "adiduck" within ".authors"
     And I should see "et al: whimsicalimages" within ".notes"
     And I should NOT see "book_people"
 
-# FIXME - current limitation given how i store author names
 Scenario: multiple authors - aka in Authors
-  Given "book_people" is an author
+  Given "book_people" is an "Author"
     And Multi Authors exists
   When I am on the page's page
-  Then I should see "by adiduck (book_people), whimsicalimages" within ".notes"
-    And I should NOT see "book_people" within ".authors"
+  Then I should see "book_people" within ".authors"
+    And I should see "et al: whimsicalimages" within ".notes"
+    And I should NOT see "adiduck" within ".authors"
 
 Scenario: Other Fandom if fandom doesn't exists
   Given Skipping Stones exists
@@ -194,7 +194,7 @@ Scenario: single of work should have work title, not chapter title
     But I should see "Fuuinjutsu+Chakra+Bonds+Clones, Should not be mixed by Uzumakis"
 
 Scenario: no author or fandom or relationships shouldn't get empty paragraph
-  Given "esama" is an author
+  Given "esama" is an "Author"
     And "Harry Potter" is a "Fandom"
     And Wheel exists
   When I am on the homepage
@@ -291,7 +291,7 @@ Scenario: check before creating a series when I already have one of its books
 
 Scenario: check before refetching a one-page Single into a Book
   Given "harry potter" is a "Fandom"
-    And "Sidra" is an author
+    And "Sidra" is an "Author"
     And Where am I existed and was read
   When I am on the page with title "Time Was, Time Is"
   Then I should see "Time Was, Time Is (Single)" within ".title"
@@ -306,7 +306,7 @@ Scenario: check before refetching a one-page Single into a Book
 
 Scenario: check before refetching a one-page Single into a Book
   Given "harry potter" is a "Fandom"
-    And "Sidra" is an author
+    And "Sidra" is an "Author"
     And Where am I existed and was read
   When I am on the page with title "Time Was, Time Is"
     And I follow "Refetch"

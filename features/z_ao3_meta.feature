@@ -51,7 +51,7 @@ Scenario: adding an unread chapter to a book makes the book unread
 
 Scenario: grab a series with multiple authors
   Given "Good Omens" is a "Fandom"
-    And "entanglednow" is an author
+    And "entanglednow" is an "Author"
   When I am on the homepage
     And I fill in "page_url" with "https://archiveofourown.org/series/2647903"
     And I press "Store"
@@ -69,7 +69,7 @@ Scenario: grab a series with multiple authors
     But I should see "et al: green_grin" within "#position_2"
 
 Scenario: works in a series should not have duplicate tags
-  Given "Sidra" is an author
+  Given "Sidra" is an "Author"
     And "harry potter" is a "Fandom"
   When I am on the homepage
     And I fill in "page_url" with "https://archiveofourown.org/series/46"

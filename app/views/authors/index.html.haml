@@ -1,7 +1,0 @@
--content_for(:title, "Authors")
-- Author.by_name.each do |author|
-  %p
-    edit
-    = link_to "#{author.name}", edit_author_path(author)
-    =surround "(", ")" do
-      = link_to "pages by #{author.name}", pages_path(author: author.true_name, type: "all")

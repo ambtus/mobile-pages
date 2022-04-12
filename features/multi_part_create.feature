@@ -31,7 +31,7 @@ Scenario: create from a list of urls
 
 Scenario: create a page from a list of urls with author and tags and notes
   Given "mytag" is a "Fandom"
-    And "myauthor" is an author
+    And "myauthor" is an "Author"
   When I am on the homepage
     And I follow "Store Multiple"
     And I fill in "page_urls" with

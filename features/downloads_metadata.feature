@@ -17,14 +17,14 @@ Scenario: drabble and has an info tag (not displayed)
     And the download epub command should NOT include comments: "drabble"
 
 Scenario: epub page; author and tag strings are populated
-  Given a page exists with tropes: "my tag" AND add_author_string: "my author"
+  Given a page exists with tropes: "my tag" AND authors: "my author"
   Then the download epub command should include tags: "my tag"
     And the download epub command should include authors: "my author"
     And the download epub command should NOT include comments: "my author"
     But the download epub command should include comments: "my tag"
 
 Scenario: do not put aka in author tag for epub
-  Given a page exists with add_author_string: "my author (AKA)"
+  Given a page exists with authors: "my author (AKA)"
   Then the download epub command should include authors: "my author"
     But the download epub command should NOT include authors: "AKA"
     And the download epub command should NOT include comments: "my author (AKA)"

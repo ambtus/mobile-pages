@@ -21,13 +21,13 @@ class Chapter < Page
     end
 
     Rails.logger.debug "DEBUG: getting chapter title for #{self.id} at position #{position}"
-    self.title = ao3_chapter_title(doc, position)
+    self.update title: ao3_chapter_title(doc, position)
     Rails.logger.debug "DEBUG: ao3 chapter title: #{self.title}"
 
     doc_summary = Scrub.sanitize_html(doc.css(".summary blockquote")).children.to_html
     doc_notes = Scrub.sanitize_html(doc.css(".notes blockquote")).children.to_html
 
-    self.notes =
+    new_notes =
       if position == 1
         if self.parent.ao3?
           ""
@@ -37,7 +37,8 @@ class Chapter < Page
       else
         [doc_summary, doc_notes].join_hr
     end
-    self.save!
+    Rails.logger.debug "DEBUG: new notes: #{new_notes}"
+    self.update notes: new_notes
     return self
   end
 

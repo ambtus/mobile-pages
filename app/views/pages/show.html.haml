@@ -34,7 +34,6 @@
     .edits
       = link_to "My Notes", edit_my_note_path(@page)
       = link_to "Notes", edit_note_path(@page)
-      = link_to "Authors", author_path(@page)
       = link_to "Tags", tag_path(@page)
       %br
       = link_to "Manage Parts", edit_part_path(@page)
@@ -66,8 +65,8 @@
     -@page.tags.rating.by_name.each do |tag|
       =link_to tag.name, pages_path(rating: tag.name)
   .authors
-    -@page.authors.by_name.each do |author|
-      =link_to author.name, pages_path(author: author.true_name)
+    -@page.authors.by_name.each do |tag|
+      =link_to tag.name, pages_path(author: tag.name)
   .stars= @page.star_string
   .size
     =@page.size_string

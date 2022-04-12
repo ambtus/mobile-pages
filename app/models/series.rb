@@ -14,10 +14,10 @@ class Series < Page
     doc_title = doc.xpath("//div[@id='main']").xpath("//h2").first.children.text.strip rescue nil
     if doc_title
       Rails.logger.debug "DEBUG: found series title: #{doc_title}"
-      self.title = doc_title
+      self.update title: doc_title
     else
       Rails.logger.debug "DEBUG: was not able to find series title"
-      self.title = "title not found"
+      self.update title: "title not found"
     end
 
     doc_authors = nil
@@ -41,7 +41,7 @@ class Series < Page
       end
     end
 
-    self.notes = [doc_summary, doc_notes].compact.join_hr
+    self.update notes: [doc_summary, doc_notes].compact.join_hr
 
     Rails.logger.debug "DEBUG: get fandoms from raw html of first and last parts"
     both = (parts.first.my_fandoms + parts.last.my_fandoms).uniq.join_comma
@@ -54,7 +54,7 @@ class Series < Page
 
     parts.map(&:remove_duplicate_tags)
 
-    self.save! && self.remove_outdated_downloads
+    self.remove_outdated_downloads
   end
 
   def get_works_from_ao3

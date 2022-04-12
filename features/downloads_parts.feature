@@ -73,7 +73,7 @@ Scenario: download part titles
     And I should NOT see "10,001 words"
 
 Scenario: part epubs should have all metadata from parent except size (which is different) and info (which is never put on epubs)
-  Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3" AND fandoms: "harry potter" AND infos: "informational" AND tropes: "AU" AND add_author_string: "my author" AND stars: "4"
+  Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3" AND fandoms: "harry potter" AND infos: "informational" AND tropes: "AU" AND authors: "my author" AND stars: "4"
   Then the download epub command for "Page 1" should include authors: "my author&harry potter"
     And the download epub command for "Part 2" should include authors: "my author&harry potter"
 

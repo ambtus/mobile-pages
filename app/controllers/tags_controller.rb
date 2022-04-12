@@ -27,7 +27,8 @@ class TagsController < ApplicationController
   def update
     @tag = Tag.find(params[:id])
     if params[:commit] == "Merge"
-      true_tag = Tag.find_by_short_name(params[:merge])
+      Rails.logger.debug "DEBUG: merging tags #{@tag.name} and #{params[:merge]}"
+      true_tag = @tag.class.find_by_short_name(params[:merge])
       if true_tag == @tag
         flash.now[:alert] = "can't merge with self"
         render :edit and return

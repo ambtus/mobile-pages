@@ -16,14 +16,14 @@ class Single < Page
     work_title = doc.xpath("//div[@id='workskin']").xpath("//h2").first.children.text.strip rescue "can’t find title"
     Rails.logger.debug "DEBUG: ao3 single work title: #{work_title}"
     chapter_title = work_title if chapter_title.blank?
-    self.title = ao3_chapter? ? chapter_title : work_title
+    self.update title: ao3_chapter? ? chapter_title : work_title
     Rails.logger.debug "DEBUG: ao3 single title: #{self.title}"
 
     doc_summary = Scrub.sanitize_html(doc.css(".summary blockquote")).children.to_html
     doc_notes = Scrub.sanitize_html(doc.css(".notes blockquote")).children.to_html
     doc_relationships = doc.css(".relationship a").map(&:text).to_p  rescue nil
     doc_tags = doc.css(".freeform a").map(&:text).to_p  rescue nil
-    self.notes = [doc_relationships, doc_summary, doc_tags, doc_notes].join_hr
+    self.update notes: [doc_relationships, doc_summary, doc_tags, doc_notes].join_hr
     Rails.logger.debug "DEBUG: notes: #{self.notes}"
 
     if ao3_chapter?
@@ -40,8 +40,6 @@ class Single < Page
     add_author(ao3_authors)
 
     Rails.logger.debug "DEBUG: notes now: #{self.notes}"
-
-    self.save!
   end
 
   def my_fandoms

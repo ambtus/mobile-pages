@@ -2,7 +2,7 @@ Feature: ao3 specific stuff
 
 Scenario: grab a single
   Given "popslash" is a "Fandom"
-    And "Sidra" is an author
+    And "Sidra" is an "Author"
     And I am on the homepage
   When I fill in "page_url" with "http://archiveofourown.org/works/68481/"
     And I press "Store"
@@ -158,7 +158,7 @@ Scenario: creating a series when I already have its books
 
 Scenario: refetching a one-page Single into a Book
   Given "harry potter" is a "Fandom"
-    And "Sidra" is an author
+    And "Sidra" is an "Author"
     And Where am I existed and was read
   When I am on the page with title "Time Was, Time Is"
     And I follow "Refetch"

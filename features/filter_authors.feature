@@ -2,7 +2,7 @@ Feature: filter on author
 
 Scenario: filter on author
   Given the following pages
-    | title                            | add_author_string |
+    | title                            | authors |
     | The Mysterious Affair at Styles  | agatha christie   |
     | Grimm's Fairy Tales              | grimm             |
     | Alice's Adventures In Wonderland | lewis carroll, charles dodgson |
@@ -18,7 +18,7 @@ Scenario: filter on author
 
 Scenario: filter by clicking link on show page
   Given the following pages
-    | title                            | add_author_string |
+    | title                            | authors |
     | The Mysterious Affair at Styles  | agatha christie   |
     | Grimm's Fairy Tales              | grimm             |
     | Alice's Adventures In Wonderland | lewis carroll, charles dodgson |
@@ -34,7 +34,7 @@ Scenario: filter by clicking link on show page
 
 Scenario: filter on AKA
   Given the following pages
-    | title                            | add_author_string |
+    | title                            | authors |
     | The Mysterious Affair at Styles  | agatha christie   |
     | Grimm's Fairy Tales              | grimm             |
     | Alice's Adventures In Wonderland | lewis carroll (charles dodgson) |

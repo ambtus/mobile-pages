@@ -27,9 +27,6 @@ end
 When("I edit the text") do
   within(".views") {click_link("Text")}
 end
-When("I edit the authors") do
-  within(".edits") {click_link("Authors")}
-end
 When("I download the epub") do
   within(".views") {click_link("ePub")}
 end

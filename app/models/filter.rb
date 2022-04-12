@@ -37,7 +37,7 @@ class Filter
       pages = pages.where("pages.url LIKE ?", "%#{params[:url].sub(/^https?/, '')}%")
     end
 
-    [:tag, :fandom, :character, :rating, :info].each do |tag_type|
+    [:tag, :fandom, :author, :character, :rating, :info].each do |tag_type|
       pages = pages.where("pages.cached_tag_string LIKE ?", "%#{params[tag_type]}%") if params.has_key?(tag_type)
     end
 
@@ -48,8 +48,6 @@ class Filter
     else
       pages = pages.where(:cached_hidden_string => "")
     end
-
-    pages = pages.joins(:authors).where("authors.name LIKE ?", "%#{params[:author]}%") if params.has_key?(:author)
 
     pages = case params[:sort_by]
       when "last_read"

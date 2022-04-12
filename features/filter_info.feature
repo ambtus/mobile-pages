@@ -14,13 +14,13 @@ Scenario: find by info tag
     But I should NOT see "Alice in Wonderland"
 
 Scenario: find after merging
-  Given a page exists with title: "Page 1" AND infos: "better name"
-    And a page exists with title: "Page 2" AND infos: "bad name"
-  When I am on the edit tag page for "bad name"
-    And I select "better name" from "merge"
+  Given a page exists with title: "Page 1" AND infos: "abc123"
+    And a page exists with title: "Page 2" AND infos: "xyz987"
+  When I am on the edit tag page for "xyz987"
+    And I select "abc123" from "merge"
     And I press "Merge"
     And I am on the homepage
-    And I select "better name" from "info"
+    And I select "abc123" from "info"
     And I press "Find"
   Then I should see "Page 1"
     And I should see "Page 2"

@@ -124,7 +124,7 @@ Scenario: find by url should NOT find hidden if it's part of the filter
     But I should NOT see "A Christmas Carol"
 
 Scenario: change part to hidden
-  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3" AND tropes: "show me" AND add_author_string: "my author"
+  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3" AND tropes: "show me" AND authors: "my author"
   When I am on the page with title "Part 2"
     And I edit its tags
     And I fill in "tags" with "hide me"

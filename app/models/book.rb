@@ -15,7 +15,7 @@ class Book < Page
       tags_doc = Nokogiri::HTML(parts.last.raw_html)
     end
 
-    self.title = doc.xpath("//div[@id='workskin']").xpath("//h2").first.children.text.strip rescue "empty title"
+    self.update title: doc.xpath("//div[@id='workskin']").xpath("//h2").first.children.text.strip rescue "empty title"
     Rails.logger.debug "DEBUG: ao3 book title: #{self.title}"
 
     doc_summary = Scrub.sanitize_html(doc.css(".summary blockquote")).children.to_html
@@ -23,14 +23,13 @@ class Book < Page
     doc_relationships = tags_doc.css(".relationship a").map(&:text).to_p  rescue nil
     doc_tags = tags_doc.css(".freeform a").map(&:text).to_p rescue nil
 
-    self.notes = [doc_relationships, doc_summary, doc_tags, doc_notes].join_hr
+    self.update notes: [doc_relationships, doc_summary, doc_tags, doc_notes].join_hr
 
     add_fandom(my_fandoms.join_comma)
     add_author(doc.css(".byline a").map(&:text).join_comma)
 
     Rails.logger.debug "DEBUG: notes now: #{self.notes}"
 
-    self.save!
   end
 
   def my_fandoms

@@ -31,9 +31,6 @@ module NavigationHelpers
     when /^the edit tag page for "(.*)"$/
       edit_tag_path(Tag.find_by_name($1))
 
-    when /^the edit author page for "(.*)"$/
-      edit_author_path(Author.find_by_name($1))
-
     else
       begin
         page_name =~ /the (.*) page/

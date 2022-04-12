@@ -6,7 +6,7 @@ class Tag < ActiveRecord::Base
   validates_uniqueness_of :name, :case_sensitive => false, scope: :type
 
   def self.types
-    ["Fandom", "Character", "Trope", "Rating", "Omitted", "Hidden", "Info"]
+    ["Fandom", "Author", "Character", "Trope", "Rating", "Omitted", "Hidden", "Info"]
   end
 
   scope :by_name, -> { order('tags.name asc') }
@@ -19,6 +19,7 @@ class Tag < ActiveRecord::Base
   scope :omitted, -> { where(type: 'Omitted') }
   scope :rating, -> { where(type: 'Rating') }
   scope :info, -> { where(type: 'Info') }
+  scope :author, -> { where(type: 'Author') }
 
   scope :not_fandom, -> { where.not(type: 'Fandom') }
   scope :not_character, -> { where.not(type: 'Character') }
@@ -26,6 +27,7 @@ class Tag < ActiveRecord::Base
   scope :not_omitted, -> { where.not(type: 'Omitted') }
   scope :not_rating, -> { where.not(type: 'Rating') }
   scope :not_info, -> { where.not(type: 'Info') }
+  scope :not_author, -> { where.not(type: 'Author') }
 
   scope :joined, -> { map(&:name).join(", ") }
 
@@ -59,9 +61,12 @@ class Tag < ActiveRecord::Base
     end
   end
 
+  def base_name; short_names.first; end
+
   def self.find_by_short_name(short)
     return nil if short.blank?
-    self.where(["name LIKE ?", "%" + short + "%"]).first
+    return nil unless self.names.include?(short) # don't catch substring au for audio
+    self.send(scope_name).where(["name LIKE ?", "%" + short + "%"]).first
   end
 
   def add_aka(aka_tag)

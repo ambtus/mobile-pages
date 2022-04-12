@@ -8,10 +8,6 @@ Given("the page's directory is missing") do
   FileUtils.rm_rf(Page.first.mydirectory)
 end
 
-Given('{string} is an author') do |string|
-  Author.find_or_create_by!(name: string)
-end
-
 Given('{string} is a tag') do |name|
   Tag.find_or_create_by!(name: name)
 end

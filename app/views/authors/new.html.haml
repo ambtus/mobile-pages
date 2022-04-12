@@ -1,7 +1,0 @@
-- content_for :title do
-  = "New authors for " + @page.title
-.title= @page.title
-.authors
-  = form_tag authors_path do
-    = hidden_field_tag(:page_id, @page.id)
-    =render "add"

@@ -77,27 +77,27 @@ class PagesController < ApplicationController
     @tag = Tag.find_by_short_name(params[:tag])
     @hidden = Hidden.find_by_short_name(params[:hidden])
     @fandom = Fandom.find_by_short_name(params[:fandom])
+    @author = Author.find_by_short_name(params[:author])
     @character = Character.find_by_short_name(params[:character])
     @rating = Rating.find_by_short_name(params[:rating])
     @omitted = Omitted.find_by_short_name(params[:omitted])
     @info = Info.find_by_short_name(params[:info])
-    @page.tags << [@tag, @hidden, @fandom, @omitted, @character, @rating, @info].compact
-    @author_name = params[:author] unless params[:author].blank?
-    @author = Author.find_by_short_name(params[:author])
-    @page.authors << @author if @author
+    @page.tags << [@tag, @hidden, @author, @fandom, @omitted, @character, @rating, @info].compact
     if @page.save
+      Rails.logger.debug "DEBUG: page saved: #{@page.inspect}"
       if !@page.errors[:base].blank?
+        Rails.logger.debug "DEBUG: page errors: #{@page.inspect} destroyed"
         @errors = @page.errors
         @page.destroy
         @page = Page.new(params[:page])
       else
-        @page.convert_to_type
         if @page.fandoms.blank?
+          Rails.logger.debug "DEBUG: page created without fandom: #{@page.inspect}"
           flash[:notice] = "Page created with #{Page::OTHER}"
           @page.toggle_other_fandom
         else
+          Rails.logger.debug "DEBUG: page created with fandom: #{@page.inspect}"
           flash[:notice] = "Page created."
-          @page.cache_tags
         end
         redirect_to page_path(@page) and return
       end
@@ -148,7 +148,6 @@ class PagesController < ApplicationController
         flash[:notice] = "Removed Dupes"
       when "Rebuild Meta"
         @page.rebuild_meta
-        @page = Page.find(@page.id) # in case something changed
         flash[:notice] = "Rebuilt Meta"
       when "Toggle #{Page::OTHER}"
         @page.toggle_other_fandom.rebuild_meta
@@ -183,6 +182,7 @@ class PagesController < ApplicationController
         @page.edit_section(params[:section].to_i,params[:new])
         redirect_to @page.download_url(".read") and return
     end
+    @page = Page.find(@page.id) # in case something changed
     render :show
   end
 

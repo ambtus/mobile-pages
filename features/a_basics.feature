@@ -45,7 +45,7 @@ Scenario: create a page from a single url
 
 Scenario: create a page from a single url with author and fandom and notes
   Given "mytag" is a "Fandom"
-    And "myauthor" is an author
+    And "myauthor" is an "Author"
   When I am on the homepage
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I fill in "page_notes" with "some notes"

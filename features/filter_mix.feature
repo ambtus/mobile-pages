@@ -44,7 +44,7 @@ Scenario: find by fandom and hidden
 
 Scenario: Find by author and fandom
   Given the following pages
-    | title                 | add_author_string | fandoms                |
+    | title                 | authors | fandoms                |
     | The Mysterious Affair | agatha christie   | mystery                |
     | Nancy Drew            | Carolyn Keene     | mystery, children      |
     | Not a Mystery         | agatha christie   | horror                 |
@@ -74,7 +74,7 @@ Scenario: Find by unread and fandom
 
 Scenario: Find by unread and author
    Given the following pages
-      | title                | add_author_string        | stars| last_read  |
+      | title                | authors        | stars| last_read  |
       | The Mysterious Affair| agatha christie          | 4    | 2009-01-01 |
       | The Boxcar Children  | Gertrude Chandler Warner | 3    | 2009-02-01 |
       | To Read Mystery      | agatha christie          |      |            |
@@ -92,7 +92,7 @@ Scenario: Find by unread and author
 
 Scenario: Find by read and author
    Given the following pages
-      | title                | add_author_string        | stars| last_read  |
+      | title                | authors        | stars| last_read  |
       | The Mysterious Affair| agatha christie          | 4    | 2009-01-01 |
       | The Boxcar Children  | Gertrude Chandler Warner | 3    | 2009-02-01 |
       | To Read Mystery      | agatha christie          |      |            |
@@ -124,7 +124,7 @@ Scenario: Find by stars and info
 
 Scenario: Find by stars and author
    Given the following pages
-      | title                | add_author_string | stars | last_read  |
+      | title                | authors | stars | last_read  |
       | The Mysterious Affair| agatha christie   | 4     | 2009-01-01 |
       | Nancy Drew           | Carolyn Keene     | 2     | 2009-02-01 |
       | Orient Express       | agatha christie   | 2     | 2009-03-01 |
