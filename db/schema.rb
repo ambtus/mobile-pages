@@ -36,7 +36,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_11_133519) do
     t.index ["ultimate_parent_id"], name: "index_pages_on_ultimate_parent_id"
   end
 
-  create_table "pages_tags", id: false, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "pages_tags", id: false, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "page_id"
     t.integer "tag_id"
   end
