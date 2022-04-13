@@ -91,6 +91,7 @@ class PagesController < ApplicationController
         @page.destroy
         @page = Page.new(params[:page])
       else
+        @page.set_hidden unless @hidden.blank?
         if @page.fandoms.blank?
           Rails.logger.debug "DEBUG: page created without fandom: #{@page.inspect}"
           flash[:notice] = "Page created with #{Page::OTHER}"

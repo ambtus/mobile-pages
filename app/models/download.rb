@@ -43,8 +43,6 @@ module Download
     "#{self.download_dir}#{self.download_title}"
   end
 
-  def hidden?; cached_hidden_string.present?; end
-
   ## --authors
   ## use the short names of the authors
   ## if it's a part, add the parent's authors and fandoms
@@ -74,7 +72,7 @@ module Download
     my_parents_tags = self.parent_id.blank? ? [] : self.parent.all_tags
     (my_tags + my_parents_tags).pulverize
   end
-  def download_tag_string; hidden? ? cached_hidden_string : "#{size}, #{all_tags.join_comma}"; end
+  def download_tag_string; hidden? ? tags.hidden.joined : "#{size}, #{all_tags.join_comma}"; end
 
   ## --comments
   def all_tags_for_comments

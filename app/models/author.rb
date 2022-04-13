@@ -9,7 +9,6 @@ class Author < Tag
       Rails.logger.debug "DEBUG: moving author to note for page #{id}"
       page = Page.find(id)
       page.add_author(name)
-      page.cache_tags
     end
   end
 

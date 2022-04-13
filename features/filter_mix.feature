@@ -136,33 +136,27 @@ Scenario: Find by stars and author
     But I should NOT see "The Mysterious Affair"
     And I should NOT see "Nancy Drew"
 
-Scenario: filter by rating and omitted
+Scenario: interesting (3h, 4i, 5) but not hateful (3h)
   Given pages with ratings and omitteds exist
   When I am on the homepage
     And I select "interesting" from "rating"
     And I select "hateful" from "omitted"
     And I press "Find"
-  Then I should NOT see "page3"
-    And I should NOT see "page2"
-    And I should NOT see "page1"
-    But I should see "page5"
-    And I should see "page4i"
-    But I should NOT see "page4l"
+  Then I should see "page4i"
+    And I should see "page5"
+    But the page should NOT contain css "#position_3"
 
-Scenario: filter by rating and omitted
+Scenario: loving (3l, 4l, 5) but not boring (3l)
   Given pages with ratings and omitteds exist
   When I am on the homepage
     And I select "loving" from "rating"
     And I select "boring" from "omitted"
     And I press "Find"
-  Then I should NOT see "page3"
-    And I should NOT see "page2"
-    And I should NOT see "page1"
-    But I should see "page5"
-    And I should see "page4l"
-    But I should NOT see "page4i"
+  Then I should see "page4l"
+    And I should see "page5"
+    But the page should NOT contain css "#position_3"
 
-Scenario: find by trope and omitted
+Scenario: mystery but not children
   Given the following pages
     | title                            | tropes    | omitteds |
     | The Mysterious Affair at Styles  | mystery   |          |

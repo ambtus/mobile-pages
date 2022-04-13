@@ -9,9 +9,13 @@ class TagsController < ApplicationController
       render :destroy and return
     elsif params[:recache]
       @tag = Tag.find(params[:id])
-      Rails.logger.debug "DEBUG: recaching pages"
-      @tag.recache
-      render :edit and return
+      if @tag.is_a? Hidden
+        Rails.logger.debug "DEBUG: recaching pages"
+        @tag.pages.map(&:set_hidden)
+        render :edit and return
+      else
+        flash.now[:alert] = "can't recache non-hiddens"
+      end
     else
       Rails.logger.debug "DEBUG: selecting tags"
       @page = Page.find(params[:id])
@@ -40,11 +44,18 @@ class TagsController < ApplicationController
       true_tag.add_aka(@tag)
       redirect_to tags_path
     elsif params[:commit] == "Change"
+      was_hidden = @tag.is_a? Hidden
       type = params[:change]
       type = "" if type == "Trope"
-      rechache = (type == "Hidden" || @tag.type == "Hidden")
       @tag.update_attribute(:type, type)
-      rechache ? @tag.pages.map(&:cache_tags) : @tag.pages.map(&:remove_outdated_downloads)
+      if type == "Hidden"
+        Rails.logger.debug "DEBUG: setting hidden"
+        @tag.pages.map(&:set_hidden)
+      elsif was_hidden
+        Rails.logger.debug "DEBUG: resetting hidden"
+        @tag.pages.map(&:reset_hidden)
+      end
+      @tag.pages.map(&:remove_outdated_downloads)
       redirect_to tags_path
     elsif params[:commit] == "Split"
       if params[:first_tag_name] == params[:second_tag_name]
@@ -56,7 +67,6 @@ class TagsController < ApplicationController
         @tag.update!(name: params[:first_tag_name])
         new_tag = Tag.create!(name: params[:second_tag_name], type: @tag.type )
         @tag.pages.each{|p| p.tags << new_tag unless p.tags.include?(new_tag)}
-        @tag.pages.map(&:cache_tags)
         redirect_to tags_path and return
       end
       first = Tag.find_by_name(params[:first_tag_name]) || (@tag.update(name: params[:first_tag_name]) && @tag)
@@ -67,13 +77,11 @@ class TagsController < ApplicationController
       end
       if @tag != first && @tag != second
         @tag.destroy_me
-      else
-        @tag.pages.map(&:cache_tags)
       end
       redirect_to tags_path and return
     elsif params[:commit] == "Update"
       @tag.update_attribute(:name, params[:tag][:name])
-      @tag.pages.map(&:cache_tags)
+      @tag.pages.map(&:remove_outdated_downloads)
       redirect_to tags_path
     else
       render :edit
@@ -90,10 +98,10 @@ class TagsController < ApplicationController
       end
       Rails.logger.debug "DEBUG: replacing tags for #{@page.id} with #{tag_ids}"
       @page.tag_ids = tag_ids
-      @page.cache_tags
     elsif params[:commit].match /Add (.*) Tags/
       @page.add_tags_from_string(params[:tags], $1.squish)
     end
+    @page.reset_hidden
     redirect_to page_path(@page)
   end
 

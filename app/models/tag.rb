@@ -78,7 +78,6 @@ class Tag < ActiveRecord::Base
     page_ids = aka_tag.pages.map(&:id)
     aka_tag.pages.each {|p| p.tags << self unless p.tags.include?(self)}
     aka_tag.destroy
-    page_ids.each {|id| Page.find(id).cache_tags}
     self
   end
 
@@ -86,19 +85,8 @@ class Tag < ActiveRecord::Base
     self.send(scope_name).map(&:short_names).flatten.sort_by(&:downcase)
   end
 
-  def recache(ids=self.pages.map(&:id))
-    Rails.logger.debug "DEBUG: recaching tags for #{ids.count} pages"
-    ids.each do |id|
-      Rails.logger.debug "DEBUG: recaching tags for page #{id}"
-      Page.find(id).cache_tags
-    end
-  end
-
   def destroy_me
-    Rails.logger.debug "DEBUG: recaching pages for #{self.name}"
-    page_ids = self.pages.map(&:id)
     self.destroy
-    self.recache(page_ids)
   end
 
 end

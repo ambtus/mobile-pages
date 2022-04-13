@@ -69,7 +69,6 @@ class Page < ActiveRecord::Base
     return unless self.parent #TODO raise error or at least log a problem
     dups = self.tags & self.parent.tags
     self.tags.delete(dups)
-    self.cache_tags
   end
 
   def mypath
@@ -110,9 +109,15 @@ class Page < ActiveRecord::Base
     if self.tags.omitted.include?(wip_tag)
       self.tags.delete(wip_tag) unless on
     else
-      self.tags << wip_tag && self.cache_tags if on
+      self.tags << wip_tag if on
     end
     return self
+  end
+
+  def set_hidden; update_columns hidden: true; end
+  def unset_hidden; update_columns hidden: false; end
+  def reset_hidden;
+    self.tags.hidden.present? ? set_hidden : unset_hidden
   end
 
   def authors; tags.author; end
@@ -126,7 +131,6 @@ class Page < ActiveRecord::Base
     else
       self.tags << other_fandom_tag
     end
-    self.cache_tags
     return self
   end
 
@@ -164,7 +168,6 @@ class Page < ActiveRecord::Base
   PARENT_PLACEHOLDER = "Enter name of existing or new (unique name) parent"
 
   has_and_belongs_to_many :tags, -> { distinct }
-  has_and_belongs_to_many :authors, -> { distinct }
   belongs_to :parent, class_name: "Page", optional: true
   belongs_to :ultimate_parent, class_name: "Page", optional: true
 
@@ -335,7 +338,7 @@ class Page < ActiveRecord::Base
     parent.parts[my_index+1]
   end
 
-  def not_hidden_parts; parts.select{|part| part.cached_hidden_string.blank?}; end
+  def not_hidden_parts; parts.where(hidden: false); end
 
   def url_list
     partregexp = /\APart \d+\Z/
@@ -360,7 +363,6 @@ class Page < ActiveRecord::Base
     return unless parent
     parent = self.parent
     self.tags << parent.tags - self.tags
-    self.cache_tags
     self.update(parent_id: nil, position: nil)
     self.set_type
     self.get_meta_from_ao3(false) if self.ao3?
@@ -422,9 +424,14 @@ class Page < ActiveRecord::Base
     return "content" unless parent.raw_html.blank?
     count = parent.parts.size + 1
     self.update(:parent_id => parent.id, :position => count)
-    if new # move my tags and authors to parent
+    if new
+      Rails.logger.debug "DEBUG: moving tags to parent"
       parent.tags << self.tags
-      parent.cache_tags
+      if self.hidden?
+        Rails.logger.debug "DEBUG: moving hidden state to parent"
+        self.unset_hidden
+        parent.set_hidden
+      end
       parent.update_stars
     end
     self.remove_duplicate_tags
@@ -606,20 +613,13 @@ class Page < ActiveRecord::Base
     return if string.blank?
     type = "Tag" if type == "Trope"
     Rails.logger.debug "DEBUG: adding #{type} #{string}"
+    self.set_hidden if type == "Hidden"
     string.split(",").each do |tag|
       typed_tag = type.constantize.find_by_short_name(tag.squish)
       typed_tag = type.constantize.find_or_create_by(name: tag.squish) unless typed_tag
       self.tags << typed_tag unless self.tags.include?(typed_tag)
     end
-    self.cache_tags
-  end
-
-  def cache_string; self.tags.not_hidden.joined; end
-  def cache_tags
-    Rails.logger.debug "DEBUG: cache_tags for #{self.id} tags: #{cache_string}, hiddens: #{hidden_string}"
-    self.remove_outdated_downloads
-    self.update(cached_tag_string: cache_string, cached_hidden_string: hidden_string)
-    self
+    Rails.logger.debug "DEBUG: tags now #{self.tags.joined}"
   end
 
   def unfinished?; stars == 9; end
@@ -892,7 +892,6 @@ class Page < ActiveRecord::Base
     unless existing.empty?
       Rails.logger.debug "DEBUG: adding #{existing.map(&:name)} to authors"
       existing.uniq.each {|a| self.tags << a unless self.all_authors.include?(a)}
-      self.cache_tags
     end
     unless non_existing.empty?
       tagged_authors = self.authors + (self.parent ? self.parent.authors : [])
@@ -944,7 +943,6 @@ class Page < ActiveRecord::Base
     unless existing.empty?
       Rails.logger.debug "DEBUG: adding #{existing.uniq.map(&:name)} to fandoms"
       existing.uniq.each {|f| self.tags << f}
-      self.cache_tags
     end
     unless non_existing.empty?
       fandoms = non_existing.uniq

@@ -77,7 +77,6 @@ Given("pages with ratings and omitteds exist") do
   Page.find_or_create_by(title: "page4l").tags << loving
   Page.find_or_create_by(title: "page4i").tags << interesting
   Page.find_or_create_by(title: "page5").tags << [interesting, loving]
-  Page.all.map(&:cache_tags)
 end
 
 Given /^underline spans exists$/ do

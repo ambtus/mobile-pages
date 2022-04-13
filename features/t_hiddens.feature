@@ -8,12 +8,14 @@ Scenario: strip whitespace and sort
     And I press "Add Hidden Tags"
   Then I should see "abc/123 lmn & 345 xyz & 789" within ".hiddens"
     And "xyz & 789" should link to "/pages?hidden=xyz+%26+789"
+    And the page should be hidden
 
 Scenario: link to tag on show should find page on index
   Given a page exists with hiddens: "lmn123"
   When I am on the page's page
     And I follow "lmn123"
   Then I should see "Page 1" within "#position_1"
+    And the page should be hidden
 
 Scenario: no tags exist during create
   Given I am on the homepage
@@ -24,6 +26,7 @@ Scenario: no tags exist during create
     And I fill in "tags" with "abc123"
     And I press "Add Hidden Tags"
   Then I should see "abc123" within ".hiddens"
+    And the page should be hidden
 
 Scenario: no tags selected during create
   Given "abc123" is a "Hidden"
@@ -35,6 +38,7 @@ Scenario: no tags selected during create
     And I select "abc123" from "page_hidden_ids_"
     And I press "Update Tags"
   Then I should see "abc123" within ".hiddens"
+    And the page should be hidden
 
 Scenario: hidden selected during create
   Given "abc123" is a "Hidden"
@@ -44,6 +48,7 @@ Scenario: hidden selected during create
     And I fill in "page_title" with "New Title"
     And I press "Store"
   Then I should see "abc123" within ".hiddens"
+    And the page should be hidden
 
 Scenario: comma separated hiddens (not & or /)
   Given a page exists
@@ -55,6 +60,7 @@ Scenario: comma separated hiddens (not & or /)
   Then I should be able to select "abc & 123" from "Hidden"
     And I should be able to select "xyz/987" from "Hidden"
     And I should have 2 tags
+    And the page should be hidden
 
 Scenario: add hiddens to a page which already has hiddens sorts alphabetically
   Given a page exists with hiddens: "lmn123"
@@ -63,8 +69,9 @@ Scenario: add hiddens to a page which already has hiddens sorts alphabetically
     And I fill in "tags" with "xyz123, abc123"
     And I press "Add Hidden Tags"
   Then I should see "abc123 lmn123 xyz123" within ".hiddens"
+    And the page should be hidden
 
-Scenario: new parent for an existing page should have the same hidden (not duped)
+Scenario: new parent for an existing page should be hidden (not duped, so i'm not)
   Given a page exists with hiddens: "abc123"
   When I am on the page's page
     And I follow "Manage Parts"
@@ -72,6 +79,8 @@ Scenario: new parent for an existing page should have the same hidden (not duped
     And I press "Update"
   Then I should see "abc123" within ".hiddens"
     But I should NOT see "abc123" within "#position_1"
+    And "New Parent" should be hidden
+    But the page should NOT be hidden
 
 Scenario: hiddens are editable
   Given "abc123" is a "Hidden"
@@ -97,6 +106,7 @@ Scenario: delete a hidden
     And I am on the homepage
   Then I should NOT see "abc123"
     But I should see "Page 1"
+    And the page should NOT be hidden
 
 Scenario: merge two tags
   Given "abc123" is a "Hidden"
@@ -106,6 +116,7 @@ Scenario: merge two tags
     And I press "Merge"
     And I am on the page's page
   Then I should see "abc123 (xyz987)" within ".hiddens"
+    And the page should be hidden
 
 Scenario: don’t allow merge if not the same type
   Given "abc123" is a tag
@@ -121,6 +132,7 @@ Scenario: change hidden to trope tag
     And I press "Change"
     And I am on the page's page
   Then I should see "abc123" within ".tags"
+    And the page should NOT be hidden
 
 Scenario: change trope to hidden tag
   Given a page exists with tropes: "abc123"
@@ -129,3 +141,4 @@ Scenario: change trope to hidden tag
     And I press "Change"
     And I am on the page's page
   Then I should see "abc" within ".hiddens"
+    And the page should be hidden

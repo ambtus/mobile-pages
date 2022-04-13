@@ -10,7 +10,6 @@ class Fandom < Tag
       page = Page.find(id)
       page.add_fandom(name)
       page.toggle_other_fandom unless page.other_fandom_present?
-      page.cache_tags
     end
   end
 

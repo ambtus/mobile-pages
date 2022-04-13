@@ -4,9 +4,10 @@
 .pages
   %p=link_to "#{@tag.pages.count} #{'page'.pluralize(@tag.pages.count)} with that tag", pages_path(@tag.class.name.downcase.to_sym => @tag.name, :type => "all" )
 .destroy
-  %p=link_to 'Destroy', tag_path(@tag, :destroy => true)
-.recache
-  %p=link_to 'Recache', tag_path(@tag, :recache => true)
+  %p=link_to 'Destroy', tag_path(@tag, destroy: true)
+-if @tag.is_a? Hidden
+  .recache
+    %p=link_to 'Recache', tag_path(@tag, recache: true)
 %p.tag
   = form_for @tag.becomes(Tag) do |f|
     Change name:

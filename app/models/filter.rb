@@ -5,6 +5,7 @@ class Filter
   def self.new(params={})
     Rails.logger.debug "DEBUG: Filter.new(#{params})"
     pages = Page.all
+
     pages = pages.where(:type => (params[:type] == "none" ? nil : params[:type])) if params[:type] unless params[:type] == "all"
 
     # ignore parts unless asking for a type or a url or a title or a fandom or sorting on last_created
@@ -37,18 +38,6 @@ class Filter
       pages = pages.where("pages.url LIKE ?", "%#{params[:url].sub(/^https?/, '')}%")
     end
 
-    [:tag, :fandom, :author, :character, :rating, :info].each do |tag_type|
-      pages = pages.where("pages.cached_tag_string LIKE ?", "%#{params[tag_type]}%") if params.has_key?(tag_type)
-    end
-
-    pages = pages.where("pages.cached_tag_string NOT LIKE ?", "%#{params[:omitted]}%") if params.has_key?(:omitted)
-
-    if params.has_key?(:hidden)
-      pages = pages.where("pages.cached_hidden_string LIKE ?", "%#{params[:hidden]}%")
-    else
-      pages = pages.where(:cached_hidden_string => "")
-    end
-
     pages = case params[:sort_by]
       when "last_read"
         pages.order('last_read DESC')
@@ -69,8 +58,64 @@ class Filter
         pages.order('read_after ASC')
     end
 
-    start = params[:count].to_i
-    pages.group(:id).limit(start + LIMIT)[start..-1]
+    tags=[]
+    if params.has_key?(:hidden)
+      tag = Hidden.find_by_short_name(params[:hidden])
+      Rails.logger.debug "DEBUG: with #{tag.base_name}"
+      tags << tag
+    else
+      pages = pages.where(hidden: false)
+    end
+
+    [:tag, :fandom, :author, :character, :rating, :info, :omitted].each do |tag_type|
+      if params.has_key?(tag_type)
+        model = tag_type.capitalize.to_s.constantize
+        tag = model.find_by_short_name(params[tag_type])
+        Rails.logger.debug "DEBUG: with #{model}s #{tag.base_name}"
+        tags << tag
+      end
+    end
+
+    if tags.size < 2
+      if tags.size == 1
+        if tags.first.is_a? Omitted
+          Filter.intersection(pages, tags, params)
+        else
+          pages = pages.joins(:tags).where(tags: {id: tags.first.id}).distinct
+          Filter.normal(pages, params)
+        end
+      elsif tags.empty?
+        Filter.normal(pages, params)
+      end
+    elsif tags.size > 1
+      Filter.intersection(pages, tags, params)
+    end
   end
 
+  def self.normal(pages, params)
+    Rails.logger.debug "DEBUG: filter on one or fewer tags"
+    Rails.logger.debug "DEBUG: #{pages.to_sql}"
+    start = params[:count].to_i
+    pages.limit(start + LIMIT)[start..-1]
+  end
+
+  def self.intersection(pages, tags, params)
+    Rails.logger.debug "DEBUG: filtering on intersection of #{tags.size} tags"
+    results = []
+    tags.each_with_index do |tag, index|
+      if tag.is_a? Omitted
+        pages_without_tag = pages - tag.pages
+        Rails.logger.debug "DEBUG: not #{tag.base_name} has #{pages_without_tag.count} pages: #{pages_without_tag.map(&:title)}"
+        results << pages_without_tag
+      else
+        pages_with_tag = pages.joins(:tags).distinct.where(tags: {id: tag.id})
+        Rails.logger.debug "DEBUG: #{tag.base_name} has #{pages_with_tag.count} pages: #{pages_with_tag.map(&:title)}"
+        results << pages_with_tag
+      end
+    end
+    intersection = results.inject{|result, pages| result & pages}
+    Rails.logger.debug "DEBUG: intersection has #{intersection.count} pages"
+    start = params[:count].to_i
+    intersection[start,LIMIT]
+  end
 end

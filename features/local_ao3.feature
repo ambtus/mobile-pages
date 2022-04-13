@@ -1,4 +1,4 @@
-Feature: ao3 testing that can use local cached files
+Feature: ao3 testing that can use local files
          so I don't have to constantly be fetching from
          (would need to be updated if ao3 changes it's format)
 
