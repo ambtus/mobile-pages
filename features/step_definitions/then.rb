@@ -49,7 +49,7 @@ Then('{string} should link to itself') do |string|
   href = page.find_link(string)['href']
   itself = Page.find_by_title(string)
   Rails.logger.debug "DEBUG: link: page #{itself.id} should be at #{href}"
-  assert href == "/pages/#{itself.id}"
+  assert_match "/pages/#{itself.id}", href
 end
 
 Then("the {string} field should contain {string}") do |field, text|
