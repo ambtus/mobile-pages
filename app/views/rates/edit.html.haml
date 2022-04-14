@@ -10,7 +10,8 @@
   .title
     =link_to @page.title, page_path(@page)
   .stars= @page.star_string
-  .ratings= @page.rating_string
+  .pros= @page.tags.pros.joined
+  .cons= @page.tags.cons.joined
   .last_read
     last read:
     =@page.last_read_string

@@ -104,9 +104,9 @@ class Page < ActiveRecord::Base
   MED_MAX   = 30000
   LONG_MAX = 300000
 
-  def wip_tag; Omitted.find_or_create_by(name: WIP); end
+  def wip_tag; Con.find_or_create_by(name: WIP); end
   def wip_switch(on = false)
-    if self.tags.omitted.include?(wip_tag)
+    if self.tags.cons.include?(wip_tag)
       self.tags.delete(wip_tag) unless on
     else
       self.tags << wip_tag if on
@@ -117,14 +117,11 @@ class Page < ActiveRecord::Base
   def set_hidden; update_columns hidden: true; end
   def unset_hidden; update_columns hidden: false; end
   def reset_hidden;
-    self.tags.hidden.present? ? set_hidden : unset_hidden
+    self.tags.hiddens.present? ? set_hidden : unset_hidden
   end
 
-  def authors; tags.author; end
-
-  def fandoms; tags.fandom; end
   def other_fandom_tag; Fandom.find_or_create_by(name: OTHER); end
-  def other_fandom_present?; self.fandoms.include?(other_fandom_tag);end
+  def other_fandom_present?; self.tags.fandoms.include?(other_fandom_tag);end
   def toggle_other_fandom
     if other_fandom_present?
       self.tags.delete(other_fandom_tag)
@@ -551,14 +548,6 @@ class Page < ActiveRecord::Base
      return answer
   end
 
-  # used in show view
-  Tag.types.each do |type|
-    define_method(type.downcase + "_string") do
-      self.tags.where(type: type).by_name.joined
-    end
-  end
-  def trope_string; self.tags.trope.by_name.joined; end #then redefine trope_string
-  def author_string; self.authors.joined; end
   def parts_string
     suffix = parts.size == 1 ? "" : "s"
     parts.blank? ? "" : " (#{parts.size} part#{suffix})"
@@ -650,7 +639,7 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def meta_strings; [author_string, last_read_string, star_string, size_string, *tags.by_type.by_name.map(&:name)].uniq.reject(&:blank?); end
+  def meta_strings; [*tags.by_type.by_name.map(&:name), star_string, last_read_string, size_string, ].uniq.reject(&:blank?); end
   def title_suffix; meta_strings.empty? ? "" : " (#{meta_strings.join_comma})"; end
 
   def section(number)
@@ -858,7 +847,8 @@ class Page < ActiveRecord::Base
 
   def make_audio  # add an audio tag and mark it as read today
     Rails.logger.debug "DEBUG: mark_audio for #{self.id}"
-    self.add_tags_from_string("audio book")
+    audio_tag = Tag.find_by(name: "audio") || Info.create(name: "audio")
+    self.tags << audio_tag
     self.update(:last_read => Time.now)
     self.update_read_after
   end
@@ -894,7 +884,7 @@ class Page < ActiveRecord::Base
       existing.uniq.each {|a| self.tags << a unless self.all_authors.include?(a)}
     end
     unless non_existing.empty?
-      tagged_authors = self.authors + (self.parent ? self.parent.authors : [])
+      tagged_authors = self.tags.authors + (self.parent ? self.parent.tags.authors : [])
       by = tagged_authors.empty? ? "by" : "et al:"
       Rails.logger.debug "DEBUG: adding #{non_existing} to notes"
       self.update notes: "<p>#{by} #{non_existing.join(", ")}</p>#{self.notes}"
@@ -940,7 +930,12 @@ class Page < ActiveRecord::Base
         end
       end
     end
-    unless existing.empty?
+    if existing.empty?
+      if self.tags.fandoms.blank?
+        Rails.logger.debug "DEBUG: adding #{OTHER} to fandoms"
+        self.tags << other_fandom_tag
+      end
+    else
       Rails.logger.debug "DEBUG: adding #{existing.uniq.map(&:name)} to fandoms"
       existing.uniq.each {|f| self.tags << f}
     end

@@ -47,3 +47,12 @@ Scenario: filter on AKA
     And "charles dodgson" should be selected in "author"
     But I should NOT see "The Mysterious Affair at Styles"
     And I should NOT see "Grimm's Fairy Tales"
+
+Scenario: two authors can share an AKA (search results unpredictable)
+  Given a page exists with authors: "dick (DO NOT REFETCH)" AND title: "dicks' book"
+    And a page exists with authors: "jane (DO NOT REFETCH)" AND title: "jane's book"
+    And a page exists with authors: "spot" AND title: "spot's book"
+  When I am on the homepage
+    And I select "DO NOT REFETCH" from "Author"
+    And I press "Find"
+  Then I should NOT see "spot's book"

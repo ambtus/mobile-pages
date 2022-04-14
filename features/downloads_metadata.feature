@@ -1,7 +1,7 @@
 Feature: downloads metadata
 
 Scenario: basic
-  Given a page exists with tropes: "tag1"
+  Given a page exists with pros: "tag1"
   When I am on the page's page
     And I download the epub
   Then the download epub file should exist
@@ -17,7 +17,7 @@ Scenario: drabble and has an info tag (not displayed)
     And the download epub command should NOT include comments: "drabble"
 
 Scenario: epub page; author and tag strings are populated
-  Given a page exists with tropes: "my tag" AND authors: "my author"
+  Given a page exists with pros: "my tag" AND authors: "my author"
   Then the download epub command should include tags: "my tag"
     And the download epub command should include authors: "my author"
     And the download epub command should NOT include comments: "my author"
@@ -30,7 +30,7 @@ Scenario: do not put aka in author tag for epub
     And the download epub command should NOT include comments: "my author (AKA)"
 
 Scenario: drabble and has a tag
-  Given a page exists with tropes: "tag1"
+  Given a page exists with pros: "tag1"
     And the download epub command should include tags: "tag1"
     And the download epub command should include tags: "drabble"
     And the download epub command should include tags: "unread"
@@ -52,7 +52,7 @@ Scenario: long
     And the download epub command should include comments: "30,003 words"
 
 Scenario: tag name changes => remove outdated downloads
-  Given a page exists with tropes: "tag1"
+  Given a page exists with pros: "tag1"
   When I am on the page's page
     And I download the epub
     And I am on the edit tag page for "tag1"
@@ -61,7 +61,7 @@ Scenario: tag name changes => remove outdated downloads
   Then the download epub file should NOT exist
 
 Scenario: tag name changes => new epub has new name
-  Given a page exists with tropes: "tag1"
+  Given a page exists with pros: "tag1"
   When I am on the page's page
     And I download the epub
     And I am on the edit tag page for "tag1"
@@ -75,7 +75,7 @@ Scenario: tag name changes => new epub has new name
     And the download epub command should NOT include authors: "fandom1"
 
 Scenario: tag type changes => remove outdated downloads
-  Given a page exists with tropes: "fandom1"
+  Given a page exists with pros: "fandom1"
   When I am on the page's page
     And I download the epub
     And I am on the edit tag page for "fandom1"
@@ -84,7 +84,7 @@ Scenario: tag type changes => remove outdated downloads
   Then the download epub file should NOT exist
 
 Scenario: tag type changes => new epub reflects change
-  Given a page exists with tropes: "fandom1"
+  Given a page exists with pros: "fandom1"
   When I am on the page's page
     And I download the epub
     And I am on the edit tag page for "fandom1"
@@ -96,8 +96,8 @@ Scenario: tag type changes => new epub reflects change
     And the download epub command should include authors: "fandom1"
     And the download epub command should NOT include tags: "fandom1"
 
-Scenario: many fandoms, many characters => characters in tags and comments, fandom in authors only
-  Given a page exists with fandoms: "harry potter, sga" AND characters: "harry/snape, john/rodney"
+Scenario: many fandoms, many pros => pros in tags and comments, fandom in authors only
+  Given a page exists with fandoms: "harry potter, sga" AND pros: "harry/snape, john/rodney"
   Then the download epub command should include authors: "harry potter"
     And the download epub command should include authors: "sga"
     And the download epub command should include tags: "harry/snape"

@@ -43,30 +43,10 @@
         = link_to "Edit Raw HTML", edit_html_path(@page)
       = link_to "Scrub", scrub_path(@page)
       = link_to "Refetch", refetch_path(@page)
-  .fandoms
-    -@page.fandoms.by_name.each do |tag|
-      =link_to tag.name, pages_path(fandom: tag.name)
-  .characters
-    -@page.tags.character.by_name.each do |tag|
-      =link_to tag.name, pages_path(character: tag.name)
-  .tags
-    -@page.tags.trope.by_name.each do |tag|
-      =link_to tag.name, pages_path(tag: tag.name)
-  .omitteds
-    -@page.tags.omitted.by_name.each do |tag|
-      =link_to tag.name, pages_path(omitted: tag.name)
-  .hiddens
-    -@page.tags.hidden.by_name.each do |tag|
-      =link_to tag.name, pages_path(hidden: tag.name)
-  .info
-    -@page.tags.info.by_name.each do |tag|
-      =link_to tag.name, pages_path(info: tag.name)
-  .ratings
-    -@page.tags.rating.by_name.each do |tag|
-      =link_to tag.name, pages_path(rating: tag.name)
-  .authors
-    -@page.authors.by_name.each do |tag|
-      =link_to tag.name, pages_path(author: tag.name)
+  -Tag.types.each do |type|
+    .div{class: "#{type.downcase.pluralize}"}
+      -@page.tags.send(type.downcase.pluralize).by_name.each do |tag|
+        =link_to tag.name, pages_path(type.downcase.to_sym => tag.name)
   .stars= @page.star_string
   .size
     =@page.size_string

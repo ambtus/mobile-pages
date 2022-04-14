@@ -72,11 +72,16 @@ class TagsController < ApplicationController
       first = Tag.find_by_name(params[:first_tag_name]) || (@tag.update(name: params[:first_tag_name]) && @tag)
       second = Tag.find_by_name(params[:second_tag_name]) || (@tag.update(name: params[:second_tag_name]) && @tag)
       @tag.pages.each do |page|
+        Rails.logger.debug "DEBUG: adding #{first.name} to #{page.title}"
         page.tags << first unless page.tags.include?(first)
+        Rails.logger.debug "DEBUG: adding #{second.name} to #{page.title}"
         page.tags << second unless page.tags.include?(second)
       end
-      if @tag != first && @tag != second
-        @tag.destroy_me
+      neither_new = (@tag != first && @tag != second)
+      if neither_new
+        Rails.logger.debug "DEBUG: removing #{@tag.name}"
+        # don't need to destroy_me, because replacements have already been added to the affected pages
+        @tag.destroy
       end
       redirect_to tags_path and return
     elsif params[:commit] == "Update"

@@ -119,23 +119,23 @@ Scenario: merge two tags
     And the page should be hidden
 
 Scenario: don’t allow merge if not the same type
-  Given "abc123" is a tag
+  Given "abc123" is a "Pro"
     And "xyz987" is a "Hidden"
   When I am on the edit tag page for "xyz987"
   Then I should NOT see "abc123"
     And I should NOT see "Merge"
 
-Scenario: change hidden to trope tag
+Scenario: change hidden to con tag
   Given a page exists with hiddens: "abc123"
   When I am on the edit tag page for "abc123"
-    And I select "Trope" from "change"
+    And I select "Con" from "change"
     And I press "Change"
     And I am on the page's page
-  Then I should see "abc123" within ".tags"
+  Then I should see "abc123" within ".cons"
     And the page should NOT be hidden
 
-Scenario: change trope to hidden tag
-  Given a page exists with tropes: "abc123"
+Scenario: change con to hidden tag
+  Given a page exists with cons: "abc123"
   When I am on the edit tag page for "abc123"
     And I select "Hidden" from "change"
     And I press "Change"

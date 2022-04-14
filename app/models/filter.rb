@@ -67,10 +67,10 @@ class Filter
       pages = pages.where(hidden: false)
     end
 
-    [:tag, :fandom, :author, :character, :rating, :info, :omitted].each do |tag_type|
-      if params.has_key?(tag_type)
-        model = tag_type.capitalize.to_s.constantize
-        tag = model.find_by_short_name(params[tag_type])
+    Tag.types.each do |tag_type|
+      if params.has_key?(tag_type.downcase.to_s)
+        model = tag_type.constantize
+        tag = model.find_by_short_name(params[tag_type.downcase.to_s])
         Rails.logger.debug "DEBUG: with #{model}s #{tag.base_name}"
         tags << tag
       end
@@ -78,7 +78,7 @@ class Filter
 
     if tags.size < 2
       if tags.size == 1
-        if tags.first.is_a? Omitted
+        if tags.first.is_a? Con
           Filter.intersection(pages, tags, params)
         else
           pages = pages.joins(:tags).where(tags: {id: tags.first.id}).distinct
@@ -103,7 +103,7 @@ class Filter
     Rails.logger.debug "DEBUG: filtering on intersection of #{tags.size} tags"
     results = []
     tags.each_with_index do |tag, index|
-      if tag.is_a? Omitted
+      if tag.is_a? Con
         pages_without_tag = pages - tag.pages
         Rails.logger.debug "DEBUG: not #{tag.base_name} has #{pages_without_tag.count} pages: #{pages_without_tag.map(&:title)}"
         results << pages_without_tag

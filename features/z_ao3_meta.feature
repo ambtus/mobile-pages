@@ -30,7 +30,7 @@ Scenario: refetching a read Series should show it as unread
     But I should NOT see "Harry Potter" before "Harry Potter" within ".notes"
 
 Scenario: rebuilding a Series before storing index as raw HTML (needs to refetch index)
-  Given Misfits exists
+  Given Misfits existed
     And Misfits has a URL
   When I am on the homepage
     And I follow "Misfit Series"
@@ -47,7 +47,7 @@ Scenario: adding an unread chapter to a book makes the book unread
     And I should see "1 unread part" within ".last_read"
     And I should see today within "#position_1"
     And I should see "Hogwarts (unread"
-    And I should see "WIP" within ".omitteds"
+    And I should see "WIP" within ".cons"
 
 Scenario: grab a series with multiple authors
   Given "Good Omens" is a "Fandom"

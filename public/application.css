@@ -31,15 +31,15 @@ hr {
 .edits { background-color: #C9F; }
 .tags { background-color: #A9F; }
 .fandoms { background-color: #9FF; }
-.hiddens { background-color: #CCC; }
-.omitteds { background-color: #F55; }
-.info { background-color: #FF5; }
-.authors { background-color: #CFF; }
+.authors { background-color: lightblue; }
+.pros { background-color: lightgreen; }
+.cons { background-color: tomato; }
+.hiddens { background-color: grey; }
+.infos { background-color: whitesmoke; }
 .stars { background-color: #E9F; }
-.ratings { background-color: #E9C; }
 .size { background-color: #C9F; }
 .last_read { background-color: #F99; }
-.my_notes { background-color: #F00; }
+.my_notes { background-color: red; }
 .notes { background-color: #FC9; }
 .part {
     border-width: 1px;

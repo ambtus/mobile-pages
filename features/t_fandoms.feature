@@ -1,12 +1,12 @@
 Feature: fandoms are a type of tag, and can be created and selected like tags
 
-Scenario: fandom tag not in tag dropdown
-  Given "not fandom" is a tag
+Scenario: fandom tag not in other tag dropdown
+  Given "not fandom" is a "Pro"
     And "yes fandom" is a "Fandom"
   When I am on the homepage
   Then I should NOT be able to select "yes fandom" from "tag"
     But I should be able to select "yes fandom" from "fandom"
-    And I should be able to select "not fandom" from "tag"
+    And I should be able to select "not fandom" from "pro"
 
 Scenario: link to tag on show should find page on index
   Given a page exists with fandoms: "lmn123"
@@ -42,22 +42,22 @@ Scenario: no tags selected during create
     And I should NOT see "first" within ".fandoms"
 
 Scenario: fandom and other tag selected during create
-  Given "first" is a tag
+  Given "first" is a "Pro"
     And "second" is a "Fandom"
     And I am on the homepage
-    And I select "first" from "tag"
+    And I select "first" from "pro"
     And I select "second" from "fandom"
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I fill in "page_title" with "New Title"
     And I press "Store"
   Then I should NOT see "Page created with Other Fandom"
     But I should see "Page created."
-    And I should see "first" within ".tags"
+    And I should see "first" within ".pros"
     And I should see "second" within ".fandoms"
 
 Scenario: fandom only selected during create
   Given "nonfiction" is a "Fandom"
-    And "something" is a tag
+    And "something" is a "Pro"
     And I am on the homepage
     And I select "nonfiction" from "fandom"
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
@@ -125,7 +125,7 @@ Scenario: new parent for an existing page should have the same fandom
     And I press "Update"
     And I am on the homepage
   Then I should see "New Parent" within "#position_1"
-    And I should see "nonfiction" within ".tags"
+    And I should see "nonfiction" within ".fandoms"
 
  Scenario: new parent for an existing page should move the fandom
   Given a page exists with fandoms: "nonfiction"
@@ -193,62 +193,62 @@ Scenario: merge two tags
   Then I should see "abc123 (xyz987)" within ".fandoms"
 
 Scenario: don’t allow merge if not the same type
-  Given "not fandom" is a tag
+  Given "not fandom" is a "Pro"
     And "bad name" is a "Fandom"
   When I am on the edit tag page for "bad name"
   Then I should NOT see "not fandom"
     And I should NOT see "Merge"
 
-Scenario: change fandom to trope tag part 1
+Scenario: change fandom to pro tag part 1
   Given a page exists with fandoms: "not a fandom"
   When I am on the page's page
   Then I should see "not a fandom" within ".fandoms"
-    But I should NOT see "not a fandom" within ".tags"
+    But I should NOT see "not a fandom" within ".pros"
 
-Scenario: change fandom to trope tag part 2
+Scenario: change fandom to pro tag part 2
   Given a page exists with fandoms: "not a fandom"
   When I am on the edit tag page for "not a fandom"
   Then "Fandom" should be selected in "change"
 
-Scenario: change fandom to trope tag part 3
+Scenario: change fandom to pro tag part 3
   Given a page exists with fandoms: "not a fandom"
   When I am on the edit tag page for "not a fandom"
-    And I select "Trope" from "change"
+    And I select "Pro" from "change"
     And I press "Change"
     And I am on the page's page
- Then I should see "not a fandom" within ".tags"
+ Then I should see "not a fandom" within ".pros"
 
-Scenario: change fandom to trope tag part 4
+Scenario: change fandom to pro tag part 4
   Given a page exists with fandoms: "not a fandom"
   When I am on the edit tag page for "not a fandom"
-    And I select "Trope" from "change"
+    And I select "Pro" from "change"
     And I press "Change"
     And I am on the homepage
-  Then I should be able to select "not a fandom" from "tag"
+  Then I should be able to select "not a fandom" from "pro"
     But I should NOT be able to select "not a fandom" from "fandom"
 
-Scenario: change trope to fandom tag part 1
-  Given a page exists with tropes: "will be fandom"
+Scenario: change pro to fandom tag part 1
+  Given a page exists with pros: "will be fandom"
   When I am on the page's page
-  Then I should see "will be fandom" within ".tags"
+  Then I should see "will be fandom" within ".pros"
     But I should NOT see "will be a fandom" within ".fandoms"
 
-Scenario: change trope to fandom tag part 2
-  Given a page exists with tropes: "will be fandom"
+Scenario: change pro to fandom tag part 2
+  Given a page exists with pros: "will be fandom"
   When I am on the edit tag page for "will be fandom"
-  Then "Trope" should be selected in "change"
+  Then "Pro" should be selected in "change"
 
-Scenario: change trope to fandom tag part 3
-  Given a page exists with tropes: "will be fandom"
+Scenario: change pro to fandom tag part 3
+  Given a page exists with pros: "will be fandom"
   When I am on the edit tag page for "will be fandom"
     And I select "Fandom" from "change"
     And I press "Change"
     And I am on the page's page
   Then I should see "will be fandom" within ".fandoms"
-    But I should NOT see "will be a fandom" within ".tags"
+    But I should NOT see "will be a fandom" within ".pros"
 
-Scenario: change trope to fandom tag part 4
-  Given a page exists with tropes: "will be fandom"
+Scenario: change pro to fandom tag part 4
+  Given a page exists with pros: "will be fandom"
   When I am on the edit tag page for "will be fandom"
     And I select "Fandom" from "change"
     And I press "Change"

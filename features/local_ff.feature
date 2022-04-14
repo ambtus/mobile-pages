@@ -1,4 +1,5 @@
 Feature: ff.net specific stuff
+         local because I never figured out how to fetch from ff.net
 
 Scenario: fanfiction meta
   Given counting exists
@@ -64,4 +65,3 @@ Scenario: fanfiction underline spans don't get cleaned
     And I view the content
   Then I should NOT see "But I so I ,"
     But I should see "But I wasn't so I didn't,"
-

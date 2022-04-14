@@ -6,29 +6,18 @@ class Tag < ActiveRecord::Base
   validates_uniqueness_of :name, :case_sensitive => false, scope: :type
 
   def self.types
-    ["Fandom", "Author", "Character", "Trope", "Rating", "Omitted", "Hidden", "Info"]
+    ["Fandom", "Author", "Pro", "Con", "Hidden", "Info"]
   end
 
   scope :by_name, -> { order('tags.name asc') }
   scope :by_type, -> { order('tags.type desc') }
 
-  scope :trope, -> { where(type: '') }
-  scope :fandom, -> { where(type: 'Fandom') }
-  scope :character, -> { where(type: 'Character') }
-  scope :hidden, -> { where(type: 'Hidden') }
-  scope :omitted, -> { where(type: 'Omitted') }
-  scope :rating, -> { where(type: 'Rating') }
-  scope :info, -> { where(type: 'Info') }
-  scope :author, -> { where(type: 'Author') }
+  self.types.each do |type|
+    scope type.downcase.pluralize.to_sym, -> { where(type: type)}
+    scope "not_#{type.downcase}".to_sym, -> {where.not(type: type)}
+  end
 
-  scope :not_fandom, -> { where.not(type: 'Fandom') }
-  scope :not_character, -> { where.not(type: 'Character') }
-  scope :not_hidden, -> { where.not(type: 'Hidden') }
-  scope :not_omitted, -> { where.not(type: 'Omitted') }
-  scope :not_rating, -> { where.not(type: 'Rating') }
-  scope :not_info, -> { where.not(type: 'Info') }
-  scope :not_author, -> { where.not(type: 'Author') }
-
+  # NOTE: this must go at the end, because it returns and array, not a scope
   scope :joined, -> { map(&:name).join(", ") }
 
   before_validation :remove_placeholder
@@ -44,11 +33,11 @@ class Tag < ActiveRecord::Base
   end
 
   def type_name
-    type.blank? ? "Trope" : type
+    type.blank? ? "Tag" : type
   end
 
   def self.scope_name
-    self.name == "Tag" ? "trope" : self.name.downcase
+    self.name == "Tag" ? "by_type" : self.name.downcase.pluralize
   end
 
   def short_names

@@ -21,7 +21,7 @@ module Download
     end
   end
 
-  def short_meta_strings; [author_string, download_unread_string, *tags.not_info.by_type.by_name.map(&:name)].reject(&:blank?); end
+  def short_meta_strings; [download_unread_string, *tags.not_info.by_type.by_name.map(&:name)].reject(&:blank?); end
 
   def download_suffix; short_meta_strings.empty? ? "" : " (#{short_meta_strings.join_comma})"; end
   def download_part_title; title_prefix + title + download_suffix; end
@@ -47,12 +47,12 @@ module Download
   ## use the short names of the authors
   ## if it's a part, add the parent's authors and fandoms
   def all_authors;
-    my_authors = self.authors
+    my_authors = self.tags.authors
     my_parents_authors = self.parent_id.blank? ? [] : self.parent.all_authors
     (my_authors + my_parents_authors).pulverize
   end
   def all_fandoms;
-    my_fandoms = self.fandoms
+    my_fandoms = self.tags.fandoms
     my_parents_fandoms = self.parent_id.blank? ? [] : self.parent.all_fandoms
     (my_fandoms + my_parents_fandoms).pulverize
   end
@@ -72,23 +72,22 @@ module Download
     my_parents_tags = self.parent_id.blank? ? [] : self.parent.all_tags
     (my_tags + my_parents_tags).pulverize
   end
-  def download_tag_string; hidden? ? tags.hidden.joined : "#{size}, #{all_tags.join_comma}"; end
+  def download_tag_string; hidden? ? tags.hiddens.joined : "#{size}, #{all_tags.join_comma}"; end
 
   ## --comments
-  def all_tags_for_comments
-    my_tags = self.tags.character.by_name + self.tags.trope.by_name
-    my_parents_tags = self.parent_id.blank? ? [] : self.parent.all_tags_for_comments
+  def pros_and_cons
+    my_tags = self.tags.pros.by_name + self.tags.cons.by_name
+    my_parents_tags = self.parent_id.blank? ? [] : self.parent.pros_and_cons
     (my_tags + my_parents_tags).pulverize
   end
-  def all_tags_for_comments_string
-    characters = all_tags_for_comments.select{|t| t.type == "Character"}
-    tropes = all_tags_for_comments.select{|t| t.type == ""}
-    (characters + tropes).map(&:name).join_comma
+  def pros_and_cons_string
+    pros = pros_and_cons.select{|t| t.type == "Pro"}
+    cons = pros_and_cons.select{|t| t.type == "Con"}
+    (pros + cons).map(&:name).join_comma
   end
   def download_comment_string
     [
-      hidden_string,
-      all_tags_for_comments_string,
+      pros_and_cons_string,
       size_string,
       my_short_notes,
       short_notes,

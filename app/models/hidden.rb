@@ -1,4 +1,5 @@
 class Hidden < Tag
+  # Tags to be filtered out by default
 
   def destroy_me
     page_ids = self.pages.map(&:id)
@@ -7,7 +8,7 @@ class Hidden < Tag
     self.destroy
     page_ids.each do |id|
       page = Page.find(id)
-      if page.tags.hidden.blank?
+      if page.tags.hiddens.blank?
         Rails.logger.debug "DEBUG: unsetting hidden for page #{id}"
         page.unset_hidden
       else

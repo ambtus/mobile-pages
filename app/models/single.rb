@@ -40,6 +40,7 @@ class Single < Page
     add_author(ao3_authors)
 
     Rails.logger.debug "DEBUG: notes now: #{self.notes}"
+    return self
   end
 
   def my_fandoms

@@ -22,11 +22,11 @@ Scenario: part sections
     And I am on the page with title "Multiple pages from urls"
   Then I should see "Text" within "#position_1"
 
-Scenario: audiobook created updates last read and adds audio tag
+Scenario: check before audiobook created
   Given a page exists with last_read: "2014-01-01"
   When I am on the page's page
   Then I should see "2014" within ".last_read"
-    And I should NOT see "audio" within ".tags"
+    And I should NOT see "audio"
 
 Scenario: audiobook created updates last read and adds audio tag
   Given a page exists with last_read: "2014-01-01"
@@ -34,7 +34,7 @@ Scenario: audiobook created updates last read and adds audio tag
     And I edit the text
     And I press "Audiobook created"
     And I am on the page's page
-  Then I should see "audio" within ".tags"
+  Then I should see "audio"
     And last read should be today
     And I should NOT see "2014" within ".last_read"
 

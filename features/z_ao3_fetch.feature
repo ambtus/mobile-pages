@@ -9,7 +9,7 @@ Scenario: grab a single
   Then I should NOT see "Title can't be blank"
     And I should NOT see "Select tags"
     And I should see "I Drive Myself Crazy (Single)" within ".title"
-    And I should NOT see "WIP" within ".omitteds"
+    And I should NOT see "WIP" within ".cons"
     And I should see "popslash" within ".fandoms"
     And I should see "please no crossovers" within ".notes"
     And I should NOT see "Popslash" within ".notes"
@@ -26,7 +26,7 @@ Scenario: grab a book
     And I select "harry potter" from "fandom"
     And I press "Store"
   Then I should see "Time Was, Time Is (Book)" within ".title"
-    And I should see "WIP" within ".omitteds"
+    And I should see "WIP" within ".cons"
     And I should see "1,581 words" within ".size"
     And I should see "by Sidra" within ".notes"
     And I should see "Using time-travel" within ".notes"
@@ -61,7 +61,7 @@ Scenario: deliberately fetch only one chapter
     And I select "harry potter" from "fandom"
   When I press "Store"
   Then I should see "Where am I? (Single)" within ".title"
-    And I should NOT see "WIP" within ".omitteds"
+    And I should NOT see "WIP" within ".cons"
     And I should NOT see "1."
     And I should see "by Sidra"
     And I should see "Using time-travel"
@@ -86,7 +86,7 @@ Scenario: refetch Single
     And I should NOT see "1."
     And I should see "by Sidra" within ".notes"
     And I should NOT see "changed notes" within ".notes"
-    And I should NOT see "WIP" within ".omitteds"
+    And I should NOT see "WIP" within ".cons"
     And my page named "Where am I?" should contain "Amy woke slowly"
     But my page named "Where am I?" should NOT contain "oops"
 
@@ -112,13 +112,12 @@ Scenario: getting book by adding parent and then refetching
     And I press "Refetch"
   Then I should see "Refetched" within "#flash_notice"
     And I should see "Time Was, Time Is (Book)" within ".title"
-    And I should see "WIP" within ".omitteds"
+    And I should see "WIP" within ".cons"
     And I should see "Where am I?" within "#position_1"
     And I should see "Hogwarts" within "#position_2"
-    And my page named "Time Was, Time Is" should have url: "https://archiveofourown.org/works/692"
 
 Scenario: fetching a series from before all the works had urls
-  Given Misfits exists
+  Given Misfits existed
   When I am on the page with title "Misfit Series"
     And I follow "Refetch"
     And I fill in "url" with "https://archiveofourown.org/series/334075"
@@ -143,15 +142,16 @@ Scenario: storing a series when I already have one of its singles
     And I should have 3 pages
 
 Scenario: creating a series when I already have its books
-  Given Misfits exists
+  Given Misfits existed
     And I am on the homepage
     And I follow "Misfit Series"
     And I press "Uncollect"
   When I am on the homepage
     And I fill in "page_url" with "https://archiveofourown.org/series/334075"
     And I press "Store"
-  Then I should see "Page created with Other Fandom"
+  Then I should see "Page created"
     And I should see "Misfits (Series)" within ".title"
+    And I should see "Other Fandom" within ".fandoms"
     And I should see "Three Misfits in New York" within "#position_1"
     And I should see "A Misfit Working Holiday In New York" within "#position_2"
     And I should have 7 pages

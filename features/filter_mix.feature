@@ -1,48 +1,6 @@
 Feature: filter/find
 
-Scenario: find by character and trope
-  Given the following pages
-    | title                  | characters       | tropes   |
-    | Mirror of Maybe        | snarry           | au       |
-    | A Nick in Time         | snarry           | kidfic   |
-    | A Single Love          | Harry/Tom        | kidfic   |
- When I am on the homepage
-    And I select "snarry" from "character"
-    And I select "kidfic" from "tag"
-    And I press "Find"
-  Then I should see "A Nick in Time"
-    But I should NOT see "Mirror of Maybe"
-    And I should NOT see "A Single Love"
-
-Scenario: find by fandom and trope
-  Given the following pages
-    | title                  | fandoms    | tropes   |
-    | Lord of the Rings      | fantasy    | adult    |
-    | The Hobbit             | fantasy    | children |
-    | Nancy Drew             | mystery    | children |
-  When I am on the homepage
-    And I select "fantasy" from "fandom"
-    And I select "children" from "tag"
-    And I press "Find"
-  Then I should NOT see "Lord of the Rings"
-    And I should NOT see "Nancy Drew"
-    But I should see "The Hobbit" within "#position_1"
-
-Scenario: find by fandom and hidden
-  Given the following pages
-    | title                            | fandoms                 | hiddens       |
-    | The Mysterious Affair at Styles  | mystery                 | hide          |
-    | Alice in Wonderland              | children                | hide, go away |
-    | The Boxcar Children              | mystery, children       |               |
-  When I am on the homepage
-    And I select "mystery" from "Fandom"
-    And I select "hide" from "Hidden"
-    And I press "Find"
-  Then I should see "The Mysterious Affair at Styles"
-    But I should NOT see "Alice in Wonderland"
-    And I should NOT see "The Boxcar Children"
-
-Scenario: Find by author and fandom
+Scenario: Find by fandom and author
   Given the following pages
     | title                 | authors | fandoms                |
     | The Mysterious Affair | agatha christie   | mystery                |
@@ -58,6 +16,48 @@ Scenario: Find by author and fandom
     But I should NOT see "Nancy Drew"
     And I should NOT see "Not a Mystery"
 
+Scenario: find by fandom and pro
+  Given the following pages
+    | title                  | fandoms    | pros     |
+    | Lord of the Rings      | fantasy    | adult    |
+    | The Hobbit             | fantasy    | children |
+    | Nancy Drew             | mystery    | children |
+  When I am on the homepage
+    And I select "fantasy" from "fandom"
+    And I select "children" from "pro"
+    And I press "Find"
+  Then I should NOT see "Lord of the Rings"
+    And I should NOT see "Nancy Drew"
+    But I should see "The Hobbit" within "#position_1"
+
+Scenario: find by fandom and info
+  Given the following pages
+    | title                  | fandoms          | infos    |
+    | Mirror of Maybe        | snarry           | abc123   |
+    | A Nick in Time         | snarry           | lmn345   |
+    | A Single Love          | Harry/Tom        | lmn345   |
+ When I am on the homepage
+    And I select "snarry" from "fandom"
+    And I select "lmn345" from "info"
+    And I press "Find"
+  Then I should see "A Nick in Time"
+    But I should NOT see "Mirror of Maybe"
+    And I should NOT see "A Single Love"
+
+Scenario: find by fandom and hidden
+  Given the following pages
+    | title                            | fandoms                 | hiddens       |
+    | The Mysterious Affair at Styles  | mystery                 | hide          |
+    | Alice in Wonderland              | children                | hide, go away |
+    | The Boxcar Children              | mystery, children       |               |
+  When I am on the homepage
+    And I select "mystery" from "Fandom"
+    And I select "hide" from "Hidden"
+    And I press "Find"
+  Then I should see "The Mysterious Affair at Styles"
+    But I should NOT see "Alice in Wonderland"
+    And I should NOT see "The Boxcar Children"
+
 Scenario: Find by unread and fandom
    Given the following pages
       | title               | fandoms  | stars | last_read  |
@@ -72,16 +72,16 @@ Scenario: Find by unread and fandom
     But I should NOT see "To Read Mystery"
     And I should NOT see "Nancy Drew"
 
-Scenario: Find by unread and author
+Scenario: Find by unread and pro
    Given the following pages
-      | title                | authors        | stars| last_read  |
-      | The Mysterious Affair| agatha christie          | 4    | 2009-01-01 |
-      | The Boxcar Children  | Gertrude Chandler Warner | 3    | 2009-02-01 |
-      | To Read Mystery      | agatha christie          |      |            |
-      | Orient Express       | agatha christie          | 2    | 2009-03-01 |
-      | Surprise Island      | Gertrude Chandler Warner |      |            |
+      | title                | pros   | stars| last_read  |
+      | The Mysterious Affair| abc123 | 4    | 2009-01-01 |
+      | The Boxcar Children  | lmn345 | 3    | 2009-02-01 |
+      | To Read Mystery      | abc123 |      |            |
+      | Orient Express       | abc123 | 2    | 2009-03-01 |
+      | Surprise Island      | lmn345 |      |            |
   When I am on the homepage
-    And I select "agatha christie" from "Author"
+    And I select "abc123" from "Pro"
     And I choose "unread_all"
     And I press "Find"
   Then I should see "To Read Mystery"
@@ -92,7 +92,7 @@ Scenario: Find by unread and author
 
 Scenario: Find by read and author
    Given the following pages
-      | title                | authors        | stars| last_read  |
+      | title                | authors                  | stars| last_read  |
       | The Mysterious Affair| agatha christie          | 4    | 2009-01-01 |
       | The Boxcar Children  | Gertrude Chandler Warner | 3    | 2009-02-01 |
       | To Read Mystery      | agatha christie          |      |            |
@@ -124,7 +124,7 @@ Scenario: Find by stars and info
 
 Scenario: Find by stars and author
    Given the following pages
-      | title                | authors | stars | last_read  |
+      | title                | authors           | stars | last_read  |
       | The Mysterious Affair| agatha christie   | 4     | 2009-01-01 |
       | Nancy Drew           | Carolyn Keene     | 2     | 2009-02-01 |
       | Orient Express       | agatha christie   | 2     | 2009-03-01 |
@@ -137,20 +137,20 @@ Scenario: Find by stars and author
     And I should NOT see "Nancy Drew"
 
 Scenario: interesting (3h, 4i, 5) but not hateful (3h)
-  Given pages with ratings and omitteds exist
+  Given pages with pros and cons exist
   When I am on the homepage
-    And I select "interesting" from "rating"
-    And I select "hateful" from "omitted"
+    And I select "interesting" from "pro"
+    And I select "hateful" from "con"
     And I press "Find"
   Then I should see "page4i"
     And I should see "page5"
     But the page should NOT contain css "#position_3"
 
 Scenario: loving (3l, 4l, 5) but not boring (3l)
-  Given pages with ratings and omitteds exist
+  Given pages with pros and cons exist
   When I am on the homepage
-    And I select "loving" from "rating"
-    And I select "boring" from "omitted"
+    And I select "loving" from "pro"
+    And I select "boring" from "con"
     And I press "Find"
   Then I should see "page4l"
     And I should see "page5"
@@ -158,13 +158,13 @@ Scenario: loving (3l, 4l, 5) but not boring (3l)
 
 Scenario: mystery but not children
   Given the following pages
-    | title                            | tropes    | omitteds |
+    | title                            | pros      | cons     |
     | The Mysterious Affair at Styles  | mystery   |          |
     | Alice in Wonderland              |           | children |
     | The Boxcar Children              | mystery   | children |
   When I am on the homepage
-    And I select "mystery" from "tag"
-    And I select "children" from "omitted"
+    And I select "mystery" from "pro"
+    And I select "children" from "con"
     And I press "Find"
   Then I should NOT see "The Boxcar Children"
     And I should NOT see "Alice in Wonderland"

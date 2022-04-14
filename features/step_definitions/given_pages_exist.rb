@@ -62,12 +62,12 @@ Given("pages with all possible unreads exist") do
   series3.cleanup.update_read_after
 end
 
-Given("pages with ratings and omitteds exist") do
+Given("pages with pros and cons exist") do
   Page.delete_all
-  interesting = Rating.find_or_create_by(name: "interesting")
-  boring = Omitted.find_or_create_by(name: "boring")
-  loving = Rating.find_or_create_by(name: "loving")
-  hateful = Omitted.find_or_create_by(name: "hateful")
+  interesting = Pro.find_or_create_by(name: "interesting")
+  boring = Con.find_or_create_by(name: "boring")
+  loving = Pro.find_or_create_by(name: "loving")
+  hateful = Con.find_or_create_by(name: "hateful")
   Page.find_or_create_by(title: "page1").tags << [hateful, boring]
   Page.find_or_create_by(title: "page2h").tags << hateful
   Page.find_or_create_by(title: "page2b").tags << boring

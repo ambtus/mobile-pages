@@ -55,6 +55,7 @@ class Series < Page
     parts.map(&:remove_duplicate_tags)
 
     self.remove_outdated_downloads
+    return self
   end
 
   def get_works_from_ao3

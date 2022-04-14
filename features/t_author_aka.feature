@@ -70,3 +70,10 @@ Scenario: merge two authors from aka point of view
     And I press "Merge"
     And I am on the page with title "Page 2"
   Then I should see "jane (aka)" within ".authors"
+
+Scenario: two authors can share an AKA
+  Given a page exists with authors: "dick (DO NOT REFETCH)" AND title: "dicks' book"
+    And a page exists with authors: "jane (DO NOT REFETCH)" AND title: "jane's book"
+  When I am on the page with title "jane's book"
+  Then I should see "jane (DO NOT REFETCH)" within ".authors"
+    But I should NOT see "dick"

@@ -46,38 +46,38 @@ Scenario: check before change (show)
   When I am on the page's page
   Then I should see "will be visible" within ".hiddens"
 
-Scenario: change hidden to trope tag (index)
+Scenario: change hidden to con tag (index)
   Given a page exists with hiddens: "will be visible"
   When I am on the edit tag page for "will be visible"
-    And I select "Trope" from "change"
+    And I select "Con" from "change"
     And I press "Change"
     And I am on the homepage
   Then I should NOT see "No pages found"
     And I should see "Page 1"
-    And I select "will be visible" from "tag"
+    And I select "will be visible" from "con"
 
-Scenario: change hidden to trope tag (show)
+Scenario: change hidden to con tag (show)
   Given a page exists with hiddens: "will be visible"
   When I am on the edit tag page for "will be visible"
-    And I select "Trope" from "change"
+    And I select "Con" from "change"
     And I press "Change"
     And I am on the homepage
-  Then I should see "will be visible" within ".tags"
+  Then I should see "will be visible" within ".cons"
 
 Scenario: check before change (index)
-  Given a page exists with tropes: "to be hidden"
+  Given a page exists with cons: "to be hidden"
   When I am on the homepage
   Then I should NOT see "No pages found"
     And I should see "Page 1"
-    And I select "to be hidden" from "tag"
+    And I select "to be hidden" from "con"
 
 Scenario: check before change (show)
-  Given a page exists with tropes: "to be hidden"
+  Given a page exists with cons: "to be hidden"
   When I am on the page's page
-  Then I should see "to be hidden" within ".tags"
+  Then I should see "to be hidden" within ".cons"
 
 Scenario: change tope to hidden tag (index)
-  Given a page exists with tropes: "to be hidden"
+  Given a page exists with cons: "to be hidden"
   When I am on the edit tag page for "to be hidden"
     And I select "Hidden" from "change"
     And I press "Change"
@@ -85,8 +85,8 @@ Scenario: change tope to hidden tag (index)
   Then I should see "No pages found"
     And I select "to be hidden" from "hidden"
 
-Scenario: change trope to hidden tag (show)
-  Given a page exists with tropes: "to be hidden"
+Scenario: change con to hidden tag (show)
+  Given a page exists with cons: "to be hidden"
   When I am on the edit tag page for "to be hidden"
     And I select "Hidden" from "change"
     And I press "Change"
@@ -124,7 +124,7 @@ Scenario: find by url should NOT find hidden if it's part of the filter
     But I should NOT see "A Christmas Carol"
 
 Scenario: change part to hidden
-  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3" AND tropes: "show me" AND authors: "my author"
+  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3" AND pros: "show me" AND authors: "my author"
   When I am on the page with title "Part 2"
     And I edit its tags
     And I fill in "tags" with "hide me"
@@ -135,3 +135,19 @@ Scenario: change part to hidden
   Then I should see "Part 1"
     And I should see "Part 3"
     But I should NOT see "Part 2"
+
+Scenario: filter out by AKA
+  Given the following pages
+    | title                            | hiddens |
+    | The Mysterious Affair at Styles  | agatha christie   |
+    | Grimm's Fairy Tales              | grimm             |
+    | Alice's Adventures In Wonderland | lewis carroll (charles dodgson) |
+    | Through the Looking Glass        | lewis carroll |
+  When I am on the homepage
+    And I select "charles dodgson" from "Hidden"
+    And I press "Find"
+  Then I should see "Alice's Adventures In Wonderland"
+    And I should see "Through the Looking Glass"
+    And "charles dodgson" should be selected in "hidden"
+    But I should NOT see "The Mysterious Affair at Styles"
+    And I should NOT see "Grimm's Fairy Tales"

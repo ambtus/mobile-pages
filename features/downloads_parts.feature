@@ -46,7 +46,7 @@ Scenario: two and three levels (h3 & h4)
     And I should see "Hiss" within "h4"
 
 Scenario: download part titles
-  Given "rating tag" is a "Rating"
+  Given "rating tag" is a "Pro"
     And "info tag" is an "Info"
     And a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3"
   When I am on the page's page
@@ -55,7 +55,7 @@ Scenario: download part titles
     And I choose "5"
     And I press "Rate"
     And I follow "Edit Tags for Part 1"
-    And I select "rating tag" from "page_rating_ids_"
+    And I select "rating tag" from "page_pro_ids_"
     And I select "info tag" from "page_info_ids_"
     And I press "Update Tags"
     And I am on the page's page
@@ -73,7 +73,7 @@ Scenario: download part titles
     And I should NOT see "10,001 words"
 
 Scenario: part epubs should have all metadata from parent except size (which is different) and info (which is never put on epubs)
-  Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3" AND fandoms: "harry potter" AND infos: "informational" AND tropes: "AU" AND authors: "my author" AND stars: "4"
+  Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3" AND fandoms: "harry potter" AND infos: "informational" AND pros: "AU" AND authors: "my author" AND stars: "4"
   Then the download epub command for "Page 1" should include authors: "my author&harry potter"
     And the download epub command for "Part 2" should include authors: "my author&harry potter"
 

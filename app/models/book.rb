@@ -6,9 +6,6 @@ class Book < Page
     if refetch
       Rails.logger.debug "DEBUG: fetching meta from ao3 for #{self.url}"
       tags_doc = doc = Nokogiri::HTML(Scrub.fetch_html(self.url))
-    elsif make_single?(parts.size)
-      Rails.logger.debug "DEBUG: not getting meta for Book because was made Single"
-      return false
     else
       Rails.logger.debug "DEBUG: build meta from raw html of first and last parts"
       doc = Nokogiri::HTML(parts.first.raw_html)
@@ -26,14 +23,15 @@ class Book < Page
     self.update notes: [doc_relationships, doc_summary, doc_tags, doc_notes].join_hr
 
     add_fandom(my_fandoms.join_comma)
+
     add_author(doc.css(".byline a").map(&:text).join_comma)
 
     Rails.logger.debug "DEBUG: notes now: #{self.notes}"
-
+    return self
   end
 
   def my_fandoms
-    (parts.first.my_fandoms + parts.second.my_fandoms).uniq
+    (parts.first.my_fandoms + parts.last.my_fandoms).uniq
   end
 
   def get_wip_from_ao3
@@ -51,6 +49,7 @@ class Book < Page
     chapter_list = doc.xpath("//ol//a")
     Rails.logger.debug "DEBUG: chapter list for #{self.id}: #{chapter_list}"
     if make_single?(chapter_list.size)
+      Rails.logger.debug "DEBUG: I am now a #{self.type}"
       return false
     else
       chapter_list.each_with_index do |element, index|
@@ -74,6 +73,17 @@ class Book < Page
     end
   end
 
+  def make_single?(size)
+    if size == 1
+      Rails.logger.debug "DEBUG: only one chapter"
+      page = self.becomes!(Single)
+      page.fetch_ao3
+      return true
+    else
+      return false
+    end
+  end
+
   def fetch_ao3
     if self.id
       Rails.logger.debug "DEBUG: fetch_ao3 work #{self.id}"
@@ -84,15 +94,4 @@ class Book < Page
     end
   end
 
-  def make_single?(size)
-    if size == 1 || size == 0
-      Rails.logger.debug "DEBUG: only one chapter"
-      page = self.becomes!(Single)
-      Rails.logger.debug "DEBUG: page became #{page.type}"
-      page.fetch_ao3
-      return true
-    else
-      return false
-    end
-  end
 end

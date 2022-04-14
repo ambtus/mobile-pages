@@ -2,7 +2,7 @@
   = "Page create error"
 .form
   = form_for @page.becomes(Page) do |f|
-    = render :partial => "pages/create", :locals => {:page => @page, :called_by => "error", :tag => @tag, :author => @author }
+    = render :partial => "pages/create", :locals => {:page => @page, :called_by => "error"}
     %br
     = f.submit "Find", :name => "Find"
     = f.submit "Store", :name => "Store"

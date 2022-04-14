@@ -21,11 +21,9 @@ class PagesController < ApplicationController
     @size = params[:size] || "any"
     @unread = params[:unread] || "either"
     @stars = params[:stars] || "any"
-    @tag_name = params[:tag] if params[:tag]
     @fandom_name = params[:fandom] if params[:fandom]
-    @character_name = params[:character] if params[:character]
-    @rating_name = params[:rating] if params[:rating]
-    @omitted_name = params[:omitted] if params[:omitted]
+    @pro_name = params[:pro] if params[:pro]
+    @con_name = params[:con] if params[:con]
     @hidden_name = params[:hidden] if params[:hidden]
     @info_name = params[:info] if params[:info]
     @author_name = params[:author] if params[:author]
@@ -38,12 +36,10 @@ class PagesController < ApplicationController
       build_route = {:action => "index" , :controller => "pages"}
       build_route[:count] = params[:count].to_i + Filter::LIMIT if params[:Next]
       build_route[:author] = params[:author] unless params[:author].blank?
-      build_route[:tag] = params[:tag] unless params[:tag].blank?
       build_route[:hidden] = params[:hidden] unless params[:hidden].blank?
       build_route[:fandom] = params[:fandom] unless params[:fandom].blank?
-      build_route[:character] = params[:character] unless params[:character].blank?
-      build_route[:rating] = params[:rating] unless params[:rating].blank?
-      build_route[:omitted] = params[:omitted] unless params[:omitted].blank?
+      build_route[:pro] = params[:pro] unless params[:pro].blank?
+      build_route[:con] = params[:con] unless params[:con].blank?
       build_route[:info] = params[:info] unless params[:info].blank?
       build_route[:type] = params[:type] unless (params[:type].blank? || params[:type] == "any")
       build_route[:sort_by] = params[:sort_by] unless (params[:sort_by].blank? || params[:sort_by] == "default")
@@ -74,15 +70,13 @@ class PagesController < ApplicationController
       return
     end
     @page = Page.new(params[:page].permit!)
-    @tag = Tag.find_by_short_name(params[:tag])
     @hidden = Hidden.find_by_short_name(params[:hidden])
     @fandom = Fandom.find_by_short_name(params[:fandom])
     @author = Author.find_by_short_name(params[:author])
-    @character = Character.find_by_short_name(params[:character])
-    @rating = Rating.find_by_short_name(params[:rating])
-    @omitted = Omitted.find_by_short_name(params[:omitted])
+    @pro = Pro.find_by_short_name(params[:pro])
+    @con = Con.find_by_short_name(params[:con])
     @info = Info.find_by_short_name(params[:info])
-    @page.tags << [@tag, @hidden, @author, @fandom, @omitted, @character, @rating, @info].compact
+    @page.tags << [@hidden, @author, @fandom, @pro, @con, @info].compact
     if @page.save
       Rails.logger.debug "DEBUG: page saved: #{@page.inspect}"
       if !@page.errors[:base].blank?
@@ -92,7 +86,7 @@ class PagesController < ApplicationController
         @page = Page.new(params[:page])
       else
         @page.set_hidden unless @hidden.blank?
-        if @page.fandoms.blank?
+        if @page.tags.fandoms.blank?
           Rails.logger.debug "DEBUG: page created without fandom: #{@page.inspect}"
           flash[:notice] = "Page created with #{Page::OTHER}"
           @page.toggle_other_fandom

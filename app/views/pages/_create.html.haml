@@ -1,19 +1,10 @@
 =render :partial => "tags/select"
-- unless Author.names.blank?
-  = label_tag :author, "Author:"
-  = select_tag :author, options_for_select([nil] + Author.names, @author_name)
-%br
-= hinted_text_field_tag 'page[title]', page.title, "Title", :size => 33
-%br
-= hinted_text_area_tag 'page[my_notes]', page.my_notes, "My Notes", :rows => 1, :cols => 33
-%br
-= hinted_text_area_tag 'page[notes]', page.notes, "Notes", :rows => 1, :cols => 33
-%br
+.div= hinted_text_field_tag 'page[title]', page.title, "Title", :size => 33
+.div= hinted_text_area_tag 'page[my_notes]', page.my_notes, "My Notes", :rows => 1, :cols => 33
+.div= hinted_text_area_tag 'page[notes]', page.notes, "Notes", :rows => 1, :cols => 33
 - if called_by == "multiple"
-  = hinted_text_field_tag 'page[base_url]', page.base_url, Page::BASE_URL_PLACEHOLDER, :maxlength => 255, :size => 33
-  %br
-  = hinted_text_field_tag 'page[url_substitutions]', page.url_substitutions, Page::URL_SUBSTITUTIONS_PLACEHOLDER, :maxlength => 255, :size => 33
-  %br
-  = hinted_text_area_tag 'page[urls]', page.urls, Page::URLS_PLACEHOLDER, :rows => 10, :cols => 33
+  .div= hinted_text_field_tag 'page[base_url]', page.base_url, Page::BASE_URL_PLACEHOLDER, :maxlength => 255, :size => 33
+  .div= hinted_text_field_tag 'page[url_substitutions]', page.url_substitutions, Page::URL_SUBSTITUTIONS_PLACEHOLDER, :maxlength => 255, :size => 33
+  .div= hinted_text_area_tag 'page[urls]', page.urls, Page::URLS_PLACEHOLDER, :rows => 10, :cols => 33
 - else
-  = hinted_text_field_tag 'page[url]', page.url, "URL", :size => 33
+  .div= hinted_text_field_tag 'page[url]', page.url, "URL", :size => 33

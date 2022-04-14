@@ -13,9 +13,9 @@
     = hidden_field_tag(:page_id, @page.id)
     .filters
       -Tag.types.each do |type|
-        =type + ": #{@page.tags.send(type.downcase).map(&:name).join(', ')}"
+        =type + ": #{@page.tags.send(type.downcase.pluralize).map(&:name).join(', ')}"
         %br
-        = select_tag("page[#{type.downcase}_ids][]", options_from_collection_for_select(Tag.send(type.downcase).by_name, 'id', 'name', selected = @page.tags.send(type.downcase).map(&:id)), :multiple => true)
+        = select_tag("page[#{type.downcase}_ids][]", options_from_collection_for_select(Tag.send(type.downcase.pluralize).by_name, 'id', 'name', selected = @page.tags.send(type.downcase.pluralize).map(&:id)), :multiple => true)
         %br
     =submit_tag "Update Tags"
     =render "add"
