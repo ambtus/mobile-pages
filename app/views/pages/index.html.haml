@@ -3,32 +3,7 @@
 .form
   = form_for @page.becomes(Page) do |f|
     = hidden_field_tag :count, @count
-    -if @filter
-      .div
-        = label_tag :type, "Type:"
-        - ['Collection', 'Series', 'Book', 'Chapter', 'Single', 'none', 'all', 'any'].each do |choice|
-          = radio_button_tag :type, choice, @type == choice
-          = label_tag "type_#{choice}", choice
-      .div
-        = label_tag :sort_by, "Sort by:"
-        - ['random', 'first_created', 'last_created', 'first_read', 'last_read', 'longest', 'shortest', 'default' ].each do |choice|
-          = radio_button_tag :sort_by, choice, @sort_by == choice
-          = label_tag "sort_by_#{choice}", choice.humanize.downcase
-      .div
-        = label_tag :unread, "Unread:"
-        - ['all', 'any', 'parts', 'none', 'either'].each do |choice|
-          = radio_button_tag :unread, choice, @unread == choice
-          = label_tag "unread_#{choice}", choice
-      .div
-        = label_tag :stars, "Stars:"
-        - ['better', '5', '4', '3', '2', '1', 'worse', 'unfinished', 'any'].each do |choice|
-          = radio_button_tag :stars, choice, @stars == choice
-          = label_tag "stars_#{choice}", choice
-      .div
-        = label_tag :size, "Size:"
-        - ['longer', *Page::SIZES.reverse, 'shorter', 'any'].each do |choice|
-          = radio_button_tag :size, choice, @size == choice
-          = label_tag "size_#{choice}", choice
+    = render :partial => "pages/filter" if @filter
     = render :partial => "pages/create", :locals => {:page => @page, :called_by => @called_by}
     = f.submit "Find", :name => "Find"
     = f.submit "Store", :name => "Store" unless @filter

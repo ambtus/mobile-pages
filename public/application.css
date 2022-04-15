@@ -17,6 +17,7 @@ hr {
 .views     { background-color: #CCF; }
 .parent    { background-color: #CFC; }
 .part      { background-color: #CFC; border-width: 1px; border-style: dotted;}
+.type      { background-color: #CFF; }
 .edits     { background-color: #C9F; }
 .size      { background-color: #C9F; }
 .top       { background-color: #DDD; }
@@ -25,9 +26,10 @@ hr {
 .part_links{ background-color: #FCF; }
 .page      { background-color: #FC9; border-width: 1px; border-style: dotted;}
 .notes     { background-color: #FC9; }
-.infos     { background-color: #FF9; }
-.stars     { background-color: #FF9; }
-.cons      { background-color: #F99; }
+.infos     { background-color: #FFC; }
+.sort_by   { background-color: #FF9; }
+.cons      { background-color: #F9C; }
+.stars     { background-color: #F9F; }
 .my_notes  { background-color: #F99; }
 .bottom    { background-color: #444; }
 .hiddens   { background-color: #9CF; }
