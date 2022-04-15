@@ -5,28 +5,28 @@ Scenario: Find page by title (first)
    When I am on the filter page
      And I fill in "page_title" with "A"
      And I press "Find"
-   Then I should see "A Christmas Carol by Charles Dickens" within ".title"
+   Then I should see "A Christmas Carol by Charles Dickens" within "#position_1"
 
 Scenario: Find page by title (middle)
   Given a page exists with title: "A Christmas Carol by Charles Dickens"
    When I am on the filter page
      And I fill in "page_title" with "by"
      And I press "Find"
-   Then I should see "A Christmas Carol by Charles Dickens" within ".title"
+   Then I should see "A Christmas Carol by Charles Dickens" within "#position_1"
 
 Scenario: Find page by title (last)
   Given a page exists with title: "A Christmas Carol by Charles Dickens"
    When I am on the filter page
      And I fill in "page_title" with "Dickens"
      And I press "Find"
-   Then I should see "A Christmas Carol by Charles Dickens" within ".title"
+   Then I should see "A Christmas Carol by Charles Dickens" within "#position_1"
 
 Scenario: Find page by title (whole)
   Given a page exists with title: "A Christmas Carol by Charles Dickens"
    When I am on the filter page
      And I fill in "page_title" with "A Christmas Carol by Charles Dickens"
      And I press "Find"
-   Then I should see "A Christmas Carol by Charles Dickens" within ".title"
+   Then I should see "A Christmas Carol by Charles Dickens" within "#position_1"
 
 Scenario: check before No matching title
   Given a page exists
