@@ -12,40 +12,48 @@ hr {
     width: 70%;
 }
 
-.links { background-color: #CCF; }
-.top { background-color: #DDD; }
-.bottom { background-color: #444; }
-.content { background-color: #EEE; }
-.node { background-color: #990; }
-.form { background-color: #9FF; }
+.links     { background-color: #CCF; }
+.title     { background-color: #CCF; font-weight: bold; }
+.views     { background-color: #CCF; }
+.parent    { background-color: #CFC; }
+.part      { background-color: #CFC; border-width: 1px; border-style: dotted;}
+.edits     { background-color: #C9F; }
+.size      { background-color: #C9F; }
+.top       { background-color: #DDD; }
+.content   { background-color: #EEE; }
+.last_read { background-color: #FCC; }
+.part_links{ background-color: #FCF; }
+.page      { background-color: #FC9; border-width: 1px; border-style: dotted;}
+.notes     { background-color: #FC9; }
+.infos     { background-color: #FF9; }
+.stars     { background-color: #FF9; }
+.cons      { background-color: #F99; }
+.my_notes  { background-color: #F99; }
+.bottom    { background-color: #444; }
+.hiddens   { background-color: #9CF; }
+.pros      { background-color: #9FC; }
+.form      { background-color: #9FF; }
+.fandoms   { background-color: #9FF; }
+.authors   { background-color: #99F; }
+.node      { background-color: #990; }
 
-.page {
-    border-width: 1px;
-    border-style: dotted;
-    background-color: #FC9;
-    }
-
-.parent { background-color: #CFC; }
-.title { background-color: #CCF; font-weight: bold; }
-.views { background-color: #CCF; }
-.edits { background-color: #C9F; }
-.tags { background-color: #A9F; }
-.fandoms { background-color: #9FF; }
-.authors { background-color: lightblue; }
-.pros { background-color: lightgreen; }
-.cons { background-color: tomato; }
-.hiddens { background-color: grey; }
-.infos { background-color: whitesmoke; }
-.stars { background-color: #E9F; }
-.size { background-color: #C9F; }
-.last_read { background-color: #F99; }
-.my_notes { background-color: red; }
-.notes { background-color: #FC9; }
-.part {
-    border-width: 1px;
-    border-style: dotted;
-    background-color: #CFC;
-}
-
-.part_links { background-color: #FCF; }
 page { font-family: Georgia,serif; }
+
+/* possibles:  CCF, CFC, CFF, CF9, C9F
+               FCC, FC9, FFC, FF9, F9C, F9F, F99
+               9CF, 9FC, 9FF, 99F
+*/
+
+/* start with 9FF (aqua), 9CF (blue) & 9FC (green) are "analogous"
+   F9F (pink) & FF9 (yellow) are "triad"
+   99F (purple) & F99 (coral) & FF9 (yellow) are "tetrad" */
+
+/* start with F99 (coral) FC9 (dust) & F9C (pink) are analogous */
+
+/* start with CCF (light purple) FCC (flesh) & CFC (light green) are triad */
+
+/* start with FC9 (dust) FF9 (yellow) & F99 ( coral) are analogous
+   FC9 (light green) and C9F (purple) are triad
+   CF9 (yellow green) 9CF (blue) and C9F (purple) are tetrad */
+
+/* start with CFC (light green) CFF (light blue)  FCF (pink) & FCC (coral) are tetrad */
