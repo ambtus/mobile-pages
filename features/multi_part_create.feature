@@ -7,10 +7,11 @@ Scenario: children should NOT show up on front page by themselves
     But I should NOT see "Part 1"
 
 Scenario: holder page for parts is okay
-  Given I am on the homepage
+  Given I am on the create page
   When I fill in "page_title" with "Only entered Title"
     And I press "Store"
   Then I should see "Page created" within "#flash_notice"
+    And I should have 1 page
 
 Scenario: create from a list of urls
   When I am on the homepage

@@ -7,7 +7,7 @@ Scenario: Find by fandom and author
     | Nancy Drew            | Carolyn Keene     | mystery, children      |
     | Not a Mystery         | agatha christie   | horror                 |
     | Still More Mysteries  | agatha christie   | mystery, short stories |
-  When I am on the homepage
+  When I am on the filter page
     And I select "agatha christie" from "Author"
     And I select "mystery" from "fandom"
     And I press "Find"
@@ -22,7 +22,7 @@ Scenario: find by fandom and pro
     | Lord of the Rings      | fantasy    | adult    |
     | The Hobbit             | fantasy    | children |
     | Nancy Drew             | mystery    | children |
-  When I am on the homepage
+  When I am on the filter page
     And I select "fantasy" from "fandom"
     And I select "children" from "pro"
     And I press "Find"
@@ -36,7 +36,7 @@ Scenario: find by fandom and info
     | Mirror of Maybe        | snarry           | abc123   |
     | A Nick in Time         | snarry           | lmn345   |
     | A Single Love          | Harry/Tom        | lmn345   |
- When I am on the homepage
+ When I am on the filter page
     And I select "snarry" from "fandom"
     And I select "lmn345" from "info"
     And I press "Find"
@@ -50,7 +50,7 @@ Scenario: find by fandom and hidden
     | The Mysterious Affair at Styles  | mystery                 | hide          |
     | Alice in Wonderland              | children                | hide, go away |
     | The Boxcar Children              | mystery, children       |               |
-  When I am on the homepage
+  When I am on the filter page
     And I select "mystery" from "Fandom"
     And I select "hide" from "Hidden"
     And I press "Find"
@@ -64,7 +64,7 @@ Scenario: Find by unread and fandom
       | Nancy Drew          | children | 2     | 2009-02-01 |
       | The Boxcar Children | children |       |            |
       | To Read Mystery     | mystery  |       |            |
-  When I am on the homepage
+  When I am on the filter page
     And I select "children" from "fandom"
     And I choose "unread_all"
     And I press "Find"
@@ -80,7 +80,7 @@ Scenario: Find by unread and pro
       | To Read Mystery      | abc123 |      |            |
       | Orient Express       | abc123 | 2    | 2009-03-01 |
       | Surprise Island      | lmn345 |      |            |
-  When I am on the homepage
+  When I am on the filter page
     And I select "abc123" from "Pro"
     And I choose "unread_all"
     And I press "Find"
@@ -98,7 +98,7 @@ Scenario: Find by read and author
       | To Read Mystery      | agatha christie          |      |            |
       | Orient Express       | agatha christie          | 2    | 2009-03-01 |
       | Surprise Island      | Gertrude Chandler Warner |      |            |
-  When I am on the homepage
+  When I am on the filter page
     And I select "agatha christie" from "Author"
     And I choose "unread_none"
     And I press "Find"
@@ -114,7 +114,7 @@ Scenario: Find by stars and info
       | The Mysterious Affair| mystery  | 4     | 2009-01-01 |
       | Nancy Drew           | children | 2     | 2009-02-01 |
       | The Boxcar Children  | children | 4     | 2009-03-01 |
-  When I am on the homepage
+  When I am on the filter page
     And I select "children" from "info"
     And I choose "stars_better"
     And I press "Find"
@@ -128,7 +128,7 @@ Scenario: Find by stars and author
       | The Mysterious Affair| agatha christie   | 4     | 2009-01-01 |
       | Nancy Drew           | Carolyn Keene     | 2     | 2009-02-01 |
       | Orient Express       | agatha christie   | 2     | 2009-03-01 |
-  When I am on the homepage
+  When I am on the filter page
   When I choose "stars_worse"
     And I select "agatha christie" from "Author"
     And I press "Find"
@@ -138,7 +138,7 @@ Scenario: Find by stars and author
 
 Scenario: interesting (3h, 4i, 5) but not hateful (3h)
   Given pages with pros and cons exist
-  When I am on the homepage
+  When I am on the filter page
     And I select "interesting" from "pro"
     And I select "hateful" from "con"
     And I press "Find"
@@ -148,7 +148,7 @@ Scenario: interesting (3h, 4i, 5) but not hateful (3h)
 
 Scenario: loving (3l, 4l, 5) but not boring (3l)
   Given pages with pros and cons exist
-  When I am on the homepage
+  When I am on the filter page
     And I select "loving" from "pro"
     And I select "boring" from "con"
     And I press "Find"
@@ -162,7 +162,7 @@ Scenario: mystery but not children
     | The Mysterious Affair at Styles  | mystery   |          |
     | Alice in Wonderland              |           | children |
     | The Boxcar Children              | mystery   | children |
-  When I am on the homepage
+  When I am on the filter page
     And I select "mystery" from "pro"
     And I select "children" from "con"
     And I press "Find"

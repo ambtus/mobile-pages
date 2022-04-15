@@ -3,7 +3,7 @@ Feature: fandoms are a type of tag, and can be created and selected like tags
 Scenario: fandom tag not in other tag dropdown
   Given "not fandom" is a "Pro"
     And "yes fandom" is a "Fandom"
-  When I am on the homepage
+  When I am on the filter page
   Then I should NOT be able to select "yes fandom" from "tag"
     But I should be able to select "yes fandom" from "fandom"
     And I should be able to select "not fandom" from "pro"
@@ -26,7 +26,6 @@ Scenario: strip fandom whitespace and sort
 Scenario: no tags exist during create
   Given I am on the homepage
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I fill in "page_title" with "New Title"
     And I press "Store"
   Then I should see "Page created with Other Fandom"
     And I should see "Other Fandom" within ".fandoms"
@@ -35,7 +34,6 @@ Scenario: no tags selected during create
   Given "first" is a "Fandom"
     And I am on the homepage
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I fill in "page_title" with "New Title"
     And I press "Store"
   Then I should see "Page created with Other Fandom"
     And I should see "Other Fandom" within ".fandoms"
@@ -44,11 +42,10 @@ Scenario: no tags selected during create
 Scenario: fandom and other tag selected during create
   Given "first" is a "Pro"
     And "second" is a "Fandom"
-    And I am on the homepage
+    And I am on the create page
     And I select "first" from "pro"
     And I select "second" from "fandom"
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I fill in "page_title" with "New Title"
     And I press "Store"
   Then I should NOT see "Page created with Other Fandom"
     But I should see "Page created."
@@ -58,10 +55,9 @@ Scenario: fandom and other tag selected during create
 Scenario: fandom only selected during create
   Given "nonfiction" is a "Fandom"
     And "something" is a "Pro"
-    And I am on the homepage
+    And I am on the create page
     And I select "nonfiction" from "fandom"
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I fill in "page_title" with "New Title"
     And I press "Store"
   Then I should NOT see "Page created with Other Fandom"
     But I should see "Page created."
@@ -81,7 +77,7 @@ Scenario: add a fandom to a page makes the fandom selectable
     And I edit its tags
     And I fill in "tags" with "Star Wars, Harry Potter"
     And I press "Add Fandom Tags"
-    And I am on the homepage
+    And I am on the filter page
   Then I should be able to select "Star Wars" from "Fandom"
     And I should be able to select "Harry Potter" from "Fandom"
 
@@ -113,7 +109,7 @@ Scenario: add another fandom to a page makes the fandom selectable
     And I edit its tags
     And I fill in "tags" with "meta, reviews"
     And I press "Add Fandom Tags"
-  When I am on the homepage
+  When I am on the filter page
   Then I should be able to select "meta" from "Fandom"
     And I should be able to select "reviews" from "Fandom"
 
@@ -123,9 +119,8 @@ Scenario: new parent for an existing page should have the same fandom
     And I follow "Manage Parts"
     And I fill in "add_parent" with "New Parent"
     And I press "Update"
-    And I am on the homepage
-  Then I should see "New Parent" within "#position_1"
-    And I should see "nonfiction" within ".fandoms"
+    And I am on the page with title "New Parent"
+  Then I should see "nonfiction" within ".fandoms"
 
  Scenario: new parent for an existing page should move the fandom
   Given a page exists with fandoms: "nonfiction"
@@ -153,7 +148,7 @@ Scenario: change the fandom name
   When I am on the edit tag page for "fantasy"
     And I fill in "tag_name" with "speculative fiction"
     And I press "Update"
-    And I am on the homepage
+    And I am on the filter page
   Then I should be able to select "speculative fiction" from "fandom"
     And I should NOT see "fantasy"
 
@@ -162,16 +157,23 @@ Scenario: show number of pages for fandom
   When I am on the edit tag page for "Twilight"
   Then I should see "1 page with that tag"
 
-Scenario: deleted fandom creates Other Fandom
+Scenario: deleted fandom creates Other Fandom (filter)
+  Given a page exists with fandoms: "Twilight"
+  When I am on the edit tag page for "Twilight"
+    And I follow "Destroy"
+    And I press "Yes"
+    And I am on the filter page
+  Then I should NOT be able to select "Twilight" from "fandom"
+    But I should be able to select "Other Fandom" from "fandom"
+
+Scenario: deleted fandom creates Other Fandom (index)
   Given a page exists with fandoms: "Twilight"
   When I am on the edit tag page for "Twilight"
     And I follow "Destroy"
     And I press "Yes"
     And I am on the homepage
-  Then I should NOT be able to select "Twilight" from "fandom"
-    But I should be able to select "Other Fandom" from "fandom"
-    When I follow "Page 1"
-    Then I should see "Other Fandom" within ".fandoms"
+    And I follow "Page 1"
+  Then I should see "Other Fandom" within ".fandoms"
     And I should see "Twilight" within ".notes"
 
 Scenario: deleted fandom puts moves fandom to other fandom on page
@@ -223,7 +225,7 @@ Scenario: change fandom to pro tag part 4
   When I am on the edit tag page for "not a fandom"
     And I select "Pro" from "change"
     And I press "Change"
-    And I am on the homepage
+    And I am on the filter page
   Then I should be able to select "not a fandom" from "pro"
     But I should NOT be able to select "not a fandom" from "fandom"
 
@@ -252,7 +254,7 @@ Scenario: change pro to fandom tag part 4
   When I am on the edit tag page for "will be fandom"
     And I select "Fandom" from "change"
     And I press "Change"
-    And I am on the homepage
+    And I am on the filter page
   Then I should be able to select "will be fandom" from "fandom"
     But I should NOT be able to select "will be fandom" from "tag"
 

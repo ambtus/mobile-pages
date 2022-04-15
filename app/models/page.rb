@@ -981,6 +981,11 @@ private
 
   def remove_placeholders
     self.url = self.url == "URL" ? nil : self.url.try(:strip)
+    if self.title.blank? && self.url.blank?
+      self.errors.add(:base, "Both URL")
+      return false
+    end
+    self.title = "no title provided" if self.title.blank?
     self.notes = nil if self.notes == "Notes"
     self.my_notes = nil if self.my_notes == "My Notes"
     self.base_url = nil if self.base_url == BASE_URL_PLACEHOLDER

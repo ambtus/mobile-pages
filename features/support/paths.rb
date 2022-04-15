@@ -31,6 +31,12 @@ module NavigationHelpers
     when /^the edit tag page for "(.*)"$/
       edit_tag_path(Tag.find_by_name($1))
 
+    when /^the create page$/
+      new_page_path
+
+    when /^the filter page$/
+      pages_path(q: true)
+
     else
       begin
         page_name =~ /the (.*) page/

@@ -14,7 +14,7 @@ Scenario: check before filter (default)
 
 Scenario: any (unread or unread parts)
   Given pages with all possible unreads exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "unread_any"
     And I press "Find"
   Then I should see "not read single"
@@ -28,7 +28,7 @@ Scenario: any (unread or unread parts)
 
 Scenario: none (only fully-read)
   Given pages with all possible unreads exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "unread_none"
     And I press "Find"
   Then I should NOT see "not read single"
@@ -42,7 +42,7 @@ Scenario: none (only fully-read)
 
 Scenario: all (filter out read and unread parts)
   Given pages with all possible unreads exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "unread_all"
     And I press "Find"
   Then I should see "not read single"
@@ -56,7 +56,7 @@ Scenario: all (filter out read and unread parts)
 
 Scenario: parts (filter out read and fully-unread)
   Given pages with all possible unreads exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "unread_parts"
     And I press "Find"
   Then I should NOT see "not read single"

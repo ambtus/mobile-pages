@@ -21,7 +21,7 @@ Scenario: grab a single
 
 Scenario: grab a book
   Given "harry potter" is a "Fandom"
-    And I am on the homepage
+    And I am on the create page
   When I fill in "page_url" with "https://archiveofourown.org/works/692/"
     And I select "harry potter" from "fandom"
     And I press "Store"
@@ -29,6 +29,7 @@ Scenario: grab a book
     And I should see "WIP" within ".cons"
     And I should see "1,581 words" within ".size"
     And I should see "by Sidra" within ".notes"
+    And I should see "harry potter" within ".fandoms"
     And I should see "Using time-travel" within ".notes"
     And I should see "abandoned, Mary Sue" within ".notes"
     And I should see "written for nanowrimo" within ".notes"
@@ -56,7 +57,7 @@ Scenario: grab a book
 
 Scenario: deliberately fetch only one chapter
   Given "harry potter" is a "Fandom"
-    And I am on the homepage
+    And I am on the create page
     And I fill in "page_url" with "https://archiveofourown.org/works/692/chapters/803"
     And I select "harry potter" from "fandom"
   When I press "Store"

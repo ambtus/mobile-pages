@@ -6,7 +6,7 @@ Scenario: split a tag
     And I fill in "first_tag_name" with "Harry"
     And I fill in "second_tag_name" with "Severus"
     And I press "Split"
-    And I am on the homepage
+    And I am on the filter page
   Then I should be able to select "Harry" from "fandom"
     And I should be able to select "Severus" from "fandom"
     But I should NOT be able to select "harry/snape" from "fandom"
@@ -30,7 +30,7 @@ Scenario: works with split tags can be found by first
     And I fill in "first_tag_name" with "Harry"
     And I fill in "second_tag_name" with "Severus"
     And I press "Split"
-    And I am on the homepage
+    And I am on the filter page
     And I select "Harry" from "fandom"
     And I press "Find"
   Then I should see "Page 1" within "#position_1"
@@ -42,7 +42,7 @@ Scenario: works with split tags can be found by second
     And I fill in "first_tag_name" with "Harry"
     And I fill in "second_tag_name" with "Severus"
     And I press "Split"
-    And I am on the homepage
+    And I am on the filter page
     And I select "Severus" from "fandom"
     And I press "Find"
   Then I should see "Page 1" within "#position_1"
@@ -63,7 +63,7 @@ Scenario: can put the name of another tag in as first name
     And I fill in "first_tag_name" with "Harry"
     And I fill in "second_tag_name" with "Severus"
     And I press "Split"
-    And I am on the homepage
+    And I am on the filter page
     When I select "harry" from "fandom"
     And I press "Find"
   Then I should see "first" within "#position_1"
@@ -80,7 +80,7 @@ Scenario: can put the name of another tag in as second name
     And I fill in "first_tag_name" with "Harry"
     And I fill in "second_tag_name" with "Severus"
     And I press "Split"
-    And I am on the homepage
+    And I am on the filter page
     When I select "severus" from "fandom"
     And I press "Find"
   Then I should see "first" within "#position_1"

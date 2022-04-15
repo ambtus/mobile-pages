@@ -6,7 +6,7 @@ Scenario: find by fandom
     | Lord of the Rings      | fantasy    | abc123 |
     | The Hobbit             | fantasy    | lmn345 |
     | Nancy Drew             | mystery    | lmn345 |
-  When I am on the homepage
+  When I am on the filter page
     And I select "fantasy" from "fandom"
     And I press "Find"
   Then I should see "Lord of the Rings" within "#position_1"
@@ -20,7 +20,7 @@ Scenario: filter on AKA
     | Grimm's Fairy Tales              | xyz987          |
     | Alice's Adventures In Wonderland | lmn345 (aka123) |
     | Through the Looking Glass        | lmn345          |
-  When I am on the homepage
+  When I am on the filter page
     And I select "aka123" from "fandom"
     And I press "Find"
   Then I should see "Alice's Adventures In Wonderland"

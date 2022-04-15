@@ -2,7 +2,7 @@ Feature: reset read_after order
 
 Scenario: Add a page and make it first
   Given a page exists
-  When I am on the homepage
+  When I am on the create page
     And I fill in "page_title" with "Page 2"
     And I press "Store"
     And I press "Read Now"
@@ -12,10 +12,11 @@ Scenario: Add a page and make it first
 
 Scenario: verify created date
   Given a page exists
-  When I am on the homepage
+  When I am on the create page
     And I fill in "page_title" with "Page 2"
     And I press "Store"
     And I press "Read Now"
+    And I follow "Filter"
     And I choose "sort_by_first_created"
     And I press "Find"
   Then I should see "Page 1" within "#position_1"
@@ -34,6 +35,7 @@ Scenario: verify created date
   When I am on the homepage
     And I follow "Page 2" within "#position_2"
     And I press "Read Now"
+    And I follow "Filter"
     And I choose "sort_by_first_created"
     And I press "Find"
   Then I should see "Page 1" within "#position_1"
@@ -43,7 +45,7 @@ Scenario: check created date before read now test
   Given I have a single with read_after "2008-01-01"
     And I have a series with read_after "2009-01-02"
     And I have a book with read_after "2008-01-02"
-  When I am on the homepage
+  When I am on the filter page
     And I choose "sort_by_first_created"
     And I press "Find"
   Then I should see "Single" within "#position_1"

@@ -1,10 +1,9 @@
 Feature: stuff to do with notes
 
 Scenario: not filling in notes shouldn't give "Notes"
-  Given I am on the homepage
-  When I fill in "page_title" with "no notes"
-    And I press "Store"
-    And I am on the page with title "no notes"
+  Given I am on the create page
+  When I press "Store"
+    And I am on the page's page
   Then I should NOT see "Notes" within ".notes"
 
 Scenario: long notes should not be truncated in show

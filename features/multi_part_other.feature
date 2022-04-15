@@ -35,7 +35,7 @@ Scenario: find a part
     | title   | base_url                              | url_substitutions |
     | Parent1 | http://test.sidrasue.com/parts/*.html | 1   |
     | Parent2 | http://test.sidrasue.com/parts/*.html | 2 3 |
-   When I am on the homepage
+   When I am on the filter page
      And I fill in "page_title" with "Part 2"
      And I press "Find"
    Then I should see "Part 2 of Parent2" within "#position_1"

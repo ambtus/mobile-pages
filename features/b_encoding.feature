@@ -3,11 +3,10 @@
 Feature: dealing with various encodings in fetched documents
 
 Scenario Outline: encodings
-  Given I am on the homepage
+  Given I am on the create page
   When I fill in "page_url" with "<url>"
     And I fill in "page_title" with "<title>"
     And I press "Store"
-    And I am on the page with title "<title>"
     And I view the content
   Then I should see "<result>" within ".content"
 

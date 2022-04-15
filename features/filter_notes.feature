@@ -9,10 +9,10 @@ Scenario: Find pages by notes
     | Four   | anoted    |
     | Five   | anotate   |
     | Six    | an        |
-  When I am on the homepage
+  When I am on the filter page
     And I fill in "page_notes" with "note"
     And I press "Find"
-  Then I should see "One"
+  Then I should see "One" within ".pages"
     And I should see "Two"
     And I should see "Three"
     And I should see "Four"
@@ -28,10 +28,10 @@ Scenario: Find pages by my notes
     | Four   | anoted    |
     | Five   | anotate   |
     | Six    | an        |
-  When I am on the homepage
+  When I am on the filter page
     And I fill in "page_notes" with "an"
     And I press "Find"
-  Then I should NOT see "One"
+  Then I should NOT see "One" within ".pages"
     And I should NOT see "Two"
     And I should NOT see "Three"
     But I should see "Four"

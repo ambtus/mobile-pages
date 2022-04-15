@@ -11,14 +11,14 @@ Scenario: check before filter (default)
 
 Scenario: find untyped pages
   Given pages with all possible types exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "type_none"
     And I press "Find"
   Then I should see "No pages found"
 
 Scenario: find singles
   Given pages with all possible types exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "type_Single"
     And I press "Find"
   Then I should see "One-shot" within "#position_1"
@@ -27,7 +27,7 @@ Scenario: find singles
 
 Scenario: find chapters
   Given pages with all possible types exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "type_Chapter"
     And I press "Find"
   Then I should see "Part 1 of Novel" within "#position_1"
@@ -40,7 +40,7 @@ Scenario: find chapters
 
 Scenario: find books
   Given pages with all possible types exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "type_Book"
     And I press "Find"
   Then I should see "Novel" within "#position_1"
@@ -53,7 +53,7 @@ Scenario: find books
 
 Scenario: find series
   Given pages with all possible types exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "type_Series"
     And I press "Find"
   Then I should see "Trilogy" within "#position_1"
@@ -62,7 +62,7 @@ Scenario: find series
 
 Scenario: find collections
   Given pages with all possible types exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "type_Collection"
     And I press "Find"
   Then I should see "Life's Work" within "#position_1"
@@ -70,7 +70,7 @@ Scenario: find collections
 
 Scenario: find everything
   Given pages with all possible types exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "type_all"
     And I press "Find"
   Then I should see "One-shot" within "#position_1"

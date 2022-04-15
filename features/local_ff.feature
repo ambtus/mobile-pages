@@ -9,7 +9,7 @@ Scenario: fanfiction meta
     # And I should see "2 connected drabbles" # TODO after add grabbing description from fanfiction
 
 Scenario: fanfiction.net can't be fetched
-  Given I am on the homepage
+  Given I am on the create page
     And I fill in "page_title" with "Counting"
     And I fill in "page_url" with "https://www.fanfiction.net/s/5853866/1/Counting"
     And I press "Store"

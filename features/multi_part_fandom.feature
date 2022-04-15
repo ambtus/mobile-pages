@@ -38,7 +38,7 @@ Scenario: find a part with a parent with different fandom
     And I follow "Manage Parts"
     And I fill in "add_parent" with "Parent"
     And I press "Update"
-    And I am on the homepage
+    And I am on the filter page
     And I choose "unread_any"
     And I select "one" from "fandom"
     And I press "Find"
@@ -55,7 +55,7 @@ Scenario: cannot find a part with a parent with same fandom (no dupes)
     And I follow "Manage Parts"
     And I fill in "add_parent" with "Parent"
     And I press "Update"
-    And I am on the homepage
+    And I am on the filter page
     And I choose "unread_any"
     And I select "two" from "fandom"
     And I press "Find"

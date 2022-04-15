@@ -1,10 +1,9 @@
 Feature: stuff to do with my notes
 
 Scenario: not filling in notes shouldn't give "My Notes"
-  Given I am on the homepage
-  When I fill in "page_title" with "no notes"
-    And I press "Store"
-    And I am on the page with title "no notes"
+  Given I am on the create page
+  When I press "Store"
+    And I am on the page's page
   Then I should NOT see "My Notes" within ".my_notes"
 
 Scenario: long notes should not be truncated in show

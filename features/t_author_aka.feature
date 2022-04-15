@@ -13,7 +13,7 @@ Scenario: adding an AKA to an author adds both authors to index page
   When I am on the edit tag page for "jane"
     And I fill in "tag_name" with "jane (june)"
     And I press "Update"
-    And I am on the homepage
+    And I am on the filter page
   Then I should be able to select "jane" from "Author"
     And I should be able to select "june" from "Author"
     But I should NOT be able to select "jane (june)" from "Author"
@@ -24,7 +24,7 @@ Scenario: editing the name from the page's edit author page
     And I edit its tags
     And I fill in "tags" with "lewis carroll (charles dodgson)"
     And I press "Add Author Tags"
-    And I am on the homepage
+    And I am on the filter page
   Then I should be able to select "lewis carrol" from "author"
     And I should be able to select "charles dodgson" from "author"
     But I should NOT be able to select "lewis carroll (charles dodgson)" from "author"
@@ -39,7 +39,7 @@ Scenario: adding an author with aka from the page's edit author page shows both
 
 Scenario: creating a page with the original from the homepage shows both on page
   Given "lewis carroll (charles dodgson)" is an "Author"
-  When I am on the homepage
+  When I am on the create page
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I select "lewis carroll" from "Author"
     And I press "Store"
@@ -47,7 +47,7 @@ Scenario: creating a page with the original from the homepage shows both on page
 
 Scenario: creating a page with the aka from the homepage shows both on page
   Given "lewis carroll (charles dodgson)" is an "Author"
-  When I am on the homepage
+  When I am on the create page
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I select "charles dodgson" from "Author"
     And I press "Store"

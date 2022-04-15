@@ -28,7 +28,7 @@ Scenario: find by hidden
     | The Mysterious Affair at Styles  | hide          |
     | Alice in Wonderland              | hide, go away |
     | The Boxcar Children              |               |
-  When I am on the homepage
+  When I am on the filter page
     And I select "go away" from "Hidden"
     And I press "Find"
   Then I should see "Alice in Wonderland"
@@ -39,6 +39,12 @@ Scenario: check before change (index)
   Given a page exists with hiddens: "will be visible"
   When I am on the homepage
   Then I should see "No pages found"
+    But I should have 1 page
+
+Scenario: check before change (filter)
+  Given a page exists with hiddens: "will be visible"
+  When I am on the filter page
+  Then I should NOT see "No pages found"
     And I select "will be visible" from "hidden"
 
 Scenario: check before change (show)
@@ -54,14 +60,21 @@ Scenario: change hidden to con tag (index)
     And I am on the homepage
   Then I should NOT see "No pages found"
     And I should see "Page 1"
-    And I select "will be visible" from "con"
+
+Scenario: change hidden to con tag (filter)
+  Given a page exists with hiddens: "will be visible"
+  When I am on the edit tag page for "will be visible"
+    And I select "Con" from "change"
+    And I press "Change"
+    And I am on the filter page
+  Then I select "will be visible" from "con"
 
 Scenario: change hidden to con tag (show)
   Given a page exists with hiddens: "will be visible"
   When I am on the edit tag page for "will be visible"
     And I select "Con" from "change"
     And I press "Change"
-    And I am on the homepage
+    And I am on the page's page
   Then I should see "will be visible" within ".cons"
 
 Scenario: check before change (index)
@@ -69,21 +82,33 @@ Scenario: check before change (index)
   When I am on the homepage
   Then I should NOT see "No pages found"
     And I should see "Page 1"
-    And I select "to be hidden" from "con"
+
+Scenario: check before change (filter)
+  Given a page exists with cons: "to be hidden"
+  When I am on the filter page
+  Then I select "to be hidden" from "con"
 
 Scenario: check before change (show)
   Given a page exists with cons: "to be hidden"
   When I am on the page's page
   Then I should see "to be hidden" within ".cons"
 
-Scenario: change tope to hidden tag (index)
+Scenario: change con to hidden tag (index)
   Given a page exists with cons: "to be hidden"
   When I am on the edit tag page for "to be hidden"
     And I select "Hidden" from "change"
     And I press "Change"
     And I am on the homepage
   Then I should see "No pages found"
-    And I select "to be hidden" from "hidden"
+    But I should have 1 page
+
+Scenario: change con to hidden tag (filter)
+  Given a page exists with cons: "to be hidden"
+  When I am on the edit tag page for "to be hidden"
+    And I select "Hidden" from "change"
+    And I press "Change"
+    And I am on the filter page
+  Then I select "to be hidden" from "hidden"
 
 Scenario: change con to hidden tag (show)
   Given a page exists with cons: "to be hidden"
@@ -136,14 +161,14 @@ Scenario: change part to hidden
     And I should see "Part 3"
     But I should NOT see "Part 2"
 
-Scenario: filter out by AKA
+Scenario: filter out by AKA (index)
   Given the following pages
     | title                            | hiddens |
     | The Mysterious Affair at Styles  | agatha christie   |
     | Grimm's Fairy Tales              | grimm             |
     | Alice's Adventures In Wonderland | lewis carroll (charles dodgson) |
     | Through the Looking Glass        | lewis carroll |
-  When I am on the homepage
+  When I am on the filter page
     And I select "charles dodgson" from "Hidden"
     And I press "Find"
   Then I should see "Alice's Adventures In Wonderland"

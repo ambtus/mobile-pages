@@ -1,7 +1,7 @@
 Feature: url stuff
 
 Scenario: switch title for url by mistake
-  Given I am on the homepage
+  Given I am on the create page
   When I fill in "page_url" with "Title of the Fic"
     And I fill in "page_title" with "http://test.sidrasue.com/test.html"
     And I press "Store"
@@ -9,7 +9,7 @@ Scenario: switch title for url by mistake
     And I should have 0 pages
 
 Scenario: url can't be resolved should throw error
-  Given I am on the homepage
+  Given I am on the create page
   When I fill in "page_title" with "bad url"
     And I fill in "page_url" with "http://w.sidrasue.com/tests/test.html"
     And I press "Store"
@@ -27,7 +27,7 @@ Scenario: url with surrounding whitespace okay
 
 Scenario: duplicate url not saved
   Given a page exists with title: "Original" AND url: "http://test.sidrasue.com/test.html"
-  When I am on the homepage
+  When I am on the create page
     And I fill in "page_title" with "duplicate"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
@@ -36,7 +36,7 @@ Scenario: duplicate url not saved
 
 Scenario: duplicate url doesn't affect original
   Given a page exists with title: "Original" AND url: "http://test.sidrasue.com/test.html"
-  When I am on the homepage
+  When I am on the create page
     And I fill in "page_title" with "duplicate"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
@@ -44,7 +44,7 @@ Scenario: duplicate url doesn't affect original
   Then I should see "Original (Single)" within ".title"
 
 Scenario: 404 not found should display error
-  Given I am on the homepage
+  Given I am on the create page
   When I fill in "page_title" with "bad url"
     And I fill in "page_url" with "http://test.sidrasue.com/style.html"
     And I press "Store"

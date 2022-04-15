@@ -1,34 +1,54 @@
 class PagesController < ApplicationController
 
+  def new
+    @page = Page.new
+    @title = "New page"
+  end
+
   def index
-    if params[:url]
-      @page = Page.find_by_url(params[:url].normalize)
+    requested = request.query_parameters
+    if requested[:url]
+      @page = Page.find_by_url(requested[:url].normalize)
       if @page
         flash[:notice] = "One page found"
         @count = 0
         render :show
       end
     end
-    @title = "Mobile pages"
-    @count = params[:count].to_i
-    @page = Page.new(params[:page])
-    @page.title = params[:title] if params[:title]
-    @page.notes = params[:notes] if params[:notes]
-    @page.my_notes = params[:my_notes] if params[:my_notes]
-    @page.url = params[:url] if params[:url]
-    @type = params[:type] || "any"
-    @sort_by = params[:sort_by] || "default"
-    @size = params[:size] || "any"
-    @unread = params[:unread] || "either"
-    @stars = params[:stars] || "any"
-    @fandom_name = params[:fandom] if params[:fandom]
-    @pro_name = params[:pro] if params[:pro]
-    @con_name = params[:con] if params[:con]
-    @hidden_name = params[:hidden] if params[:hidden]
-    @info_name = params[:info] if params[:info]
-    @author_name = params[:author] if params[:author]
-    @pages = Filter.new(params)
-    flash.now[:alert] = "No pages found" if @pages.to_a.empty?
+    @page = Page.new(requested[:page])
+    @count = requested[:count].to_i
+    if requested.empty? || requested.keys == ["count"]
+      Rails.logger.debug "DEBUG: index page"
+      @title = "Mobile pages"
+      @filter = false
+      @called_by = "index"
+      @pages = Filter.new(requested)
+      flash.now[:alert] = "No pages found" if @pages.to_a.empty?
+    else
+      @title = "Filter pages"
+      @filter = true
+      @called_by = "filter"
+      if requested.keys == ["q"]
+        Rails.logger.debug "DEBUG: empty filter page"
+        @pages = []
+      else
+        Rails.logger.debug "DEBUG: filter on #{requested}"
+        @page.title = params[:title] if params[:title]
+        @page.notes = params[:notes] if params[:notes]
+        @page.my_notes = params[:my_notes] if params[:my_notes]
+        @page.url = params[:url] if params[:url]
+        @type = params[:type] || "any"
+        @sort_by = params[:sort_by] || "default"
+        @size = params[:size] || "any"
+        @unread = params[:unread] || "either"
+        @stars = params[:stars] || "any"
+        Tag.types.each do |tag_type|
+          instance_variable_set("@#{tag_type.downcase}_name", params[tag_type.downcase]) if params[tag_type.downcase]
+        end
+        @pages = Filter.new(requested)
+        flash.now[:alert] = "No pages found" if @pages.to_a.empty?
+      end
+    end
   end
 
   def create

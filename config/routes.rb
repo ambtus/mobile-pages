@@ -5,7 +5,6 @@ Rails.application.routes.draw do
   get '/files/:modulo/:id/downloads/:download_title.:format' => 'downloads#show', :as => 'download' if Rails.env.production?
   match '/login' => 'sessions#login', :as => 'login', via: [:get, :post]
 
-  resources :authors
   resources :tags
   resources :htmls, :only => ['edit']
   resources :notes, :only => ['edit', 'show']

@@ -20,7 +20,6 @@ Scenario: link to tag on show should NOT find page on index
 Scenario: no tags exist during create
   Given I am on the homepage
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I fill in "page_title" with "New Title"
     And I press "Store"
     And I edit its tags
     And I fill in "tags" with "abc123"
@@ -31,7 +30,6 @@ Scenario: no tags selected during create
   Given "abc123" is a "Con"
   When I am on the homepage
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I fill in "page_title" with "New Title"
     And I press "Store"
     And I edit its tags
     And I select "abc123" from "page_con_ids_"
@@ -40,10 +38,9 @@ Scenario: no tags selected during create
 
 Scenario: con selected during create
   Given "abc123" is a "Con"
-  When I am on the homepage
+  When I am on the create page
     And I select "abc123" from "con"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I fill in "page_title" with "New Title"
     And I press "Store"
   Then I should see "abc123" within ".cons"
 
@@ -53,7 +50,7 @@ Scenario: comma separated cons (not & or /)
     And I edit its tags
     And I fill in "tags" with "abc & 123, xyz/987"
     And I press "Add Con Tags"
-    And I am on the homepage
+    And I am on the filter page
   Then I should be able to select "abc & 123" from "Con"
     And I should be able to select "xyz/987" from "Con"
     And I should have 2 tags
@@ -86,7 +83,7 @@ Scenario: edit the con name
   When I am on the edit tag page for "abc123"
     And I fill in "tag_name" with "xyz987"
     And I press "Update"
-    And I am on the homepage
+    And I am on the filter page
   Then I should be able to select "xyz987" from "con"
     But I should NOT be able to select "abc123" from "con"
     And I should have 1 tag

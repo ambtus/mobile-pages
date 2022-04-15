@@ -15,7 +15,7 @@ Scenario: create authors by adding them to a page
     And I edit its tags
     And I fill in "tags" with "lewis carroll, charles dodgson"
     And I press "Add Author Tags"
-    And I am on the homepage
+    And I am on the filter page
   Then I should be able to select "charles dodgson" from "Author"
     And I should be able to select "lewis carroll" from "Author"
 
@@ -42,7 +42,7 @@ Scenario: add another author to a page
     And I edit its tags
     And I fill in "tags" with "charles dodgson"
     And I press "Add Author Tags"
-    And I am on the homepage
+    And I am on the filter page
   Then I should be able to select "charles dodgson" from "Author"
 
 Scenario: new parent for an existing page should have the same author
@@ -84,7 +84,7 @@ Scenario: edit the author name
   When I am on the edit tag page for "jane"
     And I fill in "tag_name" with "June"
     And I press "Update"
-    And I am on the homepage
+    And I am on the filter page
   Then I should be able to select "June" from "Author"
     But I should NOT be able to select "jane" from "Author"
 

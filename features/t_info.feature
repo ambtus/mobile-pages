@@ -18,7 +18,6 @@ Scenario: link to tag on show should find page on index
 Scenario: no tags exist during create
   Given I am on the homepage
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I fill in "page_title" with "New Title"
     And I press "Store"
     And I edit its tags
     And I fill in "tags" with "abc123"
@@ -29,7 +28,6 @@ Scenario: no tags selected during create
   Given "abc123" is an "Info"
   When I am on the homepage
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I fill in "page_title" with "New Title"
     And I press "Store"
     And I edit its tags
     And I select "abc123" from "page_info_ids_"
@@ -38,7 +36,7 @@ Scenario: no tags selected during create
 
 Scenario: info selected during create
   Given "abc123" is an "Info"
-  When I am on the homepage
+  When I am on the create page
     And I select "abc123" from "info"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I fill in "page_title" with "New Title"
@@ -51,7 +49,7 @@ Scenario: comma separated infos (not & or /)
     And I edit its tags
     And I fill in "tags" with "Sam & Dean, Harry/Snape"
     And I press "Add Info Tags"
-    And I am on the homepage
+    And I am on the filter page
   Then I should be able to select "Sam & Dean" from "Info"
     And I should be able to select "Harry/Snape" from "Info"
 
@@ -84,7 +82,7 @@ Scenario: edit the info name
   When I am on the edit tag page for "abc123"
     And I fill in "tag_name" with "xyz987"
     And I press "Update"
-    And I am on the homepage
+    And I am on the filter page
   Then I should be able to select "xyz987" from "info"
     But I should NOT be able to select "abc123" from "info"
     And I should have 1 tag

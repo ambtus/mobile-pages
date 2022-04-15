@@ -3,55 +3,56 @@
 .form
   = form_for @page.becomes(Page) do |f|
     = hidden_field_tag :count, @count
-    .div
-      = label_tag :type, "Type:"
-      - ['Collection', 'Series', 'Book', 'Chapter', 'Single', 'none', 'all', 'any'].each do |choice|
-        = radio_button_tag :type, choice, @type == choice
-        = label_tag "type_#{choice}", choice
-    .div
-      = label_tag :sort_by, "Sort by:"
-      - ['random', 'first_created', 'last_created', 'first_read', 'last_read', 'longest', 'shortest', 'default' ].each do |choice|
-        = radio_button_tag :sort_by, choice, @sort_by == choice
-        = label_tag "sort_by_#{choice}", choice.humanize.downcase
-    .div
-      = label_tag :unread, "Unread:"
-      - ['all', 'any', 'parts', 'none', 'either'].each do |choice|
-        = radio_button_tag :unread, choice, @unread == choice
-        = label_tag "unread_#{choice}", choice
-    .div
-      = label_tag :stars, "Stars:"
-      - ['better', '5', '4', '3', '2', '1', 'worse', 'unfinished', 'any'].each do |choice|
-        = radio_button_tag :stars, choice, @stars == choice
-        = label_tag "stars_#{choice}", choice
-    .div
-      = label_tag :size, "Size:"
-      - ['longer', *Page::SIZES.reverse, 'shorter', 'any'].each do |choice|
-        = radio_button_tag :size, choice, @size == choice
-        = label_tag "size_#{choice}", choice
-    = render :partial => "pages/create", :locals => {:page => @page, :called_by => "index"}
+    -if @filter
+      .div
+        = label_tag :type, "Type:"
+        - ['Collection', 'Series', 'Book', 'Chapter', 'Single', 'none', 'all', 'any'].each do |choice|
+          = radio_button_tag :type, choice, @type == choice
+          = label_tag "type_#{choice}", choice
+      .div
+        = label_tag :sort_by, "Sort by:"
+        - ['random', 'first_created', 'last_created', 'first_read', 'last_read', 'longest', 'shortest', 'default' ].each do |choice|
+          = radio_button_tag :sort_by, choice, @sort_by == choice
+          = label_tag "sort_by_#{choice}", choice.humanize.downcase
+      .div
+        = label_tag :unread, "Unread:"
+        - ['all', 'any', 'parts', 'none', 'either'].each do |choice|
+          = radio_button_tag :unread, choice, @unread == choice
+          = label_tag "unread_#{choice}", choice
+      .div
+        = label_tag :stars, "Stars:"
+        - ['better', '5', '4', '3', '2', '1', 'worse', 'unfinished', 'any'].each do |choice|
+          = radio_button_tag :stars, choice, @stars == choice
+          = label_tag "stars_#{choice}", choice
+      .div
+        = label_tag :size, "Size:"
+        - ['longer', *Page::SIZES.reverse, 'shorter', 'any'].each do |choice|
+          = radio_button_tag :size, choice, @size == choice
+          = label_tag "size_#{choice}", choice
+    = render :partial => "pages/create", :locals => {:page => @page, :called_by => @called_by}
     = f.submit "Find", :name => "Find"
-    = f.submit "Store", :name => "Store"
-    = f.submit "Refetch", :name => "Refetch"
-    = link_to("Store Multiple", new_part_path)
+    = f.submit "Store", :name => "Store" unless @filter
+    = f.submit "Refetch", :name => "Refetch" unless @filter
     - unless @pages.blank?
-      - @pages.each_with_index do |page, index|
-        .page{:id => "position_#{index+1}"}
-          .title
-            = link_to page.title, page_path(page)
-            - if page.parent
-              of
-              =link_to page.parent.title, page_path(page.parent)
-              -if page.parent.parent
+      .pages
+        - @pages.each_with_index do |page, index|
+          .page{:id => "position_#{index+1}"}
+            .title
+              = link_to page.title, page_path(page)
+              - if page.parent
                 of
-                =link_to page.parent.parent.title, page_path(page.parent.parent)
-          .views
-            = link_to "Rate", rate_path(page)
-            = link_to "ePub", download_url_for_page(page, ".epub")
-            = link_to "HTML", download_url_for_page(page, ".html")
-            = link_to "Text", download_url_for_page(page, ".read") if page.parts.empty?
-            = link_to "Original", page.url unless page.url.blank?
-          .tags
-            =page.meta_strings.join_comma
-          .my_notes=page.my_short_notes
-          .notes=simple_format page.short_notes
-      = f.submit "Next", :name => "Next"
+                =link_to page.parent.title, page_path(page.parent)
+                -if page.parent.parent
+                  of
+                  =link_to page.parent.parent.title, page_path(page.parent.parent)
+            .views
+              = link_to "Rate", rate_path(page)
+              = link_to "ePub", download_url_for_page(page, ".epub")
+              = link_to "HTML", download_url_for_page(page, ".html")
+              = link_to "Text", download_url_for_page(page, ".read") if page.parts.empty?
+              = link_to "Original", page.url unless page.url.blank?
+            .tags
+              =page.meta_strings.join_comma
+            .my_notes=page.my_short_notes
+            .notes=simple_format page.short_notes
+        = f.submit "Next", :name => "Next"

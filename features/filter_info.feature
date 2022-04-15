@@ -6,7 +6,7 @@ Scenario: find by info tag
     | The Mysterious Affair at Styles  | mystery           |
     | Alice in Wonderland              | children          |
     | The Boxcar Children              | mystery, children |
-  When I am on the homepage
+  When I am on the filter page
     And I select "mystery" from "info"
     And I press "Find"
   Then I should see "The Mysterious Affair at Styles"
@@ -19,7 +19,7 @@ Scenario: find after merging
   When I am on the edit tag page for "xyz987"
     And I select "abc123" from "merge"
     And I press "Merge"
-    And I am on the homepage
+    And I am on the filter page
     And I select "abc123" from "info"
     And I press "Find"
   Then I should see "Page 1"

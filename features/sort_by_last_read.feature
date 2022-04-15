@@ -1,7 +1,7 @@
 Feature: last_read
 
 Scenario: no pages
-  When I am on the homepage
+  When I am on the filter page
     And I choose "sort_by_last_read"
     And I press "Find"
   Then I should see "No pages"
@@ -14,7 +14,7 @@ Scenario: find pages by last read
     | third  | 2013-01-01 |
     | fourth | 2011-01-01 |
     | fifth  |            |
-  When I am on the homepage
+  When I am on the filter page
     And I choose "sort_by_last_read"
     And I press "Find"
   Then I should see "second" within "#position_1"
@@ -31,7 +31,7 @@ Scenario: find pages by first read
     | third  | 2013-01-01 |
     | fourth | 2011-01-01 |
     | fifth  |            |
-  When I am on the homepage
+  When I am on the filter page
     And I choose "sort_by_first_read"
     And I press "Find"
   Then I should see "fourth" within "#position_1"

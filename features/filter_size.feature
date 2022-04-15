@@ -13,7 +13,7 @@ Scenario: check before filter on a size
 
 Scenario: filter drabble
   Given pages with all possible sizes exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "size_drabble"
     And I press "Find"
   Then I should see "Drabble" within "#position_1"
@@ -24,7 +24,7 @@ Scenario: filter drabble
 
 Scenario: filter short
   Given pages with all possible sizes exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "size_short"
     And I press "Find"
   Then I should see "Short" within "#position_1"
@@ -36,7 +36,7 @@ Scenario: filter short
 
 Scenario: filter medium
   Given pages with all possible sizes exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "size_medium"
     And I press "Find"
   Then I should see "Medium" within "#position_1"
@@ -48,7 +48,7 @@ Scenario: filter medium
 
 Scenario: filter long
   Given pages with all possible sizes exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "size_long"
     And I press "Find"
   Then I should see "Long" within "#position_1"
@@ -61,7 +61,7 @@ Scenario: filter long
 
 Scenario: filter epic
   Given pages with all possible sizes exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "size_epic"
     And I press "Find"
   Then I should see "Epic" within "#position_1"
@@ -73,7 +73,7 @@ Scenario: filter epic
 
 Scenario: filter longer
   Given pages with all possible sizes exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "size_longer"
     And I press "Find"
   Then I should see "Long" within "#position_1"
@@ -86,7 +86,7 @@ Scenario: filter longer
 
 Scenario: filter shorter
   Given pages with all possible sizes exist
-  When I am on the homepage
+  When I am on the filter page
     And I choose "size_shorter"
     And I press "Find"
   Then I should see "Drabble" within "#position_1"
