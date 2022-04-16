@@ -132,7 +132,7 @@ Scenario: find by url should find hidden
     | title                  | url                                | hiddens |
     | A Christmas Carol      | http://test.sidrasue.com/cc.html   | hide me |
     | The Call of the Wild   | http://test.sidrasue.com/cotw.html |         |
-  When I am on the homepage
+  When I am on the filter page
     And I fill in "page_url" with "http://test.sidrasue.com/cc.html"
     And I press "Find"
   Then I should see "A Christmas Carol" within ".title"
@@ -142,7 +142,7 @@ Scenario: find by url should NOT find hidden if it's part of the filter
     | title                  | url                                | hiddens |
     | A Christmas Carol      | http://test.sidrasue.com/cc.html   | hide me |
     | The Call of the Wild   | http://test.sidrasue.com/cotw.html |         |
-  When I am on the homepage
+  When I am on the filter page
     And I fill in "page_url" with "test.sidrasue.com"
     And I press "Find"
   Then I should see "The Call of the Wild"
@@ -154,7 +154,7 @@ Scenario: change part to hidden
     And I edit its tags
     And I fill in "tags" with "hide me"
     And I press "Add Hidden Tags"
-    And I am on the homepage
+    And I am on the filter page
     And I fill in "page_url" with "http://test.sidrasue.com/parts"
     And I press "Find"
   Then I should see "Part 1"

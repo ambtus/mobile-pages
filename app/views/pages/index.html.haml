@@ -5,7 +5,7 @@
     = hidden_field_tag :count, @count
     = render :partial => "pages/filter" if @filter
     = render :partial => "pages/create", :locals => {:page => @page, :called_by => @called_by}
-    = f.submit "Find", :name => "Find"
+    = f.submit "Find", :name => "Find" if @filter
     = f.submit "Store", :name => "Store" unless @filter
     = f.submit "Refetch", :name => "Refetch" unless @filter
     - unless @pages.blank?
