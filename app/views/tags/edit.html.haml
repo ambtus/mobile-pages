@@ -2,7 +2,7 @@
 -content_for(:title, title)
 %h1=title
 .pages
-  %p=link_to "#{@tag.pages.count} #{'page'.pluralize(@tag.pages.count)} with that tag", pages_path(@tag.class.name.downcase.to_sym => @tag.name, :type => "all" )
+  %p=link_to "#{@tag.pages.count} #{'page'.pluralize(@tag.pages.count)} with that tag", pages_path(@tag.class.name.downcase.to_sym => @tag.base_name, :type => "all" )
 .destroy
   %p=link_to 'Destroy', tag_path(@tag, destroy: true)
 -if @tag.is_a? Hidden
