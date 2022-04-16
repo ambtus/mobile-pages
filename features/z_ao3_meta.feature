@@ -38,16 +38,17 @@ Scenario: rebuilding a Series before storing index as raw HTML (needs to refetch
   Then I should see "Misfits (Series)" within ".title"
   And I should see "by Morraine" before "Teen Wolf, Captain America, Avengers, Iron Man, Thor" within ".notes"
 
-Scenario: adding an unread chapter to a book makes the book unread
+Scenario: adding an unread chapter to a book
   Given Time Was partially exists
   When I am on the page with title "Time Was, Time Is"
     And I follow "Refetch"
     And I press "Refetch"
   Then I should see "Refetched" within "#flash_notice"
+    And I should see "WIP" within ".cons"
     And I should see "1 unread part" within ".last_read"
     And I should see today within "#position_1"
-    And I should see "Hogwarts (unread"
-    And I should see "WIP" within ".cons"
+    And I should see "Hogwarts (unread" within "#position_2"
+    But I should NOT see "Other Fandom" within "#position_2"
 
 Scenario: grab a series with multiple authors
   Given "Good Omens" is a "Fandom"
@@ -101,3 +102,12 @@ Scenario: getting series by adding parent and then refetching should not duplica
     And I should NOT see "Harry Potter" before "Harry Potter/Unknown" within "#position_2"
     And I should NOT see "harry potter" within "#position_2"
 
+Scenario: adding a work to a series with a fandom should not get Other Fandom
+  Given "harry potter" is a "Fandom"
+    And Counting Drabbles partially exists
+  When I am on the homepage
+    And I fill in "page_url" with "https://archiveofourown.org/series/46"
+    And I press "Refetch"
+  Then I should see "harry potter" within ".fandoms"
+    But I should NOT see "harry potter" within "#position_2"
+    And I should NOT see "Other Fandom" within "#position_2"

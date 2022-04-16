@@ -82,13 +82,15 @@ Scenario: check before creating a series when I already have one of its books
     And I press "Uncollect"
   Then I should have 6 pages
 
-Scenario: check before adding an unread chapter to a book makes the book unread
+Scenario: check before adding an unread chapter to a book
   Given Time Was partially exists
   When I am on the homepage
     And I follow "Time Was, Time Is"
   Then I should see today within ".last_read"
     But I should NOT see "unread parts" within ".last_read"
     And I should see today within "#position_1"
+    And I should see "Other Fandom" within ".fandoms"
+    But I should NOT see "Other Fandom" within "#position_1"
 
 Scenario: check before refetch Single
   Given Where am I exists

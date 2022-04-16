@@ -66,4 +66,3 @@ Scenario: do match Drizzt (as first)
     And Counting Drabbles exists
   When I am on the page's page
   Then I should see "harry potter" within ".fandoms"
-

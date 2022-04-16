@@ -294,7 +294,7 @@ class Page < ActiveRecord::Base
         Rails.logger.debug "DEBUG: found #{part}"
         if page.url == url
           page.fetch_raw.remove_outdated_downloads.set_wordcount if refetch
-        else
+        elsif url.present?
           page.update!(:url, url)
           page.fetch_raw.remove_outdated_downloads.set_wordcount
         end
@@ -931,7 +931,7 @@ class Page < ActiveRecord::Base
       end
     end
     if existing.empty?
-      if self.tags.fandoms.blank?
+      if self.tags.fandoms.blank? && self.parent.blank?
         Rails.logger.debug "DEBUG: adding #{OTHER} to fandoms"
         self.tags << other_fandom_tag
       end

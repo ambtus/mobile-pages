@@ -184,3 +184,15 @@ Scenario: add a part does update the parent's read_after
   Then I should see "New Parent" within "#position_1"
     And I should see "Page 1" within "#position_2"
 
+Scenario: update without url bug
+  Given I have a series with read_after "2009-01-02"
+    And I am on the page's page
+    And I follow "Manage Parts"
+  When I fill in "url_list" with
+    """
+    ##Parent1
+    ##Parent2
+    http://test.sidrasue.com/long1.html##Single
+    """
+    And I press "Update"
+  Then I should see "Single" within "#position_3"
