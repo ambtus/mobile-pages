@@ -639,7 +639,7 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def meta_strings; [*tags.by_type.by_name.map(&:name), star_string, last_read_string, size_string, ].uniq.reject(&:blank?); end
+  def meta_strings; [*tags.by_type.by_name.map(&:base_name), star_string, last_read_string, size_string, ].uniq.reject(&:blank?); end
   def title_suffix; meta_strings.empty? ? "" : " (#{meta_strings.join_comma})"; end
 
   def section(number)

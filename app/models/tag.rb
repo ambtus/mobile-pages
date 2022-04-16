@@ -18,8 +18,8 @@ class Tag < ActiveRecord::Base
 
   scope :some, -> { not_author.not_fandom }
 
-  # NOTE: this must go at the end, because it returns and array, not a scope
-  scope :joined, -> { map(&:name).join(", ") }
+  # NOTE: this must go at the end, because it returns an array, not a scope
+  scope :joined, -> { map(&:base_name).join_comma }
 
   before_validation :remove_placeholder
 

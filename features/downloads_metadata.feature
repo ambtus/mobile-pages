@@ -105,3 +105,12 @@ Scenario: many fandoms, many pros => pros in tags and comments, fandom in author
     And the download epub command should include comments: "harry/snape, john/rodney"
     But the download epub command should NOT include comments: "harry potter"
     And the download epub command should NOT include tags: "sga"
+
+Scenario: suppress AKA's
+  Given a page exists with fandoms: "harry potter (Fantastic Beasts)" AND authors: "jane (june)"
+  Then the download epub command should include authors: "harry potter"
+    And the download epub command should include authors: "jane"
+    But the download epub command should NOT include authors: "Fantastic Beasts"
+    And the download epub command should NOT include authors: "june"
+    And the download epub command should NOT include comments: "june"
+    And the download epub command should NOT include comments: "Fantastic Beasts"

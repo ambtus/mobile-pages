@@ -77,3 +77,9 @@ Scenario: two authors can share an AKA
   When I am on the page with title "jane's book"
   Then I should see "jane (DO NOT REFETCH)" within ".authors"
     But I should NOT see "dick"
+
+Scenario: suppress AKA's in meta string (index)
+  Given a page exists with authors: "jane (june)"
+  When I am on the homepage
+  Then I should see "jane" within "#position_1"
+    But I should NOT see "june" within "#position_1"
