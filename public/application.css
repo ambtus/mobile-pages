@@ -23,6 +23,7 @@ hr {
 .top       { background-color: #DDD; }
 .content   { background-color: #EEE; }
 .last_read { background-color: #FCC; }
+.meta      { background-color: #FCC; }
 .part_links{ background-color: #FCF; }
 .page      { background-color: #FC9; border-width: 1px; border-style: dotted;}
 .notes     { background-color: #FC9; }
