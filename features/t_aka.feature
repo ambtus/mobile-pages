@@ -102,3 +102,9 @@ Scenario: link from tag index bug
   When I am on the tags page
     And I follow "pages tagged with jane"
   Then I should see "Page 1"
+
+Scenario: link from show bug
+  Given a page exists with authors: "jane (june)"
+  When I am on the page's page
+    And I follow "jane (june)"
+  Then I should see "Page 1"

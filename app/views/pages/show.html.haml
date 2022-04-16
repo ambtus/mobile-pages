@@ -46,7 +46,7 @@
   -Tag.types.each do |type|
     .div{class: "#{type.downcase.pluralize}"}
       -@page.tags.send(type.downcase.pluralize).by_name.each do |tag|
-        =link_to tag.name, pages_path(type.downcase.to_sym => tag.name)
+        =link_to tag.name, pages_path(type.downcase.to_sym => tag.base_name)
   .stars= @page.star_string
   .size
     =@page.size_string
