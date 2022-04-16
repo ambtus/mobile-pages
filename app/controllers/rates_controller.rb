@@ -42,6 +42,7 @@ class RatesController < ApplicationController
 
   def edit
     @page = Page.find(params[:id])
+    @some = true
   end
 
 end

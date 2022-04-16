@@ -54,7 +54,6 @@ Scenario: download part titles
     And I follow "Rate"
     And I choose "5"
     And I press "Rate"
-    And I follow "Edit Tags for Part 1"
     And I select "rating tag" from "page_pro_ids_"
     And I select "info tag" from "page_info_ids_"
     And I press "Update Tags"

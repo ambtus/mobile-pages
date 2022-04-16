@@ -24,3 +24,4 @@
             %h4{:style=> "page-break-before:always", :class => "chapter"}=third_level.download_part_title
             =render :partial => "downloads/notes", :locals => {:page => third_level}
             .content=raw third_level.epub_html
+=render :partial => "downloads/end_notes", :locals => {:page => @page}

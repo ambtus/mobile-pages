@@ -1,0 +1,7 @@
+= hidden_field_tag(:page_id, @page.id)
+-types = @some ? Tag.some_types : Tag.types
+-types.each do |type|
+  .div{class: "#{type.downcase.pluralize}"}
+    =type + ": #{@page.tags.send(type.downcase.pluralize).map(&:name).join(', ')}"
+    = select_tag("page[#{type.downcase}_ids][]", options_from_collection_for_select(Tag.send(type.downcase.pluralize).by_name, 'id', 'name', selected = @page.tags.send(type.downcase.pluralize).map(&:id)), :multiple => true)
+%div=submit_tag "Update Tags"

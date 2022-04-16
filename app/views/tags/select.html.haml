@@ -10,12 +10,5 @@
     =@page.parent.tags.by_type.by_name.joined
 .form
   = form_tag tags_path do
-    = hidden_field_tag(:page_id, @page.id)
-    .filters
-      -Tag.types.each do |type|
-        =type + ": #{@page.tags.send(type.downcase.pluralize).map(&:name).join(', ')}"
-        %br
-        = select_tag("page[#{type.downcase}_ids][]", options_from_collection_for_select(Tag.send(type.downcase.pluralize).by_name, 'id', 'name', selected = @page.tags.send(type.downcase.pluralize).map(&:id)), :multiple => true)
-        %br
-    =submit_tag "Update Tags"
+    =render "choose"
     =render "add"

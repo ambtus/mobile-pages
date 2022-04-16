@@ -4,6 +4,7 @@
 .gray-input { color: #7a7a7a; }
 .black-input { color: #000; }
 .checkbox { background-color: #FF9; }
+.floatButton { display: inline; }
 hr {
     border: 0;
     color: black;

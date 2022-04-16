@@ -10,7 +10,7 @@ Scenario: ao3 with and without chapter titles
     But I should NOT see "1. Chapter 1"
     And the part titles should be stored as "Chapter 1 & Ours"
 
-Scenario: deliberately download chapter 1 shows summary and notes
+Scenario: deliberately fetch chapter 1 shows summary and notes
   Given Where am I exists
   When I am on the homepage
     And I follow "Where am I"

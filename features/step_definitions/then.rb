@@ -52,6 +52,20 @@ Then('{string} should link to itself') do |string|
   assert_match "/pages/#{itself.id}", href
 end
 
+Then('Leave Kudos or Comments on {string} should link to its comments') do |string|
+  href = page.find_link("Leave Kudos or Comments on \"#{string}\"")['href']
+  itself = Page.find_by_title(string)
+  Rails.logger.debug "DEBUG: link: #{href}"
+  assert href == itself.url + "#comments"
+end
+
+Then('Rate {string} should link to its rate page') do |string|
+  href = page.find_link("Rate \"#{string}\"")['href']
+  itself = Page.find_by_title(string)
+  Rails.logger.debug "DEBUG: link: #{href}"
+  assert_match "/rates/#{itself.id}", href
+end
+
 Then("the {string} field should contain {string}") do |field, text|
   assert page.has_field?(field, with: text)
 end
