@@ -34,6 +34,10 @@ class Book < Page
     (parts.first.my_fandoms + parts.last.my_fandoms).uniq
   end
 
+  def my_tags
+    (parts.first.my_tags + parts.last.my_tags).uniq
+  end
+
   def get_wip_from_ao3
     Rails.logger.debug "DEBUG: build meta from raw html of last part #{parts.last.id}"
     doc = Nokogiri::HTML(parts.last.raw_html)
@@ -41,6 +45,7 @@ class Book < Page
     chapters = doc.css(".stats .chapters").children[1].text.split('/') rescue Array.new
     Rails.logger.debug "DEBUG: wip status: #{chapters}"
     wip_switch(chapters.second == "?" || chapters.first != chapters.second)
+    ao3_tt(my_tags)
   end
 
   def get_chapters_from_ao3

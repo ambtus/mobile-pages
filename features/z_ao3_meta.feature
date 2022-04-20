@@ -111,3 +111,15 @@ Scenario: adding a work to a series with a fandom should not get Other Fandom
   Then I should see "harry potter" within ".fandoms"
     But I should NOT see "harry potter" within "#position_2"
     And I should NOT see "Other Fandom" within "#position_2"
+
+Scenario: time travel Book
+  Given I am on the homepage
+  When I fill in "page_url" with "https://archiveofourown.org/works/8339320"
+    And I press "Store"
+  Then I should see "Time Travel" within ".pros"
+
+Scenario: time travel Series
+  Given I am on the homepage
+  When I fill in "page_url" with "https://archiveofourown.org/series/1664173"
+    And I press "Store"
+  Then I should see "Time Travel" within ".pros"

@@ -52,4 +52,9 @@ class Chapter < Page
     doc.css(".fandom a").map(&:children).map(&:text)
   end
 
+  def my_tags
+    doc = Nokogiri::HTML(raw_html)
+    doc.css(".freeform a").map(&:children).map(&:text)
+  end
+
 end

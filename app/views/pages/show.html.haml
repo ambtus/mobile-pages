@@ -9,6 +9,7 @@
     = submit_tag "Remove Duplicate Tags" unless @page.parts.blank?
     = submit_tag "Rebuild Meta"
     = submit_tag "Toggle #{Page::OTHER}"
+    = submit_tag "Toggle #{Page::TT}"
     = submit_tag "Make Single" if @page.parent
     = submit_tag "Uncollect" unless @page.parts.blank?
 -if @page.parent

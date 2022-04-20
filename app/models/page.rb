@@ -93,6 +93,7 @@ class Page < ActiveRecord::Base
   UNREAD_PARTS_DATE = Date.new(1967) # year first fanzine published. couldn't have read before that ;)
   UNFINISHED = "unfinished"
   WIP = "WIP"
+  TT = "Time Travel"
   OTHER = "Other Fandom"
   SHORT_LENGTH = 160 # truncate at this many characters
   MEDIUM_LENGTH = 480
@@ -130,6 +131,28 @@ class Page < ActiveRecord::Base
     end
     return self
   end
+
+  def tt_tag; Pro.find_or_create_by(name: TT); end
+  def tt_present?; self.tags.pros.include?(tt_tag);end
+  def toggle_tt
+    if tt_present?
+      self.tags.delete(tt_tag)
+    else
+      self.tags << tt_tag
+    end
+    return self
+  end
+  def ao3_tt(strings)
+    found = []
+    strings.each do |string|
+      if string.match("Time Travel")
+        self.tags << tt_tag
+        return self
+      end
+    end
+    return self
+  end
+
 
   def set_wordcount(recount=true)
     Rails.logger.debug "DEBUG: #{self.title} old wordcount: #{self.wordcount} and size: #{self.size}"

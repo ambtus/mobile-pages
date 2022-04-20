@@ -32,6 +32,7 @@ class Single < Page
       chapters = doc.css(".stats .chapters").children[1].text.split('/') rescue Array.new
       Rails.logger.debug "DEBUG: wip status: #{chapters}"
       wip_switch(chapters.second == "?" || chapters.first != chapters.second)
+      ao3_tt(my_tags)
     end
 
     ao3_authors = doc.css(".byline a").map(&:text).join_comma
@@ -41,6 +42,11 @@ class Single < Page
 
     Rails.logger.debug "DEBUG: notes now: #{self.notes}"
     return self
+  end
+
+  def my_tags
+    doc = Nokogiri::HTML(raw_html)
+    doc.css(".freeform a").map(&:children).map(&:text)
   end
 
   def my_fandoms

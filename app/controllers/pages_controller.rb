@@ -167,6 +167,9 @@ class PagesController < ApplicationController
       when "Toggle #{Page::OTHER}"
         @page.toggle_other_fandom.rebuild_meta
         flash[:notice] = "Toggled #{Page::OTHER}"
+      when "Toggle #{Page::TT}"
+        @page.toggle_tt.remove_outdated_downloads
+        flash[:notice] = "Toggled #{Page::TT}"
       when "Make Single"
         @page.make_single
         flash[:notice] = "Made Single"

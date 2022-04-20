@@ -45,8 +45,13 @@ class Series < Page
 
     Rails.logger.debug "DEBUG: get fandoms from raw html of first and last parts"
     both = (parts.first.my_fandoms + parts.last.my_fandoms).uniq.join_comma
-    Rails.logger.debug "DEBUG: first & last possibles: #{both}"
+    Rails.logger.debug "DEBUG: first & last fandoms: #{both}"
     add_fandom(both)
+
+    Rails.logger.debug "DEBUG: get tags from raw html of first and last parts"
+    both = (parts.first.my_tags + parts.last.my_tags).uniq
+    Rails.logger.debug "DEBUG: first & last tags: #{both}"
+    ao3_tt(both)
 
     add_author(doc_authors) if doc_authors
 
