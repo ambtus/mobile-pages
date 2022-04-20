@@ -42,7 +42,7 @@ class TagsController < ApplicationController
         render :edit and return
       end
       true_tag.add_aka(@tag)
-      redirect_to tags_path
+      redirect_to tags_path + "##{@tag.class}"
     elsif params[:commit] == "Change"
       was_hidden = @tag.is_a? Hidden
       type = params[:change]
@@ -56,7 +56,7 @@ class TagsController < ApplicationController
         @tag.pages.map(&:reset_hidden)
       end
       @tag.pages.map(&:remove_outdated_downloads)
-      redirect_to tags_path
+      redirect_to tags_path + "##{@tag.class}"
     elsif params[:commit] == "Split"
       if params[:first_tag_name] == params[:second_tag_name]
         flash.now[:alert] = "can't split: names must be different"
@@ -67,7 +67,7 @@ class TagsController < ApplicationController
         @tag.update!(name: params[:first_tag_name])
         new_tag = Tag.create!(name: params[:second_tag_name], type: @tag.type )
         @tag.pages.each{|p| p.tags << new_tag unless p.tags.include?(new_tag)}
-        redirect_to tags_path and return
+        redirect_to tags_path + "##{@tag.class}" and return
       end
       first = Tag.find_by_name(params[:first_tag_name]) || (@tag.update(name: params[:first_tag_name]) && @tag)
       second = Tag.find_by_name(params[:second_tag_name]) || (@tag.update(name: params[:second_tag_name]) && @tag)
@@ -83,11 +83,11 @@ class TagsController < ApplicationController
         # don't need to destroy_me, because replacements have already been added to the affected pages
         @tag.destroy
       end
-      redirect_to tags_path and return
+      redirect_to tags_path + "##{@tag.class}" and return
     elsif params[:commit] == "Update"
       @tag.update_attribute(:name, params[:tag][:name])
       @tag.pages.map(&:remove_outdated_downloads)
-      redirect_to tags_path
+      redirect_to tags_path + "##{@tag.class}"
     else
       render :edit
     end
@@ -113,6 +113,6 @@ class TagsController < ApplicationController
   def destroy
     @tag = Tag.find(params[:id])
     @tag.destroy_me
-    redirect_to tags_path
+    redirect_to tags_path + "##{@tag.class}"
   end
 end
