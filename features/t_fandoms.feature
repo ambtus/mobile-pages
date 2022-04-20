@@ -21,7 +21,7 @@ Scenario: strip fandom whitespace and sort
     And I fill in "tags" with "  xyz &   789,  abc/123,lmn   & 345  "
     And I press "Add Fandom Tags"
   Then I should see "abc/123 lmn & 345 xyz & 789" within ".fandoms"
-    And "lmn & 345" should link to "/pages?fandom=lmn+%26+345"
+    And "lmn & 345" should link to "/pages?find=lmn+%26+345"
 
 Scenario: no tags exist during create
   Given I am on the homepage

@@ -7,15 +7,14 @@ Scenario: strip whitespace and sort
     And I fill in "tags" with "  xyz &   789,  abc/123,lmn   & 345  "
     And I press "Add Con Tags"
   Then I should see "abc/123 lmn & 345 xyz & 789" within ".cons"
-    And "xyz & 789" should link to "/pages?con=xyz+%26+789"
+    And "xyz & 789" should link to "/pages?find=xyz+%26+789"
 
-Scenario: link to tag on show should NOT find page on index
+Scenario: link to tag on show should find page
   Given a page exists with cons: "lmn123"
     And a page exists with title: "no cons"
   When I am on the page's page
     And I follow "lmn123"
-  Then I should NOT see "Page 1" within "#position_1"
-    But I should see "no cons" within "#position_1"
+  Then I should see "Page 1" within "#position_1"
 
 Scenario: no tags exist during create
   Given I am on the homepage

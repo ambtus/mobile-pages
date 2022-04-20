@@ -7,7 +7,7 @@ Scenario: strip whitespace and sort
     And I fill in "tags" with "  xyz &   789,  abc/123,lmn   & 345  "
     And I press "Add Pro Tags"
   Then I should see "abc/123 lmn & 345 xyz & 789" within ".pros"
-    And "abc/123" should link to "/pages?pro=abc%2F123"
+    And "abc/123" should link to "/pages?find=abc%2F123"
 
 Scenario: link to tag on show should find page on index
   Given a page exists with pros: "lmn123"

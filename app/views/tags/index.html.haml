@@ -11,4 +11,4 @@
     .div{class: "#{type.downcase.pluralize}"}
       = link_to "edit #{tag.name}", edit_tag_path(tag)
       =surround "(", ")" do
-        = link_to "pages tagged with #{tag.base_name}", pages_path(tag.class.name.downcase.to_sym => tag.base_name)
+        = link_to_tag tag, "pages tagged with #{tag.base_name}"

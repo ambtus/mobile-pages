@@ -9,7 +9,7 @@ Scenario: shown by default
     And I should see "Page 1"
     And I should see "sad" within "#position_1"
 
-Scenario: con when selected
+Scenario: filtered out when selected
   Given a page exists with cons: "very sad" AND title: "Page 1"
     And a page exists with cons: "slightly sad" AND title: "Page 2"
   When I am on the filter page

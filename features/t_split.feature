@@ -21,7 +21,7 @@ Scenario: works with split tags get both
     And I am on the page's page
   Then I should NOT see "harry/snape"
     But I should see "Harry Severus" within ".fandoms"
-    And "Harry" should link to "/pages?fandom=Harry"
+    And "Harry" should link to "/pages?find=Harry"
 
 Scenario: works with split tags can be found by first
   Given 2 pages exist

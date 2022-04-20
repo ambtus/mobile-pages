@@ -3,12 +3,15 @@
 .form
   = form_for @page.becomes(Page) do |f|
     = hidden_field_tag :count, @count
+    = hidden_field_tag :find, @find if @find
     = render :partial => "pages/filter" if @filter
-    = render :partial => "pages/create", :locals => {:page => @page, :called_by => @called_by}
+    = render :partial => "pages/create", :locals => {:page => @page, :called_by => @called_by} unless @find
     = f.submit "Find", :name => "Find" if @filter
-    = f.submit "Store", :name => "Store" unless @filter
-    = f.submit "Refetch", :name => "Refetch" unless @filter
+    = f.submit "Store", :name => "Store" if @index
+    = f.submit "Refetch", :name => "Refetch" if @index
     - unless @pages.blank?
+      -if @find
+        .title=@title
       .pages
         - @pages.each_with_index do |page, index|
           .page{:id => "position_#{index+1}"}

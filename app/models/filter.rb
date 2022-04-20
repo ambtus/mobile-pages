@@ -2,6 +2,12 @@ class Filter
 
   LIMIT = 10 # number of pages to show in index
 
+  def self.tag(short_name, start)
+    Rails.logger.debug "DEBUG: Filter.tag(#{short_name}, #{start})"
+    tag = Tag.find_by_short_name(short_name)
+    tag.pages.limit(start + LIMIT)[start..-1]
+  end
+
   def self.new(params={})
     Rails.logger.debug "DEBUG: Filter.new(#{params})"
     pages = Page.all

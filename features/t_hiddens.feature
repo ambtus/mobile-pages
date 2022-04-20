@@ -7,7 +7,7 @@ Scenario: strip whitespace and sort
     And I fill in "tags" with "  xyz &   789,  abc/123,lmn   & 345  "
     And I press "Add Hidden Tags"
   Then I should see "abc/123 lmn & 345 xyz & 789" within ".hiddens"
-    And "xyz & 789" should link to "/pages?hidden=xyz+%26+789"
+    And "xyz & 789" should link to "/pages?find=xyz+%26+789"
     And the page should be hidden
 
 Scenario: link to tag on show should find page on index

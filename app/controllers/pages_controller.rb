@@ -17,10 +17,16 @@ class PagesController < ApplicationController
     end
     @page = Page.new(requested[:page])
     @count = requested[:count].to_i
-    if requested.empty? || requested.keys == ["count"]
+    if requested.keys.include?("find")
+      Rails.logger.debug "DEBUG: find #{requested}"
+      @title = "Pages tagged with #{requested[:find]}"
+      @find = requested[:find]
+      @pages = Filter.tag(requested[:find], @count)
+      flash.now[:alert] = "No pages found" if @pages.to_a.empty?
+    elsif requested.empty? || requested.keys == ["count"]
       Rails.logger.debug "DEBUG: index page"
       @title = "Mobile pages"
-      @filter = false
+      @index = true
       @called_by = "index"
       @pages = Filter.new(requested)
       flash.now[:alert] = "No pages found" if @pages.to_a.empty?
@@ -54,6 +60,7 @@ class PagesController < ApplicationController
   def create
     if params[:Find] || params[:Next]
       build_route = {:action => "index" , :controller => "pages"}
+      build_route[:find] = params[:find] unless params[:find].blank?
       build_route[:count] = params[:count].to_i + Filter::LIMIT if params[:Next]
       build_route[:author] = params[:author] unless params[:author].blank?
       build_route[:hidden] = params[:hidden] unless params[:hidden].blank?

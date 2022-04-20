@@ -5,6 +5,13 @@ Given("{int} pages exist") do |count|
   end
 end
 
+Given('{int} pages with cons: {string} exist') do |count, string|
+  con = Con.find_or_create_by(name: string)
+  count.times do |i|
+    con.pages << Page.create(title: "Page #{(i+1)}", read_after: "2000-01-#{i+1}")
+  end
+end
+
 Given("pages with all possible stars exist") do
   Page.create(title: "page0")
   Page.create(title: "page1").rate(1).read_today.update_read_after
@@ -119,3 +126,4 @@ Given /^the following pages?$/ do |table|
     Page.create_from_hash(hash.symbolize_keys)
   end
 end
+

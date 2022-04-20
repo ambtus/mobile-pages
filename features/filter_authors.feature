@@ -16,7 +16,7 @@ Scenario: filter on author
     And I should NOT see "The Mysterious Affair at Styles"
     And I should NOT see "Grimm's Fairy Tales"
 
-Scenario: filter by clicking link on show page
+Scenario: find by clicking link on show page
   Given the following pages
     | title                            | authors |
     | The Mysterious Affair at Styles  | agatha christie   |
@@ -28,7 +28,7 @@ Scenario: filter by clicking link on show page
     And I follow "lewis carroll"
   Then I should see "Alice's Adventures In Wonderland" within "#position_1"
     And I should see "Through the Looking Glass"
-    And "lewis carroll" should be selected in "author"
+    And the page should have title "Pages tagged with lewis carroll"
     But I should NOT see "The Mysterious Affair at Styles"
     And I should NOT see "Grimm's Fairy Tales"
 
