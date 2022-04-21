@@ -29,7 +29,7 @@
               = link_to "HTML", download_url_for_page(page, ".html")
               = link_to "Text", download_url_for_page(page, ".read") if page.parts.empty?
               = link_to "Original", page.url unless page.url.blank?
-            .meta=page.meta_strings.join_comma
+            .meta=page.meta_string
             .my_notes=page.my_short_notes
             .notes=simple_format page.short_notes
         = f.submit "Next", :name => "Next"
