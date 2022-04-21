@@ -11,8 +11,10 @@ class Page < ActiveRecord::Base
     if self.url.match("archiveofourown.org/users")
       self.errors.add(:url, "cannot be ao3 user")
       return false
+    elsif self.url.match("(.*)/collections/(.*)/works/(.*)")
+      self.url = $1 + "/works/" + $3
     elsif self.url.match("archiveofourown.org/collections")
-      self.errors.add(:url, "cannot include ao3 collection")
+      self.errors.add(:url, "cannot be an ao3 collection")
       return false
     end
     self.url = self.url.normalize

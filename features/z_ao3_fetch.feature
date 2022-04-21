@@ -183,3 +183,9 @@ Scenario: refetch from ao3 when it used to be somewhere else
     And I should see "Skipping Stones (Single)" within ".title"
     And I should see "thanks to lauriegilbert"
     And my page named "Skipping Stones" should contain "Skip. Skip."
+
+Scenario: fetch a work from a collection
+  Given I am on the homepage
+  When I fill in "page_url" with "https://archiveofourown.org/collections/Heliocentrism/works/21684820"
+    And I press "Store"
+  Then my page named "A Conversation Overheard by a Captive Faking Unconsciousness" should have url: "https://archiveofourown.org/works/21684820"

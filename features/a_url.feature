@@ -61,8 +61,8 @@ Scenario: ao3 user should display error
 
 Scenario: ao3 user should display error
   Given I am on the homepage
-  When I fill in "page_url" with "https://archiveofourown.org/collections/Heliocentrism/works/19816039"
+  When I fill in "page_url" with "https://archiveofourown.org/collections/Heliocentrism"
     And I press "Store"
-  Then I should see "Url cannot include ao3 collection"
+  Then I should see "Url cannot be an ao3 collection"
     And I should have 0 pages
 
