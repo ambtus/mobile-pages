@@ -52,3 +52,17 @@ Scenario: 404 not found should display error
     And I should NOT see "Page created"
     And I should have 0 pages
 
+Scenario: ao3 user should display error
+  Given I am on the homepage
+  When I fill in "page_url" with "https://archiveofourown.org/users/Sidra"
+    And I press "Store"
+  Then I should see "Url cannot be ao3 user"
+    And I should have 0 pages
+
+Scenario: ao3 user should display error
+  Given I am on the homepage
+  When I fill in "page_url" with "https://archiveofourown.org/collections/Heliocentrism/works/19816039"
+    And I press "Store"
+  Then I should see "Url cannot include ao3 collection"
+    And I should have 0 pages
+
