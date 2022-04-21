@@ -76,3 +76,4 @@ Scenario: do not duplicate fandom and author in notes of works in series
   Then I should see "by Sidra" before "Harry Potter" within ".notes"
     But I should NOT see "by Sidra" within "#position_1"
     And I should NOT see "Harry Potter; Harry Potter" within "#position_1"
+    And I should NOT see "by" within "#position_1"

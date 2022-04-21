@@ -937,8 +937,10 @@ class Page < ActiveRecord::Base
         end
       end
       by = tagged_authors.empty? ? "by" : "et al:"
-      Rails.logger.debug "DEBUG: adding #{unduped} to notes"
-      self.update notes: "<p>#{by} #{unduped.join_comma}</p>#{self.notes}"
+      unless unduped.empty?
+        Rails.logger.debug "DEBUG: adding #{unduped} to notes"
+        self.update notes: "<p>#{by} #{unduped.join_comma}</p>#{self.notes}"
+      end
     end
     return self
   end
@@ -1000,8 +1002,10 @@ class Page < ActiveRecord::Base
           unduped << fandom
         end
       end
-      Rails.logger.debug "DEBUG: adding #{unduped} to notes"
-      self.update notes: "<p>#{unduped.join_comma}</p>#{self.notes}"
+      unless unduped.empty?
+        Rails.logger.debug "DEBUG: adding #{unduped} to notes"
+        self.update notes: "<p>#{unduped.join_comma}</p>#{self.notes}"
+      end
     end
     return self
   end
