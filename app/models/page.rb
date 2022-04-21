@@ -927,9 +927,18 @@ class Page < ActiveRecord::Base
     end
     unless non_existing.empty?
       tagged_authors = self.tags.authors + (self.parent ? self.parent.tags.authors : [])
+      authors = non_existing.uniq
+      unduped = []
+      authors.each do |author|
+        if parent && parent.notes && parent.notes.match(author)
+          Rails.logger.debug "DEBUG: not adding parent-matched #{author} to notes"
+        else
+          unduped << author
+        end
+      end
       by = tagged_authors.empty? ? "by" : "et al:"
-      Rails.logger.debug "DEBUG: adding #{non_existing} to notes"
-      self.update notes: "<p>#{by} #{non_existing.join(", ")}</p>#{self.notes}"
+      Rails.logger.debug "DEBUG: adding #{unduped} to notes"
+      self.update notes: "<p>#{by} #{unduped.join_comma}</p>#{self.notes}"
     end
     return self
   end
@@ -983,8 +992,16 @@ class Page < ActiveRecord::Base
     end
     unless non_existing.empty?
       fandoms = non_existing.uniq
-      Rails.logger.debug "DEBUG: adding #{fandoms} to notes"
-      self.update notes: "<p>#{fandoms.join(", ")}</p>#{self.notes}"
+      unduped = []
+      fandoms.each do |fandom|
+        if parent && parent.notes && parent.notes.match(fandom)
+          Rails.logger.debug "DEBUG: not adding parent-matched #{fandom} to notes"
+        else
+          unduped << fandom
+        end
+      end
+      Rails.logger.debug "DEBUG: adding #{unduped} to notes"
+      self.update notes: "<p>#{unduped.join_comma}</p>#{self.notes}"
     end
     return self
   end

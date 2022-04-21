@@ -62,3 +62,17 @@ Scenario: one chapter from ao3 is a Single
   When I am on the page with title "Where am I?"
   Then I should see "Where am I? (Single)" within ".title"
 
+Scenario: check before do not duplicate fandom and author in notes of works in series (can't quite figure out how to remove them before they've been added since the series creates the parts first before it updates its own notes)
+  Given Counting Drabbles exists
+  When I am on the page's page
+  Then I should see "by Sidra" before "Harry Potter" within ".notes"
+    And I should see "by Sidra" within "#position_1"
+    And I should see "Harry Potter; Harry Potter" within "#position_1"
+
+Scenario: do not duplicate fandom and author in notes of works in series
+  Given Counting Drabbles exists
+  When I am on the page's page
+    And I press "Rebuild Meta"
+  Then I should see "by Sidra" before "Harry Potter" within ".notes"
+    But I should NOT see "by Sidra" within "#position_1"
+    And I should NOT see "Harry Potter; Harry Potter" within "#position_1"
