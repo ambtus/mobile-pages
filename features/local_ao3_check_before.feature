@@ -32,7 +32,8 @@ Scenario: check before refetching a read Series should show it as unread
     And I should see "Implied snarry" within ".notes"
     And I should see "thanks to lauriegilbert!" within ".notes"
     And I should see "1. Skipping Stones" within "#position_1"
-    And I should see "by Sidra; Harry Potter; Harry Potter/Unknown;" within "#position_1"
+    And I should see "Harry Potter/Unknown;" within "#position_1"
+    And I should NOT see "by Sidra; Harry Potter;" within "#position_1"
     And I should NOT see "The Flower"
 
 Scenario: check before refetch Single

@@ -66,8 +66,8 @@ Scenario: grab a series with multiple authors
     And I should NOT see "Good Omens) Rate" within "#position_2"
     And I should NOT see "entanglednow" within "#position_1"
     And I should NOT see "entanglednow" within "#position_2"
-    And I should NOT see "et al: green_grin" within "#position_1"
-    But I should see "et al: green_grin" within "#position_2"
+    And I should NOT see "green_grin" within "#position_1"
+    And I should NOT see "green_grin" within "#position_2"
 
 Scenario: works in a series should not have duplicate tags
   Given "Sidra" is an "Author"

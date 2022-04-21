@@ -904,6 +904,7 @@ class Page < ActiveRecord::Base
 
   def add_author(string)
     return if string.blank?
+    return if parent
     existing = []
     non_existing = []
     singles = string.split(", ")
@@ -947,6 +948,7 @@ class Page < ActiveRecord::Base
 
   def add_fandom(string)
     return if string.blank?
+    return if parent
     tries = string.split(", ")
     existing = []
     non_existing = []
