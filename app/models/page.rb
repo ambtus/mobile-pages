@@ -924,23 +924,14 @@ class Page < ActiveRecord::Base
     end
     unless existing.empty?
       Rails.logger.debug "DEBUG: adding #{existing.map(&:name)} to authors"
-      existing.uniq.each {|a| self.tags << a unless self.all_authors.include?(a)}
+      existing.uniq.each {|a| self.tags << a unless self.tags.authors.include?(a)}
     end
     unless non_existing.empty?
-      tagged_authors = self.tags.authors + (self.parent ? self.parent.tags.authors : [])
       authors = non_existing.uniq
-      unduped = []
-      authors.each do |author|
-        if parent && parent.notes && parent.notes.match(author)
-          Rails.logger.debug "DEBUG: not adding parent-matched #{author} to notes"
-        else
-          unduped << author
-        end
-      end
-      by = tagged_authors.empty? ? "by" : "et al:"
-      unless unduped.empty?
-        Rails.logger.debug "DEBUG: adding #{unduped} to notes"
-        self.update notes: "<p>#{by} #{unduped.join_comma}</p>#{self.notes}"
+      by = existing.empty? ? "by" : "et al:"
+      unless authors.empty?
+        Rails.logger.debug "DEBUG: adding #{authors} to notes"
+        self.update notes: "<p>#{by} #{authors.join_comma}</p>#{self.notes}"
       end
     end
     return self
@@ -974,8 +965,6 @@ class Page < ActiveRecord::Base
         Rails.logger.debug "DEBUG: found #{found.name}"
         if self.tags.include?(found)
           Rails.logger.debug "DEBUG: won't re-add #{found.name} to tags"
-        elsif self.parent && self.parent.tags.include?(found)
-          Rails.logger.debug "DEBUG: won't duplicate parent's #{found.name} in my tags"
         elsif self.other_fandom_present? # use other fandom tag to prevent false positives
            Rails.logger.debug "DEBUG: will NOT add #{found.name} to tags: add to notes instead"
            non_existing << simple if simple.present?
@@ -986,7 +975,7 @@ class Page < ActiveRecord::Base
       end
     end
     if existing.empty?
-      if self.tags.fandoms.blank? && self.parent.blank?
+      if self.tags.fandoms.blank?
         Rails.logger.debug "DEBUG: adding #{OTHER} to fandoms"
         self.tags << other_fandom_tag
       end
@@ -996,17 +985,9 @@ class Page < ActiveRecord::Base
     end
     unless non_existing.empty?
       fandoms = non_existing.uniq
-      unduped = []
-      fandoms.each do |fandom|
-        if parent && parent.notes && parent.notes.match(fandom)
-          Rails.logger.debug "DEBUG: not adding parent-matched #{fandom} to notes"
-        else
-          unduped << fandom
-        end
-      end
-      unless unduped.empty?
-        Rails.logger.debug "DEBUG: adding #{unduped} to notes"
-        self.update notes: "<p>#{unduped.join_comma}</p>#{self.notes}"
+      unless fandoms.empty?
+        Rails.logger.debug "DEBUG: adding #{fandoms} to notes"
+        self.update notes: "<p>#{fandoms.join_comma}</p>#{self.notes}"
       end
     end
     return self
