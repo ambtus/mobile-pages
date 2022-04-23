@@ -175,3 +175,20 @@ Scenario: don’t allow merge if not the same type
   Then I should NOT see "not fandom"
     And I should NOT see "Merge"
 
+Scenario: select a merged tag
+  Given a page exists with authors: "jane (june)" AND title: "Page 1"
+  When I am on the page's page
+    And I edit its tags
+  Then I should see "Author: jane"
+    But I should NOT see "june"
+
+Scenario: select a merged tag
+  Given a page exists with authors: "jane (june)" AND title: "Page 1"
+    And a page exists with authors: "judy (aka)" AND title: "Page 2"
+  When I am on the page's page
+    And I edit its tags
+    And I select "judy" from "page_author_ids_"
+    And I press "Update Tags"
+  Then I should see "jane judy" within ".authors"
+    But I should NOT see "june"
+    And I should NOT see "aka"

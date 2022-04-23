@@ -3,5 +3,5 @@
 -types.each do |type|
   .div{class: "#{type.downcase.pluralize}"}
     =type + ": #{@page.tags.send(type.downcase.pluralize).map(&:base_name).join(', ')}"
-    = select_tag("page[#{type.downcase}_ids][]", options_from_collection_for_select(Tag.send(type.downcase.pluralize).by_name, 'id', 'name', selected = @page.tags.send(type.downcase.pluralize).map(&:id)), :multiple => true)
+    = select_tag("page[#{type.downcase}_ids][]", options_from_collection_for_select(Tag.send(type.downcase.pluralize).by_name, 'id', 'base_name', selected = @page.tags.send(type.downcase.pluralize).map(&:id)), :multiple => true)
 %div=submit_tag "Update Tags"
