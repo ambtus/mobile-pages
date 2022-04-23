@@ -96,22 +96,6 @@ Scenario: delete a con
   Then I should NOT see "abc123"
     But I should see "Page 1"
 
-Scenario: merge two tags
-  Given "abc123" is a "Con"
-    And a page exists with cons: "xyz987"
-  When I am on the edit tag page for "xyz987"
-    And I select "abc123" from "merge"
-    And I press "Merge"
-    And I am on the page's page
-  Then I should see "abc123 (xyz987)" within ".cons"
-
-Scenario: don’t allow merge if not the same type
-  Given "abc123" is a "Pro"
-    And "xyz987" is a "Con"
-  When I am on the edit tag page for "xyz987"
-  Then I should NOT see "abc123"
-    And I should NOT see "Merge"
-
 Scenario: change con to pro tag
   Given a page exists with cons: "abc123"
   When I am on the edit tag page for "abc123"

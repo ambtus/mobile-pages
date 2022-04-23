@@ -49,7 +49,7 @@ Scenario: do match Drizzt (as aka)
   Given "Forgotten Realms (Drizzt)" is a "Fandom"
     And Yer a Wizard exists
     And I am on the page's page
-  Then I should see "Forgotten Realms (Drizzt)" within ".fandoms"
+  Then I should see "Forgotten Realms" within ".fandoms"
     And I should see "Starlight and Shadows Series" within ".notes"
     But I should NOT see "Legend of Drizzt Series" within ".notes"
 
@@ -57,9 +57,10 @@ Scenario: do match Drizzt (as first)
   Given "Drizzt (Forgotten Realms)" is a "Fandom"
     And Yer a Wizard exists
     And I am on the page's page
-  Then I should see "Drizzt (Forgotten Realms)" within ".fandoms"
+  Then I should see "Drizzt" within ".fandoms"
     And I should see "Starlight and Shadows Series" within ".notes"
     But I should NOT see "Legend of Drizzt Series" within ".notes"
+    And I should NOT see "Forgotten Realms" within ".notes"
 
  Scenario: series should get their fandoms from the works
   Given "harry potter" is a "Fandom"

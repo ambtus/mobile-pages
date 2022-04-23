@@ -169,10 +169,10 @@ Scenario: filter out by AKA (index)
     | Alice's Adventures In Wonderland | lewis carroll (charles dodgson) |
     | Through the Looking Glass        | lewis carroll |
   When I am on the filter page
-    And I select "charles dodgson" from "Hidden"
+    And I select "lewis carroll" from "Hidden"
     And I press "Find"
   Then I should see "Alice's Adventures In Wonderland"
     And I should see "Through the Looking Glass"
-    And "charles dodgson" should be selected in "hidden"
+    And "lewis carroll" should be selected in "hidden"
     But I should NOT see "The Mysterious Affair at Styles"
     And I should NOT see "Grimm's Fairy Tales"

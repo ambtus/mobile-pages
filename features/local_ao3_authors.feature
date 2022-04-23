@@ -12,15 +12,17 @@ Scenario: multiple authors - some in Authors
   Given "adiduck (book_people)" is an "Author"
     And Multi Authors exists
   When I am on the page's page
-  Then I should see "adiduck (book_people)" within ".authors"
+  Then I should see "adiduck" within ".authors"
     And I should see "et al: whimsicalimages" within ".notes"
+    And I should NOT see "book_people"
 
 Scenario: multiple authors - reversed in Authors
   Given "book_people (adiduck)" is an "Author"
     And Multi Authors exists
   When I am on the page's page
-  Then I should see "book_people (adiduck)" within ".authors"
+  Then I should see "book_people" within ".authors"
     And I should see "et al: whimsicalimages" within ".notes"
+    And I should NOT see "adiduck"
 
 Scenario: multiple authors - primary in Authors
   Given "adiduck" is an "Author"
@@ -36,5 +38,5 @@ Scenario: multiple authors - aka in Authors
   When I am on the page's page
   Then I should see "book_people" within ".authors"
     And I should see "et al: whimsicalimages" within ".notes"
-    And I should NOT see "adiduck" within ".authors"
+    And I should NOT see "adiduck"
 

@@ -95,22 +95,6 @@ Scenario: delete a info tag
     And I am on the page's page
   Then I should NOT see "nobody"
 
-Scenario: merge two tags
-  Given "abc123" is an "Info"
-    And a page exists with infos: "xyz987"
-  When I am on the edit tag page for "xyz987"
-    And I select "abc123" from "merge"
-    And I press "Merge"
-    And I am on the page's page
-  Then I should see "abc123 (xyz987)" within ".infos"
-
-Scenario: don’t allow merge if not the same type
-  Given "abc123" is a "Pro"
-    And a page exists with infos: "xyz987"
-  When I am on the edit tag page for "xyz987"
-    Then I should NOT see "abc123"
-    And I should NOT see "Merge"
-
 Scenario: change info to fandom
   Given a page exists with infos: "Harry Potter"
   When I am on the edit tag page for "Harry Potter"

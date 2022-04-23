@@ -13,7 +13,7 @@ Scenario: find by fandom
     And I should see "The Hobbit" within "#position_2"
     But I should NOT see "Nancy Drew"
 
-Scenario: filter on AKA
+Scenario: filter with AKA
   Given the following pages
     | title                            | fandoms         |
     | The Mysterious Affair at Styles  | abc123          |
@@ -21,10 +21,10 @@ Scenario: filter on AKA
     | Alice's Adventures In Wonderland | lmn345 (aka123) |
     | Through the Looking Glass        | lmn345          |
   When I am on the filter page
-    And I select "aka123" from "fandom"
+    And I select "lmn345" from "fandom"
     And I press "Find"
   Then I should see "Alice's Adventures In Wonderland"
     And I should see "Through the Looking Glass"
-    And "aka123" should be selected in "fandom"
+    And "lmn345" should be selected in "fandom"
     But I should NOT see "The Mysterious Affair at Styles"
     And I should NOT see "Grimm's Fairy Tales"

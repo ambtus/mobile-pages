@@ -106,23 +106,6 @@ Scenario: delete a hidden
     But I should see "Page 1"
     And the page should NOT be hidden
 
-Scenario: merge two tags
-  Given "abc123" is a "Hidden"
-    And a page exists with hiddens: "xyz987"
-  When I am on the edit tag page for "xyz987"
-    And I select "abc123" from "merge"
-    And I press "Merge"
-    And I am on the page's page
-  Then I should see "abc123 (xyz987)" within ".hiddens"
-    And the page should be hidden
-
-Scenario: don’t allow merge if not the same type
-  Given "abc123" is a "Pro"
-    And "xyz987" is a "Hidden"
-  When I am on the edit tag page for "xyz987"
-  Then I should NOT see "abc123"
-    And I should NOT see "Merge"
-
 Scenario: change hidden to con tag
   Given a page exists with hiddens: "abc123"
   When I am on the edit tag page for "abc123"

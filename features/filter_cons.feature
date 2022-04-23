@@ -56,7 +56,7 @@ Scenario: change pro to con tag (index)
   Then I should see "No pages found"
     And I should NOT see "Page 1"
 
-Scenario: filter out by AKA
+Scenario: filter out with AKA
   Given the following pages
     | title                            | cons |
     | The Mysterious Affair at Styles  | agatha christie   |
@@ -64,10 +64,9 @@ Scenario: filter out by AKA
     | Alice's Adventures In Wonderland | lewis carroll (charles dodgson) |
     | Through the Looking Glass        | lewis carroll |
   When I am on the filter page
-    And I select "charles dodgson" from "Con"
+    And I select "lewis carroll" from "Con"
     And I press "Find"
   Then I should NOT see "Alice's Adventures In Wonderland"
     And I should NOT see "Through the Looking Glass"
-    And "charles dodgson" should be selected in "con"
     But I should see "The Mysterious Affair at Styles"
     And I should see "Grimm's Fairy Tales"

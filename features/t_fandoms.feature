@@ -185,22 +185,6 @@ Scenario: deleted fandom puts moves fandom to other fandom on page
   Then I should see "Other Fandom" within ".fandoms"
     And I should see "Twilight" within ".notes"
 
-Scenario: merge two tags
-  Given "abc123" is a "Fandom"
-    And a page exists with fandoms: "xyz987"
-  When I am on the edit tag page for "xyz987"
-    And I select "abc123" from "merge"
-    And I press "Merge"
-    And I am on the page's page
-  Then I should see "abc123 (xyz987)" within ".fandoms"
-
-Scenario: don’t allow merge if not the same type
-  Given "not fandom" is a "Pro"
-    And "bad name" is a "Fandom"
-  When I am on the edit tag page for "bad name"
-  Then I should NOT see "not fandom"
-    And I should NOT see "Merge"
-
 Scenario: change fandom to pro tag part 1
   Given a page exists with fandoms: "not a fandom"
   When I am on the page's page

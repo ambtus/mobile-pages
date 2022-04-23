@@ -60,19 +60,20 @@ class Tag < ActiveRecord::Base
   end
 
   def add_aka(aka_tag)
-    all_names = (self.short_names + aka_tag.short_names).uniq.join_comma
-    true_name, akas = all_names.split(', ')
-    new_name = "#{true_name} (#{akas})"
+    all_names = (self.short_names + aka_tag.short_names).uniq
+    akas = all_names.without(self.base_name).sort_by(&:downcase).join_comma
+    new_name = "#{self.base_name} (#{akas})"
     Rails.logger.debug "DEBUG: merge #{aka_tag.name} into #{self.name} as #{new_name}"
     self.update_attribute(:name, new_name)
     page_ids = aka_tag.pages.map(&:id)
+    #TODO this should be able to be done in fewer DB operations
     aka_tag.pages.each {|p| p.tags << self unless p.tags.include?(self)}
     aka_tag.destroy
     self
   end
 
   def self.names
-    self.send(scope_name).map(&:short_names).flatten.sort_by(&:downcase)
+    self.send(scope_name).by_name.map(&:base_name)
   end
 
   def destroy_me
