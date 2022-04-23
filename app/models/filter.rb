@@ -4,8 +4,9 @@ class Filter
 
   def self.tag(short_name, start)
     Rails.logger.debug "DEBUG: Filter.tag(#{short_name}, #{start})"
-    tag = Tag.find_by_short_name(short_name)
-    tag.pages.limit(start + LIMIT)[start..-1]
+    tag = Tag.find_by_name(short_name)
+    tag = Tag.find_by_short_name(short_name) unless tag
+    tag.pages.order('read_after ASC').limit(start + LIMIT)[start..-1]
   end
 
   def self.new(params={})
