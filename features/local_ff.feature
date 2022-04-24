@@ -14,14 +14,13 @@ Scenario: fanfiction.net can't be fetched
     And I fill in "page_url" with "https://www.fanfiction.net/s/5853866/1/Counting"
     And I press "Store"
   Then "Original" should link to "https://www.fanfiction.net/s/5853866/1/Counting"
-    And my page named "Counting" should contain "edit raw html manually"
-    And my page named "Counting" should NOT contain "Skip. Skip."
+    And the contents should include "edit raw html manually"
+    But the contents should NOT include "Skip. Skip."
 
 Scenario: check before fanfiction.net can't be refetched
   Given counting exists
   When I am on the page with title "Counting"
-    And I view the content
-  Then I should see "Skip. Skip."
+  Then the contents should include "Skip. Skip."
 
 Scenario: check before fanfiction.net can't be refetched
   Given counting exists
@@ -34,8 +33,7 @@ Scenario: check before fanfiction.net can't be refetched
     And I follow "Edit Raw HTML"
     And I fill in "pasted" with "system down"
     And I press "Update Raw HTML"
-    And I view the content
-  Then I should see "system down" within ".content"
+  Then the contents should include "system down"
 
 Scenario: check before fanfiction.net can't be refetched
   Given counting exists
@@ -48,20 +46,18 @@ Scenario: check before fanfiction.net can't be refetched
   Then I should see "can't refetch from fanfiction.net"
     And I should NOT see "Fetched" within "#flash_notice"
     But I should NOT see "Base"
-    And my page named "Counting" should contain "system down"
-    And my page named "Counting" should NOT contain "Skip. Skip."
-    And my page named "Counting" should NOT contain "edit raw html manually"
+    And the contents should include "system down"
+    But the contents should NOT include "Skip. Skip."
+    And the contents should NOT include "edit raw html manually"
 
 Scenario: fanfiction Share button gets cleaned
   Given counting exists
   When I am on the page with title "Counting"
-    And I view the content
-  Then I should see "Skip. Skip."
-    But I should NOT see "Share"
+  Then the contents should include "Skip. Skip."
+    But the contents should NOT include "Share"
 
 Scenario: fanfiction underline spans don't get cleaned
   Given underline spans exists
   When I am on the page with title "Part 6"
-    And I view the content
-  Then I should NOT see "But I so I ,"
-    But I should see "But I wasn't so I didn't,"
+  Then the contents should NOT include "But I so I ,"
+    But the contents should include "But I wasn't so I didn't,"

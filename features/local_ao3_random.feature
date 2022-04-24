@@ -62,3 +62,27 @@ Scenario: do not duplicate fandom and author in notes of works in series
     But I should NOT see "by Sidra" within "#position_1"
     And I should NOT see "Harry Potter; Harry Potter" within "#position_1"
     And I should NOT see "by" within "#position_1"
+
+Scenario: do NOT overwrite raw html if Single has been deleted
+  Given The Right Path exists
+  When I am on the page's page
+    And I follow "Refetch"
+#    And I press "Refetch"
+#  Then I should see "error retrieving content" within "#flash_alert"
+    And the contents should include "Ben Solo is ten years old"
+
+Scenario: do NOT overwrite raw html if chapter of Book has been deleted
+  Given Brave New World exists
+  When I am on the page with title "Chapter 2"
+     And I follow "Refetch"
+#    And I press "Refetch"
+#  Then I should see "error retrieving content" within "#flash_alert"
+    And the contents should include "With two sets of eyes on him now, Draco gulped"
+
+Scenario: do NOT overwrite raw html if book of series has been deleted
+  Given Iterum Rex exists
+  When I am on the page with title "Brave New World"
+     And I follow "Refetch"
+#    And I press "Refetch"
+#  Then I should see "error retrieving content" within "#flash_alert"
+    And the contents should include "With two sets of eyes on him now, Draco gulped"

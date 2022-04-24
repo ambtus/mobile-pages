@@ -213,6 +213,7 @@ class Page < ActiveRecord::Base
   after_create :initial_fetch
 
   # used in tests
+  def all_html; parts.blank? ? edited_html : parts.map(&:all_html).join; end
   def inspect
      regexp = /([\d-]+ \d\d:\d\d)([\d:.+ ]+)/
      super.match(regexp) ? super.gsub(regexp, '\1') : super

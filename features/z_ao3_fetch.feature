@@ -88,8 +88,8 @@ Scenario: refetch Single
     And I should see "by Sidra" within ".notes"
     And I should NOT see "changed notes" within ".notes"
     And I should NOT see "WIP" within ".cons"
-    And my page named "Where am I?" should contain "Amy woke slowly"
-    But my page named "Where am I?" should NOT contain "oops"
+    And the contents should include "Amy woke slowly"
+    But the contents should NOT include "oops"
 
 Scenario: refetching top level fic shouldn't change chapter titles if i've modified them
   Given Time Was exists
@@ -182,7 +182,7 @@ Scenario: refetch from ao3 when it used to be somewhere else
     And I should NOT see "ambtus"
     And I should see "Skipping Stones (Single)" within ".title"
     And I should see "thanks to lauriegilbert"
-    And my page named "Skipping Stones" should contain "Skip. Skip."
+    And the contents should include "Skip. Skip."
 
 Scenario: fetch a work from a collection
   Given I am on the homepage

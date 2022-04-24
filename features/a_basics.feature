@@ -7,8 +7,6 @@ Scenario: pasted html file
     And I fill in "pasted" with "<p>This is a test</p>"
     And I press "Update Raw HTML"
   Then I should see "Raw HTML updated" within "#flash_notice"
-  When I view the content
-    And I should see "This is a test"
 
 Scenario: pasted html file part 2
   Given a page exists
@@ -16,8 +14,7 @@ Scenario: pasted html file part 2
     And I follow "Edit Raw HTML"
     And I fill in "pasted" with "<p>This is a test</p>"
     And I press "Update Raw HTML"
-    And I view the content
-  Then I should see "This is a test"
+  Then the contents should include "This is a test"
 
 Scenario: pasted plaintext
   Given a page exists
@@ -25,8 +22,7 @@ Scenario: pasted plaintext
   When I follow "Edit Raw HTML"
     And I fill in "pasted" with "plain text"
     And I press "Update Raw HTML"
-    And I view the content
-  Then I should see "plain text" within ".content"
+  Then the contents should include "plain text"
 
 Scenario: create a page from a single url
   Given I am on the homepage
@@ -45,8 +41,7 @@ Scenario: create a page from a single url content
   Given I am on the homepage
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
-    And I view the content
-  Then I should see "Retrieved from the web" within ".content"
+  Then the contents should include "Retrieved from the web"
 
 Scenario: pasted blank
   Given a page exists with url: "http://test.sidrasue.com/test.html"
@@ -54,15 +49,12 @@ Scenario: pasted blank
   When I follow "Edit Raw HTML"
     And I fill in "pasted" with ""
     And I press "Update Raw HTML"
-    And I view the content
-  Then I should see "" within ".content"
-    But I should NOT see "Retrieved from the web" within ".content"
+  Then the contents should NOT include "Retrieved from the web"
 
 Scenario: refetch original html part 1
   Given system down exists
   When I am on the page's page
-    And I view the content
-  Then I should see "system down" within ".content"
+  Then the contents should include "system down"
 
 Scenario: refetch original html part 2
   Given system down exists
@@ -82,9 +74,8 @@ Scenario: refetch original html part 4
   When I am on the page's page
     And I follow "Refetch"
     And I press "Refetch"
-    And I view the content
-  Then I should see "Retrieved from the web" within ".content"
-    And I should NOT see "system down" within ".content"
+  Then the contents should include "Retrieved from the web"
+    And the contents should NOT include "system down"
 
 Scenario: refetch original html from homepage
   Given system down exists
@@ -98,9 +89,8 @@ Scenario: refetch original html from homepage
   When I am on the homepage
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Refetch"
-    And I view the content
-  Then I should see "Retrieved from the web" within ".content"
-    And I should NOT see "system down" within ".content"
+  Then the contents should include "Retrieved from the web"
+    And the contents should NOT include "system down"
 
 Scenario: refetch fails
   Given I am on the homepage
@@ -114,8 +104,7 @@ Scenario: missing raw html directory
   Given a page exists with url: "http://test.sidrasue.com/test.html"
     And the page's directory is missing
   When I am on the page's page
-    And I view the content
-  Then I should NOT see "Retrieved from the web"
+  Then the contents should NOT include "Retrieved from the web"
 
 Scenario: refetch when raw html directory is missing
   Given a page exists with url: "http://test.sidrasue.com/test.html"
@@ -123,6 +112,5 @@ Scenario: refetch when raw html directory is missing
   When I am on the page's page
     And I follow "Refetch"
     And I press "Refetch"
-    And I view the content
-  Then I should see "Retrieved from the web"
+  Then the contents should include "Retrieved from the web"
 

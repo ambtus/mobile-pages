@@ -70,9 +70,8 @@ Scenario: recover from editing too much of the first section
     And I press "Confirm Text Edit"
     And I am on the page's page
     And I press "Rebuild from Raw HTML"
-    And I view the content
-  Then I should see "Lorem ipsum dolor sit amet"
-    And I should NOT see "New Content"
+  Then the contents should include "Lorem ipsum dolor sit amet"
+    But the contents should NOT include "New Content"
 
 Scenario: check before editing mid section
   Given a page exists with url: "http://test.sidrasue.com/long.html"
@@ -123,9 +122,8 @@ Scenario: recover from editing too much of the mid section
     And I press "Confirm Text Edit"
     And I am on the page's page
     And I press "Rebuild from Raw HTML"
-    And I view the content
-  Then I should see "Nulla facilisi. Suspendisse non lectus in nisl varius dapibus"
-    And I should NOT see "New Content"
+  Then the contents should include "Nulla facilisi. Suspendisse non lectus in nisl varius dapibus"
+    But the contents should NOT include "New Content"
 
 Scenario: check before editing last section
   Given a page exists with url: "http://test.sidrasue.com/long.html"
@@ -176,7 +174,6 @@ Scenario: recover from editing too much of the last section
     And I press "Confirm Text Edit"
     And I am on the page's page
     And I press "Rebuild from Raw HTML"
-    And I view the content
-  Then I should see "L9rem ipsum dolor sit amet"
-    And I should NOT see "New Content"
+  Then the contents should include "L9rem ipsum dolor sit amet"
+    But the contents should NOT include "New Content"
 

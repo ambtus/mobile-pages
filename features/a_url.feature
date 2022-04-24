@@ -21,8 +21,7 @@ Scenario: url can't be resolved should throw error
 Scenario: url with surrounding whitespace okay
   Given a page exists with url: " http://test.sidrasue.com/test.html "
   When I am on the page's page
-    And I view the content
-  Then I should see "Retrieved from the web"
+  Then the contents should include "Retrieved from the web"
     And my page named 'Page 1' should have url: 'http://test.sidrasue.com/test.html'
 
 Scenario: duplicate url not saved

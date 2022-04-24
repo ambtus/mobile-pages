@@ -6,10 +6,9 @@ Scenario: remove bottom when one automatically removed surrounding div
     And I follow "Scrub"
     And I choose "3rd" within ".bottom"
     And I press "Scrub" within ".top"
-    And I view the content
-  Then I should see "1st"
-    And I should see "2nd"
-    But I should NOT see "3rd"
+  Then the contents should include "1st"
+    And the contents should include "2nd"
+    But the contents should NOT include "3rd"
 
 Scenario: remove top when one automatically removed surrounding blockquote
   Given a page exists with url: "http://test.sidrasue.com/blockquote.html"
@@ -17,10 +16,9 @@ Scenario: remove top when one automatically removed surrounding blockquote
     And I follow "Scrub"
     And I choose "1st" within ".top"
     And I press "Scrub" within ".bottom"
-    And I view the content
-  Then I should see "2nd"
-    And I should see "3rd"
-    But I should NOT see "1st"
+  Then the contents should include "2nd"
+    And the contents should include "3rd"
+    But the contents should NOT include "1st"
 
 Scenario Outline: strip beginning and end
   Given a page exists with url: "<url>"
@@ -29,10 +27,9 @@ Scenario Outline: strip beginning and end
     And I choose "<unwanted1>" within ".top"
     And I choose "<unwanted2>" within ".bottom"
     And I press "Scrub" within ".top"
-    And I view the content
-  Then I should see "<wanted>"
-    And I should NOT see "<unwanted1>"
-    And I should NOT see "<unwanted2>"
+  Then the contents should include "<wanted>"
+    And the contents should NOT include "<unwanted1>"
+    And the contents should NOT include "<unwanted2>"
 
 Examples:
 | url                                        | wanted       | unwanted1       | unwanted2   |
@@ -51,9 +48,8 @@ Scenario: trim when many headers and short fic
     And I follow "Scrub"
     And I choose "third header" within ".top"
     And I press "Scrub" within ".bottom"
-    And I view the content
-  Then I should see "actual content"
-    And I should NOT see "header"
+  Then the contents should include "actual content"
+    And the contents should NOT include "header"
 
 Scenario: recover from trimming too much
   Given a page exists with url: "http://test.sidrasue.com/headers.html"
@@ -62,15 +58,12 @@ Scenario: recover from trimming too much
     And I choose "third header" within ".top"
     And I press "Scrub" within ".bottom"
     And I press "Rebuild from Raw HTML"
-    And I view the content
-  Then I should see "header"
-    And I should see "actual content"
+  Then the contents should include "header"
+    And the contents should include "actual content"
 
 Scenario: check before trimming parent
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
-  When I am on the page's page
-    And I view the content
-  Then I should see "cruft"
+  Then the contents should include "cruft"
     And the download directory should exist
 
 Scenario: trim a child removes parent's (composite) html
@@ -91,10 +84,8 @@ Scenario: trim a child removes parent's (composite) html
     And I choose "top cruft" within ".top"
     And I choose "bottom cruft" within ".bottom"
     And I press "Scrub" within ".bottom"
-    And I am on the page's page
-    And I view the content
-  Then I should NOT see "cruft"
-    But I should see "stuff for part 1"
+  Then the contents should NOT include "cruft"
+    But the contents should include "stuff for part 1"
 
 Scenario: rebuild all children from raw
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
@@ -105,8 +96,7 @@ Scenario: rebuild all children from raw
     And I choose "bottom cruft" within ".bottom"
     And I press "Scrub" within ".bottom"
     And I press "Rebuild from Raw HTML"
-    And I view the content
-  Then I should see "cruft"
+  Then the contents should include "cruft"
     And the download directory should exist
 
 Scenario: check before trim a sub-part
@@ -115,8 +105,7 @@ Scenario: check before trim a sub-part
     And I follow "Manage Parts"
     And I fill in "add_parent" with "Parent"
     And I press "Update"
-    And I view the content
-  Then I should see "cruft"
+  Then the contents should include "cruft"
     And the download directory should exist
 
 Scenario: scrubbing grandchild remove's grandparent's (composite) html
@@ -133,25 +122,22 @@ Scenario: scrubbing grandchild remove's grandparent's (composite) html
     And I press "Scrub" within ".top"
   Then the download html file should NOT exist
 
-Scenario: scrubbing grandchild shows scrubbed content
-  Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
-  When I am on the page's page
+Scenario: scrubbing grandchild shows scrubbed content in grandparent
+  Given a page exists with title: "GrandParent"
+  Given a page exists with urls: "http://test.sidrasue.com/parts/1.html" AND title: "Parent"
+  When I am on the page with title "Parent"
     And I follow "Manage Parts"
-    And I fill in "add_parent" with "Parent"
+    And I fill in "add_parent" with "GrandParent"
     And I press "Update"
     And I follow "Scrub"
-    And I follow "Scrub Page 1"
+    And I follow "Scrub Parent"
     And I follow "Scrub Part 1"
     And I choose "top cruft" within ".top"
     And I choose "bottom cruft" within ".bottom"
     And I press "Scrub" within ".top"
-    And I am on the page with title "Parent"
-    And I view the content
-  Then I should see "Page 1"
-    And I should see "Part 1"
-    And I should see "stuff for part 1"
-    But I should NOT see "top cruft"
-    And I should NOT see "bottom cruft"
+  Then the contents should include "stuff for part 1"
+    But the contents should NOT include "top cruft"
+    And the contents should NOT include "bottom cruft"
 
 Scenario: show number of nodes
   Given a page exists with url: "http://test.sidrasue.com/div.html"

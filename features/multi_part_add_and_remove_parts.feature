@@ -75,7 +75,7 @@ Scenario: add a single part to an existing parent
     And I should see "(3 parts)" within ".size"
     And I should see "Part added"
     And I should see "Part 3" within "#position_3"
-    And my page named "Part 3" should contain "stuff for part 3"
+    And the contents should include "stuff for part 3"
 
 Scenario: add two new parts via manage parts
   Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
@@ -105,8 +105,8 @@ Scenario: add two new parts via refetch
       """
     And I press "Refetch"
   Then I should see "Refetched" within "#flash_notice"
-    And my page named "Part 2" should contain "stuff for part 2"
-    And my page named "Part 3" should contain "stuff for part 3"
+    And the contents should include "stuff for part 2"
+    And the contents should include "stuff for part 3"
 
 Scenario: remove a part from an existing page with parts (make single)
   Given a page exists with title: "Multi" AND base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 3"
@@ -121,10 +121,9 @@ Scenario: remove a part from an existing page with parts (content)
   When I am on the page with title "Part 2"
     And I press "Make Single"
     And I am on the page's page
-    And I view the content
-  Then I should see "stuff for part 1"
-    And I should see "stuff for part 3"
-    But I should NOT see "stuff for part 2"
+  Then the contents should include "stuff for part 1"
+    And the contents should include "stuff for part 3"
+    But the contents should NOT include "stuff for part 2"
 
 Scenario: remove a part from an existing page with parts (manage parts)
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-3"

@@ -129,11 +129,12 @@ Then('the page should have title {string}') do |string|
   assert page.has_title? string
 end
 
-Then /^my page named "([^\"]*)" should contain "([^\"]*)"$/ do |title, string|
-  assert_match Regexp.new(string), Page.find_by_title(title).edited_html
+Then('the contents should include {string}') do |string|
+  assert_match Regexp.new(string), Page.first.all_html
 end
-Then /^my page named "([^\"]*)" should NOT contain "([^\"]*)"$/ do |title, string|
-  assert_no_match Regexp.new(string), Page.find_by_title(title).edited_html
+
+Then('the contents should NOT include {string}') do |string|
+  assert_no_match Regexp.new(string), Page.first.all_html
 end
 
 Then('my page named {string} should have {int} parts') do |string, int|
@@ -156,7 +157,6 @@ end
 Then('I should NOT see today') do
   assert_no_text(Date.current.to_s)
 end
-
 
 Then("the part titles should be stored as {string}") do |title_string|
    assert Page.first.parts.map(&:title).join(" & ") == title_string

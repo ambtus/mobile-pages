@@ -9,15 +9,19 @@ class RefetchesController < ApplicationController
       @page.refetch_meta
       @notice = "Refetched meta"
     elsif params[:url].present?
+      Rails.logger.debug "DEBUG: refetching with #{params[:url]} for #{@page.id}"
       @page.refetch(params[:url])
       @notice = "Refetched"
     else
+      Rails.logger.debug "DEBUG: refetching parts for #{@page.id}"
       @page.refetch_parts(params[:url_list])
       @notice = "Refetched parts"
     end
-    flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
+    unless @page.errors.blank?
+      Rails.logger.debug "DEBUG: page errors: #{@page.errors.messages}"
+      flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
+    end
     flash[:notice] = @notice
-    Rails.logger.debug "DEBUG: flash: #{flash.collect {|n, m| n+m}}"
     @page = Page.find(params[:page_id]) # in case its class changed during refetch
     @count = @page.parts.size > Page::LIMIT ? @page.parts.size - Page::LIMIT : 0
     render 'pages/show'

@@ -204,3 +204,32 @@ Given('wip exists') do
   chapter2.get_meta_from_ao3(false)
   page.get_meta_from_ao3(false).get_wip_from_ao3
 end
+
+Given('The Right Path exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "http://archiveofourown.org/works/5571483")
+  page.raw_html = File.open(Rails.root + "features/html/right.html", 'r:utf-8') { |f| f.read }
+  page.get_meta_from_ao3(false)
+end
+
+Given('Brave New World exists') do
+  book = Book.create!(title: "temp")
+  book.update!(url: "https://archiveofourown.org/works/23295031")
+  chapter1 = Chapter.create!(title: "temp", parent_id: book.id, position: 1)
+  chapter1.raw_html = File.open(Rails.root + "features/html/brave1.html", 'r:utf-8') { |f| f.read }
+  chapter1.update!(url: "https://archiveofourown.org/works/23295031/chapters/55791421")
+  chapter1.get_meta_from_ao3(false)
+  chapter2 = Chapter.create!(title: "temp", parent_id: book.id, position: 2)
+  chapter2.raw_html = File.open(Rails.root + "features/html/brave2.html", 'r:utf-8') { |f| f.read }
+  chapter2.update!(url: "https://archiveofourown.org/works/23295031/chapters/56053450")
+  chapter2.get_meta_from_ao3(false)
+  book.get_meta_from_ao3(false).get_wip_from_ao3
+end
+
+Given('Iterum Rex exists') do
+  step "Brave New World exists"
+  series = Series.create!(title: "Iterum Rex")
+  book = Book.find_by_title("Brave New World")
+  book.update!(parent_id: series.id, position: 2)
+  series.get_meta_from_ao3(false).set_wordcount(false)
+end

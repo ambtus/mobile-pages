@@ -1,5 +1,4 @@
 # encoding: utf-8
-
 Feature: dealing with various encodings in fetched documents
 
 Scenario Outline: encodings
@@ -7,8 +6,7 @@ Scenario Outline: encodings
   When I fill in "page_url" with "<url>"
     And I fill in "page_title" with "<title>"
     And I press "Store"
-    And I view the content
-  Then I should see "<result>" within ".content"
+  Then the contents should include "<result>"
 
 Examples:
 | url                                      | title            | result                 |
@@ -25,21 +23,17 @@ Examples:
 Scenario: stray linefeed
   Given a page exists with url: "http://test.sidrasue.com/112a.html"
   When I am on the page's page
-    And I view the content
-  Then I should see "fiancé"
-    And I should see "What was Xio Voe really like?"
-    # webrat won't display the entity, so use contain, not see
-    And my page named "Page 1" should NOT contain "&#13;"
+  Then the contents should include "fiancé"
+    And the contents should include "What was Xio Voe really like?"
+    But the contents should NOT include "&#13;"
 
 Scenario: utf8
   Given a page exists with url: "http://test.sidrasue.com/sbutf8.html"
   When I am on the page's page
-    And I view the content
-  Then I should see "“H"
+  Then the contents should include "“H"
 
 Scenario: latin1
   Given a page exists with url: "http://test.sidrasue.com/1252.html"
   When I am on the page's page
-    And I view the content
-  Then I should see "“H"
+  Then the contents should include "“H"
 

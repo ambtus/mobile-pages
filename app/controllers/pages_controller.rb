@@ -107,18 +107,18 @@ class PagesController < ApplicationController
     if @page.save
       Rails.logger.debug "DEBUG: page saved: #{@page.inspect}"
       if !@page.errors[:base].blank?
-        Rails.logger.debug "DEBUG: page errors: #{@page.inspect} destroyed"
         @errors = @page.errors
+        Rails.logger.debug "DEBUG: page destroyed because of errors"
         @page.destroy
         @page = Page.new(params[:page])
       else
         @page.set_hidden unless @hidden.blank?
         if @page.tags.fandoms.blank?
-          Rails.logger.debug "DEBUG: page created without fandom: #{@page.inspect}"
+          Rails.logger.debug "DEBUG: page created without fandom"
           flash[:notice] = "Page created with #{Page::OTHER}"
           @page.toggle_other_fandom
         else
-          Rails.logger.debug "DEBUG: page created with fandom: #{@page.inspect}"
+          Rails.logger.debug "DEBUG: page created with fandom"
           flash[:notice] = "Page created."
         end
         redirect_to page_path(@page) and return
@@ -126,7 +126,10 @@ class PagesController < ApplicationController
     else
       @errors = @page.errors
     end
-    flash[:alert] = @errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
+    unless @errors.blank?
+      Rails.logger.debug "DEBUG: page errors: #{@errors.messages}"
+      flash[:alert] = @errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
+    end
   end
 
   def show

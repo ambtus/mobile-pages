@@ -3,16 +3,14 @@ Feature: clean up html from web
 Scenario: CDATA
   Given a page exists with url: "http://test.sidrasue.com/112b.html"
   When I am on the page's page
-    And I view the content
-  Then I should see "A Single Love"
-    But I should NOT see "email Vera"
+  Then the contents should include "A Single Love"
+    But the contents should NOT include "email Vera"
 
 Scenario: quotes
   Given a page exists with title: "Quotes" AND url: "http://test.sidrasue.com/quotes.html"
   When I am on the page with title "Quotes"
-    And I view the content
-  Then I should see "Retrieved from the web"
-    But my page named "Quotes" should NOT contain "&quot;"
+  Then the contents should include "Retrieved from the web"
+    But the contents should NOT include "&quot;"
 
 Scenario: pasted html file gets cleaned
   Given a page exists with url: "http://test.sidrasue.com/test.html"
@@ -27,7 +25,6 @@ Scenario: pasted html file gets cleaned
       </script>
       """
     And I press "Update Raw HTML"
-    And I view the content
-  Then I should see "The beginning"
-    And I should NOT see "email Vera"
+  Then the contents should include "The beginning"
+    But the contents should NOT include "email Vera"
 

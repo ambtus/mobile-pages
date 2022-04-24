@@ -10,10 +10,8 @@ Scenario: bad formatting notes
 
 Scenario: bad formatting content
   Given Bad Formatting exists
-  When I am on the page's page
-    And I view the content
-  Then I should see "It doesn’t always work"
-    And I should NOT see "doesnâ€™t"
+  Then the contents should include "It doesn’t always work"
+    And the contents should NOT include "doesnâ€™t"
 
 Scenario: quotes in notes download bug
   Given Quoted Notes exists
@@ -35,4 +33,4 @@ Scenario: no author or fandom or relationships shouldn't get empty paragraph
     Then I should NOT see "; Harry has been thinking"
     But I should see "Harry has been thinking"
     And the notes should NOT include "<p></p><hr width=\"80%\"/> <p>Harry has been thinking"
-    But the notes should include "<p>Harry has been thinking"
+    But the notes should include "<p>Harry has been thinking and Voldemort gets to be the first to hear the results.</p> <hr width=\"80%\"/>"
