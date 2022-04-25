@@ -376,7 +376,15 @@ class Page < ActiveRecord::Base
     return nil unless parent
     my_index = parent.parts.find_index(self)
     return nil if my_index.nil?
-    parent.parts[my_index+1]
+    if parent.parts[my_index+1]
+      return parent.parts[my_index+1]
+    elsif parent.next_part
+      if parent.next_part.parts.blank?
+        return parent.next_part
+      else
+        return parent.next_part.parts.first
+      end
+    end
   end
 
   def not_hidden_parts; parts.where(hidden: false); end

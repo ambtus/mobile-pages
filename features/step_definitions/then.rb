@@ -54,17 +54,26 @@ end
 
 Then('Leave Kudos or Comments on {string} should link to its comments') do |string|
   href = page.find_link("Leave Kudos or Comments on \"#{string}\"")['href']
-  itself = Page.find_by_title(string)
   Rails.logger.debug "DEBUG: link: #{href}"
+  itself = Page.find_by_title(string)
   assert href == itself.url + "#comments"
 end
 
 Then('Rate {string} should link to its rate page') do |string|
   href = page.find_link("Rate \"#{string}\"")['href']
-  itself = Page.find_by_title(string)
   Rails.logger.debug "DEBUG: link: #{href}"
+  itself = Page.find_by_title(string)
   assert_match "/rates/#{itself.id}", href
 end
+
+Then('{string} should link to the content for {string}') do |string1, string2|
+  href = page.find_link(string1)['href']
+  Rails.logger.debug "DEBUG: #{string1} link: #{href}"
+  page_contents_url = Page.find_by_title(string2).download_url(".html")
+  Rails.logger.debug "DEBUG: #{string2} link: #{page_contents_url}"
+  assert href == page_contents_url
+end
+
 
 Then("the {string} field should contain {string}") do |field, text|
   assert page.has_field?(field, with: text)

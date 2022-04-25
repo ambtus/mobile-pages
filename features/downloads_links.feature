@@ -32,3 +32,40 @@ Scenario: end notes link to rating
   When I am on the page's page
      And I view the content
   Then Rate "Page 1" should link to its rate page
+
+Scenario: end notes link to next chapter of same book
+  Given a series exists
+  When I am on the page with title "Prologue"
+    And I view the content
+  Then "Next" should link to the content for "Cliffhanger"
+
+Scenario: end notes link to next book of same series
+  Given a series exists
+  When I am on the page with title "Book1"
+    And I view the content
+  Then "Next" should link to the content for "Book2"
+
+Scenario: end notes link to first chapter of next book in same series
+  Given a series exists
+  When I am on the page with title "Cliffhanger"
+    And I view the content
+  Then "Next" should link to the content for "Season2"
+
+Scenario: end notes link to next single in same series
+  Given a series exists
+  When I am on the page with title "Epilogue"
+    And I view the content
+  Then "Next" should link to the content for "Extras"
+
+Scenario: no end notes link to Next if there is no next part (on last part)
+  Given a series exists
+  When I am on the page with title "Extras"
+    And I view the content
+  Then I should NOT see "Next"
+
+Scenario: no end notes link to Next if there is no next part (all at once)
+  Given a series exists
+  When I am on the page with title "Series"
+    And I view the content
+  Then I should NOT see "Next"
+

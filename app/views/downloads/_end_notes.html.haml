@@ -1,10 +1,14 @@
 .notes{:style=> "page-break-before:always"}
--if page.ao3?
-  .offsite
-    -if page.parts.any?
-      =link_to "Leave Kudos or Comments on \"#{page.parts.last.title}\"",  page.parts.last.url + "#comments"
-    -else
-      =link_to "Leave Kudos or Comments on \"#{page.title}\"",  page.url + "#comments"
-  %hr
-=link_to "Rate \"#{@page.title}\"", @url + rate_path(@page)
-%p=@url + rate_path(@page)
+  -if page.ao3?
+    .offsite
+      -if page.parts.any?
+        =link_to "Leave Kudos or Comments on \"#{page.parts.last.title}\"",  page.parts.last.url + "#comments"
+      -else
+        =link_to "Leave Kudos or Comments on \"#{page.title}\"",  page.url + "#comments"
+    %hr
+  .rate
+    =link_to "Rate \"#{@page.title}\"", @url + rate_path(@page)
+    =@url + rate_path(@page)
+  -if page.next_part
+    %hr
+    .part=link_to "Next", download_url_for_page(@page.next_part, ".html")
