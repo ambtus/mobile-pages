@@ -1,82 +1,91 @@
 Feature: stars
 
+Scenario: any selected by default
+  When I am on the filter page
+  Then "stars_any" should be checked
+
+Scenario: check before filter on stars
+  Given pages with all possible stars exist
+  When I am on the filter page
+    And I press "Find"
+  Then I should see "page5" within ".pages"
+    And I should see "page4" within ".pages"
+    And I should see "page3" within ".pages"
+    And I should see "page2" within ".pages"
+    And I should see "page1" within ".pages"
+    And I should see "page9" within ".pages"
+    And I should see "page0" within ".pages"
+
 Scenario: search for 4 & 5 stars
   Given pages with all possible stars exist
   When I am on the filter page
     And I choose "stars_better"
     And I press "Find"
-  Then I should see "page5"
-    And I should see "page4"
+  Then I should see "page5" within ".pages"
+    And I should see "page4" within ".pages"
     And "better" should be checked
-    But I should NOT see "page3"
-    And I should NOT see "page2"
-    And I should NOT see "page1"
+    And the page should NOT contain css "#position_3"
 
 Scenario: search for 5 stars
   Given pages with all possible stars exist
   When I am on the filter page
     And I choose "stars_5"
     And I press "Find"
-  Then I should see "page5"
+  Then I should see "page5" within "#position_1"
     And "5" should be checked
-    But I should NOT see "page4"
-    And I should NOT see "page3"
-    And I should NOT see "page2"
-    And I should NOT see "page1"
+    And the page should NOT contain css "#position_2"
 
 Scenario: search for 4 stars
   Given pages with all possible stars exist
   When I am on the filter page
     And I choose "stars_4"
     And I press "Find"
-  Then I should see "page4"
+  Then I should see "page4" within "#position_1"
     And "4" should be checked
-    But I should NOT see "page5"
-    And I should NOT see "page3"
-    And I should NOT see "page2"
-    And I should NOT see "page1"
+    And the page should NOT contain css "#position_2"
 
 Scenario: search for 3 stars
   Given pages with all possible stars exist
   When I am on the filter page
     And I choose "stars_3"
     And I press "Find"
-  Then I should NOT see "page5"
-    And I should NOT see "page4"
-    And I should NOT see "page2"
-    And I should NOT see "page1"
-    But I should see "page3"
+  Then I should see "page3" within "#position_1"
+    And "3" should be checked
+    And the page should NOT contain css "#position_2"
 
 Scenario: search for 2 stars
   Given pages with all possible stars exist
   When I am on the filter page
     And I choose "stars_2"
     And I press "Find"
-  Then I should NOT see "page5"
-    And I should NOT see "page4"
-    And I should NOT see "page3"
-    But I should see "page2"
-    But I should NOT see "page1"
+  Then I should see "page2" within "#position_1"
+    And "2" should be checked
+    And the page should NOT contain css "#position_2"
 
 Scenario: search for 1 stars
   Given pages with all possible stars exist
   When I am on the filter page
     And I choose "stars_1"
     And I press "Find"
-  Then I should NOT see "page5"
-    And I should NOT see "page4"
-    And I should NOT see "page3"
-    And I should NOT see "page2"
-    But I should see "page1"
+  Then I should see "page1" within "#position_1"
+    And "1" should be checked
+    And the page should NOT contain css "#position_2"
 
 Scenario: search for 1 & 2 stars
   Given pages with all possible stars exist
   When I am on the filter page
     And I choose "stars_worse"
     And I press "Find"
-  Then I should NOT see "page5"
-    And I should NOT see "page4"
-    And I should NOT see "page3"
-    But I should see "page2"
-    And I should see "page1"
+  Then I should see "page2" within ".pages"
+    And I should see "page1" within ".pages"
+    And "worse" should be checked
+    And the page should NOT contain css "#position_3"
 
+Scenario: search for unfinished (9 stars)
+  Given pages with all possible stars exist
+  When I am on the filter page
+    And I choose "stars_unfinished"
+    And I press "Find"
+  Then I should see "page9" within "#position_1"
+    And "unfinished" should be checked
+    And the page should NOT contain css "#position_2"

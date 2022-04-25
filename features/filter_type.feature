@@ -1,8 +1,13 @@
 Feature: filter by type
 
-Scenario: check before filter (default)
+Scenario: any selected by default
+  When I am on the filter page
+  Then "type_any" should be checked
+
+Scenario: default filter
   Given pages with all possible types exist
-  When I am on the homepage
+  When I am on the filter page
+    And I press "Find"
   Then I should see "One-shot" within "#position_1"
     And I should see "Novel" within "#position_2"
     And I should see "Trilogy" within "#position_3"

@@ -1,8 +1,13 @@
 Feature: filter by unread (all, any, none, parts, either=default)
 
+Scenario: either selected by default
+  When I am on the filter page
+  Then "unread_either" should be checked
+
 Scenario: check before filter (default)
   Given pages with all possible unreads exist
-  When I am on the homepage
+  When I am on the filter page
+    And I press "Find"
   Then I should see "not read single"
     And I should see "not read book"
     And I should see "not read series"

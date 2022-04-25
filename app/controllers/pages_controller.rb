@@ -39,21 +39,21 @@ class PagesController < ApplicationController
         @pages = []
       else
         Rails.logger.debug "DEBUG: filter on #{requested}"
+        @pages = Filter.new(requested)
+        flash.now[:alert] = "No pages found" if @pages.to_a.empty?
         @page.title = params[:title] if params[:title]
         @page.notes = params[:notes] if params[:notes]
         @page.my_notes = params[:my_notes] if params[:my_notes]
         @page.url = params[:url] if params[:url]
-        @type = params[:type] || "any"
-        @sort_by = params[:sort_by] || "default"
-        @size = params[:size] || "any"
-        @unread = params[:unread] || "either"
-        @stars = params[:stars] || "any"
         Tag.types.each do |tag_type|
           instance_variable_set("@#{tag_type.downcase}_name", params[tag_type.downcase]) if params[tag_type.downcase]
         end
-        @pages = Filter.new(requested)
-        flash.now[:alert] = "No pages found" if @pages.to_a.empty?
       end
+      @type = params[:type] || "any"
+      @sort_by = params[:sort_by] || "default"
+      @size = params[:size] || "any"
+      @unread = params[:unread] || "either"
+      @stars = params[:stars] || "any"
     end
   end
 

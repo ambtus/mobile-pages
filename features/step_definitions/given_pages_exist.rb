@@ -13,23 +13,23 @@ Given('{int} pages with cons: {string} exist') do |count, string|
 end
 
 Given("pages with all possible stars exist") do
+  Page.create(title: "page4").rate(4).read_today.update_read_after
   Page.create(title: "page0")
   Page.create(title: "page1").rate(1).read_today.update_read_after
-  Page.create(title: "page2h").rate(2).read_today.update_read_after
   Page.create(title: "page3").rate(3).read_today.update_read_after
-  Page.create(title: "page4l").rate(4).read_today.update_read_after
   Page.create(title: "page5").rate(5).read_today.update_read_after
   Page.create(title: "page9").make_unfinished
+  Page.create(title: "page2").rate(2).read_today.update_read_after
 end
 
 Given("pages with all possible sizes exist") do
-  Page.create(title: "Drabble", url: "http://test.sidrasue.com/test.html")
-  Page.create(title: "Short", url: "http://test.sidrasue.com/short.html")
-  Page.create(title: "Medium", url: "http://test.sidrasue.com/long.html")
-  Page.create(title: "Long", url: "http://test.sidrasue.com/40000.html")
-  Page.create(title: "Medium2", base_url: "http://test.sidrasue.com/medium*.html", url_substitutions: "1-5")
-  Page.create(title: "Long2", base_url: "http://test.sidrasue.com/long*.html", url_substitutions: "1-9")
-  Page.create(title: "Epic", base_url: "http://test.sidrasue.com/epic/epic*.html", url_substitutions: "1-9")
+  Page.create(title: "Medium", url: "file:///#{Rails.root}/features/html/long.html")
+  Page.create(title: "Drabble").raw_html=100.times.collect{|i| (i+1).to_s}.join(" ")
+  Page.create(title: "Long2", base_url: "file:///#{Rails.root}/features/html/long*.html", url_substitutions: "1-9")
+  Page.create(title: "Short", url: "file:///#{Rails.root}/features/html/short.html")
+  Page.create(title: "Long", url: "file:///#{Rails.root}/features/html/40000.html")
+  Page.create(title: "Epic", base_url: "file:///#{Rails.root}/features/html/epic*.html", url_substitutions: "1-9")
+  Page.create(title: "Medium2", base_url: "file:///#{Rails.root}/features/html/medium*.html", url_substitutions: "1-5")
 end
 
 Given("pages with all possible unreads exist") do

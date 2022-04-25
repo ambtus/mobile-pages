@@ -1,5 +1,9 @@
 Feature: read_after order
 
+Scenario: default
+  When I am on the filter page
+  Then "sort_by_default" should be checked
+
 Scenario: default read order
   Given 4 pages exist
   When I am on the homepage
