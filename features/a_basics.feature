@@ -100,6 +100,20 @@ Scenario: refetch fails
     But I should see "Page not found. Find or Store instead." within "#flash_alert"
     And I should have 0 pages
 
+Scenario: refetch fails press store
+  Given I am on the homepage
+  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+    And I press "Refetch"
+    And I press "Store"
+  Then I should have 1 page
+
+Scenario: refetch fails press find
+  Given I am on the homepage
+  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+    And I press "Refetch"
+    And I press "Find"
+  Then I should see "No pages found"
+
 Scenario: missing raw html directory
   Given a page exists with url: "http://test.sidrasue.com/test.html"
     And the page's directory is missing

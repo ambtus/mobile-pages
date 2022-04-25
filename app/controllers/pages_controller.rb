@@ -92,7 +92,7 @@ class PagesController < ApplicationController
       else
         flash[:alert] = "Page not found. Find or Store instead."
         @page = Page.new(params[:page].permit!)
-        render :index and return
+        render :create and return
       end
       return
     end
