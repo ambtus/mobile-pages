@@ -227,9 +227,9 @@ Given('Brave New World exists') do
 end
 
 Given('Iterum Rex exists') do
-  step "Brave New World exists"
   series = Series.create!(title: "Iterum Rex")
+  series.update!(url: "http://archiveofourown.org/series/1005861")
+  step "Brave New World exists"
   book = Book.find_by_title("Brave New World")
   book.update!(parent_id: series.id, position: 2)
-  series.get_meta_from_ao3(false).set_wordcount(false)
 end

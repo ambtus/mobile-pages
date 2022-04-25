@@ -5,7 +5,9 @@ class Series < Page
   def get_meta_from_ao3(refetch=true)
     if refetch || raw_html.blank?
       Rails.logger.debug "DEBUG: fetching raw html from ao3 for #{self.url}"
-      self.raw_html = Scrub.fetch_html(self.url)
+      html = scrub_fetch(self.url)
+      return self unless html
+      self.raw_html = html
     else
       Rails.logger.debug "DEBUG: building meta from previous raw html"
     end

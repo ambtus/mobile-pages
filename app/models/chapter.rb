@@ -14,7 +14,9 @@ class Chapter < Page
   def get_meta_from_ao3(refetch=true)
     if refetch
       Rails.logger.debug "DEBUG: fetching meta from ao3 for #{self.url}"
-      doc = Nokogiri::HTML(Scrub.fetch_html(self.url))
+      html = scrub_fetch(self.url)
+      return false unless html
+      tags_doc = doc = Nokogiri::HTML(html)
     else
       Rails.logger.debug "DEBUG: build meta from raw html for #{self.id}"
       doc = Nokogiri::HTML(raw_html)

@@ -131,12 +131,16 @@ module Scrub
 
 
   def self.fetch_html(url)
-    return if url.blank?
+    raise if url.blank?
     auth = MyWebsites.getpwd(url)
     Scrub.agent.add_auth(url, auth[:username], auth[:password]) if auth
     if url.match("archiveofourown.org")
        Rails.logger.debug "DEBUG: ao3 fetch"
        content = Scrub.agent.get(url)
+       if Scrub.agent.page.uri.to_s == "https://archiveofourown.org/"
+         Rails.logger.debug "DEBUG: ao3 redirected back to homepage"
+         raise
+       end
        unless content.links.third.text.match(auth[:username])
          Rails.logger.debug "DEBUG: ao3 sign in"
          content = Scrub.agent.get("https://archiveofourown.org/users/login?restricted=true")

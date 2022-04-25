@@ -210,6 +210,10 @@ class PagesController < ApplicationController
         @page.edit_section(params[:section].to_i,params[:new])
         redirect_to @page.download_url(".read") and return
     end
+    unless @page.errors.blank?
+      Rails.logger.debug "DEBUG: page errors: #{@page.errors.messages}"
+      flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
+    end
     @page = Page.find(@page.id) # in case something changed
     render :show
   end

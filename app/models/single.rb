@@ -5,7 +5,9 @@ class Single < Page
   def get_meta_from_ao3(refetch=true)
     if refetch
       Rails.logger.debug "DEBUG: fetching meta from ao3 for #{self.url}"
-      doc = Nokogiri::HTML(Scrub.fetch_html(self.url))
+      html = scrub_fetch(self.url)
+      return false unless html
+      tags_doc = doc = Nokogiri::HTML(html)
     else
       Rails.logger.debug "DEBUG: build meta from raw html for #{self.id}"
       doc = Nokogiri::HTML(raw_html)
@@ -65,7 +67,9 @@ class Single < Page
   end
 
   def make_me_a_chapter(parent)
-    doc = Nokogiri::HTML(Scrub.fetch_html(self.url + "/navigate"))
+    html = scrub_fetch(self.url + "/navigate")
+    return false unless html
+    doc = Nokogiri::HTML(html)
     my_info = doc.xpath("//ol//a").first
     chapter_url = "https://archiveofourown.org" + my_info['href']
     Rails.logger.debug "DEBUG: making #{self.title} into a chapter of #{parent.id} with #{chapter_url}"

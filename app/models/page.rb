@@ -244,24 +244,35 @@ class Page < ActiveRecord::Base
     (self.parts.first && self.parts.first.url && self.parts.first.url.match(/fanfiction.net/))
   end
 
+  def scrub_fetch(url)
+    begin
+      Rails.logger.debug "DEBUG: fetching raw html from #{url}"
+      Scrub.fetch_html(url)
+    rescue SocketError
+      Rails.logger.debug "DEBUG: host unavailable"
+      self.errors.add(:base, "couldn't resolve host name")
+      return false
+    rescue
+      Rails.logger.debug "DEBUG: content unavailable"
+      self.errors.add(:base, "error retrieving content")
+      return false
+    end
+  end
+
   def fetch_raw
     if ff?
       self.raw_html = "edit raw html manually" if self.raw_html.blank?
       return
     end
-    remove_outdated_downloads
-    remove_outdated_edits
-    begin
-      Rails.logger.debug "DEBUG: fetching raw html from #{self.url}"
-      self.raw_html = Scrub.fetch_html(self.url)
-    rescue Mechanize::ResponseCodeError
-      Rails.logger.debug "DEBUG: content unavailable"
-      self.errors.add(:base, "error retrieving content")
-    rescue SocketError
-      Rails.logger.debug "DEBUG: host unavailable"
-      self.errors.add(:base, "couldn't resolve host name")
+    html = scrub_fetch(self.url)
+    if html
+      remove_outdated_downloads
+      remove_outdated_edits
+      self.raw_html = html
+      return self
+    else
+      return false
     end
-    return self
   end
 
   def add_part(part_url)
@@ -409,16 +420,20 @@ class Page < ActiveRecord::Base
   def refetch(passed_url)
     if ao3? && is_a?(Single) && !ao3_chapter?
       parent = Book.create!(title: "temp")
-      self.make_me_a_chapter(parent)
-      parent.update!(url: passed_url) && parent.fetch_ao3
-      me = Chapter.find(self.id).get_meta_from_ao3(false)
-      me.remove_duplicate_tags
+      if self.make_me_a_chapter(parent)
+        parent.update!(url: passed_url) && parent.fetch_ao3
+        me = Chapter.find(self.id).get_meta_from_ao3(false)
+        me.remove_duplicate_tags
+      else
+        errors.add(:base, "couldn't make me a chapter")
+      end
     else
       update!(url: passed_url) if passed_url.present?
       Rails.logger.debug "DEBUG: refetching all for #{id} url: #{self.url}"
       if ao3?
         page = becomes!(ao3_type)
         page.fetch_ao3
+        page.errors.messages.each{|e| self.errors.add(e.first, e.second.join_comma)}
       elsif ff?
         errors.add(:base, "can't refetch from fanfiction.net")
       else
@@ -755,6 +770,7 @@ class Page < ActiveRecord::Base
     File.open(self.raw_html_file_name, 'w:utf-8') { |f| f.write(body) }
     html = MyWebsites.getnode(body, self.url)
     if html
+      Rails.logger.debug "DEBUG: also updating scrubbed html"
       self.scrubbed_html = Scrub.sanitize_html(html)
     else
       self.scrubbed_html = ""
@@ -995,12 +1011,13 @@ class Page < ActiveRecord::Base
   end
 
   def rebuild_meta
-    # Rails.logger.debug "DEBUG: rebuilding meta for #{self.inspect}"
+    Rails.logger.debug "DEBUG: rebuilding meta for #{self.id}"
     remove_outdated_downloads
     if ao3?
       page = self.becomes!(self.ao3_type)
       # Rails.logger.debug "DEBUG: page is #{page.inspect}"
       page.get_meta_from_ao3(false)
+      page.errors.messages.each{|e| self.errors.add(e.first, e.second.join_comma)}
     elsif parts.any?
       self.get_meta_from_ao3(false) if parts.first.ao3_chapter?
     else

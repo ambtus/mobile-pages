@@ -5,7 +5,9 @@ class Book < Page
   def get_meta_from_ao3(refetch=true)
     if refetch
       Rails.logger.debug "DEBUG: fetching meta from ao3 for #{self.url}"
-      tags_doc = doc = Nokogiri::HTML(Scrub.fetch_html(self.url))
+      html = scrub_fetch(self.url)
+      return false unless html
+      tags_doc = doc = Nokogiri::HTML(html)
     else
       Rails.logger.debug "DEBUG: build meta from raw html of first and last parts"
       doc = Nokogiri::HTML(parts.first.raw_html)
@@ -50,7 +52,9 @@ class Book < Page
 
   def get_chapters_from_ao3
     Rails.logger.debug "DEBUG: getting chapters from ao3 for #{self.id}"
-    doc = Nokogiri::HTML(Scrub.fetch_html(self.url + "/navigate"))
+    html = scrub_fetch(self.url + "/navigate")
+    return false unless html
+    doc = Nokogiri::HTML(html)
     chapter_list = doc.xpath("//ol//a")
     Rails.logger.debug "DEBUG: chapter list for #{self.id}: #{chapter_list}"
     if make_single?(chapter_list.size)
