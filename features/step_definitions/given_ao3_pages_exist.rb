@@ -52,7 +52,7 @@ Given /^Time Was exists$/ do
   chapter2.raw_html = File.open(Rails.root + "features/html/hogwarts.html", 'r:utf-8') { |f| f.read }
   chapter2.update!(url: "https://archiveofourown.org/works/692/chapters/804")
   chapter2.get_meta_from_ao3(false)
-  page.get_meta_from_ao3(false).get_wip_from_ao3
+  page.get_meta_from_ao3(false).set_tags
 end
 
 Given /^Time Was partially exists$/ do
@@ -63,7 +63,7 @@ Given /^Time Was partially exists$/ do
   chapter1.update!(url: "https://archiveofourown.org/works/692/chapters/803")
   chapter1.get_meta_from_ao3(false)
   chapter1.read_today.rate("3").update_read_after
-  page.get_meta_from_ao3(false).get_wip_from_ao3.cleanup(false)
+  page.get_meta_from_ao3(false).set_tags.cleanup(false)
 end
 
 Given /^Bad Formatting exists$/ do
@@ -202,7 +202,7 @@ Given('wip exists') do
   chapter2.raw_html = File.open(Rails.root + "features/html/wip.html", 'r:utf-8') { |f| f.read }
   chapter2.update!(url: "https://archiveofourown.org/works/38044144/chapters/95026165")
   chapter2.get_meta_from_ao3(false)
-  page.get_meta_from_ao3(false).get_wip_from_ao3
+  page.get_meta_from_ao3(false).set_tags
 end
 
 Given('The Right Path exists') do
@@ -223,7 +223,7 @@ Given('Brave New World exists') do
   chapter2.raw_html = File.open(Rails.root + "features/html/brave2.html", 'r:utf-8') { |f| f.read }
   chapter2.update!(url: "https://archiveofourown.org/works/23295031/chapters/56053450")
   chapter2.get_meta_from_ao3(false)
-  book.get_meta_from_ao3(false).get_wip_from_ao3
+  book.get_meta_from_ao3(false).set_tags
 end
 
 Given('Iterum Rex exists') do

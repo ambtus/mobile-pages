@@ -3,6 +3,7 @@
 class Page < ActiveRecord::Base
   MODULO = 300  # files in a single directory
   include Download
+  include Meta
 
   LIMIT = 5 # number of parts to show at a time
 
@@ -101,9 +102,6 @@ class Page < ActiveRecord::Base
   UNREAD = "unread"
   UNREAD_PARTS_DATE = Date.new(1967) # year first fanzine published. couldn't have read before that ;)
   UNFINISHED = "unfinished"
-  WIP = "WIP"
-  TT = "Time Travel"
-  OTHER = "Other Fandom"
   SHORT_LENGTH = 160 # truncate at this many characters
   MEDIUM_LENGTH = 480
 
@@ -114,54 +112,11 @@ class Page < ActiveRecord::Base
   MED_MAX   = 30000
   LONG_MAX = 300000
 
-  def wip_tag; Con.find_or_create_by(name: WIP); end
-  def wip_switch(on = false)
-    if self.tags.cons.include?(wip_tag)
-      self.tags.delete(wip_tag) unless on
-    else
-      self.tags << wip_tag if on
-    end
-    return self
-  end
-
   def set_hidden; update_columns hidden: true; end
   def unset_hidden; update_columns hidden: false; end
   def reset_hidden;
     self.tags.hiddens.present? ? set_hidden : unset_hidden
   end
-
-  def other_fandom_tag; Fandom.find_or_create_by(name: OTHER); end
-  def other_fandom_present?; self.tags.fandoms.include?(other_fandom_tag);end
-  def toggle_other_fandom
-    if other_fandom_present?
-      self.tags.delete(other_fandom_tag)
-    else
-      self.tags << other_fandom_tag
-    end
-    return self
-  end
-
-  def tt_tag; Pro.find_or_create_by(name: TT); end
-  def tt_present?; self.tags.pros.include?(tt_tag);end
-  def toggle_tt
-    if tt_present?
-      self.tags.delete(tt_tag)
-    else
-      self.tags << tt_tag
-    end
-    return self
-  end
-  def ao3_tt(strings)
-    found = []
-    strings.each do |string|
-      if string.match("Time Travel")
-        self.tags << tt_tag
-        return self
-      end
-    end
-    return self
-  end
-
 
   def set_wordcount(recount=true)
     Rails.logger.debug "DEBUG: #{self.title} old wordcount: #{self.wordcount} and size: #{self.size}"
@@ -925,97 +880,6 @@ class Page < ActiveRecord::Base
     FileUtils.rm_f(self.scrubbed_html_file_name)
     FileUtils.rm_f(self.edited_html_file_name)
     self
-  end
-
-  def add_author(string)
-    return if string.blank?
-    return if parent
-    existing = []
-    non_existing = []
-    singles = string.split(", ")
-    singles.each do |single|
-      found = nil
-      possibles = single.gsub("(", ",").gsub(")", "").split(",")
-      possibles.each do |try|
-        Rails.logger.debug "DEBUG: trying '#{try}'"
-        found = Author.find_by_short_name(try.strip)
-        if found
-          Rails.logger.debug "DEBUG: found #{try}"
-          existing << found
-          break
-        end
-      end
-      non_existing << single unless found
-    end
-    unless existing.empty?
-      Rails.logger.debug "DEBUG: adding #{existing.map(&:name)} to authors"
-      existing.uniq.each {|a| self.tags << a unless self.tags.authors.include?(a)}
-    end
-    unless non_existing.empty?
-      authors = non_existing.uniq
-      by = existing.empty? ? "by" : "et al:"
-      unless authors.empty?
-        Rails.logger.debug "DEBUG: adding #{authors} to notes"
-        self.update notes: "<p>#{by} #{authors.join_comma}</p>#{self.notes}"
-      end
-    end
-    return self
-  end
-
-  def add_fandom(string)
-    return if string.blank?
-    return if parent
-    tries = string.split(", ")
-    existing = []
-    non_existing = []
-    tries.each do |t|
-      try = t.split(" | ").last.split(" - ").first.split(":").first.split('(').first
-      simple = try ? try.strip : t.split(" | ").last
-      simple.sub!(/^The /, '')
-      simple = I18n.transliterate(simple).delete('?')
-      Rails.logger.debug "DEBUG: trying #{simple}"
-      found = Fandom.where('name like ?', "%#{simple}%").first
-      if found.blank? && simple.present?
-        trying = simple.split(/[ -]/)
-        Rails.logger.debug "DEBUG: trying #{trying}"
-        possibles = trying.collect{|w| Fandom.where('name like ?', "%#{w}%") if w.length > 3}.flatten.compact
-        Rails.logger.debug "DEBUG: possible tags are #{possibles.map(&:name)}"
-        maybes = possibles.collect{|t| t unless trying.select{|w| t.name.match /\b#{w}\b/ }.empty?}
-        Rails.logger.debug "DEBUG: maybe tags are #{maybes.compact.map(&:name)}"
-        found = maybes.compact.mode
-      end
-      if found.blank?
-        non_existing << simple if simple.present?
-      else
-        Rails.logger.debug "DEBUG: found #{found.name}"
-        if self.tags.include?(found)
-          Rails.logger.debug "DEBUG: won't re-add #{found.name} to tags"
-        elsif self.other_fandom_present? # use other fandom tag to prevent false positives
-           Rails.logger.debug "DEBUG: will NOT add #{found.name} to tags: add to notes instead"
-           non_existing << simple if simple.present?
-        else
-          Rails.logger.debug "DEBUG: will add #{found.name} to tags"
-          existing << found
-        end
-      end
-    end
-    if existing.empty?
-      if self.tags.fandoms.blank?
-        Rails.logger.debug "DEBUG: adding #{OTHER} to fandoms"
-        self.tags << other_fandom_tag
-      end
-    else
-      Rails.logger.debug "DEBUG: adding #{existing.uniq.map(&:name)} to fandoms"
-      existing.uniq.each {|f| self.tags << f}
-    end
-    unless non_existing.empty?
-      fandoms = non_existing.uniq
-      unless fandoms.empty?
-        Rails.logger.debug "DEBUG: adding #{fandoms} to notes"
-        self.update notes: "<p>#{fandoms.join_comma}</p>#{self.notes}"
-      end
-    end
-    return self
   end
 
   def rebuild_meta

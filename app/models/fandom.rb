@@ -9,7 +9,7 @@ class Fandom < Tag
       Rails.logger.debug "DEBUG: moving fandom to note for page #{id}"
       page = Page.find(id)
       page.add_fandom(name)
-      page.toggle_other_fandom unless page.other_fandom_present?
+      page.set_of
     end
   end
 

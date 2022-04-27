@@ -52,9 +52,9 @@ module Download
     (my_authors + my_parents_authors).pulverize
   end
   def all_fandoms;
-    my_fandoms = self.tags.fandoms
-    my_parents_fandoms = self.parent_id.blank? ? [] : self.parent.all_fandoms
-    (my_fandoms + my_parents_fandoms).pulverize
+    mine = self.tags.fandoms
+    my_parents = self.parent_id.blank? ? [] : self.parent.all_fandoms
+    (mine + my_parents).pulverize
   end
   def download_author_string; (all_authors.map(&:base_name) + all_fandoms.map(&:base_name)).compact.join("&") || ""; end
 
@@ -68,17 +68,17 @@ module Download
      ]
   end
   def all_tags;
-    my_tags = download_tags
-    my_parents_tags = self.parent_id.blank? ? [] : self.parent.all_tags
-    (my_tags + my_parents_tags).pulverize
+    mine = download_tags
+    my_parents = self.parent_id.blank? ? [] : self.parent.all_tags
+    (mine + my_parents).pulverize
   end
   def download_tag_string; hidden? ? tags.hiddens.joined : "#{size}, #{all_tags.join_comma}"; end
 
   ## --comments
   def pros_and_cons
-    my_tags = self.tags.pros.by_name + self.tags.cons.by_name
-    my_parents_tags = self.parent_id.blank? ? [] : self.parent.pros_and_cons
-    (my_tags + my_parents_tags).pulverize
+    mine = self.tags.pros.by_name + self.tags.cons.by_name
+    my_parents = self.parent_id.blank? ? [] : self.parent.pros_and_cons
+    (mine + my_parents).pulverize
   end
   def pros_and_cons_string
     pros = pros_and_cons.select{|t| t.type == "Pro"}

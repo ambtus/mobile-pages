@@ -28,14 +28,7 @@ class Single < Page
     self.update notes: [doc_relationships, doc_summary, doc_tags, doc_notes].join_hr
     Rails.logger.debug "DEBUG: notes: #{self.notes}"
 
-    if ao3_chapter?
-      wip_switch(false)
-    else # single chapter work (at least for now)
-      chapters = doc.css(".stats .chapters").children[1].text.split('/') rescue Array.new
-      Rails.logger.debug "DEBUG: wip status: #{chapters}"
-      wip_switch(chapters.second == "?" || chapters.first != chapters.second)
-      ao3_tt(my_tags)
-    end
+    set_tags unless ao3_chapter? # single chapter work's don’t auto-get wip or tt
 
     ao3_authors = doc.css(".byline a").map(&:text).join_comma
 
@@ -46,15 +39,6 @@ class Single < Page
     return self
   end
 
-  def my_tags
-    doc = Nokogiri::HTML(raw_html)
-    doc.css(".freeform a").map(&:children).map(&:text)
-  end
-
-  def my_fandoms
-    doc = Nokogiri::HTML(raw_html)
-    doc.css(".fandom a").map(&:children).map(&:text)
-  end
 
   def fetch_ao3
     if self.id

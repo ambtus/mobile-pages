@@ -49,14 +49,4 @@ class Chapter < Page
     fetch_raw && get_meta_from_ao3(false) && cleanup
   end
 
-  def my_fandoms
-    doc = Nokogiri::HTML(raw_html)
-    doc.css(".fandom a").map(&:children).map(&:text)
-  end
-
-  def my_tags
-    doc = Nokogiri::HTML(raw_html)
-    doc.css(".freeform a").map(&:children).map(&:text)
-  end
-
 end

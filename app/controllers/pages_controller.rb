@@ -116,7 +116,7 @@ class PagesController < ApplicationController
         if @page.tags.fandoms.blank?
           Rails.logger.debug "DEBUG: page created without fandom"
           flash[:notice] = "Page created with #{Page::OTHER}"
-          @page.toggle_other_fandom
+          @page.toggle_of
         else
           Rails.logger.debug "DEBUG: page created with fandom"
           flash[:notice] = "Page created."
@@ -175,7 +175,7 @@ class PagesController < ApplicationController
         @page.rebuild_meta
         flash[:notice] = "Rebuilt Meta"
       when "Toggle #{Page::OTHER}"
-        @page.toggle_other_fandom.rebuild_meta
+        @page.toggle_of.rebuild_meta
         flash[:notice] = "Toggled #{Page::OTHER}"
       when "Toggle #{Page::TT}"
         @page.toggle_tt.remove_outdated_downloads

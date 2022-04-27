@@ -45,15 +45,9 @@ class Series < Page
 
     self.update notes: [doc_summary, doc_notes].compact.join_hr
 
-    Rails.logger.debug "DEBUG: get fandoms from raw html of first and last parts"
-    both = (parts.first.my_fandoms + parts.last.my_fandoms).uniq.join_comma
-    Rails.logger.debug "DEBUG: first & last fandoms: #{both}"
-    add_fandom(both)
+    add_fandom(my_fandoms.join_comma)
 
-    Rails.logger.debug "DEBUG: get tags from raw html of first and last parts"
-    both = (parts.first.my_tags + parts.last.my_tags).uniq
-    Rails.logger.debug "DEBUG: first & last tags: #{both}"
-    ao3_tt(both)
+    set_tags
 
     add_author(doc_authors) if doc_authors
 
