@@ -7,9 +7,7 @@ class Fandom < Tag
     self.destroy
     page_ids.each do |id|
       Rails.logger.debug "DEBUG: moving fandom to note for page #{id}"
-      page = Page.find(id)
-      page.add_fandom(name)
-      page.set_of
+      Page.find(id).add_fandoms_to_notes([name]).set_of
     end
   end
 

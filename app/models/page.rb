@@ -1,10 +1,10 @@
 # encoding=utf-8
 
 class Page < ActiveRecord::Base
-  MODULO = 300  # files in a single directory
   include Download
   include Meta
 
+  MODULO = 300  # files in a single directory
   LIMIT = 5 # number of parts to show at a time
 
   def normalize_url
@@ -185,7 +185,7 @@ class Page < ActiveRecord::Base
       page.update_last_read.update_read_after
     end
     page.rate(hash[:stars]).update_read_after if hash[:stars]
-    page.add_fandom(ao3_fandoms) && page.save if ao3_fandoms
+    page.add_fandoms_to_notes(ao3_fandoms.split(",")) if ao3_fandoms
     Rails.logger.debug "DEBUG: created test page #{page.inspect}"
     page
   end
@@ -369,15 +369,8 @@ class Page < ActiveRecord::Base
     self.tags << parent.tags - self.tags
     self.update(parent_id: nil, position: nil)
     self.set_type
-    self.get_meta_from_ao3(false) if self.ao3?
-    self.wip_switch if self.ao3_chapter?
-  end
-
-  def refetch_meta
-    self.parts.each do |part|
-      part.get_meta_from_ao3
-    end
-    self.get_meta_from_ao3
+    self.set_meta if self.ao3?
+    self.toggle_wip if self.ao3_chapter? && self.wip_present?
   end
 
   def refetch(passed_url)
@@ -385,8 +378,8 @@ class Page < ActiveRecord::Base
       parent = Book.create!(title: "temp")
       if self.make_me_a_chapter(parent)
         parent.update!(url: passed_url) && parent.fetch_ao3
-        me = Chapter.find(self.id).get_meta_from_ao3(false)
-        me.remove_duplicate_tags
+        me = Chapter.find(self.id)
+        me.set_meta && me.remove_duplicate_tags
       else
         errors.add(:base, "couldn't make me a chapter")
       end
@@ -888,10 +881,10 @@ class Page < ActiveRecord::Base
     if ao3?
       page = self.becomes!(self.ao3_type)
       # Rails.logger.debug "DEBUG: page is #{page.inspect}"
-      page.get_meta_from_ao3(false)
+      page.set_meta
       page.errors.messages.each{|e| self.errors.add(e.first, e.second.join_comma)}
     elsif parts.any?
-      self.get_meta_from_ao3(false) if parts.first.ao3_chapter?
+      self.set_meta if parts.first.ao3_chapter?
     else
       set_type
     end

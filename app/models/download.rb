@@ -45,11 +45,11 @@ module Download
 
   ## --authors
   ## use the short names of the authors
-  ## if it's a part, add the parent's authors and fandoms
+  ## if it's a part, add the parent's authors and fandoms, recursively
   def all_authors;
-    my_authors = self.tags.authors
-    my_parents_authors = self.parent_id.blank? ? [] : self.parent.all_authors
-    (my_authors + my_parents_authors).pulverize
+    mine = self.tags.authors
+    my_parents = self.parent_id.blank? ? [] : self.parent.all_authors
+    (mine + my_parents).pulverize
   end
   def all_fandoms;
     mine = self.tags.fandoms

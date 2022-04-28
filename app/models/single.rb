@@ -2,61 +2,17 @@
 
 class Single < Page
 
-  def get_meta_from_ao3(refetch=true)
-    if refetch
-      Rails.logger.debug "DEBUG: fetching meta from ao3 for #{self.url}"
-      html = scrub_fetch(self.url)
-      return false unless html
-      tags_doc = doc = Nokogiri::HTML(html)
-    else
-      Rails.logger.debug "DEBUG: build meta from raw html for #{self.id}"
-      doc = Nokogiri::HTML(raw_html)
-    end
-
-    chapter_title = doc.css(".chapter .title").children.last.text.strip.gsub(": ","") rescue nil
-    Rails.logger.debug "DEBUG: ao3 single chapter title: #{chapter_title}"
-    work_title = doc.xpath("//div[@id='workskin']").xpath("//h2").first.children.text.strip rescue "can’t find title"
-    Rails.logger.debug "DEBUG: ao3 single work title: #{work_title}"
-    chapter_title = work_title if chapter_title.blank?
-    self.update title: ao3_chapter? ? chapter_title : work_title
-    Rails.logger.debug "DEBUG: ao3 single title: #{self.title}"
-
-    doc_summary = Scrub.sanitize_html(doc.css(".summary blockquote")).children.to_html
-    doc_notes = Scrub.sanitize_html(doc.css(".notes blockquote")).children.to_html
-    doc_relationships = doc.css(".relationship a").map(&:text).to_p  rescue nil
-    doc_tags = doc.css(".freeform a").map(&:text).to_p  rescue nil
-    self.update notes: [doc_relationships, doc_summary, doc_tags, doc_notes].join_hr
-    Rails.logger.debug "DEBUG: notes: #{self.notes}"
-
-    set_tags unless ao3_chapter? # single chapter work's don’t auto-get wip or tt
-
-    ao3_authors = doc.css(".byline a").map(&:text).join_comma
-
-    add_fandom(my_fandoms.join_comma)
-    add_author(ao3_authors)
-
-    Rails.logger.debug "DEBUG: notes now: #{self.notes}"
-    return self
-  end
-
-
   def fetch_ao3
-    if self.id
-      Rails.logger.debug "DEBUG: fetch_ao3 single #{self.id}"
-      fetch_raw && get_meta_from_ao3(false) && cleanup
-    else
-      Rails.logger.debug "DEBUG: fetch_ao3 single #{self.url}"
-      get_meta_from_ao3 && fetch_raw && cleanup
-    end
+    Rails.logger.debug "DEBUG: fetch_ao3 single #{self.id}"
+    fetch_raw && set_meta && cleanup
   end
 
   def make_me_a_chapter(parent)
     html = scrub_fetch(self.url + "/navigate")
     return false unless html
     doc = Nokogiri::HTML(html)
-    my_info = doc.xpath("//ol//a").first
-    chapter_url = "https://archiveofourown.org" + my_info['href']
-    Rails.logger.debug "DEBUG: making #{self.title} into a chapter of #{parent.id} with #{chapter_url}"
+    chapter_url = "https://archiveofourown.org" + doc.xpath("//ol//a").first['href']
+    Rails.logger.debug "DEBUG: making #{self.id} into a chapter of #{parent.id} with #{chapter_url}"
     update!(url: chapter_url, parent_id: parent.id, position: 1, type: Chapter)
   end
 

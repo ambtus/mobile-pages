@@ -16,7 +16,7 @@ Scenario: second links to images should be https
   Given Prologue exists
   When I am on the homepage
     And I follow "ePub" within "#position_1"
-  Then the epub html contents for "PrologueAfter the World Burns" should contain "coverhigh.jpg"
+  Then the epub html contents for "Prologue: After the World Burns" should contain "coverhigh.jpg"
 
 Scenario: regular hrefs should still be http
   Given a page exists

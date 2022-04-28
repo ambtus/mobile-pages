@@ -15,4 +15,4 @@
         = text_field_tag :url, "", :maxlength => 255, :size => 33
     %br
     = submit_tag "Refetch"
-    = submit_tag "Refetch Meta"
+    = submit_tag "Refetch Recursive" if @page.ao3? unless @page.parts.blank?

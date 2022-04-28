@@ -7,8 +7,7 @@ class Author < Tag
     self.destroy
     page_ids.each do |id|
       Rails.logger.debug "DEBUG: moving author to note for page #{id}"
-      page = Page.find(id)
-      page.add_author(name)
+      Page.find(id).add_authors_to_notes([name])
     end
   end
 

@@ -31,34 +31,120 @@ module Meta
     if self.is_a? Book
       Nokogiri::HTML(parts.last.raw_html)
     else
+      fetch_raw if raw_html.blank?
+      return "" if raw_html.blank?
       Nokogiri::HTML(raw_html)
     end
   end
 
+  def work_doc; self.is_a?(Book) ? Nokogiri::HTML(parts.first.raw_html) : doc; end
+
   def wip?
-    return false if self.is_a? Series # ignore wip status of series
+    return false if self.is_a? Series # ignore Complete stat on series since it's rarely used
     chapters = doc.css(".stats .chapters").children[1].text.split('/') rescue Array.new
     Rails.logger.debug "DEBUG: wip status: #{chapters}"
     chapters.second == "?" || chapters.first != chapters.second
   end
 
-  def my_fandoms
+  def ao3_fandoms
     if self.parts.empty?
       Rails.logger.debug "DEBUG: get fandoms from raw_html"
       doc.css(".fandom a").map(&:children).map(&:text)
     else
       Rails.logger.debug "DEBUG: get fandoms from first and last parts"
-      (parts.first.my_fandoms + parts.last.my_fandoms).uniq
+      (parts.first.ao3_fandoms + parts.last.ao3_fandoms).uniq
     end
   end
 
-  def my_tags
+  def ao3_relationships
+    if self.parts.empty?
+      Rails.logger.debug "DEBUG: get relationships from raw_html"
+      doc.css(".relationship a").map(&:children).map(&:text)
+    else
+      Rails.logger.debug "DEBUG: get relationships from first and last parts"
+      (parts.first.ao3_relationships + parts.last.ao3_relationships).uniq
+    end
+  end
+
+  def ao3_tags
     if self.parts.empty?
       Rails.logger.debug "DEBUG: get tags from raw_html"
       doc.css(".freeform a").map(&:children).map(&:text)
     else
       Rails.logger.debug "DEBUG: get tags from first and last parts"
-      (parts.first.my_tags + parts.last.my_tags).uniq
+      (parts.first.ao3_tags + parts.last.ao3_tags).uniq
+    end
+  end
+
+  def ao3_authors
+    if self.is_a? Series
+      doc.css(".series dd").first.children.map(&:text).without(", ")
+    else
+      doc.css(".byline a").map(&:text)
+    end
+  end
+
+  def chapter_title
+    ao3_ch_title = doc.css(".chapter .title").children.last.text.strip.gsub(/^: /,"") rescue nil
+  end
+
+  def work_title
+    work_doc.xpath("//div[@id='main']").xpath("//h2").first.children.text.strip rescue "title not found"
+  end
+
+  def ao3_title
+    if self.is_a? Chapter
+      chapter_title.blank? ? "Chapter #{position}" : chapter_title
+    elsif self.is_a? Single
+      if ao3_chapter?
+        # A Single with a chapter url gets a chapter title, unless it is empty or Chapter X
+        Rails.logger.debug "DEBUG: chapter title: #{chapter_title}, work title: #{work_title}"
+        if chapter_title.blank? || chapter_title.match(/^Chapter \d*$/)
+          work_title
+        else
+          chapter_title
+        end
+      else
+        # A Single with a work url gets the work title
+        work_title
+      end
+    else
+      work_title
+    end
+  end
+
+  def ao3_summary
+    return "" if self.is_a? Chapter
+    if self.is_a? Series
+      return work_doc.css(".series dd")[3].children.map(&:text) if doc.css(".series dt")[3].text == "Description:"
+      return work_doc.css(".series dd")[4].children.map(&:text) if doc.css(".series dt")[4].text == "Description:"
+    else
+      Scrub.sanitize_html(work_doc.css(".summary blockquote")).children.to_html
+    end
+  end
+
+  def ao3_notes
+    if self.is_a? Series
+      return work_doc.css(".series dd")[3].children.map(&:text) if doc.css(".series dt")[3].text == "Notes:"
+      return work_doc.css(".series dd")[4].children.map(&:text) if doc.css(".series dt")[4].text == "Notes:"
+    else
+      Scrub.sanitize_html(work_doc.css(".notes blockquote")).children.to_html
+    end
+  end
+
+  def all_notes
+    if self.is_a? Chapter
+      if position == 1
+        # currently first Chapters don't get anything because the Book got it all
+        # TODO separate work summary & notes from chapter summary & notes
+        ""
+      else
+        ao3_notes
+      end
+    elsif self.is_a? Series
+      [add_authors(ao3_authors), add_fandoms(ao3_fandoms), ao3_summary, ao3_notes].join_hr
+    else
+      [add_authors(ao3_authors), add_fandoms(ao3_fandoms), ao3_relationships.to_p, ao3_summary, ao3_tags.to_p, ao3_notes].join_hr
     end
   end
 
@@ -73,18 +159,25 @@ module Meta
     return self
   end
 
-  def set_tags
-    set_wip if wip?
-    ao3_tt(my_tags)
+  def set_meta
+    return false if doc.blank?
+    self.update! title: ao3_title, notes: all_notes
+    Rails.logger.debug "DEBUG: set title to #{ao3_title} and notes to #{all_notes}"
+    set_wip if wip? unless ao3_chapter?
+    ao3_tt(ao3_tags) unless ao3_chapter?
   end
 
-  def add_author(string)
-    return if string.blank?
-    return if parent
+  def refetch_recursive
+    self.parts.each {|part| part.refetch_recursive}
+    self.fetch_raw && set_meta
+  end
+
+  def add_authors(strings)
+    Rails.logger.debug "DEBUG: add #{strings} to authors"
+    return if strings.blank? || parent
     existing = []
     non_existing = []
-    singles = string.split(", ")
-    singles.each do |single|
+    strings.each do |single|
       found = nil
       possibles = single.gsub("(", ",").gsub(")", "").split(",")
       possibles.each do |try|
@@ -102,24 +195,22 @@ module Meta
       Rails.logger.debug "DEBUG: adding #{existing.map(&:name)} to authors"
       existing.uniq.each {|a| self.tags << a unless self.tags.authors.include?(a)}
     end
-    unless non_existing.empty?
+    if non_existing.empty?
+      ""
+    else
       authors = non_existing.uniq
       by = existing.empty? ? "by" : "et al:"
-      unless authors.empty?
-        Rails.logger.debug "DEBUG: adding #{authors} to notes"
-        self.update notes: "<p>#{by} #{authors.join_comma}</p>#{self.notes}"
-      end
+      Rails.logger.debug "DEBUG: adding #{authors} to notes"
+      "<p>#{by} #{authors.join_comma}</p>"
     end
-    return self
   end
 
-  def add_fandom(string)
-    return if string.blank?
-    return if parent
-    tries = string.split(", ")
+  def add_fandoms(strings)
+    Rails.logger.debug "DEBUG: add #{strings} to fandoms"
+    return if strings.blank? || parent
     existing = []
     non_existing = []
-    tries.each do |t|
+    strings.each do |t|
       try = t.split(" | ").last.split(" - ").first.split(":").first.split('(').first
       simple = try ? try.strip : t.split(" | ").last
       simple.sub!(/^The /, '')
@@ -159,13 +250,24 @@ module Meta
       Rails.logger.debug "DEBUG: adding #{existing.uniq.map(&:name)} to fandoms"
       existing.uniq.each {|f| self.tags << f}
     end
-    unless non_existing.empty?
+    if non_existing.empty?
+      ""
+    else
       fandoms = non_existing.uniq
-      unless fandoms.empty?
-        Rails.logger.debug "DEBUG: adding #{fandoms} to notes"
-        self.update notes: "<p>#{fandoms.join_comma}</p>#{self.notes}"
-      end
+      Rails.logger.debug "DEBUG: adding #{fandoms.join_comma} to notes"
+      "<p>#{fandoms.join_comma}</p>"
     end
+  end
+
+  # only used in fandom.destroy_me and page.create_from_hash (testing)
+  def add_fandoms_to_notes(fandoms)
+    self.update! notes: "#{add_fandoms(fandoms)}#{self.notes}"
+    return self
+  end
+
+  # only used in author.destroy_me
+  def add_authors_to_notes(authors)
+    self.update! notes: "#{add_authors(authors)}#{self.notes}"
     return self
   end
 

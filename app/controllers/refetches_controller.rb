@@ -4,10 +4,10 @@ class RefetchesController < ApplicationController
   end
   def create
     @page = Page.find(params[:page_id])
-    if params[:commit] == "Refetch Meta"
+    if params[:commit] == "Refetch Recursive"
       Rails.logger.debug "DEBUG: refetching meta for #{@page.id}"
-      @page.refetch_meta
-      @notice = "Refetched meta"
+      @page.refetch_recursive
+      @notice = "Refetched all"
     elsif params[:url].present?
       Rails.logger.debug "DEBUG: refetching with #{params[:url]} for #{@page.id}"
       @page.refetch(params[:url])

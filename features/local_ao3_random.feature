@@ -87,11 +87,27 @@ Scenario: do NOT overwrite raw html if chapter of Book has been deleted
   Then I should see "error retrieving content" within "#flash_alert"
     And the contents should include "With two sets of eyes on him now, Draco gulped"
 
+Scenario: do NOT overwrite raw html of parts if Book has been deleted
+  Given Brave New World exists
+  When I am on the page with title "Brave New World"
+     And I follow "Refetch"
+     And I press "Refetch Recursive"
+  Then I should see "error retrieving content" within "#flash_alert"
+    And the notes should include "Harry Potter"
+
 Scenario: do NOT overwrite raw html if book of series has been deleted
   Given Iterum Rex exists
   When I am on the page with title "Brave New World"
      And I follow "Refetch"
      And I press "Refetch"
+  Then I should see "error retrieving content" within "#flash_alert"
+    And the contents should include "With two sets of eyes on him now, Draco gulped"
+
+Scenario: do NOT overwrite raw html if book of series has been deleted
+  Given Iterum Rex exists
+  When I am on the page's page
+     And I follow "Refetch"
+     And I press "Refetch Recursive"
   Then I should see "error retrieving content" within "#flash_alert"
     And the contents should include "With two sets of eyes on him now, Draco gulped"
 
@@ -102,18 +118,3 @@ Scenario: do NOT rebuild meta if series has been deleted before raw html exists
   Then I should see "error retrieving content" within "#flash_alert"
     And the notes should be empty
 
-Scenario: do NOT overwrite meta if Single has been deleted
-  Given The Right Path exists
-  When I am on the page's page
-    And I follow "Refetch"
-    And I press "Refetch Meta"
-  Then I should see "error retrieving content" within "#flash_alert"
-    And the notes should include "Star Wars"
-
-Scenario: do NOT overwrite meta if Book has been deleted
-  Given Brave New World exists
-  When I am on the page with title "Brave New World"
-     And I follow "Refetch"
-     And I press "Refetch Meta"
-  Then I should see "error retrieving content" within "#flash_alert"
-    And the notes should include "Harry Potter"

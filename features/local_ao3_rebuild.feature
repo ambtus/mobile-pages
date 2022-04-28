@@ -6,10 +6,10 @@ Scenario: rebuild meta shouldn't refetch
   Given I Drive Myself Crazy exists
   When I am on the page's page
     And I follow "Edit Raw HTML"
-    And I fill in "pasted" with ""
+    And I fill in "pasted" with "junk"
     And I press "Update Raw HTML"
     And I press "Rebuild Meta"
-  Then I should see "can’t find title (Single)"
+  Then I should see "title not found (Single)"
     And I should NOT see "by Sidra" within ".notes"
 
 Scenario: rebuild from raw should also rebuild meta
