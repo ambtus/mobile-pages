@@ -175,14 +175,14 @@ Given /^Yer a Wizard exists$/ do
 end
 
 Given /^The Picture exists$/ do
-  page = Chapter.create!(title: "temp")
+  page = Single.create!(title: "temp")
   page.update!(url: "https://archiveofourown.org/works/9381749/chapters/21239633")
   page.raw_html = File.open(Rails.root + "features/html/picture.html", 'r:utf-8') { |f| f.read }
   page.set_meta
 end
 
 Given /^Prologue exists$/ do
-  page = Chapter.create!(title: "temp")
+  page = Single.create!(title: "temp")
   page.update!(url: "https://archiveofourown.org/works/7755808/chapters/17685394")
   page.raw_html = File.open(Rails.root + "features/html/prologue.html", 'r:utf-8') { |f| f.read }
   page.set_meta

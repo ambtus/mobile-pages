@@ -7,4 +7,6 @@ class Chapter < Page
     fetch_raw && set_meta && cleanup
   end
 
+  def last?; self == parent.not_hidden_parts.last; end
+
 end

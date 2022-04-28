@@ -37,7 +37,7 @@ module Meta
     end
   end
 
-  def work_doc; self.is_a?(Book) ? Nokogiri::HTML(parts.first.raw_html) : doc; end
+  def book_doc; self.is_a?(Book) ? Nokogiri::HTML(parts.first.raw_html) : doc; end
 
   def wip?
     return false if self.is_a? Series # ignore Complete stat on series since it's rarely used
@@ -85,11 +85,11 @@ module Meta
   end
 
   def chapter_title
-    ao3_ch_title = doc.css(".chapter .title").children.last.text.strip.gsub(/^: /,"") rescue nil
+    doc.css(".chapter .title").children.last.text.strip.gsub(/^: /,"") rescue nil
   end
 
   def work_title
-    work_doc.xpath("//div[@id='main']").xpath("//h2").first.children.text.strip rescue "title not found"
+    book_doc.xpath("//div[@id='main']").xpath("//h2").first.children.text.strip rescue "title not found"
   end
 
   def ao3_title
@@ -113,39 +113,62 @@ module Meta
     end
   end
 
-  def ao3_summary
-    return "" if self.is_a? Chapter
+  def work_summary
     if self.is_a? Series
-      return work_doc.css(".series dd")[3].children.map(&:text) if doc.css(".series dt")[3].text == "Description:"
-      return work_doc.css(".series dd")[4].children.map(&:text) if doc.css(".series dt")[4].text == "Description:"
-    else
-      Scrub.sanitize_html(work_doc.css(".summary blockquote")).children.to_html
+      return doc.css(".series dd")[3].children.map(&:text) if doc.css(".series dt")[3].text == "Description:"
+      return doc.css(".series dd")[4].children.map(&:text) if doc.css(".series dt")[4].text == "Description:"
+    elsif self.is_a?(Book) || self.is_a?(Single)
+      Scrub.sanitize_html(book_doc.css(".summary[role=complementary] blockquote")).children.to_html
     end
   end
 
-  def ao3_notes
+  def work_notes
     if self.is_a? Series
-      return work_doc.css(".series dd")[3].children.map(&:text) if doc.css(".series dt")[3].text == "Notes:"
-      return work_doc.css(".series dd")[4].children.map(&:text) if doc.css(".series dt")[4].text == "Notes:"
-    else
-      Scrub.sanitize_html(work_doc.css(".notes blockquote")).children.to_html
+      return doc.css(".series dd")[3].children.map(&:text) if doc.css(".series dt")[3].text == "Notes:"
+      return doc.css(".series dd")[4].children.map(&:text) if doc.css(".series dt")[4].text == "Notes:"
+    elsif self.is_a?(Book) || self.is_a?(Single)
+      Scrub.sanitize_html(book_doc.css(".notes[role=complementary] blockquote")).children.to_html
+    end
+  end
+
+  def chapter_summary
+    if self.is_a?(Single) || self.is_a?(Chapter)
+      Scrub.sanitize_html(doc.css("div#summary blockquote")).children.to_html
+    end
+  end
+
+  def chapter_notes
+    if self.is_a?(Single) || self.is_a?(Chapter)
+      Scrub.sanitize_html(doc.css("div#notes blockquote")).children.to_html
+    end
+  end
+
+  def chapter_end_notes
+    if self.is_a?(Single) || self.is_a?(Chapter)
+      Scrub.sanitize_html(book_doc.css(".end blockquote")).children.to_html
+    end
+  end
+
+  def work_end_notes
+    if self.is_a?(Book) || self.is_a?(Single)
+      Scrub.sanitize_html(book_doc.css("div#work_endnotes blockquote")).children.to_html
     end
   end
 
   def all_notes
     if self.is_a? Chapter
-      if position == 1
-        # currently first Chapters don't get anything because the Book got it all
-        # TODO separate work summary & notes from chapter summary & notes
-        ""
+      if last?
+        [chapter_summary, chapter_notes, chapter_end_notes, parent.work_end_notes]
       else
-        ao3_notes
+        [chapter_summary, chapter_notes, chapter_end_notes]
       end
     elsif self.is_a? Series
-      [add_authors(ao3_authors), add_fandoms(ao3_fandoms), ao3_summary, ao3_notes].join_hr
-    else
-      [add_authors(ao3_authors), add_fandoms(ao3_fandoms), ao3_relationships.to_p, ao3_summary, ao3_tags.to_p, ao3_notes].join_hr
-    end
+      [add_authors(ao3_authors), add_fandoms(ao3_fandoms), work_summary, work_notes]
+    elsif self.is_a?(Book)
+      [add_authors(ao3_authors), add_fandoms(ao3_fandoms), ao3_relationships.to_p, work_summary, ao3_tags.to_p, work_notes]
+    elsif self.is_a?(Single)
+      [add_authors(ao3_authors), add_fandoms(ao3_fandoms), ao3_relationships.to_p, work_summary, chapter_summary, ao3_tags.to_p, work_notes, chapter_notes, chapter_end_notes, work_end_notes]
+    end.join_hr
   end
 
   def ao3_tt(strings)
