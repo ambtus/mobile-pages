@@ -955,9 +955,16 @@ private
       self.type = "Book"
       self.save!
       array.each do |sub|
-        title = "Part " + count.to_s
         url = base_url.gsub(/\*/, sub.to_s)
-        Chapter.create(:title => title, :url => url, :position => count, :parent_id => self.id)
+        chapter = Page.find_by url: url
+        if chapter
+          chapter.update!(:position => count, :parent_id => self.id)
+          Rails.logger.debug "DEBUG: found #{chapter.inspect}"
+        else
+          title = "Part " + count.to_s
+          Rails.logger.debug "DEBUG: creating new chapter with title: #{title}"
+          Chapter.create!(:title => title, :url => url, :position => count, :parent_id => self.id)
+        end
         count = count.next
       end
       self.set_wordcount
