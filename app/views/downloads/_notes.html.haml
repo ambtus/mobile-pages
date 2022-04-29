@@ -3,3 +3,6 @@
   -if page.notes.present? && page.my_notes.present?
     %hr
   =simple_format page.my_notes
+  -if page.my_notes.present? && (page.end_notes.present? && !page.at_end)
+    %hr
+  =simple_format page.end_notes unless page.at_end

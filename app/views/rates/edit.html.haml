@@ -23,7 +23,7 @@
     %br
     set to read again: #{@page.read_after.to_date}
 
-.my_notes=raw @page.my_formatted_notes unless @page.my_notes.blank?
+.my_notes=raw @page.formatted_my_notes unless @page.my_notes.blank?
 .my_notes=link_to "Edit My Notes", edit_my_note_path(@page)
 
 -if @page.parent

@@ -588,8 +588,9 @@ class Page < ActiveRecord::Base
       unread_string
     end
   end
-  def my_formatted_notes; Scrub.sanitize_html(my_notes); end
+  def formatted_my_notes; Scrub.sanitize_html(my_notes); end
   def formatted_notes; Scrub.sanitize_html(notes); end
+  def formatted_end_notes; Scrub.sanitize_html(end_notes); end
 
   # used in show view
   def medium_notes
@@ -600,7 +601,8 @@ class Page < ActiveRecord::Base
   # used in index view and in epub comments
   # RubyPants turns quotes into smart quotes which don't mess up the epub command
   def short_notes; RubyPants.new(Scrub.sanitize_and_strip(notes).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
-  def my_short_notes; RubyPants.new(Scrub.sanitize_and_strip(my_notes).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
+  def short_my_notes; RubyPants.new(Scrub.sanitize_and_strip(my_notes).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
+  def short_end_notes; RubyPants.new(Scrub.sanitize_and_strip(end_notes).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
 
   def add_tags_from_string(string, type="Tag")
     return if string.blank?

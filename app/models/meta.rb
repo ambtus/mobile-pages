@@ -155,19 +155,31 @@ module Meta
     end
   end
 
-  def all_notes
+  def tail_notes
     if self.is_a? Chapter
       if last?
-        [chapter_summary, chapter_notes, chapter_end_notes, parent.work_end_notes]
+        [chapter_end_notes, parent.work_end_notes].uniq.join_hr
       else
-        [chapter_summary, chapter_notes, chapter_end_notes]
+        chapter_end_notes
+      end
+    elsif self.is_a?(Single)
+      [chapter_end_notes, work_end_notes].uniq.join_hr
+    end
+  end
+
+  def head_notes
+    if self.is_a? Chapter
+      if last?
+        [chapter_summary, chapter_notes]
+      else
+        [chapter_summary, chapter_notes]
       end
     elsif self.is_a? Series
       [add_authors(ao3_authors), add_fandoms(ao3_fandoms), work_summary, work_notes]
     elsif self.is_a?(Book)
       [add_authors(ao3_authors), add_fandoms(ao3_fandoms), ao3_relationships.to_p, work_summary, ao3_tags.to_p, work_notes]
     elsif self.is_a?(Single)
-      [add_authors(ao3_authors), add_fandoms(ao3_fandoms), ao3_relationships.to_p, work_summary, chapter_summary, ao3_tags.to_p, work_notes, chapter_notes, chapter_end_notes, work_end_notes]
+      [add_authors(ao3_authors), add_fandoms(ao3_fandoms), ao3_relationships.to_p, work_summary, chapter_summary, ao3_tags.to_p, work_notes, chapter_notes]
     end.join_hr
   end
 
@@ -184,8 +196,10 @@ module Meta
 
   def set_meta
     return false if doc.blank?
-    self.update! title: ao3_title, notes: all_notes
-    Rails.logger.debug "DEBUG: set title to #{ao3_title} and notes to #{all_notes}"
+    self.update! title: ao3_title, notes: head_notes, end_notes: tail_notes
+    Rails.logger.debug "DEBUG: set title to #{ao3_title}"
+    Rails.logger.debug "DEBUG: set notes to #{head_notes}"
+    Rails.logger.debug "DEBUG: set end notes to #{tail_notes}"
     set_wip if wip? unless ao3_chapter?
     ao3_tt(ao3_tags) unless ao3_chapter?
   end

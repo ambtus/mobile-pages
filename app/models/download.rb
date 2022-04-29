@@ -89,8 +89,9 @@ module Download
     [
       pros_and_cons_string,
       size_string,
-      my_short_notes,
+      short_my_notes,
       short_notes,
+      short_end_notes
     ].join_comma
   end
 

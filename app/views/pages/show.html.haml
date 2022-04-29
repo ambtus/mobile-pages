@@ -52,10 +52,11 @@
   .size
     =@page.size_string
   .last_read=@page.last_read_string
-  .my_notes=raw @page.my_formatted_notes
+  .my_notes=raw @page.formatted_my_notes
   .notes
     =raw @page.medium_notes
     =link_to "full notes", note_path(@page.id) if @page.notes.present? && @page.notes.length > Page::MEDIUM_LENGTH
+  .end_notes=raw @page.formatted_end_notes
 -unless @page.parts.blank?
   -last = @count + Page::LIMIT
   -Rails.logger.debug "DEBUG: page parts #{@count} to #{last} of #{@page.parts.size}"
@@ -70,8 +71,9 @@
         = link_to "HTML", download_url_for_page(part, ".html")
         = link_to "Text", download_url_for_page(part, ".read") if part.parts.blank?
         = link_to "Original", part.url unless part.url.blank?
-        %span.my_notes=part.my_short_notes
+        %span.my_notes=part.short_my_notes
         %span.notes=part.short_notes
+        %span.end_notes=part.short_end_notes
   .form
     = form_for @page.becomes(Page) do
       = hidden_field_tag :count, @count

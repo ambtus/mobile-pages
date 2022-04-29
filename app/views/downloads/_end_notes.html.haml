@@ -1,4 +1,5 @@
-.notes{:style=> "page-break-before:always"}
+.end_notes{:style=> "page-break-before:always"}
+  =simple_format page.end_notes if page.at_end
   -if page.ao3?
     .offsite
       -if page.parts.any?

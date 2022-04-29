@@ -1,8 +1,11 @@
 .tags=@page.download_tag_string
-.my_notes=raw @page.my_formatted_notes
+.my_notes=raw @page.formatted_my_notes
 .notes=raw @page.formatted_notes
 
 #page=raw @page.read_html
+
+.end_notes=raw @page.formatted_end_notes
+
 .form
   = form_for @page.becomes(Page) do
     = submit_tag "Audiobook created"
