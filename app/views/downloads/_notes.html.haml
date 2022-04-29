@@ -1,8 +1,9 @@
 .notes{:style=> "page-break-after:always"}
+  %b Notes:
   =simple_format page.notes
-  -if page.notes.present? && page.my_notes.present?
+  -if page.hr1?
     %hr
   =simple_format page.my_notes
-  -if page.my_notes.present? && (page.end_notes.present? && !page.at_end)
+  -if page.hr2?
     %hr
   =simple_format page.end_notes unless page.at_end

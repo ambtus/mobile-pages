@@ -27,6 +27,20 @@ module Meta
     return self
   end
 
+  def toggle_end; update! at_end: !at_end; return self; end
+  def end_notes_in_notes?; end_notes.present? && !at_end; end
+  def show_notes; notes.present? || my_notes.present? || end_notes_in_notes?; end
+  def show_end_notes; end_notes.present? && at_end; end
+
+  def hr1?; notes.present? && my_notes.present?; end
+  def hr2?
+    if hr1?
+      end_notes_in_notes?
+    else
+      (notes.present? || my_notes.present?) && end_notes_in_notes?
+    end
+  end
+
   def doc
     if self.is_a? Book
       Nokogiri::HTML(parts.last.raw_html)

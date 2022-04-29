@@ -1,27 +1,38 @@
 - content_for :title do
-  = @page.title
+  =@page.title
+
 %h1{:style=> "page-break-before:always", :class => "chapter"}=link_to @page.title, @url + page_path(@page)
 %p=@url + page_path(@page)
--unless @page.notes.blank? && @page.my_notes.blank?
-  =render :partial => "downloads/notes", :locals => {:page => @page}
+=render :partial => "downloads/notes", :locals => {:page => @page} if @page.show_notes
+
 - if @page.parts.empty?
   .content=raw @page.epub_html
 - else
-  - @page.not_hidden_parts.each do |first_level|
-    %h2{:style=> "page-break-before:always", :class => "chapter"}=link_to first_level.download_part_title, @url + page_path(first_level)
-    %p=@url + page_path(first_level)
-    =render :partial => "downloads/notes", :locals => {:page => first_level}
-    - if first_level.parts.empty?
-      .content=raw first_level.epub_html
+  - @page.not_hidden_parts.each do |child|
+
+    %h2{:style=> "page-break-before:always", :class => "chapter"}=link_to child.download_part_title, @url + page_path(child)
+    %p=@url + page_path(child)
+    =render :partial => "downloads/notes", :locals => {:page => child} if child.show_notes
+
+    - if child.parts.empty?
+      .content=raw child.epub_html
     - else
-      - first_level.not_hidden_parts.each do |second_level|
-        %h3{:style=> "page-break-before:always", :class => "chapter"}=second_level.download_part_title
-        =render :partial => "downloads/notes", :locals => {:page => second_level}
-        - if second_level.parts.empty?
-          .content=raw second_level.epub_html
+      - child.not_hidden_parts.each do |grandchild|
+        %h3{:style=> "page-break-before:always", :class => "chapter"}=grandchild.download_part_title
+        =render :partial => "downloads/notes", :locals => {:page => grandchild} if grandchild.show_notes
+
+        - if grandchild.parts.empty?
+          .content=raw grandchild.epub_html
         - else
-          - second_level.not_hidden_parts.each do |third_level|
-            %h4{:style=> "page-break-before:always", :class => "chapter"}=third_level.download_part_title
-            =render :partial => "downloads/notes", :locals => {:page => third_level}
-            .content=raw third_level.epub_html
-=render :partial => "downloads/end_notes", :locals => {:page => @page}
+          - grandchild.not_hidden_parts.each do |ggchild|
+            %h4{:style=> "page-break-before:always", :class => "chapter"}=ggchild.download_part_title
+            =render :partial => "downloads/notes", :locals => {:page => ggchild} if ggchild.show_notes
+            .content=raw ggchild.epub_html
+            =render :partial => "downloads/end_notes", :locals => {page: ggchild} if ggchild.show_end_notes
+
+        =render :partial => "downloads/end_notes", :locals => {page: grandchild} if grandchild.show_end_notes
+
+
+    =render :partial => "downloads/end_notes", :locals => {page: child} if child.show_end_notes
+
+=render :partial => "downloads/end_notes", :locals => {:page => @page, links: true}

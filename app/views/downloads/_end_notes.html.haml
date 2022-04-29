@@ -1,5 +1,6 @@
-.end_notes{:style=> "page-break-before:always"}
-  =simple_format page.end_notes if page.at_end
+%h3{:style=> "page-break-before:always", :class => "chapter"} End Notes
+.end_notes=simple_format page.end_notes if page.at_end
+-if defined? links
   -if page.ao3?
     .offsite
       -if page.parts.any?

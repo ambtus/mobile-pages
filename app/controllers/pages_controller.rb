@@ -180,6 +180,9 @@ class PagesController < ApplicationController
       when "Toggle #{Page::TT}"
         @page.toggle_tt.remove_outdated_downloads
         flash[:notice] = "Toggled #{Page::TT}"
+      when "Toggle End Notes"
+        @page.toggle_end.remove_outdated_downloads
+        flash[:notice] = "Toggled End Notes"
       when "Make Single"
         @page.make_single
         flash[:notice] = "Made Single"

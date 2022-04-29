@@ -178,7 +178,7 @@ class Page < ActiveRecord::Base
     tag_types = Hash.new("")
     Tag.types.each {|tt| tag_types[tt] = hash.delete(tt.downcase.pluralize.to_sym) }
     ao3_fandoms = hash.delete(:ao3_fandoms)
-    page = Page.create(hash)
+    page = Page.create!(hash)
     tag_types.compact.each {|key, value| page.send("add_tags_from_string", value, key)}
     if hash[:last_read] # update read after for parts and self
       page.unread_parts.each {|p| p.update!(last_read: hash[:last_read]) && p.update_read_after}

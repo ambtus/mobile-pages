@@ -23,8 +23,16 @@ Then('I should see a horizontal rule') do
   assert page.html.include?('<hr>')
 end
 
+Then('I should see two horizontal rules') do
+  assert Regexp.new(/<hr>.*<hr>/).match(page.html.squish)
+end
+
 Then('I should NOT see a horizontal rule') do
   assert !page.html.include?('<hr>')
+end
+
+Then('I should NOT see two horizontal rules') do
+  assert !Regexp.new(/<hr>.*<hr>/).match(page.html.squish)
 end
 
 ## I should have ##
