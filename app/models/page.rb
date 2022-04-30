@@ -48,9 +48,8 @@ class Page < ActiveRecord::Base
   def set_type
     #Rails.logger.debug "DEBUG: setting type for #{self.inspect}"
     if ao3?
-      page = self.becomes(self.ao3_type)
-      Rails.logger.debug "DEBUG: ao3 type set to #{page.type}"
-      self.update_columns type: page.type
+      Rails.logger.debug "DEBUG: ao3 type set to #{self.ao3_type}"
+      self.update_columns type: self.ao3_type
     else
       should_be = if parts.empty?
         parent_id.nil? ? "Single" : "Chapter"
@@ -369,8 +368,9 @@ class Page < ActiveRecord::Base
     self.tags << parent.tags - self.tags
     self.update(parent_id: nil, position: nil)
     self.set_type
-    self.set_meta if self.ao3?
-    self.toggle_wip if self.ao3_chapter? && self.wip_present?
+    page = Page.find self.id
+    page.set_meta if page.ao3?
+    page.toggle_wip if page.ao3_chapter? && page.wip_present?
   end
 
   def refetch(passed_url)

@@ -126,6 +126,16 @@ Given /^Counting Drabbles partially exists$/ do
   series.set_meta.set_wordcount(false).update_read_after
 end
 
+Given /^broken Drabbles exists$/ do
+  series = Series.create!(title: "Counting Drabbles")
+  series.update!(url: "https://archiveofourown.org/series/46")
+  series.raw_html = File.open(Rails.root + "features/html/partial.html", 'r:utf-8') { |f| f.read }
+
+  work1 = Chapter.create!(title: "temp", parent_id: series.id, position: 1)
+  work1.update!(url: "https://archiveofourown.org/works/688")
+  work1.raw_html = File.open(Rails.root + "features/html/skipping.html", 'r:utf-8') { |f| f.read }
+end
+
 Given /^Alan Rickman exists$/ do
   page = Single.create!(title: "temp")
   page.update!(url: "https://archiveofourown.org/works/5720104")

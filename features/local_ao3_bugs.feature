@@ -34,3 +34,10 @@ Scenario: no author or fandom or relationships shouldn't get empty paragraph
     But I should see "Harry has been thinking"
     And the notes should NOT include "<p></p><hr width=\"80%\"/> <p>Harry has been thinking"
     But the notes should include "<p>Harry has been thinking and Voldemort gets to be the first to hear the results.</p> <hr width=\"80%\"/>"
+
+Scenario: bug in make_single when Single had been stored as Chapter
+  Given broken Drabbles exists
+  When I am on the page's page
+    And I press "Uncollect"
+    And I follow "Skipping Stones"
+  Then I should see "Skipping Stones (Single)"
