@@ -243,3 +243,21 @@ Given('Iterum Rex exists') do
   book = Book.find_by_title("Brave New World")
   book.update!(parent_id: series.id, position: 2)
 end
+
+Given('Cold Water exists') do
+  book = Book.create!(title: "temp")
+  book.update!(url: "https://archiveofourown.org/works/37716514")
+  chapter1 = Chapter.create!(title: "temp", parent_id: book.id, position: 1)
+  chapter1.raw_html = File.open(Rails.root + "features/html/one.html", 'r:utf-8') { |f| f.read }
+  chapter1.update!(url: "https://archiveofourown.org/works/37716514/chapters/94161631")
+  chapter1.set_meta
+  chapter2 = Chapter.create!(title: "temp", parent_id: book.id, position: 2)
+  chapter2.raw_html = File.open(Rails.root + "features/html/three.html", 'r:utf-8') { |f| f.read }
+  chapter2.update!(url: "https://archiveofourown.org/works/37716514/chapters/94181914")
+  chapter2.set_meta
+  chapter3 = Chapter.create!(title: "temp", parent_id: book.id, position: 3)
+  chapter3.raw_html = File.open(Rails.root + "features/html/five.html", 'r:utf-8') { |f| f.read }
+  chapter3.update!(url: "https://archiveofourown.org/works/37716514/chapters/94266751")
+  chapter3.set_meta
+  book.set_meta
+end

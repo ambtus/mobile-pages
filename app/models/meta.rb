@@ -159,13 +159,13 @@ module Meta
 
   def chapter_end_notes
     if self.is_a?(Single) || self.is_a?(Chapter)
-      Scrub.sanitize_html(book_doc.css(".end blockquote")).children.to_html
+      Scrub.sanitize_html(doc.css("div[id^=chapter_] blockquote")).children.to_html
     end
   end
 
   def work_end_notes
     if self.is_a?(Book) || self.is_a?(Single)
-      Scrub.sanitize_html(book_doc.css("div#work_endnotes blockquote")).children.to_html
+      Scrub.sanitize_html(doc.css("div#work_endnotes blockquote")).children.to_html
     end
   end
 

@@ -41,3 +41,18 @@ Scenario: bug in make_single when Single had been stored as Chapter
     And I press "Uncollect"
     And I follow "Skipping Stones"
   Then I should see "Skipping Stones (Single)"
+
+Scenario: check before rebuilding after no longer last chapter
+  Given Cold Water exists
+  When I am on the page's page
+  Then I should see "my tumblr: " within "#position_3"
+    And I should see "cw: gutting of a squirrel" within "#position_2"
+    And I should see "my tumblr: " within "#position_2"
+
+Scenario: rebuilding after no longer last chapter removed endnotes from middle
+  Given Cold Water exists
+  When I am on the page's page
+    And I press "Rebuild Meta"
+  Then I should see "my tumblr: " within "#position_3"
+    And I should see "cw: gutting of a squirrel" within "#position_2"
+    But I should NOT see "my tumblr: " within "#position_2"
