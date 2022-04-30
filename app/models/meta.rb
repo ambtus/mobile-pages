@@ -171,29 +171,23 @@ module Meta
 
   def tail_notes
     if self.is_a? Chapter
-      if last?
-        [chapter_end_notes, parent.work_end_notes].uniq.join_hr
-      else
-        chapter_end_notes
-      end
-    elsif self.is_a?(Single)
-      [chapter_end_notes, work_end_notes].uniq.join_hr
+      chapter_end_notes
+    elsif self.is_a? Single
+      [chapter_end_notes, work_end_notes].join_hr
+    elsif self.is_a? Book
+      work_end_notes
     end
   end
 
   def head_notes
     if self.is_a? Chapter
-      if last?
-        [chapter_summary, chapter_notes]
-      else
-        [chapter_summary, chapter_notes]
-      end
-    elsif self.is_a? Series
-      [add_authors(ao3_authors), add_fandoms(ao3_fandoms), work_summary, work_notes]
-    elsif self.is_a?(Book)
-      [add_authors(ao3_authors), add_fandoms(ao3_fandoms), ao3_relationships.to_p, work_summary, ao3_tags.to_p, work_notes]
+      [chapter_summary, chapter_notes]
     elsif self.is_a?(Single)
       [add_authors(ao3_authors), add_fandoms(ao3_fandoms), ao3_relationships.to_p, work_summary, chapter_summary, ao3_tags.to_p, work_notes, chapter_notes]
+    elsif self.is_a?(Book)
+      [add_authors(ao3_authors), add_fandoms(ao3_fandoms), ao3_relationships.to_p, work_summary, ao3_tags.to_p, work_notes]
+    elsif self.is_a? Series
+      [add_authors(ao3_authors), add_fandoms(ao3_fandoms), work_summary, work_notes]
     end.join_hr
   end
 
