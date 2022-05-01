@@ -196,6 +196,18 @@ Then('the read after date should be {string}') do |string|
   assert Page.first.read_after == string
 end
 
+Then('the read after date for {string} should be {string}') do |title, date|
+  page = Page.find_by_title(title)
+  Rails.logger.debug "DEBUG: comparing #{page.read_after.to_date} with #{date}"
+  assert page.read_after == date
+end
+
+Then('the read after date for {string} should be today') do |title|
+  page = Page.find_by_title(title)
+  Rails.logger.debug "DEBUG: comparing #{page.read_after.to_date} with #{Date.current}"
+  assert page.read_after.to_date == Date.current
+end
+
 Then('my page named {string} should have url: {string}') do |title, url|
   page = Page.find_by_title(title)
   Rails.logger.debug "DEBUG: comparing #{page.url} with #{url}"

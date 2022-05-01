@@ -52,15 +52,3 @@ Given('a series exists') do
     Chapter.create!(title: "Epilogue", parent_id: book2.id,  position: 2, url: "http://test.sidrasue.com/parts/4.html")
        Single.create!(title: "Extras", parent_id: series.id, position: 3, url: "http://test.sidrasue.com/parts/5.html")
 end
-
-
-Given('Uneven exists') do
-  parent = Book.create!(title: "Uneven")
-  4.times do |i|
-    int = i + 1
-    part = Chapter.create(title: "part #{int}", parent_id: parent.id, position: int, last_read: "2010-01-0#{int}", stars: int).update_read_after
-  end
-  parent.update_last_read.update_stars.update_read_after
-  last = Chapter.create(title: "part 5")
-  last.add_parent("Uneven")
-end

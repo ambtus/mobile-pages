@@ -116,7 +116,7 @@ class Page < ActiveRecord::Base
   end
 
   def set_wordcount(recount=true)
-    Rails.logger.debug "DEBUG: #{self.title} old wordcount: #{self.wordcount} and size: #{self.size}"
+    #Rails.logger.debug "DEBUG: #{self.title} old wordcount: #{self.wordcount} and size: #{self.size}"
     new_wordcout = if self.parts.size > 0
       self.parts.each {|part| part.set_wordcount } if recount
       self.parts.sum(:wordcount)
@@ -164,12 +164,14 @@ class Page < ActiveRecord::Base
 
   after_create :initial_fetch
 
-  # used in tests
-  def all_html; parts.blank? ? edited_html : parts.map(&:all_html).join; end
+  # make page.inspect easier to read in DEBUG: statements
   def inspect
      regexp = /([\d-]+ \d\d:\d\d)([\d:.+ ]+)/
      super.match(regexp) ? super.gsub(regexp, '\1') : super
   end
+
+  # used in tests
+  def all_html; parts.blank? ? edited_html : parts.map(&:all_html).join; end
   def self.create_from_hash(hash)
     Rails.logger.debug "DEBUG: Page.create_from_hash(#{hash})"
     tag_types = Hash.new("")
@@ -177,11 +179,13 @@ class Page < ActiveRecord::Base
     ao3_fandoms = hash.delete(:ao3_fandoms)
     page = Page.create!(hash)
     tag_types.compact.each {|key, value| page.send("add_tags_from_string", value, key)}
-    if hash[:last_read] # update read after for parts and self
-      page.unread_parts.each {|p| p.update!(last_read: hash[:last_read]) && p.update_read_after}
-      page.update_last_read.update_read_after
+    if page.parts.blank?
+      page.update last_read: hash[:last_read], stars: hash[:stars] || 10
+      page.update_read_after if hash[:read_after].blank?
+    else
+      page.parts.update_all last_read: hash[:last_read], stars: hash[:stars] || 10, read_after: hash[:read_after]
+      page.update_from_parts
     end
-    page.rate(hash[:stars]).update_read_after if hash[:stars]
     page.add_fandoms_to_notes(ao3_fandoms.split(",")) if ao3_fandoms
     Rails.logger.debug "DEBUG: created test page #{page.inspect}"
     page
@@ -242,8 +246,8 @@ class Page < ActiveRecord::Base
       page.update!(position: position) if page.position != position
       page.update!(parent_id: self.id) if page.parent_id != self.id
     end
-    self.cleanup(false)
-    self.parent.cleanup(false) if parent
+    self.update_from_parts
+    self.parent.update_from_parts if parent
   end
 
   def parts_from_urls(url_title_list, refetch=false)
@@ -308,7 +312,7 @@ class Page < ActiveRecord::Base
       Page.find(old_part_id).make_single
     end
 
-    self.update_last_read.update_stars.remove_outdated_downloads.set_wordcount(false)
+    self.update_from_parts
     self.set_type
   end
 
@@ -403,7 +407,10 @@ class Page < ActiveRecord::Base
         return "ambiguous"
       elsif pages.empty? || pages.first == self
         Rails.logger.debug "DEBUG: creating a new parent"
-        parent = Page.create!(:title => title, :last_read => self.last_read, :read_after => self.read_after)
+        parent = self.dup
+        parent.url=nil
+        parent.title=title
+        parent.save!
         new = true
       else
         Rails.logger.debug "DEBUG: matching parent found #{pages.first.title}"
@@ -424,24 +431,10 @@ class Page < ActiveRecord::Base
       parent.update_stars
     end
     self.remove_duplicate_tags
-    Rails.logger.debug "DEBUG: updating parent last read"
-    parent.update_last_read
+    parent.update_from_parts
     self.update!(type: "Chapter") if self.type == "Single"
-    parent.set_wordcount(false)
     parent.set_type
     return parent
-  end
-
-  def unread?; last_read.blank?; end
-  def read?
-     answer = last_read.present? && last_read != UNREAD_PARTS_DATE
-     #Rails.logger.debug "DEBUG: read? #{last_read} #{answer}"
-     return answer
-  end
-  def unread_parts?
-     answer = last_read == UNREAD_PARTS_DATE
-     #Rails.logger.debug "DEBUG: unread_parts? #{last_read} #{answer}"
-     return answer
   end
 
   def parts_string

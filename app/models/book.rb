@@ -4,7 +4,7 @@ class Book < Page
 
   def fetch_ao3
     Rails.logger.debug "DEBUG: fetch_ao3 book #{self.id}"
-    get_chapters_from_ao3 && set_meta && cleanup(false)
+    get_chapters_from_ao3 && set_meta && update_from_parts
   end
 
   def make_single?(size)

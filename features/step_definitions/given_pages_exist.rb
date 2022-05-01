@@ -13,13 +13,13 @@ Given('{int} pages with cons: {string} exist') do |count, string|
 end
 
 Given("pages with all possible stars exist") do
-  Page.create(title: "page4").rate(4).read_today.update_read_after
+  Page.create(title: "page4").rate_today(4)
   Page.create(title: "page0")
-  Page.create(title: "page1").rate(1).read_today.update_read_after
-  Page.create(title: "page3").rate(3).read_today.update_read_after
-  Page.create(title: "page5").rate(5).read_today.update_read_after
-  Page.create(title: "page9").make_unfinished
-  Page.create(title: "page2").rate(2).read_today.update_read_after
+  Page.create(title: "page1").rate_today(1)
+  Page.create(title: "page3").rate_today(3)
+  Page.create(title: "page5").rate_today(5)
+  Page.create(title: "page9").rate_unfinished_today
+  Page.create(title: "page2").rate_today(2)
 end
 
 Given("pages with all possible sizes exist") do
@@ -34,39 +34,39 @@ end
 
 Given("pages with all possible unreads exist") do
   Single.create(title: "not read single")
-  Single.create(title: "yes read single",).rate(5).read_today.update_read_after
+  Single.create(title: "yes read single",).rate_today(5)
 
   book1 = Book.create(title: "not read book")
   Chapter.create(title: "not read chapter", parent_id: book1.id)
-  book1.cleanup.update_read_after
+  book1.update_from_parts
 
   book2 = Book.create(title: "yes read book")
-  Chapter.create(title: "yes read chapter", parent_id: book2.id).rate(5).read_today.update_read_after
-  book2.cleanup.update_read_after
+  Chapter.create(title: "yes read chapter", parent_id: book2.id).rate_today(5)
+  book2.update_from_parts
 
   book3 = Book.create(title: "partially read book")
   Chapter.create(title: "not read chapter", parent_id: book3.id)
-  Chapter.create(title: "yes read chapter", parent_id: book3.id).rate(5).read_today.update_read_after
-  book3.cleanup.update_read_after
+  Chapter.create(title: "yes read chapter", parent_id: book3.id).rate_today(5)
+  book3.update_from_parts
 
   series1 = Series.create(title: "not read series")
   book4 = Book.create(title: "another not read book", parent_id: series1.id)
   Chapter.create(title: "another not read chapter", parent_id: book4.id)
-  book4.cleanup.update_read_after
-  series1.cleanup.update_read_after
+  book4.update_from_parts
+  series1.update_from_parts
 
   series2 = Series.create(title: "partially read series")
   book5 = Book.create(title: "another partially read book", parent_id: series2.id)
   Chapter.create(title: "yet another not read chapter", parent_id: book5.id)
-  Chapter.create(title: "another read chapter", parent_id: book5.id).rate(5).read_today.update_read_after
-  book5.cleanup.update_read_after
-  series2.cleanup.update_read_after
+  Chapter.create(title: "another read chapter", parent_id: book5.id).rate_today(5)
+  book5.update_from_parts
+  series2.update_from_parts
 
   series3 = Series.create(title: "yes read series")
   book6 = Book.create(title: "another read book", parent_id: series3.id)
-  Chapter.create(title: "another read chapter", parent_id: book6.id).rate(5).read_today.update_read_after
-  book6.cleanup.update_read_after
-  series3.cleanup.update_read_after
+  Chapter.create(title: "another read chapter", parent_id: book6.id).rate_today(5)
+  book6.update_from_parts
+  series3.update_from_parts
 end
 
 Given("pages with pros and cons exist") do
@@ -84,6 +84,16 @@ Given("pages with pros and cons exist") do
   Page.find_or_create_by(title: "page4l").tags << loving
   Page.find_or_create_by(title: "page4i").tags << interesting
   Page.find_or_create_by(title: "page5").tags << [interesting, loving]
+end
+
+Given('Uneven exists') do
+  parent = Book.create!(title: "Uneven")
+  4.times do |i|
+    int = i + 1
+    part = Chapter.create(title: "part #{int}", parent_id: parent.id, position: int, last_read: "2010-01-0#{int}", stars: int).update_read_after
+  end
+  Chapter.create(title: "part 5", parent_id: parent.id, position: 5)
+  parent.update_from_parts
 end
 
 Given /^underline spans exists$/ do

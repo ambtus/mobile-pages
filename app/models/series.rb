@@ -4,7 +4,7 @@ class Series < Page
 
   def fetch_ao3
     Rails.logger.debug "DEBUG: fetch_ao3 series #{self.id}"
-    fetch_raw && get_works_from_ao3 && set_meta && cleanup
+    fetch_raw && get_works_from_ao3 && set_meta && update_from_parts
   end
 
   def get_works_from_ao3
@@ -52,7 +52,7 @@ class Series < Page
         sleep 5 unless count == work_list.size
       end
     end
-    cleanup(false)
+    update_from_parts
   end
 
 end

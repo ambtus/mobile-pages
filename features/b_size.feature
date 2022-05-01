@@ -40,14 +40,14 @@ Scenario: find and change size from short to long
   Then I should see "40,020 words" within ".size"
 
 Scenario: sizes of parts
-  Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1-8"
+  Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1-2"
   When I am on the page's page
-  Then I should see "80,008 words" within ".size"
+  Then I should see "20,002 words" within ".size"
 
 Scenario: find by size of parent and change size of part
-  Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1-8"
+  Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1-2"
   When I am on the filter page
-  When I choose "size_long"
+  When I choose "size_medium"
     And I press "Find"
     And I follow "Page 1"
     And I follow "Part 1"
@@ -57,17 +57,17 @@ Scenario: find by size of parent and change size of part
   Then I should see "8,318 words" within ".size"
 
 Scenario: new size of parent
-  Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1-8"
+  Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1-2"
   When I am on the page's page
     And I follow "Part 1"
     And I follow "Refetch"
     And I fill in "url" with "http://test.sidrasue.com/8000.html"
     And I press "Refetch"
     And I follow "Page 1" within ".parent"
-  Then I should see "78,325 words" within ".size"
+  Then I should see "18,319 words" within ".size"
 
 Scenario: new size of part
-  Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1-8"
+  Given a page exists with base_url: "http://test.sidrasue.com/epic*.html" AND url_substitutions: "1-2"
   When I am on the page's page
     And I follow "Part 1"
     And I follow "Refetch"
@@ -78,3 +78,4 @@ Scenario: new size of part
   And I choose "type_Chapter"
     And I press "Find"
   Then I should see "Part 1 of Page 1" within "#position_1"
+    And I should NOT see "Part 2 of Page 1"

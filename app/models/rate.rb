@@ -14,78 +14,39 @@ module Rate
     reads
   end
 
-  def make_first
-    earliest = Page.where(:parent_id => nil).order(:read_after).first.read_after || Date.today
-    self.update_attribute(:read_after, earliest - 1.day)
-    if self.parent
-      parent = self.parent
-      parent.update_attribute(:read_after, earliest - 1.day) if parent
-      grandparent = parent.parent if parent
-      grandparent.update_attribute(:read_after, earliest - 1.day) if grandparent
-    end
+  def unread?; last_read.blank?; end
+  def read?
+     answer = last_read.present? && last_read != UNREAD_PARTS_DATE
+     #Rails.logger.debug "DEBUG: read? #{last_read} #{answer}"
+     return answer
+  end
+  def unread_parts?
+     answer = last_read == UNREAD_PARTS_DATE
+     #Rails.logger.debug "DEBUG: unread_parts? #{last_read} #{answer}"
+     return answer
+  end
+
+  def earliest; Page.where(:parent_id => nil).order(:read_after).first.read_after - 1.day || Date.yesterday; end
+
+  def make_first # Read Now
+    self.update_attribute(:read_after, earliest)
+    parent.make_first if self.parent
     return self
   end
 
-  def make_unfinished
-    Rails.logger.debug "DEBUG: making #{title} unfinished"
-    self.update!(stars: 9, last_read: nil, read_after: Date.today + 5.years)
-    return self
+  def reset_read_after # Read Later (default)
+    self.update_read_after
+    self.parent.update_read_after if self.parent
+    self.parent.parent.update_read_after if self.parent && self.parent.parent
   end
 
-  def read_today
-    self.update!(last_read: Time.now)
-    parent.update_last_read if parent
-    return self
-  end
-
-  def rate(stars)
-    self.update!(stars: stars)
-    parts.each{|p| p.update!(stars: stars) && p.update_read_after} if parts.any?
-    return self
-  end
-
-  def rate_unread(stars)
-    Rails.logger.debug "DEBUG: stars for unread: #{stars}"
-    self.unread_parts.each do |part|
-      Rails.logger.debug "DEBUG: updating #{part.title} with stars: #{stars}"
-      part.update!(last_read: Time.now, stars: stars)
-    end
-    return self
-  end
-
-  def update_last_read
-    return self unless parts.any?
-    last_reads = self.parts.map(&:last_read)
-    if last_reads.compact.empty?
-      self.update!(last_read: nil)
-    elsif last_reads.include?(nil)
-      self.update!(last_read: UNREAD_PARTS_DATE)
+  def calculated_read_after
+    if stars == 9
+      Date.today + 5.years
+    elsif unread? || unread_parts? || stars == 10
+      created_at
     else
-      self.update!(last_read: last_reads.sort.first)
-    end
-    #Rails.logger.debug "DEBUG: new last read: #{self.last_read}"
-    return self
-  end
-
-  def update_stars
-    return self unless parts.any?
-    mode = parts.map(&:stars).compact.mode
-    highest = parts.map(&:stars).sort.last
-    Rails.logger.debug "DEBUG: mode: #{mode}, highest: #{highest}"
-    if mode
-      self.update!(stars: mode)
-    else
-      self.update!(stars: highest)
-    end
-    #Rails.logger.debug "DEBUG: new stars: #{self.stars}"
-    return self
-  end
-
-  def update_read_after
-    return self if stars == 9
-    if last_read
-      Rails.logger.debug "DEBUG: last read: #{self.last_read.to_date}"
-      new_read_after = case stars
+      case stars
         when 5
           last_read + 6.months
         when 4
@@ -96,20 +57,94 @@ module Rate
           last_read + 3.years
         when 1
           last_read + 4.years
+        else
+          raise "unexpected last_read/stars #{last_read}/#{stars}"
       end
-    else
-      Rails.logger.debug "DEBUG: created at: #{self.created_at.to_date}"
-      new_read_after = created_at
     end
-    self.update!(read_after: new_read_after)
+  end
+
+  def update_read_after
+    self.update!(read_after: calculated_read_after)
     Rails.logger.debug "DEBUG: new read after: #{self.read_after}"
     return self
   end
 
-  def cleanup(recount = true)
-    update_last_read.update_stars.remove_outdated_downloads.set_wordcount(recount)
+  def rate_today(stars)
+    self.read_today.rate(stars)
+    self.parts.update_all last_read: Time.now
+    if self.parent
+      self.parent.update_from_parts
+      self.parent.parent.update_from_parts if self.parent.parent
+    end
   end
 
+  def rate_unfinished_today
+    Rails.logger.debug "DEBUG: making #{title} unfinished"
+    self.update!(stars: 9, last_read: nil)
+    self.update! read_after: calculated_read_after
+    self.unread_parts.update_all stars: 9, last_read: nil, read_after: self.calculated_read_after
+    self.update_from_parts
+    self.parent.update_from_parts if self.parent
+    return self
+  end
+
+  def rate_all_unrated_today(stars)
+    Rails.logger.debug "DEBUG: stars for unread: #{stars}"
+    self.unread_parts.update_all last_read: Time.now, stars: stars
+    self.update_from_parts
+    return self
+  end
+
+  def read_today
+    self.update!(last_read: Time.now)
+    parent.update_last_read if parent
+    return self
+  end
+
+  def rate(stars)
+    self.update! stars: stars
+    self.update! read_after: calculated_read_after
+    parts.update_all stars: stars, read_after: calculated_read_after
+    return self
+  end
+
+  def update_from_parts
+    return self unless parts.any?
+    update_last_read
+    update_stars
+    update_read_after
+    remove_outdated_downloads
+    set_wordcount(false)
+  end
+
+  def update_last_read
+    return self unless parts.any?
+    last_reads = parts.map(&:last_read)
+    if last_reads.compact.empty?
+      self.update!(last_read: nil)
+    elsif last_reads.include?(nil)
+      self.update!(last_read: UNREAD_PARTS_DATE)
+    else
+      self.update!(last_read: last_reads.sort.first)
+    end
+    Rails.logger.debug "DEBUG: new last read: #{self.last_read}"
+    return self
+  end
+
+  def update_stars
+    return self unless parts.any?
+    stars = parts.map(&:stars).compact.without(10)
+    mode = stars.mode
+    highest = stars.sort.last || 10
+    Rails.logger.debug "DEBUG: mode: #{mode}, highest: #{highest}"
+    if mode
+      self.update!(stars: mode)
+    else
+      self.update!(stars: highest)
+    end
+    Rails.logger.debug "DEBUG: new stars: #{self.stars}"
+    return self
+  end
 
 
 end

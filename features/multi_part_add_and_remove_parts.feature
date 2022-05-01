@@ -154,34 +154,30 @@ Scenario: remove a part from an existing page with parts (content)
     But I should see "Part 1"
     And I should see "Part 2"
 
-Scenario: add a parent does not update the parent's read_after
+Scenario: add a parent doesn't match the parent's read_after
   Given a page exists with title: "Page 1" AND url: "http://test.sidrasue.com/parts/1.html" AND read_after: "2050-01-01"
     And a page exists with title: "Page 2" AND url: "http://test.sidrasue.com/parts/2.html" AND read_after: "2050-01-02"
   When I am on the page with title "Page 2"
     And I follow "Manage Parts"
     And I fill in "add_parent" with "New Parent"
     And I press "Update"
-    And I am on the homepage
-  Then I should see "Page 1" within "#position_1"
-    And I should see "New Parent" within "#position_2"
+  Then the read after date for "Page 1" should be "2050-01-01"
+    And the read after date for "Page 2" should be "2050-01-02"
+    But the read after date for "New Parent" should be today
 
-Scenario: add a part does update the parent's read_after
-  Given a page exists with url: "http://test.sidrasue.com/parts/1.html" AND read_after: "2050-01-01"
-    And a page exists with title: "Page 2" AND url: "http://test.sidrasue.com/parts/2.html" AND read_after: "2050-01-02"
-  When I am on the page with title "Page 2"
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "New Parent"
-    And I press "Update"
+Scenario: add a part doesn't match the parent's read_after
+  Given a page exists with urls: "http://test.sidrasue.com/parts/1.html" AND read_after: "2050-01-01"
+  When I am on the page with title "Page 1"
     And I follow "Manage Parts"
     And I fill in "url_list" with
       """
-      http://test.sidrasue.com/parts/3.html
-      http://test.sidrasue.com/parts/4.html
+      http://test.sidrasue.com/parts/1.html
+      http://test.sidrasue.com/parts/2.html
       """
     And I press "Update"
-    And I am on the homepage
-  Then I should see "New Parent" within "#position_1"
-    And I should see "Page 1" within "#position_2"
+  Then the read after date for "Page 1" should be today
+    And the read after date for "Part 1" should be "2050-01-01"
+    And the read after date for "Part 2" should be today
 
 Scenario: update without url bug
   Given I have a series with read_after "2009-01-02"
