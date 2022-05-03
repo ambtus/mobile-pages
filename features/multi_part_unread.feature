@@ -53,7 +53,7 @@ Scenario: rating both updates parent as read
     And I press "Update"
     And I follow "Rate"
     And I choose "5"
-    And I press "Rate all unrated parts"
+    And I press "Rate"
     And I am on the page's page
   Then I should NOT see "unread"
     And I should see "2009-01-01" within ".last_read"

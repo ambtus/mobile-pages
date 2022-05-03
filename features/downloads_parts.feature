@@ -57,10 +57,10 @@ Scenario: download part titles
     And I select "rating tag" from "page_pro_ids_"
     And I select "info tag" from "page_info_ids_"
     And I press "Update Tags"
-    And I am on the page's page
     And I follow "Part 2"
     And I follow "Rate"
-    And I press "Rate unfinished"
+    And I choose "Yes" within ".stars"
+    And I press "Rate"
     And I follow "Page 1"
     And I view the content
   Then I should see "Part 1 (rating tag)" within "h2"

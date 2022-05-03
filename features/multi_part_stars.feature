@@ -41,7 +41,8 @@ Scenario: unfinished is highest
   Given Uneven exists
   When I am on the page with title "Uneven"
     And I follow "Rate" within "#position_5"
-    And I press "Rate unfinished"
+    And I choose "Yes" within ".stars"
+    And I press "Rate"
     And I am on the page with title "Uneven"
   Then I should see "1 unread part (2010-01-01)" within ".last_read"
     And I should see "unfinished" within ".stars"
@@ -49,12 +50,12 @@ Scenario: unfinished is highest
     And I should NOT see "stars" within "#position_5"
     And I should NOT see "unread" within "#position_5"
 
-Scenario: rate all unread with stars only rates unrated
+Scenario: rate all unread with stars
   Given Uneven exists
   When I am on the page with title "Uneven"
     And I follow "Rate" within ".views"
     And I choose "5"
-    And I press "Rate all unrated parts"
+    And I press "Rate"
   When I am on the page with title "Uneven"
     Then I should see "2010-01-01" within ".last_read"
     But I should NOT see "unread parts"
@@ -66,11 +67,12 @@ Scenario: rate all unread with stars only rates unrated
     And I should see "5 stars" within "#position_5"
     But I should NOT see "unread" within "#position_5"
 
-Scenario: rate all unread as unfinished only rates unfinished
+Scenario: rate all unread as unfinished
   Given Uneven exists
   When I am on the page with title "Uneven"
     And I follow "Rate" within ".views"
-    And I press "Rate unfinished"
+    And I choose "Yes" within ".stars"
+    And I press "Rate"
     And I am on the page with title "Uneven"
   Then I should see "1 unread part (2010-01-01)" within ".last_read"
     And I should see "unfinished" within ".stars"
@@ -86,6 +88,7 @@ Scenario: rate all with stars rates all
   When I am on the page with title "Uneven"
     And I follow "Rate" within ".views"
     And I choose "5"
+  And I choose "All Parts"
     And I press "Rate"
   When I am on the page with title "Uneven"
   Then I should NOT see "2010-01-01"

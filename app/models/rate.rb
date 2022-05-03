@@ -69,43 +69,22 @@ module Rate
     return self
   end
 
-  def rate_today(stars)
-    self.read_today.rate(stars)
-    self.parts.update_all last_read: Time.now
-    if self.parent
-      self.parent.update_from_parts
-      self.parent.parent.update_from_parts if self.parent.parent
+  def rate_today(stars, all="No")
+    Rails.logger.debug "DEBUG: rate today #{stars} #{all}"
+    if parts.empty?
+      update! stars: stars
+      update! last_read: Time.now unless stars == "9"
+      Rails.logger.debug "DEBUG: setting read after to #{calculated_read_after}"
+      update! read_after: calculated_read_after
+    else
+      parts_to_be_rated = all == "Yes" ? parts : unread_parts
+      Rails.logger.debug "DEBUG: rating #{parts_to_be_rated.size} parts"
+      parts_to_be_rated.update_all stars: stars
+      parts_to_be_rated.update_all last_read: Time.now unless stars == "9"
+      update_from_parts
     end
-  end
-
-  def rate_unfinished_today
-    Rails.logger.debug "DEBUG: making #{title} unfinished"
-    self.update!(stars: 9, last_read: nil)
-    self.update! read_after: calculated_read_after
-    self.unread_parts.update_all stars: 9, last_read: nil, read_after: self.calculated_read_after
-    self.update_from_parts
-    self.parent.update_from_parts if self.parent
-    return self
-  end
-
-  def rate_all_unrated_today(stars)
-    Rails.logger.debug "DEBUG: stars for unread: #{stars}"
-    self.unread_parts.update_all last_read: Time.now, stars: stars
-    self.update_from_parts
-    return self
-  end
-
-  def read_today
-    self.update!(last_read: Time.now)
-    parent.update_last_read if parent
-    return self
-  end
-
-  def rate(stars)
-    self.update! stars: stars
-    self.update! read_after: calculated_read_after
-    parts.update_all stars: stars, read_after: calculated_read_after
-    return self
+    parent.update_from_parts if self.parent
+    parent.parent.update_from_parts if parent && parent.parent
   end
 
   def update_from_parts

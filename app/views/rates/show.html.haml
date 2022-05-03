@@ -8,19 +8,39 @@
   -if @page.parent
     of #{@page.parent.title}
 -if @page.parent
-  .stars
+  .parent
     Parent stars:
-    =@page.parent.stars
+    =@page.parent.star_string
+    %br
+    Parent cliffhanger:
+    =@page.parent.cliff_present?
 .form
   = form_tag :rates do
     = hidden_field_tag(:page_id, @page.id)
-    = label_tag :stars, "Stars:"
-    %br
-    - 5.times.reverse_each do |int|
-      -choice = (int+1).to_s
-      =radio_button_tag :stars, choice, @stars == choice
-      =label_tag "stars_#{choice}", choice
+    .stars
+      = label_tag :stars, "Stars:"
       %br
+      - 5.times.reverse_each do |int|
+        -choice = (int+1).to_s
+        =radio_button_tag :stars, choice, @stars == choice
+        =label_tag "stars_#{choice}", choice
+        %br
+      = label_tag :unfinished, "Rate unfinished?"
+      = radio_button_tag :stars, '9', @page.unfinished?
+      = label_tag "stars_9", 'Yes'
+    .cons
+      %br
+      = label_tag :cliff, "Cliffhanger?"
+      - ['Yes', 'No'].each do |choice|
+        = radio_button_tag :cliff, choice, humanize_boolean(@page.cliff_present?) == choice
+        = label_tag "cliff_#{choice}", choice
+
+    -unless @page.parts.blank?
+      .parent
+        = label_tag :all, "Rate all parts?"
+        = radio_button_tag :all, 'Yes', false
+        = label_tag :all_Yes, 'All Parts'
+        = radio_button_tag :all, 'No', true
+        = label_tag :all_No, 'Unrated Parts'
+
     = submit_tag "Rate"
-    = submit_tag "Rate unfinished"
-    = submit_tag "Rate all unrated parts" if @page.parts.any?

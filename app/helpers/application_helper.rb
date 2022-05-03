@@ -27,4 +27,17 @@ module ApplicationHelper
     link_to name, pages_path(:find => tag.base_name)
   end
 
+  def humanize_boolean(value)
+    case value
+    when true
+      "Yes"
+    when false
+      "No"
+    when nil
+      "Undefined"
+    else
+      "Invalid"
+    end
+  end
+
 end

@@ -2,6 +2,7 @@ module Meta
   WIP = "WIP"
   TT = "Time Travel"
   OTHER = "Other Fandom"
+  CLIFF = "Cliffhanger"
 
   def wip_tag; Con.find_or_create_by(name: WIP); end
   def wip_present?; tags.cons.include?(wip_tag);end
@@ -25,6 +26,24 @@ module Meta
   def toggle_of
     of_present? ? tags.delete(of_tag) : self.tags.append(of_tag)
     return self
+  end
+
+  def cliff_tag; Con.find_or_create_by(name: CLIFF); end
+  def cliff_present?; tags.cons.include?(cliff_tag);end
+  def update_cliff(bool)
+    if bool == "Yes"
+      unless ultimate_parent.cliff_present?
+        Rails.logger.debug "DEBUG: adding cliffhanger to #{ultimate_parent.title}"
+        ultimate_parent.tags.append(cliff_tag)
+      end
+    elsif bool == "No"
+      if ultimate_parent.cliff_present?
+        Rails.logger.debug "DEBUG: removing cliffhanger from #{ultimate_parent.title}"
+        ultimate_parent.tags.delete(cliff_tag)
+      end
+    else
+      raise "why isn’t #{bool} Yes or No?"
+    end
   end
 
   def toggle_end; toggle! :at_end; return self; end

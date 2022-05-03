@@ -24,7 +24,7 @@ Given /^Where am I existed and was read$/ do
   page.update!(url: "https://archiveofourown.org/works/692")
   page.raw_html = File.open(Rails.root + "features/html/where.html", 'r:utf-8') { |f| f.read }
   page.set_meta
-  page.read_today.rate(5)
+  page.rate_today(5)
 end
 
 Given /^Fuuinjutsu exists$/ do
@@ -62,7 +62,7 @@ Given /^Time Was partially exists$/ do
   chapter1.raw_html = File.open(Rails.root + "features/html/where.html", 'r:utf-8') { |f| f.read }
   chapter1.update!(url: "https://archiveofourown.org/works/692/chapters/803")
   chapter1.set_meta
-  chapter1.read_today.rate("3")
+  chapter1.rate_today("3")
   page.set_meta
 end
 
@@ -121,7 +121,7 @@ Given /^Counting Drabbles partially exists$/ do
   work1.update!(url: "https://archiveofourown.org/works/688")
   work1.raw_html = File.open(Rails.root + "features/html/skipping.html", 'r:utf-8') { |f| f.read }
   work1.set_wordcount.set_meta
-  work1.read_today.rate(5)
+  work1.rate_today(5)
 
   series.set_meta.set_wordcount(false).update_read_after
 end

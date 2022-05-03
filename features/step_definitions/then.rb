@@ -119,6 +119,10 @@ Then("{string} should be selected in {string}") do |selected, dropdown|
   assert page.has_select?(dropdown, selected: selected)
 end
 
+Then("{string} should NOT be selected in {string}") do |selected, dropdown|
+  assert !page.has_select?(dropdown, selected: selected)
+end
+
 Then("I should be able to select {string} from {string}") do |selection, dropdown|
    assert page.has_select?(dropdown, with_options: [selection])
 end
@@ -130,6 +134,11 @@ end
 Then("{string} should be checked") do |checked|
   Rails.logger.debug "DEBUG: should be checked: #{checked}"
   assert page.has_checked_field?(checked)
+end
+
+Then("{string} should NOT be checked") do |checked|
+  Rails.logger.debug "DEBUG: should be checked: #{checked}"
+  assert !page.has_checked_field?(checked)
 end
 
 Then("nothing should be checked") do
