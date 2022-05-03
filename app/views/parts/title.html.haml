@@ -1,0 +1,7 @@
+- content_for :title do
+  = @title
+.form
+  = form_tag parts_path do
+    = hidden_field_tag(:page_id, @page.id)
+    .title= text_field_tag :title, @page.title, :size => 33
+    = submit_tag "Update"

@@ -257,7 +257,8 @@ class Page < ActiveRecord::Base
     self.parent.update_from_parts if parent
   end
 
-  def parts_from_urls(url_title_list, refetch=false)
+  def parts_from_urls(url_title_list, refetch = false)
+    Rails.logger.debug "DEBUG: #{refetch ? 're' : ''}fetch parts from urls: #{url_title_list}"
     old_part_ids = self.parts.map(&:id)
     Rails.logger.debug "DEBUG: my old parts #{old_part_ids}"
 
@@ -398,17 +399,12 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def refetch_parts(url_list)
-    Rails.logger.debug "DEBUG: refetching all for #{self.id} url_list: #{url_list}"
-    self.parts_from_urls(url_list)
-  end
-
   def add_parent(title)
     parent=Page.find_by_title(title)
     Rails.logger.debug "DEBUG: parent #{title} found? #{parent.is_a?(Page)}"
     new = false
     unless parent.is_a?(Page)
-      pages=Page.where(["title LIKE ?", "%" + title + "%"])
+      pages=Page.where(["Lower(title) LIKE ?", "%" + title.downcase + "%"])
       if pages.size > 1
         Rails.logger.debug "DEBUG: #{pages.size} possible parents found"
         return "ambiguous"

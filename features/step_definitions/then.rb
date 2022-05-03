@@ -95,6 +95,10 @@ Then("the page should NOT contain css {string}") do |field|
   assert !page.has_css?(field)
 end
 
+Then("the page should contain css {string}") do |field|
+  assert page.has_css?(field)
+end
+
 Then("I should see {string} within {string}") do |text, parent|
   within(parent) { assert assert_text(text) }
 end

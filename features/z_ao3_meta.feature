@@ -86,9 +86,7 @@ Scenario: getting series by adding parent and then refetching should not duplica
   Given "harry potter" is a "Fandom"
     And Skipping Stones exists
     And I am on the page's page
-  When I follow "Manage Parts"
-    And I fill in "add_parent" with "Parent"
-    And I press "Update"
+  When I add a parent with title "Parent"
     And I follow "Refetch"
     And I fill in "url" with "https://archiveofourown.org/series/46"
     And I press "Refetch"

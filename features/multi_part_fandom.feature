@@ -1,4 +1,4 @@
-Feature: parts differ in fandom from parent
+Feature: parts can differ in fandom from parent
 
 Scenario: add part with same fandoms
   Given the following pages
@@ -7,9 +7,7 @@ Scenario: add part with same fandoms
     | Child1 | http://test.sidrasue.com/long1.html | two |
     | Child2 | http://test.sidrasue.com/long2.html | one |
   When I am on the page with title "Child1"
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "Parent"
-    And I press "Update"
+    And I add a parent with title "Parent"
   Then I should see "Parent" within ".title"
     And I should see "two" within ".fandoms"
     But I should NOT see "two" within "#position_1"
@@ -21,9 +19,7 @@ Scenario: add part with different fandoms
     | Child1 | http://test.sidrasue.com/long1.html | two |
     | Child2 | http://test.sidrasue.com/long2.html | one |
   When I am on the page with title "Child2"
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "Parent"
-    And I press "Update"
+    And I add a parent with title "Parent"
   Then I should see "Parent" within ".title"
     And I should see "two" within ".fandoms"
     And I should see "one" within "#position_1"
@@ -35,9 +31,7 @@ Scenario: find a part with a parent with different fandom
     | Child1 | http://test.sidrasue.com/long1.html | two |
     | Child2 | http://test.sidrasue.com/long2.html | one |
   When I am on the page with title "Child2"
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "Parent"
-    And I press "Update"
+    And I add a parent with title "Parent"
     And I am on the filter page
     And I choose "unread_any"
     And I select "one" from "fandom"
@@ -52,9 +46,7 @@ Scenario: cannot find a part with a parent with same fandom (no dupes)
     | Child1 | http://test.sidrasue.com/long1.html | two |
     | Child2 | http://test.sidrasue.com/long2.html | one |
   When I am on the page with title "Child1"
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "Parent"
-    And I press "Update"
+    And I add a parent with title "Parent"
     And I am on the filter page
     And I choose "unread_any"
     And I select "two" from "fandom"

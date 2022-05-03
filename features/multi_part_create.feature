@@ -117,15 +117,3 @@ Scenario: ignore empty lines in list or urls during create
    And I should see "Child 2" within "#position_2"
    And the page should NOT contain css "#position_3"
 
-Scenario: parent shows parts by position, not created order
-  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
-  When I am on the page's page
-    And I follow "Manage Parts"
-    And I fill in "url_list" with
-      """
-      http://test.sidrasue.com/parts/2.html
-      http://test.sidrasue.com/parts/1.html
-      """
-    And I press "Update"
-  Then I should see "Part 2" before "Part 1"
-

@@ -65,9 +65,7 @@ Scenario: add cons to a page which already has cons sorts alphabetically
 Scenario: new parent for an existing page should have the same con (not duped)
   Given a page exists with cons: "abc123"
   When I am on the page's page
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "New Parent"
-    And I press "Update"
+    And I add a parent with title "New Parent"
   Then I should see "abc123" within ".cons"
     But I should NOT see "abc123" within "#position_1"
 

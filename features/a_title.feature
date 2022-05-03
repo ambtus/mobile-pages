@@ -26,7 +26,7 @@ Scenario: clear out title
 Scenario: change title
   Given a page exists with url: "http://test.sidrasue.com/test.html"
   When I am on the page's page
-    And I follow "Manage Parts"
+    And I follow "Title"
     And I fill in "title" with "New Title"
     And I press "Update"
   Then I should see "New Title" within ".title"

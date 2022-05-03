@@ -33,18 +33,19 @@
     = link_to "HTML", download_url_for_page(@page, ".html")
     = link_to "Text", download_url_for_page(@page, ".read") if @page.parts.blank?
     = link_to "Original", @page.url unless @page.url.blank?
-    .edits
-      = link_to "My Notes", edit_my_note_path(@page)
-      = link_to "Notes", edit_note_path(@page)
-      = link_to "Tags", tag_path(@page)
-      %br
-      = link_to "Manage Parts", edit_part_path(@page)
-      = link_to "Add Part", edit_part_path(@page, add: "one")
+    .content
+      = link_to "Refetch", refetch_path(@page)
+      = link_to "Add Part", edit_part_path(@page, add: "part")
+      = link_to "Add Parent", edit_part_path(@page, add: "parent")
       - if @page.parts.blank?
         = link_to "Edit Scrubbed HTML", edit_html_path(@page, format: "scrubbed")
         = link_to "Edit Raw HTML", edit_html_path(@page)
       = link_to "Scrub", scrub_path(@page)
-      = link_to "Refetch", refetch_path(@page)
+    .meta
+      = link_to "Title", edit_part_path(@page, add: "title")
+      = link_to "My Notes", edit_my_note_path(@page)
+      = link_to "Notes", edit_note_path(@page)
+      = link_to "Tags", tag_path(@page)
   -Tag.types.each do |type|
     .div{class: "#{type.downcase.pluralize}"}
       -@page.tags.send(type.downcase.pluralize).by_name.each do |tag|
@@ -79,6 +80,7 @@
     = form_for @page.becomes(Page) do
       = hidden_field_tag :count, @count
       = submit_tag "First Parts" if @count > 0
-      = submit_tag "Previous Parts" if @count > 0
       = submit_tag "Next Parts" if @page.parts.size > last
+      = submit_tag "Middle Parts" if @count > 0 || @page.parts.size > last
+      = submit_tag "Previous Parts" if @count > 0
       = submit_tag "Last Parts" if @page.parts.size > last

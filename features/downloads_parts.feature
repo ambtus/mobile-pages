@@ -25,20 +25,16 @@ Scenario: two and three levels (h3 & h4)
     And I fill in "page_title" with "Parent"
     And I press "Store"
     And I follow "Child 1"
-    And I follow "Manage Parts"
-    And I fill in "url_list" with
+    And I refetch the following
       """
       http://test.sidrasue.com/parts/1.html##Boo
       ##Grandchild
       """
-    And I press "Update"
     And I follow "Grandchild"
-    And I follow "Manage Parts"
-    And I fill in "url_list" with
+    And I refetch the following
       """
       http://test.sidrasue.com/parts/2.html##Hiss
       """
-    And I press "Update"
     And I am on the page with title "Parent"
     And I view the content
   Then I should see "Child 1" within "h2"

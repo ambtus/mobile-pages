@@ -69,7 +69,7 @@ Scenario: check before trimming parent
 Scenario: trim a child removes parent's (composite) html
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
   When I am on the page's page
-  And I follow "Scrub" within ".edits"
+  And I follow "Scrub"
     And I follow "Scrub Part 1"
     And I choose "top cruft" within ".top"
     And I choose "bottom cruft" within ".bottom"
@@ -79,7 +79,7 @@ Scenario: trim a child removes parent's (composite) html
 Scenario: trim a child removes parent's (composite) html
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
   When I am on the page's page
-  And I follow "Scrub" within ".edits"
+  And I follow "Scrub"
     And I follow "Scrub Part 1"
     And I choose "top cruft" within ".top"
     And I choose "bottom cruft" within ".bottom"
@@ -90,7 +90,7 @@ Scenario: trim a child removes parent's (composite) html
 Scenario: rebuild all children from raw
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
   When I am on the page's page
-    And I follow "Scrub" within ".edits"
+    And I follow "Scrub"
     And I follow "Scrub Part 1"
     And I choose "top cruft" within ".top"
     And I choose "bottom cruft" within ".bottom"
@@ -102,18 +102,14 @@ Scenario: rebuild all children from raw
 Scenario: check before trim a sub-part
   Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
   When I am on the page's page
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "Parent"
-    And I press "Update"
+    And I add a parent with title "Parent"
   Then the contents should include "cruft"
     And the download directory should exist
 
 Scenario: scrubbing grandchild remove's grandparent's (composite) html
   Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
   When I am on the page's page
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "Parent"
-    And I press "Update"
+    And I add a parent with title "Parent"
     And I follow "Scrub"
     And I follow "Scrub Page 1"
     And I follow "Scrub Part 1"
@@ -126,10 +122,8 @@ Scenario: scrubbing grandchild shows scrubbed content in grandparent
   Given a page exists with title: "GrandParent"
   Given a page exists with urls: "http://test.sidrasue.com/parts/1.html" AND title: "Parent"
   When I am on the page with title "Parent"
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "GrandParent"
-    And I press "Update"
-    And I follow "Scrub"
+    And I add a parent with title "Grandparent"
+   And I follow "Scrub"
     And I follow "Scrub Parent"
     And I follow "Scrub Part 1"
     And I choose "top cruft" within ".top"

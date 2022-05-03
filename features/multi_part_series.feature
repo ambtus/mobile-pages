@@ -15,23 +15,19 @@ Scenario: create series from Singles & Books
     And I fill in "page_title" with "Page 1"
     And I press "Store"
     And I follow "Part the first"
-    And I follow "Manage Parts"
-    And I fill in "url_list" with
+    And I refetch the following
       """
       http://test.sidrasue.com/parts/1.html##subpart title
       http://test.sidrasue.com/parts/2.html
       """
-    And I press "Update"
     And I follow "Part 2"
     And I follow "Third Part"
-    And I follow "Manage Parts"
-    And I fill in "url_list" with
+    And I refetch the following
       """
       http://test.sidrasue.com/parts/4.html
       http://test.sidrasue.com/parts/5.html
       http://test.sidrasue.com/parts/6.html
       """
-    And I press "Update"
     And I am on the page's page
     # FIXME - this should show Series, not book, since some parts are books
   Then I should see "Page 1 (Book)" within ".title"
@@ -46,15 +42,9 @@ Scenario: create series from Singles & Books
 Scenario: create collection by adding parent to parent to parent
   Given a page exists
   When I am on the page's page
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "Parent"
-    And I press "Update"
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "Grandparent"
-    And I press "Update"
-    When I follow "Manage Parts"
-    And I fill in "add_parent" with "Great-Grandparent"
-    And I press "Update"
+    And I add a parent with title "Parent"
+    And I add a parent with title "Grandparent"
+    And I add a parent with title "Great-Grandparent"
     And I view the content
   Then the page should have title "Great-Grandparent"
     And I should see "1. Grandparent" within "h2"
@@ -65,13 +55,9 @@ Scenario: create by adding parents to a single and a book
   Given a page exists with title: "Parent" AND urls: "http://test.sidrasue.com/parts/2.html,http://test.sidrasue.com/parts/3.html"
     And a page exists with title: "Single" AND url: "http://test.sidrasue.com/parts/1.html"
   When I am on the page with title "Parent"
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "Grandparent"
-    And I press "Update"
+    And I add a parent with title "Grandparent"
     And I am on the page with title "Single"
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "Grandparent"
-    And I press "Update"
+    And I add a parent with title "Grandparent"
     And I am on the page with title "Grandparent"
     # FIXME - this should show Series, not Collection, since no children are series
   Then I should see "Grandparent (Collection)" within ".title"
@@ -84,22 +70,18 @@ Scenario: create by adding parents to a single and a book
 Scenario: create by adding parts and then subparts
   Given a page exists
   When I am on the page's page
-    And I follow "Manage Parts"
-    And I fill in "url_list" with
+    And I refetch the following
       """
       ##Parent1
       ##Parent2
       ##Parent3
       """
-    And I press "Update"
     And I follow "Parent2" within "#position_2"
-    And I follow "Manage Parts"
-    And I fill in "url_list" with
+    And I refetch the following
       """
       http://test.sidrasue.com/parts/3.html
       http://test.sidrasue.com/parts/4.html
       """
-    And I press "Update"
     And I am on the page's page
     # FIXME - this should show Series, not Book, since Parent 2 is a book
   Then I should see "Page 1 (Book)" within ".title"
@@ -113,9 +95,7 @@ Scenario: create by adding parts and then subparts
 Scenario: rating a single unread child sets parent AND grandparent to read
   Given a page exists with title: "Parent" AND urls: "http://test.sidrasue.com/parts/1.html" AND last_read: "2009-01-01"
   When I am on the page with title "Parent"
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "Grandparent"
-    And I press "Update"
+    And I add a parent with title "Grandparent"
     And I am on the page with title "Parent"
     And I follow "Add Part"
     And I fill in "add_url" with "http://test.sidrasue.com/parts/2.html"

@@ -72,9 +72,7 @@ Scenario: add hiddens to a page which already has hiddens sorts alphabetically
 Scenario: new parent for an existing page should be hidden (not duped, so i'm not)
   Given a page exists with hiddens: "abc123"
   When I am on the page's page
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "New Parent"
-    And I press "Update"
+    And I add a parent with title "New Parent"
   Then I should see "abc123" within ".hiddens"
     But I should NOT see "abc123" within "#position_1"
     And "New Parent" should be hidden

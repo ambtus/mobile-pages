@@ -94,9 +94,7 @@ Scenario: refetch Single
 Scenario: refetching top level fic shouldn't change chapter titles if i've modified them
   Given Time Was exists
   When I am on the page with title "Hogwarts"
-    And I follow "Manage Parts"
-    And I fill in "title" with "Hogwarts (abandoned)"
-    And I press "Update"
+    And I change the title to "Hogwarts (abandoned)"
     And I follow "Time Was, Time Is"
     And I follow "Refetch"
     And I press "Refetch"
@@ -106,9 +104,7 @@ Scenario: refetching top level fic shouldn't change chapter titles if i've modif
 Scenario: getting book by adding parent and then refetching
   Given Where am I exists
   When I am on the page's page
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "Parent"
-    And I press "Update"
+    And I add a parent with title "Parent"
     And I follow "Refetch"
     And I press "Refetch"
   Then I should see "Refetched" within "#flash_notice"
@@ -174,7 +170,7 @@ Scenario: refetching a one-page Single into a Book
 Scenario: refetch from ao3 when it used to be somewhere else
   Given counting exists
     And I am on the page with title "Counting"
-    And I follow "Refetch" within ".edits"
+    And I follow "Refetch"
     And I fill in "url" with "http://archiveofourown.org/works/688"
     And I press "Refetch"
   Then I should see "Refetched" within "#flash_notice"

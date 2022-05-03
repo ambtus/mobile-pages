@@ -116,18 +116,14 @@ Scenario: add another fandom to a page makes the fandom selectable
 Scenario: new parent for an existing page should have the same fandom
   Given a page exists with fandoms: "nonfiction"
   When I am on the page's page
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "New Parent"
-    And I press "Update"
+    And I add a parent with title "New Parent"
     And I am on the page with title "New Parent"
   Then I should see "nonfiction" within ".fandoms"
 
  Scenario: new parent for an existing page should move the fandom
   Given a page exists with fandoms: "nonfiction"
   When I am on the page's page
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "New Parent"
-    And I press "Update"
+    And I add a parent with title "New Parent"
   Then I should see "nonfiction" within ".fandoms"
     And I should see "Page 1" within ".parts"
     But I should NOT see "nonfiction" within ".parts"

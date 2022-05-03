@@ -1,51 +1,53 @@
 class PartsController < ApplicationController
   NEW_PARENT_TITLE = "Enter the title of the desired Parent Page"
+
   def new
     @new_page = Page.new
     @title = "New parent page"
   end
+
   def edit
     @page = Page.find(params[:id])
-    if params[:add]
+    case params[:add]
+    when "title"
+      @title = "Edit title for #{@page.title}"
+      render "title"
+    when "part"
       @title = "Add part to #{@page.title}"
-      render "add"
+      render "part"
+    when "parent"
+      @title = "Add parent to #{@page.title}"
+      @parent_title = NEW_PARENT_TITLE
+      render "parent"
     else
-      @title = "Edit parts for #{@page.title}"
-      if @page.parent
-        @parent_title = @page.parent.title
-      else
-        @parent_title = NEW_PARENT_TITLE
-      end
+      raise "missing or bad params[:add] (#{params[:add]})"
     end
   end
+
   def create
     @page = Page.find(params[:page_id])
-    title = params[:title]
-    @page.update_attribute(:title, title) if title && title != @page.title
-    if params[:add_url]
+    @count = 0
+    if params[:title]
+      @page.update_attribute(:title, params[:title])
+    elsif params[:add_url]
       @page.add_part(params[:add_url])
       flash[:notice] = "Part added"
       @count = @page.parts.size > Page::LIMIT ? @page.parts.size - Page::LIMIT : 0
-      render 'pages/show' and return
-    end
-    url_list = params[:url_list]
-    if url_list != @page.url_list
-      @page.parts_from_urls(params[:url_list])
-      flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
-    end
-    if params[:add_parent] && params[:add_parent] != NEW_PARENT_TITLE && params[:add_parent] != @page.parent.try(:title)
-      @page = @page.add_parent(params[:add_parent])
-      case @page
-        when "ambiguous"
-           flash[:alert] = "More than one page with that title"
-           @page = Page.find(params[:page_id])
-        when "content"
-           flash[:alert] = "Parent with that title has content"
-           @page = Page.find(params[:page_id])
-        when Page
-           flash[:notice] = "Page added to this parent"
+    elsif params[:add_parent]
+      @parent = @page.add_parent(params[:add_parent])
+      case @parent
+      when "ambiguous"
+         flash[:alert] = "More than one page with that title"
+      when "content"
+         flash[:alert] = "Parent with that title has content"
+      when Page
+         flash[:notice] = "Page added to this parent"
+         @count = @page.position > Page::LIMIT ? @page.position - Page::LIMIT : 0
+         @page = @parent
       end
+    else
+      raise "missing or bad params (#{request.query_parameters})"
     end
-    redirect_to page_path(@page)
+    render 'pages/show' and return
   end
 end

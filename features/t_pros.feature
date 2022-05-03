@@ -65,9 +65,7 @@ Scenario: add pros to a page which already has pros sorts alphabetically
 Scenario: new parent for an existing page should have the same pro (not duped)
   Given a page exists with pros: "abc123"
   When I am on the page's page
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "New Parent"
-    And I press "Update"
+    And I add a parent with title "New Parent"
   Then I should see "abc123" within ".pros"
     But I should NOT see "abc123" within "#position_1"
 

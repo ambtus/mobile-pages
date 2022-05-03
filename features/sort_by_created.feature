@@ -26,9 +26,7 @@ Scenario: last created new parent
   Given 2 pages exist
     And I wait 1 second
   When I am on the page with title "Page 2"
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "Parent"
-    And I press "Update"
+    And I add a parent with title "Parent"
   When I am on the filter page
     And I choose "sort_by_last_created"
     And I press "Find"
@@ -40,12 +38,10 @@ Scenario: last created new part
   Given 2 pages exist
     And I wait 1 second
   When I am on the page with title "Page 2"
-    And I follow "Manage Parts"
-    And I fill in "url_list" with
+    And I refetch the following
     """"
     http://test.sidrasue.com/test1.html
     """"
-    And I press "Update"
   When I am on the filter page
     And I choose "sort_by_last_created"
     And I press "Find"

@@ -31,9 +31,7 @@ Scenario: add unread part to read parent makes parent unread
   Given a page exists
     And a page exists with last_read: "2009-01-01" AND title: "Parent"
   When I am on the page's page
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "Parent"
-    And I press "Update"
+    And I add a parent with title "Parent"
   Then I should see "Parent" within ".title"
     And I should see "unread" within ".last_read"
     And I should see "unread" within "#position_1"
@@ -42,9 +40,7 @@ Scenario: add read part to unread parent makes parent read
   Given a page exists with title: "Parent"
     And a page exists with last_read: "2008-01-01"
   When I am on the page's page
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "Parent"
-    And I press "Update"
+    And I add a parent with title "Parent"
   Then I should see "Parent" within ".title"
     And I should NOT see "unread"
     And I should see "2008-01-01" within ".last_read"
@@ -54,9 +50,7 @@ Scenario: add earlier read part to read parent (no other parts) changes last rea
   Given a page exists with title: "Parent" and last_read: "2009-01-01"
     And a page exists with last_read: "2008-01-01"
   When I am on the page's page
-  When I follow "Manage Parts"
-    And I fill in "add_parent" with "Parent"
-    And I press "Update"
+    And I add a parent with title "Parent"
   Then I should see "Parent" within ".title"
     And I should NOT see "unread"
     And I should see "2008-01-01" within ".last_read"
@@ -66,9 +60,7 @@ Scenario: add read part to earlier read parent (no other parts) changes last rea
   Given a page exists with title: "Parent" and last_read: "2008-01-01"
     And a page exists with last_read: "2009-01-01"
   When I am on the page's page
-  When I follow "Manage Parts"
-    And I fill in "add_parent" with "Parent"
-    And I press "Update"
+    And I add a parent with title "Parent"
   Then I should see "Parent" within ".title"
     And I should NOT see "unread"
     And I should see "2009-01-01" within ".last_read"

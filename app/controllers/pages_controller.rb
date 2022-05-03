@@ -141,14 +141,16 @@ class PagesController < ApplicationController
     @page = Page.find(params[:id])
     @count = params[:count].to_i
     case params[:commit]
-      when "Next Parts"
-        @count = params[:count].to_i + Page::LIMIT
-      when "Last Parts"
-        @count = @page.parts.size - Page::LIMIT
-      when "Previous Parts"
-        @count = @count < Page::LIMIT ? 0 : @count - Page::LIMIT
       when "First Parts"
         @count = 0
+      when "Next Parts"
+        @count = params[:count].to_i + Page::LIMIT
+      when "Middle Parts"
+        @count = @page.parts.size/2
+      when "Previous Parts"
+        @count = @count < Page::LIMIT ? 0 : @count - Page::LIMIT
+      when "Last Parts"
+        @count = @page.parts.size - Page::LIMIT
       when "Read Now"
         @page.make_first
         flash[:notice] = "Set to Read Now"

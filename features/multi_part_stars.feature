@@ -1,4 +1,4 @@
-Feature: parts differ in stars from parent
+Feature: parts can differ in stars from parent
 
 Scenario: highest if no mode
   Given Uneven exists

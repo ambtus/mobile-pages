@@ -63,9 +63,7 @@ Scenario: 2nd check before getting book by adding parent and then refetching
   Given Where am I exists
   When I am on the homepage
     And I follow "Where am I"
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "Parent"
-    And I press "Update"
+    And I add a parent with title "Parent"
     And I follow "Refetch"
   Then I should see "archiveofourown.org/works/692/chapters/803" within "#url_list"
     And the "url" field should contain "https://archiveofourown.org/works/692"
@@ -102,9 +100,7 @@ Scenario: check before refetch Single
 Scenario: check before getting book by adding parent and then refetching
   Given Where am I exists
   When I am on the page's page
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "Parent"
-    And I press "Update"
+    And I add a parent with title "Parent"
     And I follow "Refetch"
   Then the "url" field should contain "https://archiveofourown.org/works/692"
     And the "url_list" field should contain "https://archiveofourown.org/works/692/chapters/803##Where am I?"

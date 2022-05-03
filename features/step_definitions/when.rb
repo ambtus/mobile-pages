@@ -19,11 +19,11 @@ When("I wait {int} second") do |time|
 end
 
 When("I edit its tags") do
-  within(".edits") { click_link("Tags") }
+  within(".meta") { click_link("Tags") }
 end
 
-## TODO - make the following match above
-## edit its NOT edit the
+## TODO - make the following match "I edit its tags"
+## its NOT the
 When("I edit the text") do
   within(".views") {click_link("Text")}
 end
@@ -32,6 +32,24 @@ When("I download the epub") do
 end
 When("I view the content") do
   within(".views") {click_link("HTML")}
+end
+
+When("I add a parent with title {string}") do |title|
+  within(".content") { click_link("Add Parent")}
+  fill_in("add_parent", :with => title)
+  click_button("Add")
+end
+
+When("I change the title to {string}") do |title|
+  within(".meta") { click_link("Title")}
+  fill_in("title", :with => title)
+  click_button("Update")
+end
+
+When("I refetch the following") do |value|
+  within(".content") { click_link("Refetch")}
+  fill_in("url_list", :with => value)
+  click_button("Refetch")
 end
 
 When("I view the content for part {int}") do |int|
@@ -61,4 +79,5 @@ end
 When("I choose {string} within {string}") do |field, parent|
   within(parent) { choose(field) }
 end
+
 

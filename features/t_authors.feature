@@ -48,9 +48,7 @@ Scenario: add another author to a page
 Scenario: new parent for an existing page should have the same author
   Given a page exists with authors: "newbie"
   When I am on the page's page
-    And I follow "Manage Parts"
-    And I fill in "add_parent" with "New Parent"
-    And I press "Update"
+    And I add a parent with title "New Parent"
   Then I should see "newbie" within ".authors"
     And I should see "Page 1" within ".parts"
     But I should NOT see "newbie" within ".parts"

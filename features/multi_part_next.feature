@@ -44,6 +44,15 @@ Scenario: previous
     But I should NOT see "Part 11"
     And I should NOT see "Part 17"
 
+Scenario: previous
+  Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-21"
+  When I am on the page's page
+    And I press "Middle Parts"
+  Then I should see "Part 11"
+    And I should see "Part 15"
+    But I should NOT see "Part 10"
+    And I should NOT see "Part 16"
+
 Scenario: refetch shows last
   Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-21"
   When I am on the page's page
