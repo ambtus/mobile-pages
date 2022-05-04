@@ -23,14 +23,14 @@ Scenario: turn cliffhanger on while rating
     And "Cliffhanger" should be selected in "page_con_ids_"
 
 Scenario: cliffhanger pre-selected when existing
-  Given a page exists with cons: "cliffhanger"
+  Given a page exists with cons: "Cliffhanger"
   When I am on the page's page
     And I follow "Rate"
   Then "cliff_Yes" should be checked
     And "cliff_No" should NOT be checked
 
 Scenario: turn cliffhanger off while rating
-  Given a page exists with cons: "cliffhanger"
+  Given a page exists with cons: "Cliffhanger"
   When I am on the page's page
     And I follow "Rate"
     And I choose "4"
@@ -78,5 +78,10 @@ Scenario: cliffhanger removed from parent, not rated part
   Then I should NOT see "Cliffhanger" within ".cons"
     And I should NOT see "Cliffhanger" within "#position_4"
 
-
-
+Scenario: cliffhanger on parent defaults on when rating chapter
+  Given Uneven exists
+    And "Uneven" is a cliffhanger
+  When I am on the page with title "part 5"
+    And I follow "Rate"
+  Then "cliff_Yes" should be checked
+    And "cliff_No" should NOT be checked

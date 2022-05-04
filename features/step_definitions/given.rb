@@ -12,3 +12,8 @@ Given('{string} is a(n) {string}') do |name, type|
   Tag.find_or_create_by!(name: name, type: type)
 end
 
+Given("{string} is a cliffhanger") do |title|
+  page = Page.find_by title: title
+  raise "no page with title #{title}" unless page
+  page.update_cliff('Yes')
+end

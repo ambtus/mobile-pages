@@ -1,4 +1,5 @@
 module Meta
+
   WIP = "WIP"
   TT = "Time Travel"
   OTHER = "Other Fandom"
@@ -29,7 +30,7 @@ module Meta
   end
 
   def cliff_tag; Con.find_or_create_by(name: CLIFF); end
-  def cliff_present?; tags.cons.include?(cliff_tag);end
+  def cliff_present?; all_tags.include?(CLIFF);end
   def update_cliff(bool)
     if bool == "Yes"
       unless ultimate_parent.cliff_present?
