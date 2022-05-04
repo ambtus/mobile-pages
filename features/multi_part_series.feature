@@ -45,7 +45,7 @@ Scenario: create collection by adding parent to parent to parent
     And I add a parent with title "Parent"
     And I add a parent with title "Grandparent"
     And I add a parent with title "Great-Grandparent"
-    And I view the content
+    And I read "Great-Grandparent" online
   Then the page should have title "Great-Grandparent"
     And I should see "1. Grandparent" within "h2"
     And I should see "1. Parent" within "h3"

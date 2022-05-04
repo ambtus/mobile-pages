@@ -2,8 +2,7 @@ Feature: downloads metadata
 
 Scenario: basic
   Given a page exists with pros: "tag1"
-  When I am on the page's page
-    And I download the epub
+  When I download its epub
   Then the download epub file should exist
     And the download epub command should include tags: "tag1"
 
@@ -53,8 +52,7 @@ Scenario: long
 
 Scenario: tag name changes => remove outdated downloads
   Given a page exists with pros: "tag1"
-  When I am on the page's page
-    And I download the epub
+  When I download its epub
     And I am on the edit tag page for "tag1"
     And I fill in "tag_name" with "fandom1"
     And I press "Update"
@@ -62,13 +60,11 @@ Scenario: tag name changes => remove outdated downloads
 
 Scenario: tag name changes => new epub has new name
   Given a page exists with pros: "tag1"
-  When I am on the page's page
-    And I download the epub
+  When I download its epub
     And I am on the edit tag page for "tag1"
     And I fill in "tag_name" with "fandom1"
     And I press "Update"
-    And I am on the page's page
-    And I download the epub
+    And I download its epub
   Then the download epub file should exist
     And the download epub command should include tags: "fandom1"
     And the download epub command should NOT include tags: "tag1"
@@ -76,8 +72,7 @@ Scenario: tag name changes => new epub has new name
 
 Scenario: tag type changes => remove outdated downloads
   Given a page exists with pros: "fandom1"
-  When I am on the page's page
-    And I download the epub
+  When I download its epub
     And I am on the edit tag page for "fandom1"
     And I select "Fandom" from "change"
     And I press "Change"
@@ -85,13 +80,11 @@ Scenario: tag type changes => remove outdated downloads
 
 Scenario: tag type changes => new epub reflects change
   Given a page exists with pros: "fandom1"
-  When I am on the page's page
-    And I download the epub
+  When I download its epub
     And I am on the edit tag page for "fandom1"
     And I select "Fandom" from "change"
     And I press "Change"
-    And I am on the page's page
-    And I download the epub
+    And I download its epub
   Then the download epub file should exist
     And the download epub command should include authors: "fandom1"
     And the download epub command should NOT include tags: "fandom1"

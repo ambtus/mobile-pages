@@ -29,19 +29,13 @@ Scenario: check before fanfiction.net can't be refetched
 
 Scenario: check before fanfiction.net can't be refetched
   Given counting exists
-  When I am on the page with title "Counting"
-    And I follow "Edit Raw HTML"
-    And I fill in "pasted" with "system down"
-    And I press "Update Raw HTML"
+  When I change its raw html to "system down"
   Then the contents should include "system down"
 
 Scenario: check before fanfiction.net can't be refetched
   Given counting exists
-  When I am on the page with title "Counting"
-    And I follow "Edit Raw HTML"
-    And I fill in "pasted" with "system down"
-    And I press "Update Raw HTML"
-  When I follow "Refetch"
+  When I change its raw html to "system down"
+    And I follow "Refetch"
     And I press "Refetch"
   Then I should see "can't refetch from fanfiction.net"
     And I should NOT see "Fetched" within "#flash_notice"

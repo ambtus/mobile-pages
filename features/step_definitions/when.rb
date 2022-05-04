@@ -22,16 +22,55 @@ When("I edit its tags") do
   within(".meta") { click_link("Tags") }
 end
 
-## TODO - make the following match "I edit its tags"
-## its NOT the
-When("I edit the text") do
-  within(".views") {click_link("Text")}
+When("I change its raw html to") do |multi_line|
+  html = multi_line.inspect.strip_quotes
+  step "I change its raw html to \"#{html}\""
 end
-When("I download the epub") do
-  within(".views") {click_link("ePub")}
+
+When("I change its raw html to {string}") do |html|
+   page = Page.with_content.first
+   raise "no pages that can edit raw html" unless page
+   visit page_path(page)
+   click_link "Edit Raw HTML"
+   fill_in "pasted", with: html
+   click_button "Update Raw HTML"
 end
-When("I view the content") do
-  within(".views") {click_link("HTML")}
+
+When("I change the raw html for {string} to {string}") do |title, html|
+   page = Page.find_by title: title
+   raise "no pages" unless page
+   visit page_path(page)
+   click_link "Edit Raw HTML"
+   fill_in "pasted", with: html
+   click_button "Update Raw HTML"
+end
+
+When("I view the text for reading aloud") do
+   page = Page.with_content.first
+   raise "no pages that can be read aloud" unless page
+   visit page_path(page)
+   within(".views") {click_link("Text")}
+end
+
+When("I download its epub") do
+   page = Page.first
+   raise "no pages" unless page
+   visit page_path(page)
+   within(".views") {click_link("ePub")}
+end
+
+When("I read it online") do
+   page = Page.first
+   raise "no pages" unless page
+   visit page_path(page)
+   within(".views") {click_link("HTML")}
+end
+
+When("I read {string} online") do |title|
+   page = Page.find_by title: title
+   raise "no page with title #{title}" unless page
+   visit page_path(page)
+   within(".views") {click_link("HTML")}
 end
 
 When("I add a parent with title {string}") do |title|
@@ -50,10 +89,6 @@ When("I refetch the following") do |value|
   within(".content") { click_link("Refetch")}
   fill_in("url_list", :with => value)
   click_button("Refetch")
-end
-
-When("I view the content for part {int}") do |int|
-  within("#position_#{int}") {click_link("HTML")}
 end
 
 When("I fill in {string} with {string}") do |field, value|

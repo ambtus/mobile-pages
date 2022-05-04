@@ -2,14 +2,12 @@ Feature: downloads parts metadata
 
 Scenario: download part titles should not have unread if all parts unread
   Given a page exists with base_url: "http://test.sidrasue.com/test*.html" AND url_substitutions: "1 2 3"
-  When I am on the page's page
-    And I view the content
+  When I read it online
   Then I should NOT see "unread"
 
 Scenario: link to parts in downloaded html
   Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1-2"
-  When I am on the page's page
-    And I view the content
+  When I read it online
   Then "Page 1" should link to itself
     And "Part 1" should link to itself
     And "Part 2" should link to itself
@@ -35,8 +33,7 @@ Scenario: two and three levels (h3 & h4)
       """
       http://test.sidrasue.com/parts/2.html##Hiss
       """
-    And I am on the page with title "Parent"
-    And I view the content
+    And I read "Parent" online
   Then I should see "Child 1" within "h2"
     And I should see "Boo" within "h3"
     And I should see "Hiss" within "h4"
@@ -57,8 +54,7 @@ Scenario: download part titles
     And I follow "Rate"
     And I choose "Yes" within ".stars"
     And I press "Rate"
-    And I follow "Page 1"
-    And I view the content
+    And I read it online
   Then I should see "Part 1 (rating tag)" within "h2"
     And I should see "Part 2 (unfinished)"
     And I should see "Part 3 (unread)"

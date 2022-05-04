@@ -2,20 +2,16 @@ Feature: other mult-part tests
 
 Scenario: download part
   Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html"
-  When I am on the page's page
-    And I follow "Part 1"
-    And I view the content
+  When I read "Part 1" online
   Then I should see "stuff for part 1"
-    And I should NOT see "stuff for part 2"
+    But I should NOT see "stuff for part 2"
 
 Scenario: link to next part from part
   Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html"
   When I am on the page's page
     And I follow "Part 1"
     And I follow "Part 2" within ".part"
-    And I view the content
-  Then I should see "stuff for part 2"
-    And I should NOT see "stuff for part 1"
+  Then I should see "Part 2 (Chapter)" within ".title"
 
 Scenario: reorder the parts on an existing page with parts
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
@@ -25,8 +21,9 @@ Scenario: reorder the parts on an existing page with parts
       http://test.sidrasue.com/parts/2.html
       http://test.sidrasue.com/parts/1.html
       """
-    And I view the content for part 1
+    And I follow "HTML" within "#position_1"
   Then I should see "stuff for part 2"
+    And I should NOT see "stuff for part 1"
 
 Scenario: find a part
   Given the following pages
@@ -71,14 +68,8 @@ Scenario: update without url bug
 
 Scenario: refetch non-recursive
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
-    And I am on the page with title "Part 1"
-    And I follow "Edit Raw HTML"
-    And I fill in "pasted" with "<p>This is the new part 1</p>"
-    And I press "Update Raw HTML"
-    And I am on the page with title "Part 2"
-    And I follow "Edit Raw HTML"
-    And I fill in "pasted" with "<p>This is the new part 2</p>"
-    And I press "Update Raw HTML"
+    And I change the raw html for "Part 1" to "<p>This is the new part 1</p>"
+    And I change the raw html for "Part 2" to "<p>This is the new part 2</p>"
   When I am on the page's page
     And I follow "Refetch"
     And I press "Refetch"
@@ -88,14 +79,8 @@ Scenario: refetch non-recursive
 
 Scenario: refetch recursive
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
-    And I am on the page with title "Part 1"
-    And I follow "Edit Raw HTML"
-    And I fill in "pasted" with "<p>This is the new part 1</p>"
-    And I press "Update Raw HTML"
-    And I am on the page with title "Part 2"
-    And I follow "Edit Raw HTML"
-    And I fill in "pasted" with "<p>This is the new part 2</p>"
-    And I press "Update Raw HTML"
+    And I change the raw html for "Part 1" to "<p>This is the new part 1</p>"
+    And I change the raw html for "Part 2" to "<p>This is the new part 2</p>"
   When I am on the page's page
     And I follow "Refetch"
     And I press "Refetch Recursive"

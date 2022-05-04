@@ -14,9 +14,7 @@ Scenario: quotes
 
 Scenario: pasted html file gets cleaned
   Given a page exists with url: "http://test.sidrasue.com/test.html"
-  When I am on the page's page
-    And I follow "Edit Raw HTML"
-    And I fill in "pasted" with
+  When I change its raw html to
       """
       <span class='first'>The</span> beginning
       <script type="text/javascript">
@@ -24,7 +22,6 @@ Scenario: pasted html file gets cleaned
       document.write('<a href="mailto:' + emailE + '">' + 'email Vera' +'</a>')
       </script>
       """
-    And I press "Update Raw HTML"
   Then the contents should include "The beginning"
     But the contents should NOT include "email Vera"
 

@@ -43,10 +43,8 @@ Scenario: check before refetch Single
     And I follow "Notes"
     And I fill in "page_notes" with "changed notes"
     And I press "Update"
-    And I follow "Edit Raw HTML"
-    And I fill in "pasted" with "oops"
-    And I press "Update Raw HTML"
-    And I view the content
+    And I change its raw html to "oops"
+    And I read it online
   Then I should see "oops"
     And I should NOT see "Amy woke slowly"
     And I should see "changed notes"

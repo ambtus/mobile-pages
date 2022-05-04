@@ -2,8 +2,7 @@ Feature: numbering parts with a parent (visible, but not stored)
 
 Scenario: both numbers
   Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html"
-  When I am on the page's page
-    And I view the content
+  When I read it online
   Then I should see "Part 1"
     And I should see "Part 2"
     But I should NOT see "1. Part 1"
@@ -20,8 +19,7 @@ Scenario: neither numbers
       """
      And I fill in "page_title" with "Page 1"
      And I press "Store"
-  When I am on the page's page
-    And I view the content
+  When I read it online
   Then I should see "1. One"
     And I should see "2. Two"
     And the part titles should be stored as "One & Two"
@@ -36,8 +34,7 @@ Scenario: some numbers
       """
     And I fill in "page_title" with "Page 1"
     And I press "Store"
-  When I am on the page's page
-    And I view the content
+  When I read it online
   Then I should see "Section 1"
     But I should NOT see "1. Section 1"
     And I should see "2. Epilogue"

@@ -2,8 +2,7 @@ Feature: audiobook
 
 Scenario: audiobook sections
   Given a page exists with url: "http://test.sidrasue.com/long.html"
-  When I am on the page's page
-    And I edit the text
+  When I view the text for reading aloud
   Then I should see "Lorem ipsum dolor"
     And I should see "SLOW DOWN"
     And I should see "1"
@@ -30,8 +29,7 @@ Scenario: check before audiobook created
 
 Scenario: audiobook created updates last read and adds audio tag
   Given a page exists with last_read: "2014-01-01"
-  When I am on the page's page
-    And I edit the text
+    And I view the text for reading aloud
     And I press "Audiobook created"
     And I am on the page's page
   Then I should see "audio"

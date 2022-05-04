@@ -4,33 +4,27 @@ Feature: ao3 testing that can use local files
 
 Scenario: end notes link to kudos for Single chapter
   Given Where am I exists
-  When I am on the page's page
-    And I view the content
+  When I read it online
   Then Leave Kudos or Comments on "Where am I?" should link to its comments
 
 Scenario: end notes link to kudos for Single work
   Given Where am I existed and was read
-  When I am on the page's page
-    And I view the content
+  When I read it online
   Then Leave Kudos or Comments on "Time Was, Time Is" should link to its comments
 
 Scenario: end notes link to kudos for Chapter of work
   Given Time Was exists
-  When I am on the page's page
-    And I follow "Where am I?" within "#position_1"
-    And I view the content
+  When I read "Where am I?" online
   Then Leave Kudos or Comments on "Where am I?" should link to its comments
 
 Scenario: end notes link to kudos for last chapter for Works
   Given Time Was exists
-  When I am on the page's page
-    And I view the content
+  When I read it online
   Then Leave Kudos or Comments on "Hogwarts" should link to its comments
     And I should NOT see "Leave Kudos or Comments on \"Where am I?\""
     And I should NOT see "Leave Kudos or Comments on \"Timw Was, Time Is\""
 
 Scenario: hr between kudos and rating
   Given Where am I exists
-  When I am on the page's page
-     And I view the content
+  When I read it online
   Then I should see a horizontal rule

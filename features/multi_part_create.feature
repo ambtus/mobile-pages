@@ -23,8 +23,7 @@ Scenario: create from a list of urls
       """
    And I fill in "page_title" with "Multiple pages from urls"
    And I press "Store"
-   And I am on the page with title "Multiple pages from urls"
-   And I view the content
+   And I read "Multiple pages from urls" online
  Then I should see "Part 1"
    And I should see "Part 2"
    And I should see "stuff for part 1"
@@ -74,8 +73,7 @@ Scenario: create from base url plus range
     And I fill in "page_url_substitutions" with "1-3"
     And I fill in "page_title" with "Multiple pages from base"
     And I press "Store"
-  When I am on the page's page
-    And I view the content
+  When I read it online
   Then I should see "Part 1"
     And I should see "Part 2"
     And I should see "Part 3"
@@ -90,8 +88,7 @@ Scenario: create from base url plus substitutions
     And I fill in "page_url_substitutions" with "1 3"
     And I fill in "page_title" with "Multiple pages from base"
     And I press "Store"
-  When I am on the page's page
-    And I view the content
+  When I read it online
   Then I should see "Part 1"
     And I should see "Part 2"
     But I should NOT see "Part 3"

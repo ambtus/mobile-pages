@@ -178,6 +178,7 @@ class Page < ActiveRecord::Base
   end
 
   # used in tests
+  scope :with_content, -> { where(type: [Chapter, Single]) }
   def all_html; parts.blank? ? edited_html : parts.map(&:all_html).join; end
   def self.create_from_hash(hash)
     Rails.logger.debug "DEBUG: Page.create_from_hash(#{hash})"
