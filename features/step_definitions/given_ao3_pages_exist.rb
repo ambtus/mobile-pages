@@ -147,6 +147,7 @@ Given /^Misfits existed$/ do
   series = Series.create!(title: "Misfit Series")
 
   work1 = Book.create!(title: "temp", parent_id: series.id, position: 1)
+  work1.update!(url: "https://archiveofourown.org/works/4945936")
   chapter1 = Chapter.create!(title: "temp", parent_id: work1.id, position: 1)
   chapter1.raw_html = File.open(Rails.root + "features/html/misfits1.html", 'r:utf-8') { |f| f.read }
   chapter1.update!(url: "https://archiveofourown.org/works/4945936/chapters/11353174")
@@ -261,3 +262,4 @@ Given('Cold Water exists') do
   chapter3.set_meta
   book.set_meta
 end
+

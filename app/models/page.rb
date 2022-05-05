@@ -184,7 +184,7 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "DEBUG: Page.create_from_hash(#{hash})"
     tag_types = Hash.new("")
     Tag.types.each {|tt| tag_types[tt] = hash.delete(tt.downcase.pluralize.to_sym) }
-    ao3_fandoms = hash.delete(:ao3_fandoms)
+    inferred_fandoms = hash.delete(:inferred_fandoms)
     page = Page.create!(hash)
     tag_types.compact.each {|key, value| page.send("add_tags_from_string", value, key)}
     if page.parts.blank?
@@ -194,7 +194,7 @@ class Page < ActiveRecord::Base
       page.parts.update_all last_read: hash[:last_read], stars: hash[:stars] || 10, read_after: hash[:read_after]
       page.update_from_parts
     end
-    page.add_fandoms_to_notes(ao3_fandoms.split(",")) if ao3_fandoms
+    page.add_fandoms_to_notes(inferred_fandoms.split(",")) if inferred_fandoms
     Rails.logger.debug "DEBUG: created test page #{page.inspect}"
     page
   end
@@ -224,10 +224,7 @@ class Page < ActiveRecord::Base
   end
 
   def fetch_raw
-    if ff?
-      self.raw_html = "edit raw html manually" if self.raw_html.blank?
-      return
-    end
+    return false if ff?
     html = scrub_fetch(self.url)
     if html
       remove_outdated_downloads
@@ -370,7 +367,7 @@ class Page < ActiveRecord::Base
     self.update(parent_id: nil, position: nil)
     self.set_type
     page = Page.find self.id
-    page.set_meta if page.ao3?
+    page.set_meta if page.ao3? || page.ff?
     page.toggle_wip if page.ao3_chapter? && page.wip_present?
   end
 
@@ -774,43 +771,29 @@ class Page < ActiveRecord::Base
       # Rails.logger.debug "DEBUG: page is #{page.inspect}"
       page.set_meta
       page.errors.messages.each{|e| self.errors.add(e.first, e.second.join_comma)}
+    elsif ff?
+      set_meta
     elsif parts.any?
       self.set_meta if parts.first.ao3_chapter?
-    else
-      set_type
     end
-    Rails.logger.debug "DEBUG: type is #{self.type}"
     self.parts.map(&:rebuild_meta)
-    set_wordcount
-  end
-
-#TODO
-  def get_chapters_from_ff
-  end
-
-  def get_chapters_from_skyehawke
-  end
-
-  def get_meta_from_ff
-  end
-
-  def get_meta_from_skyhawke
+    self.set_wordcount # doesn't really belong here, but it's the only way to force a recount from gui
   end
 
 private
 
   def remove_placeholders
     self.url = self.url == "URL" ? nil : self.url.try(:strip)
-    if self.title.blank? && self.url.blank?
+    self.base_url = nil if self.base_url == BASE_URL_PLACEHOLDER
+    self.urls = nil if self.urls == URLS_PLACEHOLDER
+    self.url_substitutions = nil if self.url_substitutions == URL_SUBSTITUTIONS_PLACEHOLDER
+    if self.title.blank? && self.url.blank? && self.base_url.blank? && self.urls.blank?
       self.errors.add(:base, "Both URL")
       return false
     end
     self.title = "no title provided" if self.title.blank?
     self.notes = nil if self.notes == "Notes"
     self.my_notes = nil if self.my_notes == "My Notes"
-    self.base_url = nil if self.base_url == BASE_URL_PLACEHOLDER
-    self.url_substitutions = nil if self.url_substitutions == URL_SUBSTITUTIONS_PLACEHOLDER
-    self.urls = nil if self.urls == URLS_PLACEHOLDER
     self.read_after = Time.now if self.read_after.blank?
     self.sanitize_version = Scrub.sanitize_version
   end

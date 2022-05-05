@@ -96,15 +96,6 @@ Given('Uneven exists') do
   parent.update_from_parts
 end
 
-Given /^underline spans exists$/ do
-  page = Page.new
-  page.title = "Part 6"
-  page.save
-  page.url =  "https://www.fanfiction.net/s/5409165/6/It-s-For-a-Good-Cause-I-Swear"
-  page.save
-  page.raw_html = File.open(Rails.root + "features/html/part6.html", 'r:utf-8') { |f| f.read }
-end
-
 Given('link in notes exists') do
   page = Single.create!(title: "Silent Sobs")
   page.notes = File.open(Rails.root + "features/html/silent.html", 'r:utf-8') { |f| f.read }
@@ -119,6 +110,27 @@ end
 Given('system down exists') do
   page = Page.create!(url: "http://test.sidrasue.com/test.html", title: "Test")
   page.raw_html = "system down"
+end
+
+Given /^He Could Be A Zombie exists$/ do
+  page = Chapter.create!(url: "https://www.fanfiction.net/s/5409165/6/It-s-For-a-Good-Cause-I-Swear")
+  page.raw_html = File.open(Rails.root + "features/html/part6.html", 'r:utf-8') { |f| f.read }
+  page.rebuild_meta
+end
+
+Given /^skipping exists$/ do
+  page = Single.create!(url: "https://www.fanfiction.net/s/5853866/1/Counting")
+  page.raw_html = File.open(Rails.root + "features/html/counting1.html", 'r:utf-8') { |f| f.read }
+  page.rebuild_meta
+end
+
+Given /^counting exists$/ do
+  page = Book.create!(base_url: "https://www.fanfiction.net/s/5853866/*", url_substitutions: "1-2")
+  chapter1 = page.parts.first
+  chapter1.raw_html = File.open(Rails.root + "features/html/counting1.html", 'r:utf-8') { |f| f.read }
+  chapter2 = page.parts.second
+  chapter2.raw_html = File.open(Rails.root + "features/html/counting2.html", 'r:utf-8') { |f| f.read }
+  page.rebuild_meta
 end
 
 Given /a page exists(?: with (.*))?/ do |fields|

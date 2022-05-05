@@ -66,18 +66,31 @@ Scenario: 2nd check before getting book by adding parent and then refetching
   Then I should see "archiveofourown.org/works/692/chapters/803" within "#url_list"
     And the "url" field should contain "https://archiveofourown.org/works/692"
 
-Scenario: check before fetching a series from before all the works had urls
+Scenario: check before fetching a series from before series had urls
   Given Misfits existed
   When I am on the page with title "Misfit Series"
     And I follow "Refetch"
-  Then I should see "A Misfit Working Holiday In New York" within "#url_list"
+  Then I should see "##Three Misfits in New York" within "#url_list"
+    And I should see "##A Misfit Working Holiday In New York" within "#url_list"
+    And the "url" field should contain "https://archiveofourown.org/works/4945936"
 
-Scenario: check before creating a series when I already have one of its books
+Scenario: check before creating a series when I already have its books
   Given Misfits existed
   When I am on the homepage
     And I follow "Misfit Series"
     And I press "Uncollect"
   Then I should have 6 pages
+    And I should see "Three Misfits in New York" within "#position_1"
+    And I should see "A Misfit Working Holiday In New York" within "#position_2"
+    And the page should NOT contain css "#position_3"
+
+Scenario: check before rebuilding a Series before storing index as raw HTML
+  Given Misfits existed
+    And Misfits has a URL
+  When I am on the page's page
+  Then I should see "Misfit Series (Series)" within ".title"
+    And I should NOT see "by Morraine" within ".notes"
+    And I should NOT see "Teen Wolf, Captain America, Avengers, Iron Man, Thor" within ".notes"
 
 Scenario: check before adding an unread chapter to a book
   Given Time Was partially exists

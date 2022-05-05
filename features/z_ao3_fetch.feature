@@ -111,7 +111,7 @@ Scenario: getting book by adding parent and then refetching
     And I should see "Where am I?" within "#position_1"
     And I should see "Hogwarts" within "#position_2"
 
-Scenario: fetching a series from before all the works had urls
+Scenario: fetching a series from before series had urls
   Given Misfits existed
   When I am on the page with title "Misfit Series"
     And I follow "Refetch"
@@ -141,8 +141,7 @@ Scenario: creating a series when I already have its books
     And I am on the homepage
     And I follow "Misfit Series"
     And I press "Uncollect"
-  When I am on the homepage
-    And I fill in "page_url" with "https://archiveofourown.org/series/334075"
+  When I fill in "page_url" with "https://archiveofourown.org/series/334075"
     And I press "Store"
   Then I should see "Page created"
     And I should see "Misfits (Series)" within ".title"
@@ -166,8 +165,8 @@ Scenario: refetching a one-page Single into a Book
     And I should see "Hogwarts" within ".part"
 
 Scenario: refetch from ao3 when it used to be somewhere else
-  Given counting exists
-    And I am on the page with title "Counting"
+  Given skipping exists
+    And I am on the page's page
     And I follow "Refetch"
     And I fill in "url" with "http://archiveofourown.org/works/688"
     And I press "Refetch"

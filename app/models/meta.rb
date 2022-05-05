@@ -80,13 +80,17 @@ module Meta
     chapters.second == "?" || chapters.first != chapters.second
   end
 
-  def ao3_fandoms
+  def inferred_fandoms
     if self.parts.empty?
       Rails.logger.debug "DEBUG: get fandoms from raw_html"
-      doc.css(".fandom a").map(&:children).map(&:text)
+      if ao3?
+        doc.css(".fandom a").map(&:children).map(&:text)
+      elsif ff?
+        [doc.css(".lc-left").children[2].text]
+      end
     else
       Rails.logger.debug "DEBUG: get fandoms from first and last parts"
-      (parts.first.ao3_fandoms + parts.last.ao3_fandoms).uniq
+      (parts.first.inferred_fandoms + parts.last.inferred_fandoms).uniq
     end
   end
 
@@ -110,27 +114,41 @@ module Meta
     end
   end
 
-  def ao3_authors
-    if self.is_a? Series
-      doc.css(".series dd").first.children.map(&:text).without(", ")
-    else
-      doc.css(".byline a").map(&:text)
+  def inferred_authors
+    if ao3?
+      if self.is_a? Series
+        doc.css(".series dd").first.children.map(&:text).without(", ")
+      else
+        doc.css(".byline a").map(&:text)
+      end
+    elsif ff?
+      [doc.css("#profile_top a").first.text] rescue nil
     end
   end
 
   def chapter_title
-    doc.css(".chapter .title").children.last.text.strip.gsub(/^: /,"") rescue nil
+    if ao3?
+      doc.css(".chapter .title").children.last.text.strip.gsub(/^: /,"") rescue nil
+    elsif ff?
+      doc.search('option[@selected="selected"]').children.first.text.gsub(/\d+\. /,'') rescue nil
+    end
   end
 
   def work_title
-    book_doc.xpath("//div[@id='main']").xpath("//h2").first.children.text.strip rescue "title not found"
+    if ao3?
+      book_doc.xpath("//div[@id='main']").xpath("//h2").first.children.text.strip rescue "title not found"
+    elsif ff?
+      doc.css("#profile_top b").text
+    else
+      "title not found"
+    end
   end
 
-  def ao3_title
+  def inferred_title
     if self.is_a? Chapter
       chapter_title.blank? ? "Chapter #{position}" : chapter_title
     elsif self.is_a? Single
-      if ao3_chapter?
+      if ao3_chapter? || ff?
         # A Single with a chapter url gets a chapter title, unless it is empty or Chapter X
         Rails.logger.debug "DEBUG: chapter title: #{chapter_title}, work title: #{work_title}"
         if chapter_title.blank? || chapter_title.match(/^Chapter \d*$/)
@@ -161,7 +179,11 @@ module Meta
       return doc.css(".series dd")[3].children.map(&:text) if doc.css(".series dt")[3].text == "Notes:"
       return doc.css(".series dd")[4].children.map(&:text) if doc.css(".series dt")[4].text == "Notes:"
     elsif self.is_a?(Book) || self.is_a?(Single)
-      Scrub.sanitize_html(book_doc.css(".notes[role=complementary] blockquote")).children.to_html
+      if ao3?
+        Scrub.sanitize_html(book_doc.css(".notes[role=complementary] blockquote")).children.to_html
+      elsif ff?
+        doc.css(".xcontrast_txt[style='margin-top:2px']").children.to_html
+      end
     end
   end
 
@@ -203,11 +225,11 @@ module Meta
     if self.is_a? Chapter
       [chapter_summary, chapter_notes]
     elsif self.is_a?(Single)
-      [add_authors(ao3_authors), add_fandoms(ao3_fandoms), ao3_relationships.to_p, work_summary, chapter_summary, ao3_tags.to_p, work_notes, chapter_notes]
+      [add_authors(inferred_authors), add_fandoms(inferred_fandoms), ao3_relationships.to_p, work_summary, chapter_summary, ao3_tags.to_p, work_notes, chapter_notes]
     elsif self.is_a?(Book)
-      [add_authors(ao3_authors), add_fandoms(ao3_fandoms), ao3_relationships.to_p, work_summary, ao3_tags.to_p, work_notes]
+      [add_authors(inferred_authors), add_fandoms(inferred_fandoms), ao3_relationships.to_p, work_summary, ao3_tags.to_p, work_notes]
     elsif self.is_a? Series
-      [add_authors(ao3_authors), add_fandoms(ao3_fandoms), work_summary, work_notes]
+      [add_authors(inferred_authors), add_fandoms(inferred_fandoms), work_summary, work_notes]
     end.join_hr
   end
 
@@ -223,9 +245,12 @@ module Meta
   end
 
   def set_meta
-    return false if doc.blank?
-    self.update! title: ao3_title, notes: head_notes, end_notes: tail_notes
-    Rails.logger.debug "DEBUG: set title to #{ao3_title}"
+    if doc.blank?
+      Rails.logger.debug "DEBUG: can't set meta without information"
+      return false
+    end
+    self.update! title: inferred_title, notes: head_notes, end_notes: tail_notes
+    Rails.logger.debug "DEBUG: set title to #{inferred_title}"
     Rails.logger.debug "DEBUG: set notes to #{head_notes}"
     Rails.logger.debug "DEBUG: set end notes to #{tail_notes}"
     set_wip if wip? unless ao3_chapter?

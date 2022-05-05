@@ -121,6 +121,7 @@ class PagesController < ApplicationController
           Rails.logger.debug "DEBUG: page created with fandom"
           flash[:notice] = "Page created."
         end
+        flash[:alert] = "edit raw html manually" if @page.ff?
         redirect_to page_path(@page) and return
       end
     else

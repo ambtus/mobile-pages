@@ -14,15 +14,6 @@ Given('I have a single with read_after {string}') do |string|
   Single.create!(title: "Single", read_after: string, last_read: string.to_date - 1.year, stars: 4)
 end
 
-Given /^counting exists$/ do
-  page = Single.new
-  page.title = "Counting"
-  page.save
-  page.url =  "https://www.fanfiction.net/s/5853866/1/Counting"
-  page.save
-  page.raw_html = File.open(Rails.root + "features/html/counting.html", 'r:utf-8') { |f| f.read }
-end
-
 Given("pages with all possible types exist") do
   Single.create(title: "One-shot", url: "http://test.sidrasue.com/short.html")
   Book.create(title: "Novel", base_url: "http://test.sidrasue.com/long*.html", url_substitutions: "1-2")

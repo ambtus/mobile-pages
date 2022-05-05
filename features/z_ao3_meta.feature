@@ -32,8 +32,7 @@ Scenario: refetching a read Series should show it as unread
 Scenario: rebuilding a Series before storing index as raw HTML (needs to refetch index)
   Given Misfits existed
     And Misfits has a URL
-  When I am on the homepage
-    And I follow "Misfit Series"
+  When I am on the page's page
     And I press "Rebuild Meta"
   Then I should see "Misfits (Series)" within ".title"
   And I should see "by Morraine" before "Teen Wolf, Captain America, Avengers, Iron Man, Thor" within ".notes"
