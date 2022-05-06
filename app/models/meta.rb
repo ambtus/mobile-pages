@@ -63,10 +63,10 @@ module Meta
 
   def doc
     if self.is_a? Book
+      Rails.logger.debug "DEBUG: getting doc from last part"
       Nokogiri::HTML(parts.last.raw_html)
     else
       fetch_raw if raw_html.blank?
-      return "" if raw_html.blank?
       Nokogiri::HTML(raw_html)
     end
   end
@@ -80,13 +80,22 @@ module Meta
     chapters.second == "?" || chapters.first != chapters.second
   end
 
+  def old_ff_style_hash
+    return {} unless ff?
+    book_doc.css('td script').text.create_hash("\n  ", " = ", true, "var ") rescue {}
+  end
+
   def inferred_fandoms
     if self.parts.empty?
       Rails.logger.debug "DEBUG: get fandoms from raw_html"
       if ao3?
         doc.css(".fandom a").map(&:children).map(&:text)
       elsif ff?
-        [doc.css(".lc-left").children[2].text]
+        hash = old_ff_style_hash[:cat_title]
+        links = doc.css("#pre_story_links a")[1].text rescue nil
+        [hash, links].pulverize
+      else
+        []
       end
     else
       Rails.logger.debug "DEBUG: get fandoms from first and last parts"
@@ -117,12 +126,18 @@ module Meta
   def inferred_authors
     if ao3?
       if self.is_a? Series
-        doc.css(".series dd").first.children.map(&:text).without(", ")
+        begin
+          doc.css(".series dd").first.children.map(&:text).without(", ")
+        rescue
+          (parts.first.inferred_authors + parts.last.inferred_authors).uniq
+        end
       else
         doc.css(".byline a").map(&:text)
       end
     elsif ff?
-      [doc.css("#profile_top a").first.text] rescue nil
+      hash = old_ff_style_hash[:author]
+      links = [doc.css("#profile_top a").first.text] rescue nil
+      [hash, links].pulverize
     end
   end
 
@@ -130,15 +145,28 @@ module Meta
     if ao3?
       doc.css(".chapter .title").children.last.text.strip.gsub(/^: /,"") rescue nil
     elsif ff?
-      doc.search('option[@selected="selected"]').children.first.text.gsub(/\d+\. /,'') rescue nil
+      new = doc.search('option[@selected="selected"]').children[0].text.match(/\d+\. (.*)/) rescue nil
+      old = doc.search('option[@selected="selected"]').children[1].text.match(/\d+\. (.*)/) rescue nil
+      [new, old].pulverize.first
+      $1
     end
   end
 
   def work_title
     if ao3?
-      book_doc.xpath("//div[@id='main']").xpath("//h2").first.children.text.strip rescue "title not found"
+      begin
+        book_doc.xpath("//div[@id='main']").xpath("//h2").first.children.text.strip
+      rescue
+        if title.blank? || title == "temp"
+          "title not found"
+        else
+          title
+        end
+      end
     elsif ff?
-      doc.css("#profile_top b").text
+      new = book_doc.css("#profile_top b").text rescue nil
+      old = old_ff_style_hash[:title_t]
+      [new, old].pulverize.first || "title not found"
     else
       "title not found"
     end
@@ -146,7 +174,17 @@ module Meta
 
   def inferred_title
     if self.is_a? Chapter
-      chapter_title.blank? ? "Chapter #{position}" : chapter_title
+      if chapter_title.blank? || chapter_title.match(/^Chapter \d*$/)
+        if title.blank? || title == "temp" || title.match(/^Part \d*$/)
+          Rails.logger.debug "DEBUG: replacing title: #{title} with chapter and position"
+          "Chapter #{position}"
+        else
+          Rails.logger.debug "DEBUG: keeping original title: #{title}"
+          title
+        end
+      else
+        chapter_title
+      end
     elsif self.is_a? Single
       if ao3_chapter? || ff?
         # A Single with a chapter url gets a chapter title, unless it is empty or Chapter X
@@ -166,24 +204,34 @@ module Meta
   end
 
   def work_summary
-    if self.is_a? Series
-      return doc.css(".series dd")[3].children.map(&:text) if doc.css(".series dt")[3].text == "Description:"
-      return doc.css(".series dd")[4].children.map(&:text) if doc.css(".series dt")[4].text == "Description:"
+    if self.is_a?(Series) && self.ao3?
+      begin
+        return doc.css(".series dd")[3].children.map(&:text) if doc.css(".series dt")[3].text == "Description:"
+        return doc.css(".series dd")[4].children.map(&:text) if doc.css(".series dt")[4].text == "Description:"
+      rescue
+        ""
+      end
     elsif self.is_a?(Book) || self.is_a?(Single)
-      Scrub.sanitize_html(book_doc.css(".summary[role=complementary] blockquote")).children.to_html
+      if ao3?
+        Scrub.sanitize_html(book_doc.css(".summary[role=complementary] blockquote")).children.to_html
+      elsif ff?
+        new = book_doc.css(".xcontrast_txt[style='margin-top:2px']").children.to_html
+        old = old_ff_style_hash[:summary]
+        [new, old].pulverize.first
+      end
     end
   end
 
   def work_notes
-    if self.is_a? Series
-      return doc.css(".series dd")[3].children.map(&:text) if doc.css(".series dt")[3].text == "Notes:"
-      return doc.css(".series dd")[4].children.map(&:text) if doc.css(".series dt")[4].text == "Notes:"
-    elsif self.is_a?(Book) || self.is_a?(Single)
-      if ao3?
-        Scrub.sanitize_html(book_doc.css(".notes[role=complementary] blockquote")).children.to_html
-      elsif ff?
-        doc.css(".xcontrast_txt[style='margin-top:2px']").children.to_html
+    if self.is_a?(Series) && self.ao3?
+      begin
+        return doc.css(".series dd")[3].children.map(&:text) if doc.css(".series dt")[3].text == "Notes:"
+        return doc.css(".series dd")[4].children.map(&:text) if doc.css(".series dt")[4].text == "Notes:"
+      rescue
+        ""
       end
+    elsif self.is_a?(Book) || self.is_a?(Single)
+      Scrub.sanitize_html(book_doc.css(".notes[role=complementary] blockquote")).children.to_html
     end
   end
 
@@ -233,6 +281,15 @@ module Meta
     end.join_hr
   end
 
+  def inferred_notes
+    if head_notes.blank? && notes.present? && (parent.blank? || parent.notes != notes)
+      Rails.logger.debug "DEBUG: not deleting old notes"
+      notes
+    else
+      head_notes
+    end
+  end
+
   def ao3_tt(strings)
     found = []
     strings.each do |string|
@@ -245,16 +302,17 @@ module Meta
   end
 
   def set_meta
-    if doc.blank?
+    if raw_html.blank? && parts.blank?
       Rails.logger.debug "DEBUG: can't set meta without information"
       return false
     end
-    self.update! title: inferred_title, notes: head_notes, end_notes: tail_notes
+    self.update! title: inferred_title, notes: inferred_notes, end_notes: tail_notes
     Rails.logger.debug "DEBUG: set title to #{inferred_title}"
-    Rails.logger.debug "DEBUG: set notes to #{head_notes}"
+    Rails.logger.debug "DEBUG: set notes to #{inferred_notes}"
     Rails.logger.debug "DEBUG: set end notes to #{tail_notes}"
     set_wip if wip? unless ao3_chapter?
     ao3_tt(ao3_tags) unless ao3_chapter?
+    return self
   end
 
   def refetch_recursive
@@ -349,7 +407,7 @@ module Meta
     end
   end
 
-  # only used in fandom.destroy_me and page.create_from_hash (testing)
+  # only used in Fandom.destroy_me and Utilities.create_from_hash (testing)
   def add_fandoms_to_notes(fandoms)
     self.update! notes: "#{add_fandoms(fandoms)}#{self.notes}"
     return self

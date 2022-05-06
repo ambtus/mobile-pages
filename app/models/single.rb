@@ -4,7 +4,7 @@ class Single < Page
 
   def fetch_ao3
     Rails.logger.debug "DEBUG: fetch_ao3 single #{self.id}"
-    fetch_raw && set_meta && remove_outdated_downloads && set_wordcount
+    fetch_raw && set_meta
   end
 
   def make_me_a_chapter(parent)

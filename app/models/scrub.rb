@@ -135,7 +135,7 @@ module Scrub
     auth = MyWebsites.getpwd(url)
     Scrub.agent.add_auth(url, auth[:username], auth[:password]) if auth
     if url.match("archiveofourown.org")
-       Rails.logger.debug "DEBUG: ao3 fetch"
+       Rails.logger.debug "DEBUG: ao3 fetch #{url}"
        content = Scrub.agent.get(url)
        if Scrub.agent.page.uri.to_s == "https://archiveofourown.org/"
          Rails.logger.debug "DEBUG: ao3 redirected back to homepage"

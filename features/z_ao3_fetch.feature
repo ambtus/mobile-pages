@@ -160,8 +160,8 @@ Scenario: refetching a one-page Single into a Book
   Then I should see "Refetched" within "#flash_notice"
     And I should see "Where am I? (Chapter)" within ".title"
     And I should NOT see "written for nanowrimo"
-    But I should NOT see "Using time-travel"
-    And I should see "Time Was, Time Is" within ".parent"
+    And I should NOT see "Using time-travel"
+    But I should see "Time Was, Time Is" within ".parent"
     And I should see "Hogwarts" within ".part"
 
 Scenario: refetch from ao3 when it used to be somewhere else

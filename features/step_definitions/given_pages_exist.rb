@@ -113,23 +113,42 @@ Given('system down exists') do
 end
 
 Given /^He Could Be A Zombie exists$/ do
-  page = Chapter.create!(url: "https://www.fanfiction.net/s/5409165/6/It-s-For-a-Good-Cause-I-Swear")
-  page.raw_html = File.open(Rails.root + "features/html/part6.html", 'r:utf-8') { |f| f.read }
-  page.rebuild_meta
+  page = Single.create!(url: "https://www.fanfiction.net/s/5409165/6/It-s-For-a-Good-Cause-I-Swear")
+  page.set_raw_from("part6")
+end
+
+Given /^stuck exists$/ do
+  page = Book.create!(base_url: "https://www.fanfiction.net/s/2652996/*", url_substitutions: "1")
+  page.parts.first.set_raw_from("stuck1")
+  page.rebuild_meta.set_wordcount(false)
+end
+
+Given /^ibiki exists$/ do
+  page = Single.create!(url: "https://www.fanfiction.net/s/6783401/1/Ibiki-s-Apprentice")
+  page.set_raw_from("ibiki")
 end
 
 Given /^skipping exists$/ do
   page = Single.create!(url: "https://www.fanfiction.net/s/5853866/1/Counting")
-  page.raw_html = File.open(Rails.root + "features/html/counting1.html", 'r:utf-8') { |f| f.read }
-  page.rebuild_meta
+  page.set_raw_from("counting1")
 end
 
 Given /^counting exists$/ do
   page = Book.create!(base_url: "https://www.fanfiction.net/s/5853866/*", url_substitutions: "1-2")
+  page.parts.first.set_raw_from("counting1")
+  page.parts.second.set_raw_from("counting2")
+  page.rebuild_meta.set_wordcount(false)
+end
+
+Given("Child of Four exists") do
+  page = Book.create!(base_url: "http://www.fanfiction.net/s/2790804/*", url_substitutions: "1-78")
   chapter1 = page.parts.first
-  chapter1.raw_html = File.open(Rails.root + "features/html/counting1.html", 'r:utf-8') { |f| f.read }
-  chapter2 = page.parts.second
-  chapter2.raw_html = File.open(Rails.root + "features/html/counting2.html", 'r:utf-8') { |f| f.read }
+  chapter1.update title: "Introduction", notes: "This story takes place in an Alternate Universe"
+  chapter1.set_raw_from("intro")
+  chapter3 = page.parts.third
+  chapter3.update title: "First Year"
+  chapter3.set_raw_from("first")
+  page.parts.last.set_raw_from("78")
   page.rebuild_meta
 end
 
@@ -137,7 +156,7 @@ Given /a page exists(?: with (.*))?/ do |fields|
   fields.blank? ? hash = {} : hash = fields.create_hash
   hash[:title] = hash[:title] || "Page 1"
   hash[:urls] =  hash[:urls].split(',').join("\r") if hash[:urls]
-  Page.create_from_hash(hash)
+  Utilities.create_from_hash(hash)
 end
 
 # create one or more different pages
@@ -145,7 +164,7 @@ Given /^the following pages?$/ do |table|
   # table is a Cucumber::Ast::Table
   table.hashes.each do |hash|
     hash['urls'] =  hash['urls'].split(',').join("\r") if hash['urls']
-    Page.create_from_hash(hash.symbolize_keys)
+    Utilities.create_from_hash(hash.symbolize_keys)
   end
 end
 

@@ -11,13 +11,20 @@ class String
 
   def strip_quotes; self.chip.chop; end ##TODO raise errors if not quoted
 
-  def create_hash
-    array = self.split(' AND ')
+  def create_hash(on1 = ' AND ', on2 = ': ', extra = false, pre = "")
+    array = self.split(on1).pulverize.without("")
     hash = {}
 
     array.each do |pair|
-      key_value = pair.split(': ')
-      hash[key_value[0].to_sym] = key_value[1].strip_quotes
+      key_value = pair.split(on2)
+      if key_value[0].is_a?(String) && key_value[1].is_a?(String)
+        key = key_value[0]
+        key = key.gsub(pre, "") unless pre.blank?
+        key = key.to_sym
+        value = key_value[1].strip_quotes
+        value = value.chop if extra
+        hash[key] = value
+      end
     end
 
     return hash

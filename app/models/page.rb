@@ -4,6 +4,7 @@ class Page < ActiveRecord::Base
   include Download
   include Meta
   include Rate
+  include Utilities
 
   MODULO = 300  # files in a single directory
   LIMIT = 5 # number of parts to show at a time
@@ -117,29 +118,34 @@ class Page < ActiveRecord::Base
 
   def set_wordcount(recount=true)
     #Rails.logger.debug "DEBUG: #{self.title} old wordcount: #{self.wordcount} and size: #{self.size}"
-    new_wordcout = if self.parts.size > 0
-      self.parts.each {|part| part.set_wordcount } if recount
-      self.parts.sum(:wordcount)
-    elsif recount && !self.is_a?(Series)
-      count = 0
-      body = Nokogiri::HTML(self.edited_html).xpath('//body').first
-      body.traverse { |node|
-        if node.is_a? Nokogiri::XML::Text
-          words = node.inner_text.gsub(/--/, "—").gsub(/(['’‘-])+/, "")
-          count +=  words.scan(/[a-zA-Z0-9À-ÿ_]+/).size
-        end
-      } if body
-      count
+    new_wordcount = if self.parts.size > 0
+        Rails.logger.debug "DEBUG: getting wordcount for #{self.title} from parts"
+        self.parts.each {|part| part.set_wordcount } if recount
+        self.parts.sum(:wordcount)
+      elsif recount && self.has_content?
+        Rails.logger.debug "DEBUG: getting wordcount for #{self.title} by recounting"
+        count = 0
+        body = Nokogiri::HTML(self.edited_html).xpath('//body').first
+        body.traverse { |node|
+          if node.is_a? Nokogiri::XML::Text
+            words = node.inner_text.gsub(/--/, "—").gsub(/(['’‘-])+/, "")
+            count +=  words.scan(/[a-zA-Z0-9À-ÿ_]+/).size
+          end
+        } if body
+        count
+      else
+        Rails.logger.debug "DEBUG: getting wordcount for #{self.title} from previous count"
+        wordcount || 0
     end
     size_word = "drabble"
-    if new_wordcout
-      size_word = "short" if new_wordcout > DRABBLE_MAX
-      size_word = "medium" if new_wordcout > SHORT_MAX
-      size_word = "long" if new_wordcout > MED_MAX
-      size_word = "epic" if new_wordcout > LONG_MAX
+    if new_wordcount
+      size_word = "short" if new_wordcount > DRABBLE_MAX
+      size_word = "medium" if new_wordcount > SHORT_MAX
+      size_word = "long" if new_wordcount > MED_MAX
+      size_word = "epic" if new_wordcount > LONG_MAX
     end
-    Rails.logger.debug "DEBUG: #{self.title} new wordcount: #{new_wordcout} and size: #{size_word}"
-    self.update_columns wordcount: new_wordcout, size: size_word
+    Rails.logger.debug "DEBUG: #{self.title} new wordcount: #{new_wordcount} and size: #{size_word}"
+    self.update_columns wordcount: new_wordcount, size: size_word
     return self
   end
 
@@ -171,33 +177,8 @@ class Page < ActiveRecord::Base
 
   after_create :initial_fetch
 
-  # make page.inspect easier to read in DEBUG: statements
-  def inspect
-     regexp = /([\d-]+)( \d\d:\d\d[\d:.+ ]+)/
-     super.match(regexp) ? super.gsub(regexp, '\1') : super
-  end
-
-  # used in tests
   scope :with_content, -> { where(type: [Chapter, Single]) }
-  def all_html; parts.blank? ? edited_html : parts.map(&:all_html).join; end
-  def self.create_from_hash(hash)
-    Rails.logger.debug "DEBUG: Page.create_from_hash(#{hash})"
-    tag_types = Hash.new("")
-    Tag.types.each {|tt| tag_types[tt] = hash.delete(tt.downcase.pluralize.to_sym) }
-    inferred_fandoms = hash.delete(:inferred_fandoms)
-    page = Page.create!(hash)
-    tag_types.compact.each {|key, value| page.send("add_tags_from_string", value, key)}
-    if page.parts.blank?
-      page.update last_read: hash[:last_read], stars: hash[:stars] || 10
-      page.update_read_after if hash[:read_after].blank?
-    else
-      page.parts.update_all last_read: hash[:last_read], stars: hash[:stars] || 10, read_after: hash[:read_after]
-      page.update_from_parts
-    end
-    page.add_fandoms_to_notes(inferred_fandoms.split(",")) if inferred_fandoms
-    Rails.logger.debug "DEBUG: created test page #{page.inspect}"
-    page
-  end
+  def has_content?; raw_html.present? && parts.blank?; end
 
   def ao3?; self.url && self.url.match(/archiveofourown/); end
   def ao3_url; self.url || self.parts.first.url.split("/chapter").first; end
@@ -206,34 +187,6 @@ class Page < ActiveRecord::Base
   def ff?
     (self.url && self.url.match(/fanfiction.net/)) ||
     (self.parts.first && self.parts.first.url && self.parts.first.url.match(/fanfiction.net/))
-  end
-
-  def scrub_fetch(url)
-    begin
-      Rails.logger.debug "DEBUG: fetching raw html from #{url}"
-      Scrub.fetch_html(url)
-    rescue SocketError
-      Rails.logger.debug "DEBUG: host unavailable"
-      self.errors.add(:base, "couldn't resolve host name")
-      return false
-    rescue
-      Rails.logger.debug "DEBUG: content unavailable"
-      self.errors.add(:base, "error retrieving content")
-      return false
-    end
-  end
-
-  def fetch_raw
-    return false if ff?
-    html = scrub_fetch(self.url)
-    if html
-      remove_outdated_downloads
-      remove_outdated_edits
-      self.raw_html = html
-      return self
-    else
-      return false
-    end
   end
 
   def add_part(part_url)
@@ -247,7 +200,7 @@ class Page < ActiveRecord::Base
       self.update_attribute(:read_after, Time.now) if self.read_after > Time.now
       page.set_wordcount
     else
-      Rails.logger.debug "DEBUG: found #{part}"
+      Rails.logger.debug "DEBUG: found #{page}"
       page.update!(position: position) if page.position != position
       page.update!(parent_id: self.id) if page.parent_id != self.id
     end
@@ -299,10 +252,10 @@ class Page < ActiveRecord::Base
       else
         Rails.logger.debug "DEBUG: found #{part}"
         if page.url == url
-          page.fetch_raw.remove_outdated_downloads.set_wordcount if refetch
+          page.fetch_raw if refetch
         elsif url.present?
           page.update!(:url, url)
-          page.fetch_raw.remove_outdated_downloads.set_wordcount
+          page.fetch_raw
         end
         page.update!(position: position) if page.position != position
         page.update!(parent_id: self.id) if page.parent_id != self.id
@@ -391,7 +344,7 @@ class Page < ActiveRecord::Base
       elsif ff?
         errors.add(:base, "can't refetch from fanfiction.net")
       else
-        fetch_raw.remove_outdated_downloads.set_wordcount
+        fetch_raw
         self.parent.set_wordcount(false) if self.parent
       end
     end
@@ -421,6 +374,9 @@ class Page < ActiveRecord::Base
     return "content" unless parent.raw_html.blank?
     count = parent.parts.size + 1
     self.update(:parent_id => parent.id, :position => count)
+    self.update!(type: "Chapter") if self.type == "Single"
+    parent.set_type
+    parent = Page.find(parent.id) # in case type changed
     if new
       Rails.logger.debug "DEBUG: moving tags to parent"
       parent.tags << self.tags
@@ -429,12 +385,12 @@ class Page < ActiveRecord::Base
         self.unset_hidden
         parent.set_hidden
       end
-      parent.update_stars
+      parent.set_meta if parent.ao3? || parent.ff?
     end
-    self.remove_duplicate_tags
     parent.update_from_parts
-    self.update!(type: "Chapter") if self.type == "Single"
-    parent.set_type
+    me = Page.find(self.id)
+    me.set_meta if me.ao3? || me.ff?
+    me.remove_duplicate_tags
     return parent
   end
 
@@ -604,22 +560,54 @@ class Page < ActiveRecord::Base
 
   ## Raw html includes everything from the web
 
+  def scrub_fetch(url)
+    begin
+      Rails.logger.debug "DEBUG: fetching raw html from #{url}"
+      Scrub.fetch_html(url)
+    rescue SocketError
+      Rails.logger.debug "DEBUG: host unavailable"
+      self.errors.add(:base, "couldn't resolve host name")
+      return false
+    rescue
+      Rails.logger.debug "DEBUG: content unavailable"
+      self.errors.add(:base, "error retrieving content")
+      return false
+    end
+  end
+
+  def fetch_raw
+    remove_outdated_downloads
+    return false if ff?
+    html = scrub_fetch(self.url)
+    if html
+      self.raw_html = html
+      return self
+    else
+      return false
+    end
+  end
+
   def raw_html_file_name
     self.mydirectory + "raw.html"
+  end
+
+  def build_clean_from_raw
+    html = MyWebsites.getnode(raw_html, self.url)
+    if html
+      Rails.logger.debug "DEBUG: updating scrubbed html from raw"
+      self.scrubbed_html = Scrub.sanitize_html(html)
+    else
+      Rails.logger.debug "DEBUG: no scrubbed html available from raw"
+      self.scrubbed_html = ""
+    end
+    self.set_wordcount
   end
 
   def raw_html=(content)
     remove_outdated_downloads
     body = Scrub.regularize_body(content)
     File.open(self.raw_html_file_name, 'w:utf-8') { |f| f.write(body) }
-    html = MyWebsites.getnode(body, self.url)
-    if html
-      Rails.logger.debug "DEBUG: also updating scrubbed html"
-      self.scrubbed_html = Scrub.sanitize_html(html)
-    else
-      self.scrubbed_html = ""
-    end
-    self.set_wordcount
+    build_clean_from_raw
   end
 
   def raw_html
@@ -634,8 +622,9 @@ class Page < ActiveRecord::Base
     remove_outdated_downloads
     if self.parts.size > 0
       self.parts.each {|p| p.rebuild_clean_from_raw }
+      set_wordcount(false)
     else
-      self.raw_html = self.raw_html
+      build_clean_from_raw
     end
     return self
   end
@@ -648,6 +637,7 @@ class Page < ActiveRecord::Base
 
   def scrubbed_html=(content)
     remove_outdated_downloads
+    remove_outdated_edits
     content = Scrub.remove_surrounding(content) if nodes(content).size == 1
     File.open(self.scrubbed_html_file_name, 'w:utf-8') { |f| f.write(content) }
   end
@@ -766,18 +756,17 @@ class Page < ActiveRecord::Base
   def rebuild_meta
     Rails.logger.debug "DEBUG: rebuilding meta for #{self.id}"
     remove_outdated_downloads
+    self.parts.map(&:rebuild_meta)
     if ao3?
       page = self.becomes!(self.ao3_type)
       # Rails.logger.debug "DEBUG: page is #{page.inspect}"
       page.set_meta
       page.errors.messages.each{|e| self.errors.add(e.first, e.second.join_comma)}
-    elsif ff?
-      set_meta
-    elsif parts.any?
-      self.set_meta if parts.first.ao3_chapter?
+      return page
+    else
+      self.set_meta
+      return self
     end
-    self.parts.map(&:rebuild_meta)
-    self.set_wordcount # doesn't really belong here, but it's the only way to force a recount from gui
   end
 
 private
@@ -804,7 +793,7 @@ private
     FileUtils.rm_rf(mydirectory) # make sure directory is empty for testing
     FileUtils.mkdir_p(download_dir) # make sure directory exists
 
-    if !self.url.blank?
+    if self.url.present?
       if self.ao3?
         if type.nil?
           page = self.becomes!(self.initial_ao3_type)
@@ -814,7 +803,7 @@ private
         end
         page.fetch_ao3
       else
-        self.fetch_raw
+        fetch_raw
       end
     elsif !self.base_url.blank?
       count = 1

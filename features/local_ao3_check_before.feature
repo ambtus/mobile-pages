@@ -115,3 +115,11 @@ Scenario: check before getting book by adding parent and then refetching
     And I follow "Refetch"
   Then the "url" field should contain "https://archiveofourown.org/works/692"
     And the "url_list" field should contain "https://archiveofourown.org/works/692/chapters/803##Where am I?"
+
+Scenario: check before rebuild meta on deleted series
+  Given Iterum Rex exists
+  When I am on the page with title "Iterum Rex"
+  Then I should see "Brave New World" within "#position_1"
+    And I should see "by TardisIsTheOnlyWayToTravel" within "#position_1"
+    And I should see "Harry Potter, Arthurian Mythology & Related Fandoms" within "#position_1"
+    And I should see "Draco Malfoy, reluctant Death Eater" within "#position_1"

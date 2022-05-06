@@ -6,8 +6,8 @@ Scenario: rebuild meta shouldn't refetch
   Given I Drive Myself Crazy exists
   When I change its raw html to "junk"
     And I press "Rebuild Meta"
-  Then I should see "title not found (Single)"
-    And I should NOT see "by Sidra" within ".notes"
+  Then the contents should include "junk"
+    And the contents should NOT include "Traveling through galaxies"
 
 Scenario: rebuild from raw should also rebuild meta
   Given I Drive Myself Crazy exists

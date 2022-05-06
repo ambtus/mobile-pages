@@ -1,33 +1,6 @@
 Feature: ff.net specific stuff
          local because I never figured out how to fetch from ff.net
 
-Scenario: fanfiction Single meta
-  Given skipping exists
-    And I am on the page's page
-  Then I should see "Skipping Stones (Single)" within ".title"
-    But I should NOT see "1. " within ".title"
-    And I should see "by ambtus" within ".notes"
-    And I should see "Harry Potter" within ".notes"
-    And I should see "2 connected drabbles" within ".notes"
-
-Scenario: fanfiction Book meta
-  Given counting exists
-    And I am on the page's page
-  Then I should see "Counting (Book)" within ".title"
-    And I should see "by ambtus" within ".notes"
-    And I should see "Harry Potter" within ".notes"
-    And I should see "2 connected drabbles" within ".notes"
-    And I should see "Skipping Stones (unread, 100 words)" within "#position_1"
-    And I should see "The Flower (unread, 100 words)" within "#position_2"
-    But I should NOT see "ambtus" within ".parts"
-    And I should NOT see "Harry Potter" within ".parts"
-    And I should NOT see "2 connected drabbles" within ".parts"
-
-Scenario: fanfiction Book meta
-  Given counting exists
-    And I am on the page's page
-  Then I should see ""
-
 Scenario: fanfiction.net can't be fetched
   Given I am on the create page
     And I fill in "page_title" with "Counting"

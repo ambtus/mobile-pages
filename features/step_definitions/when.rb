@@ -33,6 +33,7 @@ When("I change its raw html to {string}") do |html|
    visit page_path(page)
    click_link "Edit Raw HTML"
    fill_in "pasted", with: html
+   Rails.logger.debug "DEBUG: changing raw html to: #{html}"
    click_button "Update Raw HTML"
 end
 
