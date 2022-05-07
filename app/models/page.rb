@@ -350,48 +350,78 @@ class Page < ActiveRecord::Base
     end
   end
 
+  def parent_type(current)
+    current = "Book" unless current
+    new =
+      case type
+      when "Single", "Chapter", nil
+        "Book"
+      when "Book"
+        "Series"
+      when "Series"
+        "Collection"
+      end
+    [current, new].sort_by {|x| %w{Collection Series Book Single Chapter}.index(x)}.first
+  end
+
   def add_parent(title)
     parent=Page.find_by_title(title)
     Rails.logger.debug "DEBUG: parent #{title} found? #{parent.is_a?(Page)}"
     new = false
-    unless parent.is_a?(Page)
+    if parent.is_a?(Page)
+      return "content" if parent.has_content?
+    else
       pages=Page.where(["Lower(title) LIKE ?", "%" + title.downcase + "%"])
-      if pages.size > 1
-        Rails.logger.debug "DEBUG: #{pages.size} possible parents found"
-        return "ambiguous"
-      elsif pages.empty? || pages.first == self
+      potentials = pages.reject {|p| p.has_content?}
+      if potentials.size > 1
+        Rails.logger.debug "DEBUG: #{potentials.size} possible parents found"
+        return potentials.to_a
+      elsif potentials.empty?
         Rails.logger.debug "DEBUG: creating a new parent"
         parent = self.dup
         parent.url=nil
         parent.title=title
+        parent.type = self.parent_type(type)
         parent.save!
         new = true
       else
-        Rails.logger.debug "DEBUG: matching parent found #{pages.first.title}"
-        parent = pages.first
+        Rails.logger.debug "DEBUG: matching parent found #{potentials.first.title}"
+        parent = potentials.first
+        parent.update type: self.parent_type(parent.type)
       end
     end
-    return "content" unless parent.raw_html.blank?
-    count = parent.parts.size + 1
-    self.update(:parent_id => parent.id, :position => count)
-    self.update!(type: "Chapter") if self.type == "Single"
-    parent.set_type
-    parent = Page.find(parent.id) # in case type changed
+    add_parent_with_id(parent.id)
     if new
       Rails.logger.debug "DEBUG: moving tags to parent"
-      parent.tags << self.tags
+      parent.tags = self.tags
+      self.tags = []
       if self.hidden?
         Rails.logger.debug "DEBUG: moving hidden state to parent"
         self.unset_hidden
         parent.set_hidden
       end
-      parent.set_meta if parent.ao3? || parent.ff?
     end
-    parent.update_from_parts
-    me = Page.find(self.id)
-    me.set_meta if me.ao3? || me.ff?
-    me.remove_duplicate_tags
+    parent = Page.find(parent.id) # in case type changed
     return parent
+  end
+
+  def add_parent_with_id(id)
+    parent=Page.find(id)
+    Rails.logger.debug "DEBUG: adding #{self.title} #{self.class} to #{parent.title} #{parent.class}"
+    count = parent.parts.size + 1
+    self.update(:parent_id => parent.id, :position => count)
+    if self.type == "Single"
+      self.update!(type: "Chapter")
+      me = Page.find(self.id) # since type changed
+    else
+      me = self
+    end
+    parent.update type: me.parent_type(parent.type)
+    parent = Page.find(parent.id) # in case type changed
+    parent.update_from_parts
+    parent.rebuild_meta if me.ao3? || me.ff?
+    me.remove_duplicate_tags
+    return position
   end
 
   def parts_string

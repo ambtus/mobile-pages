@@ -1,0 +1,12 @@
+- content_for :title do
+  = "Choose Parent"
+.form
+  = form_tag parts_path do
+    = hidden_field_tag(:page_id, @page.id)
+    .parent
+      - @possibles.each do |choice|
+        = radio_button_tag :parent_id, choice.id
+        = label_tag "parent_id_#{choice.id}", choice.title
+        =link_to page_path(choice), page_path(choice)
+        %br
+    = submit_tag "Add Parent"

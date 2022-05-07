@@ -89,6 +89,7 @@ module Rate
 
   def update_from_parts
     return self unless parts.any?
+    Rails.logger.debug "DEBUG: updating #{self.title} #{self.class} from parts"
     update_last_read
     update_stars
     update_read_after

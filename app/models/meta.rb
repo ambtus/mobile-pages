@@ -306,6 +306,7 @@ module Meta
       Rails.logger.debug "DEBUG: can't set meta without information"
       return false
     end
+    Rails.logger.debug "DEBUG: setting meta for #{title} (#{self.class})"
     self.update! title: inferred_title, notes: inferred_notes, end_notes: tail_notes
     Rails.logger.debug "DEBUG: set title to #{inferred_title}"
     Rails.logger.debug "DEBUG: set notes to #{inferred_notes}"

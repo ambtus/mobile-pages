@@ -59,8 +59,7 @@ Scenario: create by adding parents to a single and a book
     And I am on the page with title "Single"
     And I add a parent with title "Grandparent"
     And I am on the page with title "Grandparent"
-    # FIXME - this should show Series, not Collection, since no children are series
-  Then I should see "Grandparent (Collection)" within ".title"
+  Then I should see "Grandparent (Series)" within ".title"
     And I should see "Parent" within "#position_1"
     And I should see "2 parts" within "#position_1"
     And I should see "Single" within "#position_2"

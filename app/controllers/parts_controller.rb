@@ -36,8 +36,10 @@ class PartsController < ApplicationController
     elsif params[:add_parent]
       @parent = @page.add_parent(params[:add_parent])
       case @parent
-      when "ambiguous"
+      when Array
          flash[:alert] = "More than one page with that title"
+         @possibles = @parent
+         render 'choose' and return
       when "content"
          flash[:alert] = "Parent with that title has content"
       when Page
@@ -45,6 +47,11 @@ class PartsController < ApplicationController
          @count = @page.position > Page::LIMIT ? @page.position - Page::LIMIT : 0
          @page = @parent
       end
+    elsif params[:parent_id]
+      position = @page.add_parent_with_id(params[:parent_id])
+      flash[:notice] = "Page added to this parent"
+      @count = position > Page::LIMIT ? position - Page::LIMIT : 0
+      @page = Page.find(params[:parent_id])
     else
       raise "missing or bad params (#{request.query_parameters})"
     end

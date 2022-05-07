@@ -15,7 +15,28 @@ Scenario: can't add a page to an ambiguous parent
   When I am on the page with title "Single"
     And I add a parent with title "Ambiguous"
   Then I should see "More than one page with that title"
-    And I should NOT see "Ambiguous" within ".title"
+    And I should NOT see "Ambiguous (Book)"
+
+Scenario: can view ambiguous parents
+  Given a page exists with title: "Ambiguous1"
+    And a page exists with title: "Ambiguous2"
+    And a page exists with title: "Single"
+    And I am on the page with title "Single"
+    And I add a parent with title "Ambiguous"
+    And I follow "/pages/1"
+  Then I should see "Ambiguous1 (Single)" within ".title"
+
+Scenario: can choose ambiguous parent
+  Given a page exists with title: "Ambiguous1"
+    And a page exists with title: "Ambiguous2"
+    And a page exists with title: "Single"
+    And I am on the page with title "Single"
+    And I add a parent with title "Ambiguous"
+    And I choose "Ambiguous1"
+    And I press "Add Parent"
+  Then I should see "Ambiguous1 (Book)" within ".title"
+    And I should see "(1 part)" within ".size"
+    And I should see "Single" within "#position_1"
 
 Scenario: can't add a part to a page with content
   Given a page exists with title: "Styled" AND url: "http://test.sidrasue.com/styled.html"
@@ -24,6 +45,25 @@ Scenario: can't add a part to a page with content
     And I add a parent with title "Styled"
   Then I should see "Parent with that title has content"
     And I should NOT see "Styled" within ".title"
+
+Scenario: can only add to pages without content
+  Given a page exists with title: "Styled1" AND url: "http://test.sidrasue.com/styled.html"
+    And a page exists with title: "Styled2"
+    And a page exists with title: "Single"
+    And I am on the page with title "Single"
+  When I add a parent with title "Styled"
+  Then I should see "Styled2 (Book)" within ".title"
+
+Scenario: can only choose between pages without content
+  Given a page exists with title: "Styled1" AND url: "http://test.sidrasue.com/styled.html"
+    And a page exists with title: "Styled2"
+    And a page exists with title: "Styled3"
+    And a page exists with title: "Single"
+    And I am on the page with title "Single"
+  When I add a parent with title "Styled"
+  Then I should see "Styled2"
+    And I should see "Styled3"
+    But I should NOT see "Styled1"
 
 Scenario: can't add yourself to your parts
   Given a page exists with url: "http://test.sidrasue.com/test.html"
