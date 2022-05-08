@@ -181,13 +181,15 @@ class Page < ActiveRecord::Base
   def has_content?; raw_html.present? && parts.blank?; end
 
   def ao3?; self.url && self.url.match(/archiveofourown/); end
-  def ao3_url; self.url || self.parts.first.url.split("/chapter").first; end
-  def ao3_chapter?; self.url && self.url.match(/chapters/); end
+  def ao3_chapter?; ao3? && self.url.match(/chapter/); end
 
-  def ff?
-    (self.url && self.url.match(/fanfiction.net/)) ||
-    (self.parts.first && self.parts.first.url && self.parts.first.url.match(/fanfiction.net/))
-  end
+  def ff?; url && url.match(/fanfiction.net/); end
+  def ff_chapter?; ff? && ff_chapter_number != "1"; end
+  def ff_chapter_number; url.split("/s/").second.split("/").second; end
+  def first_part_ff?; parts.any? && parts.first.ff?; end
+
+  def chapter_url?; ao3_chapter? || ff_chapter?; end
+  def chapter_as_single?; type == "Single" && chapter_url?; end
 
   def add_part(part_url)
     position = parts.last.position + 1
@@ -321,7 +323,6 @@ class Page < ActiveRecord::Base
     self.set_type
     page = Page.find self.id
     page.set_meta if page.ao3? || page.ff?
-    page.toggle_wip if page.ao3_chapter? && page.wip_present?
   end
 
   def refetch(passed_url)

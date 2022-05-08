@@ -15,12 +15,17 @@ Given /^ibiki exists$/ do
 end
 
 Given /^skipping exists$/ do
-  page = Single.create!(url: "https://www.fanfiction.net/s/5853866/1/Counting")
+  page = Single.create!(url: "https://www.fanfiction.net/s/5853866/1")
   page.set_raw_from("counting1")
 end
 
+Given /^the flower exists$/ do
+  page = Single.create!(url: "https://www.fanfiction.net/s/5853866/2")
+  page.set_raw_from("counting2")
+end
+
 Given /^counting exists$/ do
-  page = Book.create!(base_url: "https://www.fanfiction.net/s/5853866/*", url_substitutions: "1-2")
+  page = Book.create!(base_url: "https://www.fanfiction.net/s/5853866/*/Counting", url_substitutions: "1-2")
   page.parts.first.set_raw_from("counting1")
   page.parts.second.set_raw_from("counting2")
   page.rebuild_meta.set_wordcount(false)

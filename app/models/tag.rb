@@ -53,9 +53,13 @@ class Tag < ActiveRecord::Base
 
   def base_name; short_names.first; end
 
+  def self.all_names
+    self.send(scope_name).map(&:short_names).flatten
+  end
+
   def self.find_by_short_name(short)
     return nil if short.blank?
-    return nil unless self.names.include?(short) # don't catch substring au for audio
+    return nil unless self.all_names.include?(short) # don't catch substring au for audio
     self.send(scope_name).where(["name LIKE ?", "%" + short + "%"]).first
   end
 

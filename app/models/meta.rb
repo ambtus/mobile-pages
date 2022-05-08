@@ -8,10 +8,7 @@ module Meta
   def wip_tag; Con.find_or_create_by(name: WIP); end
   def wip_present?; tags.cons.include?(wip_tag);end
   def set_wip; tags.append(wip_tag) unless wip_present?; end
-  def toggle_wip
-    wip_present? ? tags.delete(wip_tag) : tags.append(wip_tag)
-    return self
-  end
+  def unset_wip; tags.delete(wip_tag) if wip_present?; end
 
   def tt_tag; Pro.find_or_create_by(name: TT); end
   def tt_present?; tags.pros.include?(tt_tag);end
@@ -74,14 +71,15 @@ module Meta
   def book_doc; self.is_a?(Book) ? Nokogiri::HTML(parts.first.raw_html) : doc; end
 
   def wip?
-    return false if self.is_a? Series # ignore Complete stat on series since it's rarely used
+    return false unless %w{Book Single}.include?(type)
+    return false if chapter_as_single?
     chapters = doc.css(".stats .chapters").children[1].text.split('/') rescue Array.new
     Rails.logger.debug "DEBUG: wip status: #{chapters}"
     chapters.second == "?" || chapters.first != chapters.second
   end
 
   def old_ff_style_hash
-    return {} unless ff?
+    return {} unless ff? || first_part_ff?
     book_doc.css('td script').text.create_hash("\n  ", " = ", true, "var ") rescue {}
   end
 
@@ -90,7 +88,7 @@ module Meta
       Rails.logger.debug "DEBUG: get fandoms from raw_html"
       if ao3?
         doc.css(".fandom a").map(&:children).map(&:text)
-      elsif ff?
+      elsif ff? || first_part_ff?
         hash = old_ff_style_hash[:cat_title]
         links = doc.css("#pre_story_links a")[1].text rescue nil
         [hash, links].pulverize
@@ -134,7 +132,7 @@ module Meta
       else
         doc.css(".byline a").map(&:text)
       end
-    elsif ff?
+    elsif ff? || first_part_ff?
       hash = old_ff_style_hash[:author]
       links = [doc.css("#profile_top a").first.text] rescue nil
       [hash, links].pulverize
@@ -163,7 +161,7 @@ module Meta
           title
         end
       end
-    elsif ff?
+    elsif ff? || first_part_ff?
       new = book_doc.css("#profile_top b").text rescue nil
       old = old_ff_style_hash[:title_t]
       [new, old].pulverize.first || "title not found"
@@ -186,7 +184,7 @@ module Meta
         chapter_title
       end
     elsif self.is_a? Single
-      if ao3_chapter? || ff?
+      if chapter_as_single?
         # A Single with a chapter url gets a chapter title, unless it is empty or Chapter X
         Rails.logger.debug "DEBUG: chapter title: #{chapter_title}, work title: #{work_title}"
         if chapter_title.blank? || chapter_title.match(/^Chapter \d*$/)
@@ -214,7 +212,7 @@ module Meta
     elsif self.is_a?(Book) || self.is_a?(Single)
       if ao3?
         Scrub.sanitize_html(book_doc.css(".summary[role=complementary] blockquote")).children.to_html
-      elsif ff?
+      elsif ff? || first_part_ff?
         new = book_doc.css(".xcontrast_txt[style='margin-top:2px']").children.to_html
         old = old_ff_style_hash[:summary]
         [new, old].pulverize.first
@@ -311,8 +309,8 @@ module Meta
     Rails.logger.debug "DEBUG: set title to #{inferred_title}"
     Rails.logger.debug "DEBUG: set notes to #{inferred_notes}"
     Rails.logger.debug "DEBUG: set end notes to #{tail_notes}"
-    set_wip if wip? unless ao3_chapter?
-    ao3_tt(ao3_tags) unless ao3_chapter?
+    wip? ? set_wip : unset_wip
+    ao3_tt(ao3_tags) unless chapter_url?
     return self
   end
 

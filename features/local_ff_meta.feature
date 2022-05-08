@@ -20,27 +20,50 @@ Scenario: newer format
     And I should see "Naruto" within ".notes"
     And I should see "teachers thought they were getting one over on the Hokage" within ".notes"
 
-Scenario: fanfiction Single meta
+Scenario: unavoidable fanfiction first chapter gets work title when single
   Given skipping exists
   When I am on the page's page
-  Then I should see "Skipping Stones (Single)" within ".title"
-    But I should NOT see "1. " within ".title"
+  Then I should see "Counting (Single)" within ".title"
     And I should see "by ambtus" within ".notes"
     And I should see "Harry Potter" within ".notes"
     And I should see "2 connected drabbles" within ".notes"
+
+Scenario: correct fanfiction Single behavior
+  Given the flower exists
+  When I am on the page's page
+  Then I should see "The Flower (Single)" within ".title"
+    And I should see "by ambtus" within ".notes"
+    And I should see "Harry Potter" within ".notes"
+    And I should see "2 connected drabbles" within ".notes"
+
+Scenario: fanfiction Chapter of Book meta
+  Given counting exists
+  When I am on the page's page
+    And I follow "Skipping Stones"
+  Then I should see "Skipping Stones (Chapter)" within ".title"
+    And I should NOT see "1. " within ".title"
+    And I should NOT see "by ambtus" within ".notes"
+    And I should NOT see "Harry Potter" within ".notes"
+    And I should NOT see "2 connected drabbles" within ".notes"
 
 Scenario: fanfiction Book meta
   Given counting exists
   When I am on the page's page
   Then I should see "Counting (Book)" within ".title"
+    And I should see "200 words (2 parts)" within ".size"
+    And I should see "unread" within ".last_read"
     And I should see "by ambtus" within ".notes"
     And I should see "Harry Potter" within ".notes"
     And I should see "2 connected drabbles" within ".notes"
     And I should see "Skipping Stones (unread, 100 words)" within "#position_1"
     And I should see "The Flower (unread, 100 words)" within "#position_2"
-    But I should NOT see "ambtus" within ".parts"
-    And I should NOT see "Harry Potter" within ".parts"
-    And I should NOT see "2 connected drabbles" within ".parts"
+
+Scenario: fanfiction match authors
+  Given "Sidra (ambtus)" is an "Author"
+    And counting exists
+  When I am on the page's page
+  Then I should see "Sidra" within ".authors"
+    And I should NOT see "ambtus"
 
 Scenario: check before adding a parent
   Given He Could Be A Zombie exists

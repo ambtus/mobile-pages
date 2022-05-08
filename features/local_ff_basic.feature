@@ -18,7 +18,7 @@ Scenario: check 1 before fanfiction.net can't be refetched
 Scenario: check 2 before fanfiction.net can't be refetched
   Given skipping exists
   When I am on the page's page
-  Then "Original" should link to "https://www.fanfiction.net/s/5853866/1/Counting"
+  Then "Original" should link to "https://www.fanfiction.net/s/5853866/1"
 
 Scenario: check 3 before fanfiction.net can't be refetched
   Given skipping exists

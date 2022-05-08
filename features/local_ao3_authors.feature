@@ -40,3 +40,9 @@ Scenario: multiple authors - aka in Authors
     And I should see "et al: whimsicalimages" within ".notes"
     And I should NOT see "adiduck"
 
+Scenario: author in aka
+  Given "ambtus (Sidra)" is an "Author"
+    And I Drive Myself Crazy exists
+  When I am on the page's page
+  Then I should see "ambtus" within ".authors"
+    And I should NOT see "Sidra"
