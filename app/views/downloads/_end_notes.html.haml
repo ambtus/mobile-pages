@@ -9,7 +9,8 @@
         =link_to "Leave Kudos or Comments on \"#{page.title}\"",  page.url + "#comments"
     %hr
   .rate
-    =link_to "Rate \"#{@page.title}\"", @url + rate_path(@page)
+    -rate = @page.read? ? "ReRate " : "Rate "
+    =link_to rate + @page.title.with_quotes, @url + rate_path(@page)
     =@url + rate_path(@page)
   -if page.next_part
     %hr

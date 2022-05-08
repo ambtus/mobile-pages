@@ -137,7 +137,7 @@ Scenario: Find by stars and author
     And I should NOT see "Nancy Drew"
 
 Scenario: interesting (3h, 4i, 5) but not hateful (3h)
-  Given pages with pros and cons exist
+  Given pages with all combinations of pros and cons exist
   When I am on the filter page
     And I select "interesting" from "pro"
     And I select "hateful" from "con"
@@ -147,7 +147,7 @@ Scenario: interesting (3h, 4i, 5) but not hateful (3h)
     But the page should NOT contain css "#position_3"
 
 Scenario: loving (3l, 4l, 5) but not boring (3l)
-  Given pages with pros and cons exist
+  Given pages with all combinations of pros and cons exist
   When I am on the filter page
     And I select "loving" from "pro"
     And I select "boring" from "con"

@@ -1,15 +1,20 @@
-Given("{int} pages exist") do |count|
-  count.times do |i|
-    Page.create(title: "Page #{(i+1)}", read_after: "2000-01-#{i+1}")
-    Kernel::sleep 1 if i<1  # sorting on created by for 2 page
-  end
-end
+Given("pages with all possible types exist") do
+  Single.create(title: "One-shot", url: "http://test.sidrasue.com/short.html")
+  Book.create(title: "Novel", base_url: "http://test.sidrasue.com/long*.html", url_substitutions: "1-2")
 
-Given('{int} pages with cons: {string} exist') do |count, string|
-  con = Con.find_or_create_by(name: string)
-  count.times do |i|
-    con.pages << Page.create(title: "Page #{(i+1)}", read_after: "2000-01-#{i+1}")
-  end
+  series = Series.create!(title: "Trilogy")
+  book1 = Book.create!(title: "Alpha", parent_id: series.id, position: 1)
+  book2 = Book.create!(title: "Beta", parent_id: series.id, position: 2)
+  child1 = Chapter.create!(title: "Prologue", parent_id: book1.id, position: 1, url: "http://test.sidrasue.com/parts/1.html")
+  child2 = Chapter.create!(title: "Epilogue", parent_id: book2.id, position: 1, url: "http://test.sidrasue.com/parts/5.html")
+
+  collection = Collection.create!(title: "Life's Work")
+
+  Single.create(title: "First", url: "http://test.sidrasue.com/test.html", parent_id: collection.id, position: 1)
+  Book.create(title: "Second", base_url: "http://test.sidrasue.com/medium*.html", url_substitutions: "1-2", parent_id: collection.id, position: 2)
+  series2 = Series.create(title: "Third", parent_id: collection.id, position: 3)
+  Book.create(title: "Fourth", parent_id: series2.id, position: 1)
+  Book.create(title: "Fifth", parent_id: series2.id, position: 2)
 end
 
 Given("pages with all possible stars exist") do
@@ -69,7 +74,7 @@ Given("pages with all possible unreads exist") do
   series3.update_from_parts
 end
 
-Given("pages with pros and cons exist") do
+Given("pages with all combinations of pros and cons exist") do
   Page.delete_all
   interesting = Pro.find_or_create_by(name: "interesting")
   boring = Con.find_or_create_by(name: "boring")
@@ -84,87 +89,5 @@ Given("pages with pros and cons exist") do
   Page.find_or_create_by(title: "page4l").tags << loving
   Page.find_or_create_by(title: "page4i").tags << interesting
   Page.find_or_create_by(title: "page5").tags << [interesting, loving]
-end
-
-Given('Uneven exists') do
-  parent = Book.create!(title: "Uneven")
-  4.times do |i|
-    int = i + 1
-    part = Chapter.create(title: "part #{int}", parent_id: parent.id, position: int, last_read: "2010-01-0#{int}", stars: int).update_read_after
-  end
-  Chapter.create(title: "part 5", parent_id: parent.id, position: 5)
-  parent.update_from_parts
-end
-
-Given('link in notes exists') do
-  page = Single.create!(title: "Silent Sobs")
-  page.notes = File.open(Rails.root + "features/html/silent.html", 'r:utf-8') { |f| f.read }
-  page.save!
-end
-
-Given('a page with very long notes exists') do
-  string = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "*10
-  Page.create(title: "Page 1", notes: string)
-end
-
-Given('system down exists') do
-  page = Page.create!(url: "http://test.sidrasue.com/test.html", title: "Test")
-  page.raw_html = "system down"
-end
-
-Given /^He Could Be A Zombie exists$/ do
-  page = Single.create!(url: "https://www.fanfiction.net/s/5409165/6/It-s-For-a-Good-Cause-I-Swear")
-  page.set_raw_from("part6")
-end
-
-Given /^stuck exists$/ do
-  page = Book.create!(base_url: "https://www.fanfiction.net/s/2652996/*", url_substitutions: "1")
-  page.parts.first.set_raw_from("stuck1")
-  page.rebuild_meta.set_wordcount(false)
-end
-
-Given /^ibiki exists$/ do
-  page = Single.create!(url: "https://www.fanfiction.net/s/6783401/1/Ibiki-s-Apprentice")
-  page.set_raw_from("ibiki")
-end
-
-Given /^skipping exists$/ do
-  page = Single.create!(url: "https://www.fanfiction.net/s/5853866/1/Counting")
-  page.set_raw_from("counting1")
-end
-
-Given /^counting exists$/ do
-  page = Book.create!(base_url: "https://www.fanfiction.net/s/5853866/*", url_substitutions: "1-2")
-  page.parts.first.set_raw_from("counting1")
-  page.parts.second.set_raw_from("counting2")
-  page.rebuild_meta.set_wordcount(false)
-end
-
-Given("Child of Four exists") do
-  page = Book.create!(base_url: "http://www.fanfiction.net/s/2790804/*", url_substitutions: "1-78")
-  chapter1 = page.parts.first
-  chapter1.update title: "Introduction", notes: "This story takes place in an Alternate Universe"
-  chapter1.set_raw_from("intro")
-  chapter3 = page.parts.third
-  chapter3.update title: "First Year"
-  chapter3.set_raw_from("first")
-  page.parts.last.set_raw_from("78")
-  page.rebuild_meta
-end
-
-Given /a page exists(?: with (.*))?/ do |fields|
-  fields.blank? ? hash = {} : hash = fields.create_hash
-  hash[:title] = hash[:title] || "Page 1"
-  hash[:urls] =  hash[:urls].split(',').join("\r") if hash[:urls]
-  Utilities.create_from_hash(hash)
-end
-
-# create one or more different pages
-Given /^the following pages?$/ do |table|
-  # table is a Cucumber::Ast::Table
-  table.hashes.each do |hash|
-    hash['urls'] =  hash['urls'].split(',').join("\r") if hash['urls']
-    Utilities.create_from_hash(hash.symbolize_keys)
-  end
 end
 
