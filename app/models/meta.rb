@@ -141,7 +141,15 @@ module Meta
 
   def chapter_title
     if ao3?
+      new =
       doc.css(".chapter .title").children.last.text.strip.gsub(/^: /,"") rescue nil
+      if title.boring?
+        new
+      elsif parent && parent.title == title
+        new
+      else
+        title
+      end
     elsif ff?
       new = doc.search('option[@selected="selected"]').children[0].text.match(/\d+\. (.*)/) rescue nil
       old = doc.search('option[@selected="selected"]').children[1].text.match(/\d+\. (.*)/) rescue nil
@@ -172,8 +180,8 @@ module Meta
 
   def inferred_title
     if type == "Chapter"
-      if chapter_title.blank? || chapter_title.match(/^Chapter \d*$/)
-        if title.blank? || title == "temp" || title.match(/^Part \d*$/)
+      if chapter_title.blank? || chapter_title.boring?
+        if title.blank? || title.boring?
           Rails.logger.debug "DEBUG: replacing title: #{title} with chapter and position"
           "Chapter #{position}"
         else
@@ -187,7 +195,7 @@ module Meta
       if chapter_as_single?
         # A Single with a chapter url gets a chapter title, unless it is empty or Chapter X
         Rails.logger.debug "DEBUG: chapter title: #{chapter_title}, work title: #{work_title}"
-        if chapter_title.blank? || chapter_title.match(/^Chapter \d*$/)
+        if chapter_title.blank? || chapter_title.boring?
           work_title
         else
           chapter_title

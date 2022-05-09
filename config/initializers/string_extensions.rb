@@ -1,7 +1,7 @@
 # Restart required even in development mode when you modify this file.
 
 # A list of all the methods defined here to prevent breaking rails by overwriting something in use
-%w{chip strip_quotes with_quotes create_hash normalize}.each do |meth|
+%w{chip strip_quotes with_quotes create_hash normalize boring}.each do |meth|
  raise "#{meth} is already defined in String class" if String.method_defined?(meth)
 end
 
@@ -37,6 +37,16 @@ class String
     url = url.sub(/^http:/, 'https:') if url.match("^http://archiveofourown.org/")
     url = url.chop if url.match("^https://archiveofourown.org/") && url.match("/$")
     url
+  end
+
+  #TODO there must be a better way to do this
+  def boring?
+    %w{Part Chapter temp Title Page}.each do |boring|
+      return true if boring == self
+      return true if boring == self.match(/^\d+\. (.*) \d+$/)[1] rescue nil
+      return true if boring == self.match(/^(.*) \d+$/)[1] rescue nil
+    end
+    return false
   end
 
 end

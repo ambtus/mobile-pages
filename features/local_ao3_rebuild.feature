@@ -23,3 +23,19 @@ Scenario: rebuild from raw should also rebuild meta
     And I should see "please no crossovers" within ".notes"
     And I should NOT see "testing notes" within ".notes"
 
+Scenario: rebuilding shouldn't change chapter titles if i've modified them
+  Given Time Was exists
+  When I am on the page with title "Hogwarts"
+    And I change the title to "Hogwarts (abandoned)"
+    And I follow "Time Was, Time Is"
+    And I press "Rebuild Meta"
+  Then I should see "Hogwarts (abandoned)" within "#position_2"
+
+Scenario: rebuilding should change chapter titles if they're boring
+  Given Time Was exists
+  When I am on the page with title "Hogwarts"
+    And I change the title to "2. Chapter 2"
+    And I follow "Time Was, Time Is"
+    And I press "Rebuild Meta"
+  Then I should see "2. Hogwarts" within "#position_2"
+    But the part titles should be stored as "Where am I? & Hogwarts"
