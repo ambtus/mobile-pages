@@ -188,8 +188,8 @@ end
 
 Given('The Right Path exists') do
   page = Single.create!(title: "temp")
-  page.set_raw_from("right")
   page.update!(url: "http://archiveofourown.org/works/5571483")
+  page.set_raw_from("right")
 end
 
 Given('Brave New World exists') do
@@ -234,4 +234,10 @@ Given('that was partially exists') do
   chapter1.update!(url: "https://archiveofourown.org/works/38244064/chapters/95553088")
   chapter1.set_raw_from("that")
   page.set_meta
+end
+
+Given('had a heart exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/18246218")
+  page.set_raw_from("heart")
 end

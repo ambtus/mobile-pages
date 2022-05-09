@@ -49,3 +49,9 @@ Scenario: put endnote on work, not last chapter
     And I should see "cw: gutting of a squirrel" within "#position_2"
     And I should NOT see "my tumblr: " within "#position_2"
     But I should NOT see "my tumblr: " within "#position_3"
+
+Scenario: missing fandom
+  Given "Star Wars (Mandalorian, Rogue One)" is a "Fandom"
+    And had a heart exists
+  When I am on the page's page
+  Then I should see "Star Wars" within ".fandoms"
