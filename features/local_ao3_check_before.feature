@@ -123,3 +123,10 @@ Scenario: check before rebuild meta on deleted series
     And I should see "by TardisIsTheOnlyWayToTravel" within "#position_1"
     And I should see "Harry Potter, Arthurian Mythology & Related Fandoms" within "#position_1"
     And I should see "Draco Malfoy, reluctant Death Eater" within "#position_1"
+
+Scenario: check before chapter numbering bug
+  Given that was partially exists
+  When I am on the page's page
+  Then I should see "Chapter 1" within "#position_1"
+    But I should NOT see "1. Chapter 1"
+    And the part titles should be stored as "Chapter 1"

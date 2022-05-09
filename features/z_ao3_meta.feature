@@ -120,3 +120,12 @@ Scenario: time travel Series
   When I fill in "page_url" with "https://archiveofourown.org/series/1664173"
     And I press "Store"
   Then I should see "Time Travel" within ".pros"
+
+Scenario: chapter numbering bug
+  Given that was partially exists
+    And I am on the page's page
+  When I follow "Refetch"
+    And I press "Refetch"
+  Then I should see "Chapter 2" within "#position_2"
+    But I should NOT see "2. Chapter 2"
+    And the part titles should be stored as "Chapter 1 & Chapter 2"

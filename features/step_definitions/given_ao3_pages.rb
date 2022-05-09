@@ -227,3 +227,11 @@ Given('Cold Water exists') do
   book.rebuild_meta
 end
 
+Given('that was partially exists') do
+  page = Book.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/38244064")
+  chapter1 = Chapter.create!(title: "temp", parent_id: page.id, position: 1)
+  chapter1.update!(url: "https://archiveofourown.org/works/38244064/chapters/95553088")
+  chapter1.set_raw_from("that")
+  page.set_meta
+end

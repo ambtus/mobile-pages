@@ -30,7 +30,7 @@ class Book < Page
     else
       chapter_list.each_with_index do |element, index|
         count = index + 1
-        title = element.text
+        title = element.text.gsub(/^\d*\. /,"")
         url = "https://archiveofourown.org" + element['href']
         chapter = Page.find_by(url: url)
         if chapter
