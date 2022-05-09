@@ -155,7 +155,6 @@ class Page < ActiveRecord::Base
   BASE_URL_PLACEHOLDER = "Base URL: use * as replacement placeholder"
   URL_SUBSTITUTIONS_PLACEHOLDER = "replacements: space separated or range n-m"
   URLS_PLACEHOLDER = "Alternatively: full URLs for parts, one per line"
-  PARENT_PLACEHOLDER = "Enter name of existing or new (unique name) parent"
 
   has_and_belongs_to_many :tags, -> { distinct }
   belongs_to :parent, class_name: "Page", optional: true
@@ -195,22 +194,30 @@ class Page < ActiveRecord::Base
   def chapter_as_single?; type == "Single" && chapter_url?; end
 
   def add_part(part_url)
-    position = parts.last.position + 1
-    page = Page.find_by(url: part_url)
-    if page.blank?
-      title = "Part #{position}"
-      page = Page.create(:url=>part_url, :title=>title, :parent_id=>self.id, :position => position)
-      page.set_type
-      # Rails.logger.debug "DEBUG: created #{page.reload.inspect}"
-      self.update_attribute(:read_after, Time.now) if self.read_after > Time.now
-      page.set_wordcount
+    if parts.any?
+      position = parts.last.position + 1
     else
-      Rails.logger.debug "DEBUG: found #{page}"
-      page.update!(position: position) if page.position != position
-      page.update!(parent_id: self.id) if page.parent_id != self.id
+      position = 1
+    end
+    if part_url.blank?
+      title = "Part #{position}"
+      page = Page.create!(:title=>title, :parent_id=>self.id, :position => position)
+      page.set_type
+    else
+      page = Page.find_by(url: part_url)
+      if page.blank?
+        title = "Part #{position}"
+        page = Page.create!(:url=>part_url, :title=>title, :parent_id=>self.id, :position => position)
+        page.set_type
+        # Rails.logger.debug "DEBUG: created #{page.reload.inspect}"
+        self.update_attribute(:read_after, Time.now) if self.read_after > Time.now
+        page.set_wordcount
+      else
+        Rails.logger.debug "DEBUG: found #{page}"
+        page.update!(position: position, parent_id: self.id)
+      end
     end
     self.update_from_parts
-    self.parent.update_from_parts if parent
   end
 
   def parts_from_urls(url_title_list, refetch = false)
@@ -304,6 +311,7 @@ class Page < ActiveRecord::Base
   def not_hidden_parts; parts.where(hidden: false); end
 
   def url_list
+    return unless parts.present?
     partregexp = /\APart \d+\Z/
     list = []
     self.parts.each do |part|
@@ -320,6 +328,16 @@ class Page < ActiveRecord::Base
     end
     list.join("\n")
   end
+
+  def url_list_length
+    return 33 if url_list.blank?
+    url_list.split("\n").sort_by{|line| line.length}.last.length
+  end
+
+  def refetch_url; url || parts.first.url.split("/chapter").first; end
+
+  def last_url; parts.any? ? parts.last.url : nil; end
+  def last_url_length; last_url ? last_url.length : 33; end
 
   def make_single
     Rails.logger.debug "DEBUG: removing #{self.id} from #{self.parent_id}"

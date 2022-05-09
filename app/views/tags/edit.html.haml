@@ -11,13 +11,13 @@
 %p.tag
   = form_for @tag.becomes(Tag) do |f|
     Change name:
-    = hinted_text_field_tag 'tag[name]', @tag.name, "Name"
+    = text_field_tag 'tag[name]', @tag.name
     = f.submit "Update"
     %br
     Split into:
-    = hinted_text_field_tag 'first_tag_name', @tag.name, "First Name"
+    = text_field_tag 'first_tag_name', @tag.name
     and
-    = hinted_text_field_tag 'second_tag_name', @tag.name, "Second Name"
+    = text_field_tag 'second_tag_name', @tag.name
     = f.submit "Split"
     %br
     = label_tag :change, "Change type:"

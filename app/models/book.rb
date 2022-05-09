@@ -47,6 +47,7 @@ class Book < Page
         end
       end
     end
+    return true
   end
 
 end

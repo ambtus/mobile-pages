@@ -35,7 +35,7 @@
     = link_to "Original", @page.url unless @page.url.blank?
     .content
       = link_to "Refetch", refetch_path(@page)
-      = link_to "Add Part", edit_part_path(@page, add: "part")
+      = link_to "Add Part", edit_part_path(@page, add: "part") unless @page.has_content?
       = link_to "Add Parent", edit_part_path(@page, add: "parent")
       - if @page.parts.blank?
         = link_to "Edit Scrubbed HTML", edit_html_path(@page, format: "scrubbed")

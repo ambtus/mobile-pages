@@ -3,7 +3,7 @@
 .form
   = form_tag parts_path do
     = hidden_field_tag(:page_id, @page.id)
-    .parent= hinted_text_field_tag :add_parent, @parent_title, Page::PARENT_PLACEHOLDER, :size => 33
+    .parent= hinted_text_field_tag :add_parent, nil, @hint, :size => 33
     = submit_tag "Add"
 
 

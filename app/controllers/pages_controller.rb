@@ -195,6 +195,7 @@ class PagesController < ApplicationController
       when "Update Raw HTML"
         @page.raw_html = params[:pasted]
         flash[:notice] = "Raw HTML updated."
+        flash[:alert] = "Now Rebuild Meta" if @page.ff?
       when "Edit HTML"
         @page.edited_html = params[:pasted]
         flash[:notice] = "Clean HTML updated."

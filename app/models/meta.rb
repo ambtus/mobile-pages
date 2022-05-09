@@ -302,7 +302,10 @@ module Meta
   end
 
   def set_meta
-    return unless ao3? || ff? || first_part_ff?
+    unless ao3? || ff? || first_part_ff?
+      Rails.logger.debug "DEBUG: only ao3 & FF for now"
+      return false
+    end
     if raw_html.blank? && parts.blank?
       Rails.logger.debug "DEBUG: can't set meta without information"
       return false

@@ -76,6 +76,7 @@ module Rate
       update! last_read: Time.now unless stars == "9"
       Rails.logger.debug "DEBUG: setting read after to #{calculated_read_after}"
       update! read_after: calculated_read_after
+      parent.update_from_parts if self.parent
     else
       parts_to_be_rated = all == "Yes" ? parts : unread_parts
       Rails.logger.debug "DEBUG: rating #{parts_to_be_rated.size} parts"
@@ -83,8 +84,6 @@ module Rate
       parts_to_be_rated.update_all last_read: Time.now unless stars == "9"
       update_from_parts
     end
-    parent.update_from_parts if self.parent
-    parent.parent.update_from_parts if parent && parent.parent
   end
 
   def update_from_parts
@@ -95,6 +94,7 @@ module Rate
     update_read_after
     remove_outdated_downloads
     set_wordcount(false)
+    parent.update_from_parts if parent
   end
 
   def update_last_read

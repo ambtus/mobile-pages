@@ -1,5 +1,6 @@
 class PartsController < ApplicationController
-  NEW_PARENT_TITLE = "Enter the title of the desired Parent Page"
+  PARENT_PLACEHOLDER = "Title of existing or new parent page"
+  URL_PLACEHOLDER = "URL of part to add"
 
   def new
     @new_page = Page.new
@@ -14,10 +15,11 @@ class PartsController < ApplicationController
       render "title"
     when "part"
       @title = "Add part to #{@page.title}"
+      @hint = URL_PLACEHOLDER
       render "part"
     when "parent"
       @title = "Add parent to #{@page.title}"
-      @parent_title = NEW_PARENT_TITLE
+      @hint = PARENT_PLACEHOLDER
       render "parent"
     else
       raise "missing or bad params[:add] (#{params[:add]})"
@@ -30,8 +32,10 @@ class PartsController < ApplicationController
     if params[:title]
       @page.update_attribute(:title, params[:title])
     elsif params[:add_url]
-      @page.add_part(params[:add_url])
+      url = params[:add_url] unless params[:add_url] == URL_PLACEHOLDER
+      @page.add_part(url)
       flash[:notice] = "Part added"
+      flash[:alert] = "Now Edit Raw HTML" if @page.first_part_ff?
       @count = @page.parts.size > Page::LIMIT ? @page.parts.size - Page::LIMIT : 0
     elsif params[:add_parent]
       @parent = @page.add_parent(params[:add_parent])

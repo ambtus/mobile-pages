@@ -3,5 +3,5 @@
 .form
   = form_tag parts_path do
     = hidden_field_tag(:page_id, @page.id)
-    .part= hinted_text_field_tag 'add_url', @page.parts.last.url, "URL", :size => @page.parts.last.url.length
+    .part= hinted_text_field_tag 'add_url', @page.last_url, @hint, :size => @page.last_url_length
     = submit_tag "Add"

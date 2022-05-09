@@ -15,7 +15,7 @@ class Series < Page
       url = "https://archiveofourown.org/works/#{work_id}"
       work = Page.find_by_url(url)
       if work.nil?
-        #do it's chapters exist?
+        #do its chapters exist?
         possibles = Page.where("url LIKE ?", url + "/chapters/%")
       end
       if possibles
@@ -52,7 +52,7 @@ class Series < Page
         sleep 5 unless count == work_list.size
       end
     end
-    update_from_parts
+    return true
   end
 
 end
