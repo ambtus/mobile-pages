@@ -34,6 +34,9 @@ module NavigationHelpers
     when /^the create page$/
       new_page_path
 
+    when /^the "Store Multiple" page$/
+      new_part_path
+
     when /^the filter page$/
       pages_path(q: true)
 

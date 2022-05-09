@@ -9,7 +9,7 @@ class TagsController < ApplicationController
       render :destroy and return
     elsif params[:recache]
       @tag = Tag.find(params[:id])
-      if @tag.is_a? Hidden
+      if @tag.type == "Hidden"
         Rails.logger.debug "DEBUG: recaching pages"
         @tag.pages.map(&:set_hidden)
         render :edit and return
@@ -44,9 +44,8 @@ class TagsController < ApplicationController
       true_tag.add_aka(@tag)
       redirect_to tags_path + "##{@tag.class}"
     elsif params[:commit] == "Change"
-      was_hidden = @tag.is_a? Hidden
+      was_hidden = @tag.type == "Hidden"
       type = params[:change]
-      type = "" if type == "Trope"
       @tag.update_attribute(:type, type)
       if type == "Hidden"
         Rails.logger.debug "DEBUG: setting hidden"

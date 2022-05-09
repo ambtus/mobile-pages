@@ -13,8 +13,7 @@ Scenario: link to parts in downloaded html
     And "Part 2" should link to itself
 
 Scenario: two and three levels (h3 & h4)
-  Given I am on the homepage
-  When I follow "Store Multiple"
+  Given I am on the "Store Multiple" page
     And I fill in "page_urls" with
       """
       ##Child 1

@@ -59,7 +59,7 @@ module Meta
   end
 
   def doc
-    if self.is_a? Book
+    if self.type == "Book"
       Rails.logger.debug "DEBUG: getting doc from last part"
       Nokogiri::HTML(parts.last.raw_html)
     else
@@ -68,7 +68,7 @@ module Meta
     end
   end
 
-  def book_doc; self.is_a?(Book) ? Nokogiri::HTML(parts.first.raw_html) : doc; end
+  def book_doc; type == "Book" ? Nokogiri::HTML(parts.first.raw_html) : doc; end
 
   def wip?
     return false unless %w{Book Single}.include?(type)
@@ -123,7 +123,7 @@ module Meta
 
   def inferred_authors
     if ao3?
-      if self.is_a? Series
+      if type == "Series"
         begin
           doc.css(".series dd").first.children.map(&:text).without(", ")
         rescue
@@ -171,7 +171,7 @@ module Meta
   end
 
   def inferred_title
-    if self.is_a? Chapter
+    if type == "Chapter"
       if chapter_title.blank? || chapter_title.match(/^Chapter \d*$/)
         if title.blank? || title == "temp" || title.match(/^Part \d*$/)
           Rails.logger.debug "DEBUG: replacing title: #{title} with chapter and position"
@@ -183,7 +183,7 @@ module Meta
       else
         chapter_title
       end
-    elsif self.is_a? Single
+    elsif type == "Single"
       if chapter_as_single?
         # A Single with a chapter url gets a chapter title, unless it is empty or Chapter X
         Rails.logger.debug "DEBUG: chapter title: #{chapter_title}, work title: #{work_title}"
@@ -202,14 +202,14 @@ module Meta
   end
 
   def work_summary
-    if self.is_a?(Series) && self.ao3?
+    if type == "Series" && ao3?
       begin
         return doc.css(".series dd")[3].children.map(&:text) if doc.css(".series dt")[3].text == "Description:"
         return doc.css(".series dd")[4].children.map(&:text) if doc.css(".series dt")[4].text == "Description:"
       rescue
         ""
       end
-    elsif self.is_a?(Book) || self.is_a?(Single)
+    elsif %w{Book Single}.include?(type)
       if ao3?
         Scrub.sanitize_html(book_doc.css(".summary[role=complementary] blockquote")).children.to_html
       elsif ff? || first_part_ff?
@@ -221,60 +221,62 @@ module Meta
   end
 
   def work_notes
-    if self.is_a?(Series) && self.ao3?
+    if type == "Series" && ao3?
       begin
         return doc.css(".series dd")[3].children.map(&:text) if doc.css(".series dt")[3].text == "Notes:"
         return doc.css(".series dd")[4].children.map(&:text) if doc.css(".series dt")[4].text == "Notes:"
       rescue
         ""
       end
-    elsif self.is_a?(Book) || self.is_a?(Single)
+    elsif %w{Book Single}.include?(type)
       Scrub.sanitize_html(book_doc.css(".notes[role=complementary] blockquote")).children.to_html
     end
   end
 
   def chapter_summary
-    if self.is_a?(Single) || self.is_a?(Chapter)
+    if %w{Chapter Single}.include?(type)
       Scrub.sanitize_html(doc.css("div#summary blockquote")).children.to_html
     end
   end
 
   def chapter_notes
-    if self.is_a?(Single) || self.is_a?(Chapter)
+    if %w{Chapter Single}.include?(type)
       Scrub.sanitize_html(doc.css("div#notes blockquote")).children.to_html
     end
   end
 
   def chapter_end_notes
-    if self.is_a?(Single) || self.is_a?(Chapter)
+    if %w{Chapter Single}.include?(type)
       Scrub.sanitize_html(doc.css("div[id^=chapter_] blockquote")).children.to_html
     end
   end
 
   def work_end_notes
-    if self.is_a?(Book) || self.is_a?(Single)
+    if %w{Book Single}.include?(type)
       Scrub.sanitize_html(doc.css("div#work_endnotes blockquote")).children.to_html
     end
   end
 
   def tail_notes
-    if self.is_a? Chapter
+    case type
+    when "Chapter"
       chapter_end_notes
-    elsif self.is_a? Single
+    when "Single"
       [chapter_end_notes, work_end_notes].join_hr
-    elsif self.is_a? Book
+    when "Book"
       work_end_notes
     end
   end
 
   def head_notes
-    if self.is_a? Chapter
+    case type
+    when "Chapter"
       [chapter_summary, chapter_notes]
-    elsif self.is_a?(Single)
+    when "Single"
       [add_authors(inferred_authors), add_fandoms(inferred_fandoms), ao3_relationships.to_p, work_summary, chapter_summary, ao3_tags.to_p, work_notes, chapter_notes]
-    elsif self.is_a?(Book)
+    when "Book"
       [add_authors(inferred_authors), add_fandoms(inferred_fandoms), ao3_relationships.to_p, work_summary, ao3_tags.to_p, work_notes]
-    elsif self.is_a? Series
+    when "Series"
       [add_authors(inferred_authors), add_fandoms(inferred_fandoms), work_summary, work_notes]
     end.join_hr
   end
@@ -300,6 +302,7 @@ module Meta
   end
 
   def set_meta
+    return unless ao3? || ff? || first_part_ff?
     if raw_html.blank? && parts.blank?
       Rails.logger.debug "DEBUG: can't set meta without information"
       return false

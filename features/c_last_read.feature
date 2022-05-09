@@ -32,7 +32,7 @@ Scenario: add unread part to read parent makes parent unread
     And a page exists with last_read: "2009-01-01" AND title: "Parent"
   When I am on the page's page
     And I add a parent with title "Parent"
-  Then I should see "Parent" within ".title"
+  Then I should see "Parent (Book)" within ".title"
     And I should see "unread" within ".last_read"
     And I should see "unread" within "#position_1"
 

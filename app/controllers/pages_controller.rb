@@ -86,7 +86,7 @@ class PagesController < ApplicationController
       if @page
         flash[:notice] = "Refetched"
         @page.refetch(@page.url)
-        @page = Page.find(@page.id) # rather than reload, in case its class changed
+        @page = Page.find(@page.id)
         @count = @page.parts.size > Page::LIMIT ? @page.parts.size - Page::LIMIT : 0
         render :show and return
       else
@@ -218,7 +218,6 @@ class PagesController < ApplicationController
       Rails.logger.debug "DEBUG: page errors: #{@page.errors.messages}"
       flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
     end
-    @page = Page.find(@page.id) # in case something changed
     render :show
   end
 

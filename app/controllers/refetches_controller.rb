@@ -27,7 +27,7 @@ class RefetchesController < ApplicationController
       flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
     end
     flash[:notice] = @notice
-    @page = Page.find(params[:page_id]) # in case its class changed during refetch
+    @page = Page.find(params[:page_id]) # in case it changed during refetch
     @count = @page.parts.size > Page::LIMIT ? @page.parts.size - Page::LIMIT : 0
     render 'pages/show'
   end

@@ -9,8 +9,7 @@ Scenario: audiobook sections
     And I should see "2"
 
 Scenario: part sections
-  Given I am on the homepage
-  When I follow "Store Multiple"
+  Given I am on the "Store Multiple" page
     And I fill in "page_urls" with
       """
       http://test.sidrasue.com/parts/1.html

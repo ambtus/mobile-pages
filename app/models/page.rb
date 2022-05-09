@@ -51,23 +51,26 @@ class Page < ActiveRecord::Base
     #Rails.logger.debug "DEBUG: setting type for #{self.inspect}"
     if ao3?
       Rails.logger.debug "DEBUG: ao3 type set to #{self.ao3_type}"
-      self.update_columns type: self.ao3_type
+      self.update!(type: ao3_type)
     else
-      should_be = if parts.empty?
-        parent_id.nil? ? "Single" : "Chapter"
-      elsif parts.map(&:type).uniq == ["Chapter"]
-        Rails.logger.debug "DEBUG: part types: #{parts.map(&:type).uniq}"
-        "Book"
-      elsif (parts.map(&:type).uniq - ["Single", "Book"]).empty?
-        Rails.logger.debug "DEBUG: part types: #{parts.map(&:type).uniq}"
-        "Series"
-      else
-        Rails.logger.debug "DEBUG: part types: #{parts.map(&:type).uniq}"
-        "Collection"
-      end
-      Rails.logger.debug "DEBUG: non-ao3 type set to #{should_be}"
-      self.update_columns type: should_be
+      should_be =
+        if parts.empty?
+          parent_id.nil? ? Single : Chapter
+        else
+          part_types = parts.map(&:type).uniq.compact
+          Rails.logger.debug "DEBUG: part types: #{part_types}"
+          if (part_types - ["Chapter"]).empty?
+            Book
+          elsif (part_types - ["Single", "Book"]).empty?
+            Series
+          else
+            Collection
+          end
+        end
+      Rails.logger.debug "DEBUG: non-ao3 type set to #{should_be} for #{self.title}"
+      self.update!(type: should_be)
     end
+    parent.set_type if parent
   end
 
   def self.remove_all_duplicate_tags
@@ -238,11 +241,15 @@ class Page < ActiveRecord::Base
       url = part.sub(/#.*/, "")
       title = part.sub(/.*#/, "") if part.match("#")
       position = parts.index(part) + 1
-      page = if url.blank?
-        Page.find_by(title: title, parent_id: self.id)
-      else
-        Page.find_by(url: url)
-      end
+      Rails.logger.debug "DEBUG: looking for url: #{url} and title: #{title} in position #{position}"
+      page =
+        if url.present?
+          Page.find_by(url: url)
+        else
+          Page.find_by(title: title, parent_id: self.id) ||
+            possibles = Page.where(title: title)
+            possibles.first if possibles && possibles.size == 1
+        end
       if page.blank?
         title = "Part #{position}" if title.blank?
         Rails.logger.debug "DEBUG: didn't find #{part}"
@@ -321,17 +328,15 @@ class Page < ActiveRecord::Base
     self.tags << parent.tags - self.tags
     self.update(parent_id: nil, position: nil)
     self.set_type
-    page = Page.find self.id
-    page.set_meta if page.ao3? || page.ff?
+    set_meta
   end
 
   def refetch(passed_url)
-    if ao3? && is_a?(Single) && !ao3_chapter?
+    if ao3? && type == "Single" && !url.match(/chapters/)
       parent = Book.create!(title: "temp")
       if self.make_me_a_chapter(parent)
         parent.update!(url: passed_url) && parent.fetch_ao3
-        me = Chapter.find(self.id)
-        me.set_meta && me.remove_duplicate_tags
+        set_meta && remove_duplicate_tags
       else
         errors.add(:base, "couldn't make me a chapter")
       end
@@ -362,7 +367,7 @@ class Page < ActiveRecord::Base
       when "Series"
         "Collection"
       end
-    [current, new].sort_by {|x| %w{Collection Series Book Single Chapter}.index(x)}.first
+    [current, new].sort_by {|x| %w{Collection Series Book Single Chapter}.index(x)}.first.constantize
   end
 
   def add_parent(title)
@@ -379,16 +384,12 @@ class Page < ActiveRecord::Base
         return potentials.to_a
       elsif potentials.empty?
         Rails.logger.debug "DEBUG: creating a new parent"
-        parent = self.dup
-        parent.url=nil
-        parent.title=title
-        parent.type = self.parent_type(type)
-        parent.save!
+        parent = Page.create!(title: title, type: parent_type(self.type))
         new = true
       else
         Rails.logger.debug "DEBUG: matching parent found #{potentials.first.title}"
         parent = potentials.first
-        parent.update type: self.parent_type(parent.type)
+        parent.update!(type: parent_type(parent.type))
       end
     end
     add_parent_with_id(parent.id)
@@ -402,27 +403,23 @@ class Page < ActiveRecord::Base
         parent.set_hidden
       end
     end
-    parent = Page.find(parent.id) # in case type changed
-    return parent
+    return Page.find(parent.id)
   end
 
-  def add_parent_with_id(id)
-    parent=Page.find(id)
-    Rails.logger.debug "DEBUG: adding #{self.title} #{self.class} to #{parent.title} #{parent.class}"
+  def add_parent_with_id(parent_id)
+    parent=Page.find(parent_id)
+    Rails.logger.debug "DEBUG: adding #{self.type} with title #{self.title} to #{parent.type} with title #{parent.title}"
     count = parent.parts.size + 1
-    self.update(:parent_id => parent.id, :position => count)
-    if self.type == "Single"
-      self.update!(type: "Chapter")
-      me = Page.find(self.id) # since type changed
-    else
-      me = self
+    self.update!(parent_id: parent.id, position: count)
+    if self.type == "Single" && (parent.type == "Single" || parent.type == "Book")
+      self.update!(type: Chapter) && parent.update!(type: Book)
     end
-    parent.update type: me.parent_type(parent.type)
-    parent = Page.find(parent.id) # in case type changed
     parent.update_from_parts
-    parent.rebuild_meta if me.ao3? || me.ff?
-    me.remove_duplicate_tags
-    return position
+    page = Page.find(self.id)
+    page.parent.set_meta
+    page.set_meta
+    page.remove_duplicate_tags
+    return page.position
   end
 
   def parts_string
@@ -479,7 +476,6 @@ class Page < ActiveRecord::Base
 
   def add_tags_from_string(string, type="Tag")
     return if string.blank?
-    type = "Tag" if type == "Trope"
     Rails.logger.debug "DEBUG: adding #{type} #{string}"
     self.set_hidden if type == "Hidden"
     string.split(",").each do |tag|
@@ -788,16 +784,8 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "DEBUG: rebuilding meta for #{self.id}"
     remove_outdated_downloads
     self.parts.map(&:rebuild_meta)
-    if ao3?
-      page = self.becomes!(self.ao3_type)
-      # Rails.logger.debug "DEBUG: page is #{page.inspect}"
-      page.set_meta
-      page.errors.messages.each{|e| self.errors.add(e.first, e.second.join_comma)}
-      return page
-    else
-      self.set_meta
-      return self
-    end
+    set_meta
+    return self
   end
 
 private
@@ -827,14 +815,14 @@ private
     if self.url.present?
       if self.ao3?
         if type.nil?
-          page = self.becomes!(self.initial_ao3_type)
+          page = self.becomes!(initial_ao3_type)
           Rails.logger.debug "DEBUG: page became #{page.type}"
         else
           page = self
         end
         page.fetch_ao3
       else
-        fetch_raw
+        fetch_raw || return
       end
     elsif !self.base_url.blank?
       count = 1
@@ -859,13 +847,15 @@ private
         end
         count = count.next
       end
-      self.set_wordcount
+      self.set_wordcount(false)
     elsif !self.urls.blank?
       self.parts_from_urls(self.urls)
     else
       self.set_wordcount
     end
-    self.set_type unless self.type
+    self.set_type unless type
+    Rails.logger.debug "DEBUG: created as #{position.ordinalize} of #{parent.title}" if parent && position
+    Rails.logger.debug "DEBUG: created with #{parts.size} parts" if parts.any?
   end
 
 

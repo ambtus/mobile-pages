@@ -36,7 +36,7 @@ Scenario: check before refetching a read Series should show it as unread
     And I should NOT see "by Sidra; Harry Potter;" within "#position_1"
     And I should NOT see "The Flower"
 
-Scenario: check before refetch Single
+Scenario: check before refetch Single (verify that updates changed notes and html)
   Given "harry potter" is a "Fandom"
     And Where am I exists
   When I am on the page with title "Where am I?"
@@ -49,6 +49,12 @@ Scenario: check before refetch Single
     And I should NOT see "Amy woke slowly"
     And I should see "changed notes"
     And I should NOT see "Sidra"
+
+Scenario: check before refetch Single (verify url to be refetched)
+  Given Where am I exists
+    And I am on the page with title "Where am I?"
+  When I follow "Refetch"
+  Then the "url" field should contain "https://archiveofourown.org/works/692/chapters/803"
 
 Scenario: check before getting book by adding parent and then refetching
   Given Where am I exists
@@ -101,12 +107,6 @@ Scenario: check before adding an unread chapter to a book
     And I should see today within "#position_1"
     And I should see "Other Fandom" within ".fandoms"
     But I should NOT see "Other Fandom" within "#position_1"
-
-Scenario: check before refetch Single
-  Given Where am I exists
-    And I am on the page with title "Where am I?"
-  When I follow "Refetch"
-  Then the "url" field should contain "https://archiveofourown.org/works/692/chapters/803"
 
 Scenario: check before getting book by adding parent and then refetching
   Given Where am I exists

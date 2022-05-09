@@ -14,8 +14,7 @@ Scenario: holder page for parts is okay
     And I should have 1 page
 
 Scenario: create from a list of urls
-  When I am on the homepage
-    And I follow "Store Multiple"
+  When I am on the "Store Multiple" page
     And I fill in "page_urls" with
       """
       http://test.sidrasue.com/parts/1.html
@@ -32,8 +31,7 @@ Scenario: create from a list of urls
 Scenario: create a page from a list of urls with author and tags and notes
   Given "mytag" is a "Fandom"
     And "myauthor" is an "Author"
-  When I am on the homepage
-    And I follow "Store Multiple"
+  When I am on the "Store Multiple" page
     And I fill in "page_urls" with
       """
       http://test.sidrasue.com/parts/1.html
@@ -52,8 +50,7 @@ Scenario: create a page from a list of urls with author and tags and notes
     And I should see "Part 2" within "#position_2"
 
 Scenario: create from a list of urls some of which have titles
-  Given I am on the homepage
-    And I follow "Store Multiple"
+  Given I am on the "Store Multiple" page
   When I fill in "page_urls" with
       """
       http://test.sidrasue.com/parts/1.html
@@ -67,8 +64,7 @@ Scenario: create from a list of urls some of which have titles
     But I should NOT see "Part 2"
 
 Scenario: create from base url plus range
-  Given I am on the homepage
-    And I follow "Store Multiple"
+  Given I am on the "Store Multiple" page
     And I fill in "page_base_url" with "http://test.sidrasue.com/parts/*.html"
     And I fill in "page_url_substitutions" with "1-3"
     And I fill in "page_title" with "Multiple pages from base"
@@ -82,8 +78,7 @@ Scenario: create from base url plus range
     And I should see "stuff for part 3"
 
 Scenario: create from base url plus substitutions
-  Given I am on the homepage
-    And I follow "Store Multiple"
+  Given I am on the "Store Multiple" page
     And I fill in "page_base_url" with "http://test.sidrasue.com/parts/*.html"
     And I fill in "page_url_substitutions" with "1 3"
     And I fill in "page_title" with "Multiple pages from base"
@@ -97,8 +92,7 @@ Scenario: create from base url plus substitutions
     But I should see "stuff for part 3"
 
 Scenario: ignore empty lines in list or urls during create
-  Given I am on the homepage
-    And I follow "Store Multiple"
+  Given I am on the "Store Multiple" page
   When I fill in "page_urls" with
       """
 

@@ -85,7 +85,7 @@ class Filter
 
     if tags.size < 2
       if tags.size == 1
-        if tags.first.is_a? Con
+        if tags.first.type == "Con"
           Filter.intersection(pages, tags, params)
         else
           pages = pages.joins(:tags).where(tags: {id: tags.first.id}).distinct
@@ -110,7 +110,7 @@ class Filter
     Rails.logger.debug "DEBUG: filtering on intersection of #{tags.size} tags"
     results = []
     tags.each_with_index do |tag, index|
-      if tag.is_a? Con
+      if tag.type == "Con"
         pages_without_tag = pages - tag.pages
         Rails.logger.debug "DEBUG: not #{tag.base_name} has #{pages_without_tag.count} pages: #{pages_without_tag.map(&:title)}"
         results << pages_without_tag

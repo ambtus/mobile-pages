@@ -80,3 +80,18 @@ Given('a series exists') do
     Chapter.create!(title: "Epilogue", parent_id: book2.id,  position: 2, url: "http://test.sidrasue.com/parts/4.html")
        Single.create!(title: "Extras", parent_id: series.id, position: 3, url: "http://test.sidrasue.com/parts/5.html")
 end
+
+Given('I have Books with titles {string} and {string}') do |title1, title2|
+  Book.create(title: title1, base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1-2")
+  Book.create(title: title2, base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "4-6")
+end
+
+Given('I have a Single with title {string} and url {string}') do |title, url|
+  Single.create(title: title, url: url)
+end
+
+Given('three singles exist') do
+  3.times do |i|
+    Single.create(title: "Parent#{i+1}")
+  end
+end

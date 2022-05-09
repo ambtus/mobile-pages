@@ -34,14 +34,14 @@ class Book < Page
         url = "https://archiveofourown.org" + element['href']
         chapter = Page.find_by(url: url)
         if chapter
-          if chapter.position == count && chapter.parent_id == self.id && chapter.is_a?(Chapter)
-            Rails.logger.debug "DEBUG: chapter already exists, skipping #{chapter.id} in position #{count}"
+          if chapter.position == count && chapter.parent_id == self.id && chapter.type == "Chapter"
+            Rails.logger.debug "DEBUG: chapter already exists, skipping #{chapter.title}"
           else
-            Rails.logger.debug "DEBUG: chapter already exists, updating #{chapter.id} with position #{count}"
+            Rails.logger.debug "DEBUG: chapter already exists, updating #{chapter.title}"
             chapter.update(position: count, parent_id: self.id, type: Chapter)
           end
         else
-          Rails.logger.debug "DEBUG: chapter does not yet exist, creating #{title} in position #{count}"
+          Rails.logger.debug "DEBUG: chapter does not exist, creating #{title} in position #{count}"
           Chapter.create(:title => title, :url => url, :position => count, :parent_id => self.id)
           sleep 5 unless count == chapter_list.size
         end

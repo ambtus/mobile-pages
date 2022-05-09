@@ -5,7 +5,7 @@
   %p=link_to_tag @tag, "#{@tag.pages.count} #{'page'.pluralize(@tag.pages.count)} with that tag"
 .destroy
   %p=link_to 'Destroy', tag_path(@tag, destroy: true)
--if @tag.is_a? Hidden
+-if @tag.type == "Hidden"
   .recache
     %p=link_to 'Recache', tag_path(@tag, recache: true)
 %p.tag

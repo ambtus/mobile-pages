@@ -1,42 +1,24 @@
 Feature: third level hierarchy
 
-# FIXME - should be able to just put the entire heirarchy in the first page_urls
-Scenario: create series from Singles & Books
-  Given I am on the homepage
-    And I follow "Store Multiple"
+Scenario: create Series from Singles & Books
+  Given I have Books with titles "First" and "Third"
+    And I have a Single with title "Second" and url "http://test.sidrasue.com/parts/3.html"
+  When I am on the "Store Multiple" page
   When I fill in "page_urls" with
     """
-    ##Part the first
-
-    http://test.sidrasue.com/parts/3.html##Part 2
-
-    ##Third Part
+    ##First
+    ##Second
+    ##Third
     """
-    And I fill in "page_title" with "Page 1"
+    And I fill in "page_title" with "Trilogy"
     And I press "Store"
-    And I follow "Part the first"
-    And I refetch the following
-      """
-      http://test.sidrasue.com/parts/1.html##subpart title
-      http://test.sidrasue.com/parts/2.html
-      """
-    And I follow "Part 2"
-    And I follow "Third Part"
-    And I refetch the following
-      """
-      http://test.sidrasue.com/parts/4.html
-      http://test.sidrasue.com/parts/5.html
-      http://test.sidrasue.com/parts/6.html
-      """
-    And I am on the page's page
-    # FIXME - this should show Series, not book, since some parts are books
-  Then I should see "Page 1 (Book)" within ".title"
-    And I should see "Part the first" within "#position_1"
+  Then I should see "Trilogy (Series)" within ".title"
+    And I should see "First" within "#position_1"
     And I should see "2 parts" within "#position_1"
-    And I should see "Part 2" within "#position_2"
+    And I should see "Second" within "#position_2"
     And "Original" should link to "http://test.sidrasue.com/parts/3.html"
     And I should NOT see "parts" within "#position_2"
-    And I should see "Third Part" within "#position_3"
+    And I should see "Third" within "#position_3"
     And I should see "3 parts" within "#position_3"
 
 Scenario: create collection by adding parent to parent to parent
@@ -66,8 +48,29 @@ Scenario: create by adding parents to a single and a book
     And "Original" should link to "http://test.sidrasue.com/parts/1.html"
     And I should NOT see "parts" within "#position_2"
 
-Scenario: create by adding parts and then subparts
+Scenario: create book by adding parts
   Given a page exists
+    And three singles exist
+  When I am on the page's page
+    And I refetch the following
+      """
+      ##Parent1
+      ##Parent2
+      ##Parent3
+      """
+    And I follow "Parent2" within "#position_2"
+    And I refetch the following
+      """
+      http://test.sidrasue.com/parts/3.html
+      http://test.sidrasue.com/parts/4.html
+      """
+  Then I should see "Parent2 (Book)" within ".title"
+    And I should see "Part 1" within "#position_1"
+    And I should see "Part 2" within "#position_2"
+
+Scenario: create series by adding subparts to book
+  Given a page exists
+    And three singles exist
   When I am on the page's page
     And I refetch the following
       """
@@ -82,8 +85,7 @@ Scenario: create by adding parts and then subparts
       http://test.sidrasue.com/parts/4.html
       """
     And I am on the page's page
-    # FIXME - this should show Series, not Book, since Parent 2 is a book
-  Then I should see "Page 1 (Book)" within ".title"
+  Then I should see "Page 1 (Series)" within ".title"
     And I should see "Parent1" within "#position_1"
     And I should NOT see "parts" within "#position_1"
     And I should see "Parent2" within "#position_2"

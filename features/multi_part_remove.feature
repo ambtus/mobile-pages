@@ -1,8 +1,7 @@
 Feature: removing parts from parents and parents from parts
 
 Scenario: uncollect should delete parent
-  Given I am on the homepage
-  When I follow "Store Multiple"
+  Given I am on the "Store Multiple" page
     And I fill in "page_urls" with
       """
       http://test.sidrasue.com/parts/1.html##One
