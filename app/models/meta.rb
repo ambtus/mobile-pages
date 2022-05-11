@@ -298,8 +298,10 @@ module Meta
   end
 
   def inferred_notes
-    if head_notes.blank? && notes.present? && (parent.blank? || parent.notes != notes)
-      Rails.logger.debug "DEBUG: not deleting old notes"
+    if head_notes.present?
+      head_notes
+    elsif notes.present? && ff?
+      Rails.logger.debug "DEBUG: not deleting old ff notes"
       notes
     else
       head_notes

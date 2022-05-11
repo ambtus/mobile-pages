@@ -15,8 +15,8 @@ Scenario: refetching & rebuilding meta of a top level fic
     And I follow "Time Was, Time Is"
     And I press "Rebuild Meta"
   Then I should NOT see "changed book notes"
-    But I should see "changed part notes"
-    And I should see "by Sidra" within ".notes"
+    And I should NOT see "changed part notes"
+    But I should see "by Sidra" within ".notes"
     And I should see "giving up" within "#position_2"
 
 Scenario: refetching a read Series should show it as unread
