@@ -270,7 +270,11 @@ module Meta
     when "Chapter"
       chapter_end_notes
     when "Single"
-      [chapter_end_notes, work_end_notes].join_hr
+      if chapter_as_single?
+        chapter_end_notes
+      else
+        [chapter_end_notes, work_end_notes].join_hr
+      end
     when "Book"
       work_end_notes
     end
@@ -281,7 +285,11 @@ module Meta
     when "Chapter"
       [chapter_summary, chapter_notes]
     when "Single"
-      [add_authors(inferred_authors), add_fandoms(inferred_fandoms), ao3_relationships.to_p, work_summary, chapter_summary, ao3_tags.to_p, work_notes, chapter_notes]
+      if chapter_as_single?
+        [add_authors(inferred_authors), add_fandoms(inferred_fandoms), chapter_summary, chapter_notes]
+      else
+        [add_authors(inferred_authors), add_fandoms(inferred_fandoms), ao3_relationships.to_p, work_summary, chapter_summary, ao3_tags.to_p, work_notes, chapter_notes]
+      end
     when "Book"
       [add_authors(inferred_authors), add_fandoms(inferred_fandoms), ao3_relationships.to_p, work_summary, ao3_tags.to_p, work_notes]
     when "Series"

@@ -67,3 +67,11 @@ Scenario: do match Drizzt (as first)
     And Counting Drabbles exists
   When I am on the page's page
   Then I should see "harry potter" within ".fandoms"
+
+Scenario: don't add tags, except for fandom, when chapter as single
+  Given Multi Authors exists
+  When I am on the page's page
+  Then I should see "Star Wars" within ".notes"
+    But I should NOT see "Jango Fett" within ".notes"
+    And I should NOT see "Fix-It" within ".notes"
+    But I should see "by adiduck" within ".notes"

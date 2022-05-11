@@ -20,7 +20,7 @@ Scenario: newer format
     And I should see "Naruto" within ".notes"
     And I should see "teachers thought they were getting one over on the Hokage" within ".notes"
 
-Scenario: unavoidable fanfiction first chapter gets work title when single
+Scenario: unavoidable fanfiction first chapter doesn't get chapter_as_single
   Given skipping exists
   When I am on the page's page
   Then I should see "Counting (Single)" within ".title"
@@ -28,13 +28,13 @@ Scenario: unavoidable fanfiction first chapter gets work title when single
     And I should see "Harry Potter" within ".notes"
     And I should see "2 connected drabbles" within ".notes"
 
-Scenario: correct fanfiction Single behavior
+Scenario: fanfiction chapter as Single behavior
   Given the flower exists
   When I am on the page's page
   Then I should see "The Flower (Single)" within ".title"
     And I should see "by ambtus" within ".notes"
     And I should see "Harry Potter" within ".notes"
-    And I should see "2 connected drabbles" within ".notes"
+    But I should NOT see "2 connected drabbles" within ".notes"
 
 Scenario: fanfiction Chapter of Book meta
   Given counting exists
@@ -71,7 +71,7 @@ Scenario: check before adding a parent
   Then I should see "He Could Be A Zombie (Single)" within ".title"
     And I should see "by Sarah1281" within ".notes"
     And I should see "Naruto" within ".notes"
-    And I should see "After receiving a time travel jutsu" within ".notes"
+    But I should NOT see "After receiving a time travel jutsu" within ".notes"
 
 Scenario: fanfiction book from adding a parent
   Given He Could Be A Zombie exists

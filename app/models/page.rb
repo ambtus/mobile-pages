@@ -430,7 +430,7 @@ class Page < ActiveRecord::Base
     count = parent.parts.size + 1
     self.update!(parent_id: parent.id, position: count)
     if self.type == "Single" && (parent.type == "Single" || parent.type == "Book")
-      self.update!(type: Chapter) && parent.update!(type: Book)
+      self.update!(type: Chapter, notes: "") && parent.update!(type: Book)
     end
     parent.update_from_parts
     page = Page.find(self.id)

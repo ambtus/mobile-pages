@@ -55,3 +55,11 @@ Scenario: missing fandom
     And had a heart exists
   When I am on the page's page
   Then I should see "Star Wars" within ".fandoms"
+
+Scenario: duplicate end notes on chapter as single
+  Given Multi Authors exists
+  When I am on the page's page
+  Then I should see "No, Jango is not in chapter one." within ".end_notes"
+    But I should NOT see "No, Jango is not in chapter one." within ".notes"
+    And I should NOT see "full notes"
+

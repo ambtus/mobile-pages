@@ -10,13 +10,17 @@ Scenario: ao3 with and without chapter titles
     But I should NOT see "1. Chapter 1"
     And the part titles should be stored as "Chapter 1 & Ours"
 
-Scenario: deliberately fetch chapter 1 shows summary and notes
+Scenario: deliberately fetch chapter 1 shows chapter summary and chapter notes
+          and author and fandom
+          but not work summary or work notes
   Given Where am I exists
   When I am on the homepage
     And I follow "Where am I"
   Then I should see "Where am I? (Single)" within ".title"
-    And I should see "Using time-travel"
-    And I should see "written for"
+    And I should see "by Sidra" within ".notes"
+    And I should see "Harry Potter" within ".notes"
+    But I should NOT see "Using time-travel"
+    And I should NOT see "written for"
 
 Scenario: multiple fandoms and author on a Single
   Given Alan Rickman exists
