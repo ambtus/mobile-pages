@@ -817,7 +817,7 @@ private
       self.errors.add(:base, "Both URL")
       return false
     end
-    self.title = "no title provided" if self.title.blank?
+    self.title = "temp" if self.title.blank?
     self.notes = nil if self.notes == "Notes"
     self.my_notes = nil if self.my_notes == "My Notes"
     self.read_after = Time.now if self.read_after.blank?

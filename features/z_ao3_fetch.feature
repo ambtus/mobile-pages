@@ -56,10 +56,8 @@ Scenario: grab a book
     And my page named "Counting Drabbles" should have url: "https://archiveofourown.org/series/46"
 
 Scenario: deliberately fetch only one chapter
-  Given "harry potter" is a "Fandom"
-    And I am on the create page
+  Given I am on the homepage
     And I fill in "page_url" with "https://archiveofourown.org/works/692/chapters/803"
-    And I select "harry potter" from "fandom"
   When I press "Store"
   Then I should see "Where am I? (Single)" within ".title"
     And I should NOT see "WIP" within ".cons"

@@ -20,7 +20,7 @@ Scenario: clear out title
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
   Then I should NOT see "Title can't be blank"
-    And I should see "no title provided" within ".title"
+    And I should see "temp" within ".title"
     And I should have 1 page
 
 Scenario: change title
