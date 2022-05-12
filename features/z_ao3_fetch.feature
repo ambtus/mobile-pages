@@ -73,10 +73,10 @@ Scenario: refetch Single
   Given "harry potter" is a "Fandom"
     And Where am I exists
     And I am on the page with title "Where am I?"
+    And I change its raw html to "oops"
     And I follow "Notes"
     And I fill in "page_notes" with "changed notes"
     And I press "Update"
-    And I change its raw html to "oops"
     And I follow "Refetch"
     And I press "Refetch"
   Then I should see "Refetched" within "#flash_notice"

@@ -839,8 +839,10 @@ private
           page = self
         end
         page.fetch_ao3
+      elsif ff?
+        set_type unless type and return
       else
-        fetch_raw || return
+        fetch_raw or return
       end
     elsif !self.base_url.blank?
       count = 1

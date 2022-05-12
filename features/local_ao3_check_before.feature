@@ -40,10 +40,10 @@ Scenario: check before refetch Single (verify that updates changed notes and htm
   Given "harry potter" is a "Fandom"
     And Where am I exists
   When I am on the page with title "Where am I?"
+    And I change its raw html to "oops"
     And I follow "Notes"
     And I fill in "page_notes" with "changed notes"
     And I press "Update"
-    And I change its raw html to "oops"
     And I read it online
   Then I should see "oops"
     And I should NOT see "Amy woke slowly"

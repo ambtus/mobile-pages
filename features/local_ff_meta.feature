@@ -96,3 +96,15 @@ Scenario: don't rename chapters that i've named or delete notes that i've added
     And I should see "Introduction" within "#position_1"
     And I should see "This story takes place in an Alternate Universe" within "#position_1"
     And I should see "First Year" within "#position_3"
+
+Scenario: rebuild meta after updating raw html
+  Given I am on the homepage
+    And I fill in "page_url" with "https://www.fanfiction.net/s/5853866/2/Counting"
+    And I press "Store"
+  When I edit the raw html with "counting2"
+  Then I should see "The Flower" within ".title"
+    And I should see "100 words"
+    And I should see "by ambtus" within ".notes"
+    And I should see "Harry Potter" within ".notes"
+    But I should NOT see "2 connected drabbles" within ".notes"
+    And the contents should include "It is said this purple flower"
