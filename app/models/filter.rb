@@ -74,6 +74,10 @@ class Filter
       pages = pages.where(hidden: false)
     end
 
+    if params[:hide_all_cons] == "Yes"
+      pages = pages.where(con: false)
+    end
+
     Tag.types.each do |tag_type|
       if params.has_key?(tag_type.downcase.to_s)
         model = tag_type.constantize

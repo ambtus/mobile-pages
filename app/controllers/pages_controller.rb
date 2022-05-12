@@ -54,6 +54,7 @@ class PagesController < ApplicationController
       @size = params[:size] || "any"
       @unread = params[:unread] || "either"
       @stars = params[:stars] || "any"
+      @cons = params[:hide_all_cons] || "No"
     end
   end
 
@@ -68,6 +69,7 @@ class PagesController < ApplicationController
       build_route[:pro] = params[:pro] unless params[:pro].blank?
       build_route[:con] = params[:con] unless params[:con].blank?
       build_route[:info] = params[:info] unless params[:info].blank?
+      build_route[:hide_all_cons] = params[:hide_all_cons] unless params[:hide_all_cons].blank?
       build_route[:type] = params[:type] unless (params[:type].blank? || params[:type] == "any")
       build_route[:sort_by] = params[:sort_by] unless (params[:sort_by].blank? || params[:sort_by] == "default")
       build_route[:size] = params[:size] unless (params[:size].blank? || params[:size] == "any")
@@ -113,6 +115,7 @@ class PagesController < ApplicationController
         @page = Page.new(params[:page])
       else
         @page.set_hidden unless @hidden.blank?
+        @page.set_con unless @con.blank?
         if @page.tags.fandoms.blank?
           Rails.logger.debug "DEBUG: page created without fandom"
           flash[:notice] = "Page created with #{Page::OTHER}"

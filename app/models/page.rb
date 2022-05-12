@@ -115,9 +115,11 @@ class Page < ActiveRecord::Base
 
   def set_hidden; update_columns hidden: true; end
   def unset_hidden; update_columns hidden: false; end
-  def reset_hidden;
-    self.tags.hiddens.present? ? set_hidden : unset_hidden
-  end
+  def reset_hidden; self.tags.hiddens.present? ? set_hidden : unset_hidden; end
+
+  def set_con; update_columns con: true; end
+  def unset_con; update_columns con: false; end
+  def reset_con; self.tags.cons.present? ? set_con : unset_con; end
 
   def set_wordcount(recount=true)
     #Rails.logger.debug "DEBUG: #{self.title} old wordcount: #{self.wordcount} and size: #{self.size}"
@@ -425,6 +427,11 @@ class Page < ActiveRecord::Base
       self.unset_hidden
       parent.set_hidden
     end
+    if self.con?
+      Rails.logger.debug "DEBUG: moving con state to parent"
+      self.unset_con
+      parent.set_con
+    end
   end
 
   def add_parent_with_id(parent_id)
@@ -499,6 +506,7 @@ class Page < ActiveRecord::Base
     return if string.blank?
     Rails.logger.debug "DEBUG: adding #{type} #{string}"
     self.set_hidden if type == "Hidden"
+    self.set_con if type == "Con"
     string.split(",").each do |tag|
       typed_tag = type.constantize.find_by_short_name(tag.squish)
       typed_tag = type.constantize.find_or_create_by(name: tag.squish) unless typed_tag

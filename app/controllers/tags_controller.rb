@@ -11,7 +11,11 @@ class TagsController < ApplicationController
       @tag = Tag.find(params[:id])
       if @tag.type == "Hidden"
         Rails.logger.debug "DEBUG: recaching pages"
-        @tag.pages.map(&:set_hidden)
+        @tag.pages.update_all hidden: true
+        render :edit and return
+      elsif @tag.type == "Con"
+        Rails.logger.debug "DEBUG: recaching pages"
+        @tag.pages.update_all con: true
         render :edit and return
       else
         flash.now[:alert] = "can't recache non-hiddens"
@@ -45,14 +49,22 @@ class TagsController < ApplicationController
       redirect_to tags_path + "##{@tag.class}"
     elsif params[:commit] == "Change"
       was_hidden = @tag.type == "Hidden"
+      was_con = @tag.type == "Con"
       type = params[:change]
       @tag.update_attribute(:type, type)
       if type == "Hidden"
-        Rails.logger.debug "DEBUG: setting hidden"
-        @tag.pages.map(&:set_hidden)
-      elsif was_hidden
-        Rails.logger.debug "DEBUG: resetting hidden"
+        Rails.logger.debug "DEBUG: setting #{@tag.pages.size} #{@tag.name}'s pages to hidden"
+        @tag.pages.update_all hidden: true
+      elsif type == "Con"
+        Rails.logger.debug "DEBUG: setting #{@tag.pages.size} #{@tag.name}'s pages to conned"
+        @tag.pages.update_all con: true
+      end
+      if was_hidden
+        Rails.logger.debug "DEBUG: may be unhiding #{@tag.name}'s pages"
         @tag.pages.map(&:reset_hidden)
+      elsif was_con
+        Rails.logger.debug "DEBUG: may be unconning #{@tag.name}'s pages"
+        @tag.pages.map(&:reset_con)
       end
       @tag.pages.map(&:remove_outdated_downloads)
       redirect_to tags_path + "##{@tag.class}"
@@ -105,6 +117,7 @@ class TagsController < ApplicationController
     elsif params[:commit].match /Add (.*) Tags/
       @page.add_tags_from_string(params[:tags], $1.squish)
     end
+    @page.reset_con
     @page.reset_hidden
     redirect_to page_path(@page)
   end

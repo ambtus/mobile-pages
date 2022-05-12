@@ -112,6 +112,7 @@ Scenario: change hidden to con tag
     And I am on the page's page
   Then I should see "abc123" within ".cons"
     And the page should NOT be hidden
+    But the page should be conned
 
 Scenario: change con to hidden tag
   Given a page exists with cons: "abc123"
@@ -121,3 +122,4 @@ Scenario: change con to hidden tag
     And I am on the page's page
   Then I should see "abc" within ".hiddens"
     And the page should be hidden
+    But the page should NOT be conned

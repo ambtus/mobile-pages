@@ -89,5 +89,6 @@ Given("pages with all combinations of pros and cons exist") do
   Page.find_or_create_by(title: "page4l").tags << loving
   Page.find_or_create_by(title: "page4i").tags << interesting
   Page.find_or_create_by(title: "page5").tags << [interesting, loving]
+  Con.recache_all
 end
 

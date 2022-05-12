@@ -58,7 +58,9 @@ Scenario: change hidden to con tag (index)
     And I select "Con" from "change"
     And I press "Change"
     And I am on the homepage
-  Then I should NOT see "No pages found"
+  Then the page should be conned
+    But the page should NOT be hidden
+    And I should NOT see "No pages found"
     And I should see "Page 1"
 
 Scenario: change hidden to con tag (filter)
@@ -99,7 +101,9 @@ Scenario: change con to hidden tag (index)
     And I select "Hidden" from "change"
     And I press "Change"
     And I am on the homepage
-  Then I should see "No pages found"
+  Then the page should be hidden
+    But the page should NOT be conned
+    And I should see "No pages found"
     But I should have 1 page
 
 Scenario: change con to hidden tag (filter)
