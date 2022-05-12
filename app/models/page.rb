@@ -411,17 +411,20 @@ class Page < ActiveRecord::Base
       end
     end
     add_parent_with_id(parent.id)
-    if new
-      Rails.logger.debug "DEBUG: moving tags to parent"
-      parent.tags = self.tags
-      self.tags = []
-      if self.hidden?
-        Rails.logger.debug "DEBUG: moving hidden state to parent"
-        self.unset_hidden
-        parent.set_hidden
-      end
-    end
+    move_tags_up if new
     return Page.find(parent.id)
+  end
+
+  def move_tags_up
+    return unless parent.present?
+    Rails.logger.debug "DEBUG: moving tags to parent"
+    parent.tags << self.tags
+    self.tags = []
+    if self.hidden?
+      Rails.logger.debug "DEBUG: moving hidden state to parent"
+      self.unset_hidden
+      parent.set_hidden
+    end
   end
 
   def add_parent_with_id(parent_id)

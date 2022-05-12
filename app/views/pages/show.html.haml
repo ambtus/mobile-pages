@@ -7,6 +7,7 @@
     = submit_tag "Rebuild from Raw HTML"
     = submit_tag "Remove Downloads"
     = submit_tag "Remove Duplicate Tags" unless @page.parts.blank?
+    = submit_tag "Move Tags to Parent" if @page.tags.any? unless @page.parent.blank?
     = submit_tag "Rebuild Meta"
     = submit_tag "Toggle #{Page::OTHER}"
     = submit_tag "Toggle #{Page::TT}"

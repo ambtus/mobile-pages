@@ -45,6 +45,31 @@ Scenario: parent should be able to remove duplicate tags and authors
     And I should NOT see "JK Rowling" within "#position_1"
     But I should see "SGA" within "#position_1"
 
+Scenario: check before child should be able to move tags to parent (and remove duplicates on self)
+  Given a page exists with url: "http://test.sidrasue.com/parts/1.html" AND pros: "xyz123" AND cons: "abc123"
+    And a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND pros: "lmn987" AND title: "Parent" AND cons: "def987"
+  When I am on the page with title "Page 1"
+  Then I should see "xyz123" within ".pros"
+    And I should see "abc123" within ".cons"
+
+Scenario: child should be able to move tags to parent (and remove duplicates on self)
+  Given a page exists with url: "http://test.sidrasue.com/parts/1.html" AND pros: "xyz123" AND cons: "abc123"
+    And a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND pros: "lmn987" AND title: "Parent" AND cons: "def987"
+  When I am on the page with title "Page 1"
+    And I press "Move Tags to Parent"
+  Then I should NOT see "xyz123" within ".pros"
+    And I should NOT see "abc123" within ".cons"
+
+Scenario: check after child should be able to move tags to parent (and remove duplicates on self)
+  Given a page exists with url: "http://test.sidrasue.com/parts/1.html" AND pros: "xyz123" AND cons: "abc123"
+    And a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND pros: "lmn987" AND title: "Parent" AND cons: "def987"
+  When I am on the page with title "Page 1"
+    And I press "Move Tags to Parent"
+    And I follow "Parent"
+  Then I should see "lmn987 xyz123" within ".pros"
+    And I should see "abc123 def987" within ".cons"
+    But I should NOT see "Move Tags to Parent"
+
 Scenario: parent shows parts by position, not created order
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
   When I am on the page's page

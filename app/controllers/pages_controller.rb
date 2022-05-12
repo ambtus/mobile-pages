@@ -172,6 +172,9 @@ class PagesController < ApplicationController
       when "Remove Duplicate Tags"
         @page.parts.map(&:remove_duplicate_tags)
         flash[:notice] = "Removed Dupes"
+      when "Move Tags to Parent"
+        @page.move_tags_up
+        flash[:notice] = "Tags Moved"
       when "Rebuild Meta"
         @page.rebuild_meta
         flash[:notice] = "Rebuilt Meta"
