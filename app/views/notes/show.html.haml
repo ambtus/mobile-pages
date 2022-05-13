@@ -3,5 +3,8 @@
 .title
   Notes for
   =link_to @page.title, page_path(@page)
+.meta
+  = link_to "Edit Notes", edit_note_path(@page)
+  = link_to "Scrub Notes", scrub_path(@page, notes: true)
 .notes
   =raw @page.formatted_notes

@@ -167,6 +167,7 @@ class PagesController < ApplicationController
         @page.make_audio
         flash[:notice] = "Tagged as audio book and marked as read today"
       when "Rebuild from Raw HTML"
+        @page.update scrubbed_notes: false
         @page.rebuild_clean_from_raw.rebuild_edited_from_clean.rebuild_meta
         flash[:notice] = "Rebuilt from Raw HTML"
       when "Remove Downloads"
@@ -205,10 +206,20 @@ class PagesController < ApplicationController
       when "Edit HTML"
         @page.edited_html = params[:pasted]
         flash[:notice] = "Clean HTML updated."
-      when "Scrub"
+      when "Scrub", "Scrub Notes"
         top = params[:top_node] || 0
         bottom = params[:bottom_node] || 0
-        @page.remove_nodes(top, bottom)
+        Rails.logger.debug "DEBUG: Removing #{top} from top and #{bottom} from bottom"
+        case params[:commit]
+          when "Scrub"
+            Rails.logger.debug "DEBUG: of #{@page.title} content"
+            @page.remove_nodes(top, bottom)
+            flash[:notice] = "Page scrubbed."
+          when "Scrub Notes"
+            Rails.logger.debug "DEBUG: of #{@page.title} notes"
+            @page.remove_note_nodes(top, bottom)
+            flash[:notice] = "Notes scrubbed."
+          end
       when "Update"
         @page.update(params[:page].permit!)
         @page.remove_outdated_downloads

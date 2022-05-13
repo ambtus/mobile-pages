@@ -1,0 +1,28 @@
+- content_for :title do
+  = "Scrub Notes" + @page.title
+.title
+  "Scrub Notes"
+  =@page.title
+
+.info
+  remove above the top selection and below the bottom selection
+%a{:href => "#end"} Jump to end
+.form
+  = form_for @page.becomes(Page) do |f|
+    .top
+      = @page.note_nodes.size.to_s + " note nodes"
+      = f.submit "Scrub Notes"
+      Top
+      - @page.top_note_nodes.each_with_index do |node,index|
+        .node
+          = radio_button_tag "top_node", index + 1, false
+          = label_tag "top_node_#{index + 1}", node
+    .bottom
+      Bottom
+      - @page.bottom_note_nodes.each_with_index do |node,index|
+        .node
+          - id = @page.bottom_note_nodes.size - index
+          = radio_button_tag "bottom_node", id, false
+          = label_tag "bottom_node_#{id}", node
+      = f.submit "Scrub Notes"
+%a{:name => "end"}

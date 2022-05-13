@@ -297,11 +297,18 @@ module Meta
     end.join_hr
   end
 
+  # have to call head_notes to get added authors and fandoms
+  # but if you're not replacing it, just return the original notes
   def inferred_notes
-    if head_notes.present?
+    if scrubbed_notes?
+      Rails.logger.debug "DEBUG: not replacing scrubbed notes"
+      head_notes
+      notes
+    elsif head_notes.present?
       head_notes
     elsif notes.present? && ff?
       Rails.logger.debug "DEBUG: not deleting old ff notes"
+      head_notes
       notes
     else
       head_notes
@@ -328,7 +335,7 @@ module Meta
       Rails.logger.debug "DEBUG: can't set meta without information"
       return false
     end
-    Rails.logger.debug "DEBUG: setting meta for #{title} (#{self.class})"
+    Rails.logger.debug "DEBUG: setting meta for #{title} (#{self.class}) with scrubbed_notes: #{scrubbed_notes?}"
     self.update! title: inferred_title, notes: inferred_notes, end_notes: tail_notes
     Rails.logger.debug "DEBUG: set title to #{inferred_title}"
     Rails.logger.debug "DEBUG: set notes to #{inferred_notes}"

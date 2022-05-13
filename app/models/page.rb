@@ -5,6 +5,7 @@ class Page < ActiveRecord::Base
   include Meta
   include Rate
   include Utilities
+  include Scrubbing
 
   MODULO = 300  # files in a single directory
   LIMIT = 5 # number of parts to show at a time
@@ -717,54 +718,6 @@ class Page < ActiveRecord::Base
       FileUtils.rm_f(edited_html_file_name)
     end
     return self
-  end
-
-  ### scrubbing (removing top and bottom nodes) is done on clean text
-
-  def nodes(content = scrubbed_html)
-    Nokogiri::HTML(content).xpath('//body').children
-  end
-
-  def top_nodes
-    nodes[0, 20].map {|n| n.to_s.chomp }
-  end
-
-  def bottom_nodes
-    nodeset = nodes[-20, 20] || nodes
-    nodeset.map {|n| n.to_s.chomp }
-  end
-
-  def remove_nodes(top, bottom)
-    nodeset = nodes
-    top.to_i.times { nodeset.shift }
-    bottom.to_i.times { nodeset.pop }
-    self.scrubbed_html=nodeset.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
-    self.set_wordcount
-  end
-
-  def edited_html_file_name
-    self.mydirectory + "edited.html"
-  end
-
-  def edited_html=(content)
-    remove_outdated_downloads
-    File.open(self.edited_html_file_name, 'w:utf-8') { |f| f.write(content) }
-    self.set_wordcount
-  end
-
-  ## but if it doesn't exist (I haven't edited) use the scrubbed version
-  def edited_html
-    if parts.blank?
-      begin
-        File.open(self.edited_html_file_name, 'r:utf-8') { |f| f.read }
-      rescue Errno::ENOENT
-        begin
-          File.open(self.scrubbed_html_file_name, 'r:utf-8') { |f| f.read }
-        rescue Errno::ENOENT
-          ""
-        end
-      end
-    end
   end
 
   ### epub html is what I use for conversion
