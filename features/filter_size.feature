@@ -8,12 +8,17 @@ Scenario: check before filter on a size
   Given pages with all possible sizes exist
   When I am on the filter page
     And I press "Find"
-  Then I should see "Drabble" within ".pages"
-    And I should see "Short" within ".pages"
-    And I should see "Medium" within ".pages"
-    And I should see "Medium2" within ".pages"
+  Then I should see "Medium" within ".pages"
+    And I should see "Drabble" within ".pages"
     And I should see "Long" within ".pages"
-    And I should see "Long2" within ".pages"
+    And I should see "Short" within ".pages"
+
+Scenario: check before filter on a size
+  Given pages with all possible sizes exist
+  When I am on the filter page
+    And I press "Find"
+    And I press "Next"
+  Then I should see "Medium2" within ".pages"
     And I should see "Epic" within ".pages"
 
 Scenario: filter drabble

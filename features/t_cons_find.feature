@@ -36,30 +36,30 @@ Scenario: link from show
   Then I should see "Page 1"
 
 Scenario: if there are no more pages
-  Given 10 pages with cons: "abc123" exist
+  Given 5 pages with cons: "abc123" exist
   When I am on the page's page
     And I follow "abc123"
     And I press "Next"
   Then I should see "No pages found"
     And the page should NOT contain css "#position_1"
 
-Scenario: limit 10
-  Given 21 pages with cons: "abc123" exist
+Scenario: limit 5
+  Given 11 pages with cons: "abc123" exist
   When I am on the edit tag page for "abc123"
-    And I follow "21 pages with that tag"
+    And I follow "11 pages with that tag"
   Then I should see "Page 1" within "#position_1"
-    And I should see "Page 10" within "#position_10"
+    And I should see "Page 5" within "#position_5"
+    And I should NOT see "Page 6"
+    And I should NOT see "Page 10"
     And I should NOT see "Page 11"
-    And I should NOT see "Page 20"
-    And I should NOT see "Page 21"
 
 Scenario: next remembers count
-  Given 21 pages with cons: "abc123" exist
+  Given 11 pages with cons: "abc123" exist
   When I am on the edit tag page for "abc123"
-    And I follow "21 pages with that tag"
+    And I follow "11 pages with that tag"
     And I press "Next"
     And I press "Next"
-  Then I should see "Page 21" within "#position_1"
+  Then I should see "Page 11" within "#position_1"
     And the page should NOT contain css "#position_2"
-    And I should NOT see "Page 1"
-    And I should NOT see "Page 20"
+    And I should NOT see "Page 5"
+    And I should NOT see "Page 10"

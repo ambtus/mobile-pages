@@ -1,6 +1,6 @@
 Feature: reset read_after order
 
-Scenario: default read after
+Scenario: default read after pt1
   Given pages with all possible stars exist
   When I am on the homepage
   Then I should see "page0" within "#position_1"
@@ -8,16 +8,21 @@ Scenario: default read after
     And I should see "page4" within "#position_3"
     And I should see "page3" within "#position_4"
     And I should see "page2" within "#position_5"
-    And I should see "page1" within "#position_6"
-    And I should see "page9" within "#position_7"
+
+Scenario: default read after pt2
+  Given pages with all possible stars exist
+  When I am on the homepage
+    And I press "Next"
+  Then I should see "page1" within "#position_1"
+    And I should see "page9" within "#position_2"
 
 Scenario: make a page read now (manually)
   Given pages with all possible stars exist
-  When I am on the page with title "page1"
+  When I am on the page with title "page4"
     And I press "Read Now"
-  Then I should see "page1" within "#position_1"
+  Then I should see "page4" within "#position_1"
     And I should see "page0" within "#position_2"
-    And I should see "page2" within "#position_6"
+    And I should see "page5" within "#position_3"
 
 Scenario: make a page read now (epub)
   Given pages with all possible stars exist
@@ -30,13 +35,13 @@ Scenario: make a page read now (epub)
 
 Scenario: make a page read now and then reset it to original
   Given pages with all possible stars exist
-  When I am on the page with title "page1"
+  When I am on the page with title "page4"
     And I press "Read Now"
-    And I am on the page with title "page1"
+    And I am on the page with title "page4"
     And I press "Read Later"
   Then I should see "Reset read after date"
     And I should see "page0" within "#position_1"
-    And I should see "page1" within "#position_6"
+    And I should see "page4" within "#position_3"
 
 Scenario: check before resetting part or subpart
   Given I have a single with read_after "2009-01-01"

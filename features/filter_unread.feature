@@ -4,7 +4,7 @@ Scenario: either selected by default
   When I am on the filter page
   Then "unread_either" should be checked
 
-Scenario: check before filter (default)
+Scenario: check before filter (default) pt1
   Given pages with all possible unreads exist
   When I am on the filter page
     And I press "Find"
@@ -13,11 +13,17 @@ Scenario: check before filter (default)
     And I should see "not read series"
     And I should see "partially read book"
     And I should see "partially read series"
-    And I should see "yes read single"
+
+Scenario: check before filter (default) pt2
+  Given pages with all possible unreads exist
+  When I am on the filter page
+    And I press "Find"
+    And I press "Next"
+  Then I should see "yes read single"
     And I should see "yes read book"
     And I should see "yes read series"
 
-Scenario: any (unread or unread parts)
+Scenario: any (unread or unread parts) pt2
   Given pages with all possible unreads exist
   When I am on the filter page
     And I choose "unread_any"
@@ -27,9 +33,14 @@ Scenario: any (unread or unread parts)
     And I should see "not read series"
     And I should see "partially read book"
     And I should see "partially read series"
-    But I should NOT see "yes read single"
-    And I should NOT see "yes read book"
-    And I should NOT see "yes read series"
+
+Scenario: any (unread or unread parts) pt2
+  Given pages with all possible unreads exist
+  When I am on the filter page
+    And I choose "unread_any"
+    And I press "Find"
+    And I press "Next"
+  Then I should see "No pages found"
 
 Scenario: none (only fully-read)
   Given pages with all possible unreads exist
