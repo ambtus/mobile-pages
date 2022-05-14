@@ -356,8 +356,10 @@ class Page < ActiveRecord::Base
     if ao3? && type == "Single" && !url.match(/chapters/)
       parent = Book.create!(title: "temp")
       if self.make_me_a_chapter(parent)
-        parent.update!(url: passed_url) && parent.fetch_ao3
-        set_meta && remove_duplicate_tags
+        parent.update!(url: passed_url)
+        parent.fetch_ao3
+        move_tags_up
+        set_meta
       else
         errors.add(:base, "couldn't make me a chapter")
       end
