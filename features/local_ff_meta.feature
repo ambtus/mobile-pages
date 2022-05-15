@@ -73,11 +73,18 @@ Scenario: check before adding a parent
     And I should see "Naruto" within ".notes"
     But I should NOT see "After receiving a time travel jutsu" within ".notes"
 
+Scenario: fanfiction single to chapter by adding a parent
+  Given He Could Be A Zombie exists
+    And I am on the page's page
+  When I add a parent with title "good cause"
+    And I follow "He Could Be A Zombie" within "#position_1"
+  Then I should see "He Could Be A Zombie (Chapter)" within ".title"
+
 Scenario: fanfiction book from adding a parent
   Given He Could Be A Zombie exists
     And I am on the page's page
   When I add a parent with title "good cause"
-  Then I should see "It's For a Good Cause, I Swear!" within ".title"
+  Then I should see "It's For a Good Cause, I Swear! (Book)" within ".title"
     And I should see "by Sarah1281" within ".notes"
     And I should see "Naruto" within ".notes"
     And I should see "After receiving a time travel jutsu" within ".notes"

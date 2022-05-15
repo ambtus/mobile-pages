@@ -383,8 +383,10 @@ class Page < ActiveRecord::Base
     current = "Book" unless current
     new =
       case type
-      when "Single", "Chapter", nil
+      when "Chapter", nil
         "Book"
+      when "Single"
+        ao3? ? "Series" : "Book"
       when "Book"
         "Series"
       when "Series"

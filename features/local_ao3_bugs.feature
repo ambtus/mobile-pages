@@ -63,3 +63,15 @@ Scenario: duplicate end notes on chapter as single
     But I should NOT see "No, Jango is not in chapter one." within ".notes"
     And I should NOT see "full notes"
 
+Scenario: adding a parent to a single wrongly makes the parent a book
+  Given Skipping Stones exists
+    And I am on the page's page
+  When I add a parent with title "Counting"
+  Then I should see "Counting (Series)" within ".title"
+
+Scenario: adding a parent to a single wrongly makes the page a chapter
+  Given Skipping Stones exists
+    And I am on the page's page
+  When I add a parent with title "Counting"
+    And I follow "Skipping Stones"
+  Then I should see "Skipping Stones (Single)" within ".title"
