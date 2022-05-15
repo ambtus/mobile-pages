@@ -75,3 +75,15 @@ Scenario: adding a parent to a single wrongly makes the page a chapter
   When I add a parent with title "Counting"
     And I follow "Skipping Stones"
   Then I should see "Skipping Stones (Single)" within ".title"
+
+Scenario: duplicate end notes on first chapter and book (book)
+  Given New Day Dawning exists
+  When I am on the page's page
+    And I follow "full notes"
+  Then I should NOT see "And thus Obito snatches himself a child"
+
+Scenario: duplicate end notes on first chapter and book (chapter)
+  Given New Day Dawning exists
+  When I am on the page's page
+    And I follow "Chapter 1"
+  Then I should see "And thus Obito snatches himself a child"

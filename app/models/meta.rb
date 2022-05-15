@@ -237,7 +237,7 @@ module Meta
         ""
       end
     elsif %w{Book Single}.include?(type)
-      Scrub.sanitize_html(book_doc.css(".notes[role=complementary] blockquote")).children.to_html
+      Scrub.sanitize_html(book_doc.css("[class='notes module'][role=complementary] blockquote")).children.to_html
     end
   end
 

@@ -241,3 +241,12 @@ Given('had a heart exists') do
   page.update!(url: "https://archiveofourown.org/works/18246218")
   page.set_raw_from("heart")
 end
+
+Given('New Day Dawning exists') do
+  page = Book.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/38952696")
+  chapter1 = Chapter.create!(title: "temp", parent_id: page.id, position: 1)
+  chapter1.update!(url: "https://archiveofourown.org/works/38952696/chapters/97419789")
+  chapter1.set_raw_from("end_notes")
+  page.set_meta
+end
