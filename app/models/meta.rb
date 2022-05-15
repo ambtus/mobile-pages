@@ -212,8 +212,8 @@ module Meta
   def work_summary
     if type == "Series" && ao3?
       begin
-        return doc.css(".series dd")[3].children.map(&:text) if doc.css(".series dt")[3].text == "Description:"
-        return doc.css(".series dd")[4].children.map(&:text) if doc.css(".series dt")[4].text == "Description:"
+        return doc.css(".series dd")[3].css("blockquote").children.to_html if doc.css(".series dt")[3].text == "Description:"
+        return doc.css(".series dd")[4].css("blockquote").children.to_html if doc.css(".series dt")[4].text == "Description:"
       rescue
         ""
       end
@@ -231,8 +231,8 @@ module Meta
   def work_notes
     if type == "Series" && ao3?
       begin
-        return doc.css(".series dd")[3].children.map(&:text) if doc.css(".series dt")[3].text == "Notes:"
-        return doc.css(".series dd")[4].children.map(&:text) if doc.css(".series dt")[4].text == "Notes:"
+        return doc.css(".series dd")[3].css("blockquote").children.to_html if doc.css(".series dt")[3].text == "Notes:"
+        return doc.css(".series dd")[4].css("blockquote").children.to_html if doc.css(".series dt")[4].text == "Notes:"
       rescue
         ""
       end
