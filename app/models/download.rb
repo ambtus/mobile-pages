@@ -113,8 +113,8 @@ module Download
   end
   def epub_command
      cmd = %Q{cd "#{self.download_dir}"; ebook-convert "#{self.download_basename}.html" "#{self.download_basename}.epub" --no-default-epub-cover } + epub_tags
-    Rails.logger.debug "DEBUG: #{cmd}"
-    # Rails.logger.debug "DEBUG: #{epub_tags}"
+    Rails.logger.debug cmd
+    # Rails.logger.debug epub_tags
     return cmd
   end
 

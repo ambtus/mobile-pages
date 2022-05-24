@@ -31,12 +31,12 @@ module Meta
   def update_cliff(bool)
     if bool == "Yes"
       unless ultimate_parent.cliff_present?
-        Rails.logger.debug "DEBUG: adding cliffhanger to #{ultimate_parent.title}"
+        Rails.logger.debug "adding cliffhanger to #{ultimate_parent.title}"
         ultimate_parent.tags.append(cliff_tag)
       end
     elsif bool == "No"
       if ultimate_parent.cliff_present?
-        Rails.logger.debug "DEBUG: removing cliffhanger from #{ultimate_parent.title}"
+        Rails.logger.debug "removing cliffhanger from #{ultimate_parent.title}"
         ultimate_parent.tags.delete(cliff_tag)
       end
     else
@@ -60,7 +60,7 @@ module Meta
 
   def doc
     if self.type == "Book"
-      Rails.logger.debug "DEBUG: getting doc from last part"
+      Rails.logger.debug "getting doc from last part"
       Nokogiri::HTML(parts.last.raw_html)
     else
       fetch_raw if raw_html.blank?
@@ -74,7 +74,7 @@ module Meta
     return false unless %w{Book Single}.include?(type)
     return false if chapter_as_single?
     chapters = doc.css(".stats .chapters").children[1].text.split('/') rescue Array.new
-    Rails.logger.debug "DEBUG: wip status: #{chapters}"
+    Rails.logger.debug "wip status: #{chapters}"
     chapters.second == "?" || chapters.first != chapters.second
   end
 
@@ -85,7 +85,7 @@ module Meta
 
   def inferred_fandoms
     if self.parts.empty?
-      Rails.logger.debug "DEBUG: get fandoms from raw_html"
+      Rails.logger.debug "get fandoms from raw_html"
       if ao3?
         doc.css(".fandom a").map(&:children).map(&:text)
       elsif ff? || first_part_ff?
@@ -96,27 +96,27 @@ module Meta
         []
       end
     else
-      Rails.logger.debug "DEBUG: get fandoms from first and last parts"
+      Rails.logger.debug "get fandoms from first and last parts"
       (parts.first.inferred_fandoms + parts.last.inferred_fandoms).uniq
     end
   end
 
   def ao3_relationships
     if self.parts.empty?
-      Rails.logger.debug "DEBUG: get relationships from raw_html"
+      Rails.logger.debug "get relationships from raw_html"
       doc.css(".relationship a").map(&:children).map(&:text)
     else
-      Rails.logger.debug "DEBUG: get relationships from first and last parts"
+      Rails.logger.debug "get relationships from first and last parts"
       (parts.first.ao3_relationships + parts.last.ao3_relationships).uniq
     end
   end
 
   def ao3_tags
     if self.parts.empty?
-      Rails.logger.debug "DEBUG: get tags from raw_html"
+      Rails.logger.debug "get tags from raw_html"
       doc.css(".freeform a").map(&:children).map(&:text)
     else
-      Rails.logger.debug "DEBUG: get tags from first and last parts"
+      Rails.logger.debug "get tags from first and last parts"
       (parts.first.ao3_tags + parts.last.ao3_tags).uniq
     end
   end
@@ -182,10 +182,10 @@ module Meta
     if type == "Chapter"
       if chapter_title.blank? || chapter_title.boring?
         if title.blank? || title.boring?
-          Rails.logger.debug "DEBUG: replacing title: #{title} with chapter and position"
+          Rails.logger.debug "replacing title: #{title} with chapter and position"
           "Chapter #{position}"
         else
-          Rails.logger.debug "DEBUG: keeping original title: #{title}"
+          Rails.logger.debug "keeping original title: #{title}"
           title
         end
       else
@@ -194,7 +194,7 @@ module Meta
     elsif type == "Single"
       if chapter_as_single?
         # A Single with a chapter url gets a chapter title, unless it is empty or Chapter X
-        Rails.logger.debug "DEBUG: chapter title: #{chapter_title}, work title: #{work_title}"
+        Rails.logger.debug "chapter title: #{chapter_title}, work title: #{work_title}"
         if chapter_title.blank? || chapter_title.boring?
           work_title
         else
@@ -301,13 +301,13 @@ module Meta
   # but if you're not replacing it, just return the original notes
   def inferred_notes
     if scrubbed_notes?
-      Rails.logger.debug "DEBUG: not replacing scrubbed notes"
+      Rails.logger.debug "not replacing scrubbed notes"
       head_notes
       notes
     elsif head_notes.present?
       head_notes
     elsif notes.present? && ff?
-      Rails.logger.debug "DEBUG: not deleting old ff notes"
+      Rails.logger.debug "not deleting old ff notes"
       head_notes
       notes
     else
@@ -328,18 +328,18 @@ module Meta
 
   def set_meta
     unless ao3? || ff? || first_part_ff?
-      Rails.logger.debug "DEBUG: only ao3 & FF for now"
+      Rails.logger.debug "only ao3 & FF for now"
       return false
     end
     if raw_html.blank? && parts.blank?
-      Rails.logger.debug "DEBUG: can't set meta without information"
+      Rails.logger.debug "can't set meta without information"
       return false
     end
-    Rails.logger.debug "DEBUG: setting meta for #{title} (#{self.class}) with scrubbed_notes: #{scrubbed_notes?}"
+    Rails.logger.debug "setting meta for #{title} (#{self.class}) with scrubbed_notes: #{scrubbed_notes?}"
     self.update! title: inferred_title, notes: inferred_notes, end_notes: tail_notes
-    Rails.logger.debug "DEBUG: set title to #{inferred_title}"
-    Rails.logger.debug "DEBUG: set notes to #{inferred_notes}"
-    Rails.logger.debug "DEBUG: set end notes to #{tail_notes}"
+    Rails.logger.debug "set title to #{inferred_title}"
+    Rails.logger.debug "set notes to #{inferred_notes}"
+    Rails.logger.debug "set end notes to #{tail_notes}"
     wip? ? set_wip : unset_wip
     ao3_tt(ao3_tags) unless chapter_url?
     return self
@@ -351,7 +351,7 @@ module Meta
   end
 
   def add_authors(strings)
-    Rails.logger.debug "DEBUG: add #{strings} to authors"
+    Rails.logger.debug "add #{strings} to authors"
     return if strings.blank? || parent
     existing = []
     non_existing = []
@@ -359,10 +359,10 @@ module Meta
       found = nil
       possibles = single.gsub("(", ",").gsub(")", "").split(",")
       possibles.each do |try|
-        Rails.logger.debug "DEBUG: trying '#{try}'"
+        Rails.logger.debug "trying '#{try}'"
         found = Author.find_by_short_name(try.strip)
         if found
-          Rails.logger.debug "DEBUG: found #{try}"
+          Rails.logger.debug "found #{try}"
           existing << found
           break
         end
@@ -370,7 +370,7 @@ module Meta
       non_existing << single unless found
     end
     unless existing.empty?
-      Rails.logger.debug "DEBUG: adding #{existing.map(&:name)} to authors"
+      Rails.logger.debug "adding #{existing.map(&:name)} to authors"
       existing.uniq.each {|a| self.tags << a unless self.tags.authors.include?(a)}
     end
     if non_existing.empty?
@@ -378,13 +378,13 @@ module Meta
     else
       authors = non_existing.uniq
       by = existing.empty? ? "by" : "et al:"
-      Rails.logger.debug "DEBUG: adding #{authors} to notes"
+      Rails.logger.debug "adding #{authors} to notes"
       "<p>#{by} #{authors.join_comma}</p>"
     end
   end
 
   def add_fandoms(strings)
-    Rails.logger.debug "DEBUG: add #{strings} to fandoms"
+    Rails.logger.debug "add #{strings} to fandoms"
     return if strings.blank? || parent
     existing = []
     non_existing = []
@@ -393,46 +393,46 @@ module Meta
       simple = try ? try.strip : t.split(" | ").last
       simple.sub!(/^The /, '')
       simple = I18n.transliterate(simple).delete('?')
-      Rails.logger.debug "DEBUG: trying #{simple}"
+      Rails.logger.debug "trying #{simple}"
       found = Fandom.where('name like ?', "%#{simple}%").first
       if found.blank? && simple.present?
         trying = simple.split(/[ -]/)
-        Rails.logger.debug "DEBUG: trying #{trying}"
+        Rails.logger.debug "trying #{trying}"
         possibles = trying.collect{|w| Fandom.where('name like ?', "%#{w}%") if w.length > 3}.flatten.compact
-        Rails.logger.debug "DEBUG: possible tags are #{possibles.map(&:name)}"
+        Rails.logger.debug "possible tags are #{possibles.map(&:name)}"
         maybes = possibles.collect{|t| t unless trying.select{|w| t.name.match /\b#{w}\b/ }.empty?}
-        Rails.logger.debug "DEBUG: maybe tags are #{maybes.compact.map(&:name)}"
+        Rails.logger.debug "maybe tags are #{maybes.compact.map(&:name)}"
         found = maybes.compact.mode
       end
       if found.blank?
         non_existing << simple if simple.present?
       else
-        Rails.logger.debug "DEBUG: found #{found.name}"
+        Rails.logger.debug "found #{found.name}"
         if self.tags.include?(found)
-          Rails.logger.debug "DEBUG: won't re-add #{found.name} to tags"
+          Rails.logger.debug "won't re-add #{found.name} to tags"
         elsif self.of_present? # use other fandom tag to prevent false positives
-           Rails.logger.debug "DEBUG: will NOT add #{found.name} to tags: add to notes instead"
+           Rails.logger.debug "will NOT add #{found.name} to tags: add to notes instead"
            non_existing << simple if simple.present?
         else
-          Rails.logger.debug "DEBUG: will add #{found.name} to tags"
+          Rails.logger.debug "will add #{found.name} to tags"
           existing << found
         end
       end
     end
     if existing.empty?
       if self.tags.fandoms.blank?
-        Rails.logger.debug "DEBUG: adding #{OTHER} to fandoms"
+        Rails.logger.debug "adding #{OTHER} to fandoms"
         self.tags << of_tag
       end
     else
-      Rails.logger.debug "DEBUG: adding #{existing.uniq.map(&:name)} to fandoms"
+      Rails.logger.debug "adding #{existing.uniq.map(&:name)} to fandoms"
       existing.uniq.each {|f| self.tags << f}
     end
     if non_existing.empty?
       ""
     else
       fandoms = non_existing.uniq
-      Rails.logger.debug "DEBUG: adding #{fandoms.join_comma} to notes"
+      Rails.logger.debug "adding #{fandoms.join_comma} to notes"
       "<p>#{fandoms.join_comma}</p>"
     end
   end

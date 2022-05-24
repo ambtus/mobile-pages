@@ -75,7 +75,7 @@ module Scrubbing
     top.to_i.times { nodeset.shift }
     bottom.to_i.times { nodeset.pop }
     new=nodeset.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
-    Rails.logger.debug "DEBUG: new notes: #{new}"
+    Rails.logger.debug "new notes: #{new}"
     update! notes: new, scrubbed_notes: true
     remove_outdated_downloads
   end

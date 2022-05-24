@@ -49,9 +49,9 @@ class Page < ActiveRecord::Base
   end
 
   def set_type
-    #Rails.logger.debug "DEBUG: setting type for #{self.inspect}"
+    #Rails.logger.debug "setting type for #{self.inspect}"
     if ao3?
-      Rails.logger.debug "DEBUG: ao3 type set to #{self.ao3_type}"
+      Rails.logger.debug "ao3 type set to #{self.ao3_type}"
       self.update!(type: ao3_type)
     else
       should_be =
@@ -59,7 +59,7 @@ class Page < ActiveRecord::Base
           parent_id.nil? ? Single : Chapter
         else
           part_types = parts.map(&:type).uniq.compact
-          Rails.logger.debug "DEBUG: part types: #{part_types}"
+          Rails.logger.debug "part types: #{part_types}"
           if (part_types - ["Chapter"]).empty?
             Book
           elsif (part_types - ["Single", "Book"]).empty?
@@ -68,7 +68,7 @@ class Page < ActiveRecord::Base
             Collection
           end
         end
-      Rails.logger.debug "DEBUG: non-ao3 type set to #{should_be} for #{self.title}"
+      Rails.logger.debug "non-ao3 type set to #{should_be} for #{self.title}"
       self.update!(type: should_be)
     end
     parent.set_type if parent
@@ -123,13 +123,13 @@ class Page < ActiveRecord::Base
   def reset_con; self.tags.cons.present? ? set_con : unset_con; end
 
   def set_wordcount(recount=true)
-    #Rails.logger.debug "DEBUG: #{self.title} old wordcount: #{self.wordcount} and size: #{self.size}"
+    #Rails.logger.debug "#{self.title} old wordcount: #{self.wordcount} and size: #{self.size}"
     new_wordcount = if self.parts.size > 0
-        Rails.logger.debug "DEBUG: getting wordcount for #{self.title} from parts"
+        Rails.logger.debug "getting wordcount for #{self.title} from parts"
         self.parts.each {|part| part.set_wordcount } if recount
         self.parts.sum(:wordcount)
       elsif recount && self.has_content?
-        Rails.logger.debug "DEBUG: getting wordcount for #{self.title} by recounting"
+        Rails.logger.debug "getting wordcount for #{self.title} by recounting"
         count = 0
         body = Nokogiri::HTML(self.edited_html).xpath('//body').first
         body.traverse { |node|
@@ -140,7 +140,7 @@ class Page < ActiveRecord::Base
         } if body
         count
       else
-        Rails.logger.debug "DEBUG: getting wordcount for #{self.title} from previous count"
+        Rails.logger.debug "getting wordcount for #{self.title} from previous count"
         wordcount || 0
     end
     size_word = "drabble"
@@ -150,7 +150,7 @@ class Page < ActiveRecord::Base
       size_word = "long" if new_wordcount > MED_MAX
       size_word = "epic" if new_wordcount > LONG_MAX
     end
-    Rails.logger.debug "DEBUG: #{self.title} new wordcount: #{new_wordcount} and size: #{size_word}"
+    Rails.logger.debug "#{self.title} new wordcount: #{new_wordcount} and size: #{size_word}"
     self.update_columns wordcount: new_wordcount, size: size_word
     return self
   end
@@ -212,11 +212,11 @@ class Page < ActiveRecord::Base
         title = "Part #{position}"
         page = Page.create!(:url=>part_url, :title=>title, :parent_id=>self.id, :position => position)
         page.set_type
-        # Rails.logger.debug "DEBUG: created #{page.reload.inspect}"
+        # Rails.logger.debug "created #{page.reload.inspect}"
         self.update_attribute(:read_after, Time.now) if self.read_after > Time.now
         page.set_wordcount
       else
-        Rails.logger.debug "DEBUG: found #{page}"
+        Rails.logger.debug "found #{page}"
         page.update!(position: position, parent_id: self.id)
       end
     end
@@ -224,9 +224,9 @@ class Page < ActiveRecord::Base
   end
 
   def parts_from_urls(url_title_list, refetch = false)
-    Rails.logger.debug "DEBUG: #{refetch ? 're' : ''}fetch parts from urls: #{url_title_list}"
+    Rails.logger.debug "#{refetch ? 're' : ''}fetch parts from urls: #{url_title_list}"
     old_part_ids = self.parts.map(&:id)
-    Rails.logger.debug "DEBUG: my old parts #{old_part_ids}"
+    Rails.logger.debug "my old parts #{old_part_ids}"
 
     new_part_ids = []
 
@@ -245,13 +245,13 @@ class Page < ActiveRecord::Base
       return false
     end
 
-    Rails.logger.debug "DEBUG: find or create parts #{parts}"
+    Rails.logger.debug "find or create parts #{parts}"
     parts.each do |part|
       url = title = position = nil
       url = part.sub(/#.*/, "")
       title = part.sub(/.*#/, "") if part.match("#")
       position = parts.index(part) + 1
-      Rails.logger.debug "DEBUG: looking for url: #{url} and title: #{title} in position #{position}"
+      Rails.logger.debug "looking for url: #{url} and title: #{title} in position #{position}"
       page =
         if url.present?
           Page.find_by(url: url)
@@ -262,14 +262,14 @@ class Page < ActiveRecord::Base
         end
       if page.blank?
         title = "Part #{position}" if title.blank?
-        Rails.logger.debug "DEBUG: didn't find #{part}"
+        Rails.logger.debug "didn't find #{part}"
         page = Page.create(:url=>url, :title=>title, :parent_id=>self.id, :position => position)
         page.set_type
-        # Rails.logger.debug "DEBUG: created #{page.reload.inspect}"
+        # Rails.logger.debug "created #{page.reload.inspect}"
         self.update_attribute(:read_after, Time.now) if self.read_after > Time.now
         page.set_wordcount
       else
-        Rails.logger.debug "DEBUG: found #{part}"
+        Rails.logger.debug "found #{part}"
         if page.url == url
           page.fetch_raw if refetch
         elsif url.present?
@@ -282,10 +282,10 @@ class Page < ActiveRecord::Base
       end
       new_part_ids << page.id
     end
-    Rails.logger.debug "DEBUG: parts found or created: #{new_part_ids}"
+    Rails.logger.debug "parts found or created: #{new_part_ids}"
 
     remove = old_part_ids - new_part_ids
-    Rails.logger.debug "DEBUG: removing deleted parts #{remove}"
+    Rails.logger.debug "removing deleted parts #{remove}"
     remove.each do |old_part_id|
       Page.find(old_part_id).make_single
     end
@@ -343,7 +343,7 @@ class Page < ActiveRecord::Base
   def last_url_length; last_url ? last_url.length : 33; end
 
   def make_single
-    Rails.logger.debug "DEBUG: removing #{self.id} from #{self.parent_id}"
+    Rails.logger.debug "removing #{self.id} from #{self.parent_id}"
     return unless parent
     parent = self.parent
     self.tags << parent.tags - self.tags
@@ -365,7 +365,7 @@ class Page < ActiveRecord::Base
       end
     else
       update!(url: passed_url) if passed_url.present?
-      Rails.logger.debug "DEBUG: refetching all for #{id} url: #{self.url}"
+      Rails.logger.debug "refetching all for #{id} url: #{self.url}"
       if ao3?
         page = becomes!(ao3_type)
         page.fetch_ao3
@@ -397,7 +397,7 @@ class Page < ActiveRecord::Base
 
   def add_parent(title)
     parent=Page.find_by_title(title)
-    Rails.logger.debug "DEBUG: parent #{title} found? #{parent.is_a?(Page)}"
+    Rails.logger.debug "parent #{title} found? #{parent.is_a?(Page)}"
     new = false
     if parent.is_a?(Page)
       return "content" if parent.has_content?
@@ -405,14 +405,14 @@ class Page < ActiveRecord::Base
       pages=Page.where(["Lower(title) LIKE ?", "%" + title.downcase + "%"])
       potentials = pages.reject {|p| p.has_content?}
       if potentials.size > 1
-        Rails.logger.debug "DEBUG: #{potentials.size} possible parents found"
+        Rails.logger.debug "#{potentials.size} possible parents found"
         return potentials.to_a
       elsif potentials.empty?
-        Rails.logger.debug "DEBUG: creating a new parent"
+        Rails.logger.debug "creating a new parent"
         parent = Page.create!(title: title, type: parent_type(self.type))
         new = true
       else
-        Rails.logger.debug "DEBUG: matching parent found #{potentials.first.title}"
+        Rails.logger.debug "matching parent found #{potentials.first.title}"
         parent = potentials.first
         parent.update!(type: parent_type(parent.type))
       end
@@ -424,16 +424,16 @@ class Page < ActiveRecord::Base
 
   def move_tags_up
     return unless parent.present?
-    Rails.logger.debug "DEBUG: moving tags to parent"
+    Rails.logger.debug "moving tags to parent"
     parent.tags << self.tags
     self.tags = []
     if self.hidden?
-      Rails.logger.debug "DEBUG: moving hidden state to parent"
+      Rails.logger.debug "moving hidden state to parent"
       self.unset_hidden
       parent.set_hidden
     end
     if self.con?
-      Rails.logger.debug "DEBUG: moving con state to parent"
+      Rails.logger.debug "moving con state to parent"
       self.unset_con
       parent.set_con
     end
@@ -441,7 +441,7 @@ class Page < ActiveRecord::Base
 
   def add_parent_with_id(parent_id)
     parent=Page.find(parent_id)
-    Rails.logger.debug "DEBUG: adding #{self.type} with title #{self.title} to #{parent.type} with title #{parent.title}"
+    Rails.logger.debug "adding #{self.type} with title #{self.title} to #{parent.type} with title #{parent.title}"
     count = parent.parts.size + 1
     self.update!(parent_id: parent.id, position: count)
     if self.type == "Single" && (parent.type == "Single" || parent.type == "Book")
@@ -465,29 +465,29 @@ class Page < ActiveRecord::Base
 
   def last_read_string
     if read?
-      #Rails.logger.debug "DEBUG: last read #{last_read.to_date}"
+      #Rails.logger.debug "last read #{last_read.to_date}"
       last_read.to_date
     elsif unread_parts?
       suffix = unread_parts.size == 1 ? "" : "s"
       initial_string = "#{unread_parts.size} #{UNREAD} part#{suffix}"
       unless read_parts.empty?
-        #Rails.logger.debug "DEBUG: read parts"
+        #Rails.logger.debug "read parts"
         read_dates = read_parts.map(&:last_read)
       else
-        #Rails.logger.debug "DEBUG: no read parts, searching subparts"
+        #Rails.logger.debug "no read parts, searching subparts"
         subparts = parts.map(&:parts).flatten
         read_dates = subparts.map(&:last_read).compact
         read_dates.delete(UNREAD_PARTS_DATE)
       end
       if read_dates.empty?
-        #Rails.logger.debug "DEBUG: all parts & subparts last read never"
+        #Rails.logger.debug "all parts & subparts last read never"
         initial_string
       else
-        #Rails.logger.debug "DEBUG: last read dates: #{read_dates}"
+        #Rails.logger.debug "last read dates: #{read_dates}"
         initial_string + " (#{read_dates.sort.first.to_date})"
       end
     elsif unread?
-      #Rails.logger.debug "DEBUG: last read never"
+      #Rails.logger.debug "last read never"
       unread_string
     end
   end
@@ -509,7 +509,7 @@ class Page < ActiveRecord::Base
 
   def add_tags_from_string(string, type="Tag")
     return if string.blank?
-    Rails.logger.debug "DEBUG: adding #{type} #{string}"
+    Rails.logger.debug "adding #{type} #{string}"
     self.set_hidden if type == "Hidden"
     self.set_con if type == "Con"
     string.split(",").each do |tag|
@@ -517,7 +517,7 @@ class Page < ActiveRecord::Base
       typed_tag = type.constantize.find_or_create_by(name: tag.squish) unless typed_tag
       self.tags << typed_tag unless self.tags.include?(typed_tag)
     end
-    Rails.logger.debug "DEBUG: tags now #{self.tags.joined}"
+    Rails.logger.debug "tags now #{self.tags.joined}"
   end
 
   def unfinished?; stars == 9; end
@@ -531,7 +531,7 @@ class Page < ActiveRecord::Base
     elsif unrated?
       nil
     else
-      Rails.logger.debug "DEBUG: stars are #{self.stars}, should be 5,4,3,2,1,9,or 10"
+      Rails.logger.debug "stars are #{self.stars}, should be 5,4,3,2,1,9,or 10"
       "unknown"
     end
   end
@@ -588,7 +588,7 @@ class Page < ActiveRecord::Base
             if section == number
               node.content = new if section == number
               added = true
-              Rails.logger.debug "DEBUG: replaced node text in section #{number}"
+              Rails.logger.debug "replaced node text in section #{number}"
               break
             end
           end
@@ -597,7 +597,7 @@ class Page < ActiveRecord::Base
         ""
       end
       if added == false
-        Rails.logger.debug "DEBUG: added new text to end"
+        Rails.logger.debug "added new text to end"
         body.children.last.add_next_sibling(new)
       end
       self.edited_html=body.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
@@ -608,7 +608,7 @@ class Page < ActiveRecord::Base
 
 
   def re_sanitize
-    Rails.logger.debug "DEBUG: re_sanitizing #{self.id}"
+    Rails.logger.debug "re_sanitizing #{self.id}"
     if !self.parts.blank?
       self.parts.each {|p| p.re_sanitize if p.sanitize_version < Scrub.sanitize_version}
     else
@@ -623,14 +623,14 @@ class Page < ActiveRecord::Base
 
   def scrub_fetch(url)
     begin
-      Rails.logger.debug "DEBUG: fetching raw html from #{url}"
+      Rails.logger.debug "fetching raw html from #{url}"
       Scrub.fetch_html(url)
     rescue SocketError
-      Rails.logger.debug "DEBUG: host unavailable"
+      Rails.logger.debug "host unavailable"
       self.errors.add(:base, "couldn't resolve host name")
       return false
     rescue
-      Rails.logger.debug "DEBUG: content unavailable"
+      Rails.logger.debug "content unavailable"
       self.errors.add(:base, "error retrieving content")
       return false
     end
@@ -655,10 +655,10 @@ class Page < ActiveRecord::Base
   def build_clean_from_raw
     html = MyWebsites.getnode(raw_html, self.url)
     if html
-      Rails.logger.debug "DEBUG: updating scrubbed html from raw"
+      Rails.logger.debug "updating scrubbed html from raw"
       self.scrubbed_html = Scrub.sanitize_html(html)
     else
-      Rails.logger.debug "DEBUG: no scrubbed html available from raw"
+      Rails.logger.debug "no scrubbed html available from raw"
       self.scrubbed_html = ""
     end
     self.set_wordcount
@@ -752,7 +752,7 @@ class Page < ActiveRecord::Base
   end
 
   def make_audio  # add an audio tag and mark it as read today
-    Rails.logger.debug "DEBUG: mark_audio for #{self.id}"
+    Rails.logger.debug "mark_audio for #{self.id}"
     audio_tag = Tag.find_by(name: "audio") || Info.create(name: "audio")
     self.tags << audio_tag
     self.update(:last_read => Time.now)
@@ -767,7 +767,7 @@ class Page < ActiveRecord::Base
   end
 
   def rebuild_meta
-    Rails.logger.debug "DEBUG: rebuilding meta for #{self.id}"
+    Rails.logger.debug "rebuilding meta for #{self.id}"
     remove_outdated_downloads
     self.parts.map(&:rebuild_meta)
     set_meta
@@ -793,8 +793,8 @@ private
   end
 
   def initial_fetch
-    # Rails.logger.debug "DEBUG: initial fetch for #{self.inspect}"
-    Rails.logger.debug "DEBUG: initial fetch for #{self.title} (id: #{self.id})"
+    # Rails.logger.debug "initial fetch for #{self.inspect}"
+    Rails.logger.debug "initial fetch for #{self.title} (id: #{self.id})"
     FileUtils.rm_rf(mydirectory) # make sure directory is empty for testing
     FileUtils.mkdir_p(download_dir) # make sure directory exists
 
@@ -802,7 +802,7 @@ private
       if self.ao3?
         if type.nil?
           page = self.becomes!(initial_ao3_type)
-          Rails.logger.debug "DEBUG: page became #{page.type}"
+          Rails.logger.debug "page became #{page.type}"
         else
           page = self
         end
@@ -827,10 +827,10 @@ private
         chapter = Page.find_by url: url
         if chapter
           chapter.update!(:position => count, :parent_id => self.id)
-          Rails.logger.debug "DEBUG: found #{chapter.inspect}"
+          Rails.logger.debug "found #{chapter.inspect}"
         else
           title = "Part " + count.to_s
-          Rails.logger.debug "DEBUG: creating new chapter with title: #{title}"
+          Rails.logger.debug "creating new chapter with title: #{title}"
           Chapter.create!(:title => title, :url => url, :position => count, :parent_id => self.id)
         end
         count = count.next
@@ -842,8 +842,8 @@ private
       self.set_wordcount
     end
     self.set_type unless type
-    Rails.logger.debug "DEBUG: created as #{position.ordinalize} of #{parent.title}" if parent && position
-    Rails.logger.debug "DEBUG: created with #{parts.size} parts" if parts.any?
+    Rails.logger.debug "created as #{position.ordinalize} of #{parent.title}" if parent && position
+    Rails.logger.debug "created with #{parts.size} parts" if parts.any?
   end
 
 

@@ -6,7 +6,7 @@ class RatesController < ApplicationController
   end
 
   def create
-    Rails.logger.debug "DEBUG: Rate.create(#{params.to_unsafe_h.symbolize_keys})"
+    Rails.logger.debug "Rate.create(#{params.to_unsafe_h.symbolize_keys})"
     page = Page.find(params[:page_id])
     stars = params[:stars]
     unless stars

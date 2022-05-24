@@ -3,14 +3,14 @@ class Filter
   LIMIT = 5 # number of pages to show in index
 
   def self.tag(short_name, start)
-    Rails.logger.debug "DEBUG: Filter.tag(#{short_name}, #{start})"
+    Rails.logger.debug "Filter.tag(#{short_name}, #{start})"
     tag = Tag.find_by_name(short_name)
     tag = Tag.find_by_short_name(short_name) unless tag
     tag.pages.order('read_after ASC').limit(start + LIMIT)[start..-1]
   end
 
   def self.new(params={})
-    Rails.logger.debug "DEBUG: Filter.new(#{params})"
+    Rails.logger.debug "Filter.new(#{params})"
     pages = Page.all
 
     pages = pages.where(:type => (params[:type] == "none" ? nil : params[:type])) if params[:type] unless params[:type] == "all"
@@ -68,7 +68,7 @@ class Filter
     tags=[]
     if params.has_key?(:hidden)
       tag = Hidden.find_by_short_name(params[:hidden])
-      Rails.logger.debug "DEBUG: with #{tag.base_name}"
+      Rails.logger.debug "with #{tag.base_name}"
       tags << tag
     else
       pages = pages.where(hidden: false)
@@ -82,7 +82,7 @@ class Filter
       if params.has_key?(tag_type.downcase.to_s)
         model = tag_type.constantize
         tag = model.find_by_short_name(params[tag_type.downcase.to_s])
-        Rails.logger.debug "DEBUG: with #{model}s #{tag.base_name}"
+        Rails.logger.debug "with #{model}s #{tag.base_name}"
         tags << tag
       end
     end
@@ -104,28 +104,28 @@ class Filter
   end
 
   def self.normal(pages, params)
-    Rails.logger.debug "DEBUG: filter on one or fewer tags"
-    Rails.logger.debug "DEBUG: #{pages.to_sql}"
+    Rails.logger.debug "filter on one or fewer tags"
+    Rails.logger.debug pages.to_sql
     start = params[:count].to_i
     pages.limit(start + LIMIT)[start..-1]
   end
 
   def self.intersection(pages, tags, params)
-    Rails.logger.debug "DEBUG: filtering on intersection of #{tags.size} tags"
+    Rails.logger.debug "filtering on intersection of #{tags.size} tags"
     results = []
     tags.each_with_index do |tag, index|
       if tag.type == "Con"
         pages_without_tag = pages - tag.pages
-        Rails.logger.debug "DEBUG: not #{tag.base_name} has #{pages_without_tag.count} pages: #{pages_without_tag.map(&:title)}"
+        Rails.logger.debug "not #{tag.base_name} has #{pages_without_tag.count} pages: #{pages_without_tag.map(&:title)}"
         results << pages_without_tag
       else
         pages_with_tag = pages.joins(:tags).distinct.where(tags: {id: tag.id})
-        Rails.logger.debug "DEBUG: #{tag.base_name} has #{pages_with_tag.count} pages: #{pages_with_tag.map(&:title)}"
+        Rails.logger.debug "#{tag.base_name} has #{pages_with_tag.count} pages: #{pages_with_tag.map(&:title)}"
         results << pages_with_tag
       end
     end
     intersection = results.inject{|result, pages| result & pages}
-    Rails.logger.debug "DEBUG: intersection has #{intersection.count} pages"
+    Rails.logger.debug "intersection has #{intersection.count} pages"
     start = params[:count].to_i
     intersection[start,LIMIT]
   end

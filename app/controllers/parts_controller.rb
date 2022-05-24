@@ -39,7 +39,7 @@ class PartsController < ApplicationController
       @count = @page.parts.size > Page::LIMIT ? @page.parts.size - Page::LIMIT : 0
     elsif params[:add_parent]
       @parent = @page.add_parent(params[:add_parent])
-      #Rails.logger.debug "DEBUG: added #{@parent.inspect}"
+      #Rails.logger.debug "added #{@parent.inspect}"
       case @parent
       when Array
          flash[:alert] = "More than one page with that title"

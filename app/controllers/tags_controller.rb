@@ -10,18 +10,18 @@ class TagsController < ApplicationController
     elsif params[:recache]
       @tag = Tag.find(params[:id])
       if @tag.type == "Hidden"
-        Rails.logger.debug "DEBUG: recaching pages"
+        Rails.logger.debug "recaching pages"
         @tag.pages.update_all hidden: true
         render :edit and return
       elsif @tag.type == "Con"
-        Rails.logger.debug "DEBUG: recaching pages"
+        Rails.logger.debug "recaching pages"
         @tag.pages.update_all con: true
         render :edit and return
       else
         flash.now[:alert] = "can't recache non-hiddens"
       end
     else
-      Rails.logger.debug "DEBUG: selecting tags"
+      Rails.logger.debug "selecting tags"
       @page = Page.find(params[:id])
       render :select
     end
@@ -35,7 +35,7 @@ class TagsController < ApplicationController
   def update
     @tag = Tag.find(params[:id])
     if params[:commit] == "Merge"
-      Rails.logger.debug "DEBUG: merging tags #{@tag.name} and #{params[:merge]}"
+      Rails.logger.debug "merging tags #{@tag.name} and #{params[:merge]}"
       true_tag = @tag.class.find_by_short_name(params[:merge])
       if true_tag == @tag
         flash.now[:alert] = "can't merge with self"
@@ -53,17 +53,17 @@ class TagsController < ApplicationController
       type = params[:change]
       @tag.update_attribute(:type, type)
       if type == "Hidden"
-        Rails.logger.debug "DEBUG: setting #{@tag.pages.size} #{@tag.name}'s pages to hidden"
+        Rails.logger.debug "setting #{@tag.pages.size} #{@tag.name}'s pages to hidden"
         @tag.pages.update_all hidden: true
       elsif type == "Con"
-        Rails.logger.debug "DEBUG: setting #{@tag.pages.size} #{@tag.name}'s pages to conned"
+        Rails.logger.debug "setting #{@tag.pages.size} #{@tag.name}'s pages to conned"
         @tag.pages.update_all con: true
       end
       if was_hidden
-        Rails.logger.debug "DEBUG: may be unhiding #{@tag.name}'s pages"
+        Rails.logger.debug "may be unhiding #{@tag.name}'s pages"
         @tag.pages.map(&:reset_hidden)
       elsif was_con
-        Rails.logger.debug "DEBUG: may be unconning #{@tag.name}'s pages"
+        Rails.logger.debug "may be unconning #{@tag.name}'s pages"
         @tag.pages.map(&:reset_con)
       end
       @tag.pages.map(&:remove_outdated_downloads)
@@ -83,14 +83,14 @@ class TagsController < ApplicationController
       first = Tag.find_by_name(params[:first_tag_name]) || (@tag.update(name: params[:first_tag_name]) && @tag)
       second = Tag.find_by_name(params[:second_tag_name]) || (@tag.update(name: params[:second_tag_name]) && @tag)
       @tag.pages.each do |page|
-        Rails.logger.debug "DEBUG: adding #{first.name} to #{page.title}"
+        Rails.logger.debug "adding #{first.name} to #{page.title}"
         page.tags << first unless page.tags.include?(first)
-        Rails.logger.debug "DEBUG: adding #{second.name} to #{page.title}"
+        Rails.logger.debug "adding #{second.name} to #{page.title}"
         page.tags << second unless page.tags.include?(second)
       end
       neither_new = (@tag != first && @tag != second)
       if neither_new
-        Rails.logger.debug "DEBUG: removing #{@tag.name}"
+        Rails.logger.debug "removing #{@tag.name}"
         # don't need to destroy_me, because replacements have already been added to the affected pages
         @tag.destroy
       end
@@ -112,7 +112,7 @@ class TagsController < ApplicationController
         symbol = "#{type.downcase}_ids".to_sym
         tag_ids = tag_ids + params[:page][symbol] if (params[:page] && params[:page][symbol])
       end
-      Rails.logger.debug "DEBUG: replacing tags for #{@page.id} with #{tag_ids}"
+      Rails.logger.debug "replacing tags for #{@page.id} with #{tag_ids}"
       @page.tag_ids = tag_ids
     elsif params[:commit].match /Add (.*) Tags/
       @page.add_tags_from_string(params[:tags], $1.squish)

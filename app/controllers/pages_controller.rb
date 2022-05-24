@@ -18,13 +18,13 @@ class PagesController < ApplicationController
     @page = Page.new(requested[:page])
     @count = requested[:count].to_i
     if requested.keys.include?("find")
-      Rails.logger.debug "DEBUG: find #{requested}"
+      Rails.logger.debug "find #{requested}"
       @title = "Pages tagged with #{requested[:find]}"
       @find = requested[:find]
       @pages = Filter.tag(requested[:find], @count)
       flash.now[:alert] = "No pages found" if @pages.to_a.empty?
     elsif requested.empty? || requested.keys == ["count"]
-      Rails.logger.debug "DEBUG: index page"
+      Rails.logger.debug "index page"
       @title = "Mobile pages"
       @index = true
       @called_by = "index"
@@ -35,10 +35,10 @@ class PagesController < ApplicationController
       @filter = true
       @called_by = "filter"
       if requested.keys == ["q"]
-        Rails.logger.debug "DEBUG: empty filter page"
+        Rails.logger.debug "empty filter page"
         @pages = []
       else
-        Rails.logger.debug "DEBUG: filter on #{requested}"
+        Rails.logger.debug "filter on #{requested}"
         @pages = Filter.new(requested)
         flash.now[:alert] = "No pages found" if @pages.to_a.empty?
         @page.title = params[:title] if params[:title]
@@ -107,21 +107,21 @@ class PagesController < ApplicationController
     @info = Info.find_by_short_name(params[:info])
     @page.tags << [@hidden, @author, @fandom, @pro, @con, @info].compact
     if @page.save
-      Rails.logger.debug "DEBUG: page saved: #{@page.inspect}"
+      Rails.logger.debug "page saved: #{@page.inspect}"
       if !@page.errors[:base].blank?
         @errors = @page.errors
-        Rails.logger.debug "DEBUG: page destroyed because of errors"
+        Rails.logger.debug "page destroyed because of errors"
         @page.destroy
         @page = Page.new(params[:page])
       else
         @page.set_hidden unless @hidden.blank?
         @page.set_con unless @con.blank?
         if @page.tags.fandoms.blank?
-          Rails.logger.debug "DEBUG: page created without fandom"
+          Rails.logger.debug "page created without fandom"
           flash[:notice] = "Page created with #{Page::OTHER}"
           @page.toggle_of
         else
-          Rails.logger.debug "DEBUG: page created with fandom"
+          Rails.logger.debug "page created with fandom"
           flash[:notice] = "Page created."
         end
         flash[:alert] = "edit raw html manually" if @page.ff?
@@ -131,7 +131,7 @@ class PagesController < ApplicationController
       @errors = @page.errors
     end
     unless @errors.blank?
-      Rails.logger.debug "DEBUG: page errors: #{@errors.messages}"
+      Rails.logger.debug "page errors: #{@errors.messages}"
       flash[:alert] = @errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
     end
   end
@@ -209,14 +209,14 @@ class PagesController < ApplicationController
       when "Scrub", "Scrub Notes"
         top = params[:top_node] || 0
         bottom = params[:bottom_node] || 0
-        Rails.logger.debug "DEBUG: Removing #{top} from top and #{bottom} from bottom"
+        Rails.logger.debug "Removing #{top} from top and #{bottom} from bottom"
         case params[:commit]
           when "Scrub"
-            Rails.logger.debug "DEBUG: of #{@page.title} content"
+            Rails.logger.debug "of #{@page.title} content"
             @page.remove_nodes(top, bottom)
             flash[:notice] = "Page scrubbed."
           when "Scrub Notes"
-            Rails.logger.debug "DEBUG: of #{@page.title} notes"
+            Rails.logger.debug "of #{@page.title} notes"
             @page.remove_note_nodes(top, bottom)
             flash[:notice] = "Notes scrubbed."
           end
@@ -233,7 +233,7 @@ class PagesController < ApplicationController
         redirect_to @page.download_url(".read") and return
     end
     unless @page.errors.blank?
-      Rails.logger.debug "DEBUG: page errors: #{@page.errors.messages}"
+      Rails.logger.debug "page errors: #{@page.errors.messages}"
       flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
     end
     render :show

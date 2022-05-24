@@ -135,14 +135,14 @@ module Scrub
     auth = MyWebsites.getpwd(url)
     Scrub.agent.add_auth(url, auth[:username], auth[:password]) if auth
     if url.match("archiveofourown.org")
-       Rails.logger.debug "DEBUG: ao3 fetch #{url}"
+       Rails.logger.debug "ao3 fetch #{url}"
        content = Scrub.agent.get(url)
        if Scrub.agent.page.uri.to_s == "https://archiveofourown.org/"
-         Rails.logger.debug "DEBUG: ao3 redirected back to homepage"
+         Rails.logger.debug "ao3 redirected back to homepage"
          raise
        end
        unless content.links.third.text.match(auth[:username])
-         Rails.logger.debug "DEBUG: ao3 sign in"
+         Rails.logger.debug "ao3 sign in"
          content = Scrub.agent.get("https://archiveofourown.org/users/login?restricted=true")
          form = content.forms.first
          username_field = form.field_with(:name => 'user[login]')
@@ -155,7 +155,7 @@ module Scrub
     else
       content = Scrub.agent.get(MyWebsites.geturl(url))
       if content.forms.first.try(:button).try(:name) == "adult_check"
-         Rails.logger.debug "DEBUG: adult check"
+         Rails.logger.debug "adult check"
          form = content.forms.first
          content = Scrub.agent.submit(form, form.buttons.first)
       end

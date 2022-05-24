@@ -42,12 +42,12 @@ Then("I should have no authors") do
 end
 
 Then('I should have {int} page(s)') do |int|
-  Rails.logger.debug "DEBUG: currently have #{Page.count} pages"
+  Rails.logger.debug "currently have #{Page.count} pages"
   assert Page.count == int
 end
 
 Then('I should have {int} tag(s)') do |int|
-  Rails.logger.debug "DEBUG: curent tags: #{Tag.all.map(&:name)}"
+  Rails.logger.debug "curent tags: #{Tag.all.map(&:name)}"
   assert Tag.count==int
 end
 
@@ -56,29 +56,29 @@ end
 Then('{string} should link to itself') do |string|
   href = page.find_link(string)['href']
   itself = Page.find_by_title(string)
-  Rails.logger.debug "DEBUG: link: page #{itself.id} should be at #{href}"
+  Rails.logger.debug "link: page #{itself.id} should be at #{href}"
   assert_match "/pages/#{itself.id}", href
 end
 
 Then('Leave Kudos or Comments on {string} should link to its comments') do |string|
   href = page.find_link("Leave Kudos or Comments on \"#{string}\"")['href']
-  Rails.logger.debug "DEBUG: link: #{href}"
+  Rails.logger.debug "link: #{href}"
   itself = Page.find_by_title(string)
   assert href == itself.url + "#comments"
 end
 
 Then('Rate {string} should link to its rate page') do |string|
   href = page.find_link("Rate \"#{string}\"")['href']
-  Rails.logger.debug "DEBUG: link: #{href}"
+  Rails.logger.debug "link: #{href}"
   itself = Page.find_by_title(string)
   assert_match "/rates/#{itself.id}", href
 end
 
 Then('{string} should link to the content for {string}') do |string1, string2|
   href = page.find_link(string1)['href']
-  Rails.logger.debug "DEBUG: #{string1} link: #{href}"
+  Rails.logger.debug "#{string1} link: #{href}"
   page_contents_url = Page.find_by_title(string2).download_url(".html")
-  Rails.logger.debug "DEBUG: #{string2} link: #{page_contents_url}"
+  Rails.logger.debug "#{string2} link: #{page_contents_url}"
   assert href == page_contents_url
 end
 
@@ -136,12 +136,12 @@ Then("I should NOT be able to select {string} from {string}") do |selection, dro
 end
 
 Then("{string} should be checked") do |checked|
-  Rails.logger.debug "DEBUG: should be checked: #{checked}"
+  Rails.logger.debug "should be checked: #{checked}"
   assert page.has_checked_field?(checked)
 end
 
 Then("{string} should NOT be checked") do |checked|
-  Rails.logger.debug "DEBUG: should be checked: #{checked}"
+  Rails.logger.debug "should be checked: #{checked}"
   assert !page.has_checked_field?(checked)
 end
 
@@ -151,7 +151,7 @@ end
 
 Then("{string} should link to {string}") do |link_text, link_url|
   actual = page.find_link(link_text)['href']
-  Rails.logger.debug "DEBUG: link: #{actual} should be #{link_url}"
+  Rails.logger.debug "link: #{actual} should be #{link_url}"
   assert actual == link_url
 end
 
@@ -172,7 +172,7 @@ Then('my page named {string} should have {int} parts') do |string, int|
 end
 
 Then("last read should be today") do
-  Rails.logger.debug "DEBUG: comparing #{Page.first.last_read.to_date} with #{Date.current}"
+  Rails.logger.debug "comparing #{Page.first.last_read.to_date} with #{Date.current}"
   assert Page.first.last_read.to_date == Date.current
 end
 
@@ -194,36 +194,36 @@ end
 
 Then('the read after date should be {int} year(s) from now') do |int|
   diff = Page.first.read_after.year - Date.today.year
-  Rails.logger.debug "DEBUG: comparing #{Page.first.read_after.year} with #{Date.today.year} (#{diff})"
+  Rails.logger.debug "comparing #{Page.first.read_after.year} with #{Date.today.year} (#{diff})"
   assert diff == int
 end
 
 Then('the read after date should be 6 months from now') do
   diff = Page.first.read_after.month - Date.today.month
-  Rails.logger.debug "DEBUG: comparing #{Page.first.read_after.year} with #{Date.today.year} (#{diff})"
+  Rails.logger.debug "comparing #{Page.first.read_after.year} with #{Date.today.year} (#{diff})"
   assert diff.abs == 6
 end
 
 Then('the read after date should be {string}') do |string|
-  Rails.logger.debug "DEBUG: comparing #{Page.first.read_after} with #{string}"
+  Rails.logger.debug "comparing #{Page.first.read_after} with #{string}"
   assert Page.first.read_after == string
 end
 
 Then('the read after date for {string} should be {string}') do |title, date|
   page = Page.find_by_title(title)
-  Rails.logger.debug "DEBUG: comparing #{page.read_after.to_date} with #{date}"
+  Rails.logger.debug "comparing #{page.read_after.to_date} with #{date}"
   assert page.read_after == date
 end
 
 Then('the read after date for {string} should be today') do |title|
   page = Page.find_by_title(title)
-  Rails.logger.debug "DEBUG: comparing #{page.read_after.to_date} with #{Date.current}"
+  Rails.logger.debug "comparing #{page.read_after.to_date} with #{Date.current}"
   assert page.read_after.to_date == Date.current
 end
 
 Then('my page named {string} should have url: {string}') do |title, url|
   page = Page.find_by_title(title)
-  Rails.logger.debug "DEBUG: comparing #{page.url} with #{url}"
+  Rails.logger.debug "comparing #{page.url} with #{url}"
   assert page.url == url
 end
 

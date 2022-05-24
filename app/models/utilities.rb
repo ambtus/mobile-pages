@@ -1,7 +1,7 @@
 module Utilities
   # stuff used during testing or development
 
-  # make page.inspect easier to read in DEBUG: statements
+  # make page.inspect easier to read in DEBUG Rails statements
   def inspect
      regexp = /([\d-]+)( \d\d:\d\d[\d:.+ ]+)/
      super.match(regexp) ? super.gsub(regexp, '\1') : super
@@ -10,7 +10,7 @@ module Utilities
   def all_html; parts.blank? ? edited_html : parts.map(&:all_html).join; end
 
   def self.create_from_hash(hash)
-    Rails.logger.debug "DEBUG: Utilities.create_from_hash(#{hash})"
+    Rails.logger.debug "Utilities.create_from_hash(#{hash})"
     tag_types = Hash.new("")
     Tag.types.each {|tt| tag_types[tt] = hash.delete(tt.downcase.pluralize.to_sym) }
     inferred_fandoms = hash.delete(:inferred_fandoms)
@@ -24,7 +24,7 @@ module Utilities
       page.update_from_parts
     end
     page.add_fandoms_to_notes(inferred_fandoms.split(",")) if inferred_fandoms
-    Rails.logger.debug "DEBUG: created test page #{page.inspect}"
+    Rails.logger.debug "created test page #{page.inspect}"
     page
   end
 

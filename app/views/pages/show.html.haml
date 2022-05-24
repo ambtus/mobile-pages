@@ -63,7 +63,7 @@
   .end_notes=raw @page.formatted_end_notes
 -unless @page.parts.blank?
   -last = @count + Page::LIMIT
-  -#Rails.logger.debug "DEBUG: page parts #{@count} to #{last} of #{@page.parts.size}"
+  -#Rails.logger.debug "page parts #{@count} to #{last} of #{@page.parts.size}"
   .parts
     - @page.parts.limit(last)[@count..-1].each_with_index do |part, index|
       .part{:id => "position_#{index+1}"}
