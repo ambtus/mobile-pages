@@ -20,6 +20,7 @@ Scenario: end notes link to kudos for Chapter of work
 Scenario: end notes link to kudos for last chapter for Works
   Given Time Was exists
   When I read it online
-  Then Leave Kudos or Comments on "Hogwarts" should link to its comments
-    And I should NOT see "Leave Kudos or Comments on \"Where am I?\""
-    And I should NOT see "Leave Kudos or Comments on \"Timw Was, Time Is\""
+  Then I should see "Leave Kudos or Comments on: Time Was, Time Is"
+    And Leave Kudos or Comments on "Time Was, Time Is" should link to the last chapter comments
+    And I should NOT see "Leave Kudos or Comments on: Where am I?"
+    And I should NOT see "Leave Kudos or Comments on: Hogwarts"

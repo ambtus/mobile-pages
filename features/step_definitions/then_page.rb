@@ -14,25 +14,33 @@ Then('{string} should link to itself') do |string|
 end
 
 Then('Leave Kudos or Comments on {string} should link to its comments') do |string|
-  href = page.find_link("Leave Kudos or Comments on \"#{string}\"")['href']
+  href = page.find(".kudos").find_link(string)['href']
   Rails.logger.debug "link: #{href}"
   itself = Page.find_by_title(string)
   assert href == itself.url + "#comments"
 end
 
+Then('Leave Kudos or Comments on {string} should link to the last chapter comments') do |string|
+  href = page.find(".kudos").find_link(string)['href']
+  Rails.logger.debug "link: #{href}"
+  last_page = Page.find_by_title(string).parts.last
+  assert href == last_page.url + "#comments"
+end
+
 Then('Rate {string} should link to its rate page') do |string|
-  href = page.find_link("Rate \"#{string}\"")['href']
+  href = page.find(".rate").find_link(string)['href']
   Rails.logger.debug "link: #{href}"
   itself = Page.find_by_title(string)
   assert_match "/rates/#{itself.id}", href
 end
 
-Then('{string} should link to the content for {string}') do |string1, string2|
-  href = page.find_link(string1)['href']
-  Rails.logger.debug "#{string1} link: #{href}"
-  page_contents_url = Page.find_by_title(string2).download_url(".html")
-  Rails.logger.debug "#{string2} link: #{page_contents_url}"
-  assert href == page_contents_url
+Then('Next should link to the content for {string}') do |string|
+  next_page = Page.find_by_title(string)
+  page_contents_url = next_page.download_url(".html")
+  Rails.logger.debug "#{string} link: #{page_contents_url}"
+  href = page.find(".next").find_link(next_page.title)['href']
+  Rails.logger.debug "Next link: #{href}"
+  assert_match page_contents_url, href
 end
 
 Then('the contents should include {string}') do |string|

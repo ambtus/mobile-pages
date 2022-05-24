@@ -45,4 +45,4 @@ Scenario: author in aka
     And I Drive Myself Crazy exists
   When I am on the page's page
   Then I should see "ambtus" within ".authors"
-    And I should NOT see "Sidra"
+    But I should NOT see "Sidra" within ".authors"

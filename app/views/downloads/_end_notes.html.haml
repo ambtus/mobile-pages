@@ -3,20 +3,19 @@
 -if defined? links
 
   -if page.next_part
-    .part
-      %p=link_to "Next", download_url_for_page(@page.next_part, ".html")
+    %p.next
+      Next:
+      =link_to page.next_part.title, @url + download_url_for_page(page.next_part, ".html")
 
   -if page.ao3?
-    .offsite
+    %p.kudos
+      Leave Kudos or Comments on:
       -if page.parts.any?
-        %p=link_to "Leave Kudos or Comments on \"#{page.parts.last.title}\"",  page.parts.last.url + "#comments"
+        =link_to page.title, page.parts.last.url + "#comments"
       -else
-        %p=link_to "Leave Kudos or Comments on \"#{page.title}\"",  page.url + "#comments"
-
-  .rate
-    %p
-      -rate = @page.read? ? "ReRate " : "Rate "
-      =link_to rate + @page.title.with_quotes, @url + rate_path(@page)
-    %p=@url + rate_path(@page)
-%p The End
-%p Thanks for Reading!
+        =link_to page.title, page.url + "#comments"
+  %p.rate
+    = page.read? ? "ReRate: " : "Rate: "
+    =link_to page.title, @url + rate_path(page)
+    %br
+    =@url + rate_path(page)
