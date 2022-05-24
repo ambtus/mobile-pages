@@ -8,6 +8,9 @@ gem 'mysql2'
 
 gem 'unicorn', group: :production
 
+gem 'logging'
+gem 'logging-rails'
+
 group :development do
   gem 'quiet_safari'
   gem 'thin'

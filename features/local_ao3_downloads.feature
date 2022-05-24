@@ -23,8 +23,3 @@ Scenario: end notes link to kudos for last chapter for Works
   Then Leave Kudos or Comments on "Hogwarts" should link to its comments
     And I should NOT see "Leave Kudos or Comments on \"Where am I?\""
     And I should NOT see "Leave Kudos or Comments on \"Timw Was, Time Is\""
-
-Scenario: hr between kudos and rating
-  Given Where am I exists
-  When I read it online
-  Then I should see a horizontal rule

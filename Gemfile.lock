@@ -146,6 +146,12 @@ GEM
     kgio (2.11.4)
     launchy (2.5.0)
       addressable (~> 2.7)
+    little-plugger (1.1.4)
+    logging (2.3.0)
+      little-plugger (~> 1.1)
+      multi_json (~> 1.14)
+    logging-rails (0.6.0)
+      logging (>= 1.8)
     loofah (2.17.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -171,6 +177,7 @@ GEM
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
     minitest (5.15.0)
+    multi_json (1.15.0)
     multi_test (0.1.2)
     mysql2 (0.5.3)
     net-http (0.2.0)
@@ -284,6 +291,8 @@ DEPENDENCIES
   escape_utils
   haml
   launchy
+  logging
+  logging-rails
   mechanize (>= 2.7.7)
   mysql2
   net-http

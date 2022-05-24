@@ -122,3 +122,8 @@ When('I edit the raw html with {string}') do |string|
   fill_in("pasted", :with => html)
   click_button("Update Raw HTML")
 end
+
+When('I follow the link for {string}') do |string|
+  page = Page.find_by title: string
+  click_link("/pages/#{page.id}")
+end

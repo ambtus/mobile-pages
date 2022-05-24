@@ -2,7 +2,6 @@
   =@page.title
 
 %h1{:style=> "page-break-before:always", :class => "chapter"}=link_to @page.title, @url + page_path(@page)
-%p=@url + page_path(@page)
 =render :partial => "downloads/notes", :locals => {:page => @page} if @page.show_notes
 
 - if @page.parts.empty?
@@ -11,7 +10,6 @@
   - @page.not_hidden_parts.each do |child|
 
     %h2{:style=> "page-break-before:always", :class => "chapter"}=link_to child.download_part_title, @url + page_path(child)
-    %p=@url + page_path(child)
     =render :partial => "downloads/notes", :locals => {:page => child} if child.show_notes
 
     - if child.parts.empty?

@@ -1,17 +1,22 @@
 %h3{:style=> "page-break-before:always", :class => "chapter"} End Notes
 .end_notes=simple_format page.end_notes if page.at_end
 -if defined? links
+
+  -if page.next_part
+    .part
+      %p=link_to "Next", download_url_for_page(@page.next_part, ".html")
+
   -if page.ao3?
     .offsite
       -if page.parts.any?
-        =link_to "Leave Kudos or Comments on \"#{page.parts.last.title}\"",  page.parts.last.url + "#comments"
+        %p=link_to "Leave Kudos or Comments on \"#{page.parts.last.title}\"",  page.parts.last.url + "#comments"
       -else
-        =link_to "Leave Kudos or Comments on \"#{page.title}\"",  page.url + "#comments"
-    %hr
+        %p=link_to "Leave Kudos or Comments on \"#{page.title}\"",  page.url + "#comments"
+
   .rate
-    -rate = @page.read? ? "ReRate " : "Rate "
-    =link_to rate + @page.title.with_quotes, @url + rate_path(@page)
-    =@url + rate_path(@page)
-  -if page.next_part
-    %hr
-    .part=link_to "Next", download_url_for_page(@page.next_part, ".html")
+    %p
+      -rate = @page.read? ? "ReRate " : "Rate "
+      =link_to rate + @page.title.with_quotes, @url + rate_path(@page)
+    %p=@url + rate_path(@page)
+%p The End
+%p Thanks for Reading!

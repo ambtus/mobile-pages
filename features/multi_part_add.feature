@@ -23,7 +23,7 @@ Scenario: can view ambiguous parents
     And a page exists with title: "Single"
     And I am on the page with title "Single"
     And I add a parent with title "Ambiguous"
-    And I follow "/pages/1"
+  When I follow the link for "Ambiguous1"
   Then I should see "Ambiguous1 (Single)" within ".title"
 
 Scenario: can choose ambiguous parent

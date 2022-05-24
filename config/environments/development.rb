@@ -1,5 +1,5 @@
 Rails.application.configure do
- # Configure 'rails notes' to inspect Cucumber files
+  # Configure 'rails notes' to inspect Cucumber files
   config.annotations.register_directories('features')
   config.annotations.register_extensions('feature') { |tag| /#\s*(#{tag}):?\s*(.*)$/ }
 
@@ -58,4 +58,10 @@ Rails.application.configure do
 
   config.hosts << `hostname`.chomp.downcase
   config.hosts << `hostname`.chomp.downcase + ".local"
+
+  # Set the logging destination(s)
+  config.log_to = %w[stdout file]
+
+  # Show the logging configuration on STDOUT
+  config.show_log_configuration = false
 end

@@ -7,3 +7,4 @@
   -if page.hr2?
     %hr
   =simple_format page.end_notes unless page.at_end
+  %p=@url + page_path(page)
