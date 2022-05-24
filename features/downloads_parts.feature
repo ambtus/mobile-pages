@@ -87,3 +87,9 @@ Scenario: part epubs should have all metadata from parent except size (which is 
     And the download epub command for "Page 1" should include comments: "30,003 words"
     But the download epub command for "Part 2" should include comments: "10,001 words"
 
+Scenario: part epubs should have title "PartTitle of ParentTitle of GrandparentTitle"
+  Given a series exists
+  Then the download epub title for "Series" should be "Series"
+    And the download epub title for "Book1" should be "Book1 of Series"
+    And the download epub title for "Prologue" should be "Prologue of Book1 of Series"
+    And the download epub title for "Extras" should be "Extras of Series"

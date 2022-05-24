@@ -51,3 +51,8 @@ Then /^the download epub command for "([^"]*)" should NOT include (.+): "([^"]*)
   end
 end
 
+Then('the download epub title for {string} should be {string}') do |string, string2|
+  epub_title = Page.find_by_title(string).epub_title
+  Rails.logger.debug "epub_title is #{epub_title} (want #{string2})"
+  assert epub_title == string2
+end

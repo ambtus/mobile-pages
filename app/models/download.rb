@@ -95,8 +95,12 @@ module Download
     ].join_comma
   end
 
+  def epub_title
+    parent ? self.title + " of #{parent.epub_title}" : self.title
+  end
+
   def epub_tags
-    string = %Q{--title "#{self.title}"}
+    string = %Q{--title "#{self.epub_title}"}
     unless self.download_author_string.blank?
       string = string + %Q{ --authors "#{self.download_author_string}"}
     end
