@@ -2,6 +2,7 @@ Feature: stuff to do with notes
 
 Scenario: not filling in notes shouldn't give "Notes"
   Given I am on the create page
+    And I fill in "page_title" with "Title"
   When I press "Store"
     And I am on the page's page
   Then I should NOT see "Notes" within ".notes"

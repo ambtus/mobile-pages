@@ -1,28 +1,15 @@
 !!! Strict
 %html
   %head
-    %title= h(yield(:title) || "Untitled")
+    %title= @title || "Mobile Pages"
     %meta{"http-equiv"=>"Content-Type", :content=>"text/html; charset=utf-8"}/
     %meta{"name"=>"viewport", "content"=>"width=240"}
     = csrf_meta_tag
     = stylesheet_link_tag '/application.css'
   %body
-    .links
-      = link_to "Pages", pages_path
-      = link_to "Filter", pages_path(q: true)
-      = link_to "Store One", new_page_path
-      = link_to "Store Multiple", new_part_path
-      = link_to "Tags", tags_path
-
-    / flash: #{flash.collect {|n, m| n+m}}
+    =render "layouts/links"
     - flash.each do |name, msg|
-      / #{name}: #{msg}
       = content_tag :div, msg, :id => "flash_#{name}"
-    -flash.clear
-
+    - flash.clear
     = yield
-
-    .links
-      Mobile Pages
-      %br
-      by Sidra
+    =render "layouts/links"

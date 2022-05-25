@@ -1,9 +1,5 @@
 Feature: read_after order
 
-Scenario: default
-  When I am on the filter page
-  Then "sort_by_default" should be checked
-
 Scenario: default read order
   Given 4 pages exist
   When I am on the homepage
@@ -14,10 +10,7 @@ Scenario: default read order
 
 Scenario: rating a page makes its read after later
   Given 4 pages exist
-  When I am on the page with title "Page 1"
-    And I follow "Rate"
-    And I choose "2"
-    And I press "Rate"
+  When I rate it 2 stars
   When I am on the homepage
     And I should see "Page 2" within "#position_1"
     And I should see "Page 3" within "#position_2"
@@ -26,10 +19,7 @@ Scenario: rating a page makes its read after later
 
 Scenario: rating a page higher makes its read after sooner than a lower rating
   Given 4 pages exist
-  When I am on the page with title "Page 1"
-    And I follow "Rate"
-    And I choose "2"
-    And I press "Rate"
+  When I rate it 2 stars
     And I am on the page with title "Page 2"
     And I follow "Rate"
     And I choose "4"
@@ -42,10 +32,7 @@ Scenario: rating a page higher makes its read after sooner than a lower rating
 
  Scenario: rating a page midway makes its read after between others
   Given 4 pages exist
-  When I am on the page with title "Page 1"
-    And I follow "Rate"
-    And I choose "2"
-    And I press "Rate"
+  When I rate it 2 stars
     And I am on the page with title "Page 2"
     And I follow "Rate"
     And I choose "4"
@@ -60,3 +47,12 @@ Scenario: rating a page higher makes its read after sooner than a lower rating
     And I should see "Page 3" within "#position_3"
     And I should see "Page 1" within "#position_4"
 
+Scenario: change the previous "read now" behavior
+  Given 2 pages exist
+    And the second had been made read first
+  When I am on the homepage
+    And I follow "Page 2" within "#position_1"
+    And I choose "Soonest"
+    And I press "Change"
+    And I am on the homepage
+  Then I should see "Page 2" within "#position_2"

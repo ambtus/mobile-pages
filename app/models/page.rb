@@ -6,22 +6,32 @@ class Page < ActiveRecord::Base
   include Rate
   include Utilities
   include Scrubbing
+  include Soon
+
+  scope :reading, -> { where(soon: 0) }
+  scope :soonest, -> { where(soon: 1) }
+  scope :soon, -> { where(soon: 2) }
+  scope :not_hidden, -> { where(hidden: false) }
 
   MODULO = 300  # files in a single directory
   LIMIT = 5 # number of parts to show at a time
 
   def normalize_url
     return if self.url.blank?
-    if self.url.match("archiveofourown.org/users")
+    normalized = self.url.normalize
+    if normalized.blank?
+      self.errors.add(:url, "is invalid")
+      return false
+    elsif normalized.match("archiveofourown.org/users")
       self.errors.add(:url, "cannot be ao3 user")
       return false
-    elsif self.url.match("(.*)/collections/(.*)/works/(.*)")
-      self.url = $1 + "/works/" + $3
-    elsif self.url.match("archiveofourown.org/collections")
+    elsif normalized.match("(.*)/collections/(.*)/works/(.*)")
+      normalized = $1 + "/works/" + $3
+    elsif normalized.match("archiveofourown.org/collections")
       self.errors.add(:url, "cannot be an ao3 collection")
       return false
     end
-    self.url = self.url.normalize
+    self.url = normalized
   end
 
   def ao3_type
@@ -155,9 +165,9 @@ class Page < ActiveRecord::Base
     return self
   end
 
-  BASE_URL_PLACEHOLDER = "Base URL: use * as replacement placeholder"
-  URL_SUBSTITUTIONS_PLACEHOLDER = "replacements: space separated or range n-m"
-  URLS_PLACEHOLDER = "Alternatively: full URLs for parts, one per line"
+  BASE_URL_PLACEHOLDER = "Base URL (* will be replaced)"
+  URL_SUBSTITUTIONS_PLACEHOLDER = "replacements: n-m or space separated"
+  URLS_PLACEHOLDER = "Alternative to Base: one URL per line"
 
   has_and_belongs_to_many :tags, -> { distinct }
   belongs_to :parent, class_name: "Page", optional: true

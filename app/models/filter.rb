@@ -2,16 +2,27 @@ class Filter
 
   LIMIT = 5 # number of pages to show in index
 
-  def self.tag(short_name, start)
-    Rails.logger.debug "Filter.tag(#{short_name}, #{start})"
-    tag = Tag.find_by_name(short_name)
-    tag = Tag.find_by_short_name(short_name) unless tag
+  def self.tag(name, start)
+    Rails.logger.debug "Filter.tag(#{name}, #{start})"
+    tag = Tag.find_by_name(name)
+    tag = Tag.find_by_short_name(name) unless tag
     tag.pages.order('read_after ASC').limit(start + LIMIT)[start..-1]
   end
 
   def self.new(params={})
     Rails.logger.debug "Filter.new(#{params})"
     pages = Page.all
+
+    if params[:soon]
+      if params[:soon] == "Now"
+        pages = pages.where(soon: [0,1,2])
+      elsif params[:soon] == "Never"
+        pages = pages.where(soon: [3,4,5])
+      else
+        index = Soon::LABELS.index(params[:soon])
+        pages = pages.where(soon: index)
+      end
+    end
 
     pages = pages.where(:type => (params[:type] == "none" ? nil : params[:type])) if params[:type] unless params[:type] == "all"
 
@@ -23,19 +34,18 @@ class Filter
     # ignore parts if filtering on size unless you've chosen a type
     pages = pages.where(:parent_id => nil) if params[:size] && !params[:type]
 
-    pages = pages.where(:last_read => nil) if params[:unread] == "all"
-    pages = pages.where(:last_read => [nil, Page::UNREAD_PARTS_DATE]) if params[:unread] == "any"
-    pages = pages.where(:last_read => Page::UNREAD_PARTS_DATE) if params[:unread] == "parts"
-    pages = pages.where.not(:last_read => [nil, Page::UNREAD_PARTS_DATE]) if params[:unread] == "none"
+    pages = pages.where(:last_read => nil) if params[:unread] == "Unread"
+    pages = pages.where(:last_read => Page::UNREAD_PARTS_DATE) if params[:unread] == "Parts"
+    pages = pages.where.not(:last_read => [nil, Page::UNREAD_PARTS_DATE]) if params[:unread] == "Read"
 
     pages = pages.where(:stars => params[:stars]) unless params[:stars].to_i == 0
-    pages = pages.where(:stars => [5,4]) if params[:stars] == "better"
-    pages = pages.where(:stars => [2,1]) if params[:stars] == "worse"
+    pages = pages.where(:stars => [5,4]) if params[:stars] == "Better"
+    pages = pages.where(:stars => [2,1]) if params[:stars] == "Worse"
     pages = pages.where(:stars => [9]) if params[:stars] == "unfinished"
 
     pages = pages.where(:size => params[:size]) if Page::SIZES.include?(params[:size])
-    pages = pages.where(:size => ["short", "drabble"]) if params[:size] == "shorter"
-    pages = pages.where(:size => ["long", "epic"]) if params[:size] == "longer"
+    pages = pages.where(:size => ["short", "drabble"]) if params[:size] == "Shorter"
+    pages = pages.where(:size => ["long", "epic"]) if params[:size] == "Longer"
 
     [:title, :notes, :my_notes].each do |attrib|
       pages = pages.where("LOWER(pages.#{attrib.to_s}) LIKE ?", "%#{params[attrib].downcase}%") if params.has_key?(attrib)
@@ -74,7 +84,7 @@ class Filter
       pages = pages.where(hidden: false)
     end
 
-    if params[:hide_all_cons] == "Yes"
+    if params[:hide_all] == "cons"
       pages = pages.where(con: false)
     end
 

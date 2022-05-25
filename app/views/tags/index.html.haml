@@ -1,6 +1,5 @@
--content_for(:title, "Tags")
 -Tag.types.each_with_index do |type, outer|
-  %h2{id: type}
+  .bold{id: type, class: "#{type.downcase.pluralize}"}
     -Tag.types.each_with_index do |type, inner|
       ="|" unless inner == 0
       -if type == Tag.types[outer]
@@ -8,7 +7,8 @@
       -else
         =link_to type, anchor: type
   -Tag.send(type.downcase.pluralize).by_name.each do |tag|
-    .div{class: "#{type.downcase.pluralize}"}
+    .indented{class: "#{type.downcase.pluralize}"}
       = link_to "edit #{tag.name}", edit_tag_path(tag)
-      =surround "(", ")" do
-        = link_to_tag tag, "pages tagged with #{tag.base_name}"
+      .indented
+        =surround "(", ")" do
+          = link_to_tag tag, "#{tag.base_name} pages"

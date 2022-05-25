@@ -1,36 +1,3 @@
-- content_for :title do
-  = @title
-.form
-  = form_for @page.becomes(Page) do |f|
-    = hidden_field_tag :count, @count
-    = hidden_field_tag :find, @find if @find
-    = render :partial => "pages/filter" if @filter
-    = render :partial => "pages/create", :locals => {:page => @page, :called_by => @called_by} unless @find
-    = f.submit "Find", :name => "Find" if @filter
-    = f.submit "Store", :name => "Store" if @index
-    = f.submit "Refetch", :name => "Refetch" if @index
-    - unless @pages.blank?
-      -if @find
-        .title=@title
-      .pages
-        - @pages.each_with_index do |page, index|
-          .page{:id => "position_#{index+1}"}
-            .title
-              = link_to page.title, page_path(page)
-              - if page.parent
-                of
-                =link_to page.parent.title, page_path(page.parent)
-                -if page.parent.parent
-                  of
-                  =link_to page.parent.parent.title, page_path(page.parent.parent)
-            .views
-              = link_to "Rate", rate_path(page)
-              = link_to "ePub", download_url_for_page(page, ".epub")
-              = link_to "HTML", download_url_for_page(page, ".html")
-              = link_to "Text", download_url_for_page(page, ".read") if page.parts.empty?
-              = link_to "Original", page.url unless page.url.blank?
-            .meta=page.meta_string
-            .my_notes=page.short_my_notes
-            .notes=simple_format page.short_notes
-            .end_notes=simple_format page.short_end_notes
-        = f.submit "Next", :name => "Next"
+=render "new"
+=render "pages" unless @pages.blank?
+.form= button_to "Next", pages_path, method: :get, params: @new_query if @new_query

@@ -5,84 +5,105 @@ class PagesController < ApplicationController
     @title = "New page"
   end
 
-  def index
-    requested = request.query_parameters
-    if requested[:url]
-      @page = Page.find_by_url(requested[:url].normalize)
+  def show
+    @page = Page.find(params[:id])
+    @title = @page.title
+    @count = params[:count].to_i
+  end
+
+  def edit # used for editing sections
+    @page = Page.find(params[:id])
+    @section_number = params[:section].to_i
+    @section = @page.section(@section_number)
+  end
+
+  def reading
+    @page = Page.new
+    @count = params[:count].to_i
+    @title = "Currently Reading"
+    @pages = Page.reading.not_hidden.limit(@count + 5)[@count..-1]
+    flash.now[:alert] = "No pages found" if @pages.blank?
+  end
+
+  def soonest
+    @page = Page.new
+    @count = params[:count].to_i
+    @title = "Read Next"
+    @pages = Page.soonest.limit(@count + 5)[@count..-1]
+    flash.now[:alert] = "No pages found" if @pages.blank?
+  end
+
+  def soon
+    @page = Page.new
+    @count = params[:count].to_i
+    @title = "Read Soon"
+    @pages = Page.soon.limit(@count + 5)[@count..-1]
+    flash.now[:alert] = "No pages found" if @pages.blank?
+  end
+
+  def filter
+   if params[:url]
+      @page = Page.find_by_url(params[:url].normalize)
       if @page
         flash[:notice] = "One page found"
         @count = 0
         render :show
+      else
+        flash[:alert] = "Page not found"
+        redirect_to filter_path and return
       end
     end
-    @page = Page.new(requested[:page])
-    @count = requested[:count].to_i
-    if requested.keys.include?("find")
-      Rails.logger.debug "find #{requested}"
-      @title = "Pages tagged with #{requested[:find]}"
-      @find = requested[:find]
-      @pages = Filter.tag(requested[:find], @count)
-      flash.now[:alert] = "No pages found" if @pages.to_a.empty?
-    elsif requested.empty? || requested.keys == ["count"]
-      Rails.logger.debug "index page"
-      @title = "Mobile pages"
-      @index = true
-      @called_by = "index"
-      @pages = Filter.new(requested)
-      flash.now[:alert] = "No pages found" if @pages.to_a.empty?
-    else
-      @title = "Filter pages"
-      @filter = true
-      @called_by = "filter"
-      if requested.keys == ["q"]
-        Rails.logger.debug "empty filter page"
-        @pages = []
-      else
-        Rails.logger.debug "filter on #{requested}"
-        @pages = Filter.new(requested)
-        flash.now[:alert] = "No pages found" if @pages.to_a.empty?
-        @page.title = params[:title] if params[:title]
-        @page.notes = params[:notes] if params[:notes]
-        @page.my_notes = params[:my_notes] if params[:my_notes]
-        @page.url = params[:url] if params[:url]
-        Tag.types.each do |tag_type|
-          instance_variable_set("@#{tag_type.downcase}_name", params[tag_type.downcase]) if params[tag_type.downcase]
+    @page = Page.new
+    @title = "Filter Pages"
+  end
+
+  # Post method used to remove unused paramaters and generate clean query for index
+  def find
+    page = params.delete(:page)
+    if page[:url]
+      normalized = page[:url].normalize
+      unless normalized.blank?
+        Rails.logger.debug normalized
+        @page = Page.find_by_url(normalized)
+        if @page
+          flash[:notice] = "Page found"
+          @count = 0
+          redirect_to page_path(@page) and return
         end
       end
-      @type = params[:type] || "any"
-      @sort_by = params[:sort_by] || "default"
-      @size = params[:size] || "any"
-      @unread = params[:unread] || "either"
-      @stars = params[:stars] || "any"
-      @cons = params[:hide_all_cons] || "No"
+    end
+    params.delete(:action)
+    params.delete(:controller)
+    params.delete(:commit)
+    params.delete(:authenticity_token)
+    params.compact_blank!
+    page.compact_blank!
+    query = params.to_unsafe_h.merge(page.to_unsafe_h)
+    Rails.logger.debug query
+    redirect_to pages_path(query)
+  end
+
+  def index
+    @page = Page.new
+    @count = params[:count].to_i
+    query = request.query_parameters
+    if params[:find]
+      name = params[:find]
+      @title = "Pages tagged with #{name}"
+      @pages = Filter.tag(name, @count)
+    else
+      @title = "Filtered pages"
+      @pages = Filter.new(request.query_parameters)
+    end
+    if @pages.empty?
+      flash.now[:alert] = "No pages found"
+    elsif @pages.count == Filter::LIMIT
+      @new_query = query.merge(count: @count + Filter::LIMIT)
     end
   end
 
+  ## FIXME ugly
   def create
-    if params[:Find] || params[:Next]
-      build_route = {:action => "index" , :controller => "pages"}
-      build_route[:find] = params[:find] unless params[:find].blank?
-      build_route[:count] = params[:count].to_i + Filter::LIMIT if params[:Next]
-      build_route[:author] = params[:author] unless params[:author].blank?
-      build_route[:hidden] = params[:hidden] unless params[:hidden].blank?
-      build_route[:fandom] = params[:fandom] unless params[:fandom].blank?
-      build_route[:pro] = params[:pro] unless params[:pro].blank?
-      build_route[:con] = params[:con] unless params[:con].blank?
-      build_route[:info] = params[:info] unless params[:info].blank?
-      build_route[:hide_all_cons] = params[:hide_all_cons] unless params[:hide_all_cons].blank?
-      build_route[:type] = params[:type] unless (params[:type].blank? || params[:type] == "any")
-      build_route[:sort_by] = params[:sort_by] unless (params[:sort_by].blank? || params[:sort_by] == "default")
-      build_route[:size] = params[:size] unless (params[:size].blank? || params[:size] == "any")
-      build_route[:stars] = params[:stars] unless (params[:stars].blank? || params[:stars] == "any")
-      build_route[:unread] = params[:unread] unless (params[:unread].blank? || params[:unread] == "either")
-      if params[:page]
-        build_route[:title] = params[:page][:title] unless params[:page][:title] == "Title"
-        build_route[:notes] = params[:page][:notes] unless params[:page][:notes] == "Notes"
-        build_route[:my_notes] = params[:page][:my_notes] unless params[:page][:my_notes] == "My Notes"
-        build_route[:url] = params[:page][:url] unless params[:page][:url] == "URL"
-      end
-      redirect_to(build_route) and return
-    end
     if params[:Refetch]
       @page = Page.find_by_url(params[:page][:url].normalize)
       if @page
@@ -136,11 +157,7 @@ class PagesController < ApplicationController
     end
   end
 
-  def show
-    @page = Page.find(params[:id])
-    @count = params[:count].to_i
-  end
-
+  ## FIXME huge ugliness ;)
   def update
     @page = Page.find(params[:id])
     @count = params[:count].to_i
@@ -155,14 +172,9 @@ class PagesController < ApplicationController
         @count = @count < Page::LIMIT ? 0 : @count - Page::LIMIT
       when "Last Parts"
         @count = @page.parts.size - Page::LIMIT
-      when "Read Now"
-        @page.make_first
-        flash[:notice] = "Set to Read Now"
-        redirect_to root_path and return
-      when "Read Later"
-        @page.reset_read_after
-        flash[:notice] = "Reset read after date"
-        redirect_to root_path and return
+      when "Change"
+        @page.update soon: params[:page][:soon]
+        @page.update_read_after
       when "Audiobook created"
         @page.make_audio
         flash[:notice] = "Tagged as audio book and marked as read today"
@@ -239,9 +251,6 @@ class PagesController < ApplicationController
     render :show
   end
 
-  def edit # used for editing sections
-    @page = Page.find(params[:id])
-    @section_number = params[:section].to_i
-    @section = @page.section(@section_number)
-  end
+
+
 end

@@ -12,9 +12,6 @@ Scenario: uncollect should delete parent
     And I am on the page's page
     And I press "Uncollect"
   Then I should see "Uncollected" within "#flash_notice"
-    And I should see "One"
-    And I should see "Two"
-    And I should NOT see "Page 1"
     And I should have 2 pages
 
 Scenario: remove a part from an existing page with parts (make single)

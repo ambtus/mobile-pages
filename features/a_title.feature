@@ -10,9 +10,8 @@ Scenario: put title in the url box by mistake
 Scenario: don't enter title in the title box
   Given I am on the create page
   When I press "Store"
-  Then I should NOT see "Title can't be blank"
-    And I should see "Title" within ".title"
-    And I should have 1 page
+  Then I should have 0 pages
+    And I should see "Both URL and Title can't be blank"
 
 Scenario: clear out title
   Given I am on the create page

@@ -18,7 +18,7 @@ Scenario: one page found
   When I am on the filter page
     And I fill in "page_url" with "http://test.sidrasue.com/maas.html"
     And I press "Find"
-  Then I should see "One page found" within "#flash_notice"
+  Then I should see "Page found" within "#flash_notice"
     And I should see "The Mysterious Affair at Styles (Single)" within ".title"
 
 Scenario: one part found
@@ -26,7 +26,7 @@ Scenario: one part found
   When I am on the filter page
     And I fill in "page_url" with "http://test.sidrasue.com/maas.html"
     And I press "Find"
-  Then I should see "One page found" within "#flash_notice"
+  Then I should see "Page found" within "#flash_notice"
     And I should see "Part 3 (Chapter)" within ".title"
 
 Scenario: check find page by original url
@@ -34,7 +34,7 @@ Scenario: check find page by original url
   When I am on the filter page
     And I fill in "page_url" with "https://archiveofourown.org/works/310586"
     And I press "Find"
-  Then I should see "One page found" within "#flash_notice"
+  Then I should see "Page found" within "#flash_notice"
     And I should see "Open the Door (Book)" within ".title"
 
 Scenario: Find page with http
@@ -42,7 +42,7 @@ Scenario: Find page with http
   When I am on the filter page
     And I fill in "page_url" with "http://archiveofourown.org/works/310586"
     And I press "Find"
-  Then I should see "One page found" within "#flash_notice"
+  Then I should see "Page found" within "#flash_notice"
     And I should see "Open the Door (Book)" within ".title"
 
 Scenario: Find page with trailing slash
@@ -50,7 +50,7 @@ Scenario: Find page with trailing slash
   When I am on the filter page
     And I fill in "page_url" with "https://archiveofourown.org/works/310586/"
     And I press "Find"
-  Then I should see "One page found" within "#flash_notice"
+  Then I should see "Page found" within "#flash_notice"
     And I should see "Open the Door (Book)" within ".title"
 
 Scenario: Find page with http and trailing slash
@@ -58,7 +58,7 @@ Scenario: Find page with http and trailing slash
   When I am on the filter page
     And I fill in "page_url" with "http://archiveofourown.org/works/310586/"
     And I press "Find"
-  Then I should see "One page found" within "#flash_notice"
+  Then I should see "Page found" within "#flash_notice"
     And I should see "Open the Door (Book)" within ".title"
 
 Scenario: find by url shows parts

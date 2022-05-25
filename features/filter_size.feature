@@ -1,9 +1,5 @@
 Feature: filter on size
 
-Scenario: any selected by default
-  When I am on the filter page
-  Then "size_any" should be checked
-
 Scenario: check before filter on a size
   Given pages with all possible sizes exist
   When I am on the filter page
@@ -66,7 +62,7 @@ Scenario: filter epic
 Scenario: filter longer
   Given pages with all possible sizes exist
   When I am on the filter page
-    And I choose "size_longer"
+    And I choose "size_Longer"
     And I press "Find"
   Then I should see "Long" within ".pages"
     And I should see "Long2" within ".pages"
@@ -76,7 +72,7 @@ Scenario: filter longer
 Scenario: filter shorter
   Given pages with all possible sizes exist
   When I am on the filter page
-    And I choose "size_shorter"
+    And I choose "size_Shorter"
     And I press "Find"
   Then I should see "Drabble" within ".pages"
     And I should see "Short" within ".pages"

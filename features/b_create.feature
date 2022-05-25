@@ -14,7 +14,7 @@ Scenario: create a page from a single url with selected tags
     And I should see "my fandom" within ".fandoms"
     And I should see "my author" within ".authors"
     And I should see "my pro" within ".pros"
-    And I should see "Title" within ".title"
+    And I should see "temp" within ".title"
 
 Scenario: create a page from a single url with title and notes and my notes
   Given I am on the create page
@@ -28,16 +28,10 @@ Scenario: create a page from a single url with title and notes and my notes
     And I should see "some generic notes" within ".notes"
     And I should see "some personal notes" within ".my_notes"
 
-Scenario: must have url or title
-  Given I am on the create page
-    And I fill in "page_title" with ""
-  When I press "Store"
-  Then I should have 0 pages
-    And I should see "Both URL and Title can't be blank"
-
 Scenario: check before create a page with a hidden tag
   Given "abc123" is a "Hidden"
   When I am on the create page
+    And I fill in "page_title" with "Title"
     And I select "abc123" from "hidden"
     And I press "Store"
   Then I should see "Page created" within "#flash_notice"
@@ -47,6 +41,7 @@ Scenario: check before create a page with a hidden tag
 Scenario: create a page with a hidden tag
   Given "abc123" is a "Hidden"
   When I am on the create page
+    And I fill in "page_title" with "Title"
     And I select "abc123" from "hidden"
     And I press "Store"
     And I am on the homepage

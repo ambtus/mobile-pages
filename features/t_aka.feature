@@ -73,7 +73,7 @@ Scenario: link from edit page bug
 Scenario: link from tag index bug
   Given a page exists with authors: "jane (june)"
   When I am on the tags page
-    And I follow "pages tagged with jane"
+    And I follow "jane pages"
   Then I should see "Page 1"
 
 Scenario: link from show bug

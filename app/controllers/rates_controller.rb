@@ -15,6 +15,7 @@ class RatesController < ApplicationController
     end
     page.rate_today(stars, params[:all])
     page.update_cliff(params[:cliff])
+    page.reset_soon
     redirect_to edit_rate_path(page)
   end
 

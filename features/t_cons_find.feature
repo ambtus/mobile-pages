@@ -26,7 +26,7 @@ Scenario: link from edit page
 Scenario: link from tag index
   Given a page exists with cons: "abc123"
   When I am on the tags page
-    And I follow "pages tagged with abc123"
+    And I follow "abc123 pages"
   Then I should see "Page 1"
 
 Scenario: link from show

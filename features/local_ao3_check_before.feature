@@ -85,6 +85,7 @@ Scenario: check before creating a series when I already have its books
   When I am on the homepage
     And I follow "Misfit Series"
     And I press "Uncollect"
+    And I am on the homepage
   Then I should have 6 pages
     And I should see "Three Misfits in New York" within "#position_1"
     And I should see "A Misfit Working Holiday In New York" within "#position_2"

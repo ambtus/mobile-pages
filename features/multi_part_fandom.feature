@@ -33,7 +33,7 @@ Scenario: find a part with a parent with different fandom
   When I am on the page with title "Child2"
     And I add a parent with title "Parent"
     And I am on the filter page
-    And I choose "unread_any"
+    And I choose "unread_Unread"
     And I select "one" from "fandom"
     And I press "Find"
   Then I should see "Child2 of Parent" within "#position_1"
@@ -48,7 +48,7 @@ Scenario: cannot find a part with a parent with same fandom (no dupes)
   When I am on the page with title "Child1"
     And I add a parent with title "Parent"
     And I am on the filter page
-    And I choose "unread_any"
+    And I choose "unread_Unread"
     And I select "two" from "fandom"
     And I press "Find"
   Then I should see "Parent" within "#position_1"

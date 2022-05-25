@@ -95,3 +95,8 @@ Given('three singles exist') do
     Single.create(title: "Parent#{i+1}")
   end
 end
+
+Given('the second had been made read first') do
+  page = Page.second
+  page.update read_after: page.read_after - 1.year
+end

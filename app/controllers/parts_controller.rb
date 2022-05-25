@@ -3,7 +3,7 @@ class PartsController < ApplicationController
   URL_PLACEHOLDER = "URL of part to add"
 
   def new
-    @new_page = Page.new
+    @page = Page.new
     @title = "New parent page"
   end
 

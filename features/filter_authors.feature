@@ -11,7 +11,6 @@ Scenario: filter on author
     And I select "charles dodgson" from "Author"
     And I press "Find"
   Then I should see "Alice's Adventures In Wonderland" within "#position_1"
-    And "charles dodgson" should be selected in "author"
     But I should NOT see "Through the Looking Glass"
     And I should NOT see "The Mysterious Affair at Styles"
     And I should NOT see "Grimm's Fairy Tales"

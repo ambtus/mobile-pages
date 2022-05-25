@@ -1,0 +1,21 @@
+.pages
+  - @pages.each_with_index do |page, index|
+    .page{:id => "position_#{index+1}"}
+      .title.bold
+        = link_to page.title, page_path(page)
+        - if page.parent
+          of
+          =link_to page.parent.title, page_path(page.parent)
+          -if page.parent.parent
+            of
+            =link_to page.parent.parent.title, page_path(page.parent.parent)
+      .views
+        = link_to "Rate", rate_path(page)
+        = link_to "ePub", download_url_for_page(page, ".epub")
+        = link_to "HTML", download_url_for_page(page, ".html")
+        = link_to "Text", download_url_for_page(page, ".read") if page.parts.empty?
+        = link_to "Original", page.url unless page.url.blank?
+      .meta=page.meta_string
+      .my_notes=page.short_my_notes
+      .notes=simple_format page.short_notes
+      .end_notes=simple_format page.short_end_notes

@@ -1,11 +1,8 @@
 -Tag.types.each do |type|
   .div{class: "#{type.downcase.pluralize}"}
-    = label_tag type.downcase.to_sym, "#{type}:"
     = select_tag type.downcase.to_sym,
       options_for_select([nil] + type.constantize.names,instance_variable_get("@#{type.downcase}_name"))
-    -if type == "Con" && @called_by == "filter"
-      = label_tag :hide_all_cons, "Filter out all cons?"
-      = radio_button_tag :hide_all_cons, 'Yes', @cons == "Yes"
-      = label_tag :hide_all_cons_Yes, 'Yes'
-      = radio_button_tag :hide_all_cons, 'No', @cons == 'No'
-      = label_tag :hide_all_cons_No, 'No'
+    = label_tag type.downcase.to_sym, type
+    -if type == "Con"
+      = radio_button_tag :hide_all, 'cons', @hide_all == 'cons'
+      = label_tag :hide_all_cons, 'All'

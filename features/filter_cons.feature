@@ -17,16 +17,14 @@ Scenario: filtered out when selected
     And I press "Find"
   Then I should NOT see "Page 1"
     But I should see "Page 2" within "#position_1"
-    And "hide_all_cons_No" should be checked
 
 Scenario: filtered out when filtering out all
   Given a page exists with cons: "very sad" AND title: "Page 1"
     And a page exists with cons: "slightly sad" AND title: "Page 2"
   When I am on the filter page
-    And I choose "hide_all_cons_Yes"
+    And I choose "hide_all_cons"
     And I press "Find"
   Then I should see "No pages found"
-    And "hide_all_cons_Yes" should be checked
 
 Scenario: change con to pro tag (index)
   Given a page exists with cons: "sad"
@@ -93,7 +91,7 @@ Scenario: new parent for an existing page should be conned (not duped, so i'm no
 Scenario: no cons
   Given pages with all combinations of pros and cons exist
   When I am on the filter page
-    And I choose "hide_all_cons_Yes"
+    And I choose "hide_all_cons"
     And I press "Find"
   Then I should see "page3"
     And I should see "page4"

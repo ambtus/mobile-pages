@@ -75,7 +75,7 @@ When("I read {string} online") do |title|
 end
 
 When("I add a parent with title {string}") do |title|
-  within(".content") { click_link("Add Parent")}
+  click_link("Add Parent")
   fill_in("add_parent", :with => title)
   click_button("Add")
 end
@@ -126,4 +126,13 @@ end
 When('I follow the link for {string}') do |string|
   page = Page.find_by title: string
   click_link("/pages/#{page.id}")
+end
+
+When('I rate it {int} stars') do |int|
+   page = Page.first
+   raise "no page with title #{title}" unless page
+   visit page_path(page)
+   click_link("Rate")
+   choose(int)
+   click_button("Rate")
 end

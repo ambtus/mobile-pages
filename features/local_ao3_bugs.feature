@@ -39,7 +39,7 @@ Scenario: bug in make_single when Single had been stored as Chapter
   Given broken Drabbles exists
   When I am on the page's page
     And I press "Uncollect"
-    And I follow "Skipping Stones"
+    And I am on the page with title "Skipping Stones"
   Then I should see "Skipping Stones (Single)"
 
 Scenario: put endnote on work, not last chapter

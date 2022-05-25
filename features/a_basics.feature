@@ -100,7 +100,7 @@ Scenario: if refetch fails, can press find
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Refetch"
     And I press "Find"
-  Then I should see "No pages found"
+  Then I should see "Page not found"
 
 Scenario: missing raw html directory
   Given a page exists with url: "http://test.sidrasue.com/test.html"

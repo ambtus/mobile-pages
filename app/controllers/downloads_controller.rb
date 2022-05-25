@@ -19,7 +19,7 @@ class DownloadsController < ApplicationController
       }
       # epub for downloading to read offline
       format.epub {
-        @page.make_first
+        @page.set_reading
         @page.create_epub
         send_file("#{@page.download_basename}.epub", :type => "application/epub")
       }

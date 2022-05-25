@@ -177,6 +177,5 @@ Scenario: filter out by AKA (index)
     And I press "Find"
   Then I should see "Alice's Adventures In Wonderland"
     And I should see "Through the Looking Glass"
-    And "lewis carroll" should be selected in "hidden"
     But I should NOT see "The Mysterious Affair at Styles"
     And I should NOT see "Grimm's Fairy Tales"

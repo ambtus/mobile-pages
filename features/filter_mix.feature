@@ -66,7 +66,7 @@ Scenario: Find by unread and fandom
       | To Read Mystery     | mystery  |       |            |
   When I am on the filter page
     And I select "children" from "fandom"
-    And I choose "unread_all"
+    And I choose "unread_Unread"
     And I press "Find"
   Then I should see "The Boxcar Children"
     But I should NOT see "To Read Mystery"
@@ -82,7 +82,7 @@ Scenario: Find by unread and pro
       | Surprise Island      | lmn345 |      |            |
   When I am on the filter page
     And I select "abc123" from "Pro"
-    And I choose "unread_all"
+    And I choose "unread_Unread"
     And I press "Find"
   Then I should see "To Read Mystery"
     But I should NOT see "The Mysterious Affair"
@@ -100,7 +100,7 @@ Scenario: Find by read and author
       | Surprise Island      | Gertrude Chandler Warner |      |            |
   When I am on the filter page
     And I select "agatha christie" from "Author"
-    And I choose "unread_none"
+    And I choose "unread_Read"
     And I press "Find"
   Then I should see "The Mysterious Affair"
     And I should see "Orient Express"
@@ -116,7 +116,7 @@ Scenario: Find by stars and info
       | The Boxcar Children  | children | 4     | 2009-03-01 |
   When I am on the filter page
     And I select "children" from "info"
-    And I choose "stars_better"
+    And I choose "stars_Better"
     And I press "Find"
   Then I should see "The Boxcar Children"
     But I should NOT see "Nancy Drew"
@@ -129,7 +129,7 @@ Scenario: Find by stars and author
       | Nancy Drew           | Carolyn Keene     | 2     | 2009-02-01 |
       | Orient Express       | agatha christie   | 2     | 2009-03-01 |
   When I am on the filter page
-  When I choose "stars_worse"
+  When I choose "stars_Worse"
     And I select "agatha christie" from "Author"
     And I press "Find"
   Then I should see "Orient Express"

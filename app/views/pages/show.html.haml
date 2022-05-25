@@ -1,19 +1,20 @@
-- content_for :title do
-  =@page.title
 .form
   = form_for @page.becomes(Page) do
-    = submit_tag "Read Now"
-    = submit_tag "Read Later"
-    = submit_tag "Rebuild from Raw HTML"
-    = submit_tag "Remove Downloads"
-    = submit_tag "Remove Duplicate Tags" unless @page.parts.blank?
-    = submit_tag "Move Tags to Parent" if @page.tags.any? unless @page.parent.blank?
-    = submit_tag "Rebuild Meta"
-    = submit_tag "Toggle #{Page::OTHER}"
-    = submit_tag "Toggle #{Page::TT}"
-    = submit_tag "Toggle End Notes"
-    = submit_tag "Make Single" if @page.parent
-    = submit_tag "Uncollect" unless @page.parts.blank?
+    .soon
+      =render "pages/page_soon"
+      =submit_tag "Change"
+    .rebuild
+      = submit_tag "Rebuild from Raw HTML"
+      = submit_tag "Remove Downloads"
+      = submit_tag "Make Single" if @page.parent
+      = submit_tag "Uncollect" unless @page.parts.blank?
+      = submit_tag "Rebuild Meta"
+    .tags
+      = submit_tag "Remove Duplicate Tags" unless @page.parts.blank?
+      = submit_tag "Move Tags to Parent" if @page.tags.any? unless @page.parent.blank?
+      = submit_tag "Toggle #{Page::OTHER}"
+      = submit_tag "Toggle #{Page::TT}"
+      = submit_tag "Toggle End Notes"
 -if @page.parent
   .parent
     Parent:

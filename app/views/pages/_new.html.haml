@@ -1,0 +1,6 @@
+.form
+  = form_with url: @page, local: true do |form|
+    .url
+      = render "single_url"
+      = form.submit "Store", :name => "Store"
+      = form.submit "Refetch", :name => "Refetch"

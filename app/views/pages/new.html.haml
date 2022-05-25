@@ -1,7 +1,11 @@
 - content_for :title do
   = "Create One"
 .form
-  = form_for @page.becomes(Page) do |f|
-    = render :partial => "pages/create", :locals => {:page => @page, :called_by => "new"}
-    %br
-    = f.submit "Store", :name => "Store"
+  = form_with model: @page.becomes(Page), local: true do |form|
+    .soon= render "page_soon"
+    .url
+      = render "single_url"
+      Url
+    = render "tags/select"
+    = render "page_fields"
+    = form.submit "Store", :name => "Store"

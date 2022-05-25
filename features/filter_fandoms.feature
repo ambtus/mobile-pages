@@ -25,6 +25,5 @@ Scenario: filter with AKA
     And I press "Find"
   Then I should see "Alice's Adventures In Wonderland"
     And I should see "Through the Looking Glass"
-    And "lmn345" should be selected in "fandom"
     But I should NOT see "The Mysterious Affair at Styles"
     And I should NOT see "Grimm's Fairy Tales"

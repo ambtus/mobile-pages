@@ -26,14 +26,6 @@ module Rate
      return answer
   end
 
-  def earliest; Page.where(:parent_id => nil).order(:read_after).first.read_after - 1.day || Date.yesterday; end
-
-  def make_first # Read Now
-    self.update_attribute(:read_after, earliest)
-    parent.make_first if self.parent
-    return self
-  end
-
   def reset_read_after # Read Later (default)
     self.update_read_after
     self.parent.update_read_after if self.parent

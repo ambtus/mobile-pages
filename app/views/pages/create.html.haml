@@ -1,7 +1,12 @@
 - content_for :title do
   = "Page create error"
 .form
-  = form_for @page.becomes(Page) do |f|
-    = render :partial => "pages/create", :locals => {:page => @page, :called_by => "error"}
-    = f.submit "Find", :name => "Find"
-    = f.submit "Store", :name => "Store"
+  = form_with model: @page.becomes(Page), local: true do |form|
+    =render "tags/select"
+    .soon=render "page_soon"
+    =render "page_fields"
+    .url
+      =render "single_url"
+      URL
+    = form.submit "Store", :name => "Store"
+  = button_to "Find", filter_path, method: :get, params: {url: @page.url}, form_class: "float"

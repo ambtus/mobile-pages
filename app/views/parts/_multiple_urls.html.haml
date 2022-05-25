@@ -1,0 +1,12 @@
+.url
+  Base Url (use * for replacements)
+  %br
+  = text_field_tag 'page[base_url]', @page.base_url, :maxlength => 255, :size => 30
+  %br
+  Replacements: n-m or space separated
+  %br
+  = text_field_tag 'page[url_substitutions]', @page.url_substitutions, :maxlength => 255, :size => 30
+.parts
+  Alternative to Base & Replacement (one Url per line)
+  %br
+  = text_area_tag 'page[urls]', @page.urls, :rows => 10, :cols => 30

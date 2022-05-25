@@ -8,8 +8,11 @@ module NavigationHelpers
   def path_to(page_name)
     case page_name
 
+    # FIXME
+    # this isn't actually the homepage
+    # all the tests need to be rewritten
     when /the homepage/
-      '/'
+      '/pages'
 
     when /^the page's page/
       page = Page.find_by_title("Page 1") || Page.first
@@ -38,7 +41,7 @@ module NavigationHelpers
       new_part_path
 
     when /^the filter page$/
-      pages_path(q: true)
+      filter_path
 
     else
       begin

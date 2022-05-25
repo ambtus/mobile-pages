@@ -1,8 +1,4 @@
-Feature: filter by unread (all, any, none, parts, either=default)
-
-Scenario: either selected by default
-  When I am on the filter page
-  Then "unread_either" should be checked
+Feature: filter by unread (unread, unread parts, read)
 
 Scenario: check before filter (default) pt1
   Given pages with all possible unreads exist
@@ -23,29 +19,10 @@ Scenario: check before filter (default) pt2
     And I should see "yes read book"
     And I should see "yes read series"
 
-Scenario: any (unread or unread parts) pt2
+Scenario: read (only fully-read)
   Given pages with all possible unreads exist
   When I am on the filter page
-    And I choose "unread_any"
-    And I press "Find"
-  Then I should see "not read single"
-    And I should see "not read book"
-    And I should see "not read series"
-    And I should see "partially read book"
-    And I should see "partially read series"
-
-Scenario: any (unread or unread parts) pt2
-  Given pages with all possible unreads exist
-  When I am on the filter page
-    And I choose "unread_any"
-    And I press "Find"
-    And I press "Next"
-  Then I should see "No pages found"
-
-Scenario: none (only fully-read)
-  Given pages with all possible unreads exist
-  When I am on the filter page
-    And I choose "unread_none"
+    And I choose "unread_Read"
     And I press "Find"
   Then I should NOT see "not read single"
     And I should NOT see "not read book"
@@ -56,10 +33,10 @@ Scenario: none (only fully-read)
     And I should see "yes read book"
     And I should see "yes read series"
 
-Scenario: all (filter out read and unread parts)
+Scenario: unread (filter out read and unread parts)
   Given pages with all possible unreads exist
   When I am on the filter page
-    And I choose "unread_all"
+    And I choose "unread_Unread"
     And I press "Find"
   Then I should see "not read single"
     And I should see "not read book"
@@ -70,10 +47,10 @@ Scenario: all (filter out read and unread parts)
     And I should NOT see "yes read book"
     And I should NOT see "yes read series"
 
-Scenario: parts (filter out read and fully-unread)
+Scenario: unread parts (filter out read and fully-unread)
   Given pages with all possible unreads exist
   When I am on the filter page
-    And I choose "unread_parts"
+    And I choose "unread_Parts"
     And I press "Find"
   Then I should NOT see "not read single"
     And I should NOT see "not read book"

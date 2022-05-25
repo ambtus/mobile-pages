@@ -27,6 +27,15 @@ Given("pages with all possible stars exist") do
   Page.create(title: "page2").rate_today(2)
 end
 
+Given("pages with all possible soons exist") do
+  Page.create(title: "now reading", soon: 0)
+  Page.create(title: "read next", soon: 1)
+  Page.create(title: "read soon", soon: 2)
+  Page.create(title: "default", soon: 3)
+  Page.create(title: "read later", soon: 4)
+  Page.create(title: "read eventually", soon: 5)
+end
+
 Given("pages with all possible sizes exist") do
   Page.create(title: "Medium", url: "file:///#{Rails.root}/features/html/long.html")
   Page.create(title: "Drabble").raw_html=100.times.collect{|i| (i+1).to_s}.join(" ")

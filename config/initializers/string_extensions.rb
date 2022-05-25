@@ -33,7 +33,7 @@ class String
   end
 
   def normalize
-    url = self
+    url = URI.extract(self).first.to_s
     url = url.sub(/^http:/, 'https:') if url.match("^http://archiveofourown.org/")
     url = url.chop if url.match("^https://archiveofourown.org/") && url.match("/$")
     url

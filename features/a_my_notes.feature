@@ -2,6 +2,7 @@ Feature: stuff to do with my notes
 
 Scenario: not filling in notes shouldn't give "My Notes"
   Given I am on the create page
+    And I fill in "page_title" with "Title"
   When I press "Store"
     And I am on the page's page
   Then I should NOT see "My Notes" within ".my_notes"

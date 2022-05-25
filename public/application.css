@@ -4,7 +4,10 @@
 .gray-input { color: #7a7a7a; }
 .black-input { color: #000; }
 .checkbox { background-color: #FF9; }
-.floatButton { display: inline; }
+.float { display: inline; }
+.indented {padding-left: 1em}
+.bold { font-weight: bold; }
+
 hr {
     border: 0;
     color: black;
@@ -12,32 +15,36 @@ hr {
     height: 1px;
     width: 70%;
 }
+.cons      { background-color: #F77; }
+.rebuild   { background-color: #F77; }
+.my_notes  { background-color: #F77; }
 
-.links     { background-color: #CCF; }
-.title     { background-color: #CCF; font-weight: bold; }
-.views     { background-color: #CCF; }
+.title     { background-color: #CCF; }
 .parent    { background-color: #CFC; }
+.fandoms   { background-color: #CFC; }
 .part      { background-color: #CFC; border-width: 1px; border-style: dotted;}
+.parts     { background-color: #CFC; }
 .type      { background-color: #CFF; }
 .size      { background-color: #C9F; }
 .top       { background-color: #DDD; }
 .content   { background-color: #EEE; }
 .last_read { background-color: #FCC; }
-.meta      { background-color: #FCC; }
 .part_links{ background-color: #FCF; }
 .page      { background-color: #FC9; border-width: 1px; border-style: dotted;}
 .notes     { background-color: #FC9; }
 .infos     { background-color: #FFC; }
 .sort_by   { background-color: #FF9; }
 .end_notes { background-color: #FF9; }
-.cons      { background-color: #F9C; }
 .stars     { background-color: #F9F; }
-.my_notes  { background-color: #F99; }
+.meta      { background-color: #F99; }
+.tags      { background-color: #F99; }
 .bottom    { background-color: #444; }
 .hiddens   { background-color: #9CF; }
 .pros      { background-color: #9FC; }
+.links     { background-color: #9FF; }
+.url       { background-color: #9FF; }
 .form      { background-color: #9FF; }
-.fandoms   { background-color: #9FF; }
+.soon      { background-color: #9FF; }
 .authors   { background-color: #99F; }
 .node      { background-color: #990; }
 
