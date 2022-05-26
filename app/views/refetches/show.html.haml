@@ -1,5 +1,3 @@
-- content_for :title do
-  = "Refetch " + @page.title
 .form
   = form_tag refetches_path do
     = hidden_field_tag(:page_id, @page.id)

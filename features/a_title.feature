@@ -1,7 +1,7 @@
 Feature: stuff to do with titles
 
 Scenario: put title in the url box by mistake
-  Given I am on the homepage
+  Given I am on the mini page
   When I fill in "page_url" with "Title"
     And I press "Store"
   Then I should see "Url is invalid"

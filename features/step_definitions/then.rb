@@ -79,6 +79,7 @@ end
 ## It should
 
 Then('the page should have title {string}') do |string|
+  Rails.logger.debug page.title
   assert page.has_title? string
 end
 

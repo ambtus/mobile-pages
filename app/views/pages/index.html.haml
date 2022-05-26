@@ -1,3 +1,2 @@
-=render "new"
 =render "pages" unless @pages.blank?
 .form= button_to "Next", pages_path, method: :get, params: @new_query if @new_query

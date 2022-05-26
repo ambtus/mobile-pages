@@ -1,6 +1,4 @@
--title="Edit tag: #{@tag.name}"
--content_for(:title, title)
-%h1=title
+%h1=@title
 .pages
   %p=link_to_tag @tag, "#{@tag.pages.count} #{'page'.pluralize(@tag.pages.count)} with that tag"
 .destroy

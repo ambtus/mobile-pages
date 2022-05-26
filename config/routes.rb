@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
-  root to: 'pages#reading'
+
+  get '/mini' => "pages#minimal", as: :mini
+  root to: redirect('/mini', status: 302)
+
   get '/reading' => "pages#reading", as: :reading
   get '/soonest' => "pages#soonest", as: :soonest
   get '/soon' => "pages#soon", as: :soon

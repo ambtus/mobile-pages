@@ -1,12 +1,10 @@
-- content_for :title do
-  = "Page create error"
 .form
   = form_with model: @page.becomes(Page), local: true do |form|
-    =render "tags/select"
-    .soon=render "page_soon"
-    =render "page_fields"
     .url
-      =render "single_url"
-      URL
+      = render "page_url"
+      = button_to "Find", filter_path, method: :get, params: {url: @page.url}, form_class: "float"
+      = form.submit "Store", :name => "Store"
+    .soon= render "page_soon"
+    = render "tags/select"
+    = render "page_fields"
     = form.submit "Store", :name => "Store"
-  = button_to "Find", filter_path, method: :get, params: {url: @page.url}, form_class: "float"

@@ -3,6 +3,7 @@ class DownloadsController < ApplicationController
   def show
     @url = "http://sidrasue.com"
     @page = Page.find(params[:id])
+    @title = @page.title
     FileUtils.mkdir_p @page.download_dir
     render_html
 

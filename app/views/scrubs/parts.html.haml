@@ -1,6 +1,3 @@
-- content_for :title do
-  = "Choose Part to Scrub " + @page.title
-
 .title= @page.title
 - @page.parts.each do |part|
   .part= link_to "Scrub #{part.title}", scrub_path(part)

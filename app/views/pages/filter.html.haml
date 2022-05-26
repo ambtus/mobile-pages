@@ -1,11 +1,8 @@
-- content_for :title do
-  = @title
-
 .form
   = form_with url: find_path, local: true do |form|
     .url
-      = render "single_url"
-      =form.submit "Find"
+      = render "page_url"
+      = form.submit "Find"
     = render "filters"
     = render "tags/select"
     = render "page_fields"

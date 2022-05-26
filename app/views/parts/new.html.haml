@@ -1,9 +1,7 @@
-- content_for :title do
-  = "Create Multiple"
 .form
   = form_with model: @page.becomes(Page), local: true do |form|
-    = render "pages/page_fields"
-    = render "tags/select"
     = render "multiple_urls"
     .soon= render "pages/page_soon"
+    = render "tags/select"
+    = render "pages/page_fields"
     = form.submit "Store", :name => "Store"

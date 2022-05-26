@@ -1,6 +1,3 @@
--title="Edit raw html for #{@page.title}"
--content_for(:title, title)
-%h1=title
 .content
   = form_for @page.becomes(Page) do |f|
     = f.submit "Update Raw HTML"

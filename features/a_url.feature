@@ -52,14 +52,14 @@ Scenario: 404 not found should display error
     And I should have 0 pages
 
 Scenario: ao3 user should display error
-  Given I am on the homepage
+  Given I am on the mini page
   When I fill in "page_url" with "https://archiveofourown.org/users/Sidra"
     And I press "Store"
   Then I should see "Url cannot be ao3 user"
     And I should have 0 pages
 
 Scenario: ao3 user should display error
-  Given I am on the homepage
+  Given I am on the mini page
   When I fill in "page_url" with "https://archiveofourown.org/collections/Heliocentrism"
     And I press "Store"
   Then I should see "Url cannot be an ao3 collection"

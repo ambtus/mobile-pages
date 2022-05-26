@@ -2,7 +2,7 @@ Feature: ao3 specific stuff
 
 Scenario: refetching & rebuilding meta of a top level fic
   Given "harry potter" is a "Fandom"
-    And I am on the homepage
+    And I am on the mini page
   When I fill in "page_url" with "http://archiveofourown.org/works/692"
     And I press "Store"
     And I follow "Notes"
@@ -21,7 +21,7 @@ Scenario: refetching & rebuilding meta of a top level fic
 
 Scenario: refetching a read Series should show it as unread
   Given Counting Drabbles partially exists
-  When I am on the homepage
+  When I am on the mini page
     And I fill in "page_url" with "https://archiveofourown.org/series/46"
     And I press "Refetch"
   Then I should see "1 unread part" within ".last_read"
@@ -52,7 +52,7 @@ Scenario: adding an unread chapter to a book
 Scenario: grab a series with multiple authors
   Given "Good Omens" is a "Fandom"
     And "entanglednow" is an "Author"
-  When I am on the homepage
+  When I am on the mini page
     And I fill in "page_url" with "https://archiveofourown.org/series/2647903"
     And I press "Store"
   Then I should see "Into The Deep Wood (Series)" within ".title"
@@ -71,7 +71,7 @@ Scenario: grab a series with multiple authors
 Scenario: works in a series should not have duplicate tags
   Given "Sidra" is an "Author"
     And "harry potter" is a "Fandom"
-  When I am on the homepage
+  When I am on the mini page
     And I fill in "page_url" with "https://archiveofourown.org/series/46"
     And I press "Store"
   Then I should see "Sidra" within ".authors"
@@ -102,7 +102,7 @@ Scenario: getting series by adding parent and then refetching should not duplica
 Scenario: adding a work to a series with a fandom should not get Other Fandom
   Given "harry potter" is a "Fandom"
     And Counting Drabbles partially exists
-  When I am on the homepage
+  When I am on the mini page
     And I fill in "page_url" with "https://archiveofourown.org/series/46"
     And I press "Refetch"
   Then I should see "harry potter" within ".fandoms"
@@ -110,13 +110,13 @@ Scenario: adding a work to a series with a fandom should not get Other Fandom
     And I should NOT see "Other Fandom" within "#position_2"
 
 Scenario: time travel Book
-  Given I am on the homepage
+  Given I am on the mini page
   When I fill in "page_url" with "https://archiveofourown.org/works/8339320"
     And I press "Store"
   Then I should see "Time Travel" within ".pros"
 
 Scenario: time travel Series
-  Given I am on the homepage
+  Given I am on the mini page
   When I fill in "page_url" with "https://archiveofourown.org/series/1664173"
     And I press "Store"
   Then I should see "Time Travel" within ".pros"

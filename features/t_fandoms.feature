@@ -24,7 +24,7 @@ Scenario: strip fandom whitespace and sort
     And "lmn & 345" should link to "/pages?find=lmn+%26+345"
 
 Scenario: no tags exist during create
-  Given I am on the homepage
+  Given I am on the mini page
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
   Then I should see "Page created with Other Fandom"
@@ -32,7 +32,7 @@ Scenario: no tags exist during create
 
 Scenario: no tags selected during create
   Given "first" is a "Fandom"
-    And I am on the homepage
+    And I am on the mini page
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
   Then I should see "Page created with Other Fandom"

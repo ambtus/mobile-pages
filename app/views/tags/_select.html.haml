@@ -3,6 +3,6 @@
     = select_tag type.downcase.to_sym,
       options_for_select([nil] + type.constantize.names,instance_variable_get("@#{type.downcase}_name"))
     = label_tag type.downcase.to_sym, type
-    -if type == "Con"
+    -if type == "Con" && current_page?(filter_path)
       = radio_button_tag :hide_all, 'cons', @hide_all == 'cons'
       = label_tag :hide_all_cons, 'All'

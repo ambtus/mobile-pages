@@ -8,7 +8,7 @@ class Page < ActiveRecord::Base
   include Scrubbing
   include Soon
 
-  scope :reading, -> { where(soon: 0) }
+  scope :reading, -> { where(soon: 0).order('updated_at desc') }
   scope :soonest, -> { where(soon: 1) }
   scope :soon, -> { where(soon: 2) }
   scope :not_hidden, -> { where(hidden: false) }

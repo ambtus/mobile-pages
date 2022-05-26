@@ -1,0 +1,5 @@
+.url
+  = form_with url: @page, local: true do |form|
+    = render "page_url"
+    = form.submit "Store", :name => "Store"
+    = form.submit "Refetch", :name => "Refetch"

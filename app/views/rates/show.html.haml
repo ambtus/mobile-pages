@@ -1,8 +1,3 @@
-- content_for :title do
-  = "Rate " + @page.title
-  -if @page.parent
-    of #{@page.parent.title}
-
 .title
   Rate #{@page.title}
   -if @page.parent

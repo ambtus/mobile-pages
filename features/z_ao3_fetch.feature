@@ -3,7 +3,7 @@ Feature: ao3 specific stuff
 Scenario: grab a single
   Given "popslash" is a "Fandom"
     And "Sidra" is an "Author"
-    And I am on the homepage
+    And I am on the mini page
   When I fill in "page_url" with "http://archiveofourown.org/works/68481/"
     And I press "Store"
   Then I should NOT see "Title can't be blank"
@@ -41,7 +41,7 @@ Scenario: grab a book
 
  Scenario: grab a series
   Given "harry potter" is a "Fandom"
-    And I am on the homepage
+    And I am on the mini page
   When I fill in "page_url" with "http://archiveofourown.org/series/46"
     And I press "Store"
   Then I should see "Counting Drabbles (Series)" within ".title"
@@ -56,7 +56,7 @@ Scenario: grab a book
     And my page named "Counting Drabbles" should have url: "https://archiveofourown.org/series/46"
 
 Scenario: deliberately fetch only one chapter
-  Given I am on the homepage
+  Given I am on the mini page
     And I fill in "page_url" with "https://archiveofourown.org/works/692/chapters/803"
   When I press "Store"
   Then I should see "Where am I? (Single)" within ".title"
@@ -125,7 +125,7 @@ Scenario: fetching a series from before series had urls
 Scenario: storing a series when I already have one of its singles
   Given "harry potter" is a "Fandom"
     And Skipping Stones exists
-  When I am on the homepage
+  When I am on the mini page
     And I fill in "page_url" with "https://archiveofourown.org/series/46"
     And I press "Store"
   Then I should see "Counting Drabbles (Series)" within ".title"
@@ -177,7 +177,7 @@ Scenario: refetch from ao3 when it used to be somewhere else
     And the contents should include "Skip. Skip."
 
 Scenario: fetch a work from a collection
-  Given I am on the homepage
+  Given I am on the mini page
   When I fill in "page_url" with "https://archiveofourown.org/collections/Heliocentrism/works/21684820"
     And I press "Store"
   Then my page named "A Conversation Overheard by a Captive Faking Unconsciousness" should have url: "https://archiveofourown.org/works/21684820"

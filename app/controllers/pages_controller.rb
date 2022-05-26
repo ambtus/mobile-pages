@@ -1,5 +1,10 @@
 class PagesController < ApplicationController
 
+  def minimal
+    @page = Page.new
+    @title = "New page"
+  end
+
   def new
     @page = Page.new
     @title = "New page"
@@ -15,6 +20,7 @@ class PagesController < ApplicationController
     @page = Page.find(params[:id])
     @section_number = params[:section].to_i
     @section = @page.section(@section_number)
+    @title = "Edit Text #{@section_number} for page: #{@page.title}"
   end
 
   def reading
@@ -175,6 +181,7 @@ class PagesController < ApplicationController
       when "Change"
         @page.update soon: params[:page][:soon]
         @page.update_read_after
+        flash[:notice] = "set to Read #{@page.soon_label}"
       when "Audiobook created"
         @page.make_audio
         flash[:notice] = "Tagged as audio book and marked as read today"

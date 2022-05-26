@@ -30,6 +30,7 @@ class TagsController < ApplicationController
 
   def edit
     @tag = Tag.find(params[:id])
+    @title = "Edit tag: #{@tag.name}"
     @tags = Tag.all
   end
 

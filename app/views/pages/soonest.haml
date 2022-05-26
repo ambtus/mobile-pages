@@ -1,5 +1,2 @@
-- content_for :title do
-  = @title
-=render "new"
 =render "pages" unless @pages.blank?
 .form= button_to "Next", soonest_path, method: :get, params: {count: @count + Filter::LIMIT}

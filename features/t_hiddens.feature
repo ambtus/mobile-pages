@@ -18,7 +18,7 @@ Scenario: link to tag on show should find page on index
     And the page should be hidden
 
 Scenario: no tags exist during create
-  Given I am on the homepage
+  Given I am on the mini page
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
     And I edit its tags
@@ -29,7 +29,7 @@ Scenario: no tags exist during create
 
 Scenario: no tags selected during create
   Given "abc123" is a "Hidden"
-  When I am on the homepage
+  When I am on the mini page
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
     And I edit its tags
