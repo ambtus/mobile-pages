@@ -1,2 +1,2 @@
 =render "pages" unless @pages.blank?
-.form= button_to "Next", soon_path, method: :get, params: {count: @count + Filter::LIMIT}
+=render "next", path: soon_path

@@ -181,7 +181,7 @@ class PagesController < ApplicationController
       when "Change"
         @page.update soon: params[:page][:soon]
         @page.update_read_after
-        flash[:notice] = "set to Read #{@page.soon_label}"
+        flash[:notice] = "Soon set to #{@page.soon_label}"
       when "Audiobook created"
         @page.make_audio
         flash[:notice] = "Tagged as audio book and marked as read today"
