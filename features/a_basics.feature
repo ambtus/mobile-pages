@@ -19,7 +19,6 @@ Scenario: create a page from a single url
   Given I am on the mini page
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
-    And I am on the page's page
   Then "Original" should link to "http://test.sidrasue.com/test.html"
 
 Scenario: must at least have a url or title

@@ -1,2 +1,1 @@
--unless @count < Filter::LIMIT
-  .form= button_to "Next", path, method: :get, params: {count: @count + Filter::LIMIT}
+.form= button_to "Next", path, method: :get, params: @new_query if @new_query

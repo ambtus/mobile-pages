@@ -28,6 +28,9 @@ class PagesController < ApplicationController
     @count = params[:count].to_i
     @title = "Currently Reading"
     @pages = Page.reading.not_hidden.limit(@count + 5)[@count..-1]
+    if @pages.count == Filter::LIMIT
+      @new_query = {count: @count + Filter::LIMIT}
+    end
     flash.now[:alert] = "No pages found" if @pages.blank?
   end
 
@@ -36,6 +39,9 @@ class PagesController < ApplicationController
     @count = params[:count].to_i
     @title = "Read Next"
     @pages = Page.soonest.limit(@count + 5)[@count..-1]
+    if @pages.count == Filter::LIMIT
+      @new_query = {count: @count + Filter::LIMIT}
+    end
     flash.now[:alert] = "No pages found" if @pages.blank?
   end
 
@@ -44,6 +50,9 @@ class PagesController < ApplicationController
     @count = params[:count].to_i
     @title = "Read Soon"
     @pages = Page.soon.limit(@count + 5)[@count..-1]
+    if @pages.count == Filter::LIMIT
+      @new_query = {count: @count + Filter::LIMIT}
+    end
     flash.now[:alert] = "No pages found" if @pages.blank?
   end
 

@@ -84,7 +84,6 @@ Given("pages with all possible unreads exist") do
 end
 
 Given("pages with all combinations of pros and cons exist") do
-  Page.delete_all
   interesting = Pro.find_or_create_by(name: "interesting")
   boring = Con.find_or_create_by(name: "boring")
   loving = Pro.find_or_create_by(name: "loving")
