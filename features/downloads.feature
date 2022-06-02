@@ -34,7 +34,7 @@ Scenario: notes go into html downloads
   Given a page exists with notes: "Lorem ipsum dolor"
   When I read it online
   Then I should see "Lorem ipsum dolor"
-    And I should NOT see a horizontal rule
+    And I should see a horizontal rule
 
 Scenario: Update notes removes old html downloads
   Given a page exists with notes: "Lorem ipsum dolor"
@@ -50,7 +50,7 @@ Scenario: my notes do go in html
   Given a page exists with my_notes: "Lorem ipsum dolor"
   When I read it online
   Then I should see "Lorem ipsum dolor"
-    And I should NOT see a horizontal rule
+    And I should see a horizontal rule
 
 Scenario: update my notes removes old html downloads
   Given a page exists with my_notes: "Lorem ipsum dolor"
@@ -65,7 +65,7 @@ Scenario: update my notes removes old html downloads
 Scenario: hr between notes and my notes
   Given a page exists with notes: "Lorem ipsum dolor" AND my_notes: "abc123"
   When I read it online
-  Then I should see a horizontal rule
+  Then I should see two horizontal rules
 
 Scenario: no hr between before rating (if no kudos)
   Given a page exists

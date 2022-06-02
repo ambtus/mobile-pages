@@ -10,10 +10,10 @@ Scenario: change to default when rating
 Scenario: change to later during create
   Given I am on the create page
   When I fill in "page_title" with "Looks okay"
-    And I choose "Later"
+    And I choose "Someday"
     And I press "Store"
     And I am on the page's page
-  Then "Later" should be checked
+  Then "Someday" should be checked
 
 Scenario: change to eventually after create
   Given I am on the create page

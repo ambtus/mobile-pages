@@ -39,7 +39,7 @@ Scenario: filter on default
 Scenario: filter on later
   Given pages with all possible soons exist
   When I am on the filter page
-    And I choose "Later"
+    And I choose "Someday"
     And I press "Find"
   Then I should see "read later" within ".pages"
     And the page should NOT contain css "#position_2"

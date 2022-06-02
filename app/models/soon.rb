@@ -1,5 +1,5 @@
 module Soon
-  LABELS = %w{Reading Soonest Soon Default Later Eventually}
+  LABELS = %w{Reading Soonest Soon Default Someday Eventually}
 
   def soon_label; LABELS[soon]; end
 

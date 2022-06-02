@@ -17,5 +17,3 @@
   %p.rate
     = page.read? ? "ReRate: " : "Rate: "
     =link_to page.title, @url + rate_path(page)
-    %br
-    =@url + rate_path(page)
