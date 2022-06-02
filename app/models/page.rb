@@ -12,6 +12,7 @@ class Page < ActiveRecord::Base
   scope :soonest, -> { where(soon: 1) }
   scope :soon, -> { where(soon: 2) }
   scope :not_hidden, -> { where(hidden: false) }
+  scope :hidden, -> { where(hidden: true) }
 
   MODULO = 300  # files in a single directory
   LIMIT = 5 # number of parts to show at a time
