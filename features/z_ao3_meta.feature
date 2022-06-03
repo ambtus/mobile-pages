@@ -46,7 +46,8 @@ Scenario: adding an unread chapter to a book
     And I should see "WIP" within ".cons"
     And I should see "1 unread part" within ".last_read"
     And I should see today within "#position_1"
-    And I should see "Hogwarts (unread" within "#position_2"
+    And I should see "Hogwarts" within "#position_2"
+    And I should see "unread" within "#position_2"
     But I should NOT see "Other Fandom" within "#position_2"
 
 Scenario: grab a series with multiple authors
@@ -59,10 +60,10 @@ Scenario: grab a series with multiple authors
     And I should see "et al: green_grin" within ".notes"
     And I should see "Good Omens" within ".fandoms"
     And I should see "entanglednow" within ".authors"
-    And I should see "1. The Waters And The Wild " within "#position_1"
+    And I should see "1. The Waters And The Wild" within "#position_1"
     And I should see "2. The Fruits Of The Forest" within "#position_2"
-    And I should NOT see "Good Omens) Rate" within "#position_1"
-    And I should NOT see "Good Omens) Rate" within "#position_2"
+    And I should NOT see "Good Omens" within "#position_1 .fandoms"
+    And I should NOT see "Good Omens" within "#position_2 .fandoms"
     And I should NOT see "entanglednow" within "#position_1"
     And I should NOT see "entanglednow" within "#position_2"
     And I should NOT see "green_grin" within "#position_1"

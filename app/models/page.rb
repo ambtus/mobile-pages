@@ -578,19 +578,6 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def ordered_tag_names
-    result = []
-    Tag.types.each do |type|
-      result << self.tags.send(type.downcase.pluralize).by_name
-    end
-    result.flatten.map(&:base_name)
-  end
-
-  # used in page index
-  def meta_string; [*ordered_tag_names, star_string, last_read_string, size_string, ].uniq.reject(&:blank?).join_comma; end
-  # used in page show
-  def title_suffix; meta_string.blank? ? "" : " (#{meta_string})"; end
-
   def section(number)
     body = Nokogiri::HTML(self.edited_html).xpath('//body').first
     if body

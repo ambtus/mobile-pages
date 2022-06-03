@@ -55,8 +55,12 @@ Scenario: fanfiction Book meta
     And I should see "by ambtus" within ".notes"
     And I should see "Harry Potter" within ".notes"
     And I should see "2 connected drabbles" within ".notes"
-    And I should see "Skipping Stones (unread, 100 words)" within "#position_1"
-    And I should see "The Flower (unread, 100 words)" within "#position_2"
+    And I should see "Skipping Stones" within "#position_1"
+    And I should see "unread" within "#position_1"
+    And I should see "100 words" within "#position_1"
+    And I should see "The Flower" within "#position_2"
+    And I should see "unread" within "#position_2"
+    And I should see "100 words" within "#position_2"
 
 Scenario: fanfiction match authors
   Given "Sidra (ambtus)" is an "Author"

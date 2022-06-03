@@ -49,14 +49,7 @@
       = link_to "Notes", edit_note_path(@page)
       = link_to "Scrub Notes", scrub_path(@page, notes: true) unless @page.notes.blank?
       = link_to "Tags", tag_path(@page)
-  -Tag.types.each do |type|
-    .div{class: "#{type.downcase.pluralize}"}
-      -@page.tags.send(type.downcase.pluralize).by_name.each do |tag|
-        =link_to_tag tag, tag.base_name
-  .stars= @page.star_string
-  .size
-    =@page.size_string
-  .last_read=@page.last_read_string
+  =render "pages/meta", page: @page
   .my_notes=raw @page.formatted_my_notes
   .notes
     =raw @page.medium_notes
@@ -70,7 +63,7 @@
       .part{:id => "position_#{index+1}"}
         = part.title_prefix
         = link_to h(part.title), page_path(part)
-        = part.title_suffix
+        = render "pages/meta", page: part
         = link_to "Rate", rate_path(part)
         = link_to "EPUB", download_url_for_page(part, ".epub")
         = link_to "HTML", download_url_for_page(part, ".html")
