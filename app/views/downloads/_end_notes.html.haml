@@ -1,5 +1,7 @@
-%h3{:style=> "page-break-before:always", :class => "chapter"} End Notes
-.end_notes=simple_format page.end_notes if page.at_end
+-if page.at_end
+  %h3{:style=> "page-break-before:always", :class => "chapter"} End Notes
+  .end_notes=simple_format page.end_notes
+
 -if defined? links
 
   -if page.next_part
@@ -7,13 +9,19 @@
       Next:
       =link_to page.next_part.title, @url + download_url_for_page(page.next_part, ".html")
 
-  -if page.ao3?
+  %p.rate
+    = page.read? ? "ReRate: " : "Rate: "
+    =link_to page.title, @url + rate_path(page)
+
+  -if page.ao3? && !page.is_a?(Series)
     %p.kudos
       Leave Kudos or Comments on:
       -if page.parts.any?
         =link_to page.title, page.parts.last.url + "#comments"
       -else
         =link_to page.title, page.url + "#comments"
-  %p.rate
-    = page.read? ? "ReRate: " : "Rate: "
-    =link_to page.title, @url + rate_path(page)
+
+-if page.ao3? && page.last_chapter_of_book_of_series?
+  %p.kudos
+    Leave Kudos or Comments on:
+    =link_to page.book_title, page.url + "#comments"

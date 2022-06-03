@@ -58,3 +58,8 @@ Scenario: no end notes link to Next if there is no next part (all at once)
   When I read "Series" online
   Then I should NOT see "Next"
 
+Scenario: no kudos link if not ao3
+  Given a series exists
+  When I read "Series" online
+  Then I should NOT see "Leave Kudos or Comments on: Book1"
+    And I should NOT see "Leave Kudos or Comments on: Book2"

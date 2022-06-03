@@ -23,11 +23,11 @@
             %h4{:style=> "page-break-before:always", :class => "chapter"}=ggchild.download_part_title
             =render :partial => "downloads/notes", :locals => {:page => ggchild} if ggchild.show_notes
             .content=raw ggchild.epub_html
-            =render :partial => "downloads/end_notes", :locals => {page: ggchild} if ggchild.show_end_notes
+            =render :partial => "downloads/end_notes", :locals => {page: ggchild} if ggchild.show_end_notes || ggchild.last_chapter_of_book_of_series?
 
-        =render :partial => "downloads/end_notes", :locals => {page: grandchild} if grandchild.show_end_notes
+        =render :partial => "downloads/end_notes", :locals => {page: grandchild} if grandchild.show_end_notes || grandchild.last_chapter_of_book_of_series?
 
 
-    =render :partial => "downloads/end_notes", :locals => {page: child} if child.show_end_notes
+    =render :partial => "downloads/end_notes", :locals => {page: child} if child.show_end_notes or child.last_chapter_of_book_of_series?
 
 =render :partial => "downloads/end_notes", :locals => {:page => @page, links: true}
