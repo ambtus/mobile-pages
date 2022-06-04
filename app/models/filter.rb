@@ -97,9 +97,15 @@ class Filter
       end
     end
 
+    if params.has_key?("tag")
+      tag = Tag.find_by_short_name(params["tag"])
+      Rails.logger.debug "with Tag #{tag.base_name} (originally from find)"
+      tags << tag
+    end
+
     if tags.size < 2
       if tags.size == 1
-        if tags.first.type == "Con"
+        if tags.first.type == "Con" && !params.has_key?("tag")
           Filter.intersection(pages, tags, params)
         else
           pages = pages.joins(:tags).where(tags: {id: tags.first.id}).distinct
@@ -124,7 +130,7 @@ class Filter
     Rails.logger.debug "filtering on intersection of #{tags.size} tags"
     results = []
     tags.each_with_index do |tag, index|
-      if tag.type == "Con"
+      if tag.type == "Con" && !params.has_key?("tag")
         pages_without_tag = pages - tag.pages
         Rails.logger.debug "not #{tag.base_name} has #{pages_without_tag.count} pages: #{pages_without_tag.map(&:title)}"
         results << pages_without_tag
