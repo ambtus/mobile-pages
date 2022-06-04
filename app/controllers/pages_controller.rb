@@ -61,8 +61,7 @@ class PagesController < ApplicationController
       @page = Page.find_by_url(params[:url].normalize)
       if @page
         flash[:notice] = "One page found"
-        @count = 0
-        render :show
+        redirect_to page_path(@page)
       else
         flash[:alert] = "Page not found"
         redirect_to filter_path and return
