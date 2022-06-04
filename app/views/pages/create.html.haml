@@ -1,8 +1,8 @@
+= button_to "Find", filter_path, method: :get, params: {url: @page.url}, form_class: "form left"
 .form
   = form_with model: @page.becomes(Page), local: true do |form|
     .url
       = render "page_url"
-      = button_to "Find", filter_path, method: :get, params: {url: @page.url}, form_class: "float"
       = form.submit "Store", :name => "Store"
     .soon= render "page_soon"
     = render "tags/select"

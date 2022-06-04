@@ -2,6 +2,6 @@
   = form_with model: @page.becomes(Page), local: true do |form|
     = render "multiple_urls"
     .soon= render "pages/page_soon"
-    = render "tags/select"
+    = render "tags/update"
     = render "pages/page_fields"
     = form.submit "Store", :name => "Store"

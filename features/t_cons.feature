@@ -38,7 +38,7 @@ Scenario: no tags selected during create
 Scenario: con selected during create
   Given "abc123" is a "Con"
   When I am on the create page
-    And I select "abc123" from "con"
+    And I select "abc123"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
   Then I should see "abc123" within ".cons"

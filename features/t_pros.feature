@@ -37,7 +37,7 @@ Scenario: no tags selected during create
 Scenario: pro selected during create
   Given "abc123" is a "Pro"
   When I am on the create page
-    And I select "abc123" from "pro"
+    And I select "abc123"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I fill in "page_title" with "New Title"
     And I press "Store"

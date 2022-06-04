@@ -43,8 +43,8 @@ Scenario: fandom and other tag selected during create
   Given "first" is a "Pro"
     And "second" is a "Fandom"
     And I am on the create page
-    And I select "first" from "pro"
-    And I select "second" from "fandom"
+    And I select "first"
+    And I select "second"
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
   Then I should NOT see "Page created with Other Fandom"
@@ -56,7 +56,7 @@ Scenario: fandom only selected during create
   Given "nonfiction" is a "Fandom"
     And "something" is a "Pro"
     And I am on the create page
-    And I select "nonfiction" from "fandom"
+    And I select "nonfiction"
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
   Then I should NOT see "Page created with Other Fandom"

@@ -6,9 +6,9 @@ Scenario: create a page from a single url with selected tags
     And "my pro" is a "Pro"
   When I am on the create page
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I select "my fandom" from "fandom"
-    And I select "my author" from "Author"
-    And I select "my pro" from "Pro"
+    And I select "my fandom"
+    And I select "my author"
+    And I select "my pro"
     And I press "Store"
   Then I should see "Page created" within "#flash_notice"
     And I should see "my fandom" within ".fandoms"
@@ -32,7 +32,7 @@ Scenario: check before create a page with a hidden tag
   Given "abc123" is a "Hidden"
   When I am on the create page
     And I fill in "page_title" with "Title"
-    And I select "abc123" from "hidden"
+    And I select "abc123"
     And I press "Store"
   Then I should see "Page created" within "#flash_notice"
     And I should see "abc123" within ".hiddens"
@@ -42,7 +42,7 @@ Scenario: create a page with a hidden tag
   Given "abc123" is a "Hidden"
   When I am on the create page
     And I fill in "page_title" with "Title"
-    And I select "abc123" from "hidden"
+    And I select "abc123"
     And I press "Store"
     And I am on the homepage
   Then I should see "No pages found"

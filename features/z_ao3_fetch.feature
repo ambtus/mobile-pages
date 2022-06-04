@@ -23,7 +23,7 @@ Scenario: grab a book
   Given "harry potter" is a "Fandom"
     And I am on the create page
   When I fill in "page_url" with "https://archiveofourown.org/works/692/"
-    And I select "harry potter" from "fandom"
+    And I select "harry potter"
     And I press "Store"
   Then I should see "Time Was, Time Is (Book)" within ".title"
     And I should see "WIP" within ".cons"

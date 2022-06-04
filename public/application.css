@@ -6,6 +6,10 @@
 .indented {padding-left: 1em}
 .bold { font-weight: bold; }
 
+form.left { float:left;  }
+form.right { float:right; }
+.clear { clear: both;}
+
 hr {
     border: 0;
     color: black;

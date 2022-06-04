@@ -14,6 +14,10 @@ When("I choose {string}") do |field|
   choose(field)
 end
 
+When("I select {string}") do |value|
+  select(value)
+end
+
 When("I wait {int} second") do |time|
   Kernel::sleep time
 end

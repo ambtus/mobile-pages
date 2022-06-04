@@ -134,14 +134,8 @@ class PagesController < ApplicationController
       end
       return
     end
+    consolidate_tag_ids
     @page = Page.new(params[:page].permit!)
-    @hidden = Hidden.find_by_short_name(params[:hidden])
-    @fandom = Fandom.find_by_short_name(params[:fandom])
-    @author = Author.find_by_short_name(params[:author])
-    @pro = Pro.find_by_short_name(params[:pro])
-    @con = Con.find_by_short_name(params[:con])
-    @info = Info.find_by_short_name(params[:info])
-    @page.tags << [@hidden, @author, @fandom, @pro, @con, @info].compact
     if @page.save
       Rails.logger.debug "page saved: #{@page.inspect}"
       if !@page.errors[:base].blank?
@@ -150,8 +144,8 @@ class PagesController < ApplicationController
         @page.destroy
         @page = Page.new(params[:page])
       else
-        @page.set_hidden unless @hidden.blank?
-        @page.set_con unless @con.blank?
+        @page.reset_hidden
+        @page.reset_con
         if @page.tags.fandoms.blank?
           Rails.logger.debug "page created without fandom"
           flash[:notice] = "Page created with #{Page::OTHER}"
@@ -266,7 +260,5 @@ class PagesController < ApplicationController
     end
     render :show
   end
-
-
 
 end

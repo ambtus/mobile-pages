@@ -109,13 +109,8 @@ class TagsController < ApplicationController
   def create
     @page = Page.find(params[:page_id])
     if params[:commit] == "Update Tags"
-      tag_ids = []
-      Tag.types.each do |type|
-        symbol = "#{type.downcase}_ids".to_sym
-        tag_ids = tag_ids + params[:page][symbol] if (params[:page] && params[:page][symbol])
-      end
-      Rails.logger.debug "replacing tags for #{@page.id} with #{tag_ids}"
-      @page.tag_ids = tag_ids
+      consolidate_tag_ids
+      @page.tag_ids = params[:page][:tag_ids]
     elsif params[:commit].match /Add (.*) Tags/
       @page.add_tags_from_string(params[:tags], $1.squish)
     end
