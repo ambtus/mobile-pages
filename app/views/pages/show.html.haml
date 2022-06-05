@@ -50,6 +50,7 @@
       = link_to "Scrub Notes", scrub_path(@page, notes: true) unless @page.notes.blank?
       = link_to "Tags", tag_path(@page)
   =render "pages/meta", page: @page
+  =render "pages/div_tags", page: @page
   .my_notes=raw @page.formatted_my_notes
   .notes
     =raw @page.medium_notes
@@ -63,15 +64,17 @@
       .part{:id => "position_#{index+1}"}
         = part.title_prefix
         = link_to h(part.title), page_path(part)
-        = render "pages/meta", page: part
         = link_to "Rate", rate_path(part)
         = link_to "EPUB", download_url_for_page(part, ".epub")
         = link_to "HTML", download_url_for_page(part, ".html")
         = link_to "Text", download_url_for_page(part, ".read") if part.parts.blank?
         = link_to "Original", part.url unless part.url.blank?
-        %span.my_notes=part.short_my_notes
-        %span.notes=part.short_notes
-        %span.end_notes=part.short_end_notes
+        .notes
+          %span.meta= render "pages/meta", page: part
+          %span.meta= render "pages/span_tags", page: part
+          %span.my_notes=part.short_my_notes
+          %span.notes=part.short_notes
+          %span.end_notes=part.short_end_notes
   .form
     = form_for @page.becomes(Page) do
       = hidden_field_tag :count, @count
