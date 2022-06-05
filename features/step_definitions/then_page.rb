@@ -110,3 +110,24 @@ end
 Then('the notes should be empty') do
   assert Page.first.notes.blank?
 end
+
+Then('the end notes should be empty') do
+  assert Page.first.end_notes.blank?
+end
+
+Then('the end notes should start with {string}') do |string|
+  assert_match Regexp.new("^#{string}"), Page.first.end_notes
+end
+
+Then('the end notes should end with {string}') do |string|
+  assert_match Regexp.new("#{string}$"), Page.first.end_notes
+end
+
+Then('the contents should start with {string}') do |string|
+  assert_match Regexp.new("^<p>#{string}"), Page.first.scrubbed_html
+end
+
+Then('the contents should end with {string}') do |string|
+  assert_match Regexp.new("#{string}</p>$"), Page.first.scrubbed_html
+end
+

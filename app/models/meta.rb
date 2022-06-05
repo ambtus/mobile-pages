@@ -92,6 +92,8 @@ module Meta
         hash = old_ff_style_hash[:cat_title]
         links = doc.css("#pre_story_links a")[1].text rescue nil
         [hash, links].pulverize
+      elsif cn?
+        cn_try("Fandom")
       else
         []
       end
@@ -101,13 +103,17 @@ module Meta
     end
   end
 
-  def ao3_relationships
+  def inferred_relationships
     if self.parts.empty?
       Rails.logger.debug "get relationships from raw_html"
-      doc.css(".relationship a").map(&:children).map(&:text)
+      if cn?
+        [cn_try("Relationship"), cn_try("Pairing")].pulverize
+      else
+        doc.css(".relationship a").map(&:children).map(&:text)
+      end
     else
       Rails.logger.debug "get relationships from first and last parts"
-      (parts.first.ao3_relationships + parts.last.ao3_relationships).uniq
+      (parts.first.inferred_relationships + parts.last.inferred_relationships).uniq
     end
   end
 
@@ -136,6 +142,8 @@ module Meta
       hash = old_ff_style_hash[:author]
       links = [doc.css("#profile_top a").first.text] rescue nil
       [hash, links].pulverize
+    elsif cn?
+      ["Claire Watson"]
     end
   end
 
@@ -173,6 +181,8 @@ module Meta
       new = book_doc.css("#profile_top b").text rescue nil
       old = old_ff_style_hash[:title_t]
       [new, old].pulverize.first || "title not found"
+    elsif cn?
+      book_doc.css("h1").text.split("—").first
     else
       "title not found"
     end
@@ -210,7 +220,9 @@ module Meta
   end
 
   def work_summary
-    if type == "Series" && ao3?
+    if cn?
+      cn_try("Summary").first
+    elsif type == "Series" && ao3?
       begin
         return doc.css(".series dd")[3].css("blockquote").children.to_html if doc.css(".series dt")[3].text == "Description:"
         return doc.css(".series dd")[4].css("blockquote").children.to_html if doc.css(".series dt")[4].text == "Description:"
@@ -229,7 +241,9 @@ module Meta
   end
 
   def work_notes
-    if type == "Series" && ao3?
+    if cn?
+      [cn_try("Authors ").first, doc.css('div.tab-pane')[1]&.to_html].compact
+    elsif type == "Series" && ao3?
       begin
         return doc.css(".series dd")[3].css("blockquote").children.to_html if doc.css(".series dt")[3].text == "Notes:"
         return doc.css(".series dd")[4].css("blockquote").children.to_html if doc.css(".series dt")[4].text == "Notes:"
@@ -288,10 +302,10 @@ module Meta
       if chapter_as_single?
         [add_authors(inferred_authors), add_fandoms(inferred_fandoms), chapter_summary, chapter_notes]
       else
-        [add_authors(inferred_authors), add_fandoms(inferred_fandoms), ao3_relationships.to_p, work_summary, chapter_summary, ao3_tags.to_p, work_notes, chapter_notes]
+        [add_authors(inferred_authors), add_fandoms(inferred_fandoms), inferred_relationships.to_p, work_summary, chapter_summary, ao3_tags.to_p, work_notes, chapter_notes]
       end
     when "Book"
-      [add_authors(inferred_authors), add_fandoms(inferred_fandoms), ao3_relationships.to_p, work_summary, ao3_tags.to_p, work_notes]
+      [add_authors(inferred_authors), add_fandoms(inferred_fandoms), inferred_relationships.to_p, work_summary, ao3_tags.to_p, work_notes]
     when "Series"
       [add_authors(inferred_authors), add_fandoms(inferred_fandoms), work_summary, work_notes]
     end.join_hr
@@ -327,8 +341,8 @@ module Meta
   end
 
   def set_meta
-    unless ao3? || ff? || first_part_ff?
-      Rails.logger.debug "only ao3 & FF for now"
+    unless ao3? || ff? || first_part_ff? || cn?
+      Rails.logger.debug "only ao3 & FF && cn for now"
       return false
     end
     if raw_html.blank? && parts.blank?
@@ -447,6 +461,12 @@ module Meta
   def add_authors_to_notes(authors)
     self.update! notes: "#{add_authors(authors)}#{self.notes}"
     return self
+  end
+
+  def cn_try(string)
+    first = doc.css("strong").children.map(&:text).find{|t| t.match(string)}.split(": ", 2).second rescue nil
+    second = doc.css("strong").children.find{|t| t.text.match(string)}.parent.next.text.strip rescue nil
+    [first,second].pulverize
   end
 
 end

@@ -43,3 +43,20 @@ Given("Child of Four exists") do
   page.rebuild_meta
 end
 
+Given('Urgency exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "http://clairesnook.com/fiction/the-resolute-urgency-of-now-time-travel-trope-bingo-2020-2021/")
+  page.set_raw_from("urgency")
+end
+
+Given('Time exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "http://clairesnook.com/fiction/time-after-time/")
+  page.set_raw_from("time")
+end
+
+Given('Wish exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "http://clairesnook.com/fiction/bingo/i-wish-amnesia-trope-bingo-2020-2021/")
+  page.set_raw_from("wish")
+end

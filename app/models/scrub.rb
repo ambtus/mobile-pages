@@ -153,7 +153,7 @@ module Scrub
          content = Scrub.agent.get(url)
         end
     else
-      content = Scrub.agent.get(MyWebsites.geturl(url))
+      content = Scrub.agent.get(Websites.geturl(url))
       if content.forms.first.try(:button).try(:name) == "adult_check"
          Rails.logger.debug "adult check"
          form = content.forms.first

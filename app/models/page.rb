@@ -196,6 +196,8 @@ class Page < ActiveRecord::Base
   scope :with_content, -> { where(type: [Chapter, Single]) }
   def has_content?; raw_html.present? && parts.blank?; end
 
+  def cn?; self.url && self.url.match(/clairesnook.com/); end
+
   def ao3?; self.url && self.url.match(/archiveofourown/); end
   def ao3_chapter?; ao3? && self.url.match(/chapter/); end
 
@@ -670,7 +672,7 @@ class Page < ActiveRecord::Base
   end
 
   def build_clean_from_raw
-    html = MyWebsites.getnode(raw_html, self.url)
+    html = Websites.getnode(raw_html, self.url)
     if html
       Rails.logger.debug "updating scrubbed html from raw"
       self.scrubbed_html = Scrub.sanitize_html(html)

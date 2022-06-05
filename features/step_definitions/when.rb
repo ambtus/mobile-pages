@@ -122,7 +122,7 @@ end
 
 When('I edit the raw html with {string}') do |string|
   click_link("Edit Raw HTML")
-  html = File.open(Rails.root + "features/html/#{string}.html", 'r:utf-8') { |f| f.read }
+  html = File.open(Rails.root + "tmp/html/#{string}.html", 'r:utf-8') { |f| f.read }
   fill_in("pasted", :with => html)
   click_button("Update Raw HTML")
 end

@@ -37,13 +37,13 @@ Given("pages with all possible soons exist") do
 end
 
 Given("pages with all possible sizes exist") do
-  Page.create(title: "Medium", url: "file:///#{Rails.root}/features/html/long.html")
+  Page.create(title: "Medium", url: "file:///#{Rails.root}/tmp/html/long.html")
   Page.create(title: "Drabble").raw_html=100.times.collect{|i| (i+1).to_s}.join(" ")
-  Page.create(title: "Long2", base_url: "file:///#{Rails.root}/features/html/long*.html", url_substitutions: "1-9")
-  Page.create(title: "Short", url: "file:///#{Rails.root}/features/html/short.html")
-  Page.create(title: "Long", url: "file:///#{Rails.root}/features/html/40000.html")
-  Page.create(title: "Epic", base_url: "file:///#{Rails.root}/features/html/epic*.html", url_substitutions: "1-9")
-  Page.create(title: "Medium2", base_url: "file:///#{Rails.root}/features/html/medium*.html", url_substitutions: "1-5")
+  Page.create(title: "Long2", base_url: "file:///#{Rails.root}/tmp/html/long*.html", url_substitutions: "1-9")
+  Page.create(title: "Short", url: "file:///#{Rails.root}/tmp/html/short.html")
+  Page.create(title: "Long", url: "file:///#{Rails.root}/tmp/html/40000.html")
+  Page.create(title: "Epic", base_url: "file:///#{Rails.root}/tmp/html/epic*.html", url_substitutions: "1-9")
+  Page.create(title: "Medium2", base_url: "file:///#{Rails.root}/tmp/html/medium*.html", url_substitutions: "1-5")
 end
 
 Given("pages with all possible unreads exist") do

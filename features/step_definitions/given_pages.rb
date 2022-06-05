@@ -40,7 +40,7 @@ end
 
 Given('link in notes exists') do
   page = Single.create!(title: "Silent Sobs")
-  page.notes = File.open(Rails.root + "features/html/silent.html", 'r:utf-8') { |f| f.read }
+  page.notes = File.open(Rails.root + "tmp/html/silent.html", 'r:utf-8') { |f| f.read }
   page.save!
 end
 

@@ -29,7 +29,7 @@ module Utilities
   end
 
   def set_raw_from(filename)
-    FileUtils.cp(Rails.root + "features/html/#{filename}.html", raw_html_file_name)
+    FileUtils.cp(Rails.root + "tmp/html/#{filename}.html", raw_html_file_name)
     build_clean_from_raw
     set_meta
   end
