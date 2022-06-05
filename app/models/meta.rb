@@ -246,7 +246,7 @@ module Meta
 
   def work_notes
     if cn?
-      [cn_try("Authors ").first, doc.css('div.tab-pane')[1]&.to_html].compact
+      [doc.css('div.tab-pane')[1]&.to_html, cn_try(Regexp.new("Authors? [Nn]ote"))].pulverize.first
     elsif type == "Series" && ao3?
       begin
         return doc.css(".series dd")[3].css("blockquote").children.to_html if doc.css(".series dt")[3].text == "Notes:"
@@ -467,10 +467,10 @@ module Meta
     return self
   end
 
-  def cn_try(string)
-    first = doc.css("strong").children.map(&:text).find{|t| t.match(string)}.split(": ", 2).second rescue nil
-    second = doc.css("strong").children.find{|t| t.text.match(string)}.parent.next.text.strip rescue nil
-    [first,second].pulverize
+  def cn_try(regexp)
+    first = doc.css("strong").children.map(&:text).find{|t| t.match(regexp)}.split(": ", 2).second rescue nil
+    second = doc.css("strong").children.find{|t| t.text.match(regexp)}.parent.next.text.strip rescue nil
+    [first,second].pulverize.without("n/a")
   end
 
 end

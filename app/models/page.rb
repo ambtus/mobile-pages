@@ -406,6 +406,7 @@ class Page < ActiveRecord::Base
         errors.add(:base, "can't refetch from fanfiction.net")
       else
         fetch_raw
+        set_meta if cn?
         self.parent.set_wordcount(false) if self.parent
       end
     end
@@ -818,14 +819,14 @@ private
     FileUtils.mkdir_p(download_dir) # make sure directory exists
 
     if self.url.present?
-      if self.ao3?
+      if self.ao3? || self.cn?
         if type.nil?
-          page = self.becomes!(initial_ao3_type)
+          page = ao3? ? self.becomes!(initial_ao3_type) : self.becomes!(Single)
           Rails.logger.debug "page became #{page.type}"
         else
           page = self
         end
-        page.fetch_ao3
+        ao3? ? page.fetch_ao3 : fetch_raw && set_meta
       elsif ff?
         set_type unless type and return
       else
