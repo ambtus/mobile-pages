@@ -47,3 +47,9 @@ Scenario: I Wish (tab-pane summary and authors note)
     And I should see "end of the school year." within ".notes"
     And the contents should start with "It had been an ordinary boring"
     And the contents should end with "no harm done, after all."
+
+Scenario: author notes bug
+  Given Sailed exists
+  When I am on the page's page
+  Then I should see "Trope Bingo #Competence"
+    But I should NOT see ": Trope"

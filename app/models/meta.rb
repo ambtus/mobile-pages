@@ -468,8 +468,8 @@ module Meta
   end
 
   def cn_try(regexp)
-    first = doc.css("strong").children.map(&:text).find{|t| t.match(regexp)}.split(": ", 2).second rescue nil
-    second = doc.css("strong").children.find{|t| t.text.match(regexp)}.parent.next.text.strip rescue nil
+    first = doc.css("strong").children.find{|t| t.text.match(regexp)}.parent.next.text.gsub(/^:/, "").strip rescue nil
+    second = doc.css("strong").children.map(&:text).find{|t| t.match(regexp)}.split(": ", 2).second rescue nil
     [first,second].pulverize.without("n/a")
   end
 

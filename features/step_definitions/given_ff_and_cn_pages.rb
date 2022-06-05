@@ -60,3 +60,9 @@ Given('Wish exists') do
   page.update!(url: "http://clairesnook.com/fiction/bingo/i-wish-amnesia-trope-bingo-2020-2021/")
   page.set_raw_from("wish")
 end
+
+Given('Sailed exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "http://clairesnook.com/fiction/the-secret-to-survivin/")
+  page.set_raw_from("sailed")
+end
