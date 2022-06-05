@@ -11,6 +11,7 @@ Scenario: The Resolute Urgency of Now (tab-pane)
     And I should see "Harry Potter & Sirius Black" within ".notes"
     And I should see "Writing a time-travel story" within ".notes"
     And I should see "full notes" within ".notes"
+    And I should see "Time Travel" within ".pros"
     And the contents should start with "When Harry woke,"
     And the contents should end with "time to wake up."
 

@@ -117,13 +117,17 @@ module Meta
     end
   end
 
-  def ao3_tags
+  def inferred_tags
     if self.parts.empty?
       Rails.logger.debug "get tags from raw_html"
-      doc.css(".freeform a").map(&:children).map(&:text)
+      if cn?
+        cn_try("Genre")
+      else
+        doc.css(".freeform a").map(&:children).map(&:text)
+      end
     else
       Rails.logger.debug "get tags from first and last parts"
-      (parts.first.ao3_tags + parts.last.ao3_tags).uniq
+      (parts.first.inferred_tags + parts.last.inferred_tags).uniq
     end
   end
 
@@ -302,10 +306,10 @@ module Meta
       if chapter_as_single?
         [add_authors(inferred_authors), add_fandoms(inferred_fandoms), chapter_summary, chapter_notes]
       else
-        [add_authors(inferred_authors), add_fandoms(inferred_fandoms), inferred_relationships.to_p, work_summary, chapter_summary, ao3_tags.to_p, work_notes, chapter_notes]
+        [add_authors(inferred_authors), add_fandoms(inferred_fandoms), inferred_relationships.to_p, work_summary, chapter_summary, inferred_tags.to_p, work_notes, chapter_notes]
       end
     when "Book"
-      [add_authors(inferred_authors), add_fandoms(inferred_fandoms), inferred_relationships.to_p, work_summary, ao3_tags.to_p, work_notes]
+      [add_authors(inferred_authors), add_fandoms(inferred_fandoms), inferred_relationships.to_p, work_summary, inferred_tags.to_p, work_notes]
     when "Series"
       [add_authors(inferred_authors), add_fandoms(inferred_fandoms), work_summary, work_notes]
     end.join_hr
@@ -355,7 +359,7 @@ module Meta
     Rails.logger.debug "set notes to #{inferred_notes}"
     Rails.logger.debug "set end notes to #{tail_notes}"
     wip? ? set_wip : unset_wip
-    ao3_tt(ao3_tags) unless chapter_url?
+    ao3_tt(inferred_tags) unless chapter_url?
     return self
   end
 
