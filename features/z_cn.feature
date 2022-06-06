@@ -14,3 +14,4 @@ Scenario: grab a single
     And I should see "A/U, Competence" within ".notes"
     And I should see "Derek will never be his mother, but that doesn’t mean he can’t learn to be a better alpha than what he started as." within ".notes"
     And I should see "Trope Bingo #Competence" within ".notes"
+

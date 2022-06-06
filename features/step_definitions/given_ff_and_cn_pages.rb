@@ -61,8 +61,26 @@ Given('Wish exists') do
   page.set_raw_from("wish")
 end
 
-Given('Sailed exists') do
+Given('Secret exists') do
   page = Single.create!(title: "temp")
   page.update!(url: "http://clairesnook.com/fiction/the-secret-to-survivin/")
-  page.set_raw_from("sailed")
+  page.set_raw_from("secret")
+end
+
+Given('Crazy exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "http://clairesnook.com/fiction/crazy-little-thing/")
+  page.set_raw_from("crazy")
+end
+
+Given('Something exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "http://clairesnook.com/fiction/something-in-my-liberty/")
+  page.set_raw_from("something")
+end
+
+Given('Art exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "http://clairesnook.com/fiction/almost-paradise-art-by-fashi0n/")
+  page.set_raw_from("art")
 end

@@ -93,7 +93,7 @@ module Meta
         links = doc.css("#pre_story_links a")[1].text rescue nil
         [hash, links].pulverize
       elsif cn?
-        cn_try("Fandom")
+        cn_try("Fandom").split(", ")
       else
         []
       end
@@ -121,7 +121,7 @@ module Meta
     if self.parts.empty?
       Rails.logger.debug "get tags from raw_html"
       if cn?
-        cn_try("Genre")
+        cn_try("Genre").split(", ") + cn_try("Warnings").split(", ")
       else
         doc.css(".freeform a").map(&:children).map(&:text)
       end
@@ -225,7 +225,7 @@ module Meta
 
   def work_summary
     if cn?
-      cn_try("Summary").first
+      cn_try("Summary")
     elsif type == "Series" && ao3?
       begin
         return doc.css(".series dd")[3].css("blockquote").children.to_html if doc.css(".series dt")[3].text == "Description:"
@@ -246,7 +246,7 @@ module Meta
 
   def work_notes
     if cn?
-      [doc.css('div.tab-pane')[1]&.to_html, cn_try(Regexp.new("Authors? [Nn]ote"))].pulverize.first
+      [doc.css('div.tab-pane')[1]&.to_html, cn_try("Authors? [Nn]otes?")].pulverize.first
     elsif type == "Series" && ao3?
       begin
         return doc.css(".series dd")[3].css("blockquote").children.to_html if doc.css(".series dt")[3].text == "Notes:"
@@ -467,10 +467,17 @@ module Meta
     return self
   end
 
-  def cn_try(regexp)
-    first = doc.css("strong").children.find{|t| t.text.match(regexp)}.parent.next.text.gsub(/^:/, "").strip rescue nil
-    second = doc.css("strong").children.map(&:text).find{|t| t.match(regexp)}.split(": ", 2).second rescue nil
-    [first,second].pulverize.without("n/a")
+  def cn_try(string)
+    first = doc.css("strong").children.find{|t| t.text.match(string)}.parent.next.text.gsub(/^:/, "").strip rescue nil
+    second = doc.css("strong").children.map(&:text).find{|t| t.match(string)}.split(": ", 2).second rescue nil
+    meta = doc.at("strong").parent.inner_html
+    meta = doc.at("strong").parent.parent.inner_html if meta.scan(/strong/).count == 2
+    try_middle = meta.match(Regexp.new("#{string}.*?:?<\/strong>:? (.*?)<strong>"))[1] rescue nil
+    try_end = meta.match(Regexp.new("#{string}:<\/strong> (.*?)$"))[1] rescue nil
+    match = [try_middle, try_end, first,second].pulverize.first || ""
+    raise "#{string} matched #{match}" if match.match("strong>")
+    match = match.gsub("None", "") if string == "Warnings"
+    match.gsub(/n\/a/i, "").gsub(Regexp.new("<br> </em><em>$"), "")
   end
 
 end

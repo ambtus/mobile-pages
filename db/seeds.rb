@@ -206,7 +206,19 @@ Author.find_or_create_by!(name: "adiduck (book_people)")
 
   page = Single.create!(title: "temp")
   page.update!(url: "http://clairesnook.com/fiction/the-secret-to-survivin/")
-  page.set_raw_from("sailed")
+  page.set_raw_from("secret")
+
+  page = Single.create!(title: "temp")
+  page.update!(url: "http://clairesnook.com/fiction/crazy-little-thing/")
+  page.set_raw_from("crazy")
+
+  page = Single.create!(title: "temp")
+  page.update!(url: "http://clairesnook.com/fiction/something-in-my-liberty/")
+  page.set_raw_from("something")
+
+  page = Single.create!(title: "temp")
+  page.update!(url: "http://clairesnook.com/fiction/almost-paradise-art-by-fashi0n/")
+  page.set_raw_from("art")
 
 # given_pages_with_all.rb without the Given...end lines
 

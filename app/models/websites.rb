@@ -62,8 +62,15 @@ module Websites
               if body.at('div.tab-pane')
                 body.at('div.tab-pane')
               else
-                3.times {|i| body.at('div.entry-content p').remove}
-                3.times {|i| body.at('div.entry-content').children.last.remove}
+                ps = body.css('div.entry-content p')
+                3.times do |i|
+                  next unless ps[i]
+                  ps[i].remove if Scrub.strip_html(ps[i]) == "" || ps[i].to_html.match(/<strong>/)
+                end
+                divs = body.at('div.entry-content').children
+                divs[-1].remove if Scrub.strip_html(divs[-1]) == ""
+                divs[-2].remove if divs[-2].to_html.match(/Like this/)
+                divs[-3].remove if divs[-3].to_html.match(/Share this/)
                 body.at('div.entry-content')
               end
             else
