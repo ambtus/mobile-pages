@@ -2,12 +2,14 @@ Given("pages with all possible types exist") do
   Single.create(title: "One-shot", url: "http://test.sidrasue.com/short.html")
   Book.create(title: "Novel", base_url: "http://test.sidrasue.com/long*.html", url_substitutions: "1-2")
 
+  Kernel::sleep 1
   series = Series.create!(title: "Trilogy")
   book1 = Book.create!(title: "Alpha", parent_id: series.id, position: 1)
   book2 = Book.create!(title: "Beta", parent_id: series.id, position: 2)
   child1 = Chapter.create!(title: "Prologue", parent_id: book1.id, position: 1, url: "http://test.sidrasue.com/parts/1.html")
   child2 = Chapter.create!(title: "Epilogue", parent_id: book2.id, position: 1, url: "http://test.sidrasue.com/parts/5.html")
 
+  Kernel::sleep 1
   collection = Collection.create!(title: "Life's Work")
 
   Single.create(title: "First", url: "http://test.sidrasue.com/test.html", parent_id: collection.id, position: 1)
