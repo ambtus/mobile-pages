@@ -30,3 +30,18 @@ Given('Earthbound Misfit exists') do
   book.rebuild_meta.set_wordcount(false)
 end
 
+Given('Almost Paradise exists') do
+  book = Book.create!(title: "temp")
+  book.update!(url: "http://clairesnook.com/fiction/almost-paradise/")
+  book.set_raw_from("ap")
+
+  chapter1 = Chapter.create!(title: "temp", parent_id: book.id, position: 1)
+  chapter1.update!(url: "http://clairesnook.com/fiction/almost-paradise-chapter-one-to-four/")
+  chapter1.set_raw_from("ap1")
+
+  chapter2 = Chapter.create!(title: "temp", parent_id: book.id, position: 2)
+  chapter2.update!(url: "http://clairesnook.com/fiction/almost-paradise-art-by-fashi0n/")
+  chapter2.set_raw_from("art")
+
+  book.rebuild_meta.set_wordcount(false)
+end

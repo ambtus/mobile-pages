@@ -60,10 +60,22 @@ Scenario: Serendipity initial comment
   When I read it online
   Then I should see "This is the first chapter of a story where Harry and Sirius get all the care I wanted them to get in canon"
 
-Scenario: Teen Wolf meets
+Scenario: Teen Wolf meets missing content
   Given Teen exists
   When I read it online
   Then I should see "This was my first ever Teen Wolf bunny"
     And I should see "The day that Stile’s life changed irrevocably"
     And I should see "Teen Wolf meets The Changeover"
     And I should see "tbc"
+
+Scenario: Specious authors note
+  Given Specious exists
+  When I am on the page's page
+  Then I should see "Set in an AU"
+    But I should NOT see "Authors Note"
+
+Scenario: Unreality warning "None at present"
+  Given Unreality exists
+  When I am on the page's page
+  Then I should NOT see "at present"
+    But I should see "Canon divergent, Magical realism"

@@ -84,7 +84,10 @@ module Meta
   end
 
   def inferred_fandoms
-    if self.parts.empty? || (cn? && !self.type=="Series")
+    if self.parts.any? && !cn?
+      Rails.logger.debug "get fandoms from first and last parts"
+      (parts.first.inferred_fandoms + parts.last.inferred_fandoms).uniq
+    else
       Rails.logger.debug "get fandoms from raw_html"
       if ao3?
         doc.css(".fandom a").map(&:children).map(&:text)
@@ -93,18 +96,20 @@ module Meta
         links = doc.css("#pre_story_links a")[1].text rescue nil
         [hash, links].pulverize
       elsif cn?
-        cn_try("Fandom").split(", ")
+        first_try = cn_try("Fandom").split(", ")
+        if first_try.blank? && parts.any?
+          (parts.first.inferred_fandoms + parts.last.inferred_fandoms).uniq
+        else
+          first_try
+        end
       else
         []
       end
-    else
-      Rails.logger.debug "get fandoms from first and last parts"
-      (parts.first.inferred_fandoms + parts.last.inferred_fandoms).uniq
     end
   end
 
   def inferred_relationships
-    if self.parts.empty?
+    if self.parts.empty? || cn?
       Rails.logger.debug "get relationships from raw_html"
       if cn?
         [cn_try("Relationship"), cn_try("Pairing")].pulverize
@@ -118,7 +123,7 @@ module Meta
   end
 
   def inferred_tags
-    if self.parts.empty?
+    if self.parts.empty? || cn?
       Rails.logger.debug "get tags from raw_html"
       if cn?
         cn_try("Genre").split(", ") + cn_try("Warnings").split(", ")
@@ -254,7 +259,7 @@ module Meta
       end
       Scrub.sanitize_html(content).children.to_html
     elsif cn?
-      [doc.css('div.tab-pane')[1]&.to_html, cn_try("Authors? [Nn]otes?")].pulverize.first
+      [doc.css('div.tab-pane')[2]&.to_html, doc.css('div.tab-pane')[1]&.to_html, cn_try("Authors? [Nn]otes?")].join_hr
     elsif type == "Series" && ao3?
       begin
         return doc.css(".series dd")[3].css("blockquote").children.to_html if doc.css(".series dt")[3].text == "Notes:"
@@ -477,17 +482,41 @@ module Meta
 
   def cn_try(string)
     all = doc.at("strong").parent.inner_html.squish
-    all = doc.at("strong").parent.parent.inner_html.squish if all.scan(/strong/).count < 5
     metas = all.split("<strong>").pulverize
+    found = find_me(metas, string)
+    if found.blank?
+      all = doc.at("strong").parent.parent.inner_html.squish
+      metas = all.split("<div").collect{|d| d.split("<strong>")}.pulverize
+      found = find_me(metas, string)
+    end
+    if found.blank?
+      try = doc.css("strong").children.map(&:text).find{|t| t.match(string)}
+      if try == string + ":"
+        found = doc.css("strong").children.map(&:children).flatten.map(&:text).find{|t| t.match(string)}
+      else
+        found = try
+      end
+    end
+    if found
+      match = found.split(":").second.squish rescue ""
+      if string == "Warnings"
+        return "" if match.match("None")
+      end
+      match.gsub(/n\/a/i, "").gsub(Regexp.new("</em><em>$"), '').gsub(Regexp.new('<br> ?$'), '').squish
+    else
+      ""
+    end
+  end
+
+  def find_me(metas, string)
     found = metas.find {|m| m.match(string)} rescue nil
-    match = if found
-               found.match(Regexp.new("#{string}(.*)"))[1].gsub("</strong>", '')
-            else # try again
-                doc.css("strong").children.map(&:text).find{|t| t.match(string)}
-            end
-    match = match.split(":").second.squish rescue ""
-    match = match.gsub("None", "") if string == "Warnings"
-    match.gsub(/n\/a/i, "").gsub(Regexp.new("</em><em>$"), '').gsub(Regexp.new('<br> ?$'), '').squish
+    if found
+       if found.scan(/:/).count > 1
+         parts = found.split("<br>")
+         found = parts.find {|p| p.match(string)}
+       end
+       found.match(Regexp.new("#{string}(.*)"))[1].gsub("</strong>", '')
+    end
   end
 
 end

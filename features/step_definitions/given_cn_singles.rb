@@ -63,3 +63,15 @@ Given('Teen exists') do
   page.update!(url: "http://clairesnook.com/evil-author-day/teen-wolf-meets-the-changeover-ead-2018/")
   page.set_raw_from("teen")
 end
+
+Given('Specious exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "http://clairesnook.com/fiction/bingo/specious-marriage-of-convenience-trope-bingo-2020-2021/")
+  page.set_raw_from("specious")
+end
+
+Given('Unreality exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "http://clairesnook.com/evil-author-day/unreality-ead-2021/")
+  page.set_raw_from("unreality")
+end

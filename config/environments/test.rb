@@ -51,7 +51,11 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   # Set the logging destination(s)
-  config.log_to = %w[stdout file]
+  if ENV["LOGGER_BE_QUIET"].present?
+    config.log_to = %w[file]
+  else
+    config.log_to = %w[stdout file]
+  end
 
   # Show the logging configuration on STDOUT
   config.show_log_configuration = true
