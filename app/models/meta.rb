@@ -481,6 +481,7 @@ module Meta
   end
 
   def cn_try(string)
+    return "" if doc.at("strong").blank?
     all = doc.at("strong").parent.inner_html.squish
     metas = all.split("<strong>").pulverize
     found = find_me(metas, string)
