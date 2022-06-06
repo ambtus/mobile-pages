@@ -57,3 +57,9 @@ Given('Serendipity exists') do
   page.update!(url: "http://clairesnook.com/evil-author-day/serendipity-ead-2022/")
   page.set_raw_from("ead")
 end
+
+Given('Teen exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "http://clairesnook.com/evil-author-day/teen-wolf-meets-the-changeover-ead-2018/")
+  page.set_raw_from("teen")
+end

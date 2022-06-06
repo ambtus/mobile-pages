@@ -60,3 +60,10 @@ Scenario: Serendipity initial comment
   When I read it online
   Then I should see "This is the first chapter of a story where Harry and Sirius get all the care I wanted them to get in canon"
 
+Scenario: Teen Wolf meets
+  Given Teen exists
+  When I read it online
+  Then I should see "This was my first ever Teen Wolf bunny"
+    And I should see "The day that Stile’s life changed irrevocably"
+    And I should see "Teen Wolf meets The Changeover"
+    And I should see "tbc"
