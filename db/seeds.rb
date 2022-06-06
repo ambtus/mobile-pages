@@ -224,6 +224,10 @@ Author.find_or_create_by!(name: "adiduck (book_people)")
   page.update!(url: "http://clairesnook.com/fiction/black-moon-rising/")
   page.set_raw_from("black")
 
+  page = Single.create!(title: "temp")
+  page.update!(url: "http://clairesnook.com/fiction/arm-candy/")
+  page.set_raw_from("arm")
+
 # given_pages_with_all.rb without the Given...end lines
 
   Single.create(title: "One-shot", url: "http://test.sidrasue.com/short.html")

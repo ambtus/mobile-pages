@@ -473,7 +473,7 @@ module Meta
     metas = all.split("<strong>").pulverize
     found = metas.find {|m| m.match(string)} rescue nil
     match = if found
-               found.gsub("</strong>", '')
+               found.match(Regexp.new("#{string}(.*)"))[1].gsub("</strong>", '')
             else # try again
                 doc.css("strong").children.map(&:text).find{|t| t.match(string)}
             end

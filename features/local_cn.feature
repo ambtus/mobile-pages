@@ -89,3 +89,9 @@ Scenario: Black Moon Rising multi fandoms
   When I am on the page's page
   Then I should see "Harry Potter" within ".fandoms"
     And I should see "Little Black Dress" within ".notes"
+
+Scenario: Arm Candy author note
+  Given Arm exists
+  When I am on the page's page
+  Then I should see "Set outside canon and several years in the future." within ".notes"
+    And I should NOT see "938" within ".notes"
