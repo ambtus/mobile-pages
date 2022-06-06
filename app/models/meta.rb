@@ -186,7 +186,7 @@ module Meta
       old = old_ff_style_hash[:title_t]
       [new, old].pulverize.first || "title not found"
     elsif cn?
-      book_doc.css("h1").text.split("—").first
+      book_doc.at("h1").text.gsub("–", "—").split("—").first.squish
     else
       "title not found"
     end
@@ -479,7 +479,7 @@ module Meta
             end
     match = match.split(":").second.squish rescue ""
     match = match.gsub("None", "") if string == "Warnings"
-    match.gsub(/n\/a/i, "").gsub(Regexp.new("</em><em>$"), '').gsub(Regexp.new('<br> $'), '')
+    match.gsub(/n\/a/i, "").gsub(Regexp.new("</em><em>$"), '').gsub(Regexp.new('<br> ?$'), '')
   end
 
 end
