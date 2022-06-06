@@ -59,7 +59,7 @@ module Meta
   end
 
   def doc
-    if self.type == "Book"
+    if self.type == "Book" && !cn?
       Rails.logger.debug "getting doc from last part"
       Nokogiri::HTML(parts.last.raw_html)
     else
@@ -84,7 +84,7 @@ module Meta
   end
 
   def inferred_fandoms
-    if self.parts.empty?
+    if self.parts.empty? || (cn? && !self.type=="Series")
       Rails.logger.debug "get fandoms from raw_html"
       if ao3?
         doc.css(".fandom a").map(&:children).map(&:text)
@@ -167,6 +167,8 @@ module Meta
       old = doc.search('option[@selected="selected"]').children[1].text.match(/\d+\. (.*)/) rescue nil
       [new, old].pulverize.first
       $1
+    elsif cn?
+      doc.at("h1").text.gsub("–", "—").split("—").second.squish
     end
   end
 
@@ -186,7 +188,7 @@ module Meta
       old = old_ff_style_hash[:title_t]
       [new, old].pulverize.first || "title not found"
     elsif cn?
-      book_doc.at("h1").text.gsub("–", "—").split("—").first.squish
+      doc.at("h1").text.gsub("–", "—").split("—").first.squish
     else
       "title not found"
     end
@@ -245,7 +247,13 @@ module Meta
   end
 
   def work_notes
-    if cn?
+    if cn? && type=="Series"
+      content = doc.at(".entry-content")
+      content.children.each do |node|
+        node.remove if node.name == "div"
+      end
+      Scrub.sanitize_html(content).children.to_html
+    elsif cn?
       [doc.css('div.tab-pane')[1]&.to_html, cn_try("Authors? [Nn]otes?")].pulverize.first
     elsif type == "Series" && ao3?
       begin
@@ -468,8 +476,8 @@ module Meta
   end
 
   def cn_try(string)
-    all = doc.at("strong").parent.inner_html
-    all = doc.at("strong").parent.parent.inner_html if all.scan(/strong/).count == 2
+    all = doc.at("strong").parent.inner_html.squish
+    all = doc.at("strong").parent.parent.inner_html.squish if all.scan(/strong/).count < 5
     metas = all.split("<strong>").pulverize
     found = metas.find {|m| m.match(string)} rescue nil
     match = if found
@@ -479,7 +487,7 @@ module Meta
             end
     match = match.split(":").second.squish rescue ""
     match = match.gsub("None", "") if string == "Warnings"
-    match.gsub(/n\/a/i, "").gsub(Regexp.new("</em><em>$"), '').gsub(Regexp.new('<br> ?$'), '')
+    match.gsub(/n\/a/i, "").gsub(Regexp.new("</em><em>$"), '').gsub(Regexp.new('<br> ?$'), '').squish
   end
 
 end
