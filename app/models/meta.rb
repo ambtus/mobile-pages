@@ -468,16 +468,18 @@ module Meta
   end
 
   def cn_try(string)
-    first = doc.css("strong").children.find{|t| t.text.match(string)}.parent.next.text.gsub(/^:/, "").strip rescue nil
-    second = doc.css("strong").children.map(&:text).find{|t| t.match(string)}.split(": ", 2).second rescue nil
-    meta = doc.at("strong").parent.inner_html
-    meta = doc.at("strong").parent.parent.inner_html if meta.scan(/strong/).count == 2
-    try_middle = meta.match(Regexp.new("#{string}.*?:?<\/strong>:? (.*?)<strong>"))[1] rescue nil
-    try_end = meta.match(Regexp.new("#{string}:<\/strong> (.*?)$"))[1] rescue nil
-    match = [try_middle, try_end, first,second].pulverize.first || ""
-    raise "#{string} matched #{match}" if match.match("strong>")
+    all = doc.at("strong").parent.inner_html
+    all = doc.at("strong").parent.parent.inner_html if all.scan(/strong/).count == 2
+    metas = all.split("<strong>").pulverize
+    found = metas.find {|m| m.match(string)} rescue nil
+    match = if found
+               found.gsub("</strong>", '')
+            else # try again
+                doc.css("strong").children.map(&:text).find{|t| t.match(string)}
+            end
+    match = match.split(":").second.squish rescue ""
     match = match.gsub("None", "") if string == "Warnings"
-    match.gsub(/n\/a/i, "").gsub(Regexp.new("<br> </em><em>$"), "")
+    match.gsub(/n\/a/i, "").gsub(Regexp.new("</em><em>$"), '').gsub(Regexp.new('<br> $'), '')
   end
 
 end

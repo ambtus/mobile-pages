@@ -82,3 +82,10 @@ Scenario: Art scrubbing bug
   Then I should see "Almost Paradise – Art by fashi0n"
     And I should see "by Claire Watson"
     And I should see "The art created for Almost Paradise by Claire Watson. All of these images were created by fashi0n , and are presented here in the order they appear in the story."
+
+Scenario: Black Moon Rising multi fandoms
+  Given "Harry Potter" is a "Fandom"
+    And Black exists
+  When I am on the page's page
+  Then I should see "Harry Potter" within ".fandoms"
+    And I should see "Little Black Dress" within ".notes"

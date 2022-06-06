@@ -84,3 +84,9 @@ Given('Art exists') do
   page.update!(url: "http://clairesnook.com/fiction/almost-paradise-art-by-fashi0n/")
   page.set_raw_from("art")
 end
+
+Given('Black exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "http://clairesnook.com/fiction/black-moon-rising/")
+  page.set_raw_from("black")
+end
