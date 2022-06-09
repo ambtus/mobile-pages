@@ -76,14 +76,17 @@ class PagesController < ApplicationController
     page = params.delete(:page)
     if page[:url]
       normalized = page[:url].normalize
-      unless normalized.blank?
+      if normalized.blank? && page[:url].present?
+        Rails.logger.debug page[:url]
+        @page = Page.where("title LIKE ?", "%" + page[:url] + "%").first
+      elsif normalized.present?
         Rails.logger.debug normalized
         @page = Page.find_by_url(normalized)
-        if @page
-          flash[:notice] = "Page found"
-          @count = 0
-          redirect_to page_path(@page) and return
-        end
+      end
+      if @page
+        flash[:notice] = "Page found"
+        @count = 0
+        redirect_to page_path(@page) and return
       end
     end
     params.delete(:action)
