@@ -175,6 +175,17 @@ Scenario: refetching a one-page Single into a Book
     And I press "Refetch"
   Then I should see "Time Was, Time Is (Book)" within ".title"
 
+Scenario: refetching reading makes parent reading
+  Given "harry potter" is a "Fandom"
+    And "Sidra" is an "Author"
+    And Where am I existed and was read
+    And I download its epub
+  When I am on the mini page
+    And I fill in "page_url" with "https://archiveofourown.org/works/692"
+    And I press "Refetch"
+  Then I should see "Time Was, Time Is (Book)" within ".title"
+    And "Reading" should be checked
+
 Scenario: refetch from ao3 when it used to be somewhere else
   Given skipping exists
     And I am on the page's page

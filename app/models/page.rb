@@ -391,8 +391,9 @@ class Page < ActiveRecord::Base
         parent.update!(url: passed_url)
         parent.fetch_ao3
         move_tags_up
+        move_soon_up
         set_meta
-        return parent
+        return parent.reload
       else
         errors.add(:base, "couldn't make me a chapter")
         return self

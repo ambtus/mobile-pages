@@ -13,4 +13,12 @@ module Soon
     return self
   end
 
+  def move_soon_up
+    return unless parent.present?
+    Rails.logger.debug "moving #{self.soon_label} to parent"
+    parent.update soon: self.soon
+    self.reset_soon
+    parent.move_soon_up
+  end
+
 end
