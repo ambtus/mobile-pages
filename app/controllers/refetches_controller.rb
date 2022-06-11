@@ -15,7 +15,7 @@ class RefetchesController < ApplicationController
       @notice = "Refetched all"
     elsif params[:url].present? && params[:url] != "URL"
       Rails.logger.debug "refetching with #{params[:url]} for #{@page.id}"
-      @page.refetch(params[:url])
+      @page = @page.refetch(params[:url])
       @notice = "Refetched"
     else
       Rails.logger.debug "refetching parts for #{@page.id}"
@@ -27,7 +27,7 @@ class RefetchesController < ApplicationController
       flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
     end
     flash[:notice] = @notice
-    @page = Page.find(params[:page_id]) # in case it changed during refetch
+    @page = Page.find(@page.id) # in case it changed during refetch
     @count = @page.parts.size > Page::LIMIT ? @page.parts.size - Page::LIMIT : 0
     render 'pages/show'
   end

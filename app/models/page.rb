@@ -392,8 +392,10 @@ class Page < ActiveRecord::Base
         parent.fetch_ao3
         move_tags_up
         set_meta
+        return parent
       else
         errors.add(:base, "couldn't make me a chapter")
+        return self
       end
     else
       update!(url: passed_url) if passed_url.present?
@@ -402,12 +404,15 @@ class Page < ActiveRecord::Base
         page = becomes!(ao3_type)
         page.fetch_ao3
         page.errors.messages.each{|e| self.errors.add(e.first, e.second.join_comma)}
+        return page
       elsif ff?
         errors.add(:base, "can't refetch from fanfiction.net")
+        return self
       else
         fetch_raw
         set_meta if cn?
         self.parent.set_wordcount(false) if self.parent
+        return self
       end
     end
   end

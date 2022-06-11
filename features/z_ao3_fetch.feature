@@ -157,11 +157,23 @@ Scenario: refetching a one-page Single into a Book
     And I follow "Refetch"
     And I press "Refetch"
   Then I should see "Refetched" within "#flash_notice"
-    And I should see "Where am I? (Chapter)" within ".title"
-    And I should NOT see "written for nanowrimo"
-    And I should NOT see "Using time-travel"
-    But I should see "Time Was, Time Is" within ".parent"
-    And I should see "Hogwarts" within ".part"
+    And I should see "Time Was, Time Is (Book)" within ".title"
+    And I should see "1. Where am I?"
+    And I should see "2. Hogwarts"
+    And I should NOT see "Using time-travel" within ".parts"
+    But I should see "Using time-travel" within ".notes"
+    And I should NOT see "written for nanowrimo" within ".parts"
+    But I should see "written for nanowrimo" within ".notes"
+    And I should see "giving up on nanowrimo" within ".parts"
+
+Scenario: refetching a one-page Single into a Book
+  Given "harry potter" is a "Fandom"
+    And "Sidra" is an "Author"
+    And Where am I existed and was read
+  When I am on the mini page
+    And I fill in "page_url" with "https://archiveofourown.org/works/692"
+    And I press "Refetch"
+  Then I should see "Time Was, Time Is (Book)" within ".title"
 
 Scenario: refetch from ao3 when it used to be somewhere else
   Given skipping exists
