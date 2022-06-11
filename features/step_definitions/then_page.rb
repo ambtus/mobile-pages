@@ -2,7 +2,7 @@
 
 Then('I should have {int} page(s)') do |int|
   Rails.logger.debug "currently have #{Page.count} pages"
-  assert Page.count == int
+  assert_equal int, Page.count
 end
 
 
@@ -17,14 +17,14 @@ Then('Leave Kudos or Comments on {string} should link to its comments') do |stri
   href = page.find(".kudos").find_link(string)['href']
   Rails.logger.debug "link: #{href}"
   itself = Page.find_by_title(string)
-  assert href == itself.url + "#comments"
+  assert_equal itself.url + "#comments", href
 end
 
 Then('Leave Kudos or Comments on {string} should link to the last chapter comments') do |string|
   href = page.find(".kudos").find_link(string)['href']
   Rails.logger.debug "link: #{href}"
   last_page = Page.find_by_title(string).parts.last
-  assert href == last_page.url + "#comments"
+  assert_equal last_page.url + "#comments", href
 end
 
 Then('Rate {string} should link to its rate page') do |string|
@@ -52,51 +52,51 @@ Then('the contents should NOT include {string}') do |string|
 end
 
 Then('my page named {string} should have {int} parts') do |string, int|
-  assert Page.find_by_title(string).parts.size == int
+  assert_equal int, Page.find_by_title(string).parts.size
 end
 
 Then("last read should be today") do
   Rails.logger.debug "comparing #{Page.first.last_read.to_date} with #{Date.current}"
-  assert Page.first.last_read.to_date == Date.current
+  assert_equal Date.current, Page.first.last_read.to_date
 end
 
 Then("the part titles should be stored as {string}") do |title_string|
-   assert Page.first.parts.map(&:title).join(" & ") == title_string
+   assert_equal title_string, Page.first.parts.map(&:title).join(" & ")
 end
 
 Then('the read after date should be {int} year(s) from now') do |int|
   diff = Page.first.read_after.year - Date.today.year
   Rails.logger.debug "comparing #{Page.first.read_after.year} with #{Date.today.year} (#{diff})"
-  assert diff == int
+  assert_equal int, diff
 end
 
 Then('the read after date should be 6 months from now') do
   diff = Page.first.read_after.month - Date.today.month
   Rails.logger.debug "comparing #{Page.first.read_after.year} with #{Date.today.year} (#{diff})"
-  assert diff.abs == 6
+  assert_equal 6, diff.abs
 end
 
 Then('the read after date should be {string}') do |string|
   Rails.logger.debug "comparing #{Page.first.read_after} with #{string}"
-  assert Page.first.read_after == string
+  assert_equal string, Page.first.read_after.to_date.to_s
 end
 
 Then('the read after date for {string} should be {string}') do |title, date|
   page = Page.find_by_title(title)
   Rails.logger.debug "comparing #{page.read_after.to_date} with #{date}"
-  assert page.read_after == date
+  assert_equal date, page.read_after.to_date.to_s
 end
 
 Then('the read after date for {string} should be today') do |title|
   page = Page.find_by_title(title)
   Rails.logger.debug "comparing #{page.read_after.to_date} with #{Date.current}"
-  assert page.read_after.to_date == Date.current
+  assert_equal Date.current, page.read_after.to_date
 end
 
 Then('my page named {string} should have url: {string}') do |title, url|
   page = Page.find_by_title(title)
   Rails.logger.debug "comparing #{page.url} with #{url}"
-  assert page.url == url
+  assert_equal url, page.url
 end
 
 Then('the notes should NOT include {string}') do |string|
@@ -131,3 +131,8 @@ Then('the contents should end with {string}') do |string|
   assert_match Regexp.new("#{string}</p>$"), Page.first.scrubbed_html
 end
 
+Then('{string} should be {string} soon') do |string, string2|
+  page = Page.find_by_title(string)
+  Rails.logger.debug "comparing #{page.soon} with #{string2}"
+  assert_equal string2, page.soon_label
+end

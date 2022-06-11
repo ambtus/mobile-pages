@@ -1,4 +1,4 @@
-Feature: decrease a page's soon value
+Feature: change a page's soon value
 
 Scenario: default by default
   Given a page exists
@@ -28,4 +28,28 @@ Scenario: change to soon after create
     And I press "Change"
     And I am on the soon page
   Then I should see "Looks good" within ".pages"
+
+Scenario: change to default when rating
+  Given a page exists
+    And I download its epub
+  When I rate it 5 stars
+    And I am on the page's page
+  Then "Default" should be checked
+
+Scenario: change to later during create
+  Given I am on the create page
+  When I fill in "page_title" with "Looks okay"
+    And I choose "Someday"
+    And I press "Store"
+    And I am on the page's page
+  Then "Someday" should be checked
+
+Scenario: change to eventually after create
+  Given I am on the create page
+  When I fill in "page_title" with "Looks bad"
+    And I press "Store"
+    And I choose "Eventually"
+    And I press "Change"
+  Then "Eventually" should be checked
+
 

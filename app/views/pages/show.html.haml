@@ -20,6 +20,11 @@
     Parent:
     = link_to @page.parent.title, page_path(@page.parent)
     (#{@page.parent.type})
+    [#{@page.parent.soon_label}]
+    -if @page.parent.parent
+      of
+      =link_to @page.parent.parent.title, page_path(@page.parent.parent)
+      [#{@page.parent.parent.soon_label}]
 -if @page.next_part
   .part
     Next:
