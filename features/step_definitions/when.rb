@@ -137,6 +137,6 @@ When('I rate it {int} stars') do |int|
    raise "no page with title #{title}" unless page
    visit page_path(page)
    click_link("Rate")
-   choose(int)
+   choose(int.to_s)
    click_button("Rate")
 end

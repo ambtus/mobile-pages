@@ -19,7 +19,7 @@ end
 group :test do
   gem 'capybara'
   gem 'database_cleaner'
-  gem 'cucumber-rails', :require => false
+  gem 'cucumber-rails', '~> 2.5.1', :require => false
   gem 'cucumber'
   gem 'launchy'    # So you can do Then show me the page
   gem 'test-unit'
