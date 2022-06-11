@@ -78,7 +78,7 @@ class PagesController < ApplicationController
       normalized = page[:url].normalize
       if normalized.blank? && page[:url].present?
         Rails.logger.debug page[:url]
-        @page = Page.where("title LIKE ?", "%" + page[:url] + "%").first
+        @page = Page.where("lower(title) LIKE ?", "%" + page[:url].downcase + "%").first
       elsif normalized.present?
         Rails.logger.debug normalized
         @page = Page.find_by_url(normalized)

@@ -29,6 +29,14 @@ Scenario: fill in url with title
   Then I should see "Page found" within "#flash_notice"
     And I should see "The Mysterious Affair at Styles (Single)" within ".title"
 
+Scenario: fill in url with lowercase title
+  Given a page exists with title: "The Mysterious Affair at Styles" AND url: "http://test.sidrasue.com/maas.html"
+  When I am on the filter page
+    And I fill in "page_url" with "affair"
+    And I press "Find"
+  Then I should see "Page found" within "#flash_notice"
+    And I should see "The Mysterious Affair at Styles (Single)" within ".title"
+
 Scenario: one part found
   Given a page exists with base_url: "http://test.sidrasue.com/*.html" AND url_substitutions: "cc cotw maas"
   When I am on the filter page
