@@ -140,3 +140,8 @@ When('I rate it {int} stars') do |int|
    choose(int.to_s)
    click_button("Rate")
 end
+
+When('I submit the form') do
+  click_button
+end
+
