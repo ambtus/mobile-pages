@@ -6,6 +6,7 @@
     .rebuild
       = submit_tag "Rebuild from Raw HTML"
       = submit_tag "Remove Downloads"
+      = submit_tag "Update from Parts" if @page.parts.any?
       = submit_tag "Rebuild Meta"
     .type
       = submit_tag "Make Single" if @page.parent

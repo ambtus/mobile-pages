@@ -195,6 +195,9 @@ class PagesController < ApplicationController
       when "Decrease Type"
         @page.decrease_type
         flash[:notice] = "Type decreased"
+      when "Update from Parts"
+        @page.update_from_parts
+        flash[:notice] = "updated"
       when "Rebuild from Raw HTML"
         @page.update scrubbed_notes: false
         @page.rebuild_clean_from_raw.rebuild_edited_from_clean.rebuild_meta

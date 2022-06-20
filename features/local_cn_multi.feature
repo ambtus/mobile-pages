@@ -61,3 +61,15 @@ Scenario: manipulating chapter/single to get the title you want without losing n
   Then I should see "Genesis (Chapter)"
     And I should see "For as long as Alec could remember, he had been fascinated by wings."
     And I should see "Canon child neglect, canon violence"
+
+Scenario: check before update from parts
+  Given Shadowwings exists
+  When I am on the page's page
+  Then I should see "151 words"
+
+Scenario: check before update from parts
+  Given Shadowwings exists
+  When I am on the page's page
+    And I press "Update from Parts"
+  Then I should see "29,655 words"
+
