@@ -79,3 +79,10 @@ Scenario: Unreality warning "None at present"
   When I am on the page's page
   Then I should NOT see "at present"
     But I should see "Canon divergent, Magical realism"
+
+Scenario: html in fandom
+  Given "Shadowhunters" is a "Fandom"
+    And Shadowwings exists
+  When I am on the page's page
+  Then I should see "Shadowhunters" within ".fandoms"
+    And I should NOT see "Shadowhunters" within ".notes"

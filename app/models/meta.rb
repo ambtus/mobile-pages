@@ -96,11 +96,11 @@ module Meta
         links = doc.css("#pre_story_links a")[1].text rescue nil
         [hash, links].pulverize
       elsif cn?
-        first_try = cn_try("Fandom").split(", ")
+        first_try = cn_try("Fandom")
         if first_try.blank? && parts.any?
           (parts.first.inferred_fandoms + parts.last.inferred_fandoms).uniq
         else
-          first_try
+          Scrub.sanitize_and_strip(first_try).split(", ")
         end
       else
         []
