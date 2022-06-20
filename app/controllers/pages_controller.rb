@@ -189,6 +189,12 @@ class PagesController < ApplicationController
       when "Audiobook created"
         @page.make_audio
         flash[:notice] = "Tagged as audio book and marked as read today"
+      when "Increase Type"
+        @page.increase_type
+        flash[:notice] = "Type increased"
+      when "Decrease Type"
+        @page.decrease_type
+        flash[:notice] = "Type decreased"
       when "Rebuild from Raw HTML"
         @page.update scrubbed_notes: false
         @page.rebuild_clean_from_raw.rebuild_edited_from_clean.rebuild_meta

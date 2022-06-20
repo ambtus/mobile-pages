@@ -434,6 +434,38 @@ class Page < ActiveRecord::Base
     [current, new].sort_by {|x| %w{Collection Series Book Single Chapter}.index(x)}.first.constantize
   end
 
+  def increase_type
+    current = self.type
+    new = case type
+          when nil
+            "Chapter"
+          when "Chapter"
+            "Single"
+          when "Single"
+            "Book"
+          when "Book"
+            "Series"
+          else
+            "Collection"
+          end
+    update type: new
+  end
+
+  def decrease_type
+    current = self.type
+    new = case type
+          when "Collection"
+            "Series"
+          when "Series"
+            "Book"
+          when "Book"
+            "Single"
+          else
+            "Chapter"
+          end
+    update type: new
+  end
+
   def add_parent(title)
     parent=Page.find_by_title(title)
     Rails.logger.debug "parent #{title} found? #{parent.is_a?(Page)}"

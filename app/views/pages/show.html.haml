@@ -6,9 +6,12 @@
     .rebuild
       = submit_tag "Rebuild from Raw HTML"
       = submit_tag "Remove Downloads"
+      = submit_tag "Rebuild Meta"
+    .type
       = submit_tag "Make Single" if @page.parent
       = submit_tag "Uncollect" unless @page.parts.blank?
-      = submit_tag "Rebuild Meta"
+      = submit_tag "Increase Type" unless @page.type == "Collection"
+      = submit_tag "Decrease Type" unless @page.type == "Chapter"
     .tags
       = submit_tag "Remove Duplicate Tags" unless @page.parts.blank?
       = submit_tag "Move Tags to Parent" if @page.tags.any? unless @page.parent.blank?
