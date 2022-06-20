@@ -45,3 +45,19 @@ Given('Almost Paradise exists') do
 
   book.rebuild_meta.set_wordcount(false)
 end
+
+Given('Shadowwings exists') do
+  series = Series.create!(title: "temp")
+  series.update!(url: "http://clairesnook.com/fiction/shadowwings/")
+  series.set_raw_from("sw")
+
+  work1 = Single.create!(title: "temp", parent_id: series.id, position: 1)
+  work1.update!(url: "http://clairesnook.com/fiction/shadowwings-genesis/")
+  work1.set_raw_from("swg")
+
+  work2 = Single.create!(title: "temp", parent_id: series.id, position: 2)
+  work2.update!(url: "http://clairesnook.com/evil-author-day/revelations-ead-2021/")
+  work2.set_raw_from("swr")
+
+  series.rebuild_meta
+end

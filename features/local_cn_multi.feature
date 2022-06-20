@@ -51,3 +51,13 @@ Scenario: book of chapters with long notes
     And I should see "themed fanfiction stories."
     And I should see "Hate Crimes/Hate Speech, Discussion of Evil Plans involving Incest"
     But I should NOT see "Author Notes"
+
+Scenario: manipulating chapter/single to get the title you want without losing notes
+  Given Shadowwings exists
+  When I am on the page's page
+    And I follow "Shadowwings"
+    And I press "Decrease Type"
+    And I press "Rebuild Meta"
+  Then I should see "Genesis (Chapter)"
+    And I should see "For as long as Alec could remember, he had been fascinated by wings."
+    And I should see "Canon child neglect, canon violence"

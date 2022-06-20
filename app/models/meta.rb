@@ -314,7 +314,11 @@ module Meta
   def head_notes
     case type
     when "Chapter"
-      [chapter_summary, chapter_notes]
+      if cn?
+        [add_fandoms(inferred_fandoms), inferred_relationships.to_p, work_summary, inferred_tags.to_p, work_notes]
+      else
+        [chapter_summary, chapter_notes]
+      end
     when "Single"
       if chapter_as_single?
         [add_authors(inferred_authors), add_fandoms(inferred_fandoms), chapter_summary, chapter_notes]
