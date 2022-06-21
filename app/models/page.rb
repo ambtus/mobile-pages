@@ -386,16 +386,16 @@ class Page < ActiveRecord::Base
 
   def refetch(passed_url)
     if ao3? && type == "Single" && !url.match(/chapters/)
-      parent = Book.create!(title: "temp")
-      if self.make_me_a_chapter(parent)
-        parent.update!(url: passed_url)
-        parent.fetch_ao3
+      if self.make_me_a_chapter
+        parent = Book.create! url: passed_url
+        update! parent_id: parent.id
         move_tags_up
         move_soon_up
         set_meta
         return parent.reload
       else
-        errors.add(:base, "couldn't make me a chapter")
+        update!(url: passed_url) if passed_url.present?
+        fetch_ao3
         return self
       end
     else

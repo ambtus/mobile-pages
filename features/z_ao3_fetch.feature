@@ -149,7 +149,7 @@ Scenario: creating a series when I already have its books
     And I should see "A Misfit Working Holiday In New York" within "#position_2"
     And I should have 7 pages
 
-Scenario: refetching a one-page Single into a Book
+Scenario: refetching a one-page Single into a Book from page
   Given "harry potter" is a "Fandom"
     And "Sidra" is an "Author"
     And Where am I existed and was read
@@ -166,7 +166,7 @@ Scenario: refetching a one-page Single into a Book
     But I should see "written for nanowrimo" within ".notes"
     And I should see "giving up on nanowrimo" within ".parts"
 
-Scenario: refetching a one-page Single into a Book
+Scenario: refetching a one-page Single into a Book from new
   Given "harry potter" is a "Fandom"
     And "Sidra" is an "Author"
     And Where am I existed and was read
@@ -174,6 +174,14 @@ Scenario: refetching a one-page Single into a Book
     And I fill in "page_url" with "https://archiveofourown.org/works/692"
     And I press "Refetch"
   Then I should see "Time Was, Time Is (Book)" within ".title"
+
+Scenario: refetch a single shouldn't make it a chapter
+  Given I Drive Myself Crazy exists
+  When I am on the page's page
+    And I follow "Refetch"
+    And I press "Refetch"
+  Then I should see "I Drive Myself Crazy (Single)"
+    And I should have 1 page
 
 Scenario: refetching reading makes parent reading
   Given "harry potter" is a "Fandom"
@@ -204,3 +212,4 @@ Scenario: fetch a work from a collection
   When I fill in "page_url" with "https://archiveofourown.org/collections/Heliocentrism/works/21684820"
     And I press "Store"
   Then my page named "A Conversation Overheard by a Captive Faking Unconsciousness" should have url: "https://archiveofourown.org/works/21684820"
+
