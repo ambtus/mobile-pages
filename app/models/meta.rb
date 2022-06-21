@@ -486,7 +486,7 @@ module Meta
 
   def cn_try(string)
     return "" if doc.at("strong").blank?
-    all = doc.at("strong").parent.inner_html.squish
+    all = doc.at("strong").parent.inner_html.squish.gsub("<strong><a ", "<a ").gsub("</a></strong>", "</a>")
     metas = all.split("<strong>").pulverize
     found = find_me(metas, string)
     if found.blank?
@@ -503,7 +503,7 @@ module Meta
       end
     end
     if found
-      match = found.split(":").second.squish rescue ""
+      match = found.split(":", 2).second.squish rescue ""
       if string == "Warnings"
         return "" if match.match("None")
       end
@@ -516,7 +516,8 @@ module Meta
   def find_me(metas, string)
     found = metas.find {|m| m.match(string)} rescue nil
     if found
-       if found.scan(/:/).count > 1
+       clean_found = Scrub.sanitize_and_strip(found)
+       if clean_found.scan(/:/).count > 1
          parts = found.split("<br>")
          found = parts.find {|p| p.match(string)}
        end

@@ -86,3 +86,8 @@ Scenario: html in fandom
   When I am on the page's page
   Then I should see "Shadowhunters" within ".fandoms"
     And I should NOT see "Shadowhunters" within ".notes"
+
+Scenario: html in summary
+  Given Shadowwings exists
+  When I am on the page's page
+  Then I should see "Thank you to Desertpoet and Saydria Wolfe for making sure this made sense."
