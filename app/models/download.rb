@@ -23,8 +23,10 @@ module Download
 
   def short_meta_strings; [download_unread_string, *tags.not_info.by_type.by_name.map(&:name)].reject(&:blank?); end
 
+  def parent_title_prefix; (parent && parent.parent) ? "#{parent.position}." : ""; end
+
   def download_suffix; short_meta_strings.empty? ? "" : " (#{short_meta_strings.join_comma})"; end
-  def download_part_title; title_prefix + title + download_suffix; end
+  def download_part_title; parent_title_prefix + title_prefix + title + download_suffix; end
 
   def remove_outdated_downloads
     FileUtils.rm_rf(self.download_dir) if self.id

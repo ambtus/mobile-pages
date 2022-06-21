@@ -36,7 +36,7 @@ Scenario: end notes link to next chapter of same book
 Scenario: end notes link to next book of same series
   Given a series exists
   When I read "Book1" online
-  Then Next should link to the content for "Book2"
+  Then Next should link to the content for "Another Book"
 
 Scenario: end notes link to first chapter of next book in same series
   Given a series exists
@@ -62,4 +62,4 @@ Scenario: no kudos link if not ao3
   Given a series exists
   When I read "Series" online
   Then I should NOT see "Leave Kudos or Comments on: Book1"
-    And I should NOT see "Leave Kudos or Comments on: Book2"
+    And I should NOT see "Leave Kudos or Comments on: Another Book"

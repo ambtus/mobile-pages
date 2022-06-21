@@ -93,3 +93,11 @@ Scenario: part epubs should have title "PartTitle of ParentTitle of GrandparentT
     And the download epub title for "Book1" should be "Book1 of Series"
     And the download epub title for "Prologue" should be "Prologue of Book1 of Series"
     And the download epub title for "Extras" should be "Extras of Series"
+
+Scenario: subpart numbers
+  Given a series exists
+  When I read "Series" online
+  Then I should see "1.1. Prologue"
+    And I should see "1.2. Cliffhanger"
+    And I should see "2.1. Season2"
+    And I should see "2.2. Epilogue"
