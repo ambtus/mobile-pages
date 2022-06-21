@@ -136,3 +136,9 @@ Then('{string} should be {string} soon') do |string, string2|
   Rails.logger.debug "comparing #{page.soon} with #{string2}"
   assert_equal string2, page.soon_label
 end
+
+Then('{string} should be a {string}') do |string, string2|
+  page = Page.find_by_title(string)
+  Rails.logger.debug "comparing #{page.type} with #{string2}"
+  assert_equal string2, page.type
+end

@@ -95,6 +95,21 @@ Given /^Counting Drabbles exists$/ do
   series.rebuild_meta
 end
 
+Given /^Counting Drabbles exists without a URL$/ do
+  series = Series.create!(title: "Counting Drabbles")
+
+  work1 = Single.create!(title: "temp", parent_id: series.id, position: 1)
+  work1.update!(url: "https://archiveofourown.org/works/688")
+  work1.set_raw_from("skipping")
+
+  work2 = Single.create!(title: "temp", parent_id: series.id, position: 2)
+  work2.update!(url: "https://archiveofourown.org/works/689")
+  work2.set_raw_from("flower")
+
+  series.rebuild_meta
+end
+
+
 Given /^Counting Drabbles partially exists$/ do
   series = Series.create!(title: "Counting Drabbles")
   series.update!(url: "https://archiveofourown.org/series/46")

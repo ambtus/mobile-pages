@@ -134,6 +134,18 @@ Scenario: storing a series when I already have one of its singles
     And I should see "by Sidra; Harry Potter/Unknown;" within "#position_1"
     And I should see "The Flower" within "#position_2"
     And I should have 3 pages
+    And "Skipping Stones" should be a "Single"
+
+Scenario: adding a url to a series
+  Given "harry potter" is a "Fandom"
+    And Counting Drabbles exists without a URL
+  When I am on the page's page
+    And I follow "Refetch"
+    And I fill in "url" with "https://archiveofourown.org/series/46"
+    And I press "Refetch"
+  Then I should have 3 pages
+    And "Skipping Stones" should be a "Single"
+    And "Counting Drabbles" should be a "Series"
 
 Scenario: creating a series when I already have its books
   Given Misfits existed
