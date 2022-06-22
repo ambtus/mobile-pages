@@ -61,11 +61,8 @@ module Scrub
 
   def self.sanitize_and_strip(html); strip_html(sanitize_html(html)); end
 
-  # sanitize
-  def self.sanitize_html(html)
-    return html unless html.is_a? String
-    # remove most formatting
-    html = Sanitize.clean(
+  def self.remove_extra_formatting(html)
+    Sanitize.clean(
       html,
       :elements => [ 'a', 'b', 'big', 'blockquote', 'br', 'center',
                      'div', 'dt', 'em', 'i', 'h1', 'h2', 'h3', 'h4',
@@ -73,6 +70,17 @@ module Scrub
                      'strike', 'strong', 'sub', 'sup', 'u'],
       :attributes => { 'a' => ['href'],
                        'img' => ['align', 'alt', 'height', 'src', 'title', 'width'] })
+  end
+
+  # sanitize
+  def self.sanitize_html(html)
+    return html unless html.is_a? String
+    # remove most formatting
+    html = Scrub.remove_extra_formatting(html)
+    # remove empty divs
+    html.gsub!(/<div>\s*<\/div>/, "")
+    html = Scrub.remove_surrounding(html)
+
     # remove anchor links
     html.gsub!(/<a><\/a>/, "")
     # alright drives me batty
@@ -84,8 +92,6 @@ module Scrub
     # remove back_to_back bold and italic
     html.gsub!(/<\/b>([_., -]*)<b>/) {|s| $1}
     html.gsub!(/<\/i>([_., -]*)<i>/) {|s| $1}
-    # remove empty divs
-    html.gsub!(/<div>\s*<\/div>/, "")
 
     # extra breaks inside paragraphs
     html.gsub!(/<p><br ?\/?>/, "<p>")
@@ -94,32 +100,36 @@ module Scrub
     html.gsub!(/<div><br ?\/?>/, "<div>")
     html.gsub!(/<br ?\/?><\/div>/, "</div>")
     # more than two breaks are probably a section
-    html.gsub!(/(<br ?\/?>){3,}/, '<hr />')
+    html.gsub!(/(<br ?\/?>){3,}/, '<hr>')
     # when sections are taken care of, multiple breaks are a paragraph
     html.gsub!(/(<br ?\/?>?){2,}/, '<p>')
     # multiple empty paragraphs are probably a section
-    html.gsub!(/(<p>\s*<\/p>){2,}/, '<hr />')
+    html.gsub!(/(<p>\s*<\/p>){2,}/, '<hr>')
     # any left-over empty paragraphs are probably a section
-    html.gsub!(/<p>\s*<\/p>/, '<hr />')
+    html.gsub!(/<p>\s*<\/p>/, '<hr>')
     # common section designation
-    html.gsub!(/_{5,}/, '<hr />')
+    html.gsub!(/_{5,}/, '<hr>')
     # less common section designation
-    html.gsub!(/~{10,}/, '<hr />')
-    html.gsub!(/*{10,}/, '<hr />')
+    html.gsub!(/~{10,}/, '<hr>')
+    html.gsub!(/\*{10,}/, '<hr>')
     # remove stray paragraphs around sections
-    html.gsub!(/<p><hr \/>/, '<hr />')
-    html.gsub!(/<hr \/><\/p>/, '<hr />')
+    html.gsub!(/<p>\s*<hr>/, '<hr>')
+    html.gsub!(/<hr>\s*<\/p>/, '<hr>')
+    # remove stray divs around sections
+    html.gsub!(/<div>\s*<hr>/, '<hr>')
+    html.gsub!(/<hr>\s*<\/div>/, '<hr>')
 
     # condense multiple sections
-    html.gsub!(/(<hr \/>){2,}/, '<hr />')
+    html.gsub!(/(\s*<hr>\s*){2,}/, '<hr>')
     # remove beginning section
-    html.gsub!(/^<hr \/>/, '')
+    html.gsub!(/^<hr>/, '')
     # remove end section
-    html.gsub!(/<hr \/>$/, '')
-    # style sections
-    html.gsub!(/<hr \/>/, '<hr width="80%"/>')
+    html.gsub!(/<hr>$/, '')
 
-    html
+    # style sections
+    html.gsub!(/<hr>/, '<hr width="80%"/>')
+
+    Scrub.remove_surrounding(html)
   end
 
   def self.remove_surrounding(html)

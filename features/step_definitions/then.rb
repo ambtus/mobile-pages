@@ -18,11 +18,11 @@ Then("I should see {string} before {string}") do |first, second|
 end
 
 Then('I should see a horizontal rule') do
-  assert page.html.include?('<hr>')
+  assert page.html.include?('<hr')
 end
 
 Then('I should see two horizontal rules') do
-  assert Regexp.new(/<hr>.*<hr>/).match(page.html.squish)
+  assert Regexp.new(/<hr.*<hr/).match(page.html.squish)
 end
 
 Then('I should see three horizontal rules') do
@@ -30,15 +30,15 @@ Then('I should see three horizontal rules') do
 end
 
 Then('I should NOT see a horizontal rule') do
-  assert !page.html.include?('<hr>')
+  assert !page.html.include?('<hr')
 end
 
 Then('I should NOT see two horizontal rules') do
-  assert !Regexp.new(/<hr>.*<hr>/).match(page.html.squish)
+  assert !Regexp.new(/<hr.*<hr/).match(page.html.squish)
 end
 
 Then('I should NOT see three horizontal rules') do
-  assert !Regexp.new(/<hr>.*<hr>.*<hr>/).match(page.html.squish)
+  assert !Regexp.new(/<hr.*<hr.*<hr/).match(page.html.squish)
 end
 
 Then("I should see {string} within {string}") do |text, parent|

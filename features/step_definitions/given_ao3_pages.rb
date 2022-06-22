@@ -277,3 +277,9 @@ Given('salt water exists') do
   page.update!(url: "https://archiveofourown.org/works/1287505/chapters/6901151")
   page.set_raw_from("salt")
 end
+
+Given('paint exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/3410369")
+  page.set_raw_from("paint")
+end
