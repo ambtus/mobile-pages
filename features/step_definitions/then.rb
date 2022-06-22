@@ -26,7 +26,7 @@ Then('I should see two horizontal rules') do
 end
 
 Then('I should see three horizontal rules') do
-  assert Regexp.new(/<hr>.*<hr>.*<hr>/).match(page.html.squish)
+  assert Regexp.new(/<hr.*<hr.*<hr/).match(page.html.squish)
 end
 
 Then('I should NOT see a horizontal rule') do

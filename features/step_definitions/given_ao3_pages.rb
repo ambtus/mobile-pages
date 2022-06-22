@@ -265,3 +265,15 @@ Given('New Day Dawning exists') do
   chapter1.set_raw_from("end_notes")
   page.set_meta
 end
+
+Given('bananas exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/1704596/chapters/3628919")
+  page.set_raw_from("bananas")
+end
+
+Given('salt water exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/1287505/chapters/6901151")
+  page.set_raw_from("salt")
+end

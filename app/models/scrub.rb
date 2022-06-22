@@ -79,6 +79,14 @@ module Scrub
     html.gsub!(/([Aa])lright/) {|s| $1 + "ll right"}
     # charka => chakra
     html.gsub!(/([Cc])harka/) {|s| $1 + "hakra"}
+    # chocked => choked
+    html.gsub!(/([Cc])hocked/) {|s| $1 + "hocked"}
+    # remove back_to_back bold and italic
+    html.gsub!(/<\/b>([_., -]*)<b>/) {|s| $1}
+    html.gsub!(/<\/i>([_., -]*)<i>/) {|s| $1}
+    # remove empty divs
+    html.gsub!(/<div>\s*<\/div>/, "")
+
     # extra breaks inside paragraphs
     html.gsub!(/<p><br ?\/?>/, "<p>")
     html.gsub!(/<br ?\/?><\/p>/, "</p>")
@@ -90,25 +98,27 @@ module Scrub
     # when sections are taken care of, multiple breaks are a paragraph
     html.gsub!(/(<br ?\/?>?){2,}/, '<p>')
     # multiple empty paragraphs are probably a section
-    html.gsub!(/(<p><\/p>){2,}/, '<hr />')
-    # remove empty paragraphs
-    html.gsub!(/<p>\s*<\/p>/, "")
-    # remove empty divs
-    html.gsub!(/<div>\s*<\/div>/, "")
+    html.gsub!(/(<p>\s*<\/p>){2,}/, '<hr />')
+    # any left-over empty paragraphs are probably a section
+    html.gsub!(/<p>\s*<\/p>/, '<hr />')
     # common section designation
     html.gsub!(/_{5,}/, '<hr />')
     # less common section designation
     html.gsub!(/~{10,}/, '<hr />')
+    html.gsub!(/*{10,}/, '<hr />')
     # remove stray paragraphs around sections
     html.gsub!(/<p><hr \/>/, '<hr />')
     html.gsub!(/<hr \/><\/p>/, '<hr />')
+
     # condense multiple sections
     html.gsub!(/(<hr \/>){2,}/, '<hr />')
+    # remove beginning section
+    html.gsub!(/^<hr \/>/, '')
+    # remove end section
+    html.gsub!(/<hr \/>$/, '')
     # style sections
     html.gsub!(/<hr \/>/, '<hr width="80%"/>')
-    # remove back_to_back bold and italic
-    html.gsub!(/<\/b>([_., -]*)<b>/) {|s| $1}
-    html.gsub!(/<\/i>([_., -]*)<i>/) {|s| $1}
+
     html
   end
 

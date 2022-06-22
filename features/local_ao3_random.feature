@@ -66,3 +66,16 @@ Scenario: do not duplicate fandom and author in notes of works in series
     But I should NOT see "by Sidra" within "#position_1"
     And I should NOT see "Harry Potter; Harry Potter" within "#position_1"
     And I should NOT see "by" within "#position_1"
+
+Scenario: add hr between sections
+  Given "Etharei" is an "Author"
+    And bananas exists
+  When I read it online
+  Then I should see three horizontal rules
+
+Scenario: add hr between sections
+  Given "ShanaStoryteller" is an "Author"
+    And "Teen Wolf" is a "Fandom"
+    And salt water exists
+  When I read it online
+  Then I should see three horizontal rules

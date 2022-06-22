@@ -77,7 +77,7 @@ module Websites
               body.children
             end
     return html if result.blank?
-    result.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
+    Scrub.remove_surrounding(result.to_xhtml)
   end
 
 end
