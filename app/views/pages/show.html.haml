@@ -39,7 +39,6 @@
     =h @page.title
     (#{@page.type})
   .views
-    = link_to "Rate", rate_path(@page)
     = link_to "ePub", download_url_for_page(@page, ".epub")
     = link_to "HTML", download_url_for_page(@page, ".html")
     = link_to "Text", download_url_for_page(@page, ".read") if @page.parts.blank?
@@ -53,6 +52,7 @@
         = link_to "Edit Raw HTML", edit_html_path(@page)
       = link_to "Scrub", scrub_path(@page)
     .meta
+      = link_to "Rate", rate_path(@page)
       = link_to "Title", edit_part_path(@page, add: "title")
       = link_to "My Notes", edit_my_note_path(@page)
       = link_to "Notes", edit_note_path(@page)

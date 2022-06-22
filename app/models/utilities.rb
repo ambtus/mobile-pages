@@ -15,6 +15,7 @@ module Utilities
     Tag.types.each {|tt| tag_types[tt] = hash.delete(tt.downcase.pluralize.to_sym) }
     inferred_fandoms = hash.delete(:inferred_fandoms)
     page = Page.create!(hash)
+    page.remove_outdated_downloads
     tag_types.compact.each {|key, value| page.send("add_tags_from_string", value, key)}
     if page.parts.blank?
       page.update last_read: hash[:last_read], stars: hash[:stars] || 10

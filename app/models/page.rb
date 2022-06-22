@@ -707,6 +707,7 @@ class Page < ActiveRecord::Base
   end
 
   def raw_html_file_name
+    FileUtils.mkdir_p(mydirectory) # make sure directory exists
     self.mydirectory + "raw.html"
   end
 
@@ -854,7 +855,7 @@ private
     # Rails.logger.debug "initial fetch for #{self.inspect}"
     Rails.logger.debug "initial fetch for #{self.title} (id: #{self.id})"
     FileUtils.rm_rf(mydirectory) # make sure directory is empty for testing
-    FileUtils.mkdir_p(download_dir) # make sure directory exists
+    FileUtils.mkdir_p(mydirectory) # make sure directory exists
 
     if self.url.present?
       if self.ao3? || self.cn?

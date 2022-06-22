@@ -6,10 +6,10 @@ module Download
     end;1
   end
 
-  DOWNLOADS = "downloads/"
-  def download_dir; mydirectory + DOWNLOADS; end
-  def download_url(format)
-    "#{mypath}#{DOWNLOADS}/#{download_title}#{format}".gsub(' ', '%20')
+  def download_dir; "/tmp/downloads/"; end
+  def download_url(format); "/downloads/#{id}#{format}"; end
+  def download_basename
+    "#{self.download_dir}#{self.id}"
   end
 
   def download_unread_string
@@ -29,20 +29,13 @@ module Download
   def download_part_title; parent_title_prefix + title_prefix + title + download_suffix; end
 
   def remove_outdated_downloads
-    FileUtils.rm_rf(self.download_dir) if self.id
-    FileUtils.mkdir_p(self.download_dir) if self.id
+    if self.id
+      files = Dir.glob("#{download_dir}#{id}.*")
+      Rails.logger.debug "Removing #{files}"
+      FileUtils.rm files
+    end
     self.parent.remove_outdated_downloads if self.parent
     return self
-  end
-
-  # needs to be filesystem safe and not overly long
-  def download_title
-    string = self.title.encode('ASCII', :invalid => :replace, :undef => :replace, :replace => '')
-    string = string.gsub(/[^[\w _-]]+/, '')
-    string.gsub(/ +/, " ").strip.gsub(/^(.{30}[\w.]*).*/) {$1}
-  end
-  def download_basename
-    "#{self.download_dir}#{self.download_title}"
   end
 
   ## --authors
