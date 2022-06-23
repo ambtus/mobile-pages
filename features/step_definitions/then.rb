@@ -76,12 +76,12 @@ end
 ## I should have ##
 
 Then("I should have no authors") do
-  assert Author.count == 0
+  assert_equal 0, Author.count
 end
 
 Then('I should have {int} tag(s)') do |int|
   Rails.logger.debug "curent tags: #{Tag.all.map(&:name)}"
-  assert Tag.count==int
+  assert_equal int, Tag.count
 end
 
 ## It should
@@ -94,7 +94,7 @@ end
 Then("{string} should link to {string}") do |link_text, link_url|
   actual = page.find_link(link_text)['href']
   Rails.logger.debug "link: #{actual} should be #{link_url}"
-  assert actual == link_url
+  assert_equal link_url, actual
 end
 
 Then("the {string} field should contain {string}") do |field, text|
@@ -145,3 +145,6 @@ Then("nothing should be checked") do
   assert page.has_no_checked_field?
 end
 
+Then('I should be on the {string} page') do |string|
+  assert_equal "/#{string}", page.current_path
+end

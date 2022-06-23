@@ -135,6 +135,26 @@ class PagesController < ApplicationController
       end
       return
     end
+    if params[:Find]
+      normalized = params[:page][:url].normalize
+      if normalized.blank? && params[:page][:url].present?
+        Rails.logger.debug params[:page][:url]
+        @page = Page.where("lower(title) LIKE ?", "%" + params[:page][:url].downcase + "%").first
+      elsif normalized.present?
+        Rails.logger.debug normalized
+        @page = Page.find_by_url(normalized)
+      end
+      if @page
+        flash[:notice] = "Page found"
+        @count = 0
+        redirect_to page_path(@page) and return
+      else
+        flash[:alert] = "Page not found."
+        @page = Page.new(params[:page].permit!)
+        render :create and return
+        return
+      end
+    end
     consolidate_tag_ids
     @page = Page.new(params[:page].permit!)
     if @page.save
