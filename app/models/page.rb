@@ -14,7 +14,7 @@ class Page < ActiveRecord::Base
   scope :not_hidden, -> { where(hidden: false) }
   scope :hidden, -> { where(hidden: true) }
 
-  MODULO = 300  # files in a single directory
+  MODULO = 1000  # files in a single directory
   LIMIT = 5 # number of parts to show at a time
 
   def normalize_url
