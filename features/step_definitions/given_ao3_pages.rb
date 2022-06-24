@@ -283,3 +283,27 @@ Given('paint exists') do
   page.update!(url: "https://archiveofourown.org/works/3410369")
   page.set_raw_from("paint")
 end
+
+Given('adapting exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/6537379")
+  page.set_raw_from("adapting")
+end
+
+Given('fidelitas exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/23881399")
+  page.set_raw_from("fidelitas")
+end
+
+Given('fire exists') do
+  book = Book.create!(title: "temp")
+  book.update!(url: "https://archiveofourown.org/works/26249209")
+  chapter1 = Chapter.create!(title: "temp", parent_id: book.id, position: 1)
+  chapter1.update!(url: "https://archiveofourown.org/works/26249209/chapters/63892810")
+  chapter1.set_raw_from("fire1")
+  chapter2 = Chapter.create!(title: "temp", parent_id: book.id, position: 2)
+  chapter2.update!(url: "https://archiveofourown.org/works/26249209/chapters/63897259")
+  chapter2.set_raw_from("fire2")
+  book.set_meta
+end

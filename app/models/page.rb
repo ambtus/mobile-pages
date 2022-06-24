@@ -7,6 +7,7 @@ class Page < ActiveRecord::Base
   include Utilities
   include Scrubbing
   include Soon
+  include Split
 
   scope :reading, -> { where(soon: 0).order('updated_at desc') }
   scope :soonest, -> { where(soon: 1) }
@@ -760,6 +761,14 @@ class Page < ActiveRecord::Base
     remove_outdated_edits
     content = Scrub.remove_surrounding(content) if nodes(content).size == 1
     File.open(self.scrubbed_html_file_name, 'w:utf-8') { |f| f.write(content) }
+  end
+
+  def clean_html
+    if parts.blank?
+      scrubbed_html
+    else
+      File.open(self.scrubbed_html_file_name, 'r:utf-8') { |f| f.read } rescue ""
+    end
   end
 
   def scrubbed_html

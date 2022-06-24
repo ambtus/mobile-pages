@@ -2,7 +2,7 @@ module Scrubbing
 
   ### scrubbing content (removing top and bottom nodes) is done on clean text
 
-  def nodes(content = scrubbed_html)
+  def nodes(content = clean_html)
     Nokogiri::HTML(content).xpath('//body').children
   end
 
@@ -14,6 +14,10 @@ module Scrubbing
     nodeset = nodes[-20, 20] || nodes
     nodeset.map {|n| n.to_s.chomp }
   end
+
+  def nodes_above(number); nodes[0,number]; end
+
+  def nodes_below(number); nodes[number ..]; end
 
   def remove_nodes(top, bottom)
     nodeset = nodes

@@ -1,0 +1,17 @@
+.title= @page.title
+.info
+  click on the node which will
+  %em title
+  the new chapter
+.form
+  = form_with url: splits_path do |f|
+    = hidden_field_tag(:id, @page.id)
+    = @page.nodes.size.to_s + " nodes"
+    - @page.nodes.each_with_index do |node,index|
+      .node
+        = radio_button_tag "split_node", index, false
+        = label_tag "split_node_#{index}", node
+      -if index.modulo(10) == 9
+        = f.submit "Children"
+        = f.submit "Sibling"
+%a{:name => "end"}

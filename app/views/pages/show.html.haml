@@ -13,6 +13,8 @@
       = submit_tag "Uncollect" unless @page.parts.blank?
       = submit_tag "Increase Type" unless @page.type == "Collection"
       = submit_tag "Decrease Type" unless @page.type == "Chapter"
+      = submit_tag "Increase Position" if @page.position
+      = submit_tag "Decrease Position" if @page.position
     .tags
       = submit_tag "Remove Duplicate Tags" unless @page.parts.blank?
       = submit_tag "Move Tags to Parent" if @page.tags.any? unless @page.parent.blank?
@@ -51,6 +53,7 @@
         = link_to "Edit Scrubbed HTML", edit_html_path(@page, format: "scrubbed")
         = link_to "Edit Raw HTML", edit_html_path(@page)
       = link_to "Scrub", scrub_path(@page)
+      = link_to "Split", split_path(@page) if @page.has_content?
     .meta
       = link_to "Rate", rate_path(@page)
       = link_to "Title", edit_part_path(@page, add: "title")

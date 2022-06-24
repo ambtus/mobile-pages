@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   resources :rates, :only => ['show', 'create', 'edit']
   resources :refetches, :only => ['show', 'create']
   resources :scrubs, :only => ['show']
+  resources :splits, :only => ['show', 'create']
 
   get '/downloads/:id.:format' => 'downloads#show', :as => 'download'
 

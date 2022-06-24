@@ -215,6 +215,12 @@ class PagesController < ApplicationController
       when "Decrease Type"
         @page.decrease_type
         flash[:notice] = "Type decreased"
+      when "Increase Position"
+        @page.update position: @page.position + 1
+        flash[:notice] = "Position increased"
+      when "Decrease Position"
+        @page.update position: @page.position - 1
+        flash[:notice] = "Position decreased"
       when "Update from Parts"
         @page.update_from_parts
         flash[:notice] = "updated"
