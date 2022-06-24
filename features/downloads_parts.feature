@@ -44,14 +44,14 @@ Scenario: download part titles
   When I am on the page's page
     And I follow "Part 1"
     And I follow "Rate"
-    And I choose "5"
+    And I click on "5"
     And I press "Rate"
     And I select "rating tag" from "page_pro_ids_"
     And I select "info tag" from "page_info_ids_"
     And I press "Update Tags"
     And I follow "Part 2"
     And I follow "Rate"
-    And I choose "Yes" within ".stars"
+    And I click on "Yes" within ".stars"
     And I press "Rate"
     And I read it online
   Then I should see "Part 1 (rating tag)" within "h2"

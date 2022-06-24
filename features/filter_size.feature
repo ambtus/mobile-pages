@@ -20,7 +20,7 @@ Scenario: check before filter on a size
 Scenario: filter drabble
   Given pages with all possible sizes exist
   When I am on the filter page
-    And I choose "size_drabble"
+    And I click on "size_drabble"
     And I press "Find"
   Then I should see "Drabble" within "#position_1"
     And the page should NOT contain css "#position_2"
@@ -28,7 +28,7 @@ Scenario: filter drabble
 Scenario: filter short
   Given pages with all possible sizes exist
   When I am on the filter page
-    And I choose "size_short"
+    And I click on "size_short"
     And I press "Find"
   Then I should see "Short" within "#position_1"
     And the page should NOT contain css "#position_2"
@@ -36,7 +36,7 @@ Scenario: filter short
 Scenario: filter medium
   Given pages with all possible sizes exist
   When I am on the filter page
-    And I choose "size_medium"
+    And I click on "size_medium"
     And I press "Find"
   Then I should see "Medium" within ".pages"
     And I should see "Medium2" within ".pages"
@@ -45,7 +45,7 @@ Scenario: filter medium
 Scenario: filter long
   Given pages with all possible sizes exist
   When I am on the filter page
-    And I choose "size_long"
+    And I click on "size_long"
     And I press "Find"
   Then I should see "Long" within ".pages"
     And I should see "Long2" within ".pages"
@@ -54,7 +54,7 @@ Scenario: filter long
 Scenario: filter epic
   Given pages with all possible sizes exist
   When I am on the filter page
-    And I choose "size_epic"
+    And I click on "size_epic"
     And I press "Find"
   Then I should see "Epic" within "#position_1"
     And the page should NOT contain css "#position_2"
@@ -62,7 +62,7 @@ Scenario: filter epic
 Scenario: filter longer
   Given pages with all possible sizes exist
   When I am on the filter page
-    And I choose "size_Longer"
+    And I click on "size_Longer"
     And I press "Find"
   Then I should see "Long" within ".pages"
     And I should see "Long2" within ".pages"
@@ -72,7 +72,7 @@ Scenario: filter longer
 Scenario: filter shorter
   Given pages with all possible sizes exist
   When I am on the filter page
-    And I choose "size_Shorter"
+    And I click on "size_Shorter"
     And I press "Find"
   Then I should see "Drabble" within ".pages"
     And I should see "Short" within ".pages"

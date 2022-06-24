@@ -22,7 +22,7 @@ Scenario: check before filter (default) pt2
 Scenario: read (only fully-read)
   Given pages with all possible unreads exist
   When I am on the filter page
-    And I choose "unread_Read"
+    And I click on "unread_Read"
     And I press "Find"
   Then I should NOT see "not read single"
     And I should NOT see "not read book"
@@ -36,7 +36,7 @@ Scenario: read (only fully-read)
 Scenario: unread (filter out read and unread parts)
   Given pages with all possible unreads exist
   When I am on the filter page
-    And I choose "unread_Unread"
+    And I click on "unread_Unread"
     And I press "Find"
   Then I should see "not read single"
     And I should see "not read book"
@@ -50,7 +50,7 @@ Scenario: unread (filter out read and unread parts)
 Scenario: unread parts (filter out read and fully-unread)
   Given pages with all possible unreads exist
   When I am on the filter page
-    And I choose "unread_Parts"
+    And I click on "unread_Parts"
     And I press "Find"
   Then I should NOT see "not read single"
     And I should NOT see "not read book"

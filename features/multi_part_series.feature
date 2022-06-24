@@ -104,7 +104,7 @@ Scenario: rating a single unread child sets parent AND grandparent to read
     And I press "Add"
     And I am on the page with title "Part 2"
     And I follow "Rate"
-    And I choose "3"
+    And I click on "3"
     And I press "Rate"
     And I am on the page with title "Grandparent"
   Then I should NOT see "unread"

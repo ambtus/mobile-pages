@@ -32,7 +32,7 @@ Scenario: can choose ambiguous parent
     And a page exists with title: "Single"
     And I am on the page with title "Single"
     And I add a parent with title "Ambiguous"
-    And I choose "Ambiguous1"
+    And I click on "Ambiguous1"
     And I press "Add Parent"
   Then I should see "Ambiguous1 (Book)" within ".title"
     And I should see "(1 part)" within ".size"

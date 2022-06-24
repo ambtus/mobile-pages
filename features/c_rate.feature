@@ -61,7 +61,7 @@ Scenario: rate one part leaves parent read after unchanged
     And I follow "Parent"
     And I follow "Part 1"
     And I follow "Rate"
-    And I choose "4"
+    And I click on "4"
     And I press "Rate"
   Then the read after date should be 0 years from now
 
@@ -71,12 +71,12 @@ Scenario: rate both parts changes parent read after date based on best part
     And I follow "Parent"
     And I follow "Part 1"
     And I follow "Rate"
-    And I choose "4"
+    And I click on "4"
     And I press "Rate"
     And I follow "Parent"
     And I follow "Part 2"
     And I follow "Rate"
-    And I choose "1"
+    And I click on "1"
     And I press "Rate"
   Then the read after date should be 1 years from now
 

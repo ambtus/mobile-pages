@@ -27,7 +27,7 @@ Scenario: rating one leaves parent unread
     """
     And I follow "Part 2"
     And I follow "Rate"
-    And I choose "3"
+    And I click on "3"
     And I press "Rate"
     And I follow "Multi" within ".parent"
   Then I should see "1 unread part (2009-01-01)"
@@ -46,7 +46,7 @@ Scenario: rating both updates parent as read
     http://test.sidrasue.com/parts/3.html
     """
     And I follow "Rate"
-    And I choose "5"
+    And I click on "5"
     And I press "Rate"
     And I am on the page's page
   Then I should NOT see "unread"

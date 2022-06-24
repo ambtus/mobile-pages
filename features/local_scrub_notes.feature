@@ -4,8 +4,8 @@ Scenario: check before ao3
   Given I Drive Myself Crazy exists
   When I am on the page's page
     And I follow "Scrub Notes"
-    And I choose "Popslash" within ".top"
-    And I choose "Make the Yuletide Gay" within ".bottom"
+    And I click on "Popslash" within ".top"
+    And I click on "Make the Yuletide Gay" within ".bottom"
     And I press "Scrub Notes" within ".bottom"
   Then I should NOT see "by Sidra" within ".notes"
     And I should NOT see "Popslash" within ".notes"
@@ -17,8 +17,8 @@ Scenario: rebuild from raw should recover scrubbed notes
   Given I Drive Myself Crazy exists
   When I am on the page's page
     And I follow "Scrub Notes"
-    And I choose "Popslash" within ".top"
-    And I choose "Make the Yuletide Gay" within ".bottom"
+    And I click on "Popslash" within ".top"
+    And I click on "Make the Yuletide Gay" within ".bottom"
     And I press "Scrub Notes" within ".bottom"
     And I press "Rebuild from Raw HTML"
   Then I should see "by Sidra" within ".notes"
@@ -29,8 +29,8 @@ Scenario: rebuild meta should NOT recover scrubbed notes
   Given I Drive Myself Crazy exists
   When I am on the page's page
     And I follow "Scrub Notes"
-    And I choose "Popslash" within ".top"
-    And I choose "Make the Yuletide Gay" within ".bottom"
+    And I click on "Popslash" within ".top"
+    And I click on "Make the Yuletide Gay" within ".bottom"
     And I press "Scrub Notes" within ".bottom"
     And I press "Rebuild Meta"
   Then I should NOT see "by Sidra" within ".notes"
@@ -43,7 +43,7 @@ Scenario: check before ff.net
   Given ibiki exists
   When I am on the page's page
     And I follow "Scrub Notes"
-    And I choose "Naruto" within ".bottom"
+    And I click on "Naruto" within ".bottom"
     And I press "Scrub Notes" within ".bottom"
   Then I should see "by May Wren" within ".notes"
     But I should NOT see "Naruto" within ".notes"
@@ -53,7 +53,7 @@ Scenario: rebuild from raw should recover scrubbed notes
   Given ibiki exists
   When I am on the page's page
     And I follow "Scrub Notes"
-    And I choose "Naruto" within ".bottom"
+    And I click on "Naruto" within ".bottom"
     And I press "Scrub Notes" within ".bottom"
     And I press "Rebuild from Raw HTML"
   Then I should see "by May Wren" within ".notes"
@@ -64,7 +64,7 @@ Scenario: rebuild meta should NOT recover scrubbed notes
   Given ibiki exists
   When I am on the page's page
     And I follow "Scrub Notes"
-    And I choose "Naruto" within ".bottom"
+    And I click on "Naruto" within ".bottom"
     And I press "Scrub Notes" within ".bottom"
     And I press "Rebuild Meta"
   Then I should see "by May Wren" within ".notes"

@@ -65,7 +65,7 @@ Scenario: rating a part updates the part
   When I am on the page's page
     And I follow "Part 1" within "#position_1"
     And I follow "Rate"
-    And I choose "3"
+    And I click on "3"
     And I press "Rate"
   Then I should see today within ".last_read"
     And I should see "3 stars" within ".stars"
@@ -75,7 +75,7 @@ Scenario: rating a part updates the parent and the part but not the sibling
   When I am on the page's page
     And I follow "Part 1" within "#position_1"
     And I follow "Rate"
-    And I choose "3"
+    And I click on "3"
     And I press "Rate"
     And I follow "Page 1" within ".parent"
     # parent gets earliest read of parts
@@ -88,7 +88,7 @@ Scenario: rating a part does not update the sibling
   When I am on the page's page
     And I follow "Part 1" within "#position_1"
     And I follow "Rate"
-    And I choose "3"
+    And I click on "3"
     And I press "Rate"
     And I follow "Page 1" within ".parent"
     And I follow "Part 2" within "#position_2"

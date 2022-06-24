@@ -22,7 +22,7 @@ Scenario: filtered out when filtering out all
   Given a page exists with cons: "very sad" AND title: "Page 1"
     And a page exists with cons: "slightly sad" AND title: "Page 2"
   When I am on the filter page
-    And I choose "hide_all_cons"
+    And I click on "hide_all_cons"
     And I press "Find"
   Then I should see "No pages found"
 
@@ -91,7 +91,7 @@ Scenario: new parent for an existing page should be conned (not duped, so i'm no
 Scenario: no cons
   Given pages with all combinations of pros and cons exist
   When I am on the filter page
-    And I choose "hide_all_cons"
+    And I click on "hide_all_cons"
     And I press "Find"
   Then I should see "page3"
     And I should see "page4"

@@ -22,7 +22,7 @@ Scenario: rating a page higher makes its read after sooner than a lower rating
   When I rate it 2 stars
     And I am on the page with title "Page 2"
     And I follow "Rate"
-    And I choose "4"
+    And I click on "4"
     And I press "Rate"
   When I am on the homepage
     Then I should see "Page 3" within "#position_1"
@@ -35,11 +35,11 @@ Scenario: rating a page higher makes its read after sooner than a lower rating
   When I rate it 2 stars
     And I am on the page with title "Page 2"
     And I follow "Rate"
-    And I choose "4"
+    And I click on "4"
     And I press "Rate"
     And I am on the page with title "Page 3"
     And I follow "Rate"
-    And I choose "3"
+    And I click on "3"
     And I press "Rate"
     And I am on the homepage
   Then I should see "Page 4" within "#position_1"
@@ -52,7 +52,7 @@ Scenario: change the previous "read now" behavior
     And the second had been made read first
   When I am on the homepage
     And I follow "Page 2" within "#position_1"
-    And I choose "Soonest"
+    And I click on "Soonest"
     And I press "Change"
     And I am on the homepage
   Then I should see "Page 2" within "#position_2"

@@ -21,7 +21,7 @@ Scenario: soon page
 Scenario: filter on now (all three of the above)
   Given pages with all possible soons exist
   When I am on the filter page
-    And I choose "Now"
+    And I click on "Now"
     And I press "Find"
   Then I should see "now reading" within ".pages"
     And I should see "read next" within ".pages"
@@ -31,7 +31,7 @@ Scenario: filter on now (all three of the above)
 Scenario: filter on default
   Given pages with all possible soons exist
   When I am on the filter page
-    And I choose "Default"
+    And I click on "Default"
     And I press "Find"
   Then I should see "default" within ".pages"
     And the page should NOT contain css "#position_2"
@@ -39,7 +39,7 @@ Scenario: filter on default
 Scenario: filter on later
   Given pages with all possible soons exist
   When I am on the filter page
-    And I choose "Someday"
+    And I click on "Someday"
     And I press "Find"
   Then I should see "read later" within ".pages"
     And the page should NOT contain css "#position_2"
@@ -47,7 +47,7 @@ Scenario: filter on later
 Scenario: filter on eventually
   Given pages with all possible soons exist
   When I am on the filter page
-    And I choose "Eventually"
+    And I click on "Eventually"
     And I press "Find"
   Then I should see "read eventually" within ".pages"
     And the page should NOT contain css "#position_2"
@@ -55,7 +55,7 @@ Scenario: filter on eventually
 Scenario: filter on never (all three of the above)
   Given pages with all possible soons exist
   When I am on the filter page
-    And I choose "Never"
+    And I click on "Never"
     And I press "Find"
   Then I should see "default" within ".pages"
     And I should see "read later" within ".pages"

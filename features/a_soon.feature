@@ -15,7 +15,7 @@ Scenario: change to reading when download epub
 Scenario: change to soonest during create
   Given I am on the create page
   When I fill in "page_title" with "Looks great"
-    And I choose "Soonest"
+    And I click on "Soonest"
     And I press "Store"
     And I am on the soonest page
   Then I should see "Looks great" within ".pages"
@@ -24,7 +24,7 @@ Scenario: change to soon after create
   Given I am on the create page
   When I fill in "page_title" with "Looks good"
     And I press "Store"
-    And I choose "Soon"
+    And I click on "Soon"
     And I press "Change"
     And I am on the soon page
   Then I should see "Looks good" within ".pages"
@@ -39,7 +39,7 @@ Scenario: change to default when rating
 Scenario: change to later during create
   Given I am on the create page
   When I fill in "page_title" with "Looks okay"
-    And I choose "Someday"
+    And I click on "Someday"
     And I press "Store"
     And I am on the page's page
   Then "Someday" should be checked
@@ -48,7 +48,7 @@ Scenario: change to eventually after create
   Given I am on the create page
   When I fill in "page_title" with "Looks bad"
     And I press "Store"
-    And I choose "Eventually"
+    And I click on "Eventually"
     And I press "Change"
   Then "Eventually" should be checked
 

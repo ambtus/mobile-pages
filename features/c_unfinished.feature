@@ -4,7 +4,7 @@ Scenario: rate unfinished
   Given a page exists
   When I am on the page's page
     And I follow "Rate"
-    And I choose "Yes" within ".stars"
+    And I click on "Yes" within ".stars"
     And I press "Rate"
     And I should see "unfinished"
     And I should NOT see "5 stars"
@@ -14,7 +14,7 @@ Scenario: rate unfinished propagates unfinished
   Given a page exists
   When I am on the page's page
     And I follow "Rate"
-    And I choose "Yes" within ".stars"
+    And I click on "Yes" within ".stars"
     And I press "Rate"
     And I am on the page's page
     And I follow "Rate"
@@ -31,7 +31,7 @@ Scenario: rate unfinished changes read after order
     And I am on the homepage
   When I follow "Page 1" within "#position_1"
     And I follow "Rate"
-    And I choose "Yes" within ".stars"
+    And I click on "Yes" within ".stars"
     And I press "Rate"
     And I am on the homepage
   Then I should see "Page 2" within "#position_1"
@@ -48,7 +48,7 @@ Scenario: rate previously rated as unfinished
   Given a page exists with last_read: "2009-01-01" AND stars: "4"
   When I am on the page's page
     And I follow "Rate"
-    And I choose "Yes" within ".stars"
+    And I click on "Yes" within ".stars"
     And I press "Rate"
   Then I should see "unfinished"
     And I should NOT see "4 stars"

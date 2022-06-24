@@ -21,7 +21,7 @@ Scenario: check before filter on stars
 Scenario: search for 4 & 5 stars
   Given pages with all possible stars exist
   When I am on the filter page
-    And I choose "stars_Better"
+    And I click on "stars_Better"
     And I press "Find"
   Then I should see "page5" within ".pages"
     And I should see "page4" within ".pages"
@@ -30,7 +30,7 @@ Scenario: search for 4 & 5 stars
 Scenario: search for 5 stars
   Given pages with all possible stars exist
   When I am on the filter page
-    And I choose "stars_5"
+    And I click on "stars_5"
     And I press "Find"
   Then I should see "page5" within "#position_1"
     And the page should NOT contain css "#position_2"
@@ -38,7 +38,7 @@ Scenario: search for 5 stars
 Scenario: search for 4 stars
   Given pages with all possible stars exist
   When I am on the filter page
-    And I choose "stars_4"
+    And I click on "stars_4"
     And I press "Find"
   Then I should see "page4" within "#position_1"
     And the page should NOT contain css "#position_2"
@@ -46,7 +46,7 @@ Scenario: search for 4 stars
 Scenario: search for 3 stars
   Given pages with all possible stars exist
   When I am on the filter page
-    And I choose "stars_3"
+    And I click on "stars_3"
     And I press "Find"
   Then I should see "page3" within "#position_1"
     And the page should NOT contain css "#position_2"
@@ -54,7 +54,7 @@ Scenario: search for 3 stars
 Scenario: search for 2 stars
   Given pages with all possible stars exist
   When I am on the filter page
-    And I choose "stars_2"
+    And I click on "stars_2"
     And I press "Find"
   Then I should see "page2" within "#position_1"
     And the page should NOT contain css "#position_2"
@@ -62,7 +62,7 @@ Scenario: search for 2 stars
 Scenario: search for 1 stars
   Given pages with all possible stars exist
   When I am on the filter page
-    And I choose "stars_1"
+    And I click on "stars_1"
     And I press "Find"
   Then I should see "page1" within "#position_1"
     And the page should NOT contain css "#position_2"
@@ -70,7 +70,7 @@ Scenario: search for 1 stars
 Scenario: search for 1 & 2 stars
   Given pages with all possible stars exist
   When I am on the filter page
-    And I choose "stars_Worse"
+    And I click on "stars_Worse"
     And I press "Find"
   Then I should see "page2" within ".pages"
     And I should see "page1" within ".pages"
@@ -79,7 +79,7 @@ Scenario: search for 1 & 2 stars
 Scenario: search for unfinished (9 stars)
   Given pages with all possible stars exist
   When I am on the filter page
-    And I choose "stars_unfinished"
+    And I click on "stars_unfinished"
     And I press "Find"
   Then I should see "page9" within "#position_1"
     And the page should NOT contain css "#position_2"

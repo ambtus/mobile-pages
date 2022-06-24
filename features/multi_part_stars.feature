@@ -15,7 +15,7 @@ Scenario: stars as mode (most common)
   Given Uneven exists
   When I am on the page with title "Uneven"
     And I follow "Rate" within "#position_5"
-    And I choose "3"
+    And I click on "3"
     And I press "Rate"
     And I am on the page with title "Uneven"
   Then I should see "2010-01-01" within ".last_read"
@@ -28,7 +28,7 @@ Scenario: changed highest (still no mode)
   Given Uneven exists
   When I am on the page with title "Uneven"
     And I follow "Rate" within "#position_5"
-    And I choose "5"
+    And I click on "5"
     And I press "Rate"
     And I am on the page with title "Uneven"
   Then I should see "2010-01-01" within ".last_read"
@@ -41,7 +41,7 @@ Scenario: unfinished is highest
   Given Uneven exists
   When I am on the page with title "Uneven"
     And I follow "Rate" within "#position_5"
-    And I choose "Yes" within ".stars"
+    And I click on "Yes" within ".stars"
     And I press "Rate"
     And I am on the page with title "Uneven"
   Then I should see "1 unread part (2010-01-01)" within ".last_read"
@@ -54,7 +54,7 @@ Scenario: rate all unread with stars
   Given Uneven exists
   When I am on the page with title "Uneven"
     And I follow "Rate" within ".views"
-    And I choose "5"
+    And I click on "5"
     And I press "Rate"
   When I am on the page with title "Uneven"
     Then I should see "2010-01-01" within ".last_read"
@@ -71,7 +71,7 @@ Scenario: rate all unread as unfinished
   Given Uneven exists
   When I am on the page with title "Uneven"
     And I follow "Rate" within ".views"
-    And I choose "Yes" within ".stars"
+    And I click on "Yes" within ".stars"
     And I press "Rate"
     And I am on the page with title "Uneven"
   Then I should see "1 unread part (2010-01-01)" within ".last_read"
@@ -87,8 +87,8 @@ Scenario: rate all with stars rates all
   Given Uneven exists
   When I am on the page with title "Uneven"
     And I follow "Rate" within ".views"
-    And I choose "5"
-  And I choose "All Parts"
+    And I click on "5"
+  And I click on "All Parts"
     And I press "Rate"
   When I am on the page with title "Uneven"
   Then I should NOT see "2010-01-01"

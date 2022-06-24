@@ -4,7 +4,7 @@ Scenario: remove bottom when one automatically removed surrounding div
   Given a page exists with url: "http://test.sidrasue.com/divs.html"
   When I am on the page's page
     And I follow "Scrub"
-    And I choose "3rd" within ".bottom"
+    And I click on "3rd" within ".bottom"
     And I press "Scrub" within ".top"
   Then the contents should include "1st"
     And the contents should include "2nd"
@@ -14,7 +14,7 @@ Scenario: remove top when one automatically removed surrounding blockquote
   Given a page exists with url: "http://test.sidrasue.com/blockquote.html"
   When I am on the page's page
     And I follow "Scrub"
-    And I choose "1st" within ".top"
+    And I click on "1st" within ".top"
     And I press "Scrub" within ".bottom"
   Then the contents should include "2nd"
     And the contents should include "3rd"
@@ -24,8 +24,8 @@ Scenario Outline: strip beginning and end
   Given a page exists with url: "<url>"
   When I am on the page's page
     And I follow "Scrub"
-    And I choose "<unwanted1>" within ".top"
-    And I choose "<unwanted2>" within ".bottom"
+    And I click on "<unwanted1>" within ".top"
+    And I click on "<unwanted2>" within ".bottom"
     And I press "Scrub" within ".top"
   Then the contents should include "<wanted>"
     And the contents should NOT include "<unwanted1>"
@@ -46,7 +46,7 @@ Scenario: trim when many headers and short fic
   Given a page exists with url: "http://test.sidrasue.com/headers.html"
   When I am on the page's page
     And I follow "Scrub"
-    And I choose "third header" within ".top"
+    And I click on "third header" within ".top"
     And I press "Scrub" within ".bottom"
   Then the contents should include "actual content"
     And the contents should NOT include "header"
@@ -55,7 +55,7 @@ Scenario: recover from trimming too much
   Given a page exists with url: "http://test.sidrasue.com/headers.html"
   When I am on the page's page
     And I follow "Scrub"
-    And I choose "third header" within ".top"
+    And I click on "third header" within ".top"
     And I press "Scrub" within ".bottom"
     And I press "Rebuild from Raw HTML"
   Then the contents should include "header"
@@ -71,8 +71,8 @@ Scenario: trim a child removes parent's (composite) html
   When I am on the page's page
   And I follow "Scrub"
     And I follow "Scrub Part 1"
-    And I choose "top cruft" within ".top"
-    And I choose "bottom cruft" within ".bottom"
+    And I click on "top cruft" within ".top"
+    And I click on "bottom cruft" within ".bottom"
     And I press "Scrub" within ".bottom"
   Then the download html file should NOT exist
 
@@ -81,8 +81,8 @@ Scenario: trim a child removes parent's (composite) html
   When I am on the page's page
   And I follow "Scrub"
     And I follow "Scrub Part 1"
-    And I choose "top cruft" within ".top"
-    And I choose "bottom cruft" within ".bottom"
+    And I click on "top cruft" within ".top"
+    And I click on "bottom cruft" within ".bottom"
     And I press "Scrub" within ".bottom"
   Then the contents should NOT include "cruft"
     But the contents should include "stuff for part 1"
@@ -92,8 +92,8 @@ Scenario: rebuild all children from raw
   When I am on the page's page
     And I follow "Scrub"
     And I follow "Scrub Part 1"
-    And I choose "top cruft" within ".top"
-    And I choose "bottom cruft" within ".bottom"
+    And I click on "top cruft" within ".top"
+    And I click on "bottom cruft" within ".bottom"
     And I press "Scrub" within ".bottom"
     And I press "Rebuild from Raw HTML"
   Then the contents should include "cruft"
@@ -112,8 +112,8 @@ Scenario: scrubbing grandchild remove's grandparent's (composite) html
     And I add a parent with title "Parent"
     And I am on the page with title "Part 1"
     And I follow "Scrub"
-    And I choose "top cruft" within ".top"
-    And I choose "bottom cruft" within ".bottom"
+    And I click on "top cruft" within ".top"
+    And I click on "bottom cruft" within ".bottom"
     And I press "Scrub" within ".top"
   Then the download html file should NOT exist
 
@@ -124,8 +124,8 @@ Scenario: scrubbing grandchild shows scrubbed content in grandparent
     And I add a parent with title "Grandparent"
     And I am on the page with title "Part 1"
     And I follow "Scrub"
-    And I choose "top cruft" within ".top"
-    And I choose "bottom cruft" within ".bottom"
+    And I click on "top cruft" within ".top"
+    And I click on "bottom cruft" within ".bottom"
     And I press "Scrub" within ".top"
   Then the contents should include "stuff for part 1"
     But the contents should NOT include "top cruft"
@@ -141,7 +141,7 @@ Scenario: show number of nodes
   Given a page exists with url: "http://test.sidrasue.com/div.html"
   When I am on the page's page
     And I follow "Scrub"
-    And I choose "last div" within ".bottom"
+    And I click on "last div" within ".bottom"
     And I press "Scrub" within ".bottom"
     And I follow "Scrub"
   Then I should see "3 nodes"
