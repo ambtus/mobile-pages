@@ -87,3 +87,12 @@ Scenario: duplicate end notes on first chapter and book (chapter)
   When I am on the page's page
     And I follow "Chapter 1"
   Then I should see "And thus Obito snatches himself a child"
+
+Scenario: kudos link on split parts
+  Given adapting exists
+  When I am on the page's page
+    And I follow "Split"
+    And I click on "Itachi &amp; Kisame"
+    And I press "Children"
+    And I read it online
+  Then Leave Kudos or Comments on "Continually Adapting (to Stay Alive)" should link to its comments

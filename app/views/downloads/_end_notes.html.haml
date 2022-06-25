@@ -16,7 +16,7 @@
   -if page.ao3? && !page.is_a?(Series)
     %p.kudos
       Leave Kudos or Comments on:
-      -if page.parts.any?
+      -if page.parts.any? && page.parts.last.url
         =link_to page.title, page.parts.last.url + "#comments"
       -else
         =link_to page.title, page.url + "#comments"
