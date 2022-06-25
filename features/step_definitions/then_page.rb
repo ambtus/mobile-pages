@@ -142,3 +142,8 @@ Then('{string} should be a {string}') do |string, string2|
   Rails.logger.debug "comparing #{page.type} with #{string2}"
   assert_equal string2, page.type
 end
+
+Then('I should have {int} nodes') do |int|
+  Rails.logger.debug "comparing #{Page.first.nodes.count} with #{int}"
+  assert_equal int, Page.first.nodes.count
+end

@@ -104,3 +104,7 @@ Given('the second had been made read first') do
   page = Page.second
   page.update read_after: page.read_after - 1.year
 end
+
+Given('an editable page exists') do
+  page = Page.create!(url: "file:///#{Rails.root}/tmp/html/edit.html", title: "Page 1")
+end

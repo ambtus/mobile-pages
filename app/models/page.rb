@@ -5,7 +5,7 @@ class Page < ActiveRecord::Base
   include Meta
   include Rate
   include Utilities
-  include Scrubbing
+  include Nodes
   include Soon
   include Split
 
@@ -620,52 +620,6 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def section(number)
-    body = Nokogiri::HTML(self.edited_html).xpath('//body').first
-    if body
-      section = 0
-      body.traverse do |node|
-        if node.text? && !node.blank?
-          section += 1
-          return node.text if section == number
-        end
-      end
-    else
-      ""
-    end
-  end
-
-  def edit_section(number, new)
-    body = Nokogiri::HTML(self.edited_html).xpath('//body').first
-    if body
-      added = false
-      if body
-        section = 0
-        body.traverse do |node|
-          if node.text? && !node.blank?
-            section += 1
-            if section == number
-              node.content = new if section == number
-              added = true
-              Rails.logger.debug "replaced node text in section #{number}"
-              break
-            end
-          end
-        end
-      else
-        ""
-      end
-      if added == false
-        Rails.logger.debug "added new text to end"
-        body.children.last.add_next_sibling(new)
-      end
-      self.edited_html=body.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
-    else
-      ""
-    end
-  end
-
-
   def re_sanitize
     Rails.logger.debug "re_sanitizing #{self.id}"
     if !self.parts.blank?
@@ -763,14 +717,6 @@ class Page < ActiveRecord::Base
     File.open(self.scrubbed_html_file_name, 'w:utf-8') { |f| f.write(content) }
   end
 
-  def clean_html
-    if parts.blank?
-      scrubbed_html
-    else
-      File.open(self.scrubbed_html_file_name, 'r:utf-8') { |f| f.read } rescue ""
-    end
-  end
-
   def scrubbed_html
     self.re_sanitize if self.sanitize_version < Scrub.sanitize_version
     if parts.blank?
@@ -798,25 +744,6 @@ class Page < ActiveRecord::Base
 
   def epub_html
     edited_html.gsub('img src="http://', 'img src="https://')
-  end
-
-  ### Read html is what I would read for an audio book, and also how I edit
-
-  def read_html
-    body = Nokogiri::HTML(self.edited_html).xpath('//body').first
-    if body
-      section = 0
-      body.traverse do |node|
-        if node.text? && !node.blank?
-          node.add_previous_sibling("<h2>!!!!!SLOW DOWN AND ENUNCIATE!!!!!</h2>") if section % 10 == 0 || section == 0
-          section += 1
-          node.add_previous_sibling("<a id=section_#{section} href=/pages/#{self.id}/edit?section=#{section}>#{section}</a>")
-        end
-      end
-      body.children.to_xhtml
-    else
-      ""
-    end
   end
 
   def make_audio  # add an audio tag and mark it as read today

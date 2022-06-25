@@ -1,8 +1,8 @@
-module Scrubbing
+module Nodes
 
-  ### scrubbing content (removing top and bottom nodes) is done on clean text
+  ### scrubbing content (removing top and bottom nodes)
 
-  def nodes(content = clean_html)
+  def nodes(content = edited_html)
     Nokogiri::HTML(content).xpath('//body').children
   end
 
@@ -33,25 +33,23 @@ module Scrubbing
 
   def edited_html=(content)
     remove_outdated_downloads
-    File.open(self.edited_html_file_name, 'w:utf-8') { |f| f.write(content) }
+    body = Scrub.sanitize_html(content)
+    File.open(self.edited_html_file_name, 'w:utf-8') { |f| f.write(body) }
     self.set_wordcount
   end
 
   ## but if it doesn't exist (I haven't edited) use the scrubbed version
   def edited_html
-    if parts.blank?
+    begin
+      File.open(self.edited_html_file_name, 'r:utf-8') { |f| f.read }
+    rescue Errno::ENOENT
       begin
-        File.open(self.edited_html_file_name, 'r:utf-8') { |f| f.read }
+        File.open(self.scrubbed_html_file_name, 'r:utf-8') { |f| f.read }
       rescue Errno::ENOENT
-        begin
-          File.open(self.scrubbed_html_file_name, 'r:utf-8') { |f| f.read }
-        rescue Errno::ENOENT
-          ""
-        end
+        ""
       end
     end
   end
-
 
   ### scrubbing notes (removing top and bottom nodes)
 
@@ -84,5 +82,29 @@ module Scrubbing
     remove_outdated_downloads
   end
 
+  ### Read html is what I would read for an audio book, and also how I edit
+
+  def read_html
+    array = nodes.to_a
+    array.each_with_index do |node, index|
+      header = (index.modulo(10) == 0) ? "<h2>!!!!!SLOW DOWN AND ENUNCIATE!!!!!</h2>" : ""
+      anchor = "<a id=section_#{index} href=/pages/#{self.id}/edit?section=#{index}>#{index}</a>"
+      type = nodes.at(index).name
+      array[index]=nodes.at(index).replace "#{header}<#{type}>#{anchor} #{nodes.at(index).inner_html}</#{type}>"
+    end
+    array.map(&:to_html).join
+  end
+
+  ### editing content (changing text inside a node)
+
+  def section(index)
+    nodes.at(index)
+  end
+
+  def edit_section(index, new)
+    array = nodes.to_a
+    array[index]=nodes.at(index).replace(new)
+    self.edited_html=array.map(&:to_html).join
+  end
 
 end
