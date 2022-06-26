@@ -7,10 +7,49 @@ Scenario: default by default
 
 Scenario: change to reading when download epub
   Given a page exists
-  When I am on the page's page
-    And I download its epub
+  When I download its epub
     And I am on the page's page
   Then "Reading" should be checked
+
+Scenario: change to read when download partially read parent
+  Given a partially read page exists
+  When I download its epub
+    And I am on the page's page
+  Then "Reading" should be checked
+
+Scenario: change to reading when download unread part
+  Given a partially read page exists
+  When I download the epub for "Unread"
+    And I am on the page with title "Unread"
+  Then "Reading" should be checked
+
+Scenario: change to re-read when download read
+  Given a read page exists
+  When I download its epub
+    And I am on the page's page
+  Then "ReRead" should be checked
+
+Scenario: change to re-read when download read part
+  Given a partially read page exists
+  When I download the epub for "Read"
+    And I am on the page with title "Read"
+  Then "ReRead" should be checked
+
+Scenario: reading page
+  Given a partially read page exists
+    And I download the epub for "Read"
+    And I download the epub for "Unread"
+    And I am on the reading page
+  Then the page should contain css "#position_1"
+    But the page should NOT contain css "#position_2"
+
+Scenario: re-reading page
+  Given a partially read page exists
+    And I download the epub for "Read"
+    And I download the epub for "Unread"
+    And I am on the reread page
+  Then the page should contain css "#position_1"
+    But the page should NOT contain css "#position_2"
 
 Scenario: change to soonest during create
   Given I am on the create page
@@ -31,6 +70,13 @@ Scenario: change to soon after create
 
 Scenario: change to default when rating
   Given a page exists
+    And I download its epub
+  When I rate it 5 stars
+    And I am on the page's page
+  Then "Default" should be checked
+
+Scenario: change to default when re-rating
+  Given a read page exists
     And I download its epub
   When I rate it 5 stars
     And I am on the page's page

@@ -108,3 +108,14 @@ end
 Given('an editable page exists') do
   page = Page.create!(url: "file:///#{Rails.root}/tmp/html/edit.html", title: "Page 1")
 end
+
+Given("a read page exists") do
+  Single.create(title: "Page 1",).rate_today(5)
+end
+
+Given("a partially read page exists") do
+  book3 = Book.create(title: "Book")
+  Chapter.create(title: "Read", parent_id: book3.id, position: 1).rate_today(5)
+  Chapter.create(title: "Unread", parent_id: book3.id, position: 2)
+  book3.update_from_parts
+end

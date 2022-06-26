@@ -34,6 +34,17 @@ class PagesController < ApplicationController
     flash.now[:alert] = "No pages found" if @pages.blank?
   end
 
+  def reread
+    @page = Page.new
+    @count = params[:count].to_i
+    @title = "Currently Re-Reading"
+    @pages = Page.reread.not_hidden.limit(@count + 5)[@count..-1]
+    if @pages.count == Filter::LIMIT
+      @new_query = {count: @count + Filter::LIMIT}
+    end
+    flash.now[:alert] = "No pages found" if @pages.blank?
+  end
+
   def soonest
     @page = Page.new
     @count = params[:count].to_i

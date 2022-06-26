@@ -9,7 +9,8 @@ class Page < ActiveRecord::Base
   include Soon
   include Split
 
-  scope :reading, -> { where(soon: 0).order('updated_at desc') }
+  scope :reading, -> { where(soon: -1).order('updated_at desc') }
+  scope :reread, -> { where(soon: 0).order('updated_at desc') }
   scope :soonest, -> { where(soon: 1) }
   scope :soon, -> { where(soon: 2) }
   scope :not_hidden, -> { where(hidden: false) }

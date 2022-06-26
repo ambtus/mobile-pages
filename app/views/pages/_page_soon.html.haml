@@ -1,3 +1,4 @@
 - Soon::LABELS.each_with_index do |choice, index|
-  = radio_button_tag 'page[soon]', index, @page.soon == index
-  = label_tag "page[soon_#{index}]", choice
+  -number = index - 1
+  = radio_button_tag 'page[soon]', number, @page.soon == number
+  = label_tag "page[soon_#{number}]", choice

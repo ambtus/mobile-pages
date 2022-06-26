@@ -15,11 +15,11 @@ class Filter
 
     if params[:soon]
       if params[:soon] == "Now"
-        pages = pages.where(soon: [0,1,2])
+        pages = pages.where(soon: [-1,0,1,2])
       elsif params[:soon] == "Never"
         pages = pages.where(soon: [3,4,5])
       else
-        index = Soon::LABELS.index(params[:soon])
+        index = Soon::LABELS.index(params[:soon]) -1
         pages = pages.where(soon: index)
       end
     end

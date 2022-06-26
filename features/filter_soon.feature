@@ -1,9 +1,20 @@
 Feature: soon
 
+Scenario: quick links
+  Given I am on the mini page
+  Then I should see "Reading Reread Soonest Soon"
+    But I should NOT see "Default Someday Eventually"
+
 Scenario: reading page
   Given pages with all possible soons exist
   When I am on the reading page
   Then I should see "now reading" within ".pages"
+    And the page should NOT contain css "#position_2"
+
+Scenario: reread page
+  Given pages with all possible soons exist
+  When I am on the reread page
+  Then I should see "now re-reading" within ".pages"
     And the page should NOT contain css "#position_2"
 
 Scenario: soonest page
@@ -18,15 +29,16 @@ Scenario: soon page
   Then I should see "read soon" within ".pages"
     And the page should NOT contain css "#position_2"
 
-Scenario: filter on now (all three of the above)
+Scenario: filter on now (all four of the above)
   Given pages with all possible soons exist
   When I am on the filter page
     And I click on "Now"
     And I press "Find"
   Then I should see "now reading" within ".pages"
+    And I should see "now re-reading" within ".pages"
     And I should see "read next" within ".pages"
     And I should see "read soon" within ".pages"
-    And the page should NOT contain css "#position_4"
+    And the page should NOT contain css "#position_5"
 
 Scenario: filter on default
   Given pages with all possible soons exist

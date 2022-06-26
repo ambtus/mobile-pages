@@ -42,6 +42,13 @@ When("I download its epub") do
    within(".views") {click_link("ePub")}
 end
 
+When("I download the epub for {string}") do |title|
+   page = Page.find_by title: title
+   raise "no page with title #{title}" unless page
+   visit page_path(page)
+   within(".views") {click_link("ePub")}
+end
+
 When("I read it online") do
    page = Page.first
    raise "no pages" unless page
