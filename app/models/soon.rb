@@ -4,7 +4,7 @@ module Soon
   def soon_label; LABELS[soon + 1]; end
 
   def set_reading
-    new_soon = self.read? ? 0 : -1
+    new_soon = self.unread? ? -1 : 0
     self.update soon: new_soon
     return self
   end

@@ -11,11 +11,11 @@ Scenario: change to reading when download epub
     And I am on the page's page
   Then "Reading" should be checked
 
-Scenario: change to read when download partially read parent
+Scenario: change to re-read when download partially read parent
   Given a partially read page exists
   When I download its epub
     And I am on the page's page
-  Then "Reading" should be checked
+  Then "ReRead" should be checked
 
 Scenario: change to reading when download unread part
   Given a partially read page exists
