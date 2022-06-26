@@ -79,6 +79,10 @@ Then("I should have no authors") do
   assert_equal 0, Author.count
 end
 
+Then("I should have no readers") do
+  assert_equal 0, Reader.count
+end
+
 Then('I should have {int} tag(s)') do |int|
   Rails.logger.debug "curent tags: #{Tag.all.map(&:name)}"
   assert_equal int, Tag.count

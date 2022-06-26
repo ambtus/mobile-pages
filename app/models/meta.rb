@@ -484,6 +484,12 @@ module Meta
     return self
   end
 
+  # only used in reader.destroy_me
+  def add_reader_to_my_notes(reader)
+    self.update! my_notes: "read by #{reader}#{self.my_notes}"
+    return self
+  end
+
   def cn_try(string)
     return "" if doc.at("strong").blank?
     all = doc.at("strong").parent.inner_html.squish.gsub("<strong><a ", "<a ").gsub("</a></strong>", "</a>")

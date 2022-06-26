@@ -497,8 +497,8 @@ class Page < ActiveRecord::Base
   def move_tags_up
     return unless parent.present?
     Rails.logger.debug "moving tags to parent"
-    parent.tags << self.tags
-    self.tags = []
+    parent.tags << self.tags - self.tags.readers
+    self.tags = self.tags.readers
     if self.hidden?
       Rails.logger.debug "moving hidden state to parent"
       self.unset_hidden
