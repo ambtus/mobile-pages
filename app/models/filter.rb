@@ -88,6 +88,10 @@ class Filter
       pages = pages.where(con: false)
     end
 
+    if params[:show_any] == "pros"
+      pages = pages.where(pro: true)
+    end
+
     Tag.types.each do |tag_type|
       if params.has_key?(tag_type.downcase.to_s)
         model = tag_type.constantize

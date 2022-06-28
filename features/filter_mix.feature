@@ -170,3 +170,18 @@ Scenario: mystery but not children
     And I should NOT see "Alice in Wonderland"
     But I should see "The Mysterious Affair at Styles"
 
+Scenario: no cons any pros
+  Given pages with all combinations of pros and cons exist
+  When I am on the filter page
+    And I click on "show_any_pros"
+    And I click on "hide_all_cons"
+    And I press "Find"
+  Then I should see "page5"
+    And I should see "page4i"
+    And I should see "page4l"
+    But I should NOT see "page3h"
+    And I should NOT see "page3l"
+    But I should NOT see "page3d"
+    And I should NOT see "page2"
+    And I should NOT see "page1"
+    And the page should NOT contain css "#position_4"

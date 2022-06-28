@@ -94,12 +94,13 @@ Given("pages with all combinations of pros and cons exist") do
   Page.find_or_create_by(title: "page1").tags << [hateful, boring]
   Page.find_or_create_by(title: "page2h").tags << hateful
   Page.find_or_create_by(title: "page2b").tags << boring
-  Page.find_or_create_by(title: "page3")
+  Page.find_or_create_by(title: "page3d")
   Page.find_or_create_by(title: "page3l").tags << [boring,loving]
   Page.find_or_create_by(title: "page3h").tags << [hateful,interesting]
   Page.find_or_create_by(title: "page4l").tags << loving
   Page.find_or_create_by(title: "page4i").tags << interesting
   Page.find_or_create_by(title: "page5").tags << [interesting, loving]
   Con.recache_all
+  Pro.recache_all
 end
 

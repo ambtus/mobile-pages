@@ -93,7 +93,7 @@ Scenario: no cons
   When I am on the filter page
     And I click on "hide_all_cons"
     And I press "Find"
-  Then I should see "page3"
+  Then I should see "page3d"
     And I should see "page4"
     And I should see "page5"
     But I should NOT see "page1"

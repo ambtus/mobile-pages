@@ -6,3 +6,6 @@
     -if type == "Con" && current_page?(filter_path)
       = radio_button_tag :hide_all, 'cons', @hide_all == 'cons'
       = label_tag :hide_all_cons, 'All'
+    -if type == "Pro" && current_page?(filter_path)
+      = radio_button_tag :show_any, 'pros', @show_any == 'pros'
+      = label_tag :show_any_pros, 'Any'

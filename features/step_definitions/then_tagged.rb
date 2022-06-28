@@ -22,3 +22,10 @@ Then('the page should NOT be conned') do
   assert !Page.first.con?
 end
 
+Then('{string} should be proed') do |string|
+  assert Page.find_by_title(string).pro?
+end
+
+Then('the page should NOT be proed') do
+  assert !Page.first.pro?
+end
