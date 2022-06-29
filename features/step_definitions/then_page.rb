@@ -5,7 +5,6 @@ Then('I should have {int} page(s)') do |int|
   assert_equal int, Page.count
 end
 
-
 Then('{string} should link to itself') do |string|
   href = page.find_link(string)['href']
   itself = Page.find_by_title(string)
@@ -147,3 +146,8 @@ Then('I should have {int} nodes') do |int|
   Rails.logger.debug "comparing #{Page.first.nodes.count} with #{int}"
   assert_equal int, Page.first.nodes.count
 end
+
+Then('it should have {int} horizontal rules') do |int|
+  assert_equal int, Page.first.scrubbed_html.scan(/<hr/).count
+end
+

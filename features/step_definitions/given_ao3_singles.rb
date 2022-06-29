@@ -129,3 +129,9 @@ Given('guardian exists') do
   page.update!(url: "https://archiveofourown.org/works/27953759/chapters/99977028")
   page.set_raw_from("guardian")
 end
+
+Given('55367 exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/5368520/chapters/12398933")
+  page.set_raw_from("55367")
+end

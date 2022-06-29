@@ -109,3 +109,9 @@ Scenario: hr between every paragraph
   When I read it online
   Then I should see a horizontal rule
     But I should NOT see two horizontal rules
+
+Scenario: triple hr's
+  Given "esama" is an "Author"
+    And "Star Wars" is a "Fandom"
+    And 55367 exists
+  Then it should have 10 horizontal rules
