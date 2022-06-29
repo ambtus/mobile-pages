@@ -130,3 +130,12 @@ Scenario: chapter numbering bug
   Then I should see "Chapter 2" within "#position_2"
     But I should NOT see "2. Chapter 2"
     And the part titles should be stored as "Chapter 1 & Chapter 2"
+
+Scenario: single chapter 1 made into book retains title bug
+  Given that was single exists
+  When I am on the page's page
+    And I follow "Refetch"
+    And I press "Refetch"
+  Then I should see "that was a spring of storms (Book)" within ".title"
+    And I should see "Chapter 2" within "#position_2"
+    And I should see "Chapter 1" within "#position_1"

@@ -18,7 +18,7 @@ class Single < Page
     end
     chapter_url = "https://archiveofourown.org" + doc.xpath("//ol//a").first['href']
     Rails.logger.debug "making #{self.id} into a chapter with #{chapter_url}"
-    update!(url: chapter_url, position: 1, type: Chapter)
+    update!(url: chapter_url, position: 1, type: Chapter, title: "temp")
   end
 
 end

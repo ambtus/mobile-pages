@@ -1,17 +1,16 @@
 Feature: download from cn
 
 Scenario: grab a single
-  Given "Teen Wolf" is a "Fandom"
+  Given "Harry Potter" is a "Fandom"
     And "Claire Watson" is an "Author"
     And I am on the mini page
-  When I fill in "page_url" with "http://clairesnook.com/fiction/the-secret-to-survivin/"
+  When I fill in "page_url" with "http://clairesnook.com/evil-author-day/serendipity-ead-2022/"
     And I press "Store"
-  Then I should see "The Secret to Survivin’ (Single)" within ".title"
-    And I should see "Teen Wolf" within ".fandoms"
+  Then I should see "Serendipity (Single)" within ".title"
+    And I should see "Harry Potter" within ".fandoms"
     And I should see "Claire Watson" within ".authors"
+    And I should see "Harry Potter & Sirius Black" within ".notes"
+    And I should see "Harry Potter notices things." within ".notes"
+    And I should see "Canon Divergent, Fix-it" within ".notes"
     But I should NOT see "by Claire Watson" within ".notes"
-    And I should NOT see "n/a" within ".notes"
-    And I should see "A/U, Competence" within ".notes"
-    And I should see "Derek will never be his mother, but that doesn’t mean he can’t learn to be a better alpha than what he started as." within ".notes"
-    And I should see "Trope Bingo #Competence" within ".notes"
 

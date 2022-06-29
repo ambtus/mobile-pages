@@ -96,3 +96,8 @@ Scenario: kudos link on split parts
     And I press "Children"
     And I read it online
   Then Leave Kudos or Comments on "Continually Adapting (to Stay Alive)" should link to its comments
+
+Scenario: check before single chapter 1 made into book retains title
+  Given that was single exists
+  When I am on the page's page
+  Then I should see "that was a spring of storms (Single)" within ".title"

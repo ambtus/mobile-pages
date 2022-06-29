@@ -15,7 +15,7 @@ Scenario: change to re-read when download partially read parent
   Given a partially read page exists
   When I download its epub
     And I am on the page's page
-  Then "ReRead" should be checked
+  Then "Reread" should be checked
 
 Scenario: change to reading when download unread part
   Given a partially read page exists
@@ -27,13 +27,13 @@ Scenario: change to re-read when download read
   Given a read page exists
   When I download its epub
     And I am on the page's page
-  Then "ReRead" should be checked
+  Then "Reread" should be checked
 
 Scenario: change to re-read when download read part
   Given a partially read page exists
   When I download the epub for "Read"
     And I am on the page with title "Read"
-  Then "ReRead" should be checked
+  Then "Reread" should be checked
 
 Scenario: reading page
   Given a partially read page exists
