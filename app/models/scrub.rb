@@ -105,8 +105,17 @@ module Scrub
     html.gsub!(/(<br ?\/?>?){2,}/, '<p>')
     # multiple empty paragraphs are probably a section
     html.gsub!(/(<p>\s*<\/p>){2,}/, '<hr>')
-    # any left-over empty paragraphs are probably a section
-    html.gsub!(/<p>\s*<\/p>/, '<hr>')
+
+    # a few left-over empty paragraphs are probably a section
+    # but too many are just extraneous whitespace
+    total_paragraphs = html.scan(/<p>/).count
+    empty_paragraphs = html.scan(/<p>\s*<\/p>/).count
+    if empty_paragraphs > 0  && total_paragraphs/empty_paragraphs > 5
+      html.gsub!(/<p>\s*<\/p>/, '<hr>')
+    else
+      html.gsub!(/<p>\s*<\/p>/, '')
+    end
+
     # common section designation
     html.gsub!(/_{5,}/, '<hr>')
     # less common section designation

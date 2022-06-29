@@ -101,3 +101,11 @@ Scenario: check before single chapter 1 made into book retains title
   Given that was single exists
   When I am on the page's page
   Then I should see "that was a spring of storms (Single)" within ".title"
+
+Scenario: hr between every paragraph
+  Given "Lerya" is an "Author"
+    And "Teen Wolf" is a "Fandom"
+    And guardian exists
+  When I read it online
+  Then I should see a horizontal rule
+    But I should NOT see two horizontal rules
