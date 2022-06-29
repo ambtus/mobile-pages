@@ -760,7 +760,8 @@ class Page < ActiveRecord::Base
   def make_audio  # add an audio tag and mark it as read today
     Rails.logger.debug "mark_audio for #{self.id}"
     audio_tag = Tag.find_by(name: "audio") || Info.create(name: "audio")
-    self.tags << audio_tag
+    reader_tag = Reader.find_or_create_by(name: "Sidra")
+    self.tags << [audio_tag, reader_tag]
     self.update(:last_read => Time.now)
     self.update_read_after
   end

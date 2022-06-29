@@ -26,12 +26,24 @@ Scenario: check before audiobook created
   Then I should see "2014" within ".last_read"
     And I should NOT see "audio"
 
-Scenario: audiobook created updates last read and adds audio tag
+Scenario: audiobook created updates last read and adds audio and reader tags
   Given a page exists with last_read: "2014-01-01"
     And I view the text for reading aloud
     And I press "Audiobook created"
     And I am on the page's page
-  Then I should see "audio"
+  Then I should see "audio" within ".infos"
+    And I should see "Sidra" within ".readers"
+    And last read should be today
+    And I should NOT see "2014" within ".last_read"
+
+Scenario: audiobook created when i've hidden the audio tag
+  Given a page exists with last_read: "2014-01-01"
+    And "audio" is a "Hidden"
+    And I view the text for reading aloud
+    And I press "Audiobook created"
+    And I am on the page's page
+  Then I should see "audio" within ".hiddens"
+    And I should see "Sidra" within ".readers"
     And last read should be today
     And I should NOT see "2014" within ".last_read"
 
