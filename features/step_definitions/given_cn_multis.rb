@@ -61,3 +61,9 @@ Given('Shadowwings exists') do
 
   series.rebuild_meta
 end
+
+Given('If Heaven Falls exists') do
+  book = Book.create!(title: "temp")
+  book.update!(url: "http://clairesnook.com/fiction/if-heaven-falls/")
+  book.set_raw_from("ihf")
+end

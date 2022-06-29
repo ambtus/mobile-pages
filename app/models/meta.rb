@@ -100,7 +100,7 @@ module Meta
         if first_try.blank? && parts.any?
           (parts.first.inferred_fandoms + parts.last.inferred_fandoms).uniq
         else
-          Scrub.sanitize_and_strip(first_try).split(", ")
+          Scrub.sanitize_and_strip(first_try).split(", ").without("Time Travel").without("Fix-it")
         end
       else
         []
@@ -126,7 +126,7 @@ module Meta
     if self.parts.empty? || cn?
       Rails.logger.debug "get tags from raw_html"
       if cn?
-        cn_try("Genre").split(", ") + cn_try("Warnings").split(", ")
+        cn_try("Genre").split(", ") + cn_try("Warnings").split(", ") - inferred_fandoms
       else
         doc.css(".freeform a").map(&:children).map(&:text)
       end

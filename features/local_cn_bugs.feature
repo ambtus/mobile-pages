@@ -91,3 +91,10 @@ Scenario: html in summary
   Given Shadowwings exists
   When I am on the page's page
   Then I should see "Thank you to Desertpoet and Saydria Wolfe for making sure this made sense."
+
+Scenario: Fandom/Genre dupe
+  Given If Heaven Falls exists
+  When I am on the page's page
+  Then I should see "Time Travel" within ".pros"
+    And I should see "Harry Potter" within ".notes"
+    But I should NOT see "Harry Potter, Fix-it, Time Travel" within ".notes"
