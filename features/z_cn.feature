@@ -9,8 +9,10 @@ Scenario: grab a single
   Then I should see "Serendipity (Single)" within ".title"
     And I should see "Harry Potter" within ".fandoms"
     And I should see "Claire Watson" within ".authors"
+    And I should see "Fix-it" within ".pros"
     And I should see "Harry Potter & Sirius Black" within ".notes"
     And I should see "Harry Potter notices things." within ".notes"
-    And I should see "Canon Divergent, Fix-it" within ".notes"
+    And I should see "Canon Divergent" within ".notes"
     But I should NOT see "by Claire Watson" within ".notes"
+    And I should NOT see "Fix-it" within ".notes"
 

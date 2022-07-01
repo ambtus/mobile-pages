@@ -96,5 +96,7 @@ Scenario: Fandom/Genre dupe
   Given If Heaven Falls exists
   When I am on the page's page
   Then I should see "Time Travel" within ".pros"
+    And I should see "Fix-it" within ".pros"
     And I should see "Harry Potter" within ".notes"
     But I should NOT see "Harry Potter, Fix-it, Time Travel" within ".notes"
+    And I should NOT see "Fix-it, Time Travel" within ".notes"

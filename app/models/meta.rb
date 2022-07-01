@@ -2,6 +2,7 @@ module Meta
 
   WIP = "WIP"
   TT = "Time Travel"
+  FI = "Fix-it"
   OTHER = "Other Fandom"
   CLIFF = "Cliffhanger"
 
@@ -13,10 +14,10 @@ module Meta
   def tt_tag; Pro.find_or_create_by(name: TT); end
   def tt_present?; tags.pros.include?(tt_tag);end
   def set_tt; tags.append(tt_tag) unless tt_present?; end
-  def toggle_tt
-    tt_present? ? tags.delete(tt_tag) : tags.append(tt_tag)
-    return self
-  end
+
+  def fi_tag; Pro.find_or_create_by(name: FI); end
+  def fi_present?; tags.pros.include?(fi_tag);end
+  def set_fi; tags.append(fi_tag) unless fi_present?; end
 
   def of_tag; Fandom.find_or_create_by(name: OTHER); end
   def of_present?; self.tags.fandoms.include?(of_tag);end
@@ -311,11 +312,13 @@ module Meta
     end
   end
 
+  def note_tags; inferred_tags.without(TT).without(FI).to_p; end
+
   def head_notes
     case type
     when "Chapter"
       if cn?
-        [add_fandoms(inferred_fandoms), inferred_relationships.to_p, work_summary, inferred_tags.to_p, work_notes]
+        [add_fandoms(inferred_fandoms), inferred_relationships.to_p, work_summary, note_tags, work_notes]
       else
         [chapter_summary, chapter_notes]
       end
@@ -323,10 +326,10 @@ module Meta
       if chapter_as_single?
         [add_authors(inferred_authors), add_fandoms(inferred_fandoms), chapter_summary, chapter_notes]
       else
-        [add_authors(inferred_authors), add_fandoms(inferred_fandoms), inferred_relationships.to_p, work_summary, chapter_summary, inferred_tags.to_p, work_notes, chapter_notes]
+        [add_authors(inferred_authors), add_fandoms(inferred_fandoms), inferred_relationships.to_p, work_summary, chapter_summary, note_tags, work_notes, chapter_notes]
       end
     when "Book"
-      [add_authors(inferred_authors), add_fandoms(inferred_fandoms), inferred_relationships.to_p, work_summary, inferred_tags.to_p, work_notes]
+      [add_authors(inferred_authors), add_fandoms(inferred_fandoms), inferred_relationships.to_p, work_summary, note_tags, work_notes]
     when "Series"
       [add_authors(inferred_authors), add_fandoms(inferred_fandoms), work_summary, work_notes]
     end.join_hr
@@ -350,12 +353,13 @@ module Meta
     end
   end
 
-  def ao3_tt(strings)
+  def ao3_xx(strings)
     found = []
     strings.each do |string|
       if string.match("Time Travel")
         set_tt
-        return self
+      elsif string.match(/Fix[- ][iI]t/)
+        set_fi
       end
     end
     return self
@@ -376,7 +380,7 @@ module Meta
     Rails.logger.debug "set notes to #{inferred_notes}"
     Rails.logger.debug "set end notes to #{tail_notes}"
     wip? ? set_wip : unset_wip
-    ao3_tt(inferred_tags) unless chapter_url?
+    ao3_xx(inferred_tags) unless chapter_url?
     return self
   end
 

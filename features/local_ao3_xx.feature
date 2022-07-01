@@ -12,37 +12,29 @@ Scenario: Single is
   When I am on the page's page
   Then I should see "Time Travel" within ".pros"
 
-Scenario: But can be toggled off
-  Given Fuuinjutsu exists
-  When I am on the page's page
-    And I press "Toggle Time Travel"
-  Then I should NOT see "Time Travel" within ".pros"
-
 Scenario: time-travel in Single comments is NOT
   Given Where am I exists
   When I am on the page's page
   Then I should NOT see "Time Travel" within ".pros"
-
-Scenario: But can be toggled on
-  Given Where am I exists
-  When I am on the page's page
-    And I press "Toggle Time Travel"
-  Then I should see "Time Travel" within ".pros"
 
 Scenario: time-travel in Book comments is NOT
   Given Time Was exists
   When I am on the page's page
   Then I should NOT see "Time Travel" within ".pros"
 
-Scenario: But can be toggled on
-  Given Time Was exists
-  When I am on the page's page
-    And I press "Toggle Time Travel"
-  Then I should see "Time Travel" within ".pros"
 
-Scenario: and off again
-  Given Time Was exists
+Scenario: default is not
+  Given a page exists
   When I am on the page's page
-    And I press "Toggle Time Travel"
-    And I press "Toggle Time Travel"
-  Then I should NOT see "Time Travel" within ".pros"
+  Then I should NOT see "Fix-it" within ".pros"
+
+Scenario: Single is
+  Given not a chance exists
+  When I am on the page's page
+  Then I should see "Fix-it" within ".pros"
+
+Scenario: fix-it in Single comments is NOT
+  Given not a chance exists
+  When I am on the page's page
+  Then I should NOT see "Fix-It" within ".pros"
+
