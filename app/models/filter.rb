@@ -80,6 +80,8 @@ class Filter
       tag = Hidden.find_by_short_name(params[:hidden])
       Rails.logger.debug "with #{tag.base_name}"
       tags << tag
+    elsif params[:show] == "hiddens"
+      #no-op
     else
       pages = pages.where(hidden: false)
     end

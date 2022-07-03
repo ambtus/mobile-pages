@@ -185,3 +185,31 @@ Scenario: no cons any pros
     And I should NOT see "page2"
     And I should NOT see "page1"
     And the page should NOT contain css "#position_4"
+
+Scenario: check before hiddens and pros
+  Given a page exists with hiddens: "abc123" AND pros: "cba321" AND title: "Page1"
+  When I am on the filter page
+    And I select "cba321" from "pro"
+    And I press "Find"
+  Then the page should NOT contain css "#position_1"
+    And I should see "No pages found"
+
+Scenario: hiddens and pros
+  Given a page exists with hiddens: "abc123" AND pros: "cba321" AND title: "Page1"
+    And a page exists with hiddens: "abc123" AND pros: "xyz789" AND title: "Page2"
+  When I am on the filter page
+    And I click on "show_hiddens"
+    And I select "cba321" from "pro"
+    And I press "Find"
+  Then I should see "Page1"
+    But I should NOT see "Page2"
+
+Scenario: hiddens and pros
+  Given a page exists with hiddens: "abc123" AND pros: "cba321" AND title: "Page1"
+    And a page exists with hiddens: "abc123" AND pros: "xyz789" AND title: "Page2"
+  When I am on the filter page
+    And I click on "show_hiddens"
+    And I click on "show_any_pros"
+    And I press "Find"
+  Then I should see "Page1"
+    And I should see "Page2"
