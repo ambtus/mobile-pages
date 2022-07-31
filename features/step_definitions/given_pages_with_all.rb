@@ -31,8 +31,8 @@ end
 
 Given("pages with all possible soons exist") do
   Page.create(title: "now reading", soon: -1)
-  Page.create(title: "now re-reading", soon: 0)
-  Page.create(title: "read next", soon: 1)
+  Page.create(title: "read next", soon: 0)
+  Page.create(title: "read sooner", soon: 1)
   Page.create(title: "read soon", soon: 2)
   Page.create(title: "default", soon: 3)
   Page.create(title: "read later", soon: 4)

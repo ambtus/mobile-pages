@@ -204,7 +204,7 @@ Scenario: refetching reading makes parent reading
     And I fill in "page_url" with "https://archiveofourown.org/works/692"
     And I press "Refetch"
   Then I should see "Time Was, Time Is (Book)" within ".title"
-    And "Reread" should be checked
+    And "Reading" should be checked
 
 Scenario: refetch from ao3 when it used to be somewhere else
   Given skipping exists

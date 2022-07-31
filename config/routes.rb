@@ -4,9 +4,7 @@ Rails.application.routes.draw do
   root to: redirect('/mini', status: 302)
 
   get '/reading' => "pages#reading", as: :reading
-  get '/reread' => "pages#reread", as: :reread
   get '/soonest' => "pages#soonest", as: :soonest
-  get '/soon' => "pages#soon", as: :soon
   get '/filter' => "pages#filter", as: :filter
   post '/find' => "pages#find", as: :find
 
