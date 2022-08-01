@@ -62,7 +62,7 @@ class Filter
         pages = pages.where('pages.last_read is not null')
         pages.order('last_read ASC')
       when "random"
-        pages.order(Arel.sql('RAND()'))
+        pages.random
       when "last_created"
         pages.order('created_at DESC')
       when "first_created"

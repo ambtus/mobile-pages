@@ -38,7 +38,7 @@ class PagesController < ApplicationController
     @page = Page.new
     @count = params[:count].to_i
     @title = "Read Next"
-    @pages = Page.soonest.limit(@count + 5)[@count..-1]
+    @pages = Page.soonest.random.limit(@count + 5)[@count..-1]
     if @pages.count == Filter::LIMIT
       @new_query = {count: @count + Filter::LIMIT}
     end
