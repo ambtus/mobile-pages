@@ -27,7 +27,7 @@ class PagesController < ApplicationController
     @page = Page.new
     @count = params[:count].to_i
     @title = "Currently Reading"
-    @pages = Page.reading.not_hidden.limit(@count + 5)[@count..-1]
+    @pages = Page.reading.not_hidden.recent.limit(@count + 5)[@count..-1]
     if @pages.count == Filter::LIMIT
       @new_query = {count: @count + Filter::LIMIT}
     end

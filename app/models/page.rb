@@ -9,11 +9,12 @@ class Page < ActiveRecord::Base
   include Soon
   include Split
 
-  scope :reading, -> { where(soon: -1).order('updated_at asc') }
+  scope :reading, -> { where(soon: -1) }
   scope :soonest, -> { where(soon: 0) }
   scope :not_hidden, -> { where(hidden: false) }
   scope :hidden, -> { where(hidden: true) }
   scope :random, -> { order(Arel.sql('RAND()')) }
+  scope :recent, -> { order('updated_at desc') }
 
   MODULO = 1000  # files in a single directory
   LIMIT = 5 # number of parts to show at a time
