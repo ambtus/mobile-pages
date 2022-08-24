@@ -60,7 +60,7 @@ module Meta
   end
 
   def doc
-    if self.type == "Book" && !cn?
+    if self.type == "Book" && !wp?
       Rails.logger.debug "getting doc from last part"
       Nokogiri::HTML(parts.last.raw_html)
     else
@@ -85,7 +85,7 @@ module Meta
   end
 
   def inferred_fandoms
-    if self.parts.any? && !cn?
+    if self.parts.any? && !wp?
       Rails.logger.debug "get fandoms from first and last parts"
       (parts.first.inferred_fandoms + parts.last.inferred_fandoms).uniq
     else
@@ -96,8 +96,8 @@ module Meta
         hash = old_ff_style_hash[:cat_title]
         links = doc.css("#pre_story_links a")[1].text rescue nil
         [hash, links].pulverize
-      elsif cn?
-        first_try = cn_try("Fandom")
+      elsif wp?
+        first_try = wp_try("Fandom")
         if first_try.blank? && parts.any?
           (parts.first.inferred_fandoms + parts.last.inferred_fandoms).uniq
         else
@@ -110,10 +110,10 @@ module Meta
   end
 
   def inferred_relationships
-    if self.parts.empty? || cn?
+    if self.parts.empty? || wp?
       Rails.logger.debug "get relationships from raw_html"
-      if cn?
-        [cn_try("Relationship"), cn_try("Pairing")].pulverize
+      if wp?
+        [wp_try("Relationship"), wp_try("Pairing")].pulverize
       else
         doc.css(".relationship a").map(&:children).map(&:text)
       end
@@ -124,10 +124,10 @@ module Meta
   end
 
   def inferred_tags
-    if self.parts.empty? || cn?
+    if self.parts.empty? || wp?
       Rails.logger.debug "get tags from raw_html"
-      if cn?
-        cn_try("Genre").split(", ") + cn_try("Warnings").split(", ") - inferred_fandoms
+      if wp?
+        wp_try("Genre").split(", ") + wp_try("Warnings").split(", ") - inferred_fandoms
       else
         doc.css(".freeform a").map(&:children).map(&:text)
       end
@@ -154,6 +154,8 @@ module Meta
       [hash, links].pulverize
     elsif cn?
       ["Claire Watson"]
+    elsif km?
+      ["Keira Marcos"]
     end
   end
 
@@ -173,7 +175,7 @@ module Meta
       old = doc.search('option[@selected="selected"]').children[1].text.match(/\d+\. (.*)/) rescue nil
       [new, old].pulverize.first
       $1
-    elsif cn?
+    elsif wp?
       doc.at("h1").text.gsub("–", "—").split("—").second.squish
     end
   end
@@ -193,7 +195,7 @@ module Meta
       new = book_doc.css("#profile_top b").text rescue nil
       old = old_ff_style_hash[:title_t]
       [new, old].pulverize.first || "title not found"
-    elsif cn?
+    elsif wp?
       doc.at("h1").text.gsub("–", "—").split("—").first.squish
     else
       "title not found"
@@ -232,8 +234,8 @@ module Meta
   end
 
   def work_summary
-    if cn?
-      cn_try("Summary")
+    if wp?
+      wp_try("Summary")
     elsif type == "Series" && ao3?
       begin
         return doc.css(".series dd")[3].css("blockquote").children.to_html if doc.css(".series dt")[3].text == "Description:"
@@ -253,14 +255,14 @@ module Meta
   end
 
   def work_notes
-    if cn? && type=="Series"
+    if wp? && type=="Series"
       content = doc.at(".entry-content")
       content.children.each do |node|
         node.remove if node.name == "div"
       end
       Scrub.sanitize_html(content).children.to_html
-    elsif cn?
-      [doc.css('div.tab-pane')[2]&.to_html, doc.css('div.tab-pane')[1]&.to_html, cn_try("Authors? [Nn]otes?")].join_hr
+    elsif wp?
+      [doc.css('div.tab-pane')[2]&.to_html, doc.css('div.tab-pane')[1]&.to_html, wp_try("Authors? [Nn]otes?")].join_hr
     elsif type == "Series" && ao3?
       begin
         return doc.css(".series dd")[3].css("blockquote").children.to_html if doc.css(".series dt")[3].text == "Notes:"
@@ -317,7 +319,7 @@ module Meta
   def head_notes
     case type
     when "Chapter"
-      if cn?
+      if wp?
         [add_fandoms(inferred_fandoms), inferred_relationships.to_p, work_summary, note_tags, work_notes]
       else
         [chapter_summary, chapter_notes]
@@ -366,8 +368,8 @@ module Meta
   end
 
   def set_meta
-    unless ao3? || ff? || first_part_ff? || cn?
-      Rails.logger.debug "only ao3 & FF && cn for now"
+    unless ao3? || ff? || first_part_ff? || wp?
+      Rails.logger.debug "only ao3 & fanfiction.net && wordpress for now"
       return false
     end
     if raw_html.blank? && parts.blank?
@@ -494,7 +496,7 @@ module Meta
     return self
   end
 
-  def cn_try(string)
+  def wp_try(string)
     return "" if doc.at("strong").blank?
     all = doc.at("strong").parent.inner_html.squish.gsub("<strong><a ", "<a ").gsub("</a></strong>", "</a>")
     metas = all.split("<strong>").pulverize

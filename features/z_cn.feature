@@ -1,4 +1,4 @@
-Feature: download from cn
+Feature: download from wp
 
 Scenario: grab a single
   Given "Harry Potter" is a "Fandom"

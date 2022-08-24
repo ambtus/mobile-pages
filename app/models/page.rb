@@ -203,6 +203,8 @@ class Page < ActiveRecord::Base
   def has_content?; raw_html.present? && parts.blank?; end
 
   def cn?; self.url && self.url.match(/clairesnook.com/); end
+  def km?; self.url && self.url.match(/keiramarcos.com/); end
+  def wp?; cn? || km? ; end
 
   def ao3?; self.url && self.url.match(/archiveofourown/); end
   def ao3_chapter?; ao3? && self.url.match(/chapter/); end
@@ -417,7 +419,7 @@ class Page < ActiveRecord::Base
         return self
       else
         fetch_raw
-        set_meta if cn?
+        set_meta if wp?
         self.parent.set_wordcount(false) if self.parent
         return self
       end
@@ -806,7 +808,7 @@ private
     FileUtils.mkdir_p(mydirectory) # make sure directory exists
 
     if self.url.present?
-      if self.ao3? || self.cn?
+      if self.ao3? || self.wp?
         if type.nil?
           page = ao3? ? self.becomes!(initial_ao3_type) : self.becomes!(Single)
           Rails.logger.debug "page became #{page.type}"
