@@ -1,6 +1,6 @@
 Feature: download from wp
 
-Scenario: grab a single
+Scenario: grab a single from cn
   Given "Harry Potter" is a "Fandom"
     And "Claire Watson" is an "Author"
     And I am on the mini page
@@ -16,3 +16,15 @@ Scenario: grab a single
     But I should NOT see "by Claire Watson" within ".notes"
     And I should NOT see "Fix-it" within ".notes"
 
+Scenario: grab a single from km
+  Given "Sentinel" is a "Fandom"
+    And "Keira Marcos" is an "Author"
+    And I am on the mini page
+  When I fill in "page_url" with "https://keiramarcos.com/2009/03/the-awakening-part-one-five/"
+    And I press "Store"
+  Then I should see "The Awakening (Single)" within ".title"
+    And I should see "Sentinel" within ".fandoms"
+    And I should see "Keira Marcos" within ".authors"
+    And I should see "Blair/Jim" within ".notes"
+    And I should see "Detective Jim Ellison doesn’t want a Guide." within ".notes"
+    But I should NOT see "by Keira Marcos" within ".notes"

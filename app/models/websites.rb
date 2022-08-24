@@ -58,7 +58,7 @@ module Websites
               body.children
             when /grazhir.com/
               body.at('div#content')
-            when /clairesnook.com/
+            when /clairesnook.com/, /keiramarcos.com/
               if body.at('div.tab-pane')
                 body.at('div.tab-pane')
               else

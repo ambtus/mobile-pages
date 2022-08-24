@@ -175,8 +175,10 @@ module Meta
       old = doc.search('option[@selected="selected"]').children[1].text.match(/\d+\. (.*)/) rescue nil
       [new, old].pulverize.first
       $1
-    elsif wp?
+    elsif cn?
       doc.at("h1").text.gsub("–", "—").split("—").second.squish
+    elsif km?
+      doc.at("h1").text.split("–", 2).second.squish
     end
   end
 
