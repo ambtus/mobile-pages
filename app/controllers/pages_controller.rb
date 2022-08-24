@@ -101,7 +101,7 @@ class PagesController < ApplicationController
       @title = "Filtered pages"
       @pages = Filter.new(request.query_parameters)
     end
-    if @pages.empty?
+    if @pages.blank?
       flash.now[:alert] = "No pages found"
     elsif @pages.count == Filter::LIMIT
       @new_query = query.merge(count: @count + Filter::LIMIT)

@@ -1,4 +1,4 @@
-Feature: 5 star ratings
+Feature: ratings
 
 Scenario: new rating page
   Given a page exists
@@ -50,33 +50,4 @@ Scenario: rate a book 2 stars (bad)
   Then I should see "1 star"
     And I should NOT see "stars"
     And the read after date should be 4 years from now
-
-Scenario: check before rate part
-  Given a page exists with title: "Parent" AND base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-2"
-  Then the read after date should be 0 years from now
-
-Scenario: rate one part leaves parent read after unchanged
-  Given a page exists with title: "Parent" AND base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-2"
-  When I am on the homepage
-    And I follow "Parent"
-    And I follow "Part 1"
-    And I follow "Rate"
-    And I click on "4"
-    And I press "Rate"
-  Then the read after date should be 0 years from now
-
-Scenario: rate both parts changes parent read after date based on best part
-  Given a page exists with title: "Parent" AND base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-2"
-  When I am on the homepage
-    And I follow "Parent"
-    And I follow "Part 1"
-    And I follow "Rate"
-    And I click on "4"
-    And I press "Rate"
-    And I follow "Parent"
-    And I follow "Part 2"
-    And I follow "Rate"
-    And I click on "1"
-    And I press "Rate"
-  Then the read after date should be 1 years from now
 

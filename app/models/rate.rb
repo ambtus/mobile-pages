@@ -72,8 +72,7 @@ module Rate
     else
       parts_to_be_rated = all == "Yes" ? parts : unread_parts
       Rails.logger.debug "rating #{parts_to_be_rated.size} parts"
-      parts_to_be_rated.update_all stars: stars
-      parts_to_be_rated.update_all last_read: Time.now unless stars == "9"
+      parts_to_be_rated.each {|part| part.rate_today(stars, all)}
       update_from_parts
     end
   end

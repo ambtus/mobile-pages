@@ -94,18 +94,3 @@ Scenario: create series by adding subparts to book
     And I should see "Parent3" within "#position_3"
     And I should NOT see "parts" within "#position_3"
 
-Scenario: rating a single unread child sets parent AND grandparent to read
-  Given a page exists with title: "Parent" AND urls: "http://test.sidrasue.com/parts/1.html" AND last_read: "2009-01-01"
-  When I am on the page with title "Parent"
-    And I add a parent with title "Grandparent"
-    And I am on the page with title "Parent"
-    And I follow "Add Part"
-    And I fill in "add_url" with "http://test.sidrasue.com/parts/2.html"
-    And I press "Add"
-    And I am on the page with title "Part 2"
-    And I follow "Rate"
-    And I click on "3"
-    And I press "Rate"
-    And I am on the page with title "Grandparent"
-  Then I should NOT see "unread"
-    But I should see "2009-01-01"

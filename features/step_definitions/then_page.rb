@@ -151,3 +151,6 @@ Then('it should have {int} horizontal rules') do |int|
   assert_equal int, Page.first.scrubbed_html.scan(/<hr/).count
 end
 
+Then('all pages should be rated {int}') do |int|
+  assert_equal [int], Page.all.map(&:stars).uniq
+end
