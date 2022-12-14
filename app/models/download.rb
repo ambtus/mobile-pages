@@ -91,7 +91,8 @@ module Download
   end
 
   def epub_title
-    parent ? self.title + " of #{parent.epub_title}" : self.title
+    cleaned_title = self.title.gsub('"', '“')
+    parent ? cleaned_title + " of #{parent.epub_title}" : cleaned_title
   end
 
   def epub_tags

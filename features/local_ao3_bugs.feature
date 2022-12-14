@@ -115,3 +115,9 @@ Scenario: triple hr's
     And "Star Wars" is a "Fandom"
     And 55367 exists
   Then it should have 10 horizontal rules
+
+Scenario: quote in title
+  Given I asked exists
+  When I am on the homepage
+    And I follow "ePub"
+  Then the download epub file should exist

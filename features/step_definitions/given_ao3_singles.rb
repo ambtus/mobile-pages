@@ -141,3 +141,9 @@ Given('not a chance exists') do
   page.update!(url: "https://archiveofourown.org/works/22529866")
   page.set_raw_from("nota")
 end
+
+Given('I asked exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/42267606/chapters/106131021")
+  page.set_raw_from("asked")
+end
