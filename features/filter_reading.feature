@@ -46,3 +46,20 @@ Scenario: reading page after download hidden
     And the page should NOT contain css "#position_2"
     And I should see "(and 1 hidden)"
 
+Scenario: reading next
+  Given six downloaded and six hidden pages exist
+  When I am on the reading page
+    And I press "Next"
+  Then I should see "reading" within ".pages"
+    And the page should NOT contain css "#position_2"
+    And I should see "(and 6 hidden)"
+
+Scenario: reading next
+  Given six downloaded and six hidden pages exist
+  When I am on the reading page
+    And I press "Next"
+    And I follow "(and 6 hidden)"
+    And I press "Next"
+  Then I should see "hidden" within ".pages"
+    And the page should NOT contain css "#position_2"
+
