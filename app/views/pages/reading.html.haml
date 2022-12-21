@@ -1,3 +1,6 @@
-.soon #{Page.reading.not_hidden.count} pages (and #{Page.reading.hidden.count} hidden)
+.soon
+  #{Page.reading.not_hidden.count} pages
+  =link_to hidden_path do
+    (and #{Page.reading.hidden.count} hidden)
 =render "pages" unless @pages.blank?
 =render "next", path: reading_path

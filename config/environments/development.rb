@@ -56,8 +56,11 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  config.hosts << `hostname`.chomp.downcase
-  config.hosts << `hostname`.chomp.downcase + ".local"
+  hostname = `hostname`.chomp.split(".").first.downcase
+  config.hosts << hostname
+  config.hosts << hostname + ".local"
+  config.hosts << hostname + ".home"
+  config.hosts << hostname + ".ambt.us"
 
   # Set the logging destination(s)
   config.log_to = %w[stdout file]

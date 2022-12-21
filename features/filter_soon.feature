@@ -6,12 +6,6 @@ Scenario: quick links
     But I should NOT see "Default Someday Eventually"
     And I should NOT see "Soon"
 
-Scenario: reading page
-  Given pages with all possible soons exist
-  When I am on the reading page
-  Then I should see "now reading" within ".pages"
-    And the page should NOT contain css "#position_2"
-
 Scenario: next page
   Given pages with all possible soons exist
   When I am on the soonest page
