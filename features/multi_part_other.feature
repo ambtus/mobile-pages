@@ -13,6 +13,13 @@ Scenario: link to next part from part
     And I follow "Part 2" within ".part"
   Then I should see "Part 2 (Chapter)" within ".title"
 
+Scenario: link to previous part from part
+  Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html"
+  When I am on the page's page
+    And I follow "Part 2"
+    And I follow "Part 1" within ".part"
+  Then I should see "Part 1 (Chapter)" within ".title"
+
 Scenario: reorder the parts on an existing page with parts
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
   When I am on the page's page

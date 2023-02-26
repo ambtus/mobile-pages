@@ -30,6 +30,11 @@
       of
       =link_to @page.parent.parent.title, page_path(@page.parent.parent)
       [#{@page.parent.parent.soon_label}]
+-if @page.previous_part
+  .part
+    Previous:
+    = link_to @page.previous_part.title, page_path(@page.previous_part)
+    (#{@page.previous_part.type})
 -if @page.next_part
   .part
     Next:

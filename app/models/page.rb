@@ -333,6 +333,21 @@ class Page < ActiveRecord::Base
     end
   end
 
+  def previous_part
+    return nil unless parent
+    my_index = parent.parts.find_index(self)
+    return nil if my_index.nil?
+    if parent.parts[my_index-1]
+      return parent.parts[my_index-1]
+    elsif parent.previous_part
+      if parent.previous_part.parts.blank?
+        return parent.previous_part
+      else
+        return parent.previous_part.parts.last
+      end
+    end
+  end
+
   def last_chapter?
     return nil unless parent
     parent.parts.last == self
