@@ -84,8 +84,10 @@ Scenario: rate all unrated up to now
     And I am on the page's page
   Then I should see "2 unread parts"
   Then show me the page
-    And I should see "unread" within "#position_4"
-    And I should see "unread" within "#position_5"
     And I should NOT see "unread" within "#position_1"
+    But I should see "2009" within "#position_1"
     And I should NOT see "unread" within "#position_2"
+    But I should see "2010" within "#position_2"
     And I should NOT see "unread" within "#position_3"
+    And I should NOT see "unread" within "#position_4"
+    And I should see "unread" within "#position_5"

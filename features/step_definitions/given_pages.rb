@@ -142,7 +142,11 @@ Given('a partially read book exists') do
   6.times do |i|
     Chapter.create(title: "chapter #{i+1}", parent_id: book.id, position: i+1)
   end
-  book.parts.first.update last_read: 2009, stars: 4
-  book.parts.second.update last_read: 2010, stars: 4
+  chapter1=book.parts.first
+  chapter1.update last_read: "2009-01-01", stars: 4
+  chapter1.update_read_after
+  chapter2=book.parts.second
+  chapter2.update last_read: "2010-01-01", stars: 2
+  chapter2.update_read_after
   book.update_from_parts
 end

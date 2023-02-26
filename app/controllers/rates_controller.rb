@@ -18,7 +18,7 @@ class RatesController < ApplicationController
     page.reset_soon
     previous = params[:all_previous]
     if previous
-      page.previous_parts.each {|p| p.rate_today(stars)}
+      page.unread_previous.each {|p| p.rate_today(stars)}
       page.parent.update_from_parts
       redirect_to edit_rate_path(page.parent)
     else
