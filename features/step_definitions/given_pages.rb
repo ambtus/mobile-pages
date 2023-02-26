@@ -128,3 +128,11 @@ Given("six downloaded and six hidden pages exist") do
     Single.create(title: "hidden #{i+1}", soon: -1, hidden: true)
   end
 end
+
+Given('a book exists') do
+  book = Book.create!(title: "Book")
+  6.times do |i|
+    Chapter.create(title: "chapter #{i+1}", parent_id: book.id, position: i+1)
+  end
+  book.update_from_parts
+end

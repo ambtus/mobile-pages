@@ -316,6 +316,7 @@ class Page < ActiveRecord::Base
   end
 
   def parts; Page.order(:position).where(["parent_id = ?", id]); end
+  def previous_parts; Page.order(:position).where(["parent_id = ?", parent_id]).where("position < ?", position); end
 
   def next_part
     return nil unless parent

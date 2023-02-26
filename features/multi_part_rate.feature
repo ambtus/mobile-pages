@@ -58,3 +58,18 @@ Scenario: rating all unrated
     And I click on "3"
     And I press "Rate"
   Then all pages should be rated 3
+
+Scenario: rate all up to now
+  Given a book exists
+  When I am on the page with title "chapter 3"
+    And I follow "Rate"
+    And I click on "3"
+    And I click on "all_previous"
+    And I press "Rate"
+    And I am on the page's page
+  Then I should see "3 unread parts"
+    And I should see "unread" within "#position_4"
+    And I should see "unread" within "#position_5"
+    And I should NOT see "unread" within "#position_1"
+    And I should NOT see "unread" within "#position_2"
+    And I should NOT see "unread" within "#position_3"

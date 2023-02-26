@@ -16,7 +16,14 @@ class RatesController < ApplicationController
     page.rate_today(stars, params[:all])
     page.update_cliff(params[:cliff])
     page.reset_soon
-    redirect_to edit_rate_path(page)
+    previous = params[:all_previous]
+    if previous
+      page.previous_parts.each {|p| p.rate_today(stars)}
+      page.parent.update_from_parts
+      redirect_to edit_rate_path(page.parent)
+    else
+      redirect_to edit_rate_path(page)
+    end
   end
 
   def edit
