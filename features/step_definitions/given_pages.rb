@@ -136,3 +136,13 @@ Given('a book exists') do
   end
   book.update_from_parts
 end
+
+Given('a partially read book exists') do
+  book = Book.create!(title: "Book")
+  6.times do |i|
+    Chapter.create(title: "chapter #{i+1}", parent_id: book.id, position: i+1)
+  end
+  book.parts.first.update last_read: 2009, stars: 4
+  book.parts.second.update last_read: 2010, stars: 4
+  book.update_from_parts
+end
