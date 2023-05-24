@@ -10,7 +10,7 @@ Given /^Open the Door exists$/ do
   page.rebuild_meta
 end
 
-Given /^Time Was exists$/ do
+Given /^Time Was existed$/ do
   page = Book.create!(title: "temp")
   page.update!(url: "https://archiveofourown.org/works/692")
   chapter1 = Chapter.create!(title: "temp", parent_id: page.id, position: 1)
@@ -20,6 +20,20 @@ Given /^Time Was exists$/ do
   chapter2.update!(url: "https://archiveofourown.org/works/692/chapters/804")
   chapter2.set_raw_from("hogwarts")
   page.rebuild_meta
+  page.update_from_parts
+end
+
+Given /^Time Was exists$/ do
+  page = Book.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/692")
+  chapter1 = Chapter.create!(title: "temp", parent_id: page.id, position: 1)
+  chapter1.update!(url: "https://archiveofourown.org/works/692/chapters/803")
+  chapter1.set_raw_from("where_new")
+  chapter2 = Chapter.create!(title: "temp", parent_id: page.id, position: 2)
+  chapter2.update!(url: "https://archiveofourown.org/works/692/chapters/804")
+  chapter2.set_raw_from("hogwarts_new")
+  page.rebuild_meta
+  page.update_from_parts
 end
 
 Given /^Time Was partially exists$/ do

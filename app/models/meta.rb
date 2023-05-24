@@ -247,7 +247,7 @@ module Meta
       end
     elsif %w{Book Single}.include?(type)
       if ao3?
-        Scrub.sanitize_html(book_doc.css(".summary[role=complementary] blockquote")).children.to_html
+        Scrub.sanitize_html(book_doc.css(".summary blockquote")).children.to_html
       elsif ff? || first_part_ff?
         new = book_doc.css(".xcontrast_txt[style='margin-top:2px']").children.to_html
         old = old_ff_style_hash[:summary]
@@ -273,7 +273,7 @@ module Meta
         ""
       end
     elsif %w{Book Single}.include?(type)
-      Scrub.sanitize_html(book_doc.css("[class='notes module'][role=complementary] blockquote")).children.to_html
+      Scrub.sanitize_html(book_doc.css("[class='notes module'] blockquote")).children.to_html
     end
   end
 

@@ -121,3 +121,39 @@ Scenario: quote in title
   When I am on the homepage
     And I follow "ePub"
   Then the download epub file should exist
+
+Scenario: before removal of complementary
+  Given "harry potter" is a "Fandom"
+    And Time Was existed
+  When I am on the page's page
+  Then I should see "Time Was, Time Is (Book)" within ".title"
+    And I should see "WIP" within ".cons"
+    And I should see "1,581 words" within ".size"
+    And I should see "by Sidra" within ".notes"
+    And I should see "harry potter" within ".fandoms"
+    And I should see "Using time-travel" within ".notes"
+    And I should see "abandoned, Mary Sue" within ".notes"
+    And I should see "written for nanowrimo" within ".notes"
+    And I should see "1. Where am I?" within "#position_1"
+    And I should NOT see "written for nanowrimo" within "#position_1"
+    And I should see "2. Hogwarts" within "#position_2"
+    And I should see "giving up on nanowrimo" within "#position_2"
+    And my page named "Time Was, Time Is" should have url: "https://archiveofourown.org/works/692"
+
+Scenario: after removal of complementary
+  Given "harry potter" is a "Fandom"
+    And Time Was exists
+  When I am on the page's page
+  Then I should see "Time Was, Time Is (Book)" within ".title"
+    And I should see "WIP" within ".cons"
+    And I should see "1,581 words" within ".size"
+    And I should see "by Sidra" within ".notes"
+    And I should see "harry potter" within ".fandoms"
+    And I should see "Using time-travel" within ".notes"
+    And I should see "abandoned, Mary Sue" within ".notes"
+    And I should see "written for nanowrimo" within ".notes"
+    And I should see "1. Where am I?" within "#position_1"
+    And I should NOT see "written for nanowrimo" within "#position_1"
+    And I should see "2. Hogwarts" within "#position_2"
+    And I should see "giving up on nanowrimo" within "#position_2"
+    And my page named "Time Was, Time Is" should have url: "https://archiveofourown.org/works/692"

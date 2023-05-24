@@ -16,10 +16,16 @@ Given /^Fuuinjutsu exists$/ do
   page.set_raw_from("Fuuinjutsu")
 end
 
-Given /^I Drive Myself Crazy exists$/ do
+Given /^I Drive Myself Crazy existed$/ do
   page = Single.create!(title: "temp")
   page.update!(url: "https://archiveofourown.org/works/68481")
   page.set_raw_from("drive")
+end
+
+Given /^I Drive Myself Crazy exists$/ do
+  page = Single.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/68481")
+  page.set_raw_from("drive_new")
 end
 
 Given /^Bad Formatting exists$/ do
