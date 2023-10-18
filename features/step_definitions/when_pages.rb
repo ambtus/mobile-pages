@@ -32,7 +32,7 @@ When("I view the text for reading aloud") do
    page = Page.with_content.first
    raise "no pages that can be read aloud" unless page
    visit page_path(page)
-   within(".views") {click_link("Text")}
+   within(".views") {click_link("Read")}
 end
 
 When("I download its epub") do

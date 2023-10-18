@@ -1,0 +1,5 @@
+.form
+  = form_tag parts_path do
+    = hidden_field_tag(:page_id, @page.id)
+    .title= text_field_tag :audio_url, @page.audio_url || 'http://imac.local/~alice/audiobooks/', :size => 64
+    = submit_tag "Update"

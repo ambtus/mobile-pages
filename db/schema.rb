@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_06_28_230428) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_18_201708) do
   create_table "pages", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "url"
     t.string "title"
@@ -35,18 +35,19 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_28_230428) do
     t.boolean "scrubbed_notes", default: false
     t.integer "soon", limit: 2, default: 3
     t.boolean "pro", default: false
+    t.string "audio_url"
     t.index ["parent_id"], name: "index_pages_on_parent_id"
     t.index ["size"], name: "index_pages_on_size"
     t.index ["stars"], name: "index_pages_on_stars"
     t.index ["ultimate_parent_id"], name: "index_pages_on_ultimate_parent_id"
   end
 
-  create_table "pages_tags", id: false, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+  create_table "pages_tags", id: false, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "page_id"
     t.integer "tag_id"
   end
 
-  create_table "tags", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+  create_table "tags", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.string "type", default: "", null: false
     t.index ["name"], name: "tag_name"

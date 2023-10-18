@@ -1,5 +1,13 @@
 Feature: audiobook
 
+Scenario: add audiobook url
+  Given a page exists
+  When I am on the page's page
+    And I follow "AudioURL"
+    And I fill in "audio_url" with "http://imac.local/~alice/audiobooks/Fanfic/DCU/Unpaid%20Internship.mp3"
+    And I press 'Update'
+  Then "Listen" should link to "http://imac.local/~alice/audiobooks/Fanfic/DCU/Unpaid%20Internship.mp3"
+
 Scenario: audiobook sections
   Given a page exists with url: "http://test.sidrasue.com/long.html"
   When I view the text for reading aloud
