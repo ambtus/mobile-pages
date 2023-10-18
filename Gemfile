@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 gem 'bundler'
 
-gem 'rails'
+gem 'rails', '~> 7.0.5'
 gem 'nokogiri'
 gem 'mysql2'
 

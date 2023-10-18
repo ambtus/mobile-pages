@@ -83,7 +83,6 @@ Scenario: rate all unrated up to now
     And I press "Rate"
     And I am on the page's page
   Then I should see "2 unread parts"
-  Then show me the page
     And I should NOT see "unread" within "#position_1"
     But I should see "2009" within "#position_1"
     And I should NOT see "unread" within "#position_2"
