@@ -19,8 +19,6 @@ class Page < ActiveRecord::Base
   MODULO = 1000  # files in a single directory
   LIMIT = 5 # number of parts to show at a time
 
-  def audio_extension; audio_url.blank? ? nil : File.extname(audio_url); end
-
   def normalize_url
     return if self.url.blank?
     normalized = self.url.normalize

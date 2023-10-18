@@ -36,6 +36,7 @@ class PartsController < ApplicationController
       @page.update_attribute(:title, params[:title])
     elsif params[:audio_url]
       @page.update_attribute(:audio_url, params[:audio_url])
+      @page.save!
     elsif params[:add_url]
       url = params[:add_url] unless params[:add_url] == URL_PLACEHOLDER
       @page.add_part(url)
