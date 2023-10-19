@@ -1,6 +1,6 @@
 .url
   = form_with url: @page, local: true do |form|
     = render "page_url"
-    = form.submit "Store", :name => "Store"
-    = form.submit "Refetch", :name => "Refetch"
     = form.submit "Find", :name => "Find"
+    = form.submit "Refetch", :name => "Refetch"
+    = form.submit "Store", :name => "Store"
