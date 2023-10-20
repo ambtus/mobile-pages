@@ -200,7 +200,10 @@ class Page < ActiveRecord::Base
   after_create :initial_fetch
 
   scope :with_content, -> { where(type: [Chapter, Single]) }
-  def has_content?; raw_html.present? && parts.blank?; end
+  def has_content?
+    raw_html.present? && parts.blank?
+    rescue
+  end
 
   def cn?; self.url && self.url.match(/clairesnook.com/); end
   def km?; self.url && self.url.match(/keiramarcos.com/); end
