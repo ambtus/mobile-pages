@@ -58,6 +58,7 @@ hr {
 .node      { background-color: #990; }
  */
 .end_notes { background-color: #CCC; }
+.my_notes  { background-color: #CCC; }
 page { font-family: Georgia,serif; }
 
 /* possibles:  CCF, CFC, CFF, CF9, C9F
