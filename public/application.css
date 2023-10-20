@@ -19,6 +19,7 @@ hr {
     height: 1px;
     width: 70%;
 }
+/*
 .cons      { background-color: #F77; }
 .rebuild   { background-color: #F77; }
 .my_notes  { background-color: #F77; }
@@ -26,7 +27,9 @@ hr {
 .title     { background-color: #CCF; }
 .parent    { background-color: #CFC; }
 .fandoms   { background-color: #CFC; }
-.part      { background-color: #CFC; border-width: 1px; border-style: dotted;}
+ */
+.part      { /* background-color: #CFC;  */border-width: 1px; border-style: dotted;}
+/*
 .parts     { background-color: #CFC; }
 .type      { background-color: #CFF; }
 .size      { background-color: #C9F; }
@@ -34,7 +37,9 @@ hr {
 .content   { background-color: #EEE; }
 .last_read { background-color: #FCC; }
 .part_links{ background-color: #FCF; }
-.page      { background-color: #FC9; border-width: 1px; border-style: dotted;}
+ */
+.page      { /* background-color: #FC9;  */border-width: 1px; border-style: dotted;}
+/*
 .notes     { background-color: #FC9; }
 .infos     { background-color: #FFC; }
 .sort_by   { background-color: #FF9; }
@@ -51,7 +56,8 @@ hr {
 .soon      { background-color: #9FF; }
 .authors   { background-color: #99F; }
 .node      { background-color: #990; }
-
+ */
+.end_notes { background-color: #CCC; }
 page { font-family: Georgia,serif; }
 
 /* possibles:  CCF, CFC, CFF, CF9, C9F
