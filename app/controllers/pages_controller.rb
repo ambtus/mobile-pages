@@ -243,9 +243,19 @@ class PagesController < ApplicationController
       when "Toggle #{Page::OTHER}"
         @page.toggle_of.rebuild_meta
         flash[:notice] = "Toggled #{Page::OTHER}"
-      when "Toggle End Notes"
+      when 'Put end notes after', 'Put end notes before'
         @page.toggle_end.remove_outdated_downloads
         flash[:notice] = "Toggled End Notes"
+      when 'Put all end notes after'
+        @page.parts.update_all(at_end: true)
+        @page.parts.map(&:remove_outdated_downloads)
+        @page.remove_outdated_downloads
+        flash[:notice] = "Toggled All End Notes"
+      when 'Put all end notes before'
+        @page.parts.update_all(at_end: false)
+        @page.parts.map(&:remove_outdated_downloads)
+        @page.remove_outdated_downloads
+        flash[:notice] = "Toggled All End Notes"
       when "Make Single"
         @page.make_single
         flash[:notice] = "Made Single"

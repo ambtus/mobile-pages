@@ -150,3 +150,17 @@ Given('a partially read book exists') do
   chapter2.update_read_after
   book.update_from_parts
 end
+
+Given('a work exists with chapter end_notes') do
+  book = Book.create(title: "Book")
+  Chapter.create(title: "ch1", parent_id: book.id, position: 1, end_notes: "chapter 1 end notes", url: "http://test.sidrasue.com/test1.html")
+  Chapter.create(title: "ch2", parent_id: book.id, position: 2, end_notes: "chapter 2 end notes", url: "http://test.sidrasue.com/test2.html")
+  book.update_from_parts
+end
+
+Given('a work exists with chapter end_notes at end') do
+  book = Book.create(title: "Book")
+  Chapter.create(title: "ch1", parent_id: book.id, position: 1, end_notes: "chapter 1 end notes", url: "http://test.sidrasue.com/test1.html", at_end: true)
+  Chapter.create(title: "ch2", parent_id: book.id, position: 2, end_notes: "chapter 2 end notes", url: "http://test.sidrasue.com/test2.html", at_end: true)
+  book.update_from_parts
+end

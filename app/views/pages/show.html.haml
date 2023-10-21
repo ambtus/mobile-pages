@@ -19,7 +19,12 @@
       = submit_tag "Remove Duplicate Tags" unless @page.parts.blank?
       = submit_tag "Move Tags to Parent" if @page.tags.any? unless @page.parent.blank?
       = submit_tag "Toggle #{Page::OTHER}"
-      = submit_tag "Toggle End Notes"
+      =submit_tag 'Put all end notes before' unless @page.parts.blank?
+      =submit_tag 'Put all end notes after' unless @page.parts.blank?
+      -if @page.at_end
+        =submit_tag 'Put end notes before'
+      -else
+        =submit_tag 'Put end notes after'
 -if @page.parent
   .parent
     Parent:
