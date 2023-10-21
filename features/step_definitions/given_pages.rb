@@ -164,3 +164,11 @@ Given('a work exists with chapter end_notes at end') do
   Chapter.create(title: "ch2", parent_id: book.id, position: 2, end_notes: "chapter 2 end notes", url: "http://test.sidrasue.com/test2.html", at_end: true)
   book.update_from_parts
 end
+
+Given('a long partially read page exists') do
+  book = Book.create(title: 'Book')
+  10.times {|i| Chapter.create(title: "Part #{i+1}", parent_id: book.id, position: i+1, url: "https://www.fanfiction.net/s/7347955/#{i+1}/Dreaming-of-Sunshine", last_read: "2009-01-01", stars: 4)}
+  10.times {|i| Chapter.create(title: "Part #{i+11}", parent_id: book.id, position: i+11, url: "https://www.fanfiction.net/s/7347955/#{i+11}/Dreaming-of-Sunshine")}
+  book.update_from_parts
+end
+

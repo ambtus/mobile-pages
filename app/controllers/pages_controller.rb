@@ -196,6 +196,8 @@ class PagesController < ApplicationController
         @count = 0
       when "Next Parts"
         @count = params[:count].to_i + Page::LIMIT
+      when "Next Unread Part"
+        @count = @page.unread_parts.first.position-1
       when "Middle Parts"
         @count = @page.parts.size/2
       when "Previous Parts"

@@ -98,6 +98,7 @@
       = hidden_field_tag :count, @count
       = submit_tag "First Parts" if @count > 0
       = submit_tag "Next Parts" if @page.parts.size > last
+      = submit_tag "Next Unread Part" if @page.unread_parts.exists? && @page.unread_parts.first.position > last
       = submit_tag "Middle Parts" if @count > 0 || @page.parts.size > last
       = submit_tag "Previous Parts" if @count > 0
       = submit_tag "Last Parts" if @page.parts.size > last
