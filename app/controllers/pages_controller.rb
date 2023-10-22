@@ -26,11 +26,19 @@ class PagesController < ApplicationController
   def reading
     @page = Page.new
     @count = params[:count].to_i
+    case params[:commit]
+      when "First"
+        @count = 0
+      when "Next"
+        @count = params[:count].to_i + Filter::LIMIT
+      when "Previous"
+        @count = @count < Filter::LIMIT ? 0 : @count - Filter::LIMIT
+      when "Last"
+        @count = Page.reading.not_hidden.count - 5
+    end
     @title = "Currently Reading"
     @pages = Page.reading.not_hidden.recent.limit(@count + 5)[@count..-1]
-    if @pages.count == Filter::LIMIT
-      @new_query = {count: @count + Filter::LIMIT}
-    end
+    @more = true if @pages.count == Filter::LIMIT
     flash.now[:alert] = "No pages found" if @pages.blank?
   end
 

@@ -63,3 +63,26 @@ Scenario: reading next
   Then I should see "hidden" within ".pages"
     And the page should NOT contain css "#position_2"
 
+Scenario: reading last
+  Given eleven downloaded pages exist
+  When I am on the reading page
+    And I press "Last"
+  Then I should have button "Previous"
+    But I should NOT have button "Next"
+
+Scenario: reading last
+  Given eleven downloaded pages exist
+  When I am on the reading page
+    And I press "Last"
+    And I press "First"
+  Then I should have button "Next"
+    But I should NOT have button "Previous"
+
+Scenario: reading last
+  Given eleven downloaded pages exist
+  When I am on the reading page
+    And I press "Next"
+  Then I should have button "Next"
+    And I should have button "Previous"
+    And I should have button "Last"
+    And I should have button "First"

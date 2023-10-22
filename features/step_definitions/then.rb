@@ -152,3 +152,13 @@ end
 Then('I should be on the {string} page') do |string|
   assert_equal "/#{string}", page.current_path
 end
+
+Then("I should have button {string}") do |string|
+  Rails.logger.debug "should have button: #{string}"
+  assert page.has_button?(string)
+end
+Then("I should NOT have button {string}") do |string|
+  Rails.logger.debug "should not have button: #{string}"
+  assert page.has_no_button?(string)
+end
+

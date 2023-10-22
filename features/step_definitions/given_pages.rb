@@ -129,6 +129,12 @@ Given("six downloaded and six hidden pages exist") do
   end
 end
 
+Given("eleven downloaded pages exist") do
+  11.times do |i|
+    Single.create(title: "reading #{i+1}", soon: -1)
+  end
+end
+
 Given('a book exists') do
   book = Book.create!(title: "Book")
   6.times do |i|
