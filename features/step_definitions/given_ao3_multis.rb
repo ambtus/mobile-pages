@@ -200,3 +200,24 @@ Given('fire exists') do
   chapter2.set_raw_from("fire2")
   book.set_meta
 end
+
+Given /^Misfits first chapter of second work exists$/ do
+  series = Series.create!(title: "Misfit Series")
+  series.update!(url: "https://archiveofourown.org/series/334075")
+
+  work1 = Book.create!(title: "temp", parent_id: series.id, position: 1)
+  work1.update!(url: "https://archiveofourown.org/works/4945936")
+  chapter1 = Chapter.create!(title: "temp", parent_id: work1.id, position: 1)
+  chapter1.update!(url: "https://archiveofourown.org/works/4945936/chapters/11353174")
+  chapter1.set_raw_from("misfits1")
+  chapter2 = Chapter.create!(title: "temp", parent_id: work1.id, position: 2)
+  chapter2.update!(url: "https://archiveofourown.org/works/4945936/chapters/11369638")
+  chapter2.set_raw_from("misfits2")
+  work1.rebuild_meta
+
+  work2 = Single.create!(title: "temp", parent_id: series.id, position: 2)
+  work2.update!(url: "https://archiveofourown.org/works/13765827")
+  work2.set_raw_from("misfits3")
+  work2.rebuild_meta
+
+end

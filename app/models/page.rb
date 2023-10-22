@@ -414,7 +414,7 @@ class Page < ActiveRecord::Base
   def refetch(passed_url)
     if ao3? && type == "Single" && !url.match(/chapters/)
       if self.make_me_a_chapter
-        parent = Book.create! url: passed_url
+        parent = Book.create! url: passed_url, parent_id: self.parent_id
         update! parent_id: parent.id
         move_tags_up
         move_soon_up

@@ -178,6 +178,7 @@ Scenario: refetching a one-page Single into a Book from page
     But I should see "written for nanowrimo" within ".notes"
     And I should see "giving up on nanowrimo" within ".parts"
 
+#FIXME keep failing here - think there are too many fetches from ao3
 Scenario: refetching a one-page Single into a Book from new
   Given "harry potter" is a "Fandom"
     And "Sidra" is an "Author"
@@ -225,3 +226,9 @@ Scenario: fetch a work from a collection
     And I press "Store"
   Then my page named "A Conversation Overheard by a Captive Faking Unconsciousness" should have url: "https://archiveofourown.org/works/21684820"
 
+Scenario: refetch a single to a book in a collection
+  Given Misfits first chapter of second work exists
+  When I am on the page with title "A Misfit Working Holiday In New York"
+    And I follow "Refetch"
+    And I press "Refetch"
+  Then I should see "Misfit Series" within ".parent"
