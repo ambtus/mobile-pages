@@ -340,6 +340,7 @@ class Page < ActiveRecord::Base
     return nil unless parent
     my_index = parent.parts.find_index(self)
     return nil if my_index.nil?
+    return nil if my_index == 0
     if parent.parts[my_index-1]
       return parent.parts[my_index-1]
     elsif parent.previous_part

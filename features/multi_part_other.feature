@@ -20,6 +20,20 @@ Scenario: link to previous part from part
     And I follow "Part 1" within ".part"
   Then I should see "Part 1 (Chapter)" within ".title"
 
+Scenario: next, not previous
+  Given Counting Drabbles exists
+  When I am on the page's page
+    And I follow "Skipping Stones"
+  Then I should see "Next: The Flower"
+    But I should NOT see 'Previous: The Flower'
+
+Scenario: previous, not next
+  Given Counting Drabbles exists
+  When I am on the page's page
+    And I follow "The Flower"
+  Then I should see "Previous: Skipping Stones"
+    But I should NOT see 'Next: Skipping Stones'
+
 Scenario: reorder the parts on an existing page with parts
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
   When I am on the page's page
