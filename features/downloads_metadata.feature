@@ -6,6 +6,17 @@ Scenario: basic
   Then the download epub file should exist
     And the download epub command should include tags: "tag1"
 
+Scenario: author and fandom and tag strings are all in tags (as well as author)
+  Given a page exists with fandoms: "my fandom" AND authors: "my author" AND pros: 'my pro'
+  Then the download epub command should include tags: "my fandom"
+    And the download epub command should include tags: "my author"
+    And the download epub command should include tags: "my pro"
+    And the download epub command should include authors: "my author"
+    And the download epub command should include authors: "my fandom"
+  But the download epub command should NOT include comments: "my author"
+    And the download epub command should NOT include comments: "my fandom"
+    And the download epub command should include comments: "my pro"
+
 Scenario: drabble and has an info tag (not displayed)
   Given a page exists with infos: "tag1"
   Then the download epub command should NOT include tags: "tag1"
@@ -87,7 +98,7 @@ Scenario: tag type changes => new epub reflects change
     And I download its epub
   Then the download epub file should exist
     And the download epub command should include authors: "fandom1"
-    And the download epub command should NOT include tags: "fandom1"
+    And the download epub command should include tags: "fandom1"
 
 Scenario: many fandoms, many pros => pros in tags and comments, fandom in authors only
   Given a page exists with fandoms: "harry potter, sga" AND pros: "harry/snape, john/rodney"
@@ -97,7 +108,9 @@ Scenario: many fandoms, many pros => pros in tags and comments, fandom in author
     And the download epub command should include tags: "john/rodney"
     And the download epub command should include comments: "harry/snape, john/rodney"
     But the download epub command should NOT include comments: "harry potter"
-    And the download epub command should NOT include tags: "sga"
+    And the download epub command should NOT include comments: "sga"
+    But the download epub command should include tags: "harry potter"
+    And the download epub command should include tags: "sga"
 
 Scenario: suppress AKA's
   Given a page exists with fandoms: "harry potter (Fantastic Beasts)" AND authors: "jane (june)"
@@ -107,3 +120,7 @@ Scenario: suppress AKA's
     And the download epub command should NOT include authors: "june"
     And the download epub command should NOT include comments: "june"
     And the download epub command should NOT include comments: "Fantastic Beasts"
+    And the download epub command should include tags: "harry potter"
+    And the download epub command should include tags: "jane"
+    But the download epub command should NOT include tags: "Fantastic Beasts"
+    And the download epub command should NOT include tags: "june"

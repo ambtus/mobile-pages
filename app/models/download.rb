@@ -42,16 +42,16 @@ module Download
   ## use the short names of the authors
   ## if it's a part, add the parent's authors and fandoms, recursively
   def all_authors;
-    mine = self.tags.authors
+    mine = self.tags.authors.map(&:base_name)
     my_parents = self.parent_id.blank? ? [] : self.parent.all_authors
     (mine + my_parents).pulverize
   end
   def all_fandoms;
-    mine = self.tags.fandoms
+    mine = self.tags.fandoms.map(&:base_name)
     my_parents = self.parent_id.blank? ? [] : self.parent.all_fandoms
     (mine + my_parents).pulverize
   end
-  def download_author_string; (all_authors.map(&:base_name) + all_fandoms.map(&:base_name)).compact.join("&") || ""; end
+  def download_author_string; (all_authors + all_fandoms).compact.join("&") || ""; end
 
   ## --tags
   ## if it's hidden, then the hidden tags are the only tags
@@ -59,7 +59,7 @@ module Download
   ## if it's a part, add the parent's tags
   def download_tags;
     [(unread? ? Page::UNREAD : ""),
-     *tags.not_fandom.not_info.not_author.map(&:name),
+     *tags.not_fandom.not_info.not_author.map(&:name), all_authors, all_fandoms
      ]
   end
   def all_tags;
