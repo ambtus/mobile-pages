@@ -22,3 +22,12 @@ Scenario: parts should show, but not necessarily share, their grand parent's soo
   When I am on the page with title "Prologue"
   Then "Default" should be checked
     But I should see "Reading" within ".parent"
+
+Scenario: rate a part and set the next to reading
+  Given a partially read book exists
+  When I am on the page with title "chapter 3"
+    And I follow "Rate"
+    And I click on "3"
+    And I press "Rate"
+    And I press "Read Now"
+  Then "chapter 4" should be "Reading" soon

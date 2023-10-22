@@ -192,6 +192,8 @@ class PagesController < ApplicationController
     @page = Page.find(params[:id])
     @count = params[:count].to_i
     case params[:commit]
+      when "Read Now"
+        @page.set_reading
       when "First Parts"
         @count = 0
       when "Next Parts"

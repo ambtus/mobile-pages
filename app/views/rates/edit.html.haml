@@ -7,8 +7,9 @@
   .part
     Next:
     = link_to "#{@page.next_part.title} HTML", download_url_for_page(@page.next_part, ".html")
-    = link_to "#{@page.next_part.title} ePub", download_url_for_page(@page.next_part, ".epub")
-    = button_to "Read Now", @page.next_part.becomes(Page), form_class: "float"
+    = form_for @page.next_part.becomes(Page), html: {class: 'float'} do
+      =submit_tag "Read Now"
+
 
 .page
   .title
