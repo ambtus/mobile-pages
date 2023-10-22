@@ -1,8 +1,8 @@
 Feature: an ebook with a hidden tag is also hidden from marvin's tag collections
          but author and fandom still show on cover
 
-Scenario: epub download hidden page => tag strings are empty, but authors still includes authors & fandoms
-  Given a page exists with hiddens: "hide me" AND pros: "my tag" AND authors: "my author" AND fandoms: "my fandom"
+Scenario: epub download hidden page => stars tag strings are empty, but authors still includes authors & fandoms
+  Given a page exists with hiddens: "hide me" AND pros: "my tag" AND authors: "my author" AND fandoms: "my fandom" AND stars: "5"
   Then the download epub command should include tags: "hide me"
     But the download epub command should NOT include tags: "my tag"
     But the download epub command should include comments: "my tag"
@@ -10,6 +10,7 @@ Scenario: epub download hidden page => tag strings are empty, but authors still 
     And the download epub command should include authors: "my fandom"
     But the download epub command should NOT include comments: "my author"
     And the download epub command should NOT include comments: "my fandom"
+    And the download epub command should NOT include rating: "10"
 
 Scenario: epub parent of hidden part hides hidden part
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3" AND pros: "show me" AND authors: "my author" AND fandoms: "my fandom"
