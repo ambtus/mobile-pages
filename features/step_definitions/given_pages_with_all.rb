@@ -104,3 +104,23 @@ Given("pages with all combinations of pros and cons exist") do
   Pro.recache_all
 end
 
+Given("pages with all combinations of pros and cons and readers and hiddens exist") do
+  pro = Pro.find_or_create_by(name: "interesting")
+  con = Con.find_or_create_by(name: "boring")
+  reader = Reader.find_or_create_by(name: "Sidra")
+  hidden = Hidden.find_or_create_by(name: "hide me")
+  Page.find_or_create_by(title: "pagehc").tags << [hidden, con]
+  Page.find_or_create_by(title: "pageh").tags << hidden
+  Page.find_or_create_by(title: "pagec").tags << con
+  Page.find_or_create_by(title: "untagged")
+  Page.find_or_create_by(title: "pagecr").tags << [con,reader]
+  Page.find_or_create_by(title: "pagehp").tags << [hidden,pro]
+  Page.find_or_create_by(title: "pager").tags << reader
+  Page.find_or_create_by(title: "pagep").tags << pro
+  Page.find_or_create_by(title: "pagepr").tags << [pro, reader]
+  Con.recache_all
+  Pro.recache_all
+  Reader.recache_all
+  Hidden.recache_all
+end
+

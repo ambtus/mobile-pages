@@ -21,7 +21,7 @@ Scenario: filtered in when filtering in all
     And a page exists with readers: "slightly good" AND title: "Page 2"
     And a page exists with title: "Page 3"
   When I am on the filter page
-    And I click on "show_any_readers"
+    And I click on "show_readers_all"
     And I press "Find"
   Then I should see "Page 1"
     And I should see "Page 2"
@@ -31,7 +31,7 @@ Scenario: filtered out when filtering out all
   Given a page exists with readers: "very bad" AND title: "Page 1"
     And a page exists with readers: "slightly bad" AND title: "Page 2"
   When I am on the filter page
-    And I click on "hide_all_readers"
+    And I click on "show_readers_none"
     And I press "Find"
   Then I should see "No pages found"
 
@@ -42,7 +42,7 @@ Scenario: reader selected during create is filterable
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
     And I am on the filter page
-    And I click on "hide_all_readers"
+    And I click on "show_readers_none"
     And I press "Find"
   Then I should see "No pages found"
 
@@ -54,7 +54,7 @@ Scenario: reader selected during create is filterable
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
     And I am on the filter page
-    And I click on "show_any_readers"
+    And I click on "show_readers_all"
     And I press "Find"
   Then I should NOT see "No pages found"
     And I should see "abc123"

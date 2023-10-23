@@ -4,16 +4,16 @@
       options_for_select([nil] + type.constantize.names,instance_variable_get("@#{type.downcase}_name"))
     = label_tag type.downcase.to_sym, type
     -if type == "Con" && current_page?(filter_path)
-      = radio_button_tag :hide_all, 'cons', @hide_all == 'cons'
+      = check_box_tag :hide_all, 'cons'
       = label_tag :hide_all_cons, 'Hide All'
     -if type == "Pro" && current_page?(filter_path)
-      = radio_button_tag :show_any, 'pros', @show_any == 'pros'
-      = label_tag :show_any_pros, 'Show Any'
+      = check_box_tag :show_all, 'pros'
+      = label_tag :show_all_pros, 'Show All'
     -if type == "Hidden" && current_page?(filter_path)
-      = radio_button_tag :show, 'hiddens', @show_any == 'hiddens'
+      = check_box_tag :show, 'hiddens'
       = label_tag :show_hiddens, 'Show'
     -if type == "Reader" && current_page?(filter_path)
-      = radio_button_tag :show_any, 'readers', @show_any == 'readers'
-      = label_tag :show_any_readers, 'Show Any'
-      = radio_button_tag :hide_all, 'readers', @hide_all == 'readers'
-      = label_tag :hide_all_readers, 'Hide All'
+      = radio_button_tag :show_readers, 'all'
+      = label_tag :show_readers_all, 'Show All'
+      = radio_button_tag :show_readers, 'none'
+      = label_tag :show_readers, 'Show None'

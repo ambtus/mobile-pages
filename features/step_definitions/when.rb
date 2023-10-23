@@ -48,3 +48,7 @@ When("I fill in {string} with") do |field, value|
   fill_in(field, :with => value)
 end
 
+When("I check {string}") do |value|
+  check(value)
+end
+

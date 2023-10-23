@@ -92,15 +92,15 @@ class Filter
       pages = pages.where(con: false)
     end
 
-    if params[:hide_all] == "readers"
-      pages = pages.where(reader: false)
-    end
-
-    if params[:show_any] == "pros"
+    if params[:show_all] == "pros"
       pages = pages.where(pro: true)
     end
 
-    if params[:show_any] == "readers"
+    if params[:show_readers] == "none"
+      pages = pages.where(reader: false)
+    end
+
+    if params[:show_readers] == "all"
       pages = pages.where(reader: true)
     end
 

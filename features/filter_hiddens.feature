@@ -184,7 +184,7 @@ Scenario: any hiddens
   Given a page exists with hiddens: "abc123" AND title: "page1"
     And a page exists with hiddens: "xyz987" AND title: "page2"
   When I am on the filter page
-    And I click on "show_hiddens"
+    And I check "show"
     And I press "Find"
   Then I should see "page1"
     And I should see "page2"

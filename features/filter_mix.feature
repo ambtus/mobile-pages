@@ -173,8 +173,8 @@ Scenario: mystery but not children
 Scenario: no cons any pros
   Given pages with all combinations of pros and cons exist
   When I am on the filter page
-    And I click on "show_any_pros"
-    And I click on "hide_all_cons"
+    And I check "show_all"
+    And I check "hide_all"
     And I press "Find"
   Then I should see "page5"
     And I should see "page4i"
@@ -198,7 +198,7 @@ Scenario: hiddens and pros
   Given a page exists with hiddens: "abc123" AND pros: "cba321" AND title: "Page1"
     And a page exists with hiddens: "abc123" AND pros: "xyz789" AND title: "Page2"
   When I am on the filter page
-    And I click on "show_hiddens"
+    And I check "show"
     And I select "cba321" from "pro"
     And I press "Find"
   Then I should see "Page1"
@@ -208,8 +208,41 @@ Scenario: hiddens and pros
   Given a page exists with hiddens: "abc123" AND pros: "cba321" AND title: "Page1"
     And a page exists with hiddens: "abc123" AND pros: "xyz789" AND title: "Page2"
   When I am on the filter page
-    And I click on "show_hiddens"
-    And I click on "show_any_pros"
+    And I check "show"
+    And I check "show_all"
     And I press "Find"
   Then I should see "Page1"
     And I should see "Page2"
+
+Scenario: pro and hidden but not reader
+  Given pages with all combinations of pros and cons and readers and hiddens exist
+  When I am on the filter page
+    And I select "interesting" from "pro"
+    And I click on "show_readers_none"
+    And I check "show"
+    And I press "Find"
+  Then I should see "pagep"
+    And I should see "pagehp"
+    But the page should NOT contain css "#position_3"
+    And I should NOT see "pagepr"
+
+Scenario: reader but not con
+  Given pages with all combinations of pros and cons and readers and hiddens exist
+  When I am on the filter page
+    And I click on "show_readers_all"
+    And I check "hide_all"
+    And I press "Find"
+  Then I should see "pager"
+    And I should see "pagepr"
+    But the page should NOT contain css "#position_3"
+    And I should NOT see "pagecr"
+
+Scenario: all pros and readers
+  Given pages with all combinations of pros and cons and readers and hiddens exist
+  When I am on the filter page
+    And I check "show_all"
+    And I click on "show_readers_all"
+    And I press "Find"
+  Then I should see "pagepr"
+    And the page should NOT contain css "#position_2"
+
