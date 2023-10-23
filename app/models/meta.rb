@@ -31,14 +31,22 @@ module Meta
   def cliff_present?; all_tags.include?(CLIFF);end
   def update_cliff(bool)
     if bool == "Yes"
-      unless ultimate_parent.cliff_present?
-        Rails.logger.debug "adding cliffhanger to #{ultimate_parent.title}"
-        ultimate_parent.tags.append(cliff_tag)
+      if parent.blank?
+        self.tags.append(cliff_tag)
+      else
+        unless parent.cliff_present?
+          Rails.logger.debug "adding cliffhanger to #{parent.title}"
+          parent.tags.append(cliff_tag)
+        end
       end
     elsif bool == "No"
-      if ultimate_parent.cliff_present?
-        Rails.logger.debug "removing cliffhanger from #{ultimate_parent.title}"
-        ultimate_parent.tags.delete(cliff_tag)
+      if parent.blank?
+        self.tags.delete(cliff_tag)
+      else
+        if parent.cliff_present?
+          Rails.logger.debug "removing cliffhanger from #{parent.title}"
+          parent.tags.delete(cliff_tag)
+        end
       end
     else
       raise "why isn’t #{bool} Yes or No?"

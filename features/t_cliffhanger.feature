@@ -85,3 +85,14 @@ Scenario: cliffhanger on parent defaults on when rating chapter
     And I follow "Rate"
   Then "cliff_Yes" should be checked
     And "cliff_No" should NOT be checked
+
+Scenario: cliffhanger only added to parent, not grandparent
+  Given a series exists
+  When I am on the page with title "Cliffhanger"
+    And I follow "Rate"
+    And I click on "4"
+    And I click on "cliff_Yes"
+    And I press "Rate"
+    And I am on the page's page
+  Then I should NOT see "Cliffhanger" within ".cons"
+    But I should see "Cliffhanger" within "#position_1"
