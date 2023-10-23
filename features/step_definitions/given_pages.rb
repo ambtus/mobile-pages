@@ -178,3 +178,10 @@ Given('a long partially read page exists') do
   book.update_from_parts
 end
 
+Given('a book with a tagged chapter exists') do
+  book = Book.create!(title: "Book")
+  pro = Pro.find_or_create_by(name: "interesting")
+  chapter = Chapter.create(title: "chapter 1", parent_id: book.id, position: 1)
+  chapter.tags << pro
+  book.update_from_parts
+end

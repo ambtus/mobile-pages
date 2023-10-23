@@ -36,6 +36,10 @@ When("I select {string}") do |value|
   select(value)
 end
 
+When("I unselect {string}") do |value|
+  unselect(value)
+end
+
 When("I select {string} from {string}") do |value, field|
   select(value, :from => field)
 end

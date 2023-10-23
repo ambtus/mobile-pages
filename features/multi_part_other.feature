@@ -66,6 +66,16 @@ Scenario: parent should be able to remove duplicate tags and authors
     And I should NOT see "JK Rowling" within "#position_1"
     But I should see "SGA" within "#position_1"
 
+Scenario: remove tag from child bug
+  Given a book with a tagged chapter exists
+    And I am on the page with title "chapter 1"
+    And I should see "interesting" within ".pros"
+  When I follow "Tags" within ".meta"
+    And I unselect "interesting"
+  And I press "Update"
+    Then I should NOT see "interesting" within ".pros"
+
+
 Scenario: check before child should be able to move tags to parent (and remove duplicates on self)
   Given a page exists with url: "http://test.sidrasue.com/parts/1.html" AND pros: "xyz123" AND cons: "abc123"
     And a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND pros: "lmn987" AND title: "Parent" AND cons: "def987"
