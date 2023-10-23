@@ -1,5 +1,10 @@
 class Hidden < Tag
   # Tags to be filtered out by default
+  def self.recache_all
+    self.all.each do |tag|
+      tag.pages.update_all hidden: true
+    end
+  end
 
   def destroy_me
     page_ids = self.pages.map(&:id)

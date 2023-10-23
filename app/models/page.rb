@@ -127,6 +127,13 @@ class Page < ActiveRecord::Base
   MED_MAX   = 30000
   LONG_MAX = 300000
 
+  def reset_tags
+    reset_hidden
+    reset_con
+    reset_reader
+    reset_pro
+  end
+
   def set_hidden; update_columns hidden: true; end
   def unset_hidden; update_columns hidden: false; end
   def reset_hidden; self.tags.hiddens.present? ? set_hidden : unset_hidden; end
@@ -138,6 +145,10 @@ class Page < ActiveRecord::Base
   def set_pro; update_columns pro: true; end
   def unset_pro; update_columns pro: false; end
   def reset_pro; self.tags.pros.present? ? set_pro : unset_pro; end
+
+  def set_reader; update_columns reader: true; end
+  def unset_reader; update_columns reader: false; end
+  def reset_reader; self.tags.readers.present? ? set_reader : unset_reader; end
 
   def set_wordcount(recount=true)
     #Rails.logger.debug "#{self.title} old wordcount: #{self.wordcount} and size: #{self.size}"
@@ -618,6 +629,7 @@ class Page < ActiveRecord::Base
     self.set_hidden if type == "Hidden"
     self.set_con if type == "Con"
     self.set_pro if type == "Pro"
+    self.set_reader if type == "Reader"
     string.split(",").each do |tag|
       typed_tag = type.constantize.find_by_short_name(tag.squish)
       typed_tag = type.constantize.find_or_create_by(name: tag.squish) unless typed_tag

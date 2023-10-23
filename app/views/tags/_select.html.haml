@@ -12,3 +12,8 @@
     -if type == "Hidden" && current_page?(filter_path)
       = radio_button_tag :show, 'hiddens', @show_any == 'hiddens'
       = label_tag :show_hiddens, 'Show'
+    -if type == "Reader" && current_page?(filter_path)
+      = radio_button_tag :show_any, 'readers', @show_any == 'readers'
+      = label_tag :show_any_readers, 'Show Any'
+      = radio_button_tag :hide_all, 'readers', @hide_all == 'readers'
+      = label_tag :hide_all_readers, 'Hide All'

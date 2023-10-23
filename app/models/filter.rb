@@ -92,8 +92,16 @@ class Filter
       pages = pages.where(con: false)
     end
 
+    if params[:hide_all] == "readers"
+      pages = pages.where(reader: false)
+    end
+
     if params[:show_any] == "pros"
       pages = pages.where(pro: true)
+    end
+
+    if params[:show_any] == "readers"
+      pages = pages.where(reader: true)
     end
 
     Tag.types.each do |tag_type|

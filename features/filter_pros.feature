@@ -62,3 +62,17 @@ Scenario: any pros
     But I should NOT see "page3d"
     And I should NOT see "page2"
     And I should NOT see "page1"
+
+Scenario: pro selected during create is filterable
+  Given "abc123" is a "Pro"
+    And a page exists with title: "Page 3"
+  When I am on the create page
+    And I select "abc123"
+    And I fill in "page_url" with "http://test.sidrasue.com/test.html"
+    And I press "Store"
+    And I am on the filter page
+    And I click on "show_any_pros"
+    And I press "Find"
+  Then I should NOT see "No pages found"
+    And I should see "abc123"
+    But I should NOT see "Page 3"
