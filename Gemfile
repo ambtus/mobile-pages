@@ -33,6 +33,7 @@ gem 'rubypants'
 gem 'sanitize'
 gem 'mechanize', ">= 2.7.7"
 
+gem 'charlock_holmes'
 
 # https://github.com/ruby/net-imap/issues/16#issuecomment-803086765
 gem "net-http"

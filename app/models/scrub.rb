@@ -16,7 +16,12 @@ module Scrub
   #    to be saved as raw_html (raw == pre-sanitized)
   #    called before saving to raw_html file, and nowhere else
   def self.regularize_body(html)
-    return html if html.blank?
+    begin
+      return html if html.blank?
+    rescue ArgumentError
+      d = CharlockHolmes::EncodingDetector.detect(html)
+      html = Scrub.remove_extra_formatting(html.encode("UTF-8", d[:encoding], invalid: :replace, replace: ""))
+    end
     html = html.encode("utf-8")
     replacements = [
                    [ '&#13;', '' ],
@@ -76,7 +81,12 @@ module Scrub
   def self.sanitize_html(html)
     return html unless html.is_a? String
     # remove most formatting
-    html = Scrub.remove_extra_formatting(html)
+    begin
+      html = Scrub.remove_extra_formatting(html)
+    rescue ArgumentError
+      d = CharlockHolmes::EncodingDetector.detect(html)
+      html = Scrub.remove_extra_formatting(html.encode("UTF-8", d[:encoding], invalid: :replace, replace: ""))
+    end
     # remove empty divs
     html.gsub!(/<div>\s*<\/div>/, "")
     html = Scrub.remove_surrounding(html)

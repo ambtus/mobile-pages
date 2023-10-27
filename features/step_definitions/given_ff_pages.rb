@@ -5,7 +5,7 @@ end
 
 Given /^stuck exists$/ do
   page = Book.create!(base_url: "https://www.fanfiction.net/s/2652996/*", url_substitutions: "1")
-  page.parts.first.set_raw_from("stuck1")
+  page.parts.first.copy_raw_from("stuck1")
   page.rebuild_meta.set_wordcount(false)
 end
 
@@ -35,10 +35,10 @@ Given("Child of Four exists") do
   page = Book.create!(base_url: "http://www.fanfiction.net/s/2790804/*", url_substitutions: "1-78")
   chapter1 = page.parts.first
   chapter1.update title: "Introduction", notes: "This story takes place in an Alternate Universe"
-  chapter1.set_raw_from("intro")
+  chapter1.copy_raw_from("intro")
   chapter3 = page.parts.third
   chapter3.update title: "First Year"
-  chapter3.set_raw_from("first")
-  page.parts.last.set_raw_from("78")
+  chapter3.copy_raw_from("first")
+  page.parts.last.copy_raw_from("78")
   page.rebuild_meta
 end

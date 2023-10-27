@@ -29,9 +29,15 @@ module Utilities
     page
   end
 
-  def set_raw_from(filename)
+  def copy_raw_from(filename)
     FileUtils.cp(Rails.root + "tmp/html/#{filename}.html", raw_html_file_name)
     build_clean_from_raw
+    set_meta
+  end
+
+
+  def set_raw_from(filename)
+    self.raw_html = File.read(Rails.root + "tmp/html/#{filename}.html")
     set_meta
   end
 
