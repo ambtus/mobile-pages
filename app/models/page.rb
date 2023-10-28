@@ -666,18 +666,6 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def re_sanitize
-    Rails.logger.debug "re_sanitizing #{self.id}"
-    if !self.parts.blank?
-      self.parts.each {|p| p.re_sanitize if p.sanitize_version < Scrub.sanitize_version}
-    else
-      html = self.scrubbed_html
-      self.scrubbed_html = Scrub.sanitize_html(html)
-      self.set_wordcount
-    end
-    self.update_attribute(:sanitize_version, Scrub.sanitize_version)
-  end
-
   ## Raw html includes everything from the web
 
   def scrub_fetch(url)
@@ -764,7 +752,6 @@ class Page < ActiveRecord::Base
   end
 
   def scrubbed_html
-    self.re_sanitize if self.sanitize_version < Scrub.sanitize_version
     if parts.blank?
       begin
         File.open(self.scrubbed_html_file_name, 'r:utf-8') { |f| f.read }
@@ -831,7 +818,6 @@ private
     self.notes = nil if self.notes == "Notes"
     self.my_notes = nil if self.my_notes == "My Notes"
     self.read_after = Time.now if self.read_after.blank?
-    self.sanitize_version = Scrub.sanitize_version
   end
 
   def initial_fetch

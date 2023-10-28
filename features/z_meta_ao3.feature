@@ -1,4 +1,4 @@
-Feature: ao3 specific stuff
+Feature: ao3 meta stuff
 
 Scenario: refetching & rebuilding meta of a top level fic
   Given "harry potter" is a "Fandom"

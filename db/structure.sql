@@ -56,7 +56,6 @@ CREATE TABLE `pages` (
   `size` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `favorite` smallint(6) DEFAULT '10',
   `ultimate_parent_id` int(11) DEFAULT NULL,
-  `sanitize_version` smallint(6) NOT NULL DEFAULT '1',
   `cached_tag_string` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `interesting` int(11) DEFAULT NULL,
   `nice` int(11) DEFAULT NULL,

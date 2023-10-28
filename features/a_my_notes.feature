@@ -65,9 +65,9 @@ Scenario: notes on multi-page view (parent)
   Then I should see "This is my note" within "#position_1"
 
 Scenario: my html notes should be shown as text in index
-  Given a page exists with my_notes: "<p>This</p><p>is not</p><p>actually<p>a very long</p><p>note<br />(once you take out the <a href='http://some.domain.com'>html</a>)<br /></p>"
+  Given a page exists with my_notes: "<p>This.</p><p>is not.</p><p>actually.<p>a very long.</p><p>note<hr />(once you take out the <a href='http://some.domain.com'>html</a>)<br /></p>"
   When I am on the homepage
-  Then I should see "This; is not; actually; a very long; note (once you take out the html)" within "#position_1"
+  Then I should see "This. is not. actually. a very long. note; (once you take out the html)" within "#position_1"
 
 Scenario: my html notes should be shown as html in show
   Given a page exists with my_notes: "<p>This</p><p>is not</p><p>actually<p>a very long</p><p>note<br />(once you take out the <a href='http://some.domain.com'>html</a>)<br /></p>"

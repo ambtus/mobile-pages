@@ -6,23 +6,15 @@ module Scrub
     @agent ||= Mechanize.new { |a| a.log = Logger.new("#{Rails.root}/log/mechanize.log") }
   end
 
-  def self.sanitize_version
-    return 1
-  end
-
   # regularize imported html to fix garbled encodings
   #    clean up whitespace and remove javascript
   #    returns what's inside the <body> elements
   #    to be saved as raw_html (raw == pre-sanitized)
   #    called before saving to raw_html file, and nowhere else
   def self.regularize_body(html)
-    begin
-      return html if html.blank?
-    rescue ArgumentError
-      d = CharlockHolmes::EncodingDetector.detect(html)
-      html = Scrub.remove_extra_formatting(html.encode("UTF-8", d[:encoding], invalid: :replace, replace: ""))
-    end
-    html = html.encode("utf-8")
+    d = CharlockHolmes::EncodingDetector.detect(html)
+    html = html.encode("UTF-8", d[:encoding], invalid: :replace, replace: "")
+    return html if html.blank?
     replacements = [
                    [ '&#13;', '' ],
                    [ '&#151;', '&#8212;' ],
@@ -62,7 +54,7 @@ module Scrub
     nodeset.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
   end
 
-  def self.strip_html(html); Sanitize.fragment(html).strip.gsub(/\s{2,}/, "; "); end
+  def self.strip_html(html);  Sanitize.fragment(html, elements: 'hr').strip.gsub(/ *<hr> */, "; "); end
 
   def self.sanitize_and_strip(html); strip_html(sanitize_html(html)); end
 
@@ -79,14 +71,10 @@ module Scrub
 
   # sanitize
   def self.sanitize_html(html)
-    return html unless html.is_a? String
-    # remove most formatting
-    begin
-      html = Scrub.remove_extra_formatting(html)
-    rescue ArgumentError
-      d = CharlockHolmes::EncodingDetector.detect(html)
-      html = Scrub.remove_extra_formatting(html.encode("UTF-8", d[:encoding], invalid: :replace, replace: ""))
-    end
+    return "" if html.blank?
+    d = CharlockHolmes::EncodingDetector.detect(html)
+    html = html.encode("UTF-8", d[:encoding], invalid: :replace, replace: "")
+    html = Scrub.remove_extra_formatting(html)
     # remove empty divs
     html.gsub!(/<div>\s*<\/div>/, "")
     html = Scrub.remove_surrounding(html)

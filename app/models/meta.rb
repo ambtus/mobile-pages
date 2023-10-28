@@ -255,7 +255,7 @@ module Meta
       end
     elsif %w{Book Single}.include?(type)
       if ao3?
-        Scrub.sanitize_html(book_doc.css(".summary blockquote")).children.to_html
+        Scrub.sanitize_html(book_doc.css(".summary blockquote").to_html)
       elsif ff? || first_part_ff?
         new = book_doc.css(".xcontrast_txt[style='margin-top:2px']").children.to_html
         old = old_ff_style_hash[:summary]
@@ -270,7 +270,7 @@ module Meta
       content.children.each do |node|
         node.remove if node.name == "div"
       end
-      Scrub.sanitize_html(content).children.to_html
+      Scrub.sanitize_html(content.children.to_html)
     elsif wp?
       [doc.css('div.tab-pane')[2]&.to_html, doc.css('div.tab-pane')[1]&.to_html, wp_try("Authors? [Nn]otes?")].join_hr
     elsif type == "Series" && ao3?
@@ -281,31 +281,31 @@ module Meta
         ""
       end
     elsif %w{Book Single}.include?(type)
-      Scrub.sanitize_html(book_doc.css("[class='notes module'] blockquote")).children.to_html
+      Scrub.sanitize_html(book_doc.css("[class='notes module'] blockquote").to_html)
     end
   end
 
   def chapter_summary
     if %w{Chapter Single}.include?(type)
-      Scrub.sanitize_html(doc.css("div#summary blockquote")).children.to_html
+      Scrub.sanitize_html(doc.css("div#summary blockquote").to_html)
     end
   end
 
   def chapter_notes
     if %w{Chapter Single}.include?(type)
-      Scrub.sanitize_html(doc.css("div#notes blockquote")).children.to_html
+      Scrub.sanitize_html(doc.css("div#notes blockquote").to_html)
     end
   end
 
   def chapter_end_notes
     if %w{Chapter Single}.include?(type)
-      Scrub.sanitize_html(doc.css("div[id^=chapter_] blockquote")).children.to_html
+      Scrub.sanitize_html(doc.css("div[id^=chapter_] blockquote").to_html)
     end
   end
 
   def work_end_notes
     if %w{Book Single}.include?(type)
-      Scrub.sanitize_html(doc.css("div#work_endnotes blockquote")).children.to_html
+      Scrub.sanitize_html(doc.css("div#work_endnotes blockquote").to_html)
     end
   end
 
@@ -324,13 +324,13 @@ module Meta
     end
   end
 
-  def note_tags; inferred_tags.without(TT).without(FI).to_p; end
+  def note_tags; inferred_tags.without(TT).without(FI).join(", "); end
 
   def head_notes
     case type
     when "Chapter"
       if wp?
-        [add_fandoms(inferred_fandoms), inferred_relationships.to_p, work_summary, note_tags, work_notes]
+        [add_fandoms(inferred_fandoms), inferred_relationships.join(", "), work_summary, note_tags, work_notes]
       else
         [chapter_summary, chapter_notes]
       end
@@ -338,10 +338,10 @@ module Meta
       if chapter_as_single?
         [add_authors(inferred_authors), add_fandoms(inferred_fandoms), chapter_summary, chapter_notes]
       else
-        [add_authors(inferred_authors), add_fandoms(inferred_fandoms), inferred_relationships.to_p, work_summary, chapter_summary, note_tags, work_notes, chapter_notes]
+        [add_authors(inferred_authors), add_fandoms(inferred_fandoms), inferred_relationships.join(", "), work_summary, chapter_summary, note_tags, work_notes, chapter_notes]
       end
     when "Book"
-      [add_authors(inferred_authors), add_fandoms(inferred_fandoms), inferred_relationships.to_p, work_summary, note_tags, work_notes]
+      [add_authors(inferred_authors), add_fandoms(inferred_fandoms), inferred_relationships.join(", "), work_summary, note_tags, work_notes]
     when "Series"
       [add_authors(inferred_authors), add_fandoms(inferred_fandoms), work_summary, work_notes]
     end.join_hr

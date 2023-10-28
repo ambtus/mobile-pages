@@ -132,9 +132,9 @@ class PagesController < ApplicationController
     if params[:Refetch]
       @page = Page.find_by_url(params[:page][:url].normalize)
       if @page
-        flash[:notice] = "Refetched"
         @page = @page.refetch(@page.url)
         @count = @page.parts.size > Page::LIMIT ? @page.parts.size - Page::LIMIT : 0
+        flash[:notice] = "Refetched"
         render :show and return
       else
         flash[:alert] = "Page not found. Find or Store instead."

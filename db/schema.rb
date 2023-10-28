@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_22_234549) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_27_224652) do
   create_table "pages", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "url"
     t.string "title"
@@ -25,7 +25,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_22_234549) do
     t.string "size"
     t.integer "stars", limit: 2, default: 10
     t.integer "ultimate_parent_id"
-    t.integer "sanitize_version", limit: 2, default: 1, null: false
     t.text "my_notes", size: :medium
     t.string "type"
     t.boolean "hidden", default: false

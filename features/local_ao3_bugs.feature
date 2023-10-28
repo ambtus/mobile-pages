@@ -32,8 +32,8 @@ Scenario: no author or fandom or relationships shouldn't get empty paragraph
   When I am on the homepage
     Then I should NOT see "; Harry has been thinking"
     But I should see "Harry has been thinking"
-    And the notes should NOT include "<p></p><hr width=\"80%\"/> <p>Harry has been thinking"
-    But the notes should include "<p>Harry has been thinking and Voldemort gets to be the first to hear the results.</p> <hr width=\"80%\"/>"
+    And the notes should NOT include "<hr width=\"80%\"/>Harry has been thinking"
+    But the notes should include "hear the results.<hr width=\"80%\"/>"
 
 Scenario: bug in make_single when Single had been stored as Chapter
   Given broken Drabbles exists
@@ -157,3 +157,9 @@ Scenario: after removal of complementary
     And I should see "2. Hogwarts" within "#position_2"
     And I should see "giving up on nanowrimo" within "#position_2"
     And my page named "Time Was, Time Is" should have url: "https://archiveofourown.org/works/692"
+
+Scenario: before storing a series when I already have one of its singles
+  Given "harry potter" is a "Fandom"
+    And Skipping Stones exists
+  When I am on the homepage
+  Then I should see "by Sidra; Harry Potter/Unknown;" within "#position_1"
