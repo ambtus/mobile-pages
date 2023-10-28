@@ -704,7 +704,8 @@ class Page < ActiveRecord::Base
     html = Websites.getnode(raw_html, self.url)
     if html
       Rails.logger.debug "updating scrubbed html from raw"
-      self.scrubbed_html = Scrub.sanitize_html(html)
+      first_pass = Scrub.sanitize_html(html)
+      self.scrubbed_html = Scrub.sanitize_html(first_pass)
     else
       Rails.logger.debug "no scrubbed html available from raw"
       self.scrubbed_html = ""

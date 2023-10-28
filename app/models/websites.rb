@@ -58,6 +58,34 @@ module Websites
               body.children
             when /grazhir.com/
               body.at('div#content')
+            when /matthewhaldemantime/
+              continued_from = body.at('a')
+              if continued_from.text.match('Continued from')
+                header = continued_from.to_html
+                html = html.match(header).post_match
+              end
+
+              others = body.search('a')
+              10.times do |i|
+                continue_to = others[i+1]
+                if continue_to.text.match('Continue on')
+                  footer = continue_to.to_html
+                  html = html.match(footer).pre_match
+                  break
+                end
+              end
+              body = Nokogiri::HTML(html).xpath('//body').first
+              ps = body.search('p')
+              [0, 1, -1, -2].each do |i|
+                ps[i].remove if ps[i] && ps[i].text.blank?
+              end
+              spans = body.search('span')
+              [0, 1, -1, -2, -3].each do |i|
+                spans[i].remove if spans[i] && spans[i].text.blank?
+              end
+
+              body
+
             when /clairesnook.com/, /keiramarcos.com/
               if body.at('div.tab-pane')
                 body.at('div.tab-pane')

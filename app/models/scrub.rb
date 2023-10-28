@@ -12,9 +12,11 @@ module Scrub
   #    to be saved as raw_html (raw == pre-sanitized)
   #    called before saving to raw_html file, and nowhere else
   def self.regularize_body(html)
-    d = CharlockHolmes::EncodingDetector.detect(html)
-    html = html.encode("UTF-8", d[:encoding], invalid: :replace, replace: "")
-    return html if html.blank?
+    begin
+      return html if html.blank?
+    rescue ArgumentError
+      html = html.encode("UTF-8", "windows-1252")
+    end
     replacements = [
                    [ '&#13;', '' ],
                    [ '&#151;', '&#8212;' ],
@@ -33,9 +35,19 @@ module Scrub
                    [ 'â€™', '’'],
                    [ 'â€', '”'],
                    [ ' ', ' '],
+                   [ '<o:p>', '<p>' ],
+                   [ '</o:p>', '</p>' ],
                    ]
-    replacements.each do |replace|
-      html = html.gsub(replace.first, replace.last)
+    begin
+      replacements.each do |replace|
+        html = html.gsub(replace.first, replace.last)
+      end
+    rescue Encoding::CompatibilityError
+      d = CharlockHolmes::EncodingDetector.detect(html)
+      html = html.encode("UTF-8", d[:encoding], invalid: :replace, replace: "•")
+      replacements.each do |replace|
+        html = html.gsub(replace.first, replace.last)
+      end
     end
     html.gsub!(/[\s]+/, " ")
     doc = Nokogiri::HTML(html)
@@ -72,8 +84,6 @@ module Scrub
   # sanitize
   def self.sanitize_html(html)
     return "" if html.blank?
-    d = CharlockHolmes::EncodingDetector.detect(html)
-    html = html.encode("UTF-8", d[:encoding], invalid: :replace, replace: "")
     html = Scrub.remove_extra_formatting(html)
     # remove empty divs
     html.gsub!(/<div>\s*<\/div>/, "")
@@ -90,6 +100,10 @@ module Scrub
     # remove back_to_back bold and italic
     html.gsub!(/<\/b>([_., -]*)<b>/) {|s| $1}
     html.gsub!(/<\/i>([_., -]*)<i>/) {|s| $1}
+    # remove empty bold and italic and underline
+    html.gsub!(/<u><\/u>/) {|s| $1}
+    html.gsub!(/<i><\/i>/) {|s| $1}
+    html.gsub!(/<b><\/b>/) {|s| $1}
 
     # extra breaks inside paragraphs
     html.gsub!(/<p><br ?\/?>/, "<p>")
@@ -101,8 +115,6 @@ module Scrub
     html.gsub!(/(<br ?\/?>){3,}/, '<hr>')
     # when sections are taken care of, multiple breaks are a paragraph
     html.gsub!(/(<br ?\/?>?){2,}/, '<p>')
-    # multiple empty paragraphs are probably a section
-    html.gsub!(/(<p>\s*<\/p>){2,}/, '<hr>')
 
     # a few left-over empty paragraphs are probably a section
     # but too many are just extraneous whitespace
@@ -123,8 +135,8 @@ module Scrub
     html.gsub!(/<p>\s*<hr>/, '<hr>')
     html.gsub!(/<hr>\s*<\/p>/, '<hr>')
     # remove stray divs around sections
-    html.gsub!(/<div>\s*<hr>/, '<hr>')
-    html.gsub!(/<hr>\s*<\/div>/, '<hr>')
+    html.gsub!(/<div>\s*<hr ?\/?>/, '<hr>')
+    html.gsub!(/<hr ?\/?>\s*<\/div>/, '<hr>')
 
     # condense multiple sections
     html.gsub!(/(\s*<hr ?\/?>\s*){2,}/, '<hr>')
