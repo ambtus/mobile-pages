@@ -1,11 +1,9 @@
 .form
   = form_tag refetches_path do
     = hidden_field_tag(:page_id, @page.id)
-    -## url field if url exists OR it doesn't have a url but does have ao3 parts (legacy behavior)
-    - if @page.url.present? || (@page.parts.any? && @page.parts.first.ao3?)
+    - if @page.could_have_url?
       .part= text_field_tag :url, @page.refetch_url, :maxlength => 255, :size => @page.refetch_url.length
-    -## url_list field UNLESS the page is ao3 or can't have parts (has content)
-    - unless @page.ao3? || @page.has_content?
+    - if @page.could_have_parts?
       .parts= text_area_tag :url_list, @page.url_list, :rows => @page.parts.size + 2, :cols => @page.url_list_length
     = submit_tag "Refetch"
     = submit_tag "Refetch Recursive" unless @page.parts.blank?

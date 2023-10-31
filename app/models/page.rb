@@ -211,6 +211,11 @@ class Page < ActiveRecord::Base
   after_create :initial_fetch
 
   scope :with_content, -> { where(type: [Chapter, Single]) }
+
+  def could_have_content?; %w{Chapter Single}.include?(self.type); end
+  def could_have_parts?; %w{Book Series Collection}.include?(self.type); end
+  def could_have_url?; could_have_content? || ao3? || ao3_chapters?; end
+
   def has_content?
     raw_html.present? && parts.blank?
     rescue
@@ -222,6 +227,7 @@ class Page < ActiveRecord::Base
 
   def ao3?; self.url && self.url.match(/archiveofourown/); end
   def ao3_chapter?; ao3? && self.url.match(/chapter/); end
+  def ao3_chapters?; parts.first && parts.first.ao3? ; end
 
   def ff?; url && url.match(/fanfiction.net/); end
   def ff_chapter?; ff? && ff_chapter_number != "1"; end
@@ -408,7 +414,12 @@ class Page < ActiveRecord::Base
     url_list.split("\n").sort_by{|line| line.length}.last.length
   end
 
-  def refetch_url; url || parts.first.url.split("/chapter").first; end
+  def refetch_url
+    if ao3_chapters?
+      return parts.first.url.split("/chapter").first
+    end
+    url.blank? ? "" : url
+  end
 
   def last_url; parts.any? ? parts.last.url : nil; end
   def last_url_length; last_url ? last_url.length : 33; end

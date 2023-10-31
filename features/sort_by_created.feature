@@ -38,6 +38,7 @@ Scenario: last created new part
   Given 2 pages exist
     And I wait 1 second
   When I am on the page with title "Page 2"
+    And I press "Increase Type"
     And I refetch the following
     """"
     http://test.sidrasue.com/test1.html

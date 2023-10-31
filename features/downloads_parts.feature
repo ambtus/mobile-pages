@@ -22,12 +22,16 @@ Scenario: two and three levels (h3 & h4)
     And I fill in "page_title" with "Parent"
     And I press "Store"
     And I follow "Child 1"
+    And I press "Increase Type"
+    And I press "Increase Type"
     And I refetch the following
       """
       http://test.sidrasue.com/parts/1.html##Boo
       ##Grandchild
       """
     And I follow "Grandchild"
+    And I press "Increase Type"
+    And I press "Increase Type"
     And I refetch the following
       """
       http://test.sidrasue.com/parts/2.html##Hiss

@@ -53,6 +53,7 @@ Scenario: create book by adding parts
   Given a page exists
     And three singles exist
   When I am on the page's page
+    And I press "Increase Type"
     And I refetch the following
       """
       ##Parent1
@@ -60,6 +61,7 @@ Scenario: create book by adding parts
       ##Parent3
       """
     And I follow "Parent2" within "#position_2"
+    And I press "Increase Type"
     And I refetch the following
       """
       http://test.sidrasue.com/parts/3.html
@@ -73,6 +75,7 @@ Scenario: create series by adding subparts to book
   Given a page exists
     And three singles exist
   When I am on the page's page
+    And I press "Increase Type"
     And I refetch the following
       """
       ##Parent1
@@ -80,6 +83,7 @@ Scenario: create series by adding subparts to book
       ##Parent3
       """
     And I follow "Parent2" within "#position_2"
+    And I press "Increase Type"
     And I refetch the following
       """
       http://test.sidrasue.com/parts/3.html

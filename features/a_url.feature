@@ -65,3 +65,11 @@ Scenario: ao3 user should display error
   Then I should see "Url cannot be an ao3 collection"
     And I should have 0 pages
 
+Scenario: add url after
+  Given a page exists with title: "test me"
+  When I am on the page's page
+    And I follow "Refetch"
+    And I fill in "url" with "http://test.sidrasue.com/test.html"
+    And I press "Refetch"
+  Then I should see "test me (Single)"
+    And the contents should include "Retrieved from the web"
