@@ -17,3 +17,6 @@
       = label_tag :show_readers_all, 'Show All'
       = radio_button_tag :show_readers, 'none'
       = label_tag :show_readers, 'Show None'
+-if current_page?(filter_path)
+  = check_box_tag :omit, 'selected'
+  = label_tag :omit_selected, 'Omit Selected Tags'

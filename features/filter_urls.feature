@@ -1,7 +1,7 @@
 Feature: filter/find by url
 
 Scenario: find by audio url
-  Given a page exists with audio_url: "http://imac.local/~alice/audiobooks/" AND title: 'Find Me'
+  Given a page exists with audio_url: "http://imac.local/~alice/audiobooks/find_me.mp3" AND title: 'Find Me'
     And a page exists with title: 'But not me'
   When I am on the filter page
     And I fill in "page_audio_url" with "http://imac.local/~alice/audiobooks/"

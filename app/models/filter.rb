@@ -119,7 +119,9 @@ class Filter
       tags << tag
     end
 
-    if tags.size < 2
+    if params.has_key?('omit')
+      Filter.omitted(pages, tags, params)
+    elsif tags.size < 2
       if tags.size == 1
         if tags.first.type == "Con" && !params.has_key?("tag")
           Filter.intersection(pages, tags, params)
@@ -145,7 +147,7 @@ class Filter
   def self.intersection(pages, tags, params)
     Rails.logger.debug "filtering on intersection of #{tags.size} tags"
     results = []
-    tags.each_with_index do |tag, index|
+    tags.each do |tag|
       if tag.type == "Con" && !params.has_key?("tag")
         pages_without_tag = pages - tag.pages
         Rails.logger.debug "not #{tag.base_name} has #{pages_without_tag.count} pages: #{pages_without_tag.map(&:title)}"
@@ -160,5 +162,18 @@ class Filter
     Rails.logger.debug "intersection has #{intersection.count} pages"
     start = params[:count].to_i
     intersection[start,LIMIT]
+  end
+
+
+  def self.omitted(pages, tags, params)
+    Rails.logger.debug "filtering without #{tags.size} tags"
+    Rails.logger.debug "start with #{pages.count} pages"
+    results = []
+    tags.each do |tag|
+      pages = pages - tag.pages
+    end
+    Rails.logger.debug "end with #{pages.count} pages"
+    start = params[:count].to_i
+    pages[start,LIMIT]
   end
 end

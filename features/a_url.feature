@@ -33,6 +33,15 @@ Scenario: duplicate url not saved
   Then I should see "Url has already been taken" within "#flash_alert"
     And I should NOT see "duplicate"
 
+Scenario: duplicate audio url not saved
+  Given a page exists with title: "Original" AND audio_url: "http://test.sidrasue.com/test.html"
+  When I am on the create page
+    And I fill in "page_title" with "duplicate"
+    And I fill in "page_audio_url" with "http://test.sidrasue.com/test.html"
+    And I press "Store"
+  Then I should see "Audio url has already been taken" within "#flash_alert"
+    And I should NOT see "duplicate"
+
 Scenario: duplicate url doesn't affect original
   Given a page exists with title: "Original" AND url: "http://test.sidrasue.com/test.html"
   When I am on the create page
