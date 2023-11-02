@@ -1,22 +1,14 @@
 -Tag.types.each do |type|
-  .div{class: "#{type.downcase.pluralize}"}
-    = select_tag type.downcase.to_sym,
-      options_for_select([nil] + type.constantize.names,instance_variable_get("@#{type.downcase}_name"))
-    = label_tag type.downcase.to_sym, type
-    -if type == "Con" && current_page?(filter_path)
-      = check_box_tag :hide_all, 'cons'
-      = label_tag :hide_all_cons, 'Hide All'
-    -if type == "Pro" && current_page?(filter_path)
-      = check_box_tag :show_all, 'pros'
-      = label_tag :show_all_pros, 'Show All'
-    -if type == "Hidden" && current_page?(filter_path)
-      = check_box_tag :show, 'hiddens'
-      = label_tag :show_hiddens, 'Show'
-    -if type == "Reader" && current_page?(filter_path)
-      = radio_button_tag :show_readers, 'all'
-      = label_tag :show_readers_all, 'Show All'
-      = radio_button_tag :show_readers, 'none'
-      = label_tag :show_readers, 'Show None'
+  -dtype = type.downcase
+  .div{class: "#{dtype}"}
+    = select_tag dtype.to_sym,
+      options_for_select([nil] + type.constantize.names,instance_variable_get("@#{dtype}_name"))
+    = label_tag dtype.to_sym, type
+    -if current_page?(filter_path) && Tag.boolean_types.include?(type)
+      = radio_button_tag "show_#{dtype}s".to_sym, 'all'
+      = label_tag "show_#{dtype}s_all".to_sym, 'Show All'
+      = radio_button_tag "show_#{dtype}s".to_sym, 'none'
+      = label_tag "show_#{dtype}s_none".to_sym, 'Show None'
 -if current_page?(filter_path)
   = check_box_tag :omit, 'selected'
   = label_tag :omit_selected, 'Omit Selected Tags'

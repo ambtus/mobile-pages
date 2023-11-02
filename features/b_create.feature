@@ -44,7 +44,9 @@ Scenario: create a page with a hidden tag
     And I fill in "page_title" with "Title"
     And I select "abc123"
     And I press "Store"
-    And I am on the homepage
+    And I am on the filter page
+    And I click on "show_hiddens_none"
+    And I press "Find"
   Then I should see "No pages found"
     But I should have 1 page
 

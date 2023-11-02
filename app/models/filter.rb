@@ -77,34 +77,18 @@ class Filter
         pages.order('read_after ASC')
     end
 
-    tags=[]
-    if params.has_key?(:hidden)
-      tag = Hidden.find_by_short_name(params[:hidden])
-      Rails.logger.debug "with #{tag.base_name}"
-      tags << tag
-    elsif params[:show] == "hiddens"
-      #no-op
-    else
-      pages = pages.where(hidden: false)
+    Tag.boolean_types.map(&:downcase).each do |tag_type|
+      if params["show_#{tag_type}s".to_sym] == "none"
+        Rails.logger.debug "no #{tag_type}s"
+        pages = pages.where(tag_type.to_sym => false)
+      elsif params["show_#{tag_type}s".to_sym] == "all"
+        Rails.logger.debug "all #{tag_type}s"
+        pages = pages.where(tag_type.to_sym => true)
+      end
     end
 
-    if params[:hide_all] == "cons"
-      pages = pages.where(con: false)
-    end
-
-    if params[:show_all] == "pros"
-      pages = pages.where(pro: true)
-    end
-
-    if params[:show_readers] == "none"
-      pages = pages.where(reader: false)
-    end
-
-    if params[:show_readers] == "all"
-      pages = pages.where(reader: true)
-    end
-
-    Tag.types.each do |tag_type|
+   tags=[]
+   Tag.types.each do |tag_type|
       if params.has_key?(tag_type.downcase.to_s)
         model = tag_type.constantize
         tag = model.find_by_short_name(params[tag_type.downcase.to_s])

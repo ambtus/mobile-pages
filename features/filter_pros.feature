@@ -20,7 +20,7 @@ Scenario: filtered in when filtering in all
   Given a page exists with pros: "very good" AND title: "Page 1"
     And a page exists with pros: "slightly good" AND title: "Page 2"
   When I am on the filter page
-    And I check "show_all"
+    And I click on "show_pros_all"
     And I press "Find"
   Then I should see "Page 1"
     And I should see "Page 2"
@@ -52,7 +52,7 @@ Scenario: new parent for an existing page should be proed (not duped)
 Scenario: any pros
   Given pages with all combinations of pros and cons exist
   When I am on the filter page
-    And I check "show_all"
+    And I click on "show_pros_all"
     And I press "Find"
   Then I should see "page5"
     And I should see "page4i"
@@ -71,7 +71,7 @@ Scenario: pro selected during create is filterable
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
     And I am on the filter page
-    And I check "show_all"
+    And I click on "show_pros_all"
     And I press "Find"
   Then I should NOT see "No pages found"
     And I should see "abc123"

@@ -240,7 +240,9 @@ Scenario: change pro to fandom tag part 4
 
 Scenario: change hidden to fandom tag part 1
   Given a page exists with hiddens: "will be visible"
-  When I am on the homepage
+  When I am on the filter page
+    And I click on "show_hiddens_none"
+    And I press "Find"
   Then I should have 1 page
     But I should see "No pages found"
 
@@ -296,7 +298,9 @@ Scenario: change fandom to hidden tag part 4
   When I am on the edit tag page for "will be hidden"
     And I select "Hidden" from "change"
     And I press "Change"
-    And I am on the homepage
+    And I am on the filter page
+    And I click on "show_hiddens_none"
+    And I press "Find"
   Then I should have 1 page
     But I should see "No pages found"
 

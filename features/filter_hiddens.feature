@@ -1,16 +1,16 @@
-Feature: pages with hidden tags are filtered out by default. During search, anything with a hidden is not found unless it is chosen from hiddens.
+Feature: pages with hidden tags can be filtered out or in
 
-Scenario: hidden by default (no not-hiddens)
+Scenario: not hidden by default (no not-hiddens)
   Given the following pages
     | title                            | fandoms                 | hiddens       |
     | The Mysterious Affair at Styles  | mystery                 | hide          |
     | Alice in Wonderland              | children                | hide, go away |
   When I am on the homepage
-  Then I should see "No pages found"
-    And I should NOT see "The Mysterious Affair at Styles"
-    And I should NOT see "Alice in Wonderland"
+  Then I should NOT see "No pages found"
+    And I should see "The Mysterious Affair at Styles"
+    And I should see "Alice in Wonderland"
 
-Scenario: hidden by default (show not-hiddens)
+Scenario: not hidden by default (show not-hiddens)
   Given the following pages
     | title                            | fandoms                 | hiddens       |
     | The Mysterious Affair at Styles  | mystery                 | hide          |
@@ -19,8 +19,8 @@ Scenario: hidden by default (show not-hiddens)
   When I am on the homepage
   Then I should NOT see "No pages found"
     And I should see "The Boxcar Children"
-    But I should NOT see "The Mysterious Affair at Styles"
-    And I should NOT see "Alice in Wonderland"
+    And I should see "The Mysterious Affair at Styles"
+    And I should see "Alice in Wonderland"
 
 Scenario: find by hidden
   Given the following pages
@@ -35,16 +35,44 @@ Scenario: find by hidden
     But I should NOT see "The Mysterious Affair at Styles"
     And I should NOT see "The Boxcar Children"
 
+Scenario: omit hidden
+  Given the following pages
+    | title                            | hiddens       |
+    | The Mysterious Affair at Styles  | hide          |
+    | Alice in Wonderland              | hide, go away |
+    | The Boxcar Children              |               |
+  When I am on the filter page
+    And I select "go away" from "Hidden"
+    And I check "omit"
+    And I press "Find"
+  Then I should NOT see "Alice in Wonderland"
+    But I should see "The Mysterious Affair at Styles"
+    And I should see "The Boxcar Children"
+
+Scenario: hide all hiddens
+  Given the following pages
+    | title                            | hiddens       |
+    | The Mysterious Affair at Styles  | hide          |
+    | Alice in Wonderland              | hide, go away |
+    | The Boxcar Children              |               |
+  When I am on the filter page
+    And I click on "show_hiddens_none"
+    And I press "Find"
+  Then I should NOT see "Alice in Wonderland"
+    And I should NOT see "The Mysterious Affair at Styles"
+    But I should see "The Boxcar Children"
+
 Scenario: check before change (index)
   Given a page exists with hiddens: "will be visible"
-  When I am on the homepage
+  When I am on the filter page
+    And I click on "show_hiddens_none"
+    And I press "Find"
   Then I should see "No pages found"
     But I should have 1 page
 
-Scenario: check before change (filter)
+Scenario: check before change (select)
   Given a page exists with hiddens: "will be visible"
   When I am on the filter page
-  Then I should NOT see "No pages found"
     And I select "will be visible" from "hidden"
 
 Scenario: check before change (show)
@@ -103,10 +131,9 @@ Scenario: change con to hidden tag (index)
     And I am on the homepage
   Then the page should be hidden
     But the page should NOT be conned
-    And I should see "No pages found"
-    But I should have 1 page
+    And I should have 1 page
 
-Scenario: change con to hidden tag (filter)
+Scenario: change con to hidden tag (select)
   Given a page exists with cons: "to be hidden"
   When I am on the edit tag page for "to be hidden"
     And I select "Hidden" from "change"
@@ -127,7 +154,9 @@ Scenario: check before find by url
     | title                  | url                                | hiddens |
     | A Christmas Carol      | http://test.sidrasue.com/cc.html   | hide me |
     | The Call of the Wild   | http://test.sidrasue.com/cotw.html |         |
-  When I am on the homepage
+  When I am on the filter page
+    And I click on "show_hiddens_none"
+    And I press "Find"
   Then I should see "The Call of the Wild"
     But I should NOT see "A Christmas Carol"
 
@@ -148,6 +177,7 @@ Scenario: find by url should NOT find hidden if it's part of the filter
     | The Call of the Wild   | http://test.sidrasue.com/cotw.html |         |
   When I am on the filter page
     And I fill in "page_url" with "test.sidrasue.com"
+    And I click on "show_hiddens_none"
     And I press "Find"
   Then I should see "The Call of the Wild"
     But I should NOT see "A Christmas Carol"
@@ -160,6 +190,7 @@ Scenario: change part to hidden
     And I press "Add Hidden Tags"
     And I am on the filter page
     And I fill in "page_url" with "http://test.sidrasue.com/parts"
+    And I click on "show_hiddens_none"
     And I press "Find"
   Then I should see "Part 1"
     And I should see "Part 3"
@@ -183,13 +214,13 @@ Scenario: filter out by AKA (index)
 Scenario: any hiddens
   Given a page exists with hiddens: "abc123" AND title: "page1"
     And a page exists with hiddens: "xyz987" AND title: "page2"
+    And a page exists with pros: "humhum" AND title: "page3"
   When I am on the filter page
-    And I check "show"
+    And I click on "show_hiddens_all"
     And I press "Find"
   Then I should see "page1"
     And I should see "page2"
-
-
+    But I should NOT see "page3"
 
 
 Scenario: check before find by audio url
@@ -197,7 +228,9 @@ Scenario: check before find by audio url
     | title                  | audio_url                          | hiddens |
     | A Christmas Carol      | http://test.sidrasue.com/cc.html   | hide me |
     | The Call of the Wild   | http://test.sidrasue.com/cotw.html |         |
-  When I am on the homepage
+  When I am on the filter page
+    And I click on "show_hiddens_none"
+    And I press "Find"
   Then I should see "The Call of the Wild"
     But I should NOT see "A Christmas Carol"
 
@@ -207,6 +240,7 @@ Scenario: find by url should find hidden
     | A Christmas Carol      | http://test.sidrasue.com/cc.html   | hide me |
     | The Call of the Wild   | http://test.sidrasue.com/cotw.html |         |
   When I am on the filter page
+    And I click on "show_hiddens_none"
     And I fill in "page_audio_url" with "http://test.sidrasue.com/cc.html"
     And I press "Find"
   Then I should see "A Christmas Carol" within ".title"
@@ -217,6 +251,7 @@ Scenario: find by url should NOT find hidden if it's part of the filter
     | A Christmas Carol      | http://test.sidrasue.com/cc.html   | hide me |
     | The Call of the Wild   | http://test.sidrasue.com/cotw.html |         |
   When I am on the filter page
+    And I click on "show_hiddens_none"
     And I fill in "page_audio_url" with "test.sidrasue.com"
     And I press "Find"
   Then I should see "The Call of the Wild"
