@@ -43,7 +43,7 @@ Scenario: omit hidden
     | The Boxcar Children              |               |
   When I am on the filter page
     And I select "go away" from "Hidden"
-    And I check "omit"
+    And I click on "selected_hiddens_exclude"
     And I press "Find"
   Then I should NOT see "Alice in Wonderland"
     But I should see "The Mysterious Affair at Styles"

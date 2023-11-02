@@ -87,37 +87,44 @@ class Filter
       end
     end
 
-   tags=[]
+   excluded=[]
+   included=[]
    Tag.types.each do |tag_type|
       if params.has_key?(tag_type.downcase.to_s)
         model = tag_type.constantize
         tag = model.find_by_short_name(params[tag_type.downcase.to_s])
-        Rails.logger.debug "with #{model}s #{tag.base_name}"
-        tags << tag
+        if params.has_key?("selected_#{tag_type.downcase}s".to_s)
+          if params["selected_#{tag_type.downcase}s".to_s]=="include"
+            Rails.logger.debug "include by choice #{model}s #{tag.base_name}"
+            included << tag
+          elsif params["selected_#{tag_type.downcase}s".to_s]=="exclude"
+            Rails.logger.debug "exclude by choide #{model}s #{tag.base_name}"
+            excluded << tag
+          end
+        else
+          Rails.logger.debug "include by default #{model}s #{tag.base_name}"
+          included << tag
+        end
       end
     end
 
     if params.has_key?("tag")
       tag = Tag.find_by_short_name(params["tag"])
       Rails.logger.debug "with Tag #{tag.base_name} (originally from find)"
-      tags << tag
+      included << tag
     end
 
-    if params.has_key?('omit')
-      Filter.omitted(pages, tags, params)
-    elsif tags.size < 2
-      if tags.size == 1
-        if tags.first.type == "Con" && !params.has_key?("tag")
-          Filter.intersection(pages, tags, params)
-        else
-          pages = pages.joins(:tags).where(tags: {id: tags.first.id}).distinct
-          Filter.normal(pages, params)
-        end
-      elsif tags.empty?
+    if included.size < 2 && excluded.empty?
+      if included.size == 1
+        pages = pages.joins(:tags).where(tags: {id: included.first.id}).distinct
+        Filter.normal(pages, params)
+      elsif included.empty?
         Filter.normal(pages, params)
       end
-    elsif tags.size > 1
-      Filter.intersection(pages, tags, params)
+    elsif included.empty? && excluded.size >0
+      Filter.omitted(pages, excluded, params)
+    else
+      Filter.intersection(pages, included, excluded, params)
     end
   end
 
@@ -127,27 +134,6 @@ class Filter
     start = params[:count].to_i
     pages.limit(start + LIMIT)[start..-1]
   end
-
-  def self.intersection(pages, tags, params)
-    Rails.logger.debug "filtering on intersection of #{tags.size} tags"
-    results = []
-    tags.each do |tag|
-      if tag.type == "Con" && !params.has_key?("tag")
-        pages_without_tag = pages - tag.pages
-        Rails.logger.debug "not #{tag.base_name} has #{pages_without_tag.count} pages: #{pages_without_tag.map(&:title)}"
-        results << pages_without_tag
-      else
-        pages_with_tag = pages.joins(:tags).distinct.where(tags: {id: tag.id})
-        Rails.logger.debug "#{tag.base_name} has #{pages_with_tag.count} pages: #{pages_with_tag.map(&:title)}"
-        results << pages_with_tag
-      end
-    end
-    intersection = results.inject{|result, pages| result & pages}
-    Rails.logger.debug "intersection has #{intersection.count} pages"
-    start = params[:count].to_i
-    intersection[start,LIMIT]
-  end
-
 
   def self.omitted(pages, tags, params)
     Rails.logger.debug "filtering without #{tags.size} tags"
@@ -160,4 +146,24 @@ class Filter
     start = params[:count].to_i
     pages[start,LIMIT]
   end
+
+  def self.intersection(pages, included, excluded, params)
+    Rails.logger.debug "filtering on included #{included.size} and excluded #{excluded} tags"
+    results = []
+    excluded.each do |tag|
+      pages_without_tag = pages - tag.pages
+      Rails.logger.debug "not #{tag.base_name} has #{pages_without_tag.count} pages: #{pages_without_tag.map(&:title)}"
+      results << pages_without_tag
+    end
+    included.each do |tag|
+      pages_with_tag = pages.joins(:tags).distinct.where(tags: {id: tag.id})
+      Rails.logger.debug "#{tag.base_name} has #{pages_with_tag.count} pages: #{pages_with_tag.map(&:title)}"
+      results << pages_with_tag
+    end
+    intersection = results.inject{|result, pages| result & pages}
+    Rails.logger.debug "intersection has #{intersection.count} pages"
+    start = params[:count].to_i
+    intersection[start,LIMIT]
+  end
+
 end

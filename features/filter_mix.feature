@@ -141,6 +141,7 @@ Scenario: interesting (3h, 4i, 5) but not hateful (3h)
   When I am on the filter page
     And I select "interesting" from "pro"
     And I select "hateful" from "con"
+    And I click on "selected_cons_exclude"
     And I press "Find"
   Then I should see "page4i"
     And I should see "page5"
@@ -151,6 +152,7 @@ Scenario: loving (3l, 4l, 5) but not boring (3l)
   When I am on the filter page
     And I select "loving" from "pro"
     And I select "boring" from "con"
+    And I click on "selected_cons_exclude"
     And I press "Find"
   Then I should see "page4l"
     And I should see "page5"
@@ -165,6 +167,7 @@ Scenario: mystery but not children
   When I am on the filter page
     And I select "mystery" from "pro"
     And I select "children" from "con"
+    And I click on "selected_cons_exclude"
     And I press "Find"
   Then I should NOT see "The Boxcar Children"
     And I should NOT see "Alice in Wonderland"

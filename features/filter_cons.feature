@@ -1,6 +1,6 @@
 Feature: pages with con tags are filtered in by default.
          During search, anything with a con is found
-         unless it is chosen from cons, in which case it is NOT found
+         unless it is omitted, in which case it is NOT found
 
 Scenario: shown by default
   Given a page exists with cons: "sad"
@@ -14,6 +14,7 @@ Scenario: filtered out when selected
     And a page exists with cons: "slightly sad" AND title: "Page 2"
   When I am on the filter page
     And I select "very sad" from "Con"
+    And I click on "selected_cons_exclude"
     And I press "Find"
   Then I should NOT see "Page 1"
     But I should see "Page 2" within "#position_1"
@@ -60,6 +61,7 @@ Scenario: change pro to con tag (index)
     And I press "Change"
     And I am on the filter page
     And I select "sad" from "con"
+    And I click on "selected_cons_exclude"
     And I press "Find"
   Then I should see "No pages found"
     And I should NOT see "Page 1"
@@ -73,6 +75,7 @@ Scenario: filter out with AKA
     | Through the Looking Glass        | lewis carroll |
   When I am on the filter page
     And I select "lewis carroll" from "Con"
+    And I click on "selected_cons_exclude"
     And I press "Find"
   Then I should NOT see "Alice's Adventures In Wonderland"
     And I should NOT see "Through the Looking Glass"
