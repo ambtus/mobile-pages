@@ -163,3 +163,9 @@ Scenario: before storing a series when I already have one of its singles
     And Skipping Stones exists
   When I am on the homepage
   Then I should see "by Sidra; Harry Potter/Unknown;" within "#position_1"
+
+Scenario: refetching a series should have the series url
+  Given Mandalorian Zuko exists
+  When I am on the page's page
+  And I follow "Refetch"
+  Then the "url" field should contain "https://archiveofourown.org/series/1820452"

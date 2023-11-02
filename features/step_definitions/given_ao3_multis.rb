@@ -221,3 +221,23 @@ Given /^Misfits first chapter of second work exists$/ do
   work2.rebuild_meta
 
 end
+
+Given /^Mandalorian Zuko exists$/ do
+  series = Series.create!(title: "Mandalorian Zuko")
+  series.update!(url: "https://archiveofourown.org/series/1820452")
+
+  book1 = Book.create!(title: "temp", parent_id: series.id, position: 1)
+  book1.update!(url: "https://archiveofourown.org/works/25131619")
+  chapter1 = Chapter.create!(title: "temp", parent_id: book1.id, position: 1)
+  chapter1.update!(url: "https://archiveofourown.org/works/25131619/chapters/60890896")
+  chapter1.set_raw_from("meeting")
+  book1.rebuild_meta
+  book1.update_from_parts
+
+  single = Single.create!(title: "temp", parent_id: series.id, position: 2)
+  single.update!(url: "https://archiveofourown.org/works/25534093")
+  single.set_raw_from("mandalorian")
+
+  series.update_from_parts
+
+end

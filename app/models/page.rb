@@ -416,6 +416,7 @@ class Page < ActiveRecord::Base
   end
 
   def refetch_url
+    return url if ao3?
     if ao3_chapters?
       return parts.first.url.split("/chapter").first
     end
