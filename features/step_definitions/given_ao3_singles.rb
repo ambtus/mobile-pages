@@ -153,3 +153,9 @@ Given('I asked exists') do
   page.update!(url: "https://archiveofourown.org/works/42267606/chapters/106131021")
   page.set_raw_from("asked")
 end
+
+Given('To Tame a Sorcerer exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "https://archiveofourown.org/works/51369982")
+  page.set_raw_from("to_tame")
+end

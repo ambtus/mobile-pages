@@ -141,9 +141,9 @@ module Scrub
     # condense multiple sections
     html.gsub!(/(\s*<hr ?\/?>\s*){2,}/, '<hr>')
     # remove beginning section
-    html.gsub!(/^<hr>/, '')
+    html.gsub!(/^<hr ?\/?>/, '')
     # remove end section
-    html.gsub!(/<hr>$/, '')
+    html.gsub!(/<hr ?\/?>$/, '')
 
     # style sections
     html.gsub!(/<hr>/, '<hr width="80%"/>')

@@ -169,3 +169,11 @@ Scenario: refetching a series should have the series url
   When I am on the page's page
   And I follow "Refetch"
   Then the "url" field should contain "https://archiveofourown.org/series/1820452"
+
+Scenario: should only be three hrs
+  Given "Genuka" is a "Author"
+    And "Marvel Cinematic Universe (Doctor Strange, Iron Man)" is a "Fandom"
+    And To Tame a Sorcerer exists
+  When I am on the page's page
+  Then I should see three horizontal rules
+    But I should NOT see four horizontal rules

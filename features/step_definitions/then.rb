@@ -41,6 +41,10 @@ Then('I should NOT see three horizontal rules') do
   assert !Regexp.new(/<hr.*<hr.*<hr/).match(page.html.squish)
 end
 
+Then('I should NOT see four horizontal rules') do
+  assert !Regexp.new(/<hr.*<hr.*<hr.*<hr/).match(page.html.squish)
+end
+
 Then("I should see {string} within {string}") do |text, parent|
   within(parent) { assert assert_text(text) }
 end
