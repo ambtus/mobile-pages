@@ -58,13 +58,18 @@ module Websites
               body.children
             when /grazhir.com/
               body.at('div#content')
+            when /wikipedia/
+              header = body.at('div#siteSub').to_html
+              html = html.match(header).post_match
+              footer = body.at('span#Adaptations').to_html
+              html = html.match(footer).pre_match
+              Nokogiri::HTML(html).xpath('//body').first
             when /matthewhaldemantime/
               continued_from = body.at('a')
               if continued_from.text.match('Continued from')
                 header = continued_from.to_html
                 html = html.match(header).post_match
               end
-
               others = body.search('a')
               10.times do |i|
                 continue_to = others[i+1]
@@ -83,9 +88,7 @@ module Websites
               [0, 1, -1, -2, -3].each do |i|
                 spans[i].remove if spans[i] && spans[i].text.blank?
               end
-
               body
-
             when /clairesnook.com/, /keiramarcos.com/
               if body.at('div.tab-pane')
                 body.at('div.tab-pane')

@@ -207,6 +207,8 @@ module Meta
       [new, old].pulverize.first || "title not found"
     elsif wp?
       doc.at("h1").text.gsub("–", "—").split("—").first.squish
+    elsif wikipedia?
+      doc.at('h1.firstHeading').text.strip
     else
       "title not found"
     end
@@ -378,7 +380,7 @@ module Meta
   end
 
   def set_meta
-    unless ao3? || ff? || first_part_ff? || wp?
+    unless ao3? || ff? || first_part_ff? || wp? || wikipedia?
       Rails.logger.debug "only ao3 & fanfiction.net && wordpress for now"
       return false
     end

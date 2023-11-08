@@ -225,6 +225,7 @@ class Page < ActiveRecord::Base
   def cn?; self.url && self.url.match(/clairesnook.com/); end
   def km?; self.url && self.url.match(/keiramarcos.com/); end
   def wp?; cn? || km? ; end
+  def wikipedia?; self.url && self.url.match(/wikipedia.org/); end
 
   def ao3?; self.url && self.url.match(/archiveofourown/); end
   def ao3_chapter?; ao3? && self.url.match(/chapter/); end
