@@ -39,3 +39,16 @@ Scenario: dumb witness
     But I should NOT see "Adaptations"
     And I should NOT see "From Wikipedia, the free encyclopedia"
 
+Scenario: mews
+  Given Murder in the Mews exists
+  When I am on the page's page
+  Then I should see "Murder in the Mews (Single)"
+
+Scenario: mews
+  Given Murder in the Mews exists
+  When I read it online
+  Then I should see "1937 story collection by Agatha Christie"
+    And I should see "which was later collected in Poirot's Early Cases."
+    But I should NOT see "Film, TV or theatrical adaptations"
+    And I should NOT see "From Wikipedia, the free encyclopedia"
+

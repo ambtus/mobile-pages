@@ -61,8 +61,13 @@ module Websites
             when /wikipedia/
               header = body.at('div#siteSub').to_html
               html = html.match(header).post_match
-              footer = body.at('span#Adaptations').to_html
-              html = html.match(footer).pre_match
+              first_try = body.at('span#Adaptations')
+              if first_try.blank?
+                footer = "Film, TV or theatrical adaptations"
+              else
+                footer = first_try.to_html
+              end
+              html = html.match(footer).pre_match if footer
               Nokogiri::HTML(html).xpath('//body').first
             when /matthewhaldemantime/
               continued_from = body.at('a')

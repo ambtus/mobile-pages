@@ -16,6 +16,12 @@ Given('Dumb Witness exists') do
   page.set_raw_from('dumb')
 end
 
+Given('Murder in the Mews exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "https://en.wikipedia.org/wiki/Murder_in_the_Mews")
+  page.set_raw_from('mews')
+end
+
 Given('The Awakening exists') do
   book = Book.create!(title: "temp")
   book.update!(url: "https://keiramarcos.com/fan-fiction/the-awakening/")
