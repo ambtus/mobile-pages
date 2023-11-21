@@ -83,20 +83,12 @@ Scenario: change to default when re-rating
     And I am on the page's page
   Then "Default" should be checked
 
-Scenario: change to later during create
-  Given I am on the create page
-  When I fill in "page_title" with "Looks okay"
-    And I click on "Someday"
-    And I press "Store"
-    And I am on the page's page
-  Then "Someday" should be checked
-
-Scenario: change to eventually after create
+Scenario: change to someday after create
   Given I am on the create page
   When I fill in "page_title" with "Looks bad"
     And I press "Store"
-    And I click on "Eventually"
+    And I click on "Someday"
     And I press "Change"
-  Then "Eventually" should be checked
+  Then "Someday" should be checked
 
 

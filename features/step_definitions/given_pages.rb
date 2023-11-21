@@ -122,16 +122,16 @@ end
 
 Given("six downloaded and six hidden pages exist") do
   6.times do |i|
-    Single.create(title: "reading #{i+1}", soon: -1)
+    Single.create(title: "reading #{i+1}", soon: 0)
   end
   6.times do |i|
-    Single.create(title: "hidden #{i+1}", soon: -1, hidden: true)
+    Single.create(title: "hidden #{i+1}", soon: 0, hidden: true)
   end
 end
 
 Given("eleven downloaded pages exist") do
   11.times do |i|
-    Single.create(title: "reading #{i+1}", soon: -1)
+    Single.create(title: "reading #{i+1}", soon: 0)
   end
 end
 

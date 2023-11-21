@@ -1,10 +1,11 @@
 module Soon
-  LABELS = %w{Reading Soonest Sooner Soon Default Someday Eventually}
+  ####          0       1      2      3       4
+  LABELS = %w{Reading Soonest Sooner Default Someday}
 
-  def soon_label; LABELS[soon + 1]; end
+  def soon_label; LABELS[soon]; end
 
   def set_reading
-    self.update soon: -1
+    self.update soon: 0
     return self
   end
 
