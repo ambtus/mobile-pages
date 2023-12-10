@@ -52,3 +52,20 @@ Scenario: mews
     But I should NOT see "Film, TV or theatrical adaptations"
     And I should NOT see "From Wikipedia, the free encyclopedia"
 
+Scenario: early cases
+  Given Early Cases exists
+  When I read it online
+  Then "Poirot's Early Cases" should link to itself
+    And I should see "short story collection"
+    But I should NOT see "From Wikipedia, the free"
+    And I should see "did publish at the time."
+    But I should NOT see "Film, television or theatrical adaptations"
+
+Scenario: announced
+  Given Announced exists
+  When I read it online
+  Then "A Murder Is Announced" should link to itself
+    And I should see "June 1950"
+    And I should see "counting in both UK and US short story collections"
+    But I should NOT see "From Wikipedia, the free"
+    And I should NOT see "Film, television or theatrical adaptations"

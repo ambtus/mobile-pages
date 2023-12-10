@@ -64,10 +64,13 @@ module Websites
               first_try = body.at('span#Adaptations')
               if first_try.blank?
                 footer = "Film, TV or theatrical adaptations"
+                if html.match(footer).blank?
+                  footer = "Film, television or theatrical adaptations"
+                end
               else
                 footer = first_try.to_html
               end
-              html = html.match(footer).pre_match if footer
+              html = html.match(footer).pre_match if (footer && html.match(footer))
               Nokogiri::HTML(html).xpath('//body').first
             when /matthewhaldemantime/
               continued_from = body.at('a')

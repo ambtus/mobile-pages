@@ -21,6 +21,18 @@ Given('Murder in the Mews exists') do
   page.update!(url: "https://en.wikipedia.org/wiki/Murder_in_the_Mews")
   page.set_raw_from('mews')
 end
+Given('Early Cases exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "https://en.wikipedia.org/wiki/Poirot's_Early_Cases")
+  page.set_raw_from('early')
+end
+
+Given('Announced exists') do
+  page = Single.create!(title: "temp")
+  page.update!(url: "https://en.wikipedia.org/wiki/A_Murder_Is_Announced")
+  page.set_raw_from('announced')
+end
+
 
 Given('The Awakening exists') do
   book = Book.create!(title: "temp")
