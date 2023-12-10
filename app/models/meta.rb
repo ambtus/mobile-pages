@@ -346,6 +346,8 @@ module Meta
       [add_authors(inferred_authors), add_fandoms(inferred_fandoms), inferred_relationships.join(", "), work_summary, note_tags, work_notes]
     when "Series"
       [add_authors(inferred_authors), add_fandoms(inferred_fandoms), work_summary, work_notes]
+    else # oops?
+      ["why am i a #{type}?"]
     end.join_hr
   end
 

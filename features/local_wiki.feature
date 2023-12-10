@@ -63,6 +63,12 @@ Scenario: early cases
 
 Scenario: announced
   Given Announced exists
+  When I am on the page's page
+    And I press "Rebuild Meta"
+  Then I should see "why am i a Page?"
+
+Scenario: announced
+  Given Announced exists
   When I read it online
   Then "A Murder Is Announced" should link to itself
     And I should see "June 1950"

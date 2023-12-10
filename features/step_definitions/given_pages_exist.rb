@@ -28,9 +28,10 @@ Given('Early Cases exists') do
 end
 
 Given('Announced exists') do
-  page = Single.create!(title: "temp")
+  page = Page.create!(title: "temp")
   page.update!(url: "https://en.wikipedia.org/wiki/A_Murder_Is_Announced")
   page.set_raw_from('announced')
+  page.update!(type: 'Page')
 end
 
 
