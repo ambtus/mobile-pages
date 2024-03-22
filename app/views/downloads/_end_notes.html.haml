@@ -4,14 +4,14 @@
 
 -if defined? links
 
+  %p.rate
+    = page.read? ? "ReRate: " : "Rate: "
+    =link_to page.title, @url + rate_path(page)
+
   -if page.next_part
     %p.next
       Next:
       =link_to page.next_part.title, @url + download_url_for_page(page.next_part, ".html")
-
-  %p.rate
-    = page.read? ? "ReRate: " : "Rate: "
-    =link_to page.title, @url + rate_path(page)
 
   -if page.ao3? && !page.is_a?(Series)
     %p.kudos
