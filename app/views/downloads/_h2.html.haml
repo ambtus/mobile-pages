@@ -1,0 +1,10 @@
+%h2{:style=> "page-break-before:always", :class => "chapter_#{child.download_part_title.sum}"}=link_to child.download_part_title, @url + page_path(child)
+=render :partial => "downloads/notes", :locals => {:page => child} if child.show_notes
+
+- if child.parts.empty?
+  .content=raw child.epub_html
+- else
+  - child.not_hidden_parts.each do |grandchild|
+    =render :partial => "downloads/h3", :locals => {:grandchild => grandchild}
+
+=render :partial => "downloads/end_notes", :locals => {page: child}

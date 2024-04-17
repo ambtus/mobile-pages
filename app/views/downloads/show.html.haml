@@ -1,33 +1,11 @@
-%h1{:style=> "page-break-before:always", :class => "chapter"}=link_to @page.title, @url + page_path(@page)
+%h1{:style=> "page-break-before:always", :class => "chapter_#{@page.title.sum}"}=link_to @page.title, @url + page_path(@page)
 =render :partial => "downloads/notes", :locals => {:page => @page} if @page.show_notes
 
 - if @page.parts.empty?
   .content=raw @page.epub_html
 - else
   - @page.not_hidden_parts.each do |child|
-
-    %h2{:style=> "page-break-before:always", :class => "chapter"}=link_to child.download_part_title, @url + page_path(child)
-    =render :partial => "downloads/notes", :locals => {:page => child} if child.show_notes
-
-    - if child.parts.empty?
-      .content=raw child.epub_html
-    - else
-      - child.not_hidden_parts.each do |grandchild|
-        %h3{:style=> "page-break-before:always", :class => "chapter"}=grandchild.download_part_title
-        =render :partial => "downloads/notes", :locals => {:page => grandchild} if grandchild.show_notes
-
-        - if grandchild.parts.empty?
-          .content=raw grandchild.epub_html
-        - else
-          - grandchild.not_hidden_parts.each do |ggchild|
-            %h4{:style=> "page-break-before:always", :class => "chapter"}=ggchild.download_part_title
-            =render :partial => "downloads/notes", :locals => {:page => ggchild} if ggchild.show_notes
-            .content=raw ggchild.epub_html
-            =render :partial => "downloads/end_notes", :locals => {page: ggchild} if ggchild.show_end_notes || ggchild.last_chapter_of_book_of_series?
-
-        =render :partial => "downloads/end_notes", :locals => {page: grandchild} if grandchild.show_end_notes || grandchild.last_chapter_of_book_of_series?
+    =render :partial => "downloads/h2", :locals => {:child => child}
 
 
-    =render :partial => "downloads/end_notes", :locals => {page: child} if child.show_end_notes or child.last_chapter_of_book_of_series?
-
-=render :partial => "downloads/end_notes", :locals => {:page => @page, links: true}
+=render :partial => "downloads/end_notes", :locals => {:page => @page, :last => true}

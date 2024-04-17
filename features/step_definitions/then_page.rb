@@ -6,8 +6,8 @@ Then('I should have {int} page(s)') do |int|
 end
 
 Then('{string} should link to itself') do |string|
-  href = page.find_link(string)['href']
-  itself = Page.find_by_title(string)
+  href = page.find(".chapter_#{string.sum}").find_link(string)['href']
+  itself = Page.find_by_title(string) || Page.find_by_title(string.partition('. ').last)
   Rails.logger.debug "link: page #{itself.id} should be at #{href}"
   assert_match "/pages/#{itself.id}", href
 end
@@ -27,7 +27,7 @@ Then('Leave Kudos or Comments on {string} should link to the last chapter commen
 end
 
 Then('Rate {string} should link to its rate page') do |string|
-  href = page.find(".rate").find_link(string)['href']
+  href = page.find(".rate_#{string.sum}").find_link(string)['href']
   Rails.logger.debug "link: #{href}"
   itself = Page.find_by_title(string)
   assert_match "/rates/#{itself.id}", href

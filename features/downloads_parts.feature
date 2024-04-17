@@ -98,10 +98,26 @@ Scenario: part epubs should have title "PartTitle of ParentTitle of GrandparentT
     And the download epub title for "Prologue" should be "Prologue of Book1 of Series"
     And the download epub title for "Extras" should be "Extras of Series"
 
-Scenario: subpart numbers
+Scenario: all parts and subparts should have page links with proper numbers
   Given a series exists
   When I read "Series" online
-  Then I should see "1.1. Prologue"
-    And I should see "1.2. Cliffhanger"
-    And I should see "2.1. Season2"
-    And I should see "2.2. Epilogue"
+  Then "Series" should link to itself
+    And "Book1" should link to itself
+    And "1.1. Prologue" should link to itself
+    And "1.2. Cliffhanger" should link to itself
+    And "2. Another Book" should link to itself
+    And "2.1. Season2" should link to itself
+    And "2.2. Epilogue" should link to itself
+    And "3. Extras" should link to itself
+
+Scenario: all parts and subparts should have rating links
+  Given a series exists
+  When I read "Series" online
+  Then Rate "Prologue" should link to its rate page
+    And Rate "Cliffhanger" should link to its rate page
+    And Rate "Book1" should link to its rate page
+    And Rate "Season2" should link to its rate page
+    And Rate "Epilogue" should link to its rate page
+    And Rate "Another Book" should link to its rate page
+    And Rate "Extras" should link to its rate page
+    And Rate "Series" should link to its rate page

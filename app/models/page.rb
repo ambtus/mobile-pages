@@ -230,6 +230,8 @@ class Page < ActiveRecord::Base
   def ao3?; self.url && self.url.match(/archiveofourown/); end
   def ao3_chapter?; ao3? && self.url.match(/chapter/); end
   def ao3_chapters?; parts.first && parts.first.ao3? ; end
+  def ao3_work?; ao3? && self.url.match(/work/) && !self.url.match(/chapter/); end
+  def not_ao3_series?; ao3? && !self.url.match(/series/); end
 
   def ff?; url && url.match(/fanfiction.net/); end
   def ff_chapter?; ff? && ff_chapter_number != "1"; end
@@ -374,20 +376,6 @@ class Page < ActiveRecord::Base
   def last_chapter?
     return nil unless parent
     parent.parts.last == self
-  end
-
-  def last_chapter_of_book_of_series?
-    return false unless parent
-    return true if parent.is_a?(Series) && self.is_a?(Single)
-    return true if parent.is_a?(Book) && parent.parent&.is_a?(Series) && self.last_chapter?
-    return false
-  end
-
-  def book_title
-    raise "why am i being called" unless last_chapter_of_book_of_series?
-    return title if self.is_a?(Single)
-    return parent.title if parent.is_a?(Book)
-    raise "what have i missed?"
   end
 
   def not_hidden_parts; parts.where(hidden: false); end

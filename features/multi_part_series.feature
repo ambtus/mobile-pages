@@ -22,7 +22,7 @@ Scenario: create Series from Singles & Books
     And I should see "3 parts" within "#position_3"
 
 Scenario: create collection by adding parent to parent to parent
-  Given a page exists
+  Given a page exists with title: "GG"
   When I am on the page's page
     And I add a parent with title "Parent"
     And I add a parent with title "Grandparent"
@@ -31,8 +31,10 @@ Scenario: create collection by adding parent to parent to parent
   Then the page should have title "Great-Grandparent"
     And I should see "Great-Grandparent" within "h1"
     And I should see "1. Grandparent" within "h2"
-    And I should see "1. Parent" within "h3"
-    And I should see "Page 1" within "h4"
+    And I should see "1.1. Parent" within "h3"
+    And I should see "1.1.1. GG" within "h4"
+    And "1.1.1. GG" should link to itself
+    And Rate "GG" should link to its rate page
 
 Scenario: create by adding parents to a single and a book
   Given a page exists with title: "Parent" AND urls: "http://test.sidrasue.com/parts/2.html,http://test.sidrasue.com/parts/3.html"

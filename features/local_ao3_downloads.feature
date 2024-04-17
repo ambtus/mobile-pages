@@ -36,3 +36,4 @@ Scenario: kudos link if series of chaptered books
   Then I should see "Leave Kudos or Comments on: Three Misfits in New York"
     And I should see "Leave Kudos or Comments on: A Misfit Working Holiday In New York"
     But I should NOT see "Leave Kudos or Comments on: Misfit Series"
+    And I should NOT see "Leave Kudos or Comments on: Chapter 1"
