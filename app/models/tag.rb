@@ -61,7 +61,13 @@ class Tag < ActiveRecord::Base
   def self.find_by_short_name(short)
     return nil if short.blank?
     return nil unless self.all_names.include?(short) # don't catch substring au for audio
-    self.send(scope_name).where(["name LIKE ?", "%" + short + "%"]).first
+    possibles = self.send(scope_name).where(["name LIKE ?", "%" + short + "%"]).all
+    Rails.logger.debug "possibles #{possibles.map(&:name)} from #{short}"
+    if possibles.size == 1
+      possibles.first
+    else
+      possibles.find {|p| p.short_names.include?(short)}
+    end
   end
 
   def add_aka(aka_tag)

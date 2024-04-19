@@ -192,3 +192,52 @@ Scenario: select a merged tag
   Then I should see "jane judy" within ".authors"
     But I should NOT see "june"
     And I should NOT see "aka"
+
+
+Scenario: merge into correct tag
+  Given "feels unfinished/abrupt ending" is a "Con"
+    And "unfinished" is a "Con"
+    And a page exists with cons: "skimmed"
+  When I am on the edit tag page for "skimmed"
+    And I select "unfinished" from "merge"
+    And I press "Merge"
+    And I am on the page's page
+  Then I should see "unfinished" within ".cons"
+    And I should NOT see "skimmed" within ".cons"
+    And I should NOT see "abrupt" within ".cons"
+
+Scenario: merge into correct tag
+  Given "feels unfinished (abrupt ending)" is a "Con"
+    And "unfinished" is a "Con"
+    And a page exists with cons: "skimmed"
+  When I am on the edit tag page for "skimmed"
+    And I select "unfinished" from "merge"
+    And I press "Merge"
+    And I am on the page's page
+  Then I should see "unfinished" within ".cons"
+    And I should NOT see "skimmed" within ".cons"
+    And I should NOT see "abrupt" within ".cons"
+
+Scenario: merge into correct tag
+  Given "feels unfinished (abrupt ending)" is a "Con"
+    And "unfinished" is a "Con"
+    And a page exists with cons: "skimmed"
+  When I am on the edit tag page for "skimmed"
+    And I select "feels unfinished" from "merge"
+    And I press "Merge"
+    And I am on the page's page
+  Then I should see "feels unfinished" within ".cons"
+    And I should NOT see "skimmed" within ".cons"
+    And I should NOT see "abrupt" within ".cons"
+
+Scenario: merge into correct tag
+  Given "feels unfinished" is a "Con"
+    And "unfinished" is a "Con"
+    And a page exists with cons: "abrupt ending"
+  When I am on the edit tag page for "abrupt ending"
+    And I select "unfinished" from "merge"
+    And I press "Merge"
+    And I am on the page's page
+  Then I should see "unfinished" within ".cons"
+    And I should NOT see "abrupt" within ".cons"
+    And I should NOT see "feels" within ".cons"
