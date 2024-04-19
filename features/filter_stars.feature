@@ -16,7 +16,6 @@ Scenario: check before filter on stars
     And I press "Find"
     And I press "Next"
   Then I should see "page1" within ".pages"
-    And I should see "page9" within ".pages"
 
 Scenario: search for 4 & 5 stars
   Given pages with all possible stars exist
@@ -76,10 +75,3 @@ Scenario: search for 1 & 2 stars
     And I should see "page1" within ".pages"
     And the page should NOT contain css "#position_3"
 
-Scenario: search for unfinished (9 stars)
-  Given pages with all possible stars exist
-  When I am on the filter page
-    And I click on "stars_unfinished"
-    And I press "Find"
-  Then I should see "page9" within "#position_1"
-    And the page should NOT contain css "#position_2"

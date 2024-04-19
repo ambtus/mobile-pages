@@ -15,6 +15,7 @@ class RatesController < ApplicationController
     end
     page.rate_today(stars, params[:all])
     page.update_cliff(params[:cliff])
+    page.update_unfinished(params[:unfinished])
     page.reset_soon
     previous = params[:all_previous]
     if previous

@@ -25,7 +25,6 @@ Given("pages with all possible stars exist") do
   Page.create(title: "page1").rate_today(1)
   Page.create(title: "page3").rate_today(3)
   Page.create(title: "page5").rate_today(5)
-  Page.create(title: "page9").rate_today(9)
   Page.create(title: "page2").rate_today(2)
 end
 

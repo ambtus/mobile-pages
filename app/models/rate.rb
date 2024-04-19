@@ -1,20 +1,16 @@
 module Rate
   UNREAD = "unread"
   UNREAD_PARTS_DATE = Date.new(1967) # year first fanzine published. couldn't have read before that ;)
-  UNFINISHED = "unfinished"
 
-  def unfinished?; stars == 9; end
   def unrated?; stars == 10; end
   def stars?; [5,4,3,2,1].include?(self.stars); end
   def star_string
     if stars?
       "#{stars} " + "star".pluralize(stars)
-    elsif unfinished?
-      UNFINISHED
     elsif unrated?
       nil
     else
-      Rails.logger.debug "stars are #{self.stars}, should be 5,4,3,2,1,9,or 10"
+      Rails.logger.debug "stars are #{self.stars}, should be 5,4,3,2,1 or 10"
       "unknown"
     end
   end
@@ -49,9 +45,7 @@ module Rate
   end
 
   def calculated_read_after
-    if stars == 9
-      Date.today + 5.years
-    elsif unread? || unread_parts? || stars == 10
+    if unread? || unread_parts? || stars == 10
       created_at
     else
       case stars

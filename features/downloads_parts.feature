@@ -55,7 +55,8 @@ Scenario: download part titles
     And I press "Update Tags"
     And I follow "Part 2"
     And I follow "Rate"
-    And I click on "Yes" within ".stars"
+    And I click on "3"
+    And I click on "unfinished_Yes"
     And I press "Rate"
     And I read it online
   Then I should see "Part 1 (rating tag)" within "h2"

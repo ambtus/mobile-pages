@@ -37,12 +37,3 @@ Scenario: don’t find unfinished random pages
     And I click on "stars_Better"
     And I press "Find"
   Then I should see "No pages found"
-
-Scenario: do find unfinished random pages if requested
-  Given a page exists with stars: "9"
-  When I am on the filter page
-    And I click on "sort_by_random"
-    And I click on "stars_unfinished"
-    And I press "Find"
-  Then I should NOT see "No pages found"
-    And I should see "Page 1" within "#position_1"

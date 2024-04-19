@@ -15,7 +15,7 @@ module Download
   def download_unread_string
     return "" unless self.unread?
     if parent && parent.read_parts.any?
-      self.unfinished? ? Page::UNFINISHED : Page::UNREAD
+      Page::UNREAD
     else
       ""
     end

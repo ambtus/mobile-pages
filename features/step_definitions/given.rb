@@ -19,6 +19,12 @@ Given("{string} is a cliffhanger") do |title|
   page.update_cliff('Yes')
 end
 
+Given("{string} is unfinished") do |title|
+  page = Page.find_by title: title
+  raise "no page with title #{title}" unless page
+  page.update_unfinished('Yes')
+end
+
 Given('a test page exists') do
   page = Single.create(title: "Test", url: "file:///#{Rails.root}/tmp/html/short.html")
   page.update url: "http://test.sidrasue.com/short.html"

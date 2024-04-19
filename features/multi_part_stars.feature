@@ -37,19 +37,6 @@ Scenario: changed highest (still no mode)
     And I should see "5 stars" within "#position_5"
     And I should NOT see "unread"
 
-Scenario: unfinished is highest
-  Given Uneven exists
-  When I am on the page with title "Uneven"
-    And I follow "Rate" within "#position_5"
-    And I click on "Yes" within ".stars"
-    And I press "Rate"
-    And I am on the page with title "Uneven"
-  Then I should see "1 unread part (2010-01-01)" within ".last_read"
-    And I should see "unfinished" within ".stars"
-    And I should see "unfinished" within "#position_5"
-    And I should NOT see "stars" within "#position_5"
-    And I should NOT see "unread" within "#position_5"
-
 Scenario: rate all unread with stars
   Given Uneven exists
   When I am on the page with title "Uneven"
@@ -65,22 +52,6 @@ Scenario: rate all unread with stars
     And I should see "3 stars" within "#position_3"
     And I should see "4 stars" within "#position_4"
     And I should see "5 stars" within "#position_5"
-    But I should NOT see "unread" within "#position_5"
-
-Scenario: rate all unread as unfinished
-  Given Uneven exists
-  When I am on the page with title "Uneven"
-    And I follow "Rate" within ".views"
-    And I click on "Yes" within ".stars"
-    And I press "Rate"
-    And I am on the page with title "Uneven"
-  Then I should see "1 unread part (2010-01-01)" within ".last_read"
-    And I should see "unfinished" within ".stars"
-    And I should see "1 star" within "#position_1"
-    And I should see "2 stars" within "#position_2"
-    And I should see "3 stars" within "#position_3"
-    And I should see "4 stars" within "#position_4"
-    And I should see "unfinished" within "#position_5"
     But I should NOT see "unread" within "#position_5"
 
 Scenario: rate all with stars rates all

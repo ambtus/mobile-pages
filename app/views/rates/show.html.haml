@@ -20,10 +20,11 @@
         =radio_button_tag :stars, choice, @stars == choice
         =label_tag "stars_#{choice}", choice
         %br
-      = label_tag :unfinished, "Rate unfinished?"
-      = radio_button_tag :stars, '9', @page.unfinished?
-      = label_tag "stars_9", 'Yes'
     .cons
+      = label_tag :unfinished, "Unfinished?"
+      - ['Yes', 'No'].each do |choice|
+        = radio_button_tag :unfinished, choice, humanize_boolean(@page.unfinished_present?) == choice
+        = label_tag "unfinished_#{choice}", choice
       %br
       = label_tag :cliff, "Cliffhanger?"
       - ['Yes', 'No'].each do |choice|

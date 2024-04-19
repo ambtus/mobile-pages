@@ -3,6 +3,7 @@
 class Page < ActiveRecord::Base
   include Download
   include Meta
+  include SpecialTags
   include Rate
   include Utilities
   include Nodes
@@ -642,15 +643,7 @@ class Page < ActiveRecord::Base
 
   def title_prefix; title.match(position.to_s) ? "" : "#{position}. "; end
 
-  def unread_string
-    if unfinished?
-      UNFINISHED
-    elsif unread?
-      UNREAD
-    else
-      ""
-    end
-  end
+  def unread_string; unread? ? UNREAD : ""; end
 
   ## Raw html includes everything from the web
 
