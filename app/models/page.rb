@@ -640,22 +640,6 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "tags now #{self.tags.joined}"
   end
 
-  def unfinished?; stars == 9; end
-  def unrated?; stars == 10; end
-  def stars?; [5,4,3,2,1].include?(self.stars); end
-  def star_string
-    if stars?
-      "#{stars} " + "star".pluralize(stars)
-    elsif unfinished?
-      UNFINISHED
-    elsif unrated?
-      nil
-    else
-      Rails.logger.debug "stars are #{self.stars}, should be 5,4,3,2,1,9,or 10"
-      "unknown"
-    end
-  end
-
   def title_prefix; title.match(position.to_s) ? "" : "#{position}. "; end
 
   def unread_string

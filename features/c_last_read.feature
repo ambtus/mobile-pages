@@ -80,8 +80,8 @@ Scenario: rating a part updates the parent and the part but not the sibling
     And I follow "Page 1" within ".parent"
     # parent gets earliest read of parts
   Then I should see "2009-01-01" within ".last_read"
-    # parent gets max if there is no mode
-    And I should see "5 stars" within ".stars"
+    # parent gets average if there is no mode
+    And I should see "4 stars" within ".stars"
 
 Scenario: rating a part does not update the sibling
   Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND last_read: "2009-01-01" AND stars: "5"

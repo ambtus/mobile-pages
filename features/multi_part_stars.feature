@@ -1,10 +1,10 @@
 Feature: parts can differ in stars from parent
 
-Scenario: highest if no mode
+Scenario: average if no mode
   Given Uneven exists
   When I am on the page with title "Uneven"
   Then I should see "1 unread part (2010-01-01)" within ".last_read"
-    And I should see "4 stars" within ".stars"
+    And I should see "2 stars" within ".stars"
     And I should see "1 star" within "#position_1"
     And I should see "2 stars" within "#position_2"
     And I should see "3 stars" within "#position_3"
@@ -33,7 +33,7 @@ Scenario: changed highest (still no mode)
     And I am on the page with title "Uneven"
   Then I should see "2010-01-01" within ".last_read"
     But I should NOT see "unread parts"
-    And I should see "5 stars" within ".stars"
+    And I should see "3 stars" within ".stars"
     And I should see "5 stars" within "#position_5"
     And I should NOT see "unread"
 
@@ -59,7 +59,7 @@ Scenario: rate all unread with stars
   When I am on the page with title "Uneven"
     Then I should see "2010-01-01" within ".last_read"
     But I should NOT see "unread parts"
-    And I should see "5 stars" within ".stars"
+    And I should see "3 stars" within ".stars"
     And I should see "1 star" within "#position_1"
     And I should see "2 stars" within "#position_2"
     And I should see "3 stars" within "#position_3"

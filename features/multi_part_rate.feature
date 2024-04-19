@@ -14,7 +14,7 @@ Scenario: rate one part leaves parent read after unchanged
     And I press "Rate"
   Then the read after date should be 0 years from now
 
-Scenario: rate both parts changes parent read after date based on best part
+Scenario: rate both parts changes parent read after date based on average part
   Given a page exists with title: "Parent" AND base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-2"
   When I am on the homepage
     And I follow "Parent"
@@ -25,9 +25,9 @@ Scenario: rate both parts changes parent read after date based on best part
     And I follow "Parent"
     And I follow "Part 2"
     And I follow "Rate"
-    And I click on "1"
+    And I click on "2"
     And I press "Rate"
-  Then the read after date should be 1 years from now
+  Then the read after date should be 2 years from now
 
 Scenario: rating a single unread child sets parent AND grandparent to read
   Given a page exists with title: "Parent" AND urls: "http://test.sidrasue.com/parts/1.html" AND last_read: "2009-01-01"

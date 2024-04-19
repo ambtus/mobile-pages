@@ -3,6 +3,22 @@ module Rate
   UNREAD_PARTS_DATE = Date.new(1967) # year first fanzine published. couldn't have read before that ;)
   UNFINISHED = "unfinished"
 
+  def unfinished?; stars == 9; end
+  def unrated?; stars == 10; end
+  def stars?; [5,4,3,2,1].include?(self.stars); end
+  def star_string
+    if stars?
+      "#{stars} " + "star".pluralize(stars)
+    elsif unfinished?
+      UNFINISHED
+    elsif unrated?
+      nil
+    else
+      Rails.logger.debug "stars are #{self.stars}, should be 5,4,3,2,1,9,or 10"
+      "unknown"
+    end
+  end
+
   def unread_parts
     unreads = parts.where(:last_read => [nil, UNREAD_PARTS_DATE])
     Rails.logger.debug "found #{unreads.size} unread parts"
@@ -55,12 +71,6 @@ module Rate
     end
   end
 
-  def update_read_after
-    self.update!(read_after: calculated_read_after)
-    Rails.logger.debug "new read after: #{self.read_after}"
-    return self
-  end
-
   def rate_today(stars, all="No")
     Rails.logger.debug "rate today #{stars} #{all}"
     if parts.empty?
@@ -81,7 +91,7 @@ module Rate
     return self unless parts.any?
     Rails.logger.debug "updating #{self.type} with title #{self.title} from parts"
     update_last_read
-    update_stars
+    update_stars_from_parts
     update_read_after
     remove_outdated_downloads
     set_wordcount(false)
@@ -102,20 +112,31 @@ module Rate
     return self
   end
 
-  def update_stars
-    return self unless parts.any?
+  def update_stars_from_parts
     stars = parts.map(&:stars).compact.without(10)
-    mode = stars.mode
-    highest = stars.sort.last || 10
-    Rails.logger.debug "mode: #{mode}, highest: #{highest}"
-    if mode
-      self.update!(stars: mode)
+    if stars.include?(9)
+      self.update!(stars: 9)
     else
-      self.update!(stars: highest)
+      mode = stars.mode
+      if mode
+        self.update!(stars: mode)
+      else
+        if stars.empty?
+          Rails.logger.debug "no change (no stars)"
+        else
+          average = stars.sum / stars.size
+          self.update!(stars: average)
+        end
+      end
     end
     Rails.logger.debug "new stars: #{self.stars}"
     return self
   end
 
+  def update_read_after
+    self.update!(read_after: calculated_read_after)
+    Rails.logger.debug "new read after: #{self.read_after}"
+    return self
+  end
 
 end
