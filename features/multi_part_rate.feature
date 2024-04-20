@@ -14,18 +14,18 @@ Scenario: rate one part leaves parent read after unchanged
     And I press "Rate"
   Then the read after date should be 0 years from now
 
-Scenario: rate both parts changes parent read after date based on average part
+Scenario: rate both parts changes parent read after date based on average stars
   Given a page exists with title: "Parent" AND base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-2"
   When I am on the homepage
     And I follow "Parent"
     And I follow "Part 1"
     And I follow "Rate"
-    And I click on "4"
+    And I click on "5"
     And I press "Rate"
     And I follow "Parent"
     And I follow "Part 2"
     And I follow "Rate"
-    And I click on "2"
+    And I click on "3"
     And I press "Rate"
   Then the read after date should be 2 years from now
 

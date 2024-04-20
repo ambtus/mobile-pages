@@ -1,6 +1,6 @@
 Feature: read_after order
 
-Scenario: default read order
+Scenario: default read order by creation
   Given 4 pages exist
   When I am on the homepage
   Then I should see "Page 1" within "#position_1"
@@ -10,7 +10,7 @@ Scenario: default read order
 
 Scenario: rating a page makes its read after later
   Given 4 pages exist
-  When I rate it 2 stars
+  When I rate it 5 stars
   When I am on the homepage
     And I should see "Page 2" within "#position_1"
     And I should see "Page 3" within "#position_2"
@@ -19,7 +19,7 @@ Scenario: rating a page makes its read after later
 
 Scenario: rating a page higher makes its read after sooner than a lower rating
   Given 4 pages exist
-  When I rate it 2 stars
+  When I rate it 3 stars
     And I am on the page with title "Page 2"
     And I follow "Rate"
     And I click on "4"
@@ -32,14 +32,14 @@ Scenario: rating a page higher makes its read after sooner than a lower rating
 
  Scenario: rating a page midway makes its read after between others
   Given 4 pages exist
-  When I rate it 2 stars
+  When I rate it 3 stars
     And I am on the page with title "Page 2"
     And I follow "Rate"
-    And I click on "4"
+    And I click on "5"
     And I press "Rate"
     And I am on the page with title "Page 3"
     And I follow "Rate"
-    And I click on "3"
+    And I click on "4"
     And I press "Rate"
     And I am on the homepage
   Then I should see "Page 4" within "#position_1"

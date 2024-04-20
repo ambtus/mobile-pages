@@ -64,8 +64,8 @@ Scenario: rate all unread as unfinished
     And I should see "unfinished" within ".cons"
     But I should NOT see "unfinished" within "#position_5"
     And I should see "3 stars" within "#position_5"
-    And I should see "1 star" within "#position_1"
-    And I should see "2 stars" within "#position_2"
+    And I should see "old stars (1)" within "#position_1"
+    And I should see "old stars (2)" within "#position_2"
     And I should see "3 stars" within "#position_3"
     And I should see "4 stars" within "#position_4"
 

@@ -7,7 +7,7 @@ Scenario: an unread page
 
 Scenario: after rate an unread page, display it's last read date
   Given a page exists
-  When I rate it 1 stars
+  When I rate it 3 stars
   Then last read should be today
 
 Scenario: a read page
@@ -17,7 +17,7 @@ Scenario: a read page
 
 Scenario: after rate a read page, change it's last read date
   Given a page exists with last_read: "2008-01-01"
-  When I rate it 1 stars
+  When I rate it 3 stars
   Then I should NOT see "2008-01-01"
     And last read should be today
 

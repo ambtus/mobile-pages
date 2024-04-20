@@ -61,7 +61,7 @@ Scenario: find by fandom and hidden
 Scenario: Find by unread and fandom
    Given the following pages
       | title               | fandoms  | stars | last_read  |
-      | Nancy Drew          | children | 2     | 2009-02-01 |
+      | Nancy Drew          | children | 3     | 2009-02-01 |
       | The Boxcar Children | children |       |            |
       | To Read Mystery     | mystery  |       |            |
   When I am on the filter page
@@ -78,7 +78,7 @@ Scenario: Find by unread and pro
       | The Mysterious Affair| abc123 | 4    | 2009-01-01 |
       | The Boxcar Children  | lmn345 | 3    | 2009-02-01 |
       | To Read Mystery      | abc123 |      |            |
-      | Orient Express       | abc123 | 2    | 2009-03-01 |
+      | Orient Express       | abc123 | 5    | 2009-03-01 |
       | Surprise Island      | lmn345 |      |            |
   When I am on the filter page
     And I select "abc123" from "Pro"
@@ -96,7 +96,7 @@ Scenario: Find by read and author
       | The Mysterious Affair| agatha christie          | 4    | 2009-01-01 |
       | The Boxcar Children  | Gertrude Chandler Warner | 3    | 2009-02-01 |
       | To Read Mystery      | agatha christie          |      |            |
-      | Orient Express       | agatha christie          | 2    | 2009-03-01 |
+      | Orient Express       | agatha christie          | 5    | 2009-03-01 |
       | Surprise Island      | Gertrude Chandler Warner |      |            |
   When I am on the filter page
     And I select "agatha christie" from "Author"
@@ -112,7 +112,7 @@ Scenario: Find by stars and info
    Given the following pages
       | title                | infos    | stars | last_read  |
       | The Mysterious Affair| mystery  | 4     | 2009-01-01 |
-      | Nancy Drew           | children | 2     | 2009-02-01 |
+      | Nancy Drew           | children | 3     | 2009-02-01 |
       | The Boxcar Children  | children | 4     | 2009-03-01 |
   When I am on the filter page
     And I select "children" from "info"
@@ -122,19 +122,20 @@ Scenario: Find by stars and info
     But I should NOT see "Nancy Drew"
     And I should NOT see "The Mysterious Affair"
 
-Scenario: Find by stars and author
+Scenario: Find by historical stars and author
    Given the following pages
       | title                | authors           | stars | last_read  |
-      | The Mysterious Affair| agatha christie   | 4     | 2009-01-01 |
+      | The Mysterious Affair| agatha christie   | 9     | 2009-01-01 |
       | Nancy Drew           | Carolyn Keene     | 2     | 2009-02-01 |
-      | Orient Express       | agatha christie   | 2     | 2009-03-01 |
+      | Orient Express       | agatha christie   | 1     | 2009-03-01 |
   When I am on the filter page
-  When I click on "stars_Worse"
+  When I click on "stars_other"
     And I select "agatha christie" from "Author"
     And I press "Find"
   Then I should see "Orient Express"
-    But I should NOT see "The Mysterious Affair"
-    And I should NOT see "Nancy Drew"
+    And I should see "The Mysterious Affair"
+    But I should NOT see "Nancy Drew"
+
 
 Scenario: interesting (3h, 4i, 5) but not hateful (3h)
   Given pages with all combinations of pros and cons exist
@@ -185,8 +186,6 @@ Scenario: no cons any pros
     But I should NOT see "page3h"
     And I should NOT see "page3l"
     But I should NOT see "page3d"
-    And I should NOT see "page2"
-    And I should NOT see "page1"
     And the page should NOT contain css "#position_4"
 
 Scenario: check before hiddens and pros

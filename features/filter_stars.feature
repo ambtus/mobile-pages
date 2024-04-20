@@ -8,14 +8,6 @@ Scenario: check before filter on stars
     And I should see "page5" within ".pages"
     And I should see "page4" within ".pages"
     And I should see "page3" within ".pages"
-    And I should see "page2" within ".pages"
-
-Scenario: check before filter on stars
-  Given pages with all possible stars exist
-  When I am on the filter page
-    And I press "Find"
-    And I press "Next"
-  Then I should see "page1" within ".pages"
 
 Scenario: search for 4 & 5 stars
   Given pages with all possible stars exist
@@ -50,28 +42,17 @@ Scenario: search for 3 stars
   Then I should see "page3" within "#position_1"
     And the page should NOT contain css "#position_2"
 
-Scenario: search for 2 stars
-  Given pages with all possible stars exist
+Scenario: search for historical stars
+   Given the following pages
+      | title                |  stars | last_read  |
+      | The Mysterious Affair|  9     | 2009-01-01 |
+      | Nancy Drew           |  3     | 2009-02-01 |
+      | Orient Express       |  1     | 2009-03-01 |
+      | Hardy Boys           |        | |
   When I am on the filter page
-    And I click on "stars_2"
+  When I click on "stars_other"
     And I press "Find"
-  Then I should see "page2" within "#position_1"
-    And the page should NOT contain css "#position_2"
-
-Scenario: search for 1 stars
-  Given pages with all possible stars exist
-  When I am on the filter page
-    And I click on "stars_1"
-    And I press "Find"
-  Then I should see "page1" within "#position_1"
-    And the page should NOT contain css "#position_2"
-
-Scenario: search for 1 & 2 stars
-  Given pages with all possible stars exist
-  When I am on the filter page
-    And I click on "stars_Worse"
-    And I press "Find"
-  Then I should see "page2" within ".pages"
-    And I should see "page1" within ".pages"
-    And the page should NOT contain css "#position_3"
-
+  Then I should see "Orient Express"
+    And I should see "The Mysterious Affair"
+    But I should NOT see "Nancy Drew"
+    And I should NOT see "Hardy Boys"

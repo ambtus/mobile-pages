@@ -12,7 +12,7 @@ Scenario: don't delete fandom
 Scenario: or author
   Given "abc123" is a "Con"
     And a page exists with authors: "Sidra"
-  When I rate it 2 stars
+  When I rate it 3 stars
     And I select "abc123" from "page_con_ids_"
     And I submit the form
   Then I should see "abc123" within ".cons"

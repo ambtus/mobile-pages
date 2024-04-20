@@ -40,7 +40,7 @@ class Filter
 
     pages = pages.where(:stars => params[:stars]) unless params[:stars].to_i == 0
     pages = pages.where(:stars => [5,4]) if params[:stars] == "Better"
-    pages = pages.where(:stars => [2,1]) if params[:stars] == "Worse"
+    pages = pages.where.not(:stars => [10,5,4,3]) if params[:stars] == "other"
 
     pages = pages.where(:size => params[:size]) if Page::SIZES.include?(params[:size])
     pages = pages.where(:size => ["short", "drabble"]) if params[:size] == "Shorter"

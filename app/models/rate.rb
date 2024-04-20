@@ -3,15 +3,15 @@ module Rate
   UNREAD_PARTS_DATE = Date.new(1967) # year first fanzine published. couldn't have read before that ;)
 
   def unrated?; stars == 10; end
-  def stars?; [5,4,3,2,1].include?(self.stars); end
+  def stars?; [5,4,3].include?(self.stars); end
   def star_string
     if stars?
       "#{stars} " + "star".pluralize(stars)
     elsif unrated?
       nil
     else
-      Rails.logger.debug "stars are #{self.stars}, should be 5,4,3,2,1 or 10"
-      "unknown"
+      Rails.logger.debug "stars are #{self.stars}, should be 5,4,3 or 10"
+      "old stars (#{stars})"
     end
   end
 
@@ -50,17 +50,14 @@ module Rate
     else
       case stars
         when 5
-          last_read + 6.months
-        when 4
           last_read + 1.year
-        when 3
+        when 4
           last_read + 2.years
-        when 2
+        when 3
           last_read + 3.years
-        when 1
-          last_read + 4.years
         else
-          raise "unexpected last_read/stars #{last_read}/#{stars}"
+          last_read + 4.years
+          Rails.logger.debug "historical or unexpected stars: #{stars}"
       end
     end
   end
