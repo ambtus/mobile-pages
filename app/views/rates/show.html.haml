@@ -15,8 +15,7 @@
     .stars
       = label_tag :stars, "Stars:"
       %br
-      - 5.times.reverse_each do |int|
-        -choice = (int+1).to_s
+      - %w[5 4 3].each do |choice|
         =radio_button_tag :stars, choice, @stars == choice
         =label_tag "stars_#{choice}", choice
         %br
