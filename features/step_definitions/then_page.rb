@@ -59,6 +59,11 @@ Then("last read should be today") do
   assert_equal Date.current, Page.first.last_read.to_date
 end
 
+Then("last read should be {string}") do |date|
+  Rails.logger.debug "comparing #{Page.first.last_read.to_date} with #{date.to_date}"
+  assert_equal date.to_date, Page.first.last_read.to_date
+end
+
 Then("the part titles should be stored as {string}") do |title_string|
    assert_equal title_string, Page.first.parts.map(&:title).join(" & ")
 end
@@ -67,12 +72,6 @@ Then('the read after date should be {int} year(s) from now') do |int|
   diff = Page.first.read_after.year - Date.today.year
   Rails.logger.debug "comparing #{Page.first.read_after.year} with #{Date.today.year} (#{diff})"
   assert_equal int, diff
-end
-
-Then('the read after date should be 6 months from now') do
-  diff = Page.first.read_after.month - Date.today.month
-  Rails.logger.debug "comparing #{Page.first.read_after.year} with #{Date.today.year} (#{diff})"
-  assert_equal 6, diff.abs
 end
 
 Then('the read after date should be {string}') do |string|

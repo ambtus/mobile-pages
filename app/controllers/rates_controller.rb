@@ -13,7 +13,7 @@ class RatesController < ApplicationController
       flash[:alert] = "You must select stars"
       redirect_to rate_path(page) and return
     end
-    page.rate_today(stars, params[:all])
+    page.rate_today(stars, params[:all], params[:today])
     page.update_cliff(params[:cliff])
     page.update_unfinished(params[:unfinished])
     page.reset_soon

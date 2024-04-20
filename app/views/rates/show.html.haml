@@ -19,6 +19,11 @@
         =radio_button_tag :stars, choice, @stars == choice
         =label_tag "stars_#{choice}", choice
         %br
+      = label_tag :today, "Today?"
+      = radio_button_tag :today, 'Yes', true
+      = label_tag :today_Yes, 'Yes'
+      = radio_button_tag :today, 'No', false
+      = label_tag :today_No, 'No'
     .cons
       = label_tag :unfinished, "Unfinished?"
       - ['Yes', 'No'].each do |choice|

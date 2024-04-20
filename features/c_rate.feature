@@ -37,4 +37,25 @@ Scenario: rate a book 3 stars (bad)
   When I rate it 3 stars
   Then I should see "3 stars"
     And the read after date should be 3 years from now
+    And last read should be today
+
+Scenario: rate a book without changing the date
+  Given a page exists with stars: 2 AND last_read: "2009-01-01"
+  When I am on the page's page
+    And I follow "Rate"
+    And I click on "3"
+  And I click on "today_No"
+    And I press "Rate"
+  Then last read should be "2009-01-01"
+    And the read after date should be "2012-01-01"
+
+Scenario: rate a book without changing the date when it didn’t have a last_read
+  Given a page exists with stars: 9 AND updated_at: "2009-01-01"
+  When I am on the page's page
+    And I follow "Rate"
+    And I click on "3"
+  And I click on "today_No"
+    And I press "Rate"
+  Then last read should be "2009-01-01"
+    And the read after date should be "2012-01-01"
 
