@@ -120,7 +120,7 @@ Given("a partially read page exists") do
   book3.update_from_parts
 end
 
-Given("six downloaded and six hidden pages exist") do
+Given("six downloaded and six hidden soon pages exist") do
   6.times do |i|
     Single.create(title: "reading #{i+1}", soon: 0)
   end

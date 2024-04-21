@@ -153,3 +153,8 @@ end
 Then('all pages should be rated {int}') do |int|
   assert_equal [int], Page.all.map(&:stars).uniq
 end
+
+Then('I should have {int} reading page(s)') do |int|
+  Rails.logger.debug "comparing #{Page.reading.count} with #{int}"
+  assert_equal int, Page.reading.count
+end

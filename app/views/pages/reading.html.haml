@@ -1,7 +1,5 @@
 .soon
-  #{Page.reading.not_hidden.count} pages
-  =link_to hidden_path do
-    (and #{Page.reading.hidden.count} hidden)
+  #{Page.reading.count} pages
 
 -unless @pages.blank?
   =render "pages"
@@ -9,6 +7,6 @@
     = form_tag reading_path, method: :get do
       = hidden_field_tag :count, @count
       = submit_tag "First" if @count > 0
-      = submit_tag "Next" if @count < Page.reading.not_hidden.count - Filter::LIMIT
+      = submit_tag "Next" if @count < Page.reading.count - Filter::LIMIT
       = submit_tag "Previous" if @count > 0
       = submit_tag "Last" if @more

@@ -5,7 +5,7 @@ Scenario: reading page
   When I am on the reading page
   Then I should see "now reading" within ".pages"
     And the page should NOT contain css "#position_2"
-    And I should see "(and 0 hidden)"
+    And I should NOT see "hidden"
 
 Scenario: reading page after new download
   Given pages with all possible soons exist
@@ -14,7 +14,7 @@ Scenario: reading page after new download
   Then I should see "now reading" within ".pages"
     And I should see "read next" within ".pages"
     And the page should NOT contain css "#position_3"
-    And I should see "(and 0 hidden)"
+    And I should NOT see "hidden"
 
 Scenario: reading page after download hidden
   Given a page exists with hiddens: "will be visible"
@@ -23,45 +23,25 @@ Scenario: reading page after download hidden
   When I am on the reading page
   Then I should see "now reading" within ".pages"
     And the page should NOT contain css "#position_2"
-    And I should see "(and 1 hidden)"
+    And I should NOT see "hidden"
 
 Scenario: reading page after download hidden
   Given a page exists with hiddens: "will be visible"
     And I download its epub
     And pages with all possible soons exist
   When I am on the reading page
-  And I follow "(and 1 hidden)"
-  Then I should see "will be visible" within ".pages"
+  Then I should see "now reading" within ".pages"
     And the page should NOT contain css "#position_2"
     And I should see "1 pages"
-
-Scenario: reading page after download hidden
-  Given a page exists with hiddens: "will be visible"
-    And I download its epub
-    And pages with all possible soons exist
-  When I am on the reading page
-    And I follow "(and 1 hidden)"
-    And I follow "1 pages"
-  Then I should see "now reading" within ".pages"
-    And the page should NOT contain css "#position_2"
-    And I should see "(and 1 hidden)"
+    And I should have 1 reading page
 
 Scenario: reading next
-  Given six downloaded and six hidden pages exist
+  Given six downloaded and six hidden soon pages exist
   When I am on the reading page
     And I press "Next"
   Then I should see "reading" within ".pages"
-    And the page should NOT contain css "#position_2"
-    And I should see "(and 6 hidden)"
-
-Scenario: reading next
-  Given six downloaded and six hidden pages exist
-  When I am on the reading page
-    And I press "Next"
-    And I follow "(and 6 hidden)"
-    And I press "Next"
-  Then I should see "hidden" within ".pages"
-    And the page should NOT contain css "#position_2"
+    And the page should contain css "#position_2"
+    And I should have 12 reading pages
 
 Scenario: reading last
   Given eleven downloaded pages exist

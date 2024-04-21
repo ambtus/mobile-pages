@@ -12,8 +12,6 @@ class Page < ActiveRecord::Base
 
   scope :reading, -> { where(soon: 0) }
   scope :soonest, -> { where(soon: 1) }
-  scope :not_hidden, -> { where(hidden: false) }
-  scope :hidden, -> { where(hidden: true) }
   scope :random, -> { order(Arel.sql('RAND()')) }
   scope :recent, -> { order('updated_at desc') }
 
