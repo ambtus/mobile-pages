@@ -642,8 +642,6 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "tags now #{self.tags.joined}"
   end
 
-  def title_prefix; title.match(position.to_s) ? "" : "#{position}. "; end
-
   def unread_string; unread? ? UNREAD : ""; end
 
   ## Raw html includes everything from the web

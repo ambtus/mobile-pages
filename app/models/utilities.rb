@@ -24,6 +24,7 @@ module Utilities
       page.parts.update_all last_read: hash[:last_read], stars: hash[:stars] || 10, read_after: hash[:read_after], updated_at: hash[:updated_at]
       page.update_from_parts
     end
+    page.update position: hash[:position]
     page.add_fandoms_to_notes(inferred_fandoms.split(",")) if inferred_fandoms
     Rails.logger.debug "created test page #{page.inspect}"
     page

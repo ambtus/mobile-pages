@@ -100,6 +100,19 @@ Scenario: part epubs should have title "X. PartTitle of GrandparentTitle"
     And the download epub title for "Season2" should be "2.1. Season2 of Series"
     And the download epub title for "Extras" should be "3. Extras of Series"
 
+Scenario: a single which used to be a part shouldn't have a title prefix
+  Given a series exists
+  When I am on the page's page
+    And I press "Uncollect"
+  Then the download epub title for "Prologue" should be "1. Prologue of Book1"
+    And the download epub title for "Another Book" should be "Another Book"
+    And the download epub title for "Season2" should be "1. Season2 of Another Book"
+    And the download epub title for "Extras" should be "Extras"
+
+Scenario: a page with a random position but no parent shouldn't have a title prefix
+  Given a page exists with title: "Hello" AND position: "1"
+  Then the download epub title for "Hello" should be "Hello"
+
 Scenario: all parts and subparts should have page links with proper numbers
   Given a series exists
   When I read "Series" online
@@ -123,3 +136,4 @@ Scenario: all parts and subparts should have rating links
     And Rate "Another Book" should link to its rate page
     And Rate "Extras" should link to its rate page
     And Rate "Series" should link to its rate page
+
