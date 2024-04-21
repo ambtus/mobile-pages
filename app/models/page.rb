@@ -342,6 +342,7 @@ class Page < ActiveRecord::Base
 
   def parts; Page.order(:position).where(["parent_id = ?", id]); end
   def unread_previous; Page.order(:position).where(["parent_id = ?", parent_id]).where("position < ?", position).where(:last_read => [nil, UNREAD_PARTS_DATE]); end
+  def all_previous; Page.order(:position).where(["parent_id = ?", parent_id]).where("position < ?", position); end
 
   def next_part
     return nil unless parent

@@ -17,9 +17,14 @@ class RatesController < ApplicationController
     page.update_cliff(params[:cliff])
     page.update_unfinished(params[:unfinished])
     page.reset_soon
-    previous = params[:all_previous]
-    if previous
+    previous = params[:previous]
+    case previous
+    when "Unrated"
       page.unread_previous.each {|p| p.rate_today(stars)}
+      page.parent.update_from_parts
+      redirect_to edit_rate_path(page.parent)
+    when "All"
+      page.all_previous.each {|p| p.rate_today(stars)}
       page.parent.update_from_parts
       redirect_to edit_rate_path(page.parent)
     else

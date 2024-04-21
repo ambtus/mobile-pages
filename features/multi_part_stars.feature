@@ -59,7 +59,7 @@ Scenario: rate all with stars rates all
   When I am on the page with title "Uneven"
     And I follow "Rate" within ".views"
     And I click on "5"
-  And I click on "All Parts"
+  And I click on "all_All"
     And I press "Rate"
   When I am on the page with title "Uneven"
   Then I should NOT see "2010-01-01"

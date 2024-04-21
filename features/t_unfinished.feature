@@ -75,7 +75,7 @@ Scenario: unfinished only added to parent when rating parent
     And I follow "Rate"
     And I click on "4"
     And I click on "unfinished_Yes"
-    And I click on "all_Yes"
+    And I click on "all_All"
     And I press "Rate"
     And I am on the page's page
   Then I should see "unfinished" within ".cons"

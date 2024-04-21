@@ -49,7 +49,7 @@ Scenario: rating all unrated
   Given a series exists
   When I am on the page's page
     And I follow "Rate"
-  Then "Unrated Parts" should be checked
+  Then "Unrated" should be checked
 
 Scenario: rating all unrated
   Given a series exists
@@ -64,7 +64,7 @@ Scenario: rate all up to now
   When I am on the page with title "chapter 3"
     And I follow "Rate"
     And I click on "3"
-    And I click on "all_previous"
+    And I click on "previous_Unrated"
     And I press "Rate"
     And I am on the page's page
   Then I should see "3 unread parts"
@@ -79,7 +79,7 @@ Scenario: rate all unrated up to now
   When I am on the page with title "chapter 4"
     And I follow "Rate"
     And I click on "3"
-    And I click on "all_previous"
+    And I click on "previous_Unrated"
     And I press "Rate"
     And I am on the page's page
   Then I should see "2 unread parts"
@@ -87,6 +87,23 @@ Scenario: rate all unrated up to now
     But I should see "2009" within "#position_1"
     And I should NOT see "unread" within "#position_2"
     But I should see "2010" within "#position_2"
+    And I should NOT see "unread" within "#position_3"
+    And I should NOT see "unread" within "#position_4"
+    And I should see "unread" within "#position_5"
+
+Scenario: re-rate all up to now
+  Given a partially read book exists
+  When I am on the page with title "chapter 4"
+    And I follow "Rate"
+    And I click on "3"
+    And I click on "previous_All"
+    And I press "Rate"
+    And I am on the page's page
+  Then I should see "2 unread parts"
+    And I should NOT see "unread" within "#position_1"
+    And I should NOT see "2009" within "#position_1"
+    And I should NOT see "unread" within "#position_2"
+    And I should NOT see "2010" within "#position_2"
     And I should NOT see "unread" within "#position_3"
     And I should NOT see "unread" within "#position_4"
     And I should see "unread" within "#position_5"

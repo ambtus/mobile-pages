@@ -62,7 +62,7 @@ module Rate
     end
   end
 
-  def rate_today(stars, all="No", today="Yes")
+  def rate_today(stars, all="Unrated", today="Yes")
     Rails.logger.debug "rate today stars: #{stars} all: #{all} today: #{today}"
     if parts.empty?
       if today == "Yes"
@@ -77,7 +77,7 @@ module Rate
       update! read_after: calculated_read_after
       parent.update_from_parts if self.parent
     else
-      parts_to_be_rated = all == "Yes" ? parts : unread_parts
+      parts_to_be_rated = all == "All" ? parts : unread_parts
       Rails.logger.debug "rating #{parts_to_be_rated.size} parts"
       parts_to_be_rated.each {|part| part.rate_today(stars, all, today)}
       update_from_parts

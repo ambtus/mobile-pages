@@ -37,15 +37,19 @@
 
     -unless @page.parts.blank?
       .parent
-        = label_tag :all, "Rate all parts?"
-        = radio_button_tag :all, 'Yes', false
-        = label_tag :all_Yes, 'All Parts'
-        = radio_button_tag :all, 'No', true
-        = label_tag :all_No, 'Unrated Parts'
+        = label_tag :all, "Rate parts?"
+        = radio_button_tag :all, 'All', false
+        = label_tag :all_All, 'All'
+        = radio_button_tag :all, 'Unrated', true
+        = label_tag :all_Unrated, 'Unrated'
     -if @page.parent && @page.position != 1
       .siblings
-        = label_tag :all_previous, "Rate all previous parts?"
-        = radio_button_tag :all_previous, 'Yes', false
-        = label_tag :all_previous, 'Yes'
+        = label_tag :all_previous, "Rate previous?"
+        = radio_button_tag :previous, 'All', false
+        = label_tag :previous_All, 'All'
+        = radio_button_tag :previous, 'Unrated', false
+        = label_tag :previous_Unrated, 'Unrated'
+        = radio_button_tag :previous, 'None', true
+        = label_tag :previous_None, 'None'
 
     = submit_tag "Rate"
