@@ -28,7 +28,12 @@ module Download
 
   def download_suffix; short_meta_strings.empty? ? "" : " (#{short_meta_strings.join_comma})"; end
   def download_prefixes; gparent_title_prefix + parent_title_prefix + title_prefix; end
-  def download_part_title; (download_prefixes + " " + title + download_suffix).squish; end
+  def title_w_position; (download_prefixes + " " + title).squish; end
+  def download_part_title; title_w_position + download_suffix; end
+  def epub_title
+    (parent ? title_w_position + " of #{ultimate_parent.title}" : title_w_position).gsub('"', '')
+
+  end
 
   def remove_outdated_downloads
     if self.id
@@ -90,11 +95,6 @@ module Download
       short_notes,
       short_end_notes
     ].join_comma
-  end
-
-  def epub_title
-    cleaned_title = self.title.gsub('"', '“')
-    parent ? cleaned_title + " of #{parent.epub_title}" : cleaned_title
   end
 
   def epub_tags
