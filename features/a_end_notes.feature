@@ -50,3 +50,12 @@ Scenario: end notes are html safe
   Given a page exists with end_notes: "This is fun & cute <3"
   When I am on the page's page
   Then I should see "This is fun & cute <3" within ".end_notes"
+
+Scenario: edit end notes
+  Given a page exists with end_notes: "This is fun & cute <3"
+  When I am on the page's page
+    And I follow "End Notes"
+    And I fill in "page_end_notes" with "new notes"
+    And I press "Update"
+  Then I should see "new notes" within ".end_notes"
+    But I should NOT see "This is fun" within ".end_notes"

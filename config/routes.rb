@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   resources :htmls, :only => ['edit']
   resources :notes, :only => ['edit', 'show']
   resources :my_notes, :only => ['edit']
+  resources :end_notes, :only => ['edit']
   resources :parts, :only => ['new', 'edit', 'create']
   resources :rates, :only => ['show', 'create', 'edit']
   resources :refetches, :only => ['show', 'create']

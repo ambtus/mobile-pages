@@ -1,0 +1,4 @@
+.notes
+  = form_for @page.becomes(Page) do |f|
+    = f.submit "Update"
+    = f.text_area :end_notes, :rows => 10, :cols => 33

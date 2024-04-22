@@ -66,6 +66,7 @@
       = link_to "My Notes", edit_my_note_path(@page)
       = link_to "Notes", edit_note_path(@page)
       = link_to "Scrub Notes", scrub_path(@page, notes: true) unless @page.notes.blank?
+      = link_to "End Notes", edit_end_note_path(@page)
       = link_to "Tags", tag_path(@page)
   =render "pages/meta", page: @page
   =render "pages/div_tags", page: @page
