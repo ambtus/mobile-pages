@@ -137,3 +137,11 @@ Scenario: all parts and subparts should have rating links
     And Rate "Extras" should link to its rate page
     And Rate "Series" should link to its rate page
 
+Scenario: work notes go into part download
+  Given a work exists with chapter and work notes
+  When I read "ch1" online
+  Then I should see "Book Notes:"
+    And I should see "work notes"
+    And I should see "Chapter Notes:"
+    And I should see "ch1 notes"
+    But I should NOT see "ch2 notes"

@@ -185,3 +185,10 @@ Given('a book with a tagged chapter exists') do
   chapter.tags << pro
   book.update_from_parts
 end
+
+Given('a work exists with chapter and work notes') do
+  book = Book.create(title: "Book", notes: "work notes")
+  Chapter.create(title: "ch1", parent_id: book.id, position: 1, notes: "ch1 notes", url: "http://test.sidrasue.com/test1.html")
+  Chapter.create(title: "ch2", parent_id: book.id, position: 2, notes: "ch2 notes", url: "http://test.sidrasue.com/test2.html")
+  book.update_from_parts
+end
