@@ -57,15 +57,6 @@ Scenario: find a part
    Then I should see "Part 2 of Parent2" within "#position_1"
      And the page should NOT contain css "#position_2"
 
-Scenario: parent should be able to remove duplicate tags and authors
-  Given a page exists with url: "http://test.sidrasue.com/parts/1.html" AND fandoms: "Harry Potter, SGA" AND authors: "JK Rowling"
-    And a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND fandoms: "Harry Potter" AND title: "Parent" AND authors: "JK Rowling"
-  When I am on the page with title "Parent"
-    And I press "Remove Duplicate Tags"
-  Then I should NOT see "Harry Potter" within "#position_1"
-    And I should NOT see "JK Rowling" within "#position_1"
-    But I should see "SGA" within "#position_1"
-
 Scenario: remove tag from child bug
   Given a book with a tagged chapter exists
     And I am on the page with title "chapter 1"

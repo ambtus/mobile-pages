@@ -16,7 +16,6 @@
       = submit_tag "Increase Position" if @page.position
       = submit_tag "Decrease Position" if @page.position
     .tags
-      = submit_tag "Remove Duplicate Tags" unless @page.parts.blank?
       = submit_tag "Toggle #{Page::OTHER}"
       =submit_tag 'Put all end notes before' unless @page.parts.blank?
       =submit_tag 'Put all end notes after' unless @page.parts.blank?

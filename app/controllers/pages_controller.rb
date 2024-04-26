@@ -243,9 +243,6 @@ class PagesController < ApplicationController
       when "Remove Downloads"
         @page.remove_outdated_downloads
         flash[:notice] = "Removed Downloads"
-      when "Remove Duplicate Tags"
-        @page.parts.map(&:remove_duplicate_tags)
-        flash[:notice] = "Removed Dupes"
       when "Rebuild Meta"
         @page.rebuild_meta
         flash[:notice] = "Rebuilt Meta"
