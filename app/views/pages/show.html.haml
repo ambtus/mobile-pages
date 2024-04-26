@@ -17,7 +17,6 @@
       = submit_tag "Decrease Position" if @page.position
     .tags
       = submit_tag "Remove Duplicate Tags" unless @page.parts.blank?
-      = submit_tag "Move Tags to Parent" if @page.tags.any? unless @page.parent.blank?
       = submit_tag "Toggle #{Page::OTHER}"
       =submit_tag 'Put all end notes before' unless @page.parts.blank?
       =submit_tag 'Put all end notes after' unless @page.parts.blank?
@@ -90,7 +89,7 @@
         = link_to "Original", part.url unless part.url.blank?
         .notes
           %span.meta= render "pages/meta", page: part
-          %span.meta= render "pages/span_tags", page: part
+          %span.meta= render "pages/own_tags", page: part
           %span.my_notes=part.short_my_notes
           %span.notes=part.short_notes
           %span.end_notes=part.short_end_notes

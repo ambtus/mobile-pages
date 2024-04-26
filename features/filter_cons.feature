@@ -82,15 +82,6 @@ Scenario: filter out with AKA
     But I should see "The Mysterious Affair at Styles"
     And I should see "Grimm's Fairy Tales"
 
-Scenario: new parent for an existing page should be conned (not duped, so i'm not)
-  Given a page exists with cons: "abc123"
-  When I am on the page's page
-    And I add a parent with title "New Parent"
-  Then I should see "abc123" within ".cons"
-    But I should NOT see "abc123" within "#position_1"
-    And "New Parent" should be conned
-    But the page should NOT be conned
-
 Scenario: no cons
   Given pages with all combinations of pros and cons exist
   When I am on the filter page

@@ -69,15 +69,6 @@ Scenario: add hiddens to a page which already has hiddens sorts alphabetically
   Then I should see "abc123 lmn123 xyz123" within ".hiddens"
     And the page should be hidden
 
-Scenario: new parent for an existing page should be hidden (not duped, so i'm not)
-  Given a page exists with hiddens: "abc123"
-  When I am on the page's page
-    And I add a parent with title "New Parent"
-  Then I should see "abc123" within ".hiddens"
-    But I should NOT see "abc123" within "#position_1"
-    And "New Parent" should be hidden
-    But the page should NOT be hidden
-
 Scenario: hiddens are editable
   Given "abc123" is a "Hidden"
   When I am on the tags page

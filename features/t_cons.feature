@@ -62,13 +62,6 @@ Scenario: add cons to a page which already has cons sorts alphabetically
     And I press "Add Con Tags"
   Then I should see "abc123 lmn123 xyz123" within ".cons"
 
-Scenario: new parent for an existing page should have the same con (not duped)
-  Given a page exists with cons: "abc123"
-  When I am on the page's page
-    And I add a parent with title "New Parent"
-  Then I should see "abc123" within ".cons"
-    But I should NOT see "abc123" within "#position_1"
-
 Scenario: cons are editable
   Given "abc123" is a "Con"
   When I am on the tags page

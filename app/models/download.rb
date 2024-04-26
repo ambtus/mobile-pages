@@ -48,35 +48,26 @@ module Download
   end
 
   ## --authors
-  ## use the short names of the authors
-  ## if it's a part, add the parent's authors and fandoms, recursively
-  def all_authors;
-    mine = self.tags.authors.map(&:base_name)
-    my_parents = self.parent_id.blank? ? [] : self.parent.all_authors
-    (mine + my_parents).pulverize
-  end
-  def all_fandoms;
-    mine = self.tags.fandoms.map(&:base_name)
-    my_parents = self.parent_id.blank? ? [] : self.parent.all_fandoms
-    (mine + my_parents).pulverize
-  end
-  def download_author_string; (all_authors + all_fandoms).compact.join("&") || ""; end
+  ## use the short names of the authors and the fandoms
+  def author_bns; self.author_tags.map(&:base_name); end
+  def fandom_bns; self.fandom_tags.map(&:base_name); end
+  def download_author_string; (author_bns + fandom_bns).compact.join("&") || ""; end
 
   ## --tags
   ## if it's hidden, then the hidden tags are the only tags
   ## if it's not hidden, then add size and unread (if not read) to not-series tags
   ## if it's a part, add the parent's tags
-  def download_tags;
+  def download_tag_bns;
     [(unread? ? Page::UNREAD : ""),
-     *tags.not_fandom.not_info.not_author.map(&:name), all_authors, all_fandoms
+     *tags.not_fandom.not_info.not_author.map(&:base_name), *author_bns, *fandom_bns
      ]
   end
-  def all_tags;
-    mine = download_tags
-    my_parents = self.parent_id.blank? ? [] : self.parent.all_tags
+  def all_bns;
+    mine = download_tag_bns
+    my_parents = self.parent_id.blank? ? [] : self.parent.all_bns
     (mine + my_parents).pulverize
   end
-  def download_tag_string; hidden? ? tags.hiddens.joined : "#{size}, #{all_tags.join_comma}"; end
+  def download_tag_string; hidden? ? tags.hiddens.joined : "#{size}, #{all_bns.join_comma}"; end
 
   ## --comments
   def pros_and_cons

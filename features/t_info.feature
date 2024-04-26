@@ -61,14 +61,6 @@ Scenario: add infos to a page which already has infos sorts alphabetically
     And I press "Add Info Tags"
   Then I should see "abc123 lmn123 xyz123" within ".infos"
 
- Scenario: new parent for an existing page should have the same info (no dupes)
-  Given a page exists with infos: "abc123"
-  When I am on the page's page
-    And I add a parent with title "New Parent"
-  When I am on the page with title "New Parent"
-  Then I should see "abc123" within ".infos"
-    And I should NOT see "abc123" within "#position_1"
-
 Scenario: info tags are editable
   Given "abc123" is an "Info"
   When I am on the tags page

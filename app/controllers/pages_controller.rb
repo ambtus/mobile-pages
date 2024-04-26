@@ -175,7 +175,7 @@ class PagesController < ApplicationController
         @page = Page.new(params[:page])
       else
         @page.reset_tags
-        if @page.tags.fandoms.blank?
+        if @page.tags.fandoms.blank? && @page.can_have_tags?
           Rails.logger.debug "page created without fandom"
           flash[:notice] = "Page created with #{Page::OTHER}"
           @page.toggle_of
@@ -246,9 +246,6 @@ class PagesController < ApplicationController
       when "Remove Duplicate Tags"
         @page.parts.map(&:remove_duplicate_tags)
         flash[:notice] = "Removed Dupes"
-      when "Move Tags to Parent"
-        @page.move_tags_up
-        flash[:notice] = "Tags Moved"
       when "Rebuild Meta"
         @page.rebuild_meta
         flash[:notice] = "Rebuilt Meta"

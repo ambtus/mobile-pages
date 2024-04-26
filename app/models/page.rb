@@ -211,6 +211,11 @@ class Page < ActiveRecord::Base
   after_create :initial_fetch
 
   scope :with_content, -> { where(type: [Chapter, Single]) }
+  scope :with_parts, -> { where(type: [Book, Series, Collection])}
+  scope :with_tags, -> { where(type: [Book, Single])}
+
+  def can_have_tags?; %w{Single Book}.include?(self.type) || self.type.blank?; end
+  def tag_types; can_have_tags? ? Tag.types : Tag.some_types; end
 
   def could_have_content?; %w{Chapter Single}.include?(self.type); end
   def could_have_parts?; %w{Book Series Collection}.include?(self.type); end
@@ -425,6 +430,29 @@ class Page < ActiveRecord::Base
     set_meta
   end
 
+  # only used when make_me_a_chapter
+  def move_tags_up
+    return unless parent.present?
+    Rails.logger.debug "moving tags to parent"
+    parent.tags << self.tags - self.tags.readers
+    self.tags = self.tags.readers
+    if self.hidden?
+      Rails.logger.debug "moving hidden state to parent"
+      self.unset_hidden
+      parent.set_hidden
+    end
+    if self.con?
+      Rails.logger.debug "moving con state to parent"
+      self.unset_con
+      parent.set_con
+    end
+    if self.pro?
+      Rails.logger.debug "moving pro state to parent"
+      self.unset_pro
+      parent.set_pro
+    end
+  end
+
   def refetch(passed_url)
     if ao3? && type == "Single" && !url.match(/chapters/)
       old_position = self.position
@@ -511,7 +539,6 @@ class Page < ActiveRecord::Base
   def add_parent(title)
     parent=Page.find_by_title(title)
     Rails.logger.debug "parent #{title} found? #{parent.is_a?(Page)}"
-    new = false
     if parent.is_a?(Page)
       return "content" if parent.has_content?
     else
@@ -523,7 +550,6 @@ class Page < ActiveRecord::Base
       elsif potentials.empty?
         Rails.logger.debug "creating a new parent"
         parent = Page.create!(title: title, type: parent_type(self.type))
-        new = true
       else
         Rails.logger.debug "matching parent found #{potentials.first.title}"
         parent = potentials.first
@@ -531,30 +557,7 @@ class Page < ActiveRecord::Base
       end
     end
     add_parent_with_id(parent.id)
-    move_tags_up if new
     return Page.find(parent.id)
-  end
-
-  def move_tags_up
-    return unless parent.present?
-    Rails.logger.debug "moving tags to parent"
-    parent.tags << self.tags - self.tags.readers
-    self.tags = self.tags.readers
-    if self.hidden?
-      Rails.logger.debug "moving hidden state to parent"
-      self.unset_hidden
-      parent.set_hidden
-    end
-    if self.con?
-      Rails.logger.debug "moving con state to parent"
-      self.unset_con
-      parent.set_con
-    end
-    if self.pro?
-      Rails.logger.debug "moving pro state to parent"
-      self.unset_pro
-      parent.set_pro
-    end
   end
 
   def add_parent_with_id(parent_id)

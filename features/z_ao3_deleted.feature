@@ -54,11 +54,10 @@ Scenario: do NOT lose information if series has been deleted before raw html exi
     And I press "Rebuild Meta"
   Then I should see "error retrieving content" within "#flash_alert"
     But I should see "Iterum Rex" within ".title"
-    And I should see "by TardisIsTheOnlyWayToTravel" within ".notes"
-    And I should see "Harry Potter, Arthurian Mythology & Related Fandoms" within ".notes"
-    And I should see "Brave New World" within "#position_1"
-    But I should NOT see "by TardisIsTheOnlyWayToTravel" within "#position_1"
-    And I should NOT see "Harry Potter, Arthurian Mythology & Related Fandoms" within "#position_1"
-    But I should see "Draco Malfoy, reluctant Death Eater" within "#position_1"
-
+    And I should NOT see "by TardisIsTheOnlyWayToTravel" within ".notes"
+    And I should NOT see "Harry Potter, Arthurian Mythology & Related Fandoms" within ".notes"
+    But I should see "Brave New World" within "#position_1"
+    And I should see "by TardisIsTheOnlyWayToTravel" within "#position_1"
+    And I should see "Harry Potter, Arthurian Mythology & Related Fandoms" within "#position_1"
+    And I should see "Draco Malfoy, reluctant Death Eater" within "#position_1"
 

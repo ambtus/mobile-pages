@@ -40,15 +40,6 @@ Scenario: filter in with AKA
     But I should NOT see "The Mysterious Affair at Styles"
     And I should NOT see "Grimm's Fairy Tales"
 
-Scenario: new parent for an existing page should be proed (not duped)
-  Given a page exists with pros: "abc123"
-  When I am on the page's page
-    And I add a parent with title "New Parent"
-  Then I should see "abc123" within ".pros"
-    But I should NOT see "abc123" within "#position_1"
-    And "New Parent" should be proed
-    But the page should NOT be proed
-
 Scenario: any pros
   Given pages with all combinations of pros and cons exist
   When I am on the filter page

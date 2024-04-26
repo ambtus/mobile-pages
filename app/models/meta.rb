@@ -41,10 +41,7 @@ module Meta
   end
 
   def inferred_fandoms
-    if self.parts.any? && !wp?
-      Rails.logger.debug "get fandoms from first and last parts"
-      (parts.first.inferred_fandoms + parts.last.inferred_fandoms).uniq
-    else
+    if can_have_tags?
       Rails.logger.debug "get fandoms from raw_html"
       if ao3?
         doc.css(".fandom a").map(&:children).map(&:text)
@@ -62,6 +59,9 @@ module Meta
       else
         []
       end
+    else
+      Rails.logger.debug "fandoms will be inferred from child or parent"
+      []
     end
   end
 
@@ -94,24 +94,21 @@ module Meta
   end
 
   def inferred_authors
-    if ao3?
-      if type == "Series"
-        begin
-          doc.css(".series dd").first.children.map(&:text).without(", ")
-        rescue
-          (parts.first.inferred_authors + parts.last.inferred_authors).uniq
-        end
-      else
+    if can_have_tags?
+      if ao3?
         doc.css(".byline a").map(&:text)
+      elsif ff? || first_part_ff?
+        hash = old_ff_style_hash[:author]
+        links = [doc.css("#profile_top a").first.text] rescue nil
+        [hash, links].pulverize
+      elsif cn?
+        ["Claire Watson"]
+      elsif km?
+        ["Keira Marcos"]
       end
-    elsif ff? || first_part_ff?
-      hash = old_ff_style_hash[:author]
-      links = [doc.css("#profile_top a").first.text] rescue nil
-      [hash, links].pulverize
-    elsif cn?
-      ["Claire Watson"]
-    elsif km?
-      ["Keira Marcos"]
+    else
+      Rails.logger.debug "authors will be inferred from child or parent"
+      []
     end
   end
 
@@ -355,7 +352,7 @@ module Meta
 
   def add_authors(strings)
     Rails.logger.debug "add #{strings} to authors"
-    return if strings.blank? || parent
+    return if strings.blank? || !can_have_tags?
     existing = []
     non_existing = []
     strings.each do |single|
@@ -388,7 +385,7 @@ module Meta
 
   def add_fandoms(strings)
     Rails.logger.debug "add #{strings} to fandoms"
-    return if strings.blank? || parent
+    return if strings.blank? || !can_have_tags?
     existing = []
     non_existing = []
     strings.each do |t|

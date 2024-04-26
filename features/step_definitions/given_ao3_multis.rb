@@ -57,7 +57,7 @@ Given /^Counting Drabbles exists$/ do
   work2 = Single.create!(title: "temp", parent_id: series.id, position: 2)
   work2.update!(url: "https://archiveofourown.org/works/689")
   work2.set_raw_from("flower")
-
+  series.update_from_parts
   series.rebuild_meta
 end
 
@@ -120,6 +120,8 @@ Given /^Misfits existed$/ do
   chapter4.set_raw_from("misfits4")
   work2.rebuild_meta
 
+  series.rebuild_meta
+  series.update_from_parts
 end
 
 Given('Misfits has a URL') do

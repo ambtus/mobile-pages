@@ -57,15 +57,15 @@ Scenario: one chapter from ao3 is a Single
   When I am on the page with title "Where am I?"
   Then I should see "Where am I? (Single)" within ".title"
 
-Scenario: do not duplicate fandom and author in notes of works in series
+Scenario: series don't get note author and fandom
   Given Counting Drabbles exists
   When I am on the page's page
-  Then I should see "by Sidra" before "Harry Potter" within ".notes"
-    And I should see "Skipping Stones" within "#position_1"
+  Then I should NOT see "by Sidra" within ".notes"
+    And I should NOT see "Harry Potter" within ".notes"
+    But I should see "Skipping Stones" within "#position_1"
     And I should see "The Flower [sequel to Skipping Stones]" within "#position_2"
-    But I should NOT see "by Sidra" within "#position_1"
-    And I should NOT see "Harry Potter; Harry Potter" within "#position_1"
-    And I should NOT see "by" within "#position_1"
+    And I should see "by Sidra; Harry Potter; Harry Potter/Unknown" within "#position_1"
+    And I should see "by Sidra; Harry Potter; Harry Potter/Unknown" within "#position_2"
 
 Scenario: add hr between sections
   Given "Etharei" is an "Author"

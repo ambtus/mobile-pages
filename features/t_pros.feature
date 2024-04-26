@@ -62,13 +62,6 @@ Scenario: add pros to a page which already has pros sorts alphabetically
     And I press "Add Pro Tags"
   Then I should see "abc123 lmn123 xyz123" within ".pros"
 
-Scenario: new parent for an existing page should have the same pro (not duped)
-  Given a page exists with pros: "abc123"
-  When I am on the page's page
-    And I add a parent with title "New Parent"
-  Then I should see "abc123" within ".pros"
-    But I should NOT see "abc123" within "#position_1"
-
 Scenario: pros are editable
   Given "abc123" is a "Pro"
   When I am on the tags page

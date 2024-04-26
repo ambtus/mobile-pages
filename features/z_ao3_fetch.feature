@@ -39,21 +39,29 @@ Scenario: grab a book
     And I should see "giving up on nanowrimo" within "#position_2"
     And my page named "Time Was, Time Is" should have url: "https://archiveofourown.org/works/692"
 
- Scenario: grab a series
-  Given "harry potter" is a "Fandom"
+ Scenario: grab a series (duplicate from local_ao3_xx)
+  Given "Harry Potter" is a "Fandom"
+    And "Sidra" is an "Author"
     And I am on the mini page
   When I fill in "page_url" with "http://archiveofourown.org/series/46"
     And I press "Store"
   Then I should see "Counting Drabbles (Series)" within ".title"
     And I should see "200 words" within ".size"
-    And I should see "by Sidra" within ".notes"
-    And I should see "harry potter" within ".fandoms"
-    And I should NOT see "Harry Potter" before "Harry Potter/Unknown" within ".notes"
     And I should see "Implied snarry" within ".notes"
     And I should see "thanks to lauriegilbert!" within ".notes"
+    And I should see "Harry Potter" within ".fandoms"
+    And I should see "Sidra" within ".authors"
     And I should see "1. Skipping Stones" within "#position_1"
-    And I should see "2. The Flower" within "#position_2"
+    And I should see "2. The Flower [sequel to Skipping Stones]" within "#position_2"
+    And the show tags for "Counting Drabbles" should include fandom and author
+    And I should see "Harry Potter/Unknown; Drabble; thanks to lauriegilbert for" within "#position_1"
+    And I should see "Harry Potter/Unknown; Drabble; Thank you lauriegilbert for" within "#position_2"
     And my page named "Counting Drabbles" should have url: "https://archiveofourown.org/series/46"
+    And my page named "Skipping Stones" should have url: "https://archiveofourown.org/works/688"
+    And my page named "The Flower [sequel to Skipping Stones]" should have url: "https://archiveofourown.org/works/689"
+    And the tags for "Skipping Stones" should include fandom and author
+    And the tags for "The Flower [sequel to Skipping Stones]" should include fandom and author
+    But the tags for "Counting Drabbles" should NOT include fandom and author
 
 Scenario: deliberately fetch only one chapter
   Given I am on the mini page

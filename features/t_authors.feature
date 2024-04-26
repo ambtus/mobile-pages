@@ -45,14 +45,6 @@ Scenario: add another author to a page
     And I am on the filter page
   Then I should be able to select "charles dodgson" from "Author"
 
-Scenario: new parent for an existing page should have the same author
-  Given a page exists with authors: "newbie"
-  When I am on the page's page
-    And I add a parent with title "New Parent"
-  Then I should see "newbie" within ".authors"
-    And I should see "Page 1" within ".parts"
-    But I should NOT see "newbie" within ".parts"
-
 Scenario: list the authors
   Given "jane" is an "Author"
     And "bob" is an "Author"

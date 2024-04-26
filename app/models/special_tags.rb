@@ -29,7 +29,13 @@ module SpecialTags
   end
 
   def cliff_tag; Con.find_or_create_by(name: CLIFF); end
-  def cliff_present?; all_tags.include?(CLIFF);end
+  def cliff_present?
+    if parent.blank?
+      self.tags.cons.include?(cliff_tag)
+    else
+      parent.tags.cons.include?(cliff_tag)
+    end
+  end
   def update_cliff(bool)
     if bool == "Yes"
       if parent.blank?
@@ -69,6 +75,27 @@ module SpecialTags
       raise "why isn’t #{bool} Yes or No?"
     end
     reset_con
+  end
+
+  ## if it's a chapter, add the book's authors and fandoms
+  ## if it's a series or collection, add its children's authors and fandoms
+  def author_tags(add_parent = true);
+    mine = tags.authors
+    my_parents = (parent && add_parent) ? parent.author_tags : []
+    my_childrens = parts.blank? ? [] : parts.map{|p| p.author_tags(false)}
+    (mine + my_parents + my_childrens).pulverize.sort_by(&:base_name)
+  end
+  def fandom_tags(add_parent = true);
+    mine = tags.fandoms
+    my_parents = (parent && add_parent) ? parent.fandom_tags : []
+    my_childrens = parts.blank? ? [] : parts.map{|p| p.fandom_tags(false)}
+    (mine + my_parents + my_childrens).pulverize.sort_by(&:base_name)
+  end
+
+  Tag.some_types.each do |type|
+    define_method type.downcase + "_tags" do
+      self.tags.send(type.downcase.pluralize).sort_by(&:base_name)
+    end
   end
 
 end

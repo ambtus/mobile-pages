@@ -120,14 +120,6 @@ Scenario: new parent for an existing page should have the same fandom
     And I am on the page with title "New Parent"
   Then I should see "nonfiction" within ".fandoms"
 
- Scenario: new parent for an existing page should move the fandom
-  Given a page exists with fandoms: "nonfiction"
-  When I am on the page's page
-    And I add a parent with title "New Parent"
-  Then I should see "nonfiction" within ".fandoms"
-    And I should see "Page 1" within ".parts"
-    But I should NOT see "nonfiction" within ".parts"
-
 Scenario: list the fandoms
   Given "Harry Potter" is a "Fandom"
   When I am on the tags page

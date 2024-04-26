@@ -27,13 +27,12 @@ Scenario: check before refetching a read Series should show it as unread
   Given Counting Drabbles partially exists
   When I am on the page with title "Counting Drabbles"
   Then I should see "100 words" within ".size"
-    And I should see "by Sidra" within ".notes"
-    And I should see "Harry Potter" within ".notes"
+    And I should NOT see "by Sidra" within ".notes"
+    And I should NOT see "Harry Potter" within ".notes"
     And I should see "Implied snarry" within ".notes"
     And I should see "thanks to lauriegilbert!" within ".notes"
     And I should see "1. Skipping Stones" within "#position_1"
-    And I should see "Harry Potter/Unknown;" within "#position_1"
-    And I should NOT see "by Sidra; Harry Potter;" within "#position_1"
+    And I should see "by Sidra; Harry Potter; Harry Potter/Unknown;" within "#position_1"
     And I should NOT see "The Flower"
 
 Scenario: check before refetch Single (verify that updates changed notes and html)
@@ -91,14 +90,6 @@ Scenario: check before creating a series when I already have its books
     And I should see "A Misfit Working Holiday In New York" within "#position_2"
     And the page should NOT contain css "#position_3"
 
-Scenario: check before rebuilding a Series before storing index as raw HTML
-  Given Misfits existed
-    And Misfits has a URL
-  When I am on the page's page
-  Then I should see "Misfit Series (Series)" within ".title"
-    And I should NOT see "by Morraine" within ".notes"
-    And I should NOT see "Teen Wolf, Captain America, Avengers, Iron Man, Thor" within ".notes"
-
 Scenario: check before adding an unread chapter to a book
   Given Time Was partially exists
   When I am on the homepage
@@ -120,7 +111,10 @@ Scenario: check before getting book by adding parent and then refetching
 Scenario: check before rebuild meta on deleted series
   Given Iterum Rex exists
   When I am on the page with title "Iterum Rex"
-  Then I should see "Brave New World" within "#position_1"
+  Then I should see "Iterum Rex" within ".title"
+    And I should NOT see "by TardisIsTheOnlyWayToTravel" within ".notes"
+    And I should NOT see "Harry Potter, Arthurian Mythology & Related Fandoms" within ".notes"
+    But I should see "Brave New World" within "#position_1"
     And I should see "by TardisIsTheOnlyWayToTravel" within "#position_1"
     And I should see "Harry Potter, Arthurian Mythology & Related Fandoms" within "#position_1"
     And I should see "Draco Malfoy, reluctant Death Eater" within "#position_1"
@@ -131,3 +125,27 @@ Scenario: check before chapter numbering bug
   Then I should see "Chapter 1" within "#position_1"
     But I should NOT see "1. Chapter 1"
     And the part titles should be stored as "Chapter 1"
+
+ Scenario: local series (duplicated in z_ao3_fetch)
+  Given "Harry Potter" is a "Fandom"
+    And "Sidra" is an "Author"
+    And Counting Drabbles exists
+  When I am on the page's page
+  Then I should see "Counting Drabbles (Series)" within ".title"
+    And I should see "200 words" within ".size"
+    And I should see "Implied snarry" within ".notes"
+    And I should see "thanks to lauriegilbert!" within ".notes"
+    And I should see "Harry Potter" within ".fandoms"
+    And I should see "Sidra" within ".authors"
+    And I should see "1. Skipping Stones" within "#position_1"
+    And I should see "2. The Flower [sequel to Skipping Stones]" within "#position_2"
+    And the show tags for "Counting Drabbles" should include fandom and author
+    And I should see "Harry Potter/Unknown; Drabble; thanks to lauriegilbert for" within "#position_1"
+    And I should see "Harry Potter/Unknown; Drabble; Thank you lauriegilbert for" within "#position_2"
+    And my page named "Counting Drabbles" should have url: "https://archiveofourown.org/series/46"
+    And my page named "Skipping Stones" should have url: "https://archiveofourown.org/works/688"
+    And my page named "The Flower [sequel to Skipping Stones]" should have url: "https://archiveofourown.org/works/689"
+    And the tags for "Skipping Stones" should include fandom and author
+    And the tags for "The Flower [sequel to Skipping Stones]" should include fandom and author
+    But the tags for "Counting Drabbles" should NOT include fandom and author
+
