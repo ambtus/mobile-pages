@@ -91,3 +91,11 @@ Given('tags exist') do
   fandom = Fandom.find_or_create_by(name: "Harry Potter")
   author = Author.find_or_create_by(name: "Sidra")
 end
+
+Given /^Counting Drabbles had tags$/ do
+  page = Series.find_by(title: "Counting Drabbles")
+  fandom = Fandom.find_or_create_by(name: "Harry Potter")
+  author = Author.find_or_create_by(name: "Sidra")
+  page.tags << [fandom, author]
+end
+

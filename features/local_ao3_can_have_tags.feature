@@ -56,3 +56,12 @@ Scenario: A Series without fandom and author tags from child
     And I should NOT see "Sidra" within ".notes"
     And I should NOT see "Harry Potter" within ".notes"
     But I should see "by Sidra; Harry Potter; Harry Potter/Unknown" within "#position_1"
+
+
+Scenario: remove old fandom and author tags from series when rebuild meta
+  Given tags exist
+    And Counting Drabbles exists
+    And Counting Drabbles had tags
+  When I am on the page's page
+    And I press "Rebuild Meta"
+  Then the tags for "Counting Drabbles" should NOT include fandom and author

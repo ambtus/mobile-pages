@@ -779,7 +779,15 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "rebuilding meta for #{self.id}"
     remove_outdated_downloads
     self.parts.map(&:rebuild_meta)
+    remove_outdated_tags unless self.can_have_tags?
     set_meta
+    return self
+  end
+
+  def remove_outdated_tags
+    return if self.can_have_tags?
+    self.tags.delete(self.tags.authors)
+    self.tags.delete(self.tags.fandoms)
     return self
   end
 
