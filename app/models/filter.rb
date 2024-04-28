@@ -24,7 +24,14 @@ class Filter
       end
     end
 
-    pages = pages.where(:type => (params[:type] == "none" ? nil : params[:type])) if params[:type] unless params[:type] == "all"
+    if params[:type]
+      if params[:type] == "none"
+        pages = pages.where(type: nil)
+      elsif params[:type] == "all"
+      else
+        pages = pages.where(type: params[:type])
+      end
+    end
 
     # ignore parts unless asking for a type or a url or a title or a fandom or sorting on last_created
     # TODO should this be an if, instead of an unless? blacklist or whitelist?

@@ -94,7 +94,7 @@ Scenario: cannot go below Chapter
     And I follow "Where am I?"
   Then I should NOT see "Decrease Type"
 
-Scenario: cannot go above Collection
-  Given a collection exists
+Scenario: cannot go above Series
+  Given a series exists
   When I am on the page's page
   Then I should NOT see "Increase Type"

@@ -44,7 +44,7 @@ class Page < ActiveRecord::Base
     elsif self.url.match(/series/)
       Series
     else
-      Collection
+      raise "what's my ao3_type?"
     end
   end
 
@@ -56,7 +56,7 @@ class Page < ActiveRecord::Base
     elsif self.url.match(/series/)
       Series
     else
-      Collection
+      raise "what's my initial_ao3_type?"
     end
   end
 
@@ -74,10 +74,8 @@ class Page < ActiveRecord::Base
           Rails.logger.debug "part types: #{part_types}"
           if (part_types - ["Chapter"]).empty?
             Book
-          elsif (part_types - ["Single", "Book"]).empty?
-            Series
           else
-            Collection
+            Series
           end
         end
       Rails.logger.debug "non-ao3 type set to #{should_be} for #{self.title}"
@@ -211,14 +209,14 @@ class Page < ActiveRecord::Base
   after_create :initial_fetch
 
   scope :with_content, -> { where(type: [Chapter, Single]) }
-  scope :with_parts, -> { where(type: [Book, Series, Collection])}
+  scope :with_parts, -> { where(type: [Book, Series])}
   scope :with_tags, -> { where(type: [Book, Single])}
 
   def can_have_tags?; %w{Single Book}.include?(self.type) || self.type.blank?; end
   def tag_types; can_have_tags? ? Tag.types : Tag.some_types; end
 
   def could_have_content?; %w{Chapter Single}.include?(self.type); end
-  def could_have_parts?; %w{Book Series Collection}.include?(self.type); end
+  def could_have_parts?; %w{Book Series}.include?(self.type); end
   def could_have_url?; could_have_content? || ao3? || ao3_chapters?; end
 
   def has_content?
@@ -489,54 +487,46 @@ class Page < ActiveRecord::Base
   end
 
   def parent_type(current)
-    current = "Book" unless current
-    new =
-      case type
-      when "Chapter", nil
-        "Book"
-      when "Single"
-        ao3? ? "Series" : "Book"
-      when "Book"
-        "Series"
-      when "Series"
-        "Collection"
-      end
-    [current, new].sort_by {|x| %w{Collection Series Book Single Chapter}.index(x)}.first.constantize
+    case type
+    when "Chapter", nil
+      Book
+    when "Single"
+      ao3? ? "Series" : "Book"
+    else
+      Series
+    end
   end
 
   def increase_type
-    current = self.type
-    new = case type
-          when nil
-            "Chapter"
-          when "Chapter"
+    new = case self.type
+          when nil, "Chapter"
             "Single"
           when "Single"
             "Book"
           when "Book"
             "Series"
           else
-            "Collection"
+            raise "cannot increase type"
           end
     update type: new
   end
 
   def decrease_type
-    current = self.type
-    new = case type
-          when "Collection"
-            "Series"
+    new = case self.type
           when "Series"
             "Book"
           when "Book"
             "Single"
-          else
+          when "Single"
             "Chapter"
+          else
+            raise "cannot decrease type"
           end
     update type: new
   end
 
   def add_parent(title)
+    raise "cannot add parent" unless can_have_tags?
     parent=Page.find_by_title(title)
     Rails.logger.debug "parent #{title} found? #{parent.is_a?(Page)}"
     if parent.is_a?(Page)

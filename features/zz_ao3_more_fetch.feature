@@ -156,9 +156,11 @@ Scenario: fetch a work from a collection
     And I press "Store"
   Then my page named "A Conversation Overheard by a Captive Faking Unconsciousness" should have url: "https://archiveofourown.org/works/21684820"
 
-Scenario: refetch a single to a book in a collection
+Scenario: refetch a single in a series to a book
   Given Misfits first chapter of second work exists
   When I am on the page with title "A Misfit Working Holiday In New York"
     And I follow "Refetch"
     And I press "Refetch"
-  Then I should see "Misfit Series" within ".parent"
+  Then I should see "Parent: Misfit Series (Series)"
+    And I should see "A Misfit Working Holiday In New York (Book)"
+    And I should see "(4 parts)"

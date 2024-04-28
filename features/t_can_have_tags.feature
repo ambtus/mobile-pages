@@ -31,23 +31,12 @@ Scenario: A Chapter inherits author tags from parent but only when alone
     And I should NOT see "Harry Potter" within "#position_1"
 
 Scenario: A Series cannot have it’s own fandom and author tags
-  Given a Series exists
+  Given a series exists
   Then I can NOT tag "Series" with fandom and author
 
 Scenario: A Series inherits fandom and author tags from child
-  Given a Series exists
-  When I can tag "Book" with fandom and author
-  Then the download tag string for "Series" should include fandom and author
-    And the show tags for "Series" should include fandom and author
-    And the index tags for "Series" should include fandom and author
-
-Scenario: A Collection cannot have it’s own fandom and author tags
-  Given a Collection exists
-  Then I can NOT tag "Collection" with fandom and author
-
-Scenario: A Collection inherits fandom and author tags from child
-  Given a Series exists
-  When I can tag "Book" with fandom and author
+  Given a series exists
+  When I can tag "Book1" with fandom and author
   Then the download tag string for "Series" should include fandom and author
     And the show tags for "Series" should include fandom and author
     And the index tags for "Series" should include fandom and author

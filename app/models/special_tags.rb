@@ -78,7 +78,7 @@ module SpecialTags
   end
 
   ## if it's a chapter, add the book's authors and fandoms
-  ## if it's a series or collection, add its children's authors and fandoms
+  ## if it's a series, add its children's authors and fandoms
   def author_tags(add_parent = true);
     mine = tags.authors
     my_parents = (parent && add_parent) ? parent.author_tags : []

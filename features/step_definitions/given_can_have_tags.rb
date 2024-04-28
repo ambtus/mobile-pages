@@ -9,26 +9,6 @@ Given('a Book exists') do
   end
 end
 
-Given('a Series exists') do
-  series = Series.create!(title: "Series")
-  book = Book.create!(title: "Book", parent_id: series.id, position: 1)
-  2.times do |i|
-    Chapter.create(title: "Chapter #{i+1}", parent_id: book.id, position: i+1)
-  end
-  Single.create!(title: "Single", parent_id: series.id, position: 2)
-end
-
-Given('a Collection exists') do
-  collection = Collection.create!(title: "Collection")
-  series = Series.create!(title: "Series", parent_id: collection.id, position: 1)
-  book = Book.create!(title: "Book", parent_id: series.id, position: 1)
-  2.times do |i|
-    Chapter.create(title: "Chapter #{i+1}", parent_id: book.id, position: i+1)
-  end
-  Single.create!(title: "Single 1", parent_id: series.id, position: 2)
-  Single.create!(title: "Single 2", parent_id: collection.id, position: 2)
-end
-
 Then('I can tag {string} with fandom and author') do |string|
   fandom = Fandom.find_or_create_by(name: "Harry Potter")
   author = Author.find_or_create_by(name: "Sidra")

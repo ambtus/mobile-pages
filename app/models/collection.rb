@@ -1,5 +1,4 @@
-# encoding=utf-8
-
-class Collection < Page
+class Collection < Tag
+  # Tags to collect random singles, books, and series
 
 end

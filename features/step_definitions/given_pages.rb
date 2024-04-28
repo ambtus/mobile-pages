@@ -81,10 +81,6 @@ Given('a series exists') do
   Single.create!(title: "Extras", parent_id: series.id, position: 3, url: "http://test.sidrasue.com/parts/5.html")
 end
 
-Given('a collection exists') do
-  collection = Collection.create!(title: "Collection")
-end
-
 Given('I have Books with titles {string} and {string}') do |title1, title2|
   Book.create(title: title1, base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "1-2")
   Book.create(title: title2, base_url: "http://test.sidrasue.com/parts/*.html", url_substitutions: "4-6")

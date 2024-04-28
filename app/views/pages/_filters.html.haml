@@ -19,6 +19,6 @@
     = radio_button_tag :soon, choice, @soon == choice
     = label_tag "soon_#{choice}", choice
 .type
-  - ['Collection', 'Series', 'Book', 'Chapter', 'Single', 'none', 'all'].each do |choice|
+  - ['Series', 'Book', 'Chapter', 'Single', 'none', 'all'].each do |choice|
     = radio_button_tag :type, choice, @type == choice
     = label_tag "type_#{choice}", choice

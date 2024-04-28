@@ -9,14 +9,10 @@ Given("pages with all possible types exist") do
   child1 = Chapter.create!(title: "Prologue", parent_id: book1.id, position: 1, url: "http://test.sidrasue.com/parts/1.html")
   child2 = Chapter.create!(title: "Epilogue", parent_id: book2.id, position: 1, url: "http://test.sidrasue.com/parts/5.html")
 
-  Kernel::sleep 1
-  collection = Collection.create!(title: "Life's Work")
+  # it's a bug, but it's happened
+  untyped = Page.create!(title: "Untyped")
+  untyped.update!(type: nil)
 
-  Single.create(title: "First", url: "http://test.sidrasue.com/test.html", parent_id: collection.id, position: 1)
-  Book.create(title: "Second", base_url: "http://test.sidrasue.com/medium*.html", url_substitutions: "1-2", parent_id: collection.id, position: 2)
-  series2 = Series.create(title: "Third", parent_id: collection.id, position: 3)
-  Book.create(title: "Fourth", parent_id: series2.id, position: 1)
-  Book.create(title: "Fifth", parent_id: series2.id, position: 2)
 end
 
 Given("pages with all possible stars exist") do

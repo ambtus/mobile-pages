@@ -5,9 +5,9 @@ class Tag < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :case_sensitive => false, scope: :type
 
-  def self.types; ["Fandom", "Author", "Pro", "Con", "Hidden", "Reader", "Info"]; end
+  def self.types; ["Fandom", "Author", "Pro", "Con", "Hidden", "Reader", "Info", "Collection"]; end
   def self.some_types; self.types - ["Fandom", "Author"]; end
-  def self.boolean_types; self.some_types - ["Info"]; end
+  def self.boolean_types; self.some_types - ["Info", "Collection"]; end
 
   scope :by_name, -> { order('tags.name asc') }
   scope :by_type, -> { order('tags.type desc') }
