@@ -101,9 +101,31 @@ Scenario: change fandom to info
     And I am on the page's page
   Then I should see "Harry Potter" within ".infos"
 
- Scenario: allow info and fandom tags to have the same name
-  Given a page exists with fandoms: "Harry Potter" AND infos: "Harry Potter"
+ Scenario: do not allow info and fandom tags to have the same base name
+  Given a page exists with fandoms: "Harry Potter"
   When I am on the page's page
-  Then I should see "Harry Potter" within ".fandoms"
-    And I should see "Harry Potter" within ".infos"
+    And I edit its tags
+    And I fill in "tags" with "Harry Potter"
+    And I press "Add Info Tags"
+  Then I should see "duplicate short name"
+    And I should have 1 tag
+
+ Scenario: do not allow info and fandom tags to have the same short name
+  Given a page exists with fandoms: "Harry Potter (Harry)"
+  When I am on the page's page
+    And I edit its tags
+    And I fill in "tags" with "Harry"
+    And I press "Add Info Tags"
+  Then I should see "duplicate short name"
+    And I should have 1 tag
+
+ Scenario: allow info and fandom tags to have similar names
+  Given a page exists with fandoms: "Harry Potter"
+  When I am on the page's page
+    And I edit its tags
+    And I fill in "tags" with "Harry (Potter)"
+    And I press "Add Info Tags"
+  Then I should see "Harry" within ".infos"
+    And I should NOT see "Potter" within ".infos"
     And I should have 2 tags
+

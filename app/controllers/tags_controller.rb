@@ -112,7 +112,11 @@ class TagsController < ApplicationController
       consolidate_tag_ids
       @page.tag_ids = params[:page][:tag_ids]
     elsif params[:commit].match /Add (.*) Tags/
-      @page.add_tags_from_string(params[:tags], $1.squish)
+      unless @page.add_tags_from_string(params[:tags], $1.squish)
+        Rails.logger.debug "page errors: #{@page.errors.messages}"
+        flash[:alert] = @page.errors.collect {|error| "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"}.join(" and  ")
+        redirect_to tag_path(@page.id) and return
+      end
     end
     @page.reset_con
     @page.reset_hidden

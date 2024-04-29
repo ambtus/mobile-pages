@@ -46,3 +46,17 @@ Scenario: author in aka
   When I am on the page's page
   Then I should see "ambtus" within ".authors"
     But I should NOT see "Sidra" within ".authors"
+
+Scenario: lowercase author in aka
+  Given "ambtus (sidra)" is an "Author"
+    And I Drive Myself Crazy exists
+  When I am on the page's page
+  Then I should see "ambtus" within ".authors"
+    But I should NOT see "Sidra" within ".authors"
+
+Scenario: lowercase author
+  Given "sidra" is an "Author"
+    And I Drive Myself Crazy exists
+  When I am on the page's page
+  Then I should see "sidra" within ".authors"
+    But I should NOT see "Sidra" within ".authors"

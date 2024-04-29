@@ -625,10 +625,21 @@ class Page < ActiveRecord::Base
     self.set_con if type == "Con"
     self.set_pro if type == "Pro"
     self.set_reader if type == "Reader"
-    string.split(",").each do |tag|
-      typed_tag = type.constantize.find_by_short_name(tag.squish)
-      typed_tag = type.constantize.find_or_create_by(name: tag.squish) unless typed_tag
-      self.tags << typed_tag unless self.tags.include?(typed_tag)
+    string.split(",").each do |try|
+      name = try.squish
+      exists = Tag.find_by_short_name(name)
+      if exists
+        if exists.type == type
+          self.tags << exists unless self.tags.include?(exists)
+        else
+          Rails.logger.debug "Tag #{exists} already exists"
+          self.errors.add(:base, "duplicate short name")
+          return false
+        end
+      else
+        typed_tag = type.constantize.find_or_create_by(name: name.squish)
+        self.tags << typed_tag unless self.tags.include?(typed_tag)
+      end
     end
     Rails.logger.debug "tags now #{self.tags.joined}"
   end

@@ -54,19 +54,17 @@ class Tag < ActiveRecord::Base
 
   def base_name; short_names.first; end
 
-  def self.all_names
-    self.send(scope_name).map(&:short_names).flatten
-  end
+  def self.all_names; self.send(scope_name).map(&:short_names).flatten.map(&:downcase); end
 
   def self.find_by_short_name(short)
     return nil if short.blank?
-    return nil unless self.all_names.include?(short) # don't catch substring au for audio
-    possibles = self.send(scope_name).where(["name LIKE ?", "%" + short + "%"]).all
+    return nil unless self.all_names.include?(short.downcase) # don't catch substring au for audio
+    possibles = self.send(scope_name).where(["name LIKE ?", "%" + short.downcase + "%"]).all
     Rails.logger.debug "possibles #{possibles.map(&:name)} from #{short}"
     if possibles.size == 1
       possibles.first
     else
-      possibles.find {|p| p.short_names.include?(short)}
+      possibles.find {|p| p.short_names.map(&:downcase).include?(short.downcase)}
     end
   end
 
