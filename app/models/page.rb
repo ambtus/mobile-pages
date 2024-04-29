@@ -186,7 +186,7 @@ class Page < ActiveRecord::Base
 
   has_and_belongs_to_many :tags, -> { distinct }
   belongs_to :parent, class_name: "Page", optional: true
-#  belongs_to :ultimate_parent, class_name: "Page", optional: true
+
   def ultimate_parent  # note: ultimate parent is self, not nil, if self has no parent...
     if parent_id.blank?
       self
