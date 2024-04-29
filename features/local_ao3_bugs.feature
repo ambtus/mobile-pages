@@ -177,3 +177,17 @@ Scenario: should only be three hrs
   When I am on the page's page
   Then I should see three horizontal rules
     But I should NOT see four horizontal rules
+
+Scenario: bug in meta when author matches substring
+  Given "Whispering_Samir" is an "Author"
+    And five times exists
+  When I am on the page's page
+  Then I should see "by sami"
+    And I should NOT see "Whispering_Samir"
+
+Scenario: bug in meta when author matches substring
+  Given "Whispering_Sumire (Whispering_samir)" is an "Author"
+    And five times exists
+  When I am on the page's page
+  Then I should see "by sami"
+    And I should NOT see "Whispering"
