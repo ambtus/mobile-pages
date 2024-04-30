@@ -11,15 +11,6 @@ Scenario: A Book can have fandom and author tags but a Chapter cannot have it’
     And the show tags for "Hogwarts" should include fandom and author
     And the index tags for "Hogwarts" should include fandom and author
 
-Scenario: A Chapter inherits author tags from parent but only when alone
-  Given tags exist
-  When Time Was exists
-  When I am on the page with title "Time Was, Time Is"
-  Then I should see "Sidra" within ".authors"
-    And I should see "Harry Potter" within ".fandoms"
-    But I should NOT see "Sidra" within "#position_1"
-    And I should NOT see "Harry Potter" within "#position_1"
-
 Scenario: A Series cannot have it’s own fandom and author tags
   Given Counting Drabbles exists
   Then I can NOT tag "Counting Drabbles" with fandom and author
@@ -30,8 +21,6 @@ Scenario: A Series inherits fandom and author tags from child
   Then the download tag string for "Counting Drabbles" should include fandom and author
     And the show tags for "Counting Drabbles" should include fandom and author
     And the index tags for "Counting Drabbles" should include fandom and author
-
-
 
 Scenario: A Book can have fandom and author in notes but a Chapter does not have it’s own fandom and author in notes
   Given Time Was exists

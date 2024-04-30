@@ -36,7 +36,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_29_160720) do
     t.boolean "pro", default: false
     t.string "audio_url"
     t.boolean "reader", default: false
-    t.string "tag_cache"
+    t.string "tag_cache", default: "", null: false
     t.index ["parent_id"], name: "index_pages_on_parent_id"
     t.index ["size"], name: "index_pages_on_size"
     t.index ["stars"], name: "index_pages_on_stars"

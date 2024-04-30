@@ -22,6 +22,10 @@ module ApplicationHelper
     url_for page.download_url(format)
   end
 
+  def link_to_basename(basename)
+    link_to basename, pages_path(:find => basename)
+  end
+
   def link_to_tag(tag, name)
     link_to name, pages_path(:find => tag.base_name)
   end

@@ -1,4 +1,2 @@
--Tag.types.each do |type|
-  %span{class: "#{type.downcase.pluralize}"}
-    -page.send(type.downcase + "_tags").each do |tag|
-      =link_to_tag tag, tag.base_name
+-page.tag_cache.split_comma.each do |basename|
+  =link_to_basename basename

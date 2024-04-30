@@ -20,6 +20,7 @@ class Con < Tag
       else
         Rails.logger.debug "page #{id} still has cons"
       end
+      page.update_tag_cache!
     end
   end
 

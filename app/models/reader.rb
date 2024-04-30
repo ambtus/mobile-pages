@@ -21,6 +21,7 @@ class Reader < Tag
       else
         Rails.logger.debug "page #{id} still has reader"
       end
+      page.update_tag_cache!
     end
   end
 

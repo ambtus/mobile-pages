@@ -40,7 +40,8 @@ Scenario: adding an unread chapter to a book
     And I should see today within "#position_1"
     And I should see "Hogwarts" within "#position_2"
     And I should see "unread" within "#position_2"
-    But I should NOT see "Other Fandom" within "#position_2"
+    And I should see "Other Fandom" within "#position_2"
+    But I should NOT see "by Sidra" within "#position_2"
 
 Scenario: grab a series with multiple authors
   Given "Good Omens" is a "Fandom"
@@ -54,8 +55,8 @@ Scenario: grab a series with multiple authors
     But I should NOT see "green_grin" within ".authors"
     And I should see "1. The Waters And The Wild" within "#position_1"
     And I should see "2. The Fruits Of The Forest" within "#position_2"
-    And I should see "Good Omens" within "#position_1 .fandoms"
-    And I should see "Good Omens" within "#position_2 .fandoms"
+    And I should see "Good Omens" within "#position_1"
+    And I should see "Good Omens" within "#position_2"
     And I should see "entanglednow" within "#position_1"
     And I should see "entanglednow" within "#position_2"
     And I should NOT see "green_grin" within "#position_1"

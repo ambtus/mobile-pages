@@ -67,8 +67,11 @@ Scenario: can put the name of another tag in as first name
     When I select "harry" from "fandom"
     And I press "Find"
   Then I should see "first" within "#position_1"
+    And I should see "harry" within "#position_1"
+    But I should NOT see "Severus" within "#position_1"
     And I should see "both" within "#position_2"
-    And I should see "harry"
+    And I should see "harry" within "#position_2"
+    And I should see "Severus" within "#position_2"
     But I should NOT see "Harry"
     And I should NOT see "harry/snape"
 

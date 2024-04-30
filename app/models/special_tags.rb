@@ -62,6 +62,8 @@ module SpecialTags
     else
       raise "why isn’t #{bool} Yes or No?"
     end
+    self.parent.update_tag_cache! if self.parent
+    self.update_tag_cache!
   end
 
   def unfinished_tag; Con.find_or_create_by(name: UNFINISHED); end
@@ -75,6 +77,7 @@ module SpecialTags
       raise "why isn’t #{bool} Yes or No?"
     end
     reset_con
+    self.update_tag_cache!
   end
 
   ## if it's a chapter, add the book's authors and fandoms

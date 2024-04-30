@@ -86,7 +86,14 @@ class Tag < ActiveRecord::Base
   end
 
   def destroy_me
+    page_ids = self.pages.map(&:id)
+    name = self.name
+    Rails.logger.debug "destroying #{name} for #{page_ids.size} pages"
     self.destroy
+    page_ids.each do |id|
+      page = Page.find(id)
+      page.update_tag_cache!
+    end
   end
 
 end

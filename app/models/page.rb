@@ -218,6 +218,7 @@ class Page < ActiveRecord::Base
   def tag_types; can_have_tags? ? Tag.types : Tag.some_types; end
 
   def update_tag_cache; self.tag_cache = self.base_tags; end
+  def update_tag_cache!; update_tag_cache && save!; end
   def base_tags
     case type
     when "Chapter"
@@ -225,7 +226,10 @@ class Page < ActiveRecord::Base
     when "Book", "Single"
       tags.map(&:base_name).join_comma
     when "Series"
-      (tags + parts[0,5].map(&:shared_tags).flatten.uniq).join_comma
+      (tags + [parts.first, parts.last].pulverize.map(&:shared_tags)).pulverize.map(&:base_name).join_comma
+    else # shouldn't get here, but...
+      Rails.logger.debug "page #{self.id} doesn't have a proper type"
+      ''
     end
   end
 
@@ -794,8 +798,9 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "rebuilding meta for #{self.id}"
     remove_outdated_downloads
     self.parts.map(&:rebuild_meta)
-    remove_outdated_tags unless self.can_have_tags?
+    remove_outdated_tags
     set_meta
+    self.parts.map(&:update_tag_cache!)
     return self
   end
 

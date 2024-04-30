@@ -43,6 +43,7 @@ Given /^Time Was partially exists$/ do
   chapter1.update!(url: "https://archiveofourown.org/works/692/chapters/803")
   chapter1.set_raw_from("where").rate_today("3")
   page.set_meta
+  chapter1.rebuild_meta
 end
 
 Given /^Counting Drabbles exists$/ do

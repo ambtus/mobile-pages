@@ -33,9 +33,9 @@ class Filter
       end
     end
 
-    # ignore parts unless asking for a type or a url or a title or a fandom or sorting on last_created
+    # ignore parts unless asking for a type or a url or a title or a fandom or author or sorting on last_created
     # TODO should this be an if, instead of an unless? blacklist or whitelist?
-    unless params[:type] || params[:url] || params[:audio_url] || params[:title] || params[:fandom] || params[:sort_by] == "last_created"
+    unless params[:type] || params[:url] || params[:audio_url] || params[:title] || params[:fandom] || params[:author] || params[:sort_by] == "last_created"
       pages = pages.where(:parent_id => nil)
     end
     # ignore parts if filtering on size unless you've chosen a type

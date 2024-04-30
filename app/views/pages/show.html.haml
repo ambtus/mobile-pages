@@ -88,7 +88,7 @@
         = link_to "Original", part.url unless part.url.blank?
         .notes
           %span.meta= render "pages/meta", page: part
-          %span.meta= render "pages/own_tags", page: part
+          %span.meta= render "pages/span_tags", page: part
           %span.my_notes=part.short_my_notes
           %span.notes=part.short_notes
           %span.end_notes=part.short_end_notes

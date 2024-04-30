@@ -42,6 +42,7 @@ Then('the index tags for {string} should include fandom and author') do |string|
   visit filter_path
   fill_in("page_title", :with => string)
   click_button("Find")
+  # save_and_open_page
   assert_text("Sidra")
   assert_text("Harry Potter")
 end

@@ -21,15 +21,6 @@ Scenario: A Chapter inherits fandom and author tags from parent
     And the show tags for "Chapter 1" should include fandom and author
     And the index tags for "Chapter 1" should include fandom and author
 
-Scenario: A Chapter inherits author tags from parent but only when alone
-  Given a Book exists
-  When I can tag "Book" with fandom and author
-  When I am on the page's page
-  Then I should see "Sidra" within ".authors"
-    And I should see "Harry Potter" within ".fandoms"
-    But I should NOT see "Sidra" within "#position_1"
-    And I should NOT see "Harry Potter" within "#position_1"
-
 Scenario: A Series cannot have it’s own fandom and author tags
   Given a series exists
   Then I can NOT tag "Series" with fandom and author

@@ -1,7 +1,7 @@
 # Restart required even in development mode when you modify this file.
 
 # A list of all the methods defined here to prevent breaking rails by overwriting something in use
-%w{chip strip_quotes with_quotes create_hash normalize boring}.each do |meth|
+%w{chip strip_quotes with_quotes create_hash normalize boring? split_comma}.each do |meth|
  raise "#{meth} is already defined in String class" if String.method_defined?(meth)
 end
 
@@ -48,5 +48,7 @@ class String
     end
     return false
   end
+
+  def split_comma; self.split(",").map(&:squish); end
 
 end
