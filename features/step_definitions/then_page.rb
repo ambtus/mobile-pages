@@ -146,8 +146,9 @@ Then('I should have {int} nodes') do |int|
   assert_equal int, Page.first.nodes.count
 end
 
-Then('it should have {int} horizontal rules') do |int|
-  assert_equal int, Page.first.scrubbed_html.scan(/<hr/).count
+Then('{string} should have {int} horizontal rules') do |string, int|
+  page = Page.find_by(title: string)
+  assert_equal int, page.scrubbed_html.scan(/<hr/).count
 end
 
 Then('all pages should be rated {int}') do |int|

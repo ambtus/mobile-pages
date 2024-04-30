@@ -208,12 +208,28 @@ class Page < ActiveRecord::Base
 
   after_create :initial_fetch
 
+  before_save :update_tag_cache
+
   scope :with_content, -> { where(type: [Chapter, Single]) }
   scope :with_parts, -> { where(type: [Book, Series])}
   scope :with_tags, -> { where(type: [Book, Single])}
 
   def can_have_tags?; %w{Single Book}.include?(self.type) || self.type.blank?; end
   def tag_types; can_have_tags? ? Tag.types : Tag.some_types; end
+
+  def update_tag_cache; self.tag_cache = self.base_tags; end
+  def base_tags
+    case type
+    when "Chapter"
+      (tags + parent.shared_tags).map(&:base_name).join_comma
+    when "Book", "Single"
+      tags.map(&:base_name).join_comma
+    when "Series"
+      (tags + parts[0,5].map(&:shared_tags).flatten.uniq).join_comma
+    end
+  end
+
+  def shared_tags; tags.authors + tags.fandoms; end
 
   def could_have_content?; %w{Chapter Single}.include?(self.type); end
   def could_have_parts?; %w{Book Series}.include?(self.type); end
@@ -421,10 +437,11 @@ class Page < ActiveRecord::Base
   def make_single
     Rails.logger.debug "removing #{self.id} from #{self.parent_id}"
     return unless parent
-    parent = self.parent
-    self.tags << parent.tags - self.tags
-    self.update(parent_id: nil, position: nil)
+    old_parent = self.parent
+    self.parent_id = nil
+    self.position = nil
     self.set_type
+    self.tags << old_parent.tags - self.tags
     set_meta
   end
 
@@ -453,14 +470,11 @@ class Page < ActiveRecord::Base
 
   def refetch(passed_url)
     if ao3? && type == "Single" && !url.match(/chapters/)
-      old_position = self.position
-      if self.make_me_a_chapter
-        parent = Book.create! url: passed_url, parent_id: self.parent_id, position: old_position
-        update! parent_id: parent.id
+      if make_me_a_chapter(passed_url)
         move_tags_up
         move_soon_up
         set_meta
-        return parent.reload
+        return self.parent.reload
       else
         update!(url: passed_url) if passed_url.present?
         fetch_ao3

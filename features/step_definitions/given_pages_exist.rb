@@ -52,7 +52,8 @@ Given('The Awakening exists') do
 end
 
 Given('part {int} exists') do |int|
-  chapter = Chapter.create!(title: "part#{int}")
+  book = Book.create!(title: "In This Land")
+  chapter = Chapter.create!(title: "Part #{int}", parent_id: book.id)
   chapter.update!(url: "http://www.matthewhaldemantime.com/InThisLand/inthisland#{int}.html")
   chapter.set_raw_from("inthisland#{int}")
 end

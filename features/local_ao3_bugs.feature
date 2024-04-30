@@ -114,7 +114,7 @@ Scenario: triple hr's
   Given "esama" is an "Author"
     And "Star Wars" is a "Fandom"
     And 55367 exists
-  Then it should have 10 horizontal rules
+  Then "#55367" should have 10 horizontal rules
 
 Scenario: quote in title
   Given I asked exists

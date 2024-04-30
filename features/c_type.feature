@@ -13,6 +13,7 @@ Scenario: change from single to book
 
 Scenario: change from single to chapter
   Given a page exists
+    And the single has a parent
   When I am on the page's page
     And I press "Decrease Type"
   Then I should see "Page 1 (Chapter)"
