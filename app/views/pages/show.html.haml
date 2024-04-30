@@ -8,6 +8,7 @@
       = submit_tag "Remove Downloads"
       = submit_tag "Update from Parts" if @page.parts.any?
       = submit_tag "Rebuild Meta"
+      = submit_tag "Update Tag Cache"
     .type
       = submit_tag "Make Single" if @page.parent
       = submit_tag "Uncollect" unless @page.parts.blank?

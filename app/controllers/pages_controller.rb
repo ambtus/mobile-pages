@@ -246,6 +246,9 @@ class PagesController < ApplicationController
       when "Rebuild Meta"
         @page.rebuild_meta
         flash[:notice] = "Rebuilt Meta"
+      when "Update Tag Cache"
+        @page.full_tag_cache_update
+        flash[:notice] = "Updaded Tag Cache"
       when "Toggle #{Page::OTHER}"
         @page.toggle_of.rebuild_meta
         flash[:notice] = "Toggled #{Page::OTHER}"

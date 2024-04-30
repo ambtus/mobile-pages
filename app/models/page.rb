@@ -233,6 +233,19 @@ class Page < ActiveRecord::Base
     end
   end
 
+  def full_tag_cache_update
+    case type
+    when "Chapter", "Single"
+      update_tag_cache!
+    when "Book", "Series"
+      update_tag_cache!
+      parts.map(&:update_tag_cache!)
+    else # shouldn't get here, but...
+      Rails.logger.debug "page #{self.id} doesn't have a proper type"
+      ''
+    end
+  end
+
   def shared_tags; tags.authors + tags.fandoms; end
 
   def could_have_content?; %w{Chapter Single}.include?(self.type); end
