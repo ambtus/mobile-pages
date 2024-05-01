@@ -20,6 +20,7 @@ module Meta
       Rails.logger.debug "getting doc from last part"
       Nokogiri::HTML(parts.last.raw_html)
     else
+      Rails.logger.debug "getting doc from raw_html"
       fetch_raw if raw_html.blank?
       Nokogiri::HTML(raw_html)
     end
@@ -42,7 +43,7 @@ module Meta
 
   def inferred_fandoms
     if can_have_tags?
-      Rails.logger.debug "get fandoms from raw_html"
+      Rails.logger.debug "getting fandoms from raw_html"
       if ao3?
         doc.css(".fandom a").map(&:children).map(&:text)
       elsif ff? || first_part_ff?
@@ -67,7 +68,7 @@ module Meta
 
   def inferred_relationships
     if self.parts.empty? || wp?
-      Rails.logger.debug "get relationships from raw_html"
+      Rails.logger.debug "getting relationships from raw_html"
       if wp?
         [wp_try("Relationship"), wp_try("Pairing")].pulverize
       else
@@ -79,11 +80,11 @@ module Meta
     end
   end
 
-  def inferred_tags
+  def inferred_tags(my_if=[])
     if self.parts.empty? || wp?
-      Rails.logger.debug "get tags from raw_html"
+      Rails.logger.debug "getting inferred tags from raw_html"
       if wp?
-        wp_try("Genre").split(", ") + wp_try("Warnings").split(", ") - inferred_fandoms
+        wp_try("Genre").split(", ") + wp_try("Warnings").split(", ") - my_if
       else
         doc.css(".freeform a").map(&:children).map(&:text)
       end
@@ -95,6 +96,7 @@ module Meta
 
   def inferred_authors
     if can_have_tags?
+      Rails.logger.debug "getting authors from raw_html"
       if ao3?
         doc.css(".byline a").map(&:text)
       elsif ff? || first_part_ff?
@@ -273,57 +275,43 @@ module Meta
 
   def note_tags; inferred_tags.without(TT).without(FI).join(", "); end
 
-  def head_notes
+  def head_notes(my_if, my_ia, my_ir)
     case type
     when "Chapter"
       if wp?
-        [add_fandoms(inferred_fandoms), inferred_relationships.join(", "), work_summary, note_tags, work_notes]
+        [add_fandoms(my_if), my_ir.join(", "), work_summary, note_tags, work_notes]
       else
         [chapter_summary, chapter_notes]
       end
     when "Single"
       if chapter_as_single?
-        [add_authors(inferred_authors), add_fandoms(inferred_fandoms), chapter_summary, chapter_notes]
+        [add_authors(my_ia), add_fandoms(my_if), chapter_summary, chapter_notes]
       else
-        [add_authors(inferred_authors), add_fandoms(inferred_fandoms), inferred_relationships.join(", "), work_summary, chapter_summary, note_tags, work_notes, chapter_notes]
+        [add_authors(my_ia), add_fandoms(my_if), my_ir.join(", "), work_summary, chapter_summary, note_tags, work_notes, chapter_notes]
       end
     when "Book"
-      [add_authors(inferred_authors), add_fandoms(inferred_fandoms), inferred_relationships.join(", "), work_summary, note_tags, work_notes]
+      [add_authors(my_ia), add_fandoms(my_if), my_ir.join(", "), work_summary, note_tags, work_notes]
     when "Series"
-      [add_authors(inferred_authors), add_fandoms(inferred_fandoms), work_summary, work_notes]
+      [add_authors(my_ia), add_fandoms(my_if), work_summary, work_notes]
     else # oops?
       ["why am i a #{type}?"]
     end.join_hr
   end
 
-  # have to call head_notes to get added authors and fandoms
-  # but if you're not replacing it, just return the original notes
-  def inferred_notes
+  def inferred_notes(my_if, my_ia, my_ir)
     if scrubbed_notes?
       Rails.logger.debug "not replacing scrubbed notes"
-      head_notes
-      notes
-    elsif head_notes.present?
-      head_notes
+      return notes
+    end
+    new_head_notes = head_notes(my_if, my_ia, my_ir)
+    if new_head_notes.present?
+      new_head_notes
     elsif notes.present? && ff?
       Rails.logger.debug "not deleting old ff notes"
-      head_notes
       notes
     else
-      head_notes
+      ""
     end
-  end
-
-  def ao3_xx(strings)
-    found = []
-    strings.each do |string|
-      if string.match("Time Travel")
-        set_tt
-      elsif string.match(/Fix[- ][iI]t/)
-        set_fi
-      end
-    end
-    return self
   end
 
   def set_meta
@@ -336,12 +324,40 @@ module Meta
       return false
     end
     Rails.logger.debug "setting meta for #{title} (#{self.class}) with scrubbed_notes: #{scrubbed_notes?}"
-    self.update! title: inferred_title, notes: inferred_notes, end_notes: tail_notes
-    Rails.logger.debug "set title to #{inferred_title}"
-    Rails.logger.debug "set notes to #{inferred_notes}"
-    Rails.logger.debug "set end notes to #{tail_notes}"
-    wip? ? set_wip : unset_wip
-    ao3_xx(inferred_tags) unless chapter_url?
+    Rails.logger.debug "looking for possible new title"
+    my_it = self.inferred_title
+    Rails.logger.debug "title is #{my_it}"
+    self.update!(title: my_it) unless title == my_it
+    Rails.logger.debug "looking for possible new fandoms"
+    my_if = self.inferred_fandoms
+    Rails.logger.debug "inferred fandoms are #{my_if}"
+    Rails.logger.debug "looking for possible new authors"
+    my_ia = self.inferred_authors
+    Rails.logger.debug "inferred authors are #{my_ia}"
+    Rails.logger.debug "looking for possible new relationships"
+    my_ir = self.inferred_relationships
+    Rails.logger.debug "inferred relationships are #{my_ir}"
+    Rails.logger.debug "looking for possible new notes"
+    my_in = self.inferred_notes(my_if, my_ia, my_ir)
+    Rails.logger.debug "notes are #{my_in}"
+    self.update!(notes: my_in) unless notes == my_in
+    Rails.logger.debug "looking for possible new end notes"
+    my_en = self.tail_notes
+    Rails.logger.debug "end notes are #{my_en}"
+    self.update!(end_notes: my_en) unless end_notes == my_en
+    Rails.logger.debug "looking for possible new wip"
+    my_wip = self.wip?
+    Rails.logger.debug "wip is #{my_wip}"
+    my_wip ? set_wip : unset_wip
+    Rails.logger.debug "looking for possible new inferred_tags"
+    my_it = self.inferred_tags(my_if)
+    Rails.logger.debug "inferred_tags are #{my_it}"
+    unless chapter_url?
+      my_it.each do |string|
+        set_tt if string.match("Time Travel")
+        set_fi if string.match(/Fix[- ][iI]t/)
+      end
+    end
     return self
   end
 
@@ -351,7 +367,7 @@ module Meta
   end
 
   def add_authors(strings)
-    Rails.logger.debug "add #{strings} to authors"
+    Rails.logger.debug "attempting to add #{strings} to authors"
     return if strings.blank? || !can_have_tags?
     existing = []
     non_existing = []
@@ -378,13 +394,13 @@ module Meta
     else
       authors = non_existing.uniq
       by = existing.empty? ? "by" : "et al:"
-      Rails.logger.debug "adding #{authors} to notes"
+      Rails.logger.debug "adding #{by} #{authors} to notes"
       "<p>#{by} #{authors.join_comma}</p>"
     end
   end
 
   def add_fandoms(strings)
-    Rails.logger.debug "add #{strings} to fandoms"
+    Rails.logger.debug "attempting to add #{strings} to fandoms"
     return if strings.blank? || !can_have_tags?
     existing = []
     non_existing = []

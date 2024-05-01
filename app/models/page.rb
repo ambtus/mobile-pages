@@ -700,11 +700,12 @@ class Page < ActiveRecord::Base
   end
 
   def fetch_raw
-    remove_outdated_downloads
+    Rails.logger.debug "fetching raw html"
     return false if ff?
     html = scrub_fetch(self.url)
     if html
       self.raw_html = html
+      remove_outdated_downloads
       return self
     else
       return false
@@ -824,8 +825,7 @@ class Page < ActiveRecord::Base
 
   def remove_outdated_tags
     return if self.can_have_tags?
-    self.tags.delete(self.tags.authors)
-    self.tags.delete(self.tags.fandoms)
+    self.tags.delete(self.tags.where(type: ["Fandom", "Author"]))
     return self
   end
 

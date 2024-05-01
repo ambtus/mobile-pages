@@ -40,7 +40,7 @@ module Download
   def remove_outdated_downloads
     if self.id
       files = Dir.glob("#{download_dir}#{id}.*")
-      Rails.logger.debug "Removing #{files}"
+      Rails.logger.debug "Removing outdated downloads: #{files}"
       FileUtils.rm files
     end
     self.parent.remove_outdated_downloads if self.parent

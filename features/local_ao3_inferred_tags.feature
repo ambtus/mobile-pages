@@ -22,7 +22,6 @@ Scenario: time-travel in Book comments is NOT
   When I am on the page's page
   Then I should NOT see "Time Travel" within ".pros"
 
-
 Scenario: default is not
   Given a page exists
   When I am on the page's page

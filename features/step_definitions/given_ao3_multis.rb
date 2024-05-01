@@ -42,8 +42,8 @@ Given /^Time Was partially exists$/ do
   chapter1 = Chapter.create!(title: "temp", parent_id: page.id, position: 1)
   chapter1.update!(url: "https://archiveofourown.org/works/692/chapters/803")
   chapter1.set_raw_from("where").rate_today("3")
-  page.set_meta
-  chapter1.rebuild_meta
+  page.rebuild_meta
+  page.update_from_parts
 end
 
 Given /^Counting Drabbles exists$/ do
@@ -157,6 +157,7 @@ Given('Iterum Rex exists') do
   step "Brave New World exists"
   book = Book.find_by_title("Brave New World")
   book.update!(parent_id: series.id, position: 2)
+  series.rebuild_meta
 end
 
 Given('Cold Water exists') do

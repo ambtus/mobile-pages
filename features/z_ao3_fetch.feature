@@ -39,7 +39,7 @@ Scenario: grab a book
     And I should see "giving up on nanowrimo" within "#position_2"
     And my page named "Time Was, Time Is" should have url: "https://archiveofourown.org/works/692"
 
- Scenario: grab a series (duplicate from local_ao3_xx)
+ Scenario: grab a series (duplicate from local_ao3_inferred_tags)
   Given "Harry Potter" is a "Fandom"
     And "Sidra" is an "Author"
     And I am on the mini page
