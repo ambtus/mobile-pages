@@ -17,12 +17,12 @@ module Utilities
     page = Page.create!(hash)
     page.remove_outdated_downloads
     tag_types.compact.each {|key, value| page.send("add_tags_from_string", value, key)}
-    if page.parts.blank?
-      page.update last_read: hash[:last_read], stars: hash[:stars] || 10, updated_at: hash[:updated_at]
-      page.update_read_after if hash[:read_after].blank?
-    else
+    if page.can_have_parts?
       page.parts.update_all last_read: hash[:last_read], stars: hash[:stars] || 10, read_after: hash[:read_after], updated_at: hash[:updated_at]
       page.update_from_parts
+    else
+      page.update last_read: hash[:last_read], stars: hash[:stars] || 10, updated_at: hash[:updated_at]
+      page.update_read_after if hash[:read_after].blank?
     end
     page.update position: hash[:position]
     page.add_fandoms_to_notes(inferred_fandoms.split(",")) if inferred_fandoms

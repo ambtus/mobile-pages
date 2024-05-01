@@ -11,7 +11,7 @@
   -if (defined?(last) && page.ao3? && page.not_ao3_series?) || page.ao3_work?
     %p.kudos
       Leave Kudos or Comments on:
-      -if page.parts.any? && page.parts.last.url
+      -if page.can_have_parts? && page.parts.last.url
         =link_to page.title, page.parts.last.url + "#comments"
       -else
         =link_to page.title, page.url + "#comments"

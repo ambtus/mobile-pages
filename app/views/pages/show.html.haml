@@ -6,20 +6,21 @@
     .rebuild
       = submit_tag "Rebuild from Raw HTML"
       = submit_tag "Remove Downloads"
-      = submit_tag "Update from Parts" if @page.parts.any?
+      = submit_tag "Update from Parts" if @page.can_have_parts?
       = submit_tag "Rebuild Meta"
       = submit_tag "Update Tag Cache"
     .type
       = submit_tag "Make Single" if @page.parent
-      = submit_tag "Uncollect" unless @page.parts.blank?
+      = submit_tag "Uncollect" if @page.can_have_parts?
       = submit_tag "Increase Type" unless @page.type == "Series"
       = submit_tag "Decrease Type" unless @page.type == "Chapter"
       = submit_tag "Increase Position" if @page.position
       = submit_tag "Decrease Position" if @page.position
     .tags
       = submit_tag "Toggle #{Page::OTHER}"
-      =submit_tag 'Put all end notes before' unless @page.parts.blank?
-      =submit_tag 'Put all end notes after' unless @page.parts.blank?
+      -if @page.can_have_parts?
+        =submit_tag 'Put all end notes before'
+        =submit_tag 'Put all end notes after'
       -if @page.at_end
         =submit_tag 'Put end notes before'
       -else

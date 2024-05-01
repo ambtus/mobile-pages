@@ -2,11 +2,11 @@
 =render :partial => "downloads/notes", :locals => {:page => @page.parent} if @page.parent && @page.parent.show_notes
 =render :partial => "downloads/notes", :locals => {:page => @page} if @page.show_notes
 
-- if @page.parts.empty?
-  .content=raw @page.epub_html
-- else
+- if @page.can_have_parts?
   - @page.not_hidden_parts.each do |child|
     =render :partial => "downloads/h2", :locals => {:child => child}
+- else
+  .content=raw @page.epub_html
 
 
 =render :partial => "downloads/end_notes", :locals => {:page => @page, :last => true}

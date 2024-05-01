@@ -3,10 +3,10 @@ class ScrubsController < ApplicationController
     @page = Page.find(params[:id])
     if params[:notes]
       render :notes
-    elsif @page.parts.blank?
-      render :show
-    else
+    elsif @page.can_have_parts?
       render :parts
+    else
+      render :show
     end
   end
 end

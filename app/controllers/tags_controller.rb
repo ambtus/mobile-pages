@@ -116,7 +116,7 @@ class TagsController < ApplicationController
       consolidate_tag_ids
       @page.tag_ids = params[:page][:tag_ids]
       @page.update_tag_cache!
-      @page.parts.map(&:update_tag_cache!) if @page.parts
+      @page.parts.map(&:update_tag_cache!) if @page.can_have_parts?
       @page.parent.update_tag_cache! if @page.parent
     elsif params[:commit].match /Add (.*) Tags/
       unless @page.add_tags_from_string(params[:tags], $1.squish)

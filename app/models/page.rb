@@ -217,8 +217,10 @@ class Page < ActiveRecord::Base
   def can_have_tags?; %w{Single Book}.include?(self.type) || self.type.blank?; end
   def tag_types; can_have_tags? ? Tag.types : Tag.some_types; end
 
+  def can_have_parts?; %w{Book Series}.include?(self.type); end
+
   def some_parts
-    return [] unless parts
+    return [] unless can_have_parts?
     [parts.first, parts[parts.size/2], parts.last].pulverize
   end
 
