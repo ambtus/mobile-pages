@@ -85,13 +85,13 @@ module SpecialTags
   def author_tags(add_parent = true);
     mine = tags.authors
     my_parents = (parent && add_parent) ? parent.author_tags : []
-    my_childrens = parts.blank? ? [] : parts.map{|p| p.author_tags(false)}
+    my_childrens = parts.blank? ? [] : some_parts.map{|p| p.author_tags(false)}
     (mine + my_parents + my_childrens).pulverize.sort_by(&:base_name)
   end
   def fandom_tags(add_parent = true);
     mine = tags.fandoms
     my_parents = (parent && add_parent) ? parent.fandom_tags : []
-    my_childrens = parts.blank? ? [] : parts.map{|p| p.fandom_tags(false)}
+    my_childrens = parts.blank? ? [] : some_parts.map{|p| p.fandom_tags(false)}
     (mine + my_parents + my_childrens).pulverize.sort_by(&:base_name)
   end
 

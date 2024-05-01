@@ -217,6 +217,11 @@ class Page < ActiveRecord::Base
   def can_have_tags?; %w{Single Book}.include?(self.type) || self.type.blank?; end
   def tag_types; can_have_tags? ? Tag.types : Tag.some_types; end
 
+  def some_parts
+    return [] unless parts
+    [parts.first, parts[parts.size/2], parts.last].pulverize
+  end
+
   def update_tag_cache; self.tag_cache = self.base_tags; end
   def update_tag_cache!; update_tag_cache && save!; end
   def base_tags
@@ -226,7 +231,7 @@ class Page < ActiveRecord::Base
     when "Book", "Single"
       tags.map(&:base_name).join_comma
     when "Series"
-      (tags + [parts.first, parts.last].pulverize.map(&:shared_tags)).pulverize.map(&:base_name).join_comma
+      (tags + some_parts.map(&:shared_tags)).pulverize.map(&:base_name).join_comma
     else # shouldn't get here, but...
       Rails.logger.debug "page #{self.id} doesn't have a proper type"
       ''
