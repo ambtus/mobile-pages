@@ -191,3 +191,12 @@ Scenario: bug in meta when author matches substring
   When I am on the page's page
   Then I should see "by sami"
     And I should NOT see "Whispering"
+
+ Scenario: fandoms and authors shouldn't be in headers
+  Given "harry potter (forgotten beasts)" is a "Fandom"
+    And "sidra" is an "Author"
+    And Counting Drabbles exists
+  When I read it online
+    Then I should NOT see "forgotten beasts"
+    And I should NOT see "harry potter" within "h2"
+    And I should NOT see "sidra" within "h2"

@@ -12,6 +12,8 @@ class Tag < ActiveRecord::Base
   scope :by_name, -> { order('tags.name asc') }
   scope :by_type, -> { order('tags.type desc') }
 
+  scope :title_suffixes, -> {where(type: Tag.boolean_types)}
+
   self.types.each do |type|
     scope type.downcase.pluralize.to_sym, -> { where(type: type)}
     scope "not_#{type.downcase}".to_sym, -> {where.not(type: type)}

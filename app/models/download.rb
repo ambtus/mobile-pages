@@ -21,7 +21,8 @@ module Download
     end
   end
 
-  def short_meta_strings; [download_unread_string, *tags.not_info.by_type.by_name.map(&:name)].reject(&:blank?); end
+  def short_meta_strings; [download_unread_string, *tags.title_suffixes.by_type.map(&:base_name)].reject(&:blank?); end
+  def download_suffix; short_meta_strings.empty? ? "" : " (#{short_meta_strings.join_comma})"; end
 
   def title_prefix; parent ? title.match(position.to_s) ? "" : "#{position}. " : ""; end
   def parent_title_prefix; (parent && parent.parent) ? "#{parent.position}." : ""; end
@@ -33,7 +34,6 @@ module Download
     (parent ? title_w_position + " of #{ultimate_parent.title}" : title_w_position).gsub('"', '')
   end
 
-  def download_suffix; short_meta_strings.empty? ? "" : " (#{short_meta_strings.join_comma})"; end
   def download_part_title; title_w_position + download_suffix; end
 
 
