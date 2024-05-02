@@ -228,9 +228,7 @@ class Page < ActiveRecord::Base
   def update_tag_cache!; update_tag_cache && save!; end
   def base_tags
     case type
-    when "Chapter"
-      (tags + parent.shared_tags).map(&:base_name).join_comma
-    when "Book", "Single"
+    when "Chapter", "Single", "Book"
       tags.map(&:base_name).join_comma
     when "Series"
       (tags + some_parts.map(&:shared_tags)).pulverize.map(&:base_name).join_comma

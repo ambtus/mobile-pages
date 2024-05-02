@@ -40,7 +40,7 @@ Scenario: adding an unread chapter to a book
     And I should see today within "#position_1"
     And I should see "Hogwarts" within "#position_2"
     And I should see "unread" within "#position_2"
-    And I should see "Other Fandom" within "#position_2"
+    And I should NOT see "Other Fandom" within "#position_2"
     But I should NOT see "by Sidra" within "#position_2"
 
 Scenario: grab a series with multiple authors

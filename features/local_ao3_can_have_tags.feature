@@ -1,15 +1,17 @@
 Feature: can_have_tags? inferred tags feature
 
-Scenario: A Book can have fandom and author tags but a Chapter cannot have it’s own fandom and author tags and inherits fandom and author tags from parent
+Scenario: A Book can have fandom and author tags but a Chapter cannot have it’s own fandom and author tags and inherits fandom and author tags from parent but only when downloaded
   Given tags exist
   When Time Was exists
   Then the download tag string for "Time Was, Time Is" should include fandom and author
     And the show tags for "Time Was, Time Is" should include fandom and author
     And the index tags for "Time Was, Time Is" should include fandom and author
+    And the tags for "Time Was, Time Is" should include fandom and author
+    And the tag_cache for "Time Was, Time Is" should include fandom and author
     But I can NOT tag "Hogwarts" with fandom and author
-    And the download tag string for "Hogwarts" should include fandom and author
-    And the show tags for "Hogwarts" should include fandom and author
-    And the index tags for "Hogwarts" should include fandom and author
+    And the tags for "Hogwarts" should NOT include fandom and author
+    And the tag_cache for "Hogwarts" should NOT include fandom and author
+    But the download tag string for "Hogwarts" should include fandom and author
 
 Scenario: A Series cannot have it’s own fandom and author tags
   Given Counting Drabbles exists

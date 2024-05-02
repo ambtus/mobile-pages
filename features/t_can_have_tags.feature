@@ -14,12 +14,11 @@ Scenario: A Chapter cannot have it’s own fandom and author tags
   Given a Book exists
   Then I can NOT tag "Chapter 1" with fandom and author
 
-Scenario: A Chapter inherits fandom and author tags from parent
+Scenario: A Chapter inherits fandom and author tags from parent, but only when downloaded
   Given a Book exists
   When I can tag "Book" with fandom and author
   Then the download tag string for "Chapter 1" should include fandom and author
-    And the show tags for "Chapter 1" should include fandom and author
-    And the index tags for "Chapter 1" should include fandom and author
+    But the tag_cache for "Chapter 1" should NOT include fandom and author
 
 Scenario: A Series cannot have it’s own fandom and author tags
   Given a series exists

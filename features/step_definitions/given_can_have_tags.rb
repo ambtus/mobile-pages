@@ -68,6 +68,21 @@ Then('the tags for {string} should include fandom and author') do |string|
   assert page.tags.authors.include?(author)
 end
 
+Then('the tag_cache for {string} should include fandom and author') do |string|
+  page = Page.find_by_title(string)
+  tag_cache = page.tag_cache
+  assert_match "Harry Potter", tag_cache
+  assert_match "Sidra", tag_cache
+end
+
+
+Then('the tag_cache for {string} should NOT include fandom and author') do |string|
+  page = Page.find_by_title(string)
+  tag_cache = page.tag_cache
+  assert_no_match "Harry Potter", tag_cache
+  assert_no_match "Sidra", tag_cache
+end
+
 Given('tags exist') do
   fandom = Fandom.find_or_create_by(name: "Harry Potter")
   author = Author.find_or_create_by(name: "Sidra")
