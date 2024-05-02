@@ -18,18 +18,21 @@ Scenario: change from single to chapter
     And I press "Decrease Type"
   Then I should see "Page 1 (Chapter)"
 
-Scenario: change from series to book
+Scenario: change from series to book changes the parts to chapters
   Given Counting Drabbles exists
   When I am on the page's page
     And I press "Decrease Type"
-  Then I should see "Counting Drabbles (Book)"
+  Then I should see "Counting Drabbles (Book)" within ".title"
+  And "Skipping Stones" should be a "Chapter"
 
-Scenario: change from series to book doesn't change the parts
+Scenario: change from chapter to single changes the parent to series
   Given Counting Drabbles exists
   When I am on the page's page
     And I press "Decrease Type"
     And I follow "Skipping Stones"
-  Then I should see "Skipping Stones (Single)"
+    And I press "Increase Type"
+  Then I should see "Skipping Stones (Single)" within ".title"
+  And I should see "Counting Drabbles (Series)" within ".parent"
 
 Scenario: change from book to series
   Given Time Was exists
@@ -51,13 +54,24 @@ Scenario: increase a chapter
     And I press "Increase Type"
   Then I should see "Where am I? (Single)"
 
-Scenario: increase a chapter doesn't increase the parent
+Scenario: increase a chapter increases the parent to series
   Given Time Was exists
   When I am on the page's page
     And I follow "Where am I?"
     And I press "Increase Type"
     And I follow "Time Was, Time Is"
+  Then I should see "Time Was, Time Is (Series)"
+    And "Where am I?" should be a "Single"
+
+Scenario: change from series to book changes the parts to chapters
+  Given Time Was exists
+  When I am on the page's page
+    And I follow "Where am I?"
+    And I press "Increase Type"
+    And I follow "Time Was, Time Is"
+    And I press "Decrease Type"
   Then I should see "Time Was, Time Is (Book)"
+    And "Where am I?" should be a "Chapter"
 
 Scenario: increase a single part
   Given Counting Drabbles exists
