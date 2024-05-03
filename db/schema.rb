@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_29_160720) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_03_200725) do
   create_table "pages", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "url"
     t.string "title"
@@ -24,7 +24,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_29_160720) do
     t.integer "wordcount"
     t.string "size"
     t.integer "stars", limit: 2, default: 10
-    t.integer "ultimate_parent_id"
     t.text "my_notes", size: :medium
     t.string "type"
     t.boolean "hidden", default: false
@@ -35,12 +34,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_29_160720) do
     t.integer "soon", limit: 2, default: 3
     t.boolean "pro", default: false
     t.string "audio_url"
-    t.boolean "reader", default: false
     t.string "tag_cache", default: "", null: false
     t.index ["parent_id"], name: "index_pages_on_parent_id"
     t.index ["size"], name: "index_pages_on_size"
     t.index ["stars"], name: "index_pages_on_stars"
-    t.index ["ultimate_parent_id"], name: "index_pages_on_ultimate_parent_id"
   end
 
   create_table "pages_tags", id: false, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|

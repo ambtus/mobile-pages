@@ -541,7 +541,7 @@ class Page < ActiveRecord::Base
             raise "cannot decrease type"
           end
     update type: new
-    self.parts.map(&:decrease_type) if new = "Book"
+    self.parts.map(&:decrease_type) if new == "Book"
   end
 
   def add_parent(title)
