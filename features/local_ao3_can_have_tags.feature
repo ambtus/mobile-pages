@@ -36,7 +36,7 @@ Scenario: A Book can have fandom and author in notes but a Chapter does not have
 Scenario: A Chapter without fandom and author tags when alone
   Given Time Was exists
   When I am on the page with title "Hogwarts"
-  Then I should see "Other Fandom" within ".fandoms"
+  Then I should NOT see "Other Fandom" within ".fandoms"
     But I should NOT see "Sidra"
     And I should NOT see "Harry Potter"
 

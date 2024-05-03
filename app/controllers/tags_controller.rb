@@ -127,6 +127,7 @@ class TagsController < ApplicationController
     end
     @page.reset_con
     @page.reset_hidden
+    @page.update_tag_cache!
     redirect_to page_path(@page)
   end
 

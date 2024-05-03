@@ -9,8 +9,8 @@ module SpecialTags
 
   def wip_tag; Con.find_or_create_by(name: WIP); end
   def wip_present?; tags.cons.include?(wip_tag);end
-  def set_wip; tags.append(wip_tag) unless wip_present? && reset_con; end
-  def unset_wip; tags.delete(wip_tag) if wip_present? && reset_con; end
+  def set_wip; (tags.append(wip_tag) && reset_con) unless wip_present?; end
+  def unset_wip; (tags.delete(wip_tag) && reset_con) if wip_present? ; end
 
   def tt_tag; Pro.find_or_create_by(name: TT); end
   def tt_present?; tags.pros.include?(tt_tag);end
@@ -25,6 +25,7 @@ module SpecialTags
   def set_of; tags.append(of_tag) unless of_present?; end
   def toggle_of
     of_present? ? tags.delete(of_tag) : self.tags.append(of_tag)
+    self.update_tag_cache!
     return self
   end
 

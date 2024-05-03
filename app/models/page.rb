@@ -84,18 +84,6 @@ class Page < ActiveRecord::Base
     parent.set_type if parent
   end
 
-  def self.remove_all_duplicate_tags
-    Page.where.not(parent_id: nil).each do |page|
-      page.remove_duplicate_tags
-    end
-  end
-
-  def remove_duplicate_tags
-    return unless self.parent #TODO raise error or at least log a problem
-    dups = self.tags & self.parent.tags
-    self.tags.delete(dups)
-  end
-
   def mypath
     prefix = case Rails.env
       when "test"; "/tmp/test/"
@@ -225,7 +213,7 @@ class Page < ActiveRecord::Base
   end
 
   def update_tag_cache; self.tag_cache = self.base_tags; end
-  def update_tag_cache!; update_tag_cache && save!; end
+  def update_tag_cache!; self.update(tag_cache: base_tags); end
   def base_tags
     case type
     when "Chapter", "Single", "Book"
@@ -237,6 +225,9 @@ class Page < ActiveRecord::Base
       ''
     end
   end
+
+  def tag_basenames; tag_cache.split_comma; end
+  def cached_tags; Tag.all.select{|t| tag_basenames.include?(t.base_name)}; end
 
   def full_tag_cache_update
     case type
@@ -472,22 +463,11 @@ class Page < ActiveRecord::Base
     return unless parent.present?
     Rails.logger.debug "moving tags to parent"
     parent.tags << self.tags - self.tags.readers
+    parent.reset_tags
+    parent.update_tag_cache!
     self.tags = self.tags.readers
-    if self.hidden?
-      Rails.logger.debug "moving hidden state to parent"
-      self.unset_hidden
-      parent.set_hidden
-    end
-    if self.con?
-      Rails.logger.debug "moving con state to parent"
-      self.unset_con
-      parent.set_con
-    end
-    if self.pro?
-      Rails.logger.debug "moving pro state to parent"
-      self.unset_pro
-      parent.set_pro
-    end
+    self.update_tag_cache!
+    self.reset_tags
   end
 
   def refetch(passed_url)
@@ -597,14 +577,13 @@ class Page < ActiveRecord::Base
     count = parent.parts.size + 1
     self.update!(parent_id: parent.id, position: count)
     if self.type == "Single" && (parent.type == "Single" || parent.type == "Book")
+      Rails.logger.debug "making me a chapter"
       self.update!(type: Chapter, notes: "") && parent.update!(type: Book)
+      self.move_tags_up
     end
     parent.update_from_parts
-    page = Page.find(self.id)
-    page.parent.set_meta
-    page.set_meta
-    page.remove_duplicate_tags
-    return page.position
+    parent.set_meta
+    return self.position
   end
 
   def parts_string
