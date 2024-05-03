@@ -5,7 +5,7 @@ Scenario: test before omitted
     And a page exists with readers: "my reader" AND title: "Page 2" AND infos: "audio available"
     And a page exists with readers: "my reader" AND title: "Page 3" AND pros: "favorite"
   When I am on the filter page
-    And I click on "show_readers_all"
+    And I click on "show_audios_all"
     And I select "audio available"
     And I press "Find"
   Then I should see "Page 2"
@@ -17,7 +17,7 @@ Scenario: omit one selected
     And a page exists with readers: "my reader" AND title: "Page 2" AND infos: "audio available"
     And a page exists with readers: "my reader" AND title: "Page 3" AND pros: "favorite"
   When I am on the filter page
-    And I click on "show_readers_all"
+    And I click on "show_audios_all"
     And I select "audio available"
     And I click on "selected_infos_exclude"
     And I press "Find"
@@ -30,7 +30,7 @@ Scenario: test before omitted
     And a page exists with readers: "my reader" AND title: "Page 2" AND infos: "audio available"
     And a page exists with readers: "my reader" AND title: "Page 3" AND pros: "favorite"
   When I am on the filter page
-    And I click on "show_readers_all"
+    And I click on "show_audios_all"
     And I select "audio available"
     And I select "favorite"
     And I press "Find"
@@ -42,7 +42,7 @@ Scenario: omit two selected
     And a page exists with readers: "my reader" AND title: "Page 2" AND infos: "audio available"
     And a page exists with readers: "my reader" AND title: "Page 3" AND pros: "favorite"
   When I am on the filter page
-    And I click on "show_readers_all"
+    And I click on "show_audios_all"
     And I select "audio available"
     And I click on "selected_infos_exclude"
     And I select "favorite"

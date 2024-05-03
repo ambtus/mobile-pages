@@ -468,7 +468,7 @@ module Meta
 
   # only used in reader.destroy_me
   def add_reader_to_my_notes(reader)
-    self.update! my_notes: "read by #{reader}#{self.my_notes}"
+    self.update! my_notes: "read by #{reader}<p>#{self.my_notes}"
     return self
   end
 

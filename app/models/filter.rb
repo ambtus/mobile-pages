@@ -93,6 +93,13 @@ class Filter
       end
     end
 
+    if params[:show_audios] == "none"
+        Rails.logger.debug "no audios"
+        pages = pages.where(audio_url: nil)
+    elsif params[:show_audios] == "all"
+        pages = pages.where.not(audio_url: nil)
+    end
+
    excluded=[]
    included=[]
    Tag.types.each do |tag_type|

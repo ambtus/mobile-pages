@@ -115,7 +115,6 @@ class Page < ActiveRecord::Base
   def reset_tags
     reset_hidden
     reset_con
-    reset_reader
     reset_pro
   end
 
@@ -130,10 +129,6 @@ class Page < ActiveRecord::Base
   def set_pro; update_columns pro: true; end
   def unset_pro; update_columns pro: false; end
   def reset_pro; self.tags.pros.present? ? set_pro : unset_pro; end
-
-  def set_reader; update_columns reader: true; end
-  def unset_reader; update_columns reader: false; end
-  def reset_reader; self.tags.readers.present? ? set_reader : unset_reader; end
 
   def set_wordcount(recount=true)
     #Rails.logger.debug "#{self.title} old wordcount: #{self.wordcount} and size: #{self.size}"
@@ -197,6 +192,7 @@ class Page < ActiveRecord::Base
   after_create :initial_fetch
 
   before_save :update_tag_cache
+  before_save :update_reader
 
   scope :with_content, -> { where(type: [Chapter, Single]) }
   scope :with_parts, -> { where(type: [Book, Series])}
@@ -211,6 +207,8 @@ class Page < ActiveRecord::Base
     return [] unless can_have_parts?
     [parts.first, parts[parts.size/2], parts.last].pulverize
   end
+
+  def update_reader; reader = audio_url.present?; end
 
   def update_tag_cache; self.tag_cache = self.base_tags; end
   def update_tag_cache!; self.update(tag_cache: base_tags); end
@@ -644,7 +642,6 @@ class Page < ActiveRecord::Base
     self.set_hidden if type == "Hidden"
     self.set_con if type == "Con"
     self.set_pro if type == "Pro"
-    self.set_reader if type == "Reader"
     string.split(",").each do |try|
       name = try.squish
       exists = Tag.find_by_short_name(name)

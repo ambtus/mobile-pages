@@ -221,7 +221,7 @@ Scenario: pro and hidden but not reader
   Given pages with all combinations of pros and cons and readers and hiddens exist
   When I am on the filter page
     And I select "interesting" from "pro"
-    And I click on "show_readers_none"
+    And I click on "show_audios_none"
     And I press "Find"
   Then I should see "pagep"
     And I should see "pagehp"
@@ -231,7 +231,7 @@ Scenario: pro and hidden but not reader
 Scenario: reader but not con
   Given pages with all combinations of pros and cons and readers and hiddens exist
   When I am on the filter page
-    And I click on "show_readers_all"
+    And I click on "show_audios_all"
     And I click on "show_cons_none"
     And I press "Find"
   Then I should see "pager"
@@ -243,7 +243,7 @@ Scenario: all pros and readers
   Given pages with all combinations of pros and cons and readers and hiddens exist
   When I am on the filter page
     And I click on "show_pros_all"
-    And I click on "show_readers_all"
+    And I click on "show_audios_all"
     And I click on "show_cons_none"
     And I click on "show_hiddens_none"
     And I press "Find"
