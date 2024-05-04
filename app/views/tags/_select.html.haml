@@ -2,7 +2,7 @@
   -dtype = type.downcase
   .div{class: "#{dtype}"}
     = select_tag dtype.to_sym,
-      options_for_select([nil] + type.constantize.names,instance_variable_get("@#{dtype}_name"))
+      options_for_select([nil] + type.constantize.names, @selected[type] || instance_variable_get("@#{dtype}_name"))
     = label_tag dtype.to_sym, type
     -if current_page?(filter_path)
       = radio_button_tag "selected_#{dtype}s".to_sym, 'include'

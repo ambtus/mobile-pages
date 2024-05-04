@@ -64,6 +64,19 @@ class PagesController < ApplicationController
         redirect_to filter_path and return
       end
     end
+    @selected = {}
+    if params[:find]
+      tag = Tag.find_by_short_name(params[:find])
+      @selected[tag.type] = tag.base_name
+    end
+    Tag.types.each do |type|
+      sn = type.downcase.singularize.to_s
+      if params[sn]
+        tag = Tag.find_by_short_name(params[sn])
+        @selected[tag.type] = tag.base_name
+      end
+    end
+    Rails.logger.debug "#{@selected} should be selected"
     @page = Page.new
     @title = "Filter Pages"
   end
@@ -130,6 +143,7 @@ class PagesController < ApplicationController
 
   ## FIXME ugly
   def create
+    @selected = {} # needed for tags/select
     if params[:Refetch]
       @page = Page.find_by_url(params[:page][:url].normalize)
       if @page
