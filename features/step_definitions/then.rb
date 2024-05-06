@@ -109,6 +109,10 @@ Then("the {string} field should contain {string}") do |field, text|
   assert page.has_field?(field, with: text)
 end
 
+Then('{string} should be entered in {string}') do |text, field|
+  assert page.has_field?(field, with: text)
+end
+
 Then("the {string} field should NOT contain {string}") do |field, text|
   assert !page.has_field?(field, with: text)
 end

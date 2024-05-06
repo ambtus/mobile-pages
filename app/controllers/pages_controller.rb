@@ -53,6 +53,7 @@ class PagesController < ApplicationController
     flash.now[:alert] = "No pages found" if @pages.blank?
   end
 
+  ## FIXME can @selected be streamlined?
   def filter
    if params[:url]
       @page = Page.find_by_url(params[:url].normalize)
@@ -61,20 +62,12 @@ class PagesController < ApplicationController
         redirect_to page_path(@page)
       else
         flash[:alert] = "Page not found"
-        redirect_to filter_path and return
       end
     end
-    @selected = {}
     if params[:find]
       tag = Tag.find_by_short_name(params[:find])
-      @selected[tag.type] = tag.base_name
-    end
-    Tag.types.each do |type|
-      sn = type.downcase.singularize.to_s
-      if params[sn]
-        tag = Tag.find_by_short_name(params[sn])
-        @selected[tag.type] = tag.base_name
-      end
+      params[tag.type.downcase] = tag.base_name
+      params.delete(:find)
     end
     Rails.logger.debug "#{@selected} should be selected"
     @page = Page.new

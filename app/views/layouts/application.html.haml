@@ -10,6 +10,7 @@
   %body
     -if Rails.env.development?
       .red.bold.indented DEVELOPMENT
+      params: #{params}
     =render "layouts/links"
     - flash.each do |name, msg|
       = content_tag :div, msg, :id => "flash_#{name}"

@@ -2,15 +2,16 @@
   -dtype = type.downcase
   .div{class: "#{dtype}"}
     = select_tag dtype.to_sym,
-      options_for_select([nil] + type.constantize.names, @selected[type] || instance_variable_get("@#{dtype}_name"))
+      options_for_select([nil] + type.constantize.names, params[dtype] || instance_variable_get("@#{dtype}_name"))
     = label_tag dtype.to_sym, type
     -if current_page?(filter_path)
+      -if Tag.boolean_types.include?(type)
+        = radio_button_tag "show_#{dtype}s".to_sym, 'all'
+        = label_tag "show_#{dtype}s_all".to_sym, 'Show All'
       = radio_button_tag "selected_#{dtype}s".to_sym, 'include'
       = label_tag "selected_#{dtype}s_include".to_sym, 'Include'
       = radio_button_tag "selected_#{dtype}s".to_sym, 'exclude'
       = label_tag "selected_#{dtype}s_exclude".to_sym, 'Exclude'
-    -if current_page?(filter_path) && Tag.boolean_types.include?(type)
-      = radio_button_tag "show_#{dtype}s".to_sym, 'all'
-      = label_tag "show_#{dtype}s_all".to_sym, 'Show All'
-      = radio_button_tag "show_#{dtype}s".to_sym, 'none'
-      = label_tag "show_#{dtype}s_none".to_sym, 'Show None'
+      -if Tag.boolean_types.include?(type)
+        = radio_button_tag "show_#{dtype}s".to_sym, 'none'
+        = label_tag "show_#{dtype}s_none".to_sym, 'Show None'

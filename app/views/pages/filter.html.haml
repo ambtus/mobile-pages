@@ -1,10 +1,5 @@
 .form
   = form_with url: find_path, local: true do |form|
-    -request.query_parameters.each do |key, value|
-      -if key == "find"
-        = hidden_field_tag("tag", value)
-      -else
-        = hidden_field_tag(key, value)
     .url
       = render "page_url"
       = form.submit "Find"
