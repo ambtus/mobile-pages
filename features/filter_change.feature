@@ -122,3 +122,12 @@ Scenario: change url and title
   Then "by" should be entered in "page_title"
     And "test.sidrasue.com" should be entered in "page_url"
 
+Scenario: change tag cache
+  Given tags exist
+    And Counting Drabbles exists
+  When I am on the filter page
+    And I fill in "page_tag_cache" with "Sidra, Popslash"
+    And I click on "Series"
+    And I press "Find"
+    And I press "Change Filter"
+  Then "Sidra, Popslash" should be entered in "page_tag_cache"

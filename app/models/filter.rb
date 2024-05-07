@@ -100,6 +100,14 @@ class Filter
         pages = pages.where.not(audio_url: nil)
     end
 
+    if params[:tag_cache]
+      tags = params[:tag_cache].split_comma
+      Rails.logger.debug "tags #{tags} in tag cache"
+      tags.each do |tag|
+        pages = pages.where("pages.tag_cache LIKE ?", "%#{tag}%")
+      end
+    end
+
    excluded=[]
    included=[]
    Tag.types.each do |tag_type|
