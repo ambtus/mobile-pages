@@ -95,7 +95,7 @@ module Download
     unless self.download_author_string.blank?
       string = string + %Q{ --authors "#{self.download_author_string}"}
     end
-    if self.stars?
+    if self.read? && (self.stars? || self.old_stars?)
       string = hidden? ? string : string + %Q{ --rating "#{self.stars*2}" }
     end
     unless self.download_tag_string.blank?

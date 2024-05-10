@@ -145,3 +145,11 @@ Scenario: work notes go into part download
     And I should see "Chapter Notes:"
     And I should see "ch1 notes"
     But I should NOT see "ch2 notes"
+
+Scenario: unread parts shouldn't show stars in download but its fully read parts should
+  Given I have a partially read series
+  Then the download epub command for "Parent1" should include rating: "8"
+    And the download epub command for "Subpart1" should NOT include "rating"
+    And the download epub command for "Subpart2" should include rating: "6"
+    But the download epub command for "Parent2" should NOT include "rating"
+    And the download epub command for "Grandparent" should NOT include "rating"

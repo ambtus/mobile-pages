@@ -62,6 +62,14 @@ Given('I have a series with read_after {string}') do |string|
   child = Chapter.create!(title: "Subpart", parent_id: parent2.id, position: 1, read_after: string, last_read: string.to_date - 1.year, stars: 4)
 end
 
+Given('I have a partially read series') do
+  series = Series.create!(title: "Grandparent")
+  parent1 = Single.create!(title: "Parent1", parent_id: series.id, position: 1).rate_today(4)
+  parent2 = Book.create!(title: "Parent2", parent_id: series.id, position: 2)
+  Chapter.create!(title: "Subpart1", parent_id: parent2.id, position: 1)
+  Chapter.create!(title: "Subpart2", parent_id: parent2.id, position: 2).rate_today(3)
+end
+
 Given('I have a book with read_after {string}') do |string|
   parent = Single.create!(title: "Parent", read_after: string, last_read: string.to_date - 1.year, stars: 4)
   child = Chapter.create!(title: "Part 1", parent_id: parent.id, position: 1, read_after: string, last_read: string.to_date - 1.year, stars: 4)

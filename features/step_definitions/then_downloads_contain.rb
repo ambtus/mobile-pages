@@ -29,6 +29,11 @@ Then /^the download epub command should NOT include (.+): "([^"]*)"$/ do |option
   assert !Page.first.epub_command.match("--#{option} \"[^\"]*#{text}[^\"]*\"")
 end
 
+Then('the download epub command for {string} should NOT include {string}') do |title, cmd|
+  page = Page.find_by_title(title)
+  assert !page.epub_command.match(cmd)
+end
+
 Then /^the download epub command for "([^"]*)" should include (.+): "([^"]*)"$/ do |title, option, text|
   Rails.logger.debug "page with title #{title} should have epub with #{option} #{text}"
   epub_tags = Page.find_by_title(title).epub_tags

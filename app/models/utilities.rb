@@ -18,11 +18,19 @@ module Utilities
     page.remove_outdated_downloads
     tag_types.compact.each {|key, value| page.send("add_tags_from_string", value, key)}
     if page.can_have_parts?
-      page.parts.update_all last_read: hash[:last_read], stars: hash[:stars] || 10, read_after: hash[:read_after], updated_at: hash[:updated_at]
+      if hash[:last_read] || hash[:updated_at] || hash[:read_after]
+        page.parts.update_all last_read: hash[:last_read], stars: hash[:stars] || 10, read_after: hash[:read_after], updated_at: hash[:updated_at]
+      elsif hash[:stars]
+        page.parts.each {|p| p.rate_today(hash[:stars])}
+      end
       page.update_from_parts
     else
-      page.update last_read: hash[:last_read], stars: hash[:stars] || 10, updated_at: hash[:updated_at]
-      page.update_read_after if hash[:read_after].blank?
+      if hash[:last_read] || hash[:updated_at] || hash[:read_after]
+        page.update last_read: hash[:last_read], stars: hash[:stars] || 10, updated_at: hash[:updated_at]
+        page.update_read_after if hash[:read_after].blank?
+      elsif hash[:stars]
+        page.rate_today(hash[:stars])
+      end
     end
     page.update position: hash[:position]
     page.add_fandoms_to_notes(inferred_fandoms.split(",")) if inferred_fandoms

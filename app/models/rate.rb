@@ -4,6 +4,7 @@ module Rate
 
   def unrated?; stars == 10; end
   def stars?; [5,4,3].include?(self.stars); end
+  def old_stars?; [2,1].include?(self.stars); end
   def star_string
     if stars?
       "#{stars} " + "star".pluralize(stars)
