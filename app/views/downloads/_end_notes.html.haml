@@ -1,4 +1,4 @@
--if page.at_end
+-if page.at_end && page.end_notes.present?
   %b Page Endnotes:
   .end_notes=simple_format page.end_notes
 

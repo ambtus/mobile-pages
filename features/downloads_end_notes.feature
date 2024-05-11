@@ -65,3 +65,10 @@ Scenario: if they were after, and i toggle them all, they should be before
   Then I should see "chapter 1 end notes" before "Retrieved from the web 1"
   And I should see "chapter 2 end notes" before "Retrieved from the web 2"
     And I should see a horizontal rule
+
+Scenario: if i toggle them all after, they should only show if they exists
+  Given a work exists with toggled chapter end_notes
+  When I read it online
+  Then I should see "Page Endnotes:" before "chapter 1 end notes"
+    And I should see "Page Endnotes:" before "chapter 3 end notes"
+    And I should see exactly 2 "Page Endnotes:"

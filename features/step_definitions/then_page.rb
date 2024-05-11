@@ -151,6 +151,10 @@ Then('{string} should have {int} horizontal rules') do |string, int|
   assert_equal int, page.scrubbed_html.scan(/<hr/).count
 end
 
+Then('I should see exactly {int} {string}') do |int, string|
+  assert_equal int, page.html.scan(string).count
+end
+
 Then('all pages should be rated {int}') do |int|
   assert_equal [int], Page.all.map(&:stars).uniq
 end

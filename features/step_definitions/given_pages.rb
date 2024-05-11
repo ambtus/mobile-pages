@@ -176,6 +176,14 @@ Given('a work exists with chapter end_notes at end') do
   book.update_from_parts
 end
 
+Given('a work exists with toggled chapter end_notes') do
+  book = Book.create(title: "Book")
+  Chapter.create(title: "ch1", parent_id: book.id, position: 1, end_notes: "chapter 1 end notes", url: "http://test.sidrasue.com/test1.html")
+  Chapter.create(title: "ch2", parent_id: book.id, position: 2, url: "http://test.sidrasue.com/test2.html")
+  Chapter.create(title: "ch3", parent_id: book.id, position: 3, end_notes: "chapter 3 end notes", url: "http://test.sidrasue.com/test3.html")
+  book.parts.update_all(at_end: true)
+end
+
 Given('a long partially read page exists') do
   book = Book.create(title: 'Book')
   10.times {|i| Chapter.create(title: "Part #{i+1}", parent_id: book.id, position: i+1, url: "https://www.fanfiction.net/s/7347955/#{i+1}/Dreaming-of-Sunshine", last_read: "2009-01-01", stars: 4)}
