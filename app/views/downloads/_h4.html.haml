@@ -1,4 +1,4 @@
-%h4{:style=> "page-break-before:always", :class => "chapter", :id => ggchild.download_part_title.sum.to_s}=link_to ggchild.download_part_title, @url + page_path(ggchild)
+%h4{:style=> "page-break-before:always", :class => "chapter", :id => ggchild.header_id}=link_to ggchild.download_part_title, @url + page_path(ggchild)
 =render :partial => "downloads/notes", :locals => {:page => ggchild} if ggchild.show_notes
 .content=raw ggchild.epub_html
 =render :partial => "downloads/end_notes", :locals => {page: ggchild}

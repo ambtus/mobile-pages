@@ -1,4 +1,4 @@
-%h2{:style=> "page-break-before:always", :class => "chapter", :id => child.download_part_title.sum.to_s}=link_to child.download_part_title, @url + page_path(child)
+%h2{:style=> "page-break-before:always", :class => "chapter", :id => child.header_id}=link_to child.download_part_title, @url + page_path(child)
 =render :partial => "downloads/notes", :locals => {:page => child} if child.show_notes
 
 - if child.parts.empty?

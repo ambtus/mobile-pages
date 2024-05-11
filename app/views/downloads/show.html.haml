@@ -1,4 +1,4 @@
-%h1{:style=> "page-break-before:always", :class => "chapter", :id => @page.title.sum.to_s}=link_to @page.title, @url + page_path(@page)
+%h1{:style=> "page-break-before:always", :class => "chapter", :id => @page.header_id}=link_to @page.title, @url + page_path(@page)
 =render :partial => "downloads/notes", :locals => {:page => @page.parent} if @page.parent && @page.parent.show_notes
 =render :partial => "downloads/notes", :locals => {:page => @page} if @page.show_notes
 

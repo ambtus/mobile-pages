@@ -6,8 +6,8 @@ Then('I should have {int} page(s)') do |int|
 end
 
 Then('{string} should link to itself') do |string|
-  href = page.find("##{string.sum}").find_link(string)['href']
   itself = Page.find_by_title(string) || Page.find_by_title(string.partition('. ').last)
+  href = page.find("##{itself.header_id}").find_link(string)['href']
   Rails.logger.debug "link: page #{itself.id} should be at #{href}"
   assert_match "/pages/#{itself.id}", href
 end

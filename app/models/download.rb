@@ -36,6 +36,7 @@ module Download
 
   def download_part_title; title_w_position + download_suffix; end
 
+  def header_id; title.clean; end
 
   def remove_outdated_downloads
     if self.id
