@@ -73,3 +73,61 @@ Scenario: limit number of found pages
     And I should see "Page 4"
     And I should see "Page 5"
     But I should NOT see "Page 6"
+
+Scenario: find by exact title
+  Given three re-entry works exist
+  When I am on the mini page
+    And I fill in "page_url" with "re-entry"
+    And I press "Find"
+  Then I should see "Page found"
+    And I should see "Re-Entry (Single)"
+    And I should NOT see "delayed"
+    And I should NOT see "Whills"
+
+Scenario: normalize url bug
+  Given three re-entry works exist
+  When I am on the mini page
+    And I fill in "page_url" with "Re-Entry: Journey of the Whills"
+    And I press "Find"
+  Then I should see "Page found"
+    And I should see "Re-Entry: Journey of the Whills (Single)"
+    And I should NOT see "delayed"
+    And I should NOT see "Re-Entry (Single)"
+
+Scenario: multimatch from find
+  Given three re-entry works exist
+  When I am on the mini page
+    And I fill in "page_url" with "Entry"
+    And I press "Find"
+  Then I should see "Pages found"
+    And I should see "delayed re-entry" within "#position_1"
+    And I should see "Re-Entry" within "#position_2"
+    And I should see "Re-Entry: Journey of the Whills" within "#position_3"
+
+Scenario: no match from find
+  Given three re-entry works exist
+  When I am on the mini page
+    And I fill in "page_url" with "endry"
+    And I press "Find"
+  Then I should see "Page not found"
+    And "endry" should be entered in "page_title"
+    But "endry" should NOT be entered in "page_url"
+
+Scenario: more than five matches
+  Given 7 pages exist
+  When I am on the mini page
+    And I fill in "page_url" with "Page"
+    And I press "Find"
+  Then I should see "More than 5 Pages found"
+    And I should see "Page 1"
+    But I should NOT see "Page 6"
+    And the page should NOT contain css "#position_6"
+    But I should have button "Change Filter"
+
+Scenario: and the button should work
+  Given 7 pages exist
+  When I am on the mini page
+    And I fill in "page_url" with "Page"
+    And I press "Find"
+    And I press "Change Filter"
+  Then "Page" should be entered in "page_title"

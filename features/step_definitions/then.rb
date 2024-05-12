@@ -117,6 +117,10 @@ Then("the {string} field should NOT contain {string}") do |field, text|
   assert !page.has_field?(field, with: text)
 end
 
+Then('{string} should NOT be entered in {string}') do |text, field|
+  assert !page.has_field?(field, with: text)
+end
+
 Then("the page should NOT contain css {string}") do |field|
   assert !page.has_css?(field)
 end

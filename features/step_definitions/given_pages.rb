@@ -212,3 +212,9 @@ Given('the single has a parent') do
   parent = Series.create(title: "Parent")
   page.add_parent("Parent")
 end
+
+Given('three re-entry works exist') do
+  Single.create(title: "delayed re-entry")
+  Single.create(title: "Re-Entry")
+  Single.create(title: "Re-Entry: Journey of the Whills")
+end

@@ -53,7 +53,6 @@ class PagesController < ApplicationController
     flash.now[:alert] = "No pages found" if @pages.blank?
   end
 
-  ## FIXME can @selected be streamlined?
   def filter
    if params[:url]
       @page = Page.find_by_url(params[:url].normalize)
@@ -69,7 +68,6 @@ class PagesController < ApplicationController
       params[tag.type.downcase] = tag.base_name
       params.delete(:find)
     end
-    Rails.logger.debug "#{@selected} should be selected"
     @page = Page.new
     @title = "Filter Pages"
   end
@@ -136,7 +134,6 @@ class PagesController < ApplicationController
 
   ## FIXME ugly
   def create
-    @selected = {} # needed for tags/select
     if params[:Refetch]
       @page = Page.find_by_url(params[:page][:url].normalize)
       if @page
@@ -154,11 +151,29 @@ class PagesController < ApplicationController
     if params[:Find]
       normalized = params[:page][:url].normalize
       if normalized.blank? && params[:page][:url].present?
-        Rails.logger.debug params[:page][:url]
-        @page = Page.where("lower(title) LIKE ?", "%" + params[:page][:url].downcase + "%").first
+        @title = params[:page][:url]
+        params[:page].delete(:url)
+        params[:page][:title] = @title
+        @pages = Page.where('lower(title) = ?', @title.downcase).all
+        @pages = Page.where("lower(title) LIKE ?", "%" + @title.downcase + "%").all if @pages.blank?
+        Rails.logger.debug "possibles #{@pages.map(&:title)} from #{@title}"
       elsif normalized.present?
-        Rails.logger.debug normalized
+        Rails.logger.debug "normalized: #{normalized}"
         @page = Page.find_by_url(normalized)
+      end
+      if @pages.present?
+        if @pages.size == 1
+          @page = @pages.first
+        elsif @pages.size > 5
+          flash[:notice] = "More than 5 Pages found"
+          page = params.delete(:page)
+          query = params.to_unsafe_h.merge(page.to_unsafe_h)
+          Rails.logger.debug query
+          redirect_to pages_path(query) and return
+        else
+          flash[:notice] = "Pages found"
+          render :index and return
+        end
       end
       if @page
         flash[:notice] = "Page found"
@@ -168,7 +183,6 @@ class PagesController < ApplicationController
         flash[:alert] = "Page not found."
         @page = Page.new(params[:page].permit!)
         render :create and return
-        return
       end
     end
     consolidate_tag_ids
