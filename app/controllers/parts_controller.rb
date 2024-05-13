@@ -53,6 +53,8 @@ class PartsController < ApplicationController
          render 'choose' and return
       when "content"
          flash[:alert] = "Parent with that title has content"
+      when "normalized"
+         flash[:alert] = "No page with that url"
       when Page
          flash[:notice] = "Page added to this parent"
          @count = @page.position > Page::LIMIT ? @page.position - Page::LIMIT : 0

@@ -150,3 +150,24 @@ Scenario: add a part doesn't match the parent's read_after
     And the read after date for "Part 1" should be "2050-01-01"
     And the read after date for "Part 2" should be today
 
+
+Scenario: can add parent by url
+  Given Time Was partially exists
+    And I add the second chapter manually
+  When I am on the page with title "Hogwarts"
+    And I add a parent with title "https://archiveofourown.org/works/692"
+  Then I should see "Page added to this parent"
+    And my page named "Time Was, Time Is" should have 2 parts
+    And I should see "Time Was, Time Is (Book)"
+    And I should see "Hogwarts" within "#position_2"
+    And "Hogwarts" should be a "Chapter"
+
+Scenario: cannot add parent by url if not existant
+  Given Time Was partially exists
+    And I add the second chapter manually
+  When I am on the page with title "Hogwarts"
+    And I add a parent with title "https://archiveofourown.org/works/69"
+  Then I should NOT see "Page added to this parent"
+    And I should see "No page with that url"
+    And my page named "Time Was, Time Is" should have 1 parts
+    And my page named "Hogwarts" should not have a parent

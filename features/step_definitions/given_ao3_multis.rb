@@ -46,6 +46,12 @@ Given /^Time Was partially exists$/ do
   page.update_from_parts
 end
 
+Given /^I add the second chapter manually$/ do
+  chapter2 = Single.create!(title: "temp")
+  chapter2.update!(url: "https://archiveofourown.org/works/692/chapters/804")
+  chapter2.set_raw_from("hogwarts_new")
+end
+
 Given /^Counting Drabbles exists$/ do
   series = Series.create!(title: "Counting Drabbles")
   series.update!(url: "https://archiveofourown.org/series/46")

@@ -545,11 +545,25 @@ class Page < ActiveRecord::Base
   end
 
   def add_parent(title)
-    raise "cannot add parent" unless can_have_tags?
-    parent=Page.find_by_title(title)
-    Rails.logger.debug "parent #{title} found? #{parent.is_a?(Page)}"
+    normalized = title.normalize
+    parent = nil
+    if normalized.present?
+     parent=Page.find_by_url(normalized)
+     Rails.logger.debug "page #{normalized} found by url"
+    else
+      parent=Page.find_by_title(title)
+      Rails.logger.debug "page #{title} found by title"
+    end
     if parent.is_a?(Page)
-      return "content" if parent.has_content?
+      if parent.has_content?
+        Rails.logger.debug "page has content and cannot be a parent"
+        return "content"
+      else
+        Rails.logger.debug "page can be a parent"
+      end
+    elsif normalized.present?
+      Rails.logger.debug "cannot make a parent with url as title"
+      return "normalized"
     else
       pages=Page.where(["Lower(title) LIKE ?", "%" + title.downcase + "%"])
       potentials = pages.reject {|p| p.has_content?}

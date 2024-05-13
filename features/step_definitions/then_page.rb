@@ -163,3 +163,8 @@ Then('I should have {int} reading page(s)') do |int|
   Rails.logger.debug "comparing #{Page.reading.count} with #{int}"
   assert_equal int, Page.reading.count
 end
+
+Then('my page named {string} should not have a parent') do |string|
+  page = Page.find_by(title: string)
+  assert_equal nil, page.parent
+end
