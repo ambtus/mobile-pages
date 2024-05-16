@@ -218,3 +218,8 @@ Given('three re-entry works exist') do
   Single.create(title: "Re-Entry")
   Single.create(title: "Re-Entry: Journey of the Whills")
 end
+
+Given('part {int} has reader {string}') do |int, string|
+  part = Page.first.parts[int-1]
+  part.add_tags_from_string(string, type="Reader")
+end

@@ -85,3 +85,16 @@ Scenario: show_audios_none should only show if there is not an audio url
     And I should see "Page 1"
     And I should see "Page 3"
     But I should NOT see "Page 2"
+
+Scenario: filter on reader should not filter out parts
+  Given Counting Drabbles exists
+    And part 1 has reader "Author"
+    And part 2 has reader "Sidra"
+  When I am on the filter page
+    And I select "Author" from "Reader"
+    And I press "Find"
+  Then I should NOT see "No pages found"
+    And I should see "Skipping"
+    But I should NOT see "Flower"
+    And the page should NOT contain css "#position_2"
+

@@ -1,6 +1,6 @@
 Feature: filter by unread (unread, unread parts, read)
 
-Scenario: check before filter (default) pt1
+Scenario: check before filter (default)
   Given pages with all possible unreads exist
   When I am on the filter page
     And I press "Find"
@@ -9,11 +9,6 @@ Scenario: check before filter (default) pt1
     And I should see "not read series"
     And I should see "partially read book"
     And I should see "partially read series"
-
-Scenario: check before filter (default) pt2
-  Given pages with all possible unreads exist
-  When I am on the filter page
-    And I press "Find"
     And I press "Next"
   Then I should see "yes read single"
     And I should see "yes read book"

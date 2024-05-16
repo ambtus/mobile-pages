@@ -13,16 +13,12 @@ Scenario: Crazy Little Thing summary multiline
   Then I should see "For Stiles, all roads would eventually"
     And I should see "knocked unconscious and abducted."
 
-Scenario: Something In My Liberty author note multiline pt1
+Scenario: Something In My Liberty author note multiline
   Given Something exists
   When I am on the page's page
   Then I should see "Trope Bingo #Pregnancy"
     And I should see "full notes"
-
-Scenario: Something In My Liberty author note multiline pt2
-  Given Something exists
-  When I am on the page's page
-    And I follow "full notes"
+  When I follow "full notes"
   Then I should see "not sorry"
     And I should see "as Kamaria."
 

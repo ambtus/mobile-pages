@@ -13,74 +13,103 @@ class Filter
     Rails.logger.debug "Filter.new(#{params})"
     pages = Page.all
 
-    if params[:soon]
-      if params[:soon] == "Now"
-        pages = pages.where(soon: [0,1,2])
-      elsif params[:soon] == "Never"
-        pages = pages.where(soon: [3,4])
-      else
-        index = Soon::LABELS.index(params[:soon])
-        pages = pages.where(soon: index)
-      end
-    end
-
-    if params[:type]
-      if params[:type] == "none"
-        pages = pages.where(type: nil)
-      elsif params[:type] == "all"
-      else
-        pages = pages.where(type: params[:type])
-      end
-    end
-
-    # ignore parts unless asking for a type or a url or a title or a fandom or author or sorting on last_created
-    # TODO should this be an if, instead of an unless? blacklist or whitelist?
-    unless params[:type] || params[:url] || params[:audio_url] || params[:title] || params[:fandom] || params[:author] || params[:sort_by] == "last_created"
+    # ignore parts if haven't made any choices at all
+    if params.blank? || params.without(:count).blank?
       pages = pages.where(:parent_id => nil)
     end
-    # ignore parts if filtering on size unless you've chosen a type
-    pages = pages.where(:parent_id => nil) if params[:size] && !params[:type]
 
-    pages = pages.where(:last_read => nil) if params[:unread] == "Unread"
-    pages = pages.where(:last_read => Page::UNREAD_PARTS_DATE) if params[:unread] == "Parts"
-    pages = pages.where.not(:last_read => [nil, Page::UNREAD_PARTS_DATE]) if params[:unread] == "Read"
+    case params[:soon]
+    when "Now"
+      pages = pages.where(soon: [0,1,2])
+    when "Never"
+      pages = pages.where(soon: [3,4])
+    when nil
+    else
+      index = Soon::LABELS.index(params[:soon])
+      pages = pages.where(soon: index)
+    end
 
-    pages = pages.where(:stars => params[:stars]) unless params[:stars].to_i == 0
-    pages = pages.where(:stars => [5,4]) if params[:stars] == "Better"
-    pages = pages.where.not(:stars => [10,5,4,3]) if params[:stars] == "other"
+    case params[:type]
+    when "none"
+      pages = pages.where(type: nil)
+    when "all"
+    when nil
+      # ignore parts if filtering on size unless you've chosen a size
+      pages = pages.where(:parent_id => nil) if params[:size]
+    else
+      pages = pages.where(type: params[:type])
+    end
 
-    pages = pages.where(:size => params[:size]) if Page::SIZES.include?(params[:size])
-    pages = pages.where(:size => ["short", "drabble"]) if params[:size] == "Shorter"
-    pages = pages.where(:size => ["long", "epic"]) if params[:size] == "Longer"
+    case params[:unread]
+    when "Unread"
+      pages = pages.where(:last_read => nil)
+      # ignore parts if filtering on unread unless you've chosen a type
+      pages = pages.where(:parent_id => nil) unless params[:type]
+    when "Parts"
+      pages = pages.where(:last_read => Page::UNREAD_PARTS_DATE)
+    when "Read"
+      pages = pages.where.not(:last_read => [nil, Page::UNREAD_PARTS_DATE])
+      # ignore parts if filtering on unread unless you've chosen a type
+      pages = pages.where(:parent_id => nil) unless params[:type]
+    end
+
+    case params[:stars]
+    when "Better"
+      pages = pages.where(:stars => [5,4])
+    when "other"
+      pages = pages.where.not(:stars => [10,5,4,3])
+    when nil
+    else
+      pages = pages.where(:stars => params[:stars])
+    end
+
+    case params[:size]
+    when "Shorter"
+      pages = pages.where(:size => ["short", "drabble"])
+    when "Longer"
+      pages = pages.where(:size => ["long", "epic"])
+    when nil
+    else
+      pages = pages.where(:size => params[:size])
+    end
 
     [:title, :notes, :my_notes].each do |attrib|
       pages = pages.where("LOWER(pages.#{attrib.to_s}) LIKE ?", "%#{params[attrib].downcase}%") if params.has_key?(attrib)
     end
 
-    pages = pages.where("pages.audio_url LIKE ?", "%#{params[:audio_url]}%") unless params[:audio_url].blank?
-
-    if params.has_key?(:url) # strip the https? in case it was stored under the other
-      pages = pages.where("pages.url LIKE ?", "%#{params[:url].sub(/^https?/, '')}%")
+    [:url, :audio_url].each do |attrib|
+      pages = pages.where("pages.#{attrib.to_s} LIKE ?", "%#{params[attrib].normalize}%") if params.has_key?(attrib)
     end
 
-    pages = case params[:sort_by]
-      when "last_read"
-        pages.order('last_read DESC')
-      when "first_read"
-        pages = pages.where('pages.last_read is not null')
-        pages.order('last_read ASC')
-      when "random"
-        pages.random
-      when "last_created"
-        pages.order('created_at DESC')
-      when "first_created"
-        pages.order('created_at ASC')
-      when "longest"
-        pages.order('wordcount DESC')
-      when "shortest"
-        pages.order('wordcount ASC')
-      else
-        pages.order('read_after ASC')
+    case params[:sort_by]
+    when "last_read"
+      pages = pages.order('last_read DESC')
+    when "first_read"
+      pages = pages.where('pages.last_read is not null').order('last_read ASC')
+    when "random"
+      pages = pages.random
+    when "last_created"
+      pages = pages.order('created_at DESC')
+    when "first_created"
+      pages = pages.order('created_at ASC')
+    when "longest"
+      pages = pages.order('wordcount DESC')
+      # ignore parts if filtering on length unless you've chosen a type
+      pages = pages.where(:parent_id => nil) unless params[:type]
+    when "shortest"
+      pages = pages.order('wordcount ASC')
+      # ignore parts if filtering on length unless you've chosen a type
+      pages = pages.where(:parent_id => nil) unless params[:type]
+    else
+      pages = pages.order('read_after ASC')
+    end
+
+    case params[:show_audios]
+    when "none"
+      Rails.logger.debug "no audios"
+      pages = pages.where(audio_url: nil)
+    when "all"
+      pages = pages.where.not(audio_url: nil)
     end
 
     Tag.boolean_types.map(&:downcase).each do |tag_type|
@@ -91,13 +120,6 @@ class Filter
         Rails.logger.debug "all #{tag_type}s"
         pages = pages.where(tag_type.to_sym => true)
       end
-    end
-
-    if params[:show_audios] == "none"
-        Rails.logger.debug "no audios"
-        pages = pages.where(audio_url: nil)
-    elsif params[:show_audios] == "all"
-        pages = pages.where.not(audio_url: nil)
     end
 
     if params[:tag_cache]
