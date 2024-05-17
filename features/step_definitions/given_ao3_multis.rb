@@ -163,7 +163,7 @@ Given('Iterum Rex exists') do
   step "Brave New World exists"
   book = Book.find_by_title("Brave New World")
   book.update!(parent_id: series.id, position: 2)
-  series.rebuild_meta
+  series.update_from_parts # don't rebuild meta, it will force an ao3 call
 end
 
 Given('Cold Water exists') do

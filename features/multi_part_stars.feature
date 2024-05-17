@@ -1,6 +1,6 @@
 Feature: parts can differ in stars from parent
 
-Scenario: average if no mode
+Scenario: average
   Given Uneven exists
   When I am on the page with title "Uneven"
   Then I should see "1 unread part (2010-01-01)" within ".last_read"
@@ -11,7 +11,7 @@ Scenario: average if no mode
     And I should see "4 stars" within "#position_4"
     And I should see "unread" within "#position_5"
 
-Scenario: stars as mode (most common)
+Scenario: stars as average (not mode)
   Given Uneven exists
   When I am on the page with title "Uneven"
     And I follow "Rate" within "#position_5"
@@ -20,7 +20,7 @@ Scenario: stars as mode (most common)
     And I am on the page with title "Uneven"
   Then I should see "2010-01-01" within ".last_read"
     But I should NOT see "unread parts"
-    And I should see "3 stars" within ".stars"
+    And I should see "old stars (2)" within ".stars"
     And I should see "3 stars" within "#position_5"
     And I should NOT see "unread"
 

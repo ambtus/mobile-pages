@@ -115,16 +115,11 @@ module Rate
     if stars.include?(9)
       self.update!(stars: 9)
     else
-      mode = stars.mode
-      if mode
-        self.update!(stars: mode)
+      if stars.empty?
+        Rails.logger.debug "no change (no stars)"
       else
-        if stars.empty?
-          Rails.logger.debug "no change (no stars)"
-        else
-          average = stars.sum / stars.size
-          self.update!(stars: average)
-        end
+        average = stars.sum / stars.size
+        self.update!(stars: average)
       end
     end
     Rails.logger.debug "new stars: #{self.stars}"

@@ -60,7 +60,7 @@ Scenario: rate all unread as unfinished
     And I press "Rate"
     And I am on the page with title "Uneven"
   Then I should NOT see "unread"
-    But I should see "3 stars" within ".stars"
+    But I should see "old stars (2)" within ".stars"
     And I should see "unfinished" within ".cons"
     But I should NOT see "unfinished" within "#position_5"
     And I should see "3 stars" within "#position_5"
