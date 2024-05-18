@@ -4,7 +4,7 @@ Scenario: average
   Given Uneven exists
   When I am on the page with title "Uneven"
   Then I should see "1 unread part (2010-01-01)" within ".last_read"
-    And I should see "old stars (2)" within ".stars"
+    And I should see "3 stars" within ".stars"
     And I should see "old stars (1)" within "#position_1"
     And I should see "old stars (2)" within "#position_2"
     And I should see "3 stars" within "#position_3"
@@ -20,7 +20,7 @@ Scenario: stars as average (not mode)
     And I am on the page with title "Uneven"
   Then I should see "2010-01-01" within ".last_read"
     But I should NOT see "unread parts"
-    And I should see "old stars (2)" within ".stars"
+    And I should see "3 stars" within ".stars"
     And I should see "3 stars" within "#position_5"
     And I should NOT see "unread"
 
@@ -72,4 +72,3 @@ Scenario: rate all with stars rates all
     And I should see "5 stars" within "#position_3"
     And I should see "5 stars" within "#position_4"
     And I should see "5 stars" within "#position_5"
-

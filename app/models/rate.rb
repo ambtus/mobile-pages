@@ -118,8 +118,8 @@ module Rate
       if stars.empty?
         Rails.logger.debug "no change (no stars)"
       else
-        average = stars.sum / stars.size
-        self.update!(stars: average)
+        average = stars.sum.to_f / stars.size
+        self.update!(stars: average.round)
       end
     end
     Rails.logger.debug "new stars: #{self.stars}"
