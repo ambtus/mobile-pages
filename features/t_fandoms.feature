@@ -131,14 +131,31 @@ Scenario: edit a fandoms
     And I follow "Harry Potter"
   Then I should see "Edit tag: Harry Potter"
 
-Scenario: change the fandom name
-  Given "fantasy" is a "Fandom"
+Scenario: change the fandom name and change base_name
+  Given a page exists with fandoms: "fantasy" AND infos: "historical"
+    And the tag "historical" is destroyed without caching
   When I am on the edit tag page for "fantasy"
     And I fill in "tag_name" with "speculative fiction"
     And I press "Update"
     And I am on the filter page
   Then I should be able to select "speculative fiction" from "fandom"
     And I should NOT see "fantasy"
+    And the tag_cache should include "speculative fiction"
+    And the tag_cache should NOT include "fantasy"
+    And the tag_cache should NOT include "historical"
+
+Scenario: change the fandom name and do not change base_name should not call update_tag_cache
+  Given a page exists with fandoms: "fantasy" AND infos: "historical"
+    And the tag "historical" is destroyed without caching
+  When I am on the edit tag page for "fantasy"
+    And I fill in "tag_name" with "fantasy (some other things)"
+    And I press "Update"
+    And I am on the filter page
+  Then I should be able to select "fantasy" from "fandom"
+    And I should NOT see "some other things"
+    And the tag_cache should include "fantasy"
+    But the tag_cache should NOT include "some"
+    And the tag_cache should include "historical"
 
 Scenario: show number of pages for fandom
   Given a page exists with fandoms: "Twilight"

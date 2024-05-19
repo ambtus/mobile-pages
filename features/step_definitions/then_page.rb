@@ -168,3 +168,8 @@ Then('my page named {string} should not have a parent') do |string|
   page = Page.find_by(title: string)
   assert_equal nil, page.parent
 end
+
+Given('the tag {string} is destroyed without caching') do |string|
+  tag = Tag.find_by(name: string)
+  tag.destroy
+end

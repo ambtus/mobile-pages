@@ -69,7 +69,6 @@ class TagsController < ApplicationController
         @tag.pages.map(&:reset_con)
       end
       @tag.pages.map(&:remove_outdated_downloads)
-      @tag.pages.map(&:update_tag_cache!)
       redirect_to tags_path + "##{@tag.class}"
     elsif params[:commit] == "Split"
       if params[:first_tag_name] == params[:second_tag_name]
@@ -101,9 +100,13 @@ class TagsController < ApplicationController
       end
       redirect_to tags_path + "##{@tag.class}" and return
     elsif params[:commit] == "Update"
+      old_basename = @tag.base_name
       @tag.update_attribute(:name, params[:tag][:name])
       @tag.pages.map(&:remove_outdated_downloads)
-      @tag.pages.map(&:update_tag_cache!)
+      if @tag.base_name != old_basename
+        Rails.logger.debug "changed base name requires rechache from #{old_basename} to #{@tag.base_name}"
+        @tag.pages.map(&:update_tag_cache!)
+      end
       redirect_to tags_path + "##{@tag.class}"
     else
       render :edit
