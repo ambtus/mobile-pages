@@ -171,7 +171,7 @@ class Page < ActiveRecord::Base
   belongs_to :parent, class_name: "Page", optional: true
 
   def ultimate_parent  # note: ultimate parent is self, not nil, if self has no parent...
-    if parent_id.blank?
+    if parent.blank?
       self
     else
       parent.ultimate_parent

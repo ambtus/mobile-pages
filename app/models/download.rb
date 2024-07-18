@@ -65,7 +65,7 @@ module Download
   end
   def all_bns;
     mine = download_tag_bns
-    my_parents = self.parent_id.blank? ? [] : self.parent.all_bns
+    my_parents = self.parent.blank? ? [] : self.parent.all_bns
     (mine + my_parents).pulverize
   end
   def download_tag_string; hidden? ? tags.hiddens.joined : "#{size}, #{all_bns.join_comma}"; end
@@ -73,7 +73,7 @@ module Download
   ## --comments
   def pros_and_cons
     mine = self.tags.pros.by_name + self.tags.cons.by_name
-    my_parents = self.parent_id.blank? ? [] : self.parent.pros_and_cons
+    my_parents = self.parent.blank? ? [] : self.parent.pros_and_cons
     (mine + my_parents).pulverize
   end
   def pros_and_cons_string
