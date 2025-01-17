@@ -202,4 +202,56 @@ module Scrub
     return content.body.force_encoding(Scrub.agent.page.encoding)
   end
 
+  def self.get_ao3_works_from_list(work_list, parent=Page.new)
+    works = []
+    work_list.each_with_index do |work_id, index|
+      count = index + 1
+      url = "https://archiveofourown.org/works/#{work_id}"
+      work = Page.find_by_url(url)
+      if work.nil?
+        #do its chapters exist?
+        possibles = Page.where("url LIKE ?", url + "/chapters/%")
+      end
+      if possibles
+        possibles.each do |p|
+          if p.parent && p.parent == parent
+           Rails.logger.debug "selecting from my first level possibles #{p.title}"
+           work = p
+           break
+          elsif p.parent && p.parent.parent.nil?
+           Rails.logger.debug "selecting from unclaimed first level possibles #{p.parent.title}"
+           work = p.parent
+           break
+          elsif p.parent && p.parent && p.parent.parent == parent
+            Rails.logger.debug "selecting from my second level possibles #{p.parent.title}"
+            work = p.parent
+            break
+          elsif p.parent && p.parent.parent && p.parent.parent.parent.nil?
+            Rails.logger.debug "selecting from unclaimed second level possibles #{p.parent.parent.title}"
+            work = p.parent.parent
+            break
+          end
+        end
+      end
+      if work
+        if work.position == count && work.parent_id == parent.id
+          Rails.logger.debug "work already exists, skipping #{work.title} in position #{count}"
+        elsif parent.id
+          Rails.logger.debug "work already exists, updating #{work.title} with position #{count} and parent_id #{parent.id}"
+          work.update!(position: count, parent_id: parent.id)
+        end
+      elsif parent.id
+        Rails.logger.debug "work does not yet exist, creating ao3/works/#{work_id} in position #{count} and parent_id #{parent.id}"
+        work = Book.create!(:url => url, :position => count, :parent_id => parent.id, :title => "temp").set_wordcount
+        sleep 5 unless count == work_list.size
+      else
+        Rails.logger.debug "work does not yet exist, creating ao3/works/#{work_id}"
+        work = Book.create!(:url => url, :title => "temp").set_wordcount
+        sleep 5 unless count == work_list.size
+      end
+      works << work
+    end
+    return works
+  end
+
 end

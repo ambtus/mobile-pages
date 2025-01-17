@@ -186,6 +186,13 @@ class PagesController < ApplicationController
       end
     end
     consolidate_tag_ids
+    normalized = params[:page][:url].try(&:normalize) || ""
+    if normalized.include?('?') && normalized.match('archiveofourown')
+      pages = create_pages_from_search(normalized)
+      flash[:notice] = "#{pages.try(&:count)} pages created."
+      @page = Page.new
+      render :minimal and return
+    end
     @page = Page.new(params[:page].permit!)
     if @page.save
       Rails.logger.debug "page saved: #{@page.inspect}"

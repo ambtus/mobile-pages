@@ -29,3 +29,8 @@ Given('a test page exists') do
   page = Single.create(title: "Test", url: "file:///#{Rails.root}/tmp/html/short.html")
   page.update url: "http://test.sidrasue.com/short.html"
 end
+
+Given('the tag {string} is destroyed without caching') do |string|
+  tag = Tag.find_by(name: string)
+  tag.destroy
+end

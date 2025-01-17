@@ -77,3 +77,19 @@ Scenario: deliberately fetch only one chapter
     And I should NOT see "giving up on nanowrimo"
     And my page named "Where am I?" should have url: "https://archiveofourown.org/works/692/chapters/803"
 
+Scenario: fetch a group of works (e.g. a users fandom collection)
+  Given I am on the mini page
+    And I fill in "page_url" with "https://archiveofourown.org/users/WriteThroughTheNight/works?fandom_id=258526"
+  When I press "Store"
+  Then I should have 2 works
+    And my page named "Rest In Peace" should have url: "https://archiveofourown.org/works/1358119"
+    And my page named "Fancy Seeing You Here" should have url: "https://archiveofourown.org/works/1151707"
+    And I should see "2 pages created."
+
+Scenario: fetch a group of works (e.g. a search)
+  Given I am on the mini page
+    And I fill in "page_url" with "https://archiveofourown.org/works?commit=Sort+and+Filter&user_id=Sidra&include_work_search%5Bfreeform_ids%5D%5B%5D=663"
+  When I press "Store"
+  Then I should have 4 works
+    And I should see "4 pages created."
+    And all wordcounts should be 100

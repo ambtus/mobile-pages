@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
 
   def consolidate_tag_ids
     if params[:page]
+      Rails.logger.debug "consolidate_tag_ids"
       tag_ids = []
       Tag.types.each do |type|
         tag_ids << params[:page].delete(type.downcase + "_ids")
@@ -15,4 +16,11 @@ class ApplicationController < ActionController::Base
       Rails.logger.debug "no tag ids"
     end
   end
+
+  def create_pages_from_search(url)
+    raw_html = Scrub.fetch_html(url)
+    work_list = raw_html.scan(/work-(\d+)/).flatten.uniq
+    Scrub.get_ao3_works_from_list(work_list)
+  end
+
 end

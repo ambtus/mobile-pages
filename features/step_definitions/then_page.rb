@@ -159,6 +159,14 @@ Then('all pages should be rated {int}') do |int|
   assert_equal [int], Page.all.map(&:stars).uniq
 end
 
+Then('all wordcounts should be {int}') do |int|
+  assert_equal [int], Page.all.map(&:wordcount).uniq
+end
+
+Then('I should have {int} works') do |int|
+  assert_equal int, Page.count
+end
+
 Then('I should have {int} reading page(s)') do |int|
   Rails.logger.debug "comparing #{Page.reading.count} with #{int}"
   assert_equal int, Page.reading.count
@@ -169,7 +177,4 @@ Then('my page named {string} should not have a parent') do |string|
   assert_equal nil, page.parent
 end
 
-Given('the tag {string} is destroyed without caching') do |string|
-  tag = Tag.find_by(name: string)
-  tag.destroy
-end
+
