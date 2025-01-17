@@ -239,17 +239,20 @@ module Scrub
         elsif parent.id
           Rails.logger.debug "work already exists, updating #{work.title} with position #{count} and parent_id #{parent.id}"
           work.update!(position: count, parent_id: parent.id)
+        else
+          Rails.logger.debug "work already exists, skipping #{work.title}"
         end
       elsif parent.id
         Rails.logger.debug "work does not yet exist, creating ao3/works/#{work_id} in position #{count} and parent_id #{parent.id}"
         work = Book.create!(:url => url, :position => count, :parent_id => parent.id, :title => "temp").set_wordcount
         sleep 5 unless count == work_list.size
+        works << work
       else
         Rails.logger.debug "work does not yet exist, creating ao3/works/#{work_id}"
         work = Book.create!(:url => url, :title => "temp").set_wordcount
         sleep 5 unless count == work_list.size
+        works << work
       end
-      works << work
     end
     return works
   end

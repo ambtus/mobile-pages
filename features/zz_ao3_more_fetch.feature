@@ -164,3 +164,27 @@ Scenario: refetch a single in a series to a book
   Then I should see "Parent: Misfit Series (Series)"
     And I should see "A Misfit Working Holiday In New York (Book)"
     And I should see "(4 parts)"
+
+Scenario: fetch a group of works (e.g. a users fandom collection)
+  Given I am on the mini page
+    And I fill in "page_url" with "https://archiveofourown.org/users/WriteThroughTheNight/works?fandom_id=258526"
+  When I press "Store"
+  Then I should have 2 works
+    And my page named "Rest In Peace" should have url: "https://archiveofourown.org/works/1358119"
+    And my page named "Fancy Seeing You Here" should have url: "https://archiveofourown.org/works/1151707"
+    And I should see "2 pages created."
+
+Scenario: fetch a group of works (e.g. a search)
+  Given I am on the mini page
+    And I fill in "page_url" with "https://archiveofourown.org/works?commit=Sort+and+Filter&user_id=Sidra&include_work_search%5Bfreeform_ids%5D%5B%5D=663"
+  When I press "Store"
+  Then I should have 4 works
+    And I should see "4 pages created."
+    And all wordcounts should be 100
+
+Scenario: ignore already created works in search
+  Given Time Was exists
+  When I am on the mini page
+    And I fill in "page_url" with "https://archiveofourown.org/works?commit=Sort+and+Filter&include_work_search%5Bfreeform_ids%5D%5B%5D=2485&user_id=Sidra"
+  When I press "Store"
+  Then I should see "0 pages created."
