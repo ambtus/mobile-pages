@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 gem 'bundler'
 
 gem 'rails', '~> 7.0.5'
+gem 'concurrent-ruby', '1.3.4' # until rails 7.1 https://www.devgem.io/posts/resolving-the-loggerthreadsafelevel-error-in-rails-after-bundle-update
 gem 'nokogiri'
 gem 'mysql2'
 
