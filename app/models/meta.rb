@@ -133,7 +133,8 @@ module Meta
     elsif cn?
       doc.at("h1").text.gsub("–", "—").split("—").second.squish
     elsif km?
-      doc.at("h1").text.split("–", 2).second.squish
+      ary = doc.at("h1").text.split("–", 2)
+      (ary.second || ary.first).squish
     end
   end
 
