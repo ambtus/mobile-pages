@@ -23,7 +23,7 @@ Scenario: creating the name from the page's edit author page
     And I edit its tags
     And I fill in "tags" with "lewis carroll (charles dodgson)"
     And I press "Add Author Tags"
-    And I am on the tags page
+    And I am on the authors page
   Then I should see "lewis carroll (charles dodgson)"
 
 Scenario: creating the name from the page's edit author page
@@ -72,7 +72,7 @@ Scenario: link from edit page bug
 
 Scenario: link from tag index bug
   Given a page exists with authors: "jane (june)"
-  When I am on the tags page
+  When I am on the authors page
     And I follow "jane pages"
   Then I should see "Page 1"
 

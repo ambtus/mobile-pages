@@ -122,13 +122,13 @@ Scenario: new parent for an existing page should have the same fandom
 
 Scenario: list the fandoms
   Given "Harry Potter" is a "Fandom"
-  When I am on the tags page
+  When I am on the fandoms page
   Then I should see "Harry Potter"
 
 Scenario: edit a fandoms
   Given "Harry Potter" is a "Fandom"
-  When I am on the tags page
-    And I follow "Harry Potter"
+  When I am on the fandoms page
+    And I follow "edit Harry Potter"
   Then I should see "Edit tag: Harry Potter"
 
 Scenario: change the fandom name and change base_name

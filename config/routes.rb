@@ -20,6 +20,8 @@ Rails.application.routes.draw do
   resources :refetches, :only => ['show', 'create']
   resources :scrubs, :only => ['show']
   resources :splits, :only => ['show', 'create']
+  resources :authors, :only => ['index', 'show']
+  resources :fandoms, :only => ['index', 'show']
 
   get '/downloads/:id.:format' => 'downloads#show', :as => 'download'
 

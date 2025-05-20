@@ -14,6 +14,12 @@ class Page < ActiveRecord::Base
   scope :soonest, -> { where(soon: 1) }
   scope :random, -> { order(Arel.sql('RAND()')) }
   scope :recent, -> { order('updated_at desc') }
+  scope :unread, -> { where(last_read: nil) }
+  scope :unread_parts, -> {where(last_read: UNREAD_PARTS_DATE)}
+  scope :read, -> {where.not(last_read: [nil, UNREAD_PARTS_DATE])}
+  scope :best, -> { where(stars: 5) }
+  scope :okay, -> { where(stars: 4) }
+  scope :bad, -> { where(stars: 3) }
 
   MODULO = 1000  # files in a single directory
   LIMIT = 5 # number of parts to show at a time

@@ -48,16 +48,16 @@ Scenario: add another author to a page
 Scenario: list the authors
   Given "jane" is an "Author"
     And "bob" is an "Author"
-  When I am on the tags page
+  When I am on the authors page
   Then I should see "jane"
     And I should see "bob"
-  When I follow "jane"
+  When I follow "edit jane"
     Then I should see "Edit tag: jane"
 
 Scenario: edit an author
   Given "jane" is an "Author"
-  When I am on the tags page
-    And I follow "jane"
+  When I am on the authors page
+    And I follow "edit jane"
   Then I should see "Edit tag: jane"
 
 Scenario: edit the author name

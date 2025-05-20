@@ -1,8 +1,8 @@
--Tag.types.each_with_index do |type, outer|
+-Tag.some_types.each_with_index do |type, outer|
   .bold{id: type, class: "#{type.downcase.pluralize}"}
-    -Tag.types.each_with_index do |type, inner|
+    -Tag.some_types.each_with_index do |type, inner|
       ="|" unless inner == 0
-      -if type == Tag.types[outer]
+      -if type == Tag.some_types[outer]
         =type
       -else
         =link_to type, anchor: type

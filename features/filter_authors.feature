@@ -34,6 +34,6 @@ Scenario: find by clicking link on show page
 Scenario: two authors can share an AKA
   Given a page exists with authors: "dick (boba)" AND title: "dicks' book"
     And a page exists with authors: "jane (boba)" AND title: "jane's book"
-  When I am on the tags page
+  When I am on the authors page
   Then I should see "dick (boba)"
     And I should see "jane (boba)"

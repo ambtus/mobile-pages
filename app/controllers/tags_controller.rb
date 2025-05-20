@@ -48,7 +48,13 @@ class TagsController < ApplicationController
         render :edit and return
       end
       true_tag.add_aka(@tag)
-      redirect_to tags_path + "##{@tag.class}"
+      if true_tag.is_a?(Author)
+        redirect_to author_path(true_tag)
+      elsif true_tag.is_a?(Fandom)
+        redirect_to fandom_path(true_tag)
+      else
+        redirect_to tags_path + "##{@tag.class}"
+      end
     elsif params[:commit] == "Change"
       was_hidden = @tag.type == "Hidden"
       was_con = @tag.type == "Con"
@@ -69,7 +75,13 @@ class TagsController < ApplicationController
         @tag.pages.map(&:reset_con)
       end
       @tag.pages.map(&:remove_outdated_downloads)
-      redirect_to tags_path + "##{@tag.class}"
+      if type == 'Author'
+        redirect_to author_path(@tag)
+      elsif type == 'Fandom'
+        redirect_to fandom_path(@tag)
+      else
+        redirect_to tags_path + "##{@tag.class}"
+      end
     elsif params[:commit] == "Split"
       if params[:first_tag_name] == params[:second_tag_name]
         flash.now[:alert] = "can't split: names must be different"
@@ -98,7 +110,13 @@ class TagsController < ApplicationController
         # don't need to destroy_me, because replacements have already been added to the affected pages
         @tag.destroy
       end
-      redirect_to tags_path + "##{@tag.class}" and return
+      if first.is_a?(Author)
+        redirect_to authors_path
+      elsif first.is_a?(Fandom)
+        redirect_to fandoms_path
+      else
+        redirect_to tags_path + "##{@tag.class}" and return
+      end
     elsif params[:commit] == "Update"
       old_basename = @tag.base_name
       @tag.update_attribute(:name, params[:tag][:name])
@@ -107,7 +125,13 @@ class TagsController < ApplicationController
         Rails.logger.debug "changed base name requires rechache from #{old_basename} to #{@tag.base_name}"
         @tag.pages.map(&:update_tag_cache!)
       end
-      redirect_to tags_path + "##{@tag.class}"
+      if @tag.is_a?(Author)
+        redirect_to author_path(@tag)
+      elsif @tag.is_a?(Fandom)
+        redirect_to fandom_path(@tag)
+      else
+        redirect_to tags_path + "##{@tag.class}" and return
+      end
     else
       render :edit
     end

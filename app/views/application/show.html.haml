@@ -1,0 +1,27 @@
+.center
+  %b=@tag.name
+  %br
+  = link_to "edit", edit_tag_path(@tag)
+  |
+  -total = @tag.pages.count
+  =link_to_tag @tag, "#{total} #{'page'.pluralize(total)}"
+  %br
+  %br
+  -count = @tag.pages.read.count
+  #{count} read #{'page'.pluralize(count)} 
+  %br
+  -count = @tag.pages.unread.count
+  #{count} unread #{'page'.pluralize(count)} 
+  %br
+  -count = @tag.pages.unread_parts.count
+  #{count} partially read #{'page'.pluralize(count)} 
+  %br
+  %br
+  -count = @tag.pages.best.count
+  #{count} best #{'page'.pluralize(count)} 
+  %br
+  -count = @tag.pages.okay.count
+  #{count} okay #{'page'.pluralize(count)} 
+  %br
+  -count = @tag.pages.bad.count
+  #{count} bad #{'page'.pluralize(count)} 

@@ -42,13 +42,13 @@ class Filter
 
     case params[:unread]
     when "Unread"
-      pages = pages.where(:last_read => nil)
+      pages = pages.unread
       # ignore parts if filtering on unread unless you've chosen a type
       pages = pages.where(:parent_id => nil) unless params[:type]
     when "Parts"
-      pages = pages.where(:last_read => Page::UNREAD_PARTS_DATE)
+      pages = pages.unread_parts
     when "Read"
-      pages = pages.where.not(:last_read => [nil, Page::UNREAD_PARTS_DATE])
+      pages = pages.read
       # ignore parts if filtering on unread unless you've chosen a type
       pages = pages.where(:parent_id => nil) unless params[:type]
     end

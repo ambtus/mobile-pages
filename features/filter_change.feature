@@ -7,7 +7,7 @@ Scenario: change author direct find
     | Grimm's Fairy Tales              | grimm             |
     | Alice's Adventures In Wonderland | lewis carroll, charles dodgson |
     | Through the Looking Glass        | lewis carroll |
-  When I am on the tags page
+  When I am on the authors page
     And I follow "lewis carroll pages"
     And I press "Change Filter"
   Then "lewis carroll" should be selected in "Author"
@@ -86,7 +86,7 @@ Scenario: change author direct find and tag filter
     | Grimm's Fairy Tales              | grimm             |
     | Alice's Adventures In Wonderland | lewis carroll, charles dodgson |
     | Through the Looking Glass        | lewis carroll |
-  When I am on the tags page
+  When I am on the authors page
     And I follow "lewis carroll pages"
     And I press "Change Filter"
     And I press "Find"
