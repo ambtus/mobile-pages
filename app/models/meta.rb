@@ -387,7 +387,12 @@ module Meta
       end
       non_existing << single unless found
     end
-    unless existing.empty?
+    if existing.empty?
+      if self.tags.authors.blank?
+        Rails.logger.debug "adding #{OTHERA} to authors"
+        self.tags << oa_tag
+      end
+    else
       Rails.logger.debug "adding #{existing.map(&:name)} to authors"
       existing.uniq.each {|a| self.tags << a unless self.tags.authors.include?(a)}
     end
@@ -439,7 +444,7 @@ module Meta
     end
     if existing.empty?
       if self.tags.fandoms.blank?
-        Rails.logger.debug "adding #{OTHER} to fandoms"
+        Rails.logger.debug "adding #{OTHERF} to fandoms"
         self.tags << of_tag
       end
     else

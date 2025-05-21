@@ -9,7 +9,8 @@ class Author < Tag
       page = Page.find(id)
         if page.can_have_tags?
           Rails.logger.debug "moving author to note for page #{id}"
-          Page.find(id).add_authors_to_notes([name])
+          page.add_authors_to_notes([name])
+          page.set_oa if page.tags.authors.blank?
         end
       page.update_tag_cache!
     end

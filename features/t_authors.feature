@@ -1,4 +1,4 @@
-Feature: author stuff
+Feature: authors are a type of tag; at least one author must exist per taggable page
 
 Scenario: add authors to a page
   Given a page exists
@@ -27,6 +27,7 @@ Scenario: add an existing author to a page
     And I select "lewis carroll" from "page_author_ids_"
     And I press "Update Tags"
   Then I should see "lewis carroll" within ".authors"
+    But I should NOT see "Other Author" within ".authors"
 
 Scenario: add another author to a page
   Given a page exists with authors: "lewis carroll"
@@ -78,12 +79,10 @@ Scenario: edit the author name
   Then I should be able to select "June" from "Author"
     But I should NOT be able to select "jane" from "Author"
 
-Scenario: delete an author
+Scenario: delete an author part 1
   Given a page exists with authors: "jane"
-  When I am on the edit tag page for "jane"
-    And I follow "Destroy"
-    And I press "Yes"
-  Then I should have no authors
+  When I am on the page's page
+  Then I should NOT see "Other Author" within ".authors"
 
 Scenario: delete an author
   Given a page exists with authors: "jane"
@@ -93,3 +92,65 @@ Scenario: delete an author
     And I am on the page's page
   Then I should NOT see "jane" within ".authors"
     But I should see "by jane" within ".notes"
+    And I should see "Other Author" within ".authors"
+
+Scenario: no tags exist during create
+  Given I am on the mini page
+  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+    And I press "Store"
+  Then I should see "with Other Author"
+    And I should see "Other Author" within ".authors"
+
+Scenario: no tags selected during create
+  Given "first" is a "Author"
+    And I am on the mini page
+  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+    And I press "Store"
+  Then I should see "with Other Author"
+    And I should see "Other Author" within ".authors"
+    And I should NOT see "first" within ".authors"
+
+Scenario: author and other tag selected during create
+  Given "first" is a "Pro"
+    And "second" is a "Author"
+    And I am on the create page
+    And I select "first"
+    And I select "second"
+  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+    And I press "Store"
+  Then I should NOT see "with Other Author"
+    But I should see "with Other Fandom."
+    And I should see "first" within ".pros"
+    And I should see "second" within ".authors"
+    And I should NOT see "Other Author" within ".authors"
+
+Scenario: author only selected during create
+  Given "nonfiction" is a "Author"
+    And "something" is a "Pro"
+    And I am on the create page
+    And I select "nonfiction"
+  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+    And I press "Store"
+  Then I should NOT see "with Other Author"
+    But I should see "with Other Fandom"
+    And I should see "nonfiction" within ".authors"
+    And I should NOT see "Other Author" within ".authors"
+    But I should see "Other Fandom" within ".fandoms"
+
+Scenario: deleted author creates Other Author (filter)
+  Given a page exists with authors: "Twilight"
+  When I am on the edit tag page for "Twilight"
+    And I follow "Destroy"
+    And I press "Yes"
+    And I am on the filter page
+  Then I should NOT be able to select "Twilight" from "author"
+    But I should be able to select "Other Author" from "author"
+
+Scenario: deleted author creates Other Author (index)
+  Given a page exists with authors: "Twilight"
+  When I am on the edit tag page for "Twilight"
+    And I follow "Destroy"
+    And I press "Yes"
+    And I am on the page's page
+  Then I should see "Other Author" within ".authors"
+    And I should see "by Twilight" within ".notes"

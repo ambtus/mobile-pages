@@ -1,4 +1,4 @@
-Feature: fandoms are a type of tag, and can be created and selected like tags
+Feature: fandoms are a type of tag; at least one fandom must exist per taggable page
 
 Scenario: fandom tag not in other tag dropdown
   Given "not fandom" is a "Pro"
@@ -40,16 +40,17 @@ Scenario: no tags selected during create
     And I should NOT see "first" within ".fandoms"
 
 Scenario: fandom and other tag selected during create
-  Given "first" is a "Pro"
+  Given "first" is a "Author"
     And "second" is a "Fandom"
     And I am on the create page
     And I select "first"
     And I select "second"
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
-  Then I should NOT see "Page created with Other Fandom"
+  Then I should NOT see "with Other Fandom"
+    And I should NOT see "with Other Author"
     But I should see "Page created."
-    And I should see "first" within ".pros"
+    And I should see "first" within ".authors"
     And I should see "second" within ".fandoms"
 
 Scenario: fandom only selected during create
@@ -60,7 +61,7 @@ Scenario: fandom only selected during create
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
   Then I should NOT see "Page created with Other Fandom"
-    But I should see "Page created."
+    But I should see "Page created with Other Author"
     And I should see "nonfiction" within ".fandoms"
 
 Scenario: add a fandom to a page when there are no fandoms

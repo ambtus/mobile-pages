@@ -203,14 +203,22 @@ class PagesController < ApplicationController
         @page = Page.new(params[:page])
       else
         @page.reset_tags
+        flash[:notice] = "Page created"
         if @page.tags.fandoms.blank? && @page.can_have_tags?
           Rails.logger.debug "page created without fandom"
-          flash[:notice] = "Page created with #{Page::OTHER}"
+          flash[:notice] += " with #{Page::OTHERF}"
           @page.toggle_of
         else
           Rails.logger.debug "page created with fandom"
-          flash[:notice] = "Page created."
         end
+        if @page.tags.authors.blank? && @page.can_have_tags?
+          Rails.logger.debug "page created without author"
+          flash[:notice] += " with #{Page::OTHERA}"
+          @page.toggle_oa
+        else
+          Rails.logger.debug "page created with author"
+        end
+        flash[:notice] += "."
         flash[:alert] = "edit raw html manually" if @page.ff?
         redirect_to page_path(@page) and return
       end
@@ -277,9 +285,12 @@ class PagesController < ApplicationController
       when "Update Tag Cache"
         @page.full_tag_cache_update
         flash[:notice] = "Updaded Tag Cache"
-      when "Toggle #{Page::OTHER}"
+      when "Toggle #{Page::OTHERF}"
         @page.toggle_of.rebuild_meta
-        flash[:notice] = "Toggled #{Page::OTHER}"
+        flash[:notice] = "Toggled #{Page::OTHERF}"
+      when "Toggle #{Page::OTHERA}"
+        @page.toggle_oa.rebuild_meta
+        flash[:notice] = "Toggled #{Page::OTHERA}"
       when 'Put end notes after', 'Put end notes before'
         @page.toggle_end.remove_outdated_downloads
         flash[:notice] = "Toggled End Notes"

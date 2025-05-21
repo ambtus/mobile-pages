@@ -17,7 +17,8 @@
       = submit_tag "Increase Position" if @page.position
       = submit_tag "Decrease Position" if @page.position
     .tags
-      = submit_tag "Toggle #{Page::OTHER}"
+      = submit_tag "Toggle #{Page::OTHERF}"
+      = submit_tag "Toggle #{Page::OTHERA}"
       -if @page.can_have_parts?
         =submit_tag 'Put all end notes before'
         =submit_tag 'Put all end notes after'

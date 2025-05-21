@@ -9,7 +9,8 @@ class Fandom < Tag
       page = Page.find(id)
         if page.can_have_tags?
           Rails.logger.debug "moving fandom to note for page #{id}"
-          Page.find(id).add_fandoms_to_notes([name]).set_of
+          page.add_fandoms_to_notes([name])
+          page.set_of if page.tags.fandoms.blank?
         end
       page.update_tag_cache!
     end

@@ -3,7 +3,8 @@ module SpecialTags
   WIP = "WIP"
   TT = "Time Travel"
   FI = "Fix-it"
-  OTHER = "Other Fandom"
+  OTHERF = "Other Fandom"
+  OTHERA = "Other Author"
   CLIFF = "Cliffhanger"
   UNFINISHED = "unfinished"
 
@@ -20,11 +21,20 @@ module SpecialTags
   def fi_present?; tags.pros.include?(fi_tag);end
   def set_fi; tags.append(fi_tag) unless fi_present?; end
 
-  def of_tag; Fandom.find_or_create_by(name: OTHER); end
+  def of_tag; Fandom.find_or_create_by(name: OTHERF); end
   def of_present?; self.tags.fandoms.include?(of_tag);end
   def set_of; tags.append(of_tag) unless of_present?; end
   def toggle_of
     of_present? ? tags.delete(of_tag) : self.tags.append(of_tag)
+    self.update_tag_cache!
+    return self
+  end
+
+  def oa_tag; Author.find_or_create_by(name: OTHERA); end
+  def oa_present?; self.tags.authors.include?(oa_tag);end
+  def set_oa; tags.append(oa_tag) unless oa_present?; end
+  def toggle_oa
+    oa_present? ? tags.delete(oa_tag) : self.tags.append(oa_tag)
     self.update_tag_cache!
     return self
   end
