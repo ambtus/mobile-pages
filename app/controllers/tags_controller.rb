@@ -160,7 +160,14 @@ class TagsController < ApplicationController
 
   def destroy
     @tag = Tag.find(params[:id])
+    klass = @tag.class
     @tag.destroy_me
-    redirect_to tags_path + "##{@tag.class}"
+    if klass == Author
+      redirect_to authors_path
+    elsif klass == Fandom
+      redirect_to fandoms_path
+    else
+      redirect_to tags_path + "##{klass}"
+    end
   end
 end
