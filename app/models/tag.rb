@@ -7,7 +7,7 @@ class Tag < ActiveRecord::Base
 
   def self.types; ["Fandom", "Author", "Pro", "Con", "Hidden", "Reader", "Info", "Collection"]; end
   def self.some_types; self.types - ["Fandom", "Author"]; end
-  def self.boolean_types; self.some_types - ["Reader", "Info", "Collection"]; end
+  def self.boolean_types; self.some_types - ["Info", "Collection"]; end
 
   scope :by_name, -> { order('tags.name asc') }
   scope :by_type, -> { order('tags.type desc') }

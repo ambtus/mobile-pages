@@ -224,37 +224,3 @@ Scenario: any hiddens
     But I should NOT see "page3"
 
 
-Scenario: check before find by audio url
-  Given the following pages
-    | title                  | audio_url                          | hiddens |
-    | A Christmas Carol      | http://test.sidrasue.com/cc.html   | hide me |
-    | The Call of the Wild   | http://test.sidrasue.com/cotw.html |         |
-  When I am on the filter page
-    And I click on "show_hiddens_none"
-    And I press "Find"
-  Then I should see "The Call of the Wild"
-    But I should NOT see "A Christmas Carol"
-
-Scenario: find by url should find hidden
-  Given the following pages
-    | title                  | audio_url                          | hiddens |
-    | A Christmas Carol      | http://test.sidrasue.com/cc.html   | hide me |
-    | The Call of the Wild   | http://test.sidrasue.com/cotw.html |         |
-  When I am on the filter page
-    And I click on "show_hiddens_none"
-    And I fill in "page_audio_url" with "http://test.sidrasue.com/cc.html"
-    And I press "Find"
-  Then I should see "A Christmas Carol" within ".title"
-
-Scenario: find by url should NOT find hidden if it's part of the filter
-  Given the following pages
-    | title                  | audio_url                          | hiddens |
-    | A Christmas Carol      | http://test.sidrasue.com/cc.html   | hide me |
-    | The Call of the Wild   | http://test.sidrasue.com/cotw.html |         |
-  When I am on the filter page
-    And I click on "show_hiddens_none"
-    And I fill in "page_audio_url" with "test.sidrasue.com"
-    And I press "Find"
-  Then I should see "The Call of the Wild"
-    But I should NOT see "A Christmas Carol"
-

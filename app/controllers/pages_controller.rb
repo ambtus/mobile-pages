@@ -90,18 +90,6 @@ class PagesController < ApplicationController
         redirect_to page_path(@page) and return
       end
     end
-    if page[:audio_url]
-      audio_url = page[:audio_url]
-      if audio_url.present?
-        Rails.logger.debug audio_url
-        @page = Page.find_by_audio_url(audio_url)
-      end
-      if @page
-        flash[:notice] = "Page found"
-        @count = 0
-        redirect_to page_path(@page) and return
-      end
-    end
     params.delete(:action)
     params.delete(:controller)
     params.delete(:commit)
@@ -256,7 +244,7 @@ class PagesController < ApplicationController
         flash[:notice] = "Read set to #{@page.soon_label}"
       when "Audiobook created"
         @page.make_audio
-        flash[:notice] = "Tagged as audio book and marked as read today"
+        flash[:notice] = "Tagged with reader and marked as read today"
       when "Increase Type"
         @page.increase_type
         flash[:notice] = "Type increased"

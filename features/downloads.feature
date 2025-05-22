@@ -1,12 +1,5 @@
 Feature: downloads
 
-Scenario: audio isn't a download
-  Given a page exists with audio_url: "http://imac.local/~alice/audiobooks/Fanfic/Harry%20Potter/Mirror%20of%20Maybe/Mirror%20of%20Maybe1.m4b"
-  When I am on the page's page
-  Then "Listen" should link to "http://imac.local/~alice/audiobooks/Fanfic/Harry%20Potter/Mirror%20of%20Maybe/Mirror%20of%20Maybe1.m4b"
-    But the download html file should NOT exist
-    And the download epub file should NOT exist
-
 Scenario: text isn't a download
   Given a page exists
   When I am on the page's page

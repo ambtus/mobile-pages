@@ -88,9 +88,7 @@ class Filter
       pages = pages.where("LOWER(pages.#{attrib.to_s}) LIKE ?", "%#{params[attrib].downcase}%") if params.has_key?(attrib)
     end
 
-    [:url, :audio_url].each do |attrib|
-      pages = pages.where("pages.#{attrib.to_s} LIKE ?", "%#{params[attrib].normalize}%") if params.has_key?(attrib)
-    end
+    pages = pages.where("pages.url LIKE ?", "%#{params[:url].normalize}%") if params.has_key?(:url)
 
     case params[:sort_by]
     when "last_read"
@@ -109,14 +107,6 @@ class Filter
       pages = pages.order('wordcount ASC')
     else
       pages = pages.order('read_after ASC')
-    end
-
-    case params[:show_audios]
-    when "none"
-      Rails.logger.debug "no audios"
-      pages = pages.where(audio_url: nil)
-    when "all"
-      pages = pages.where.not(audio_url: nil)
     end
 
     Tag.boolean_types.map(&:downcase).each do |tag_type|

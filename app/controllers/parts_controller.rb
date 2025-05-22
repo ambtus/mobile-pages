@@ -21,9 +21,6 @@ class PartsController < ApplicationController
       @title = "Add parent to #{@page.title}"
       @hint = PARENT_PLACEHOLDER
       render "parent"
-    when "audio_url"
-      @title = "Add Audio URL to #{@page.title}"
-      render 'audio_url'
     else
       raise "missing or bad params[:add] (#{params[:add]})"
     end
@@ -34,9 +31,6 @@ class PartsController < ApplicationController
     @count = 0
     if params[:title]
       @page.update_attribute(:title, params[:title])
-    elsif params[:audio_url]
-      @page.update_attribute(:audio_url, params[:audio_url])
-      @page.save!
     elsif params[:add_url]
       url = params[:add_url] unless params[:add_url] == URL_PLACEHOLDER
       @page.add_part(url)

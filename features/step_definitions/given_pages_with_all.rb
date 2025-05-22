@@ -135,14 +135,15 @@ Given("pages with all combinations of pros and cons and readers and hiddens exis
   Page.find_or_create_by(title: "pageh").tags << hidden
   Page.find_or_create_by(title: "pagec").tags << con
   Page.find_or_create_by(title: "untagged")
-  Page.find_or_create_by(title: "pagecr", audio_url: 'http://test.org/pagecr.mp3').tags << [con,reader]
+  Page.find_or_create_by(title: "pagecr").tags << [con,reader]
   Page.find_or_create_by(title: "pagehp").tags << [hidden,pro]
-  Page.find_or_create_by(title: "pager", audio_url: 'http://test.org/pager.mp3').tags << reader
+  Page.find_or_create_by(title: "pager").tags << reader
   Page.find_or_create_by(title: "pagep").tags << pro
-  Page.find_or_create_by(title: "pagepr", audio_url: 'http://test.org.pagepr.mp3').tags << [pro, reader]
+  Page.find_or_create_by(title: "pagepr").tags << [pro, reader]
   Con.recache_all
   Pro.recache_all
   Hidden.recache_all
+  Reader.recache_all
   Page.all.map(&:save!)
 end
 

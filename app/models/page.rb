@@ -132,6 +132,7 @@ class Page < ActiveRecord::Base
     reset_hidden
     reset_con
     reset_pro
+    reset_reader
   end
 
   def set_hidden; update_columns hidden: true; end
@@ -145,6 +146,10 @@ class Page < ActiveRecord::Base
   def set_pro; update_columns pro: true; end
   def unset_pro; update_columns pro: false; end
   def reset_pro; self.tags.pros.present? ? set_pro : unset_pro; end
+
+  def set_reader; update_columns reader: true; end
+  def unset_reader; update_columns reader: false; end
+  def reset_reader; self.tags.readers.present? ? set_reader : unset_reader; end
 
   def set_wordcount(recount=true)
     #Rails.logger.debug "#{self.title} old wordcount: #{self.wordcount} and size: #{self.size}"
@@ -203,7 +208,6 @@ class Page < ActiveRecord::Base
   validates_presence_of :title, :message => "can't be blank"
   validates_format_of :url, :with => URI.regexp, :allow_blank => true
   validates_uniqueness_of :url, :allow_blank => true
-  validates_uniqueness_of :audio_url, :allow_blank => true
 
   after_create :initial_fetch
 
@@ -801,12 +805,11 @@ class Page < ActiveRecord::Base
     edited_html.gsub('img src="http://', 'img src="https://')
   end
 
-  def make_audio  # add an audio tag and mark it as read today
+  def make_audio  # add reader tag and mark it as read today
     Rails.logger.debug "mark_audio for #{self.id}"
-    audio_tag = Tag.find_by(name: "audio") || Info.create(name: "audio")
     reader_tag = Reader.find_or_create_by(name: "Sidra")
-    self.tags << [audio_tag, reader_tag]
-    self.update(:last_read => Time.now)
+    self.tags << reader_tag
+    self.update(last_read: Time.now, reader: true)
     self.update_read_after
   end
 

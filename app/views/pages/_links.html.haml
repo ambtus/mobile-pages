@@ -2,5 +2,4 @@
 = link_to "ePub", download_url_for_page(page, ".epub")
 = link_to "HTML", download_url_for_page(page, ".html")
 = link_to "Read", download_url_for_page(page, ".read") unless page.can_have_parts?
-= link_to "Listen", page.audio_url unless page.audio_url.blank?
 = link_to "Original", page.url unless page.url.blank?

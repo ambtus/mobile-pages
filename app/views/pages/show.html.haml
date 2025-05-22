@@ -68,7 +68,6 @@
       = link_to "Split", split_path(@page) if @page.has_content?
     .meta
       = link_to "Title", edit_part_path(@page, add: "title")
-      = link_to "AudioURL", edit_part_path(@page, add: "audio_url")
       = link_to "My Notes", edit_my_note_path(@page)
       = link_to "Notes", edit_note_path(@page)
       = link_to "Scrub Notes", scrub_path(@page, notes: true) unless @page.notes.blank?

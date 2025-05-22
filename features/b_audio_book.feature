@@ -1,13 +1,5 @@
 Feature: audiobook
 
-Scenario: add audiobook url
-  Given a page exists
-  When I am on the page's page
-    And I follow "AudioURL"
-    And I fill in "audio_url" with "http://imac.local/~alice/audiobooks/Fanfic/DCU/Unpaid%20Internship.mp3"
-    And I press 'Update'
-  Then "Listen" should link to "http://imac.local/~alice/audiobooks/Fanfic/DCU/Unpaid%20Internship.mp3"
-
 Scenario: audiobook sections
   Given a page exists with url: "http://test.sidrasue.com/long.html"
   When I view the text for reading aloud
@@ -39,19 +31,7 @@ Scenario: audiobook created updates last read and adds audio and reader tags
     And I view the text for reading aloud
     And I press "Audiobook created"
     And I am on the page's page
-  Then I should see "audio" within ".infos"
-    And I should see "Sidra" within ".readers"
-    And last read should be today
-    And I should NOT see "2014" within ".last_read"
-
-Scenario: audiobook created when i've hidden the audio tag
-  Given a page exists with last_read: "2014-01-01"
-    And "audio" is a "Hidden"
-    And I view the text for reading aloud
-    And I press "Audiobook created"
-    And I am on the page's page
-  Then I should see "audio" within ".hiddens"
-    And I should see "Sidra" within ".readers"
+  Then I should see "Sidra" within ".readers"
     And last read should be today
     And I should NOT see "2014" within ".last_read"
 

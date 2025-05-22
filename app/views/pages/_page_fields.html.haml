@@ -1,11 +1,3 @@
-.audio_url
-  = text_field_tag 'page[audio_url]', @page.audio_url || params[:audio_url] , :size => 29
-  AudioURL
-  -if current_page?(filter_path)
-    = radio_button_tag :show_audios, 'all'
-    = label_tag :show_audios_all, 'Show All'
-    = radio_button_tag :show_audios, 'none'
-    = label_tag :show_audios_none, 'Show None'
 .title
   = text_field_tag 'page[title]', @page.title || params[:title], :size => 29
   Title
