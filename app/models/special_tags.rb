@@ -1,17 +1,11 @@
 module SpecialTags
 
-  WIP = "WIP"
   TT = "Time Travel"
   FI = "Fix-it"
   OTHERF = "Other Fandom"
   OTHERA = "Other Author"
   CLIFF = "Cliffhanger"
   UNFINISHED = "unfinished"
-
-  def wip_tag; Con.find_or_create_by(name: WIP); end
-  def wip_present?; tags.cons.include?(wip_tag);end
-  def set_wip; (tags.append(wip_tag) && reset_con) unless wip_present?; end
-  def unset_wip; (tags.delete(wip_tag) && reset_con) if wip_present? ; end
 
   def tt_tag; Pro.find_or_create_by(name: TT); end
   def tt_present?; tags.pros.include?(tt_tag);end

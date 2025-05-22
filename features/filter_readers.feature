@@ -92,6 +92,7 @@ Scenario: filter on reader should not filter out parts
     And part 2 has reader "Sidra"
   When I am on the filter page
     And I select "Author" from "Reader"
+    And I click on "type_all"
     And I press "Find"
   Then I should NOT see "No pages found"
     And I should see "Skipping"

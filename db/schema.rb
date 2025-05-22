@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_03_200725) do
+ActiveRecord::Schema[7.0].define(version: 2025_05_21_111900) do
   create_table "pages", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "url"
     t.string "title"
@@ -35,6 +35,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_03_200725) do
     t.boolean "pro", default: false
     t.string "audio_url"
     t.string "tag_cache", default: "", null: false
+    t.boolean "wip", default: false
+    t.boolean "favorite", default: false
     t.index ["parent_id"], name: "index_pages_on_parent_id"
     t.index ["size"], name: "index_pages_on_size"
     t.index ["stars"], name: "index_pages_on_stars"

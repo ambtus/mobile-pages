@@ -20,6 +20,16 @@ class Page < ActiveRecord::Base
   scope :best, -> { where(stars: 5) }
   scope :okay, -> { where(stars: 4) }
   scope :bad, -> { where(stars: 3) }
+  scope :unrated, -> { where(stars: 10)}
+  scope :old_rating, -> {where.not(stars: [3,4,5,10])}
+  scope :favorite, -> { where(favorite: true) }
+  scope :wip, -> { where(wip: true) }
+  scope :with_content, -> { where(type: [Chapter, Single]) }
+  scope :with_parts, -> { where(type: [Book, Series])}
+  scope :with_tags, -> { where(type: [Book, Single])}
+  scope :has_no_parent, -> { where(parent_id: nil)}
+  scope :has_parent, -> {where.not(parent_id: nil)}
+
 
   MODULO = 1000  # files in a single directory
   LIMIT = 5 # number of parts to show at a time
@@ -199,10 +209,6 @@ class Page < ActiveRecord::Base
 
   before_save :update_tag_cache
   before_save :update_reader
-
-  scope :with_content, -> { where(type: [Chapter, Single]) }
-  scope :with_parts, -> { where(type: [Book, Series])}
-  scope :with_tags, -> { where(type: [Book, Single])}
 
   def can_have_tags?; %w{Single Book}.include?(self.type) || self.type.blank?; end
   def tag_types; can_have_tags? ? Tag.types : Tag.some_types; end

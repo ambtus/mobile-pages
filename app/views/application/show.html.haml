@@ -25,3 +25,16 @@
   %br
   -count = @tag.pages.bad.count
   #{count} bad #{'page'.pluralize(count)} 
+  %br
+  -count = @tag.pages.old_rating.count
+  #{count} old rating #{'page'.pluralize(count)} 
+  %br
+  -count = @tag.pages.unrated.count
+  #{count} unrated #{'page'.pluralize(count)} 
+  %br
+  %br
+  -count = @tag.pages.favorite.count
+  #{count} favorite/loved #{'page'.pluralize(count)} 
+  %br
+  -count = @tag.pages.wip.count
+  #{count} WIP #{'page'.pluralize(count)} 

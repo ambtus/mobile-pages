@@ -1,11 +1,13 @@
 .title
-  Rate #{@page.title}
+  Rate
+  =link_to @page.title, page_path(@page)
   -if @page.parent
     of #{@page.parent.title}
 -if @page.parent
   .parent
     Parent stars:
     =@page.parent.star_string
+    ="Favorite" if @page.parent.favorite
     %br
     Parent cliffhanger:
     =@page.parent.cliff_present?
@@ -18,6 +20,12 @@
       - %w[5 4 3].each do |choice|
         =radio_button_tag :stars, choice, @stars == choice
         =label_tag "stars_#{choice}", choice
+        -if choice == "5"
+          = label_tag :favorite, "Favorite?"
+          = radio_button_tag :favorite, 'Yes', @page.favorite == true
+          = label_tag :favorite_Yes, 'Yes'
+          = radio_button_tag :favorite, 'No', @page.favorite == false
+          = label_tag :favorite_No, 'No'
         %br
       = label_tag :today, "Today?"
       = radio_button_tag :today, 'Yes', true

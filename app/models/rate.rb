@@ -63,8 +63,8 @@ module Rate
     end
   end
 
-  def rate_today(stars, all="Unrated", today="Yes")
-    Rails.logger.debug "rate today stars: #{stars} all: #{all} today: #{today}"
+  def rate_today(stars, all="Unrated", today="Yes", favorite="No")
+    Rails.logger.debug "rate today stars: #{stars} all: #{all} today: #{today} favorite: #{favorite}"
     if parts.empty?
       if today == "Yes"
         update! last_read: Time.now
@@ -83,6 +83,7 @@ module Rate
       parts_to_be_rated.each {|part| part.rate_today(stars, all, today)}
       update_from_parts
     end
+    update! favorite: favorite == "Yes"
   end
 
   def update_from_parts

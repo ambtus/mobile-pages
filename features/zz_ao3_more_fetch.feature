@@ -15,7 +15,7 @@ Scenario: refetch Single
     And I should NOT see "1."
     And I should see "by Sidra" within ".notes"
     And I should NOT see "changed notes" within ".notes"
-    And I should NOT see "WIP" within ".cons"
+    And I should NOT see "WIP" within ".size"
     And the contents should include "Amy woke slowly"
     But the contents should NOT include "oops"
 
@@ -37,7 +37,7 @@ Scenario: getting book by adding parent and then refetching
     And I press "Refetch"
   Then I should see "Refetched" within "#flash_notice"
     And I should see "Time Was, Time Is (Book)" within ".title"
-    And I should see "WIP" within ".cons"
+    And I should see "WIP" within ".size"
     And I should see "Where am I?" within "#position_1"
     And I should see "Hogwarts" within "#position_2"
 

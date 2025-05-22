@@ -13,16 +13,33 @@ class Filter
     Rails.logger.debug "Filter.new(#{params})"
     pages = Page.all
 
-    # ignore parts if haven't made any choices at all
-    if params.blank? || params.without(:count).blank?
-      pages = pages.where(:parent_id => nil)
+    # ignore parts unless filering by type
+    pages = pages.where(:parent_id => nil) unless params[:type]
+
+    case params[:favorite]
+    when "Yes"
+      pages = pages.favorite
+    when "No"
+      pages = pages.where(favorite: false)
+    end
+
+    case params[:wip]
+    when "Yes"
+      pages = pages.wip
+    when "No"
+      pages = pages.where(wip: false)
+    end
+
+    case params[:parent]
+    when "Yes"
+      pages = pages.has_parent
+    when "No"
+      pages = pages.has_no_parent
     end
 
     case params[:soon]
-    when "Now"
-      pages = pages.where(soon: [0,1,2])
-    when "Never"
-      pages = pages.where(soon: [3,4])
+    when "Other"
+      pages = pages.where.not(soon: [0,1,2,3,4])
     when nil
     else
       index = Soon::LABELS.index(params[:soon])
@@ -32,10 +49,10 @@ class Filter
     case params[:type]
     when "none"
       pages = pages.where(type: nil)
-    when "all"
     when nil
-      # ignore parts if filtering on size unless you've chosen a size
-      pages = pages.where(:parent_id => nil) if params[:size]
+    when "all"
+    when 'taggable'
+      pages = pages.with_tags
     else
       pages = pages.where(type: params[:type])
     end
@@ -43,14 +60,10 @@ class Filter
     case params[:unread]
     when "Unread"
       pages = pages.unread
-      # ignore parts if filtering on unread unless you've chosen a type
-      pages = pages.where(:parent_id => nil) unless params[:type]
     when "Parts"
       pages = pages.unread_parts
     when "Read"
       pages = pages.read
-      # ignore parts if filtering on unread unless you've chosen a type
-      pages = pages.where(:parent_id => nil) unless params[:type]
     end
 
     case params[:stars]
@@ -94,12 +107,8 @@ class Filter
       pages = pages.order('created_at ASC')
     when "longest"
       pages = pages.order('wordcount DESC')
-      # ignore parts if filtering on length unless you've chosen a type
-      pages = pages.where(:parent_id => nil) unless params[:type]
     when "shortest"
       pages = pages.order('wordcount ASC')
-      # ignore parts if filtering on length unless you've chosen a type
-      pages = pages.where(:parent_id => nil) unless params[:type]
     else
       pages = pages.order('read_after ASC')
     end

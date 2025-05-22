@@ -1,3 +1,33 @@
+Given("pages with all possible favorites exist") do
+  Single.create(title: "good single", favorite: true)
+  Single.create(title: "bad single")
+  book = Book.create!(title: "bad parent of good child")
+  Chapter.create!(title: "good child", parent_id: book.id, position: 1, favorite: true)
+  book = Book.create!(title: "bad parent of bad child")
+  Chapter.create!(title: "bad child", parent_id: book.id, position: 1)
+  book = Book.create!(title: "good parent of good child", favorite:true)
+  Chapter.create!(title: "good child", parent_id: book.id, position: 1, favorite: true)
+  book = Book.create!(title: "good parent of bad child", favorite: true)
+  Chapter.create!(title: "bad child", parent_id: book.id, position: 1)
+end
+
+Given("pages with all possible wips exist") do
+  Book.create(title: "wip book", base_url: "http://test.sidrasue.com/long*.html", url_substitutions: "1-2", wip: true)
+  Book.create(title: "finished book", base_url: "http://test.sidrasue.com/long*.html", url_substitutions: "3-4")
+  series1 = Series.create!(title: "finished series")
+  book1 = Book.create!(title: "book1", parent_id: series1.id, position: 1)
+  book2 = Book.create!(title: "book2", parent_id: series1.id, position: 2)
+  series2 = Series.create!(title: 'wip series', wip: true)
+  book1 = Book.create!(title: "book1", parent_id: series2.id, position: 1)
+  book2 = Book.create!(title: "book2", parent_id: series2.id, position: 2)
+  series3 = Series.create!(title: 'finished series with wip book')
+  book1 = Book.create!(title: "book1", parent_id: series3.id, position: 1)
+  book2 = Book.create!(title: "wip book2", parent_id: series3.id, position: 2, wip: true)
+  series4 = Series.create!(title: 'wip series with wip book', wip: true)
+  book1 = Book.create!(title: "wip book1", parent_id: series4.id, position: 1, wip: true)
+  book2 = Book.create!(title: "book2", parent_id: series4.id, position: 2)
+end
+
 Given("pages with all possible types exist") do
   Single.create(title: "One-shot", url: "http://test.sidrasue.com/short.html")
   Book.create(title: "Novel", base_url: "http://test.sidrasue.com/long*.html", url_substitutions: "1-2")

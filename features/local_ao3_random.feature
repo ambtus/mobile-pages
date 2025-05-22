@@ -50,7 +50,7 @@ Scenario: meta on first book of series
     Then I should see "Parent: Counting Drabbles (Series)"
     And I should see "Next: The Flower [sequel to Skipping Stones] (Single)"
     And I should see "Skipping Stones (Single)" within ".title"
-    And I should NOT see "WIP" within ".cons"
+    And I should NOT see "WIP" within ".size"
 
 Scenario: one chapter from ao3 is a Single
   Given Where am I exists

@@ -7,7 +7,7 @@ Scenario: check before refetching a one-page Single into a Book
   When I am on the page with title "Time Was, Time Is"
   Then I should see "Time Was, Time Is (Single)" within ".title"
     And I should see "5" within ".stars"
-    And I should see "WIP" within ".cons"
+    And I should see "WIP" within ".size"
     And I should see "harry potter" within ".fandoms"
     And I should see "Sidra" within ".authors"
     And I should see "Using time-travel"
@@ -60,7 +60,7 @@ Scenario: check before getting book by adding parent and then refetching
   When I am on the homepage
     And I follow "Where am I"
   Then I should see "Where am I? (Single)" within ".title"
-    And I should NOT see "WIP" within ".cons"
+    And I should NOT see "WIP" within ".size"
 
 Scenario: 2nd check before getting book by adding parent and then refetching
   Given Where am I exists

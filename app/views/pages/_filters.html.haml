@@ -10,15 +10,31 @@
   - ['Longer', *Page::SIZES.reverse, 'Shorter'].each do |choice|
     = radio_button_tag :size, choice, @size == choice
     = label_tag "size_#{choice}", choice
+  %br
+  WIP:
+  - ['Yes', 'No'].each do |choice|
+    = radio_button_tag :wip, choice, @wip == choice
+    = label_tag "wip_#{choice}", choice
 .stars
   - ['Better', '5', '4', '3', 'other'].each do |choice|
     = radio_button_tag :stars, choice, @stars == choice
     = label_tag "stars_#{choice}", choice
+  %br
+  Favorite:
+  - ['Yes', 'No'].each do |choice|
+    = radio_button_tag :favorite, choice, @favorite == choice
+    = label_tag "favorite_#{choice}", choice
 .soon
-  - ['Now', *Soon::LABELS, 'Never'].each do |choice|
+  - Soon::LABELS.each do |choice|
     = radio_button_tag :soon, choice, @soon == choice
     = label_tag "soon_#{choice}", choice
 .type
-  - ['Series', 'Book', 'Chapter', 'Single', 'none', 'all'].each do |choice|
+  - ['Series', 'Book', 'Chapter', 'Single', 'none', 'all', 'taggable'].each do |choice|
     = radio_button_tag :type, choice, @type == choice
     = label_tag "type_#{choice}", choice
+  %br
+  Has Parent:
+  - ['Yes', 'No'].each do |choice|
+    = radio_button_tag :parent, choice, @parent == choice
+    = label_tag "parent_#{choice}", choice
+

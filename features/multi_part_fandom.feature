@@ -36,11 +36,13 @@ Scenario: find a part by fandom or authors
     And I add a parent with title "Parent"
   When I am on the filter page
     And I select "one" from "fandom"
+    And I click on "type_all"
     And I press "Find"
   Then I should see "Child1 of Parent"
     And the page should NOT contain css "#position_2"
   When I am on the filter page
     And I select "Second" from "author"
+    And I click on "type_all"
     And I press "Find"
   Then I should see "Child2 of Parent"
     And the page should NOT contain css "#position_2"

@@ -1,9 +1,9 @@
 Feature: omit selected
 
 Scenario: test before omitted
-  Given a page exists with readers: "my reader" AND title: "Page 1"
-    And a page exists with readers: "my reader" AND title: "Page 2" AND infos: "audio available"
-    And a page exists with readers: "my reader" AND title: "Page 3" AND pros: "favorite"
+  Given a page exists with audio_url: "one" AND title: "Page 1"
+    And a page exists with audio_url: "two" AND title: "Page 2" AND infos: "audio available"
+    And a page exists with audio_url: "three" AND title: "Page 3" AND pros: "favorite"
   When I am on the filter page
     And I click on "show_audios_all"
     And I select "audio available"
@@ -13,9 +13,9 @@ Scenario: test before omitted
     And I should NOT see "Page 3"
 
 Scenario: omit one selected
-  Given a page exists with readers: "my reader" AND title: "Page 1"
-    And a page exists with readers: "my reader" AND title: "Page 2" AND infos: "audio available"
-    And a page exists with readers: "my reader" AND title: "Page 3" AND pros: "favorite"
+  Given a page exists with audio_url: "one" AND title: "Page 1"
+    And a page exists with audio_url: "two" AND title: "Page 2" AND infos: "audio available"
+    And a page exists with audio_url: "three" AND title: "Page 3" AND pros: "favorite"
   When I am on the filter page
     And I click on "show_audios_all"
     And I select "audio available"
@@ -26,9 +26,9 @@ Scenario: omit one selected
     But I should NOT see "Page 2"
 
 Scenario: test before omitted
-  Given a page exists with readers: "my reader" AND title: "Page 1"
-    And a page exists with readers: "my reader" AND title: "Page 2" AND infos: "audio available"
-    And a page exists with readers: "my reader" AND title: "Page 3" AND pros: "favorite"
+  Given a page exists with audio_url: "one" AND title: "Page 1"
+    And a page exists with audio_url: "two" AND title: "Page 2" AND infos: "audio available"
+    And a page exists with audio_url: "three" AND title: "Page 3" AND pros: "favorite"
   When I am on the filter page
     And I click on "show_audios_all"
     And I select "audio available"
@@ -38,9 +38,9 @@ Scenario: test before omitted
     And I should NOT see "Page 1"
 
 Scenario: omit two selected
-  Given a page exists with readers: "my reader" AND title: "Page 1"
-    And a page exists with readers: "my reader" AND title: "Page 2" AND infos: "audio available"
-    And a page exists with readers: "my reader" AND title: "Page 3" AND pros: "favorite"
+  Given a page exists with audio_url: "one" AND title: "Page 1"
+    And a page exists with audio_url: "two" AND title: "Page 2" AND infos: "audio available"
+    And a page exists with audio_url: "three" AND title: "Page 3" AND pros: "favorite"
   When I am on the filter page
     And I click on "show_audios_all"
     And I select "audio available"

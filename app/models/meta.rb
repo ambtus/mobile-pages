@@ -349,7 +349,7 @@ module Meta
     Rails.logger.debug "looking for possible new wip"
     my_wip = self.wip?
     Rails.logger.debug "wip is #{my_wip}"
-    my_wip ? set_wip : unset_wip
+    self.update!(wip: my_wip)
     Rails.logger.debug "looking for possible new inferred_tags"
     my_it = self.inferred_tags(my_if)
     Rails.logger.debug "inferred_tags are #{my_it}"

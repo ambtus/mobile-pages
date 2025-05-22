@@ -127,7 +127,7 @@ Scenario: before removal of complementary
     And Time Was existed
   When I am on the page's page
   Then I should see "Time Was, Time Is (Book)" within ".title"
-    And I should see "WIP" within ".cons"
+    And I should see "WIP" within ".size"
     And I should see "1,581 words" within ".size"
     And I should see "by Sidra" within ".notes"
     And I should see "harry potter" within ".fandoms"
@@ -145,7 +145,7 @@ Scenario: after removal of complementary
     And Time Was exists
   When I am on the page's page
   Then I should see "Time Was, Time Is (Book)" within ".title"
-    And I should see "WIP" within ".cons"
+    And I should see "WIP" within ".size"
     And I should see "1,581 words" within ".size"
     And I should see "by Sidra" within ".notes"
     And I should see "harry potter" within ".fandoms"

@@ -19,6 +19,11 @@
     .tags
       = submit_tag "Toggle #{Page::OTHERF}"
       = submit_tag "Toggle #{Page::OTHERA}"
+      -if @page.wip
+        =submit_tag 'Unset WIP'
+      -else
+        =submit_tag 'Set WIP'
+      %br
       -if @page.can_have_parts?
         =submit_tag 'Put all end notes before'
         =submit_tag 'Put all end notes after'

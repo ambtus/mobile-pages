@@ -53,6 +53,7 @@ Scenario: find a part
     | Parent2 | http://test.sidrasue.com/parts/*.html | 2 3 |
    When I am on the filter page
      And I fill in "page_title" with "Part 2"
+     And I click on "type_all"
      And I press "Find"
    Then I should see "Part 2 of Parent2" within "#position_1"
      And the page should NOT contain css "#position_2"

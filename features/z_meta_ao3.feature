@@ -35,7 +35,7 @@ Scenario: adding an unread chapter to a book
     And I follow "Refetch"
     And I press "Refetch"
   Then I should see "Refetched" within "#flash_notice"
-    And I should see "WIP" within ".cons"
+    And I should see "WIP" within ".size"
     And I should see "1 unread part" within ".last_read"
     And I should see today within "#position_1"
     And I should see "Hogwarts" within "#position_2"

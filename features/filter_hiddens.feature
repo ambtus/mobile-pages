@@ -191,6 +191,7 @@ Scenario: change part to hidden
     And I am on the filter page
     And I fill in "page_url" with "http://test.sidrasue.com/parts"
     And I click on "show_hiddens_none"
+    And I click on "type_all"
     And I press "Find"
   Then I should see "Part 1"
     And I should see "Part 3"

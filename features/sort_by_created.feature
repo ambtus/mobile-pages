@@ -29,6 +29,7 @@ Scenario: last created new parent
     And I add a parent with title "Parent"
   When I am on the filter page
     And I click on "sort_by_last_created"
+    And I click on "type_all"
     And I press "Find"
   Then I should see "Parent" within "#position_1"
     And I should see "Page 2 of Parent" within "#position_2"
@@ -45,6 +46,7 @@ Scenario: last created new part
     """"
   When I am on the filter page
     And I click on "sort_by_last_created"
+    And I click on "type_all"
     And I press "Find"
   Then I should see "Part 1 of Page 2" within "#position_1"
     And I should see "Page 2" within "#position_2"

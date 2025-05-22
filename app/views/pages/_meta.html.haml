@@ -1,3 +1,7 @@
-.stars=page.star_string
-.size=page.size_string
+.stars
+  =page.star_string
+  ="Favorite" if page.favorite
+.size
+  =page.size_string
+  ="WIP" if page.wip
 .last_read=page.last_read_string

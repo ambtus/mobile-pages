@@ -291,6 +291,10 @@ class PagesController < ApplicationController
       when "Toggle #{Page::OTHERA}"
         @page.toggle_oa.rebuild_meta
         flash[:notice] = "Toggled #{Page::OTHERA}"
+      when "Set WIP"
+        @page.update wip: true
+      when "Unset WIP"
+        @page.update wip: false
       when 'Put end notes after', 'Put end notes before'
         @page.toggle_end.remove_outdated_downloads
         flash[:notice] = "Toggled End Notes"

@@ -6,22 +6,41 @@ Scenario: quick links
     But I should NOT see "Default Someday"
     And I should NOT see "Soon"
 
+Scenario: reading page
+  Given pages with all possible soons exist
+  When I am on the reading page
+  Then I should see "now reading" within ".pages"
+    And the page should NOT contain css "#position_2"
+
 Scenario: next page
   Given pages with all possible soons exist
   When I am on the soonest page
   Then I should see "read next" within ".pages"
     And the page should NOT contain css "#position_2"
 
-Scenario: filter on now (reading + all three soons)
+Scenario: filter on reading
   Given pages with all possible soons exist
   When I am on the filter page
-    And I click on "Now"
+    And I click on "Reading"
     And I press "Find"
   Then I should see "now reading" within ".pages"
-    And I should see "read next" within ".pages"
-    And I should see "read sooner" within ".pages"
-    And I should see "read soon" within ".pages"
-    And the page should NOT contain css "#position_5"
+    And the page should NOT contain css "#position_2"
+
+Scenario: filter on soonest
+  Given pages with all possible soons exist
+  When I am on the filter page
+    And I click on "Soonest"
+    And I press "Find"
+  Then I should see "read next" within ".pages"
+    And the page should NOT contain css "#position_2"
+
+Scenario: filter on sooner
+  Given pages with all possible soons exist
+  When I am on the filter page
+    And I click on "Sooner"
+    And I press "Find"
+  Then I should see "read sooner" within ".pages"
+    And the page should NOT contain css "#position_2"
 
 Scenario: filter on default
   Given pages with all possible soons exist
@@ -31,7 +50,7 @@ Scenario: filter on default
   Then I should see "default" within ".pages"
     And the page should NOT contain css "#position_2"
 
-Scenario: filter on later
+Scenario: filter on someday
   Given pages with all possible soons exist
   When I am on the filter page
     And I click on "Someday"
@@ -39,11 +58,3 @@ Scenario: filter on later
   Then I should see "read later" within ".pages"
     And the page should NOT contain css "#position_2"
 
-Scenario: filter on never (both of the above)
-  Given pages with all possible soons exist
-  When I am on the filter page
-    And I click on "Never"
-    And I press "Find"
-  Then I should see "default" within ".pages"
-    And I should see "read later" within ".pages"
-    And the page should NOT contain css "#position_3"
