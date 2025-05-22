@@ -34,6 +34,6 @@ Scenario: don’t find unfinished random pages
   Given a page exists with stars: "9"
   When I am on the filter page
     And I click on "sort_by_random"
-    And I click on "stars_Better"
+    And I click on "stars_4"
     And I press "Find"
   Then I should see "No pages found"

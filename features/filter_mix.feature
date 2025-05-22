@@ -116,7 +116,7 @@ Scenario: Find by stars and info
       | The Boxcar Children  | children | 4     | 2009-03-01 |
   When I am on the filter page
     And I select "children" from "info"
-    And I click on "stars_Better"
+    And I click on "stars_4"
     And I press "Find"
   Then I should see "The Boxcar Children"
     But I should NOT see "Nancy Drew"

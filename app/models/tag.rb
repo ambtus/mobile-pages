@@ -78,7 +78,7 @@ class Tag < ActiveRecord::Base
     self.update_attribute(:name, new_name)
     page_ids = aka_tag.pages.map(&:id)
     #TODO this should be able to be done in fewer DB operations
-    aka_tag.pages.each {|p| (p.tags << self && p.update_tag_cache!) unless p.tags.include?(self)}
+    aka_tag.pages.each {|p| (p.tags << self && p.save!) unless p.tags.include?(self)}
     aka_tag.destroy
     self
   end
@@ -94,7 +94,7 @@ class Tag < ActiveRecord::Base
     self.destroy
     page_ids.each do |id|
       page = Page.find(id)
-      page.update_tag_cache!
+      page.save!
     end
   end
 

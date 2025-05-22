@@ -9,15 +9,6 @@ Scenario: check before filter on stars
     And I should see "page4" within ".pages"
     And I should see "page3" within ".pages"
 
-Scenario: search for 4 & 5 stars
-  Given pages with all possible stars exist
-  When I am on the filter page
-    And I click on "stars_Better"
-    And I press "Find"
-  Then I should see "page5" within ".pages"
-    And I should see "page4" within ".pages"
-    And the page should NOT contain css "#position_3"
-
 Scenario: search for 5 stars
   Given pages with all possible stars exist
   When I am on the filter page

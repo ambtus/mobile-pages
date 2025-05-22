@@ -46,7 +46,7 @@ Scenario: not wip (only books)
   When I am on the filter page
     And I click on "wip_No"
     And I click on "type_Book"
-    And I click on "parent_No"
+    And I click on "child_No"
     And I press "Find"
   Then I should see "finished book" within "#position_1"
     And the page should NOT contain css "#position_2"

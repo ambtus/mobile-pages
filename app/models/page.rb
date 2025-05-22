@@ -208,7 +208,6 @@ class Page < ActiveRecord::Base
   after_create :initial_fetch
 
   before_save :update_tag_cache
-  before_save :update_reader
 
   def can_have_tags?; %w{Single Book}.include?(self.type) || self.type.blank?; end
   def tag_types; can_have_tags? ? Tag.types : Tag.some_types; end
@@ -220,10 +219,7 @@ class Page < ActiveRecord::Base
     [parts.first, parts[parts.size/2], parts.last].pulverize
   end
 
-  def update_reader; reader = audio_url.present?; end
-
   def update_tag_cache; self.tag_cache = self.base_tags; end
-  def update_tag_cache!; self.update(tag_cache: base_tags); end
   def base_tags
     case type
     when "Chapter", "Single", "Book"
@@ -242,10 +238,10 @@ class Page < ActiveRecord::Base
   def full_tag_cache_update
     case type
     when "Chapter", "Single"
-      update_tag_cache!
+      save!
     when "Book", "Series"
-      update_tag_cache!
-      parts.map(&:update_tag_cache!)
+      save!
+      parts.map(&:save!)
     else # shouldn't get here, but...
       Rails.logger.debug "page #{self.id} doesn't have a proper type"
       ''
@@ -474,9 +470,9 @@ class Page < ActiveRecord::Base
     Rails.logger.debug "moving tags to parent"
     parent.tags << self.tags - self.tags.readers
     parent.reset_tags
-    parent.update_tag_cache!
+    parent.save!
     self.tags = self.tags.readers
-    self.update_tag_cache!
+    self.save!
     self.reset_tags
   end
 
@@ -684,6 +680,7 @@ class Page < ActiveRecord::Base
         self.tags << typed_tag unless self.tags.include?(typed_tag)
       end
     end
+    self.save!
     Rails.logger.debug "tags now #{self.tags.joined}"
   end
 
@@ -826,7 +823,7 @@ class Page < ActiveRecord::Base
     self.parts.map(&:rebuild_meta)
     remove_outdated_tags
     set_meta
-    self.parts.map(&:update_tag_cache!)
+    self.parts.map(&:save!)
     return self
   end
 

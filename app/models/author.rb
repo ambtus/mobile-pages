@@ -12,7 +12,7 @@ class Author < Tag
           page.add_authors_to_notes([name])
           page.set_oa if page.tags.authors.blank?
         end
-      page.update_tag_cache!
+      page.save!
     end
   end
 

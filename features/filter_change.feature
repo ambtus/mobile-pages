@@ -126,8 +126,10 @@ Scenario: change tag cache
   Given tags exist
     And Counting Drabbles exists
   When I am on the filter page
-    And I fill in "page_tag_cache" with "Sidra, Popslash"
+    And I select "Sidra"
+    And I select "Popslash"
     And I click on "Series"
     And I press "Find"
     And I press "Change Filter"
-  Then "Sidra, Popslash" should be entered in "page_tag_cache"
+  Then "Sidra" should be selected in "Author"
+    And "Popslash" should be selected in "Fandom"

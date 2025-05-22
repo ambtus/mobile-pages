@@ -19,7 +19,7 @@ class Pro < Tag
       else
         Rails.logger.debug "page #{id} still has pros"
       end
-      page.update_tag_cache!
+      page.save!
     end
   end
 

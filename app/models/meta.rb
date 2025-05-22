@@ -359,7 +359,7 @@ module Meta
         set_fi if string.match(/Fix[- ][iI]t/)
       end
     end
-    self.update_tag_cache!
+    self.save!
     return self
   end
 

@@ -92,7 +92,7 @@ class TagsController < ApplicationController
         @tag.update!(name: params[:first_tag_name])
         new_tag = Tag.create!(name: params[:second_tag_name], type: @tag.type )
         @tag.pages.each{|p| p.tags << new_tag unless p.tags.include?(new_tag)}
-        @tag.pages.map(&:update_tag_cache!)
+        @tag.pages.map(&:save!)
         redirect_to tags_path + "##{@tag.class}" and return
       end
       first = Tag.find_by_name(params[:first_tag_name]) || (@tag.update(name: params[:first_tag_name]) && @tag)
@@ -102,7 +102,7 @@ class TagsController < ApplicationController
         page.tags << first unless page.tags.include?(first)
         Rails.logger.debug "adding #{second.name} to #{page.title}"
         page.tags << second unless page.tags.include?(second)
-        page.update_tag_cache!
+        page.save!
       end
       neither_new = (@tag != first && @tag != second)
       if neither_new
@@ -123,7 +123,7 @@ class TagsController < ApplicationController
       @tag.pages.map(&:remove_outdated_downloads)
       if @tag.base_name != old_basename
         Rails.logger.debug "changed base name requires rechache from #{old_basename} to #{@tag.base_name}"
-        @tag.pages.map(&:update_tag_cache!)
+        @tag.pages.map(&:save!)
       end
       if @tag.is_a?(Author)
         redirect_to author_path(@tag)
@@ -142,9 +142,9 @@ class TagsController < ApplicationController
     if params[:commit] == "Update Tags"
       consolidate_tag_ids
       @page.tag_ids = params[:page][:tag_ids]
-      @page.update_tag_cache!
-      @page.parts.map(&:update_tag_cache!) if @page.can_have_parts?
-      @page.parent.update_tag_cache! if @page.parent
+      @page.save!
+      @page.parts.map(&:save!) if @page.can_have_parts?
+      @page.parent.save! if @page.parent
     elsif params[:commit].match /Add (.*) Tags/
       unless @page.add_tags_from_string(params[:tags], $1.squish)
         Rails.logger.debug "page errors: #{@page.errors.messages}"
@@ -154,7 +154,7 @@ class TagsController < ApplicationController
     end
     @page.reset_con
     @page.reset_hidden
-    @page.update_tag_cache!
+    @page.save!
     redirect_to page_path(@page)
   end
 

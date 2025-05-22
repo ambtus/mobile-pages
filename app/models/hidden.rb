@@ -19,7 +19,7 @@ class Hidden < Tag
       else
         Rails.logger.debug "page #{id} still hidden"
       end
-      page.update_tag_cache!
+      page.save!
     end
   end
 

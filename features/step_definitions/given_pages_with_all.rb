@@ -123,6 +123,7 @@ Given("pages with all combinations of pros and cons exist") do
   Page.find_or_create_by(title: "page5").tags << [interesting, loving]
   Con.recache_all
   Pro.recache_all
+  Page.all.map(&:save!)
 end
 
 Given("pages with all combinations of pros and cons and readers and hiddens exist") do
@@ -142,5 +143,6 @@ Given("pages with all combinations of pros and cons and readers and hiddens exis
   Con.recache_all
   Pro.recache_all
   Hidden.recache_all
+  Page.all.map(&:save!)
 end
 

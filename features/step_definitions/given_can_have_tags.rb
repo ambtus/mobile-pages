@@ -85,7 +85,9 @@ end
 
 Given('tags exist') do
   fandom = Fandom.find_or_create_by(name: "Harry Potter")
+  fandom = Fandom.find_or_create_by(name: "Popslash")
   author = Author.find_or_create_by(name: "Sidra")
+  author = Author.find_or_create_by(name: "esama")
 end
 
 Given /^Counting Drabbles had tags$/ do

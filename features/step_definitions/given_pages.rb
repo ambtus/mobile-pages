@@ -25,7 +25,7 @@ Given('{int} pages with cons: {string} exist') do |count, string|
   con = Con.find_or_create_by(name: string)
   count.times do |i|
     con.pages << Page.create(title: "Page #{(i+1)}", read_after: "2000-01-#{i+1}")
-    con.pages.map(&:update_tag_cache!)
+    con.pages.map(&:save!)
   end
 end
 
@@ -196,7 +196,7 @@ Given('a book with a tagged chapter exists') do
   pro = Pro.find_or_create_by(name: "interesting")
   chapter = Chapter.create(title: "chapter 1", parent_id: book.id, position: 1)
   chapter.tags << pro
-  chapter.update_tag_cache!
+  chapter.save!
   book.update_from_parts
 end
 

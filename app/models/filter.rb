@@ -14,7 +14,7 @@ class Filter
     pages = Page.all
 
     # ignore parts unless filering by type
-    pages = pages.where(:parent_id => nil) unless params[:type]
+    pages = pages.where(:parent_id => nil) unless (params[:type] || params[:child])
 
     case params[:favorite]
     when "Yes"
@@ -30,7 +30,7 @@ class Filter
       pages = pages.where(wip: false)
     end
 
-    case params[:parent]
+    case params[:child]
     when "Yes"
       pages = pages.has_parent
     when "No"
@@ -67,8 +67,6 @@ class Filter
     end
 
     case params[:stars]
-    when "Better"
-      pages = pages.where(:stars => [5,4])
     when "other"
       pages = pages.where.not(:stars => [10,5,4,3])
     when nil
@@ -131,16 +129,6 @@ class Filter
       end
     end
 
-    if params[:tag_cache]
-      tags = params[:tag_cache].split_comma
-      Rails.logger.debug "tags #{tags} in tag cache"
-      tags.each do |tag|
-        pages = pages.where("pages.tag_cache LIKE ?", "%#{tag}%")
-      end
-    end
-
-   excluded=[]
-   included=[]
    Tag.types.each do |tag_type|
       if params.has_key?(tag_type.downcase.to_s)
         model = tag_type.constantize
@@ -148,14 +136,14 @@ class Filter
         if params.has_key?("selected_#{tag_type.downcase}s".to_s)
           if params["selected_#{tag_type.downcase}s".to_s]=="include"
             Rails.logger.debug "include by choice #{model}s #{tag.base_name}"
-            included << tag
+            pages = pages.where("pages.tag_cache LIKE ?", "%#{tag.base_name}%")
           elsif params["selected_#{tag_type.downcase}s".to_s]=="exclude"
             Rails.logger.debug "exclude by choide #{model}s #{tag.base_name}"
-            excluded << tag
+            pages = pages.where.not("pages.tag_cache LIKE ?", "%#{tag.base_name}%")
           end
         else
           Rails.logger.debug "include by default #{model}s #{tag.base_name}"
-          included << tag
+          pages = pages.where("pages.tag_cache LIKE ?", "%#{tag.base_name}%")
         end
       end
     end
@@ -163,59 +151,11 @@ class Filter
     if params.has_key?("tag")
       tag = Tag.find_by_short_name(params["tag"])
       Rails.logger.debug "with Tag #{tag.base_name} (originally from find)"
-      included << tag
+      pages = pages.where("pages.tag_cache LIKE ?", "%#{tag.base_name}%")
     end
 
-    if included.size < 2 && excluded.empty?
-      if included.size == 1
-        pages = pages.joins(:tags).where(tags: {id: included.first.id}).distinct
-        Filter.normal(pages, params)
-      elsif included.empty?
-        Filter.normal(pages, params)
-      end
-    elsif included.empty? && excluded.size >0
-      Filter.omitted(pages, excluded, params)
-    else
-      Filter.intersection(pages, included, excluded, params)
-    end
-  end
-
-  def self.normal(pages, params)
-    Rails.logger.debug "filter on one or fewer tags"
-    Rails.logger.debug pages.to_sql
     start = params[:count].to_i
     pages.limit(start + LIMIT)[start..-1]
-  end
-
-  def self.omitted(pages, tags, params)
-    Rails.logger.debug "filtering without #{tags.size} tags"
-    Rails.logger.debug "start with #{pages.count} pages"
-    results = []
-    tags.each do |tag|
-      pages = pages - tag.pages
-    end
-    Rails.logger.debug "end with #{pages.count} pages"
-    start = params[:count].to_i
-    pages[start,LIMIT]
-  end
-
-  def self.intersection(pages, included, excluded, params)
-    Rails.logger.debug "filtering on included #{included.size} and excluded #{excluded} tags"
-    results = []
-    excluded.each do |tag|
-      pages_without_tag = pages - tag.pages
-      Rails.logger.debug "not #{tag.base_name} has #{pages_without_tag.count} pages: #{pages_without_tag.map(&:title)}"
-      results << pages_without_tag
-    end
-    included.each do |tag|
-      pages_with_tag = pages.joins(:tags).distinct.where(tags: {id: tag.id})
-      Rails.logger.debug "#{tag.base_name} has #{pages_with_tag.count} pages: #{pages_with_tag.map(&:title)}"
-      results << pages_with_tag
-    end
-    intersection = results.inject{|result, pages| result & pages}
-    Rails.logger.debug "intersection has #{intersection.count} pages"
-    start = params[:count].to_i
-    intersection[start,LIMIT]
   end
 
 end

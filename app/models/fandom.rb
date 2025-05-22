@@ -12,7 +12,7 @@ class Fandom < Tag
           page.add_fandoms_to_notes([name])
           page.set_of if page.tags.fandoms.blank?
         end
-      page.update_tag_cache!
+      page.save!
     end
   end
 

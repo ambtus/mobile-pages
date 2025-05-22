@@ -20,7 +20,7 @@ module SpecialTags
   def set_of; tags.append(of_tag) unless of_present?; end
   def toggle_of
     of_present? ? tags.delete(of_tag) : self.tags.append(of_tag)
-    self.update_tag_cache!
+    self.save!
     return self
   end
 
@@ -29,7 +29,7 @@ module SpecialTags
   def set_oa; tags.append(oa_tag) unless oa_present?; end
   def toggle_oa
     oa_present? ? tags.delete(oa_tag) : self.tags.append(oa_tag)
-    self.update_tag_cache!
+    self.save!
     return self
   end
 
@@ -67,8 +67,8 @@ module SpecialTags
     else
       raise "why isn’t #{bool} Yes or No?"
     end
-    self.parent.update_tag_cache! if self.parent
-    self.update_tag_cache!
+    self.parent.save! if self.parent
+    self.save!
   end
 
   def unfinished_tag; Con.find_or_create_by(name: UNFINISHED); end
@@ -82,7 +82,7 @@ module SpecialTags
       raise "why isn’t #{bool} Yes or No?"
     end
     reset_con
-    self.update_tag_cache!
+    self.save!
   end
 
   ## if it's a chapter, add the book's authors and fandoms
