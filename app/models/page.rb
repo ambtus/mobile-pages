@@ -134,36 +134,49 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def set_wordcount(recount=true)
-    #Rails.logger.debug "#{self.title} old wordcount: #{self.wordcount} and size: #{self.size}"
-    new_wordcount = if self.parts.size > 0
-        Rails.logger.debug "getting wordcount for #{self.title} from parts"
-        self.parts.each {|part| part.set_wordcount } if recount
-        self.parts.sum(:wordcount)
-      elsif recount && self.has_content?
-        Rails.logger.debug "getting wordcount for #{self.title} by recounting"
+  def new_wordcount(recount=true)
+    if self.parts.size > 0
+      Rails.logger.debug "getting wordcount for #{self.title} from parts"
+      self.parts.each {|part| part.set_wordcount } if recount
+      self.parts.sum(:wordcount)
+    elsif recount && self.has_content?
+      Rails.logger.debug "getting wordcount for #{self.title} by recounting"
+      body = Nokogiri::HTML(self.edited_html).xpath('//body').first
+      if body.blank?
+        0
+      else
         count = 0
-        body = Nokogiri::HTML(self.edited_html).xpath('//body').first
         body.traverse { |node|
           if node.is_a? Nokogiri::XML::Text
             words = node.inner_text.gsub(/--/, "—").gsub(/(['’‘-])+/, "")
             count +=  words.scan(/[a-zA-Z0-9À-ÿ_]+/).size
           end
-        } if body
-        count
-      else
-        Rails.logger.debug "getting wordcount for #{self.title} from previous count"
-        wordcount || 0
+        }
+        if count == 0
+          Rails.logger.debug "setting wordcount for #{self.title} to -1 because body but no text implies image only"
+          -1
+        else
+          count
+        end
+      end
+    else
+      Rails.logger.debug "getting wordcount for #{self.title} from previous count"
+      wordcount || 0
     end
+  end
+
+  def set_wordcount(recount=true)
+    #Rails.logger.debug "#{self.title} old wordcount: #{self.wordcount} and size: #{self.size}"
+    newwc = new_wordcount(recount)
     size_word = "drabble"
-    if new_wordcount
-      size_word = "short" if new_wordcount > DRABBLE_MAX
-      size_word = "medium" if new_wordcount > SHORT_MAX
-      size_word = "long" if new_wordcount > MED_MAX
-      size_word = "epic" if new_wordcount > LONG_MAX
+    if newwc
+      size_word = "short" if newwc > DRABBLE_MAX
+      size_word = "medium" if newwc > SHORT_MAX
+      size_word = "long" if newwc > MED_MAX
+      size_word = "epic" if newwc > LONG_MAX
     end
-    Rails.logger.debug "#{self.title} new wordcount: #{new_wordcount} and size: #{size_word}"
-    self.update_columns wordcount: new_wordcount, size: size_word
+    Rails.logger.debug "#{self.title} new wordcount: #{newwc} and size: #{size_word}"
+    self.update_columns wordcount: newwc, size: size_word
     return self
   end
 

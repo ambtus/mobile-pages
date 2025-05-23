@@ -79,3 +79,8 @@ Scenario: new size of part
     And I press "Find"
   Then I should see "Part 1 of Page 1" within "#position_1"
     And I should NOT see "Part 2 of Page 1"
+
+Scenario: image only chapter
+  Given an image only chapter
+  When I am on the page's page
+  Then I should see "-1 words" within ".size"

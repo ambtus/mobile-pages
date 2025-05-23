@@ -57,3 +57,9 @@ Given('part {int} exists') do |int|
   chapter.update!(url: "http://www.matthewhaldemantime.com/InThisLand/inthisland#{int}.html")
   chapter.set_raw_from("inthisland#{int}")
 end
+
+Given('an image only chapter') do
+  chapter = Chapter.create!(title: "legal")
+  chapter.update!(url: "http://www.illuminations.nu/foxmonkey/fic/chasez/legal1.html")
+  chapter.set_raw_from("img")
+end
