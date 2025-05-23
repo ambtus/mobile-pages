@@ -97,10 +97,10 @@ Scenario: check before adding an unread chapter to a book
   Then I should see today within ".last_read"
     But I should NOT see "unread parts" within ".last_read"
     And I should see today within "#position_1"
-    And I should see "Other Fandom" within ".fandoms"
     And I should see "by Sidra" within ".notes"
-    And I should NOT see "Other Fandom" within "#position_1"
     And I should NOT see "Sidra" within "#position_1"
+    And I should have 0 pages with and 2 without fandoms
+    And I should have 0 pages with and 2 without authors
 
 Scenario: check before getting book by adding parent and then refetching
   Given Where am I exists

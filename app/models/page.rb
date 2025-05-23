@@ -128,28 +128,11 @@ class Page < ActiveRecord::Base
   MED_MAX   = 30000
   LONG_MAX = 300000
 
-  def reset_tags
-    reset_hidden
-    reset_con
-    reset_pro
-    reset_reader
+  def reset_booleans
+    Tag.boolean_types.each do |thing|
+      self.send(thing.downcase + '=', self.tags.where(type: thing).present?)
+    end
   end
-
-  def set_hidden; update_columns hidden: true; end
-  def unset_hidden; update_columns hidden: false; end
-  def reset_hidden; self.tags.hiddens.present? ? set_hidden : unset_hidden; end
-
-  def set_con; update_columns con: true; end
-  def unset_con; update_columns con: false; end
-  def reset_con; self.tags.cons.present? ? set_con : unset_con; end
-
-  def set_pro; update_columns pro: true; end
-  def unset_pro; update_columns pro: false; end
-  def reset_pro; self.tags.pros.present? ? set_pro : unset_pro; end
-
-  def set_reader; update_columns reader: true; end
-  def unset_reader; update_columns reader: false; end
-  def reset_reader; self.tags.readers.present? ? set_reader : unset_reader; end
 
   def set_wordcount(recount=true)
     #Rails.logger.debug "#{self.title} old wordcount: #{self.wordcount} and size: #{self.size}"
@@ -212,6 +195,7 @@ class Page < ActiveRecord::Base
   after_create :initial_fetch
 
   before_save :update_tag_cache
+  before_save :reset_booleans
 
   def can_have_tags?; %w{Single Book}.include?(self.type) || self.type.blank?; end
   def tag_types; can_have_tags? ? Tag.types : Tag.some_types; end
@@ -473,11 +457,9 @@ class Page < ActiveRecord::Base
     return unless parent.present?
     Rails.logger.debug "moving tags to parent"
     parent.tags << self.tags - self.tags.readers
-    parent.reset_tags
     parent.save!
     self.tags = self.tags.readers
     self.save!
-    self.reset_tags
   end
 
   def refetch(passed_url)
@@ -665,9 +647,6 @@ class Page < ActiveRecord::Base
   def add_tags_from_string(string, type="Tag")
     return if string.blank?
     Rails.logger.debug "adding #{type} #{string}"
-    self.set_hidden if type == "Hidden"
-    self.set_con if type == "Con"
-    self.set_pro if type == "Pro"
     string.split(",").each do |try|
       name = try.squish
       exists = Tag.find_by_short_name(name)

@@ -56,31 +56,18 @@ class TagsController < ApplicationController
         redirect_to tags_path + "##{@tag.class}"
       end
     elsif params[:commit] == "Change"
-      was_hidden = @tag.type == "Hidden"
-      was_con = @tag.type == "Con"
-      type = params[:change]
-      @tag.update_attribute(:type, type)
-      if type == "Hidden"
-        Rails.logger.debug "setting #{@tag.pages.size} #{@tag.name}'s pages to hidden"
-        @tag.pages.update_all hidden: true
-      elsif type == "Con"
-        Rails.logger.debug "setting #{@tag.pages.size} #{@tag.name}'s pages to conned"
-        @tag.pages.update_all con: true
-      end
-      if was_hidden
-        Rails.logger.debug "may be unhiding #{@tag.name}'s pages"
-        @tag.pages.map(&:reset_hidden)
-      elsif was_con
-        Rails.logger.debug "may be unconning #{@tag.name}'s pages"
-        @tag.pages.map(&:reset_con)
-      end
+      old_type = @tag.class
+      new_type = params[:change]
+      @tag.update_attribute(:type, new_type)
+      old_type.recache_all
+      new_type.constantize.recache_all
       @tag.pages.map(&:remove_outdated_downloads)
-      if type == 'Author'
+      if new_type == 'Author'
         redirect_to author_path(@tag)
-      elsif type == 'Fandom'
+      elsif new_type == 'Fandom'
         redirect_to fandom_path(@tag)
       else
-        redirect_to tags_path + "##{@tag.class}"
+        redirect_to tags_path + "##{new_type}"
       end
     elsif params[:commit] == "Split"
       if params[:first_tag_name] == params[:second_tag_name]
@@ -152,8 +139,6 @@ class TagsController < ApplicationController
         redirect_to tag_path(@page.id) and return
       end
     end
-    @page.reset_con
-    @page.reset_hidden
     @page.save!
     redirect_to page_path(@page)
   end

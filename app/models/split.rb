@@ -13,7 +13,7 @@ module Split
     chapter2.raw_html = ch2nodes.to_xhtml(:indent_text => '', :indent => 0).gsub("\n",'')
   end
 
-  def created_via_split?; url.blank? && File.exists?(raw_html_file_name); end
+  def created_via_split?; url.blank? && File.exist?(raw_html_file_name); end
 
   def create_sibling(number)
     sibling_nodes = nodes_below(number)

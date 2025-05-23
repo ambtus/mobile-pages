@@ -387,12 +387,7 @@ module Meta
       end
       non_existing << single unless found
     end
-    if existing.empty?
-      if self.tags.authors.blank?
-        Rails.logger.debug "adding #{OTHERA} to authors"
-        self.tags << oa_tag
-      end
-    else
+    if existing.present?
       Rails.logger.debug "adding #{existing.map(&:name)} to authors"
       existing.uniq.each {|a| self.tags << a unless self.tags.authors.include?(a)}
     end
@@ -433,21 +428,13 @@ module Meta
         Rails.logger.debug "found #{found.name}"
         if self.tags.include?(found)
           Rails.logger.debug "won't re-add #{found.name} to tags"
-        elsif self.of_present? # use other fandom tag to prevent false positives
-           Rails.logger.debug "will NOT add #{found.name} to tags: add to notes instead"
-           non_existing << simple if simple.present?
         else
           Rails.logger.debug "will add #{found.name} to tags"
           existing << found
         end
       end
     end
-    if existing.empty?
-      if self.tags.fandoms.blank?
-        Rails.logger.debug "adding #{OTHERF} to fandoms"
-        self.tags << of_tag
-      end
-    else
+    if existing.present?
       Rails.logger.debug "adding #{existing.uniq.map(&:name)} to fandoms"
       existing.uniq.each {|f| self.tags << f}
     end

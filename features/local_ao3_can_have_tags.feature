@@ -29,22 +29,19 @@ Scenario: A Book can have fandom and author in notes but a Chapter does not have
   When I am on the page's page
   Then I should see "by Sidra" within ".notes"
     And I should see "Harry Potter" before "Using time-travel" within ".notes"
-    And I should see "Other Fandom" within ".fandoms"
     But I should NOT see "Sidra" within "#position_1"
     And I should NOT see "Harry Potter" within "#position_1"
 
 Scenario: A Chapter without fandom and author tags when alone
   Given Time Was exists
   When I am on the page with title "Hogwarts"
-  Then I should NOT see "Other Fandom" within ".fandoms"
-    But I should NOT see "Sidra"
+  Then I should NOT see "Sidra"
     And I should NOT see "Harry Potter"
 
 Scenario: A Series without fandom and author tags from child
   Given Counting Drabbles exists
   When I am on the page's page
-  Then I should see "Other Fandom" within ".fandoms"
-    And I should NOT see "Sidra" within ".notes"
+  Then I should NOT see "Sidra" within ".notes"
     And I should NOT see "Harry Potter" within ".notes"
     But I should see "by Sidra; Harry Potter; Harry Potter/Unknown" within "#position_1"
 

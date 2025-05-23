@@ -87,10 +87,11 @@ Scenario: creating a series when I already have its books
     And I press "Store"
   Then I should see "Page created"
     And I should see "Misfits (Series)" within ".title"
-    And I should see "Other Fandom" within ".fandoms"
     And I should see "Three Misfits in New York" within "#position_1"
     And I should see "A Misfit Working Holiday In New York" within "#position_2"
     And I should have 7 pages
+    And I should have 0 pages with and 7 without fandoms
+    And I should have 0 pages with and 7 without authors
 
 Scenario: refetching a one-page Single into a Book from page
   Given "harry potter" is a "Fandom"

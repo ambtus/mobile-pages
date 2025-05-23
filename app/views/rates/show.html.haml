@@ -8,9 +8,6 @@
     Parent stars:
     =@page.parent.star_string
     ="Favorite" if @page.parent.favorite
-    %br
-    Parent cliffhanger:
-    =@page.parent.cliff_present?
 .form
   = form_tag :rates do
     = hidden_field_tag(:page_id, @page.id)
@@ -32,16 +29,6 @@
       = label_tag :today_Yes, 'Yes'
       = radio_button_tag :today, 'No', false
       = label_tag :today_No, 'No'
-    .cons
-      = label_tag :unfinished, "Unfinished?"
-      - ['Yes', 'No'].each do |choice|
-        = radio_button_tag :unfinished, choice, humanize_boolean(@page.unfinished_present?) == choice
-        = label_tag "unfinished_#{choice}", choice
-      %br
-      = label_tag :cliff, "Cliffhanger?"
-      - ['Yes', 'No'].each do |choice|
-        = radio_button_tag :cliff, choice, humanize_boolean(@page.cliff_present?) == choice
-        = label_tag "cliff_#{choice}", choice
 
     -if @page.can_have_parts?
       .parent

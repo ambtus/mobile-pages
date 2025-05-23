@@ -174,3 +174,12 @@ Then("I should NOT have button {string}") do |string|
   assert page.has_no_button?(string)
 end
 
+
+Then('I should have {int} page(s) with and {int} without fandoms') do |wi, wo|
+  assert_equal wi, Page.where(fandom: true).count
+  assert_equal wo, Page.where(fandom: false).count
+end
+Then('I should have {int} page(s) with and {int} without authors') do |wi, wo|
+  assert_equal wi, Page.where(author: true).count
+  assert_equal wo, Page.where(author: false).count
+end

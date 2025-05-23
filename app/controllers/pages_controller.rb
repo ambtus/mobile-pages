@@ -190,23 +190,7 @@ class PagesController < ApplicationController
         @page.destroy
         @page = Page.new(params[:page])
       else
-        @page.reset_tags
-        flash[:notice] = "Page created"
-        if @page.tags.fandoms.blank? && @page.can_have_tags?
-          Rails.logger.debug "page created without fandom"
-          flash[:notice] += " with #{Page::OTHERF}"
-          @page.toggle_of
-        else
-          Rails.logger.debug "page created with fandom"
-        end
-        if @page.tags.authors.blank? && @page.can_have_tags?
-          Rails.logger.debug "page created without author"
-          flash[:notice] += " with #{Page::OTHERA}"
-          @page.toggle_oa
-        else
-          Rails.logger.debug "page created with author"
-        end
-        flash[:notice] += "."
+        flash[:notice] = "Page created."
         flash[:alert] = "edit raw html manually" if @page.ff?
         redirect_to page_path(@page) and return
       end
@@ -273,12 +257,6 @@ class PagesController < ApplicationController
       when "Update Tag Cache"
         @page.full_tag_cache_update
         flash[:notice] = "Updaded Tag Cache"
-      when "Toggle #{Page::OTHERF}"
-        @page.toggle_of.rebuild_meta
-        flash[:notice] = "Toggled #{Page::OTHERF}"
-      when "Toggle #{Page::OTHERA}"
-        @page.toggle_oa.rebuild_meta
-        flash[:notice] = "Toggled #{Page::OTHERA}"
       when "Set WIP"
         @page.update wip: true
       when "Unset WIP"

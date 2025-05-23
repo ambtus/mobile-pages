@@ -14,8 +14,6 @@ class RatesController < ApplicationController
       redirect_to rate_path(page) and return
     end
     page.rate_today(stars, params[:all], params[:today], params[:favorite])
-    page.update_cliff(params[:cliff])
-    page.update_unfinished(params[:unfinished])
     page.reset_soon
     previous = params[:previous]
     case previous

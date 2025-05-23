@@ -56,11 +56,10 @@ Scenario: download part titles
     And I follow "Part 2"
     And I follow "Rate"
     And I click on "3"
-    And I click on "unfinished_Yes"
     And I press "Rate"
     And I read it online
   Then I should see "Part 1 (rating tag)" within "h2"
-    And I should see "Part 2 (unfinished)"
+    And I should NOT see "Part 2 (unread)"
     And I should see "Part 3 (unread)"
     But I should NOT see "info tag"
     And I should NOT see today

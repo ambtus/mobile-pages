@@ -2,10 +2,6 @@ module SpecialTags
 
   TT = "Time Travel"
   FI = "Fix-it"
-  OTHERF = "Other Fandom"
-  OTHERA = "Other Author"
-  CLIFF = "Cliffhanger"
-  UNFINISHED = "unfinished"
 
   def tt_tag; Pro.find_or_create_by(name: TT); end
   def tt_present?; tags.pros.include?(tt_tag);end
@@ -15,75 +11,6 @@ module SpecialTags
   def fi_present?; tags.pros.include?(fi_tag);end
   def set_fi; tags.append(fi_tag) unless fi_present?; end
 
-  def of_tag; Fandom.find_or_create_by(name: OTHERF); end
-  def of_present?; self.tags.fandoms.include?(of_tag);end
-  def set_of; tags.append(of_tag) unless of_present?; end
-  def toggle_of
-    of_present? ? tags.delete(of_tag) : self.tags.append(of_tag)
-    self.save!
-    return self
-  end
-
-  def oa_tag; Author.find_or_create_by(name: OTHERA); end
-  def oa_present?; self.tags.authors.include?(oa_tag);end
-  def set_oa; tags.append(oa_tag) unless oa_present?; end
-  def toggle_oa
-    oa_present? ? tags.delete(oa_tag) : self.tags.append(oa_tag)
-    self.save!
-    return self
-  end
-
-  def cliff_tag; Con.find_or_create_by(name: CLIFF); end
-  def cliff_present?
-    if parent.blank?
-      self.tags.cons.include?(cliff_tag)
-    else
-      parent.tags.cons.include?(cliff_tag)
-    end
-  end
-  def update_cliff(bool)
-    if bool == "Yes"
-      if parent.blank?
-        self.tags.append(cliff_tag)
-        self.reset_con
-      else
-        unless parent.cliff_present?
-          Rails.logger.debug "adding cliffhanger to #{parent.title}"
-          parent.tags.append(cliff_tag)
-          parent.reset_con
-        end
-      end
-    elsif bool == "No"
-      if parent.blank?
-        self.tags.delete(cliff_tag)
-        self.reset_con
-      else
-        if parent.cliff_present?
-          Rails.logger.debug "removing cliffhanger from #{parent.title}"
-          parent.tags.delete(cliff_tag)
-          parent.reset_con
-        end
-      end
-    else
-      raise "why isn’t #{bool} Yes or No?"
-    end
-    self.parent.save! if self.parent
-    self.save!
-  end
-
-  def unfinished_tag; Con.find_or_create_by(name: UNFINISHED); end
-  def unfinished_present?; self.tags.include?(unfinished_tag);end
-  def update_unfinished(bool)
-    if bool == "Yes"
-      self.tags.append(unfinished_tag)
-    elsif bool == "No"
-      self.tags.delete(unfinished_tag)
-    else
-      raise "why isn’t #{bool} Yes or No?"
-    end
-    reset_con
-    self.save!
-  end
 
   ## if it's a chapter, add the book's authors and fandoms
   ## if it's a series, add its children's authors and fandoms

@@ -2,27 +2,11 @@ Feature: ao3 testing that can use local files
          so I don't have to constantly be fetching from
          (would need to be updated if ao3 changes it's format)
 
-Scenario: Other Fandom if fandom doesn't exists
+Scenario: Fandom in notes if fandom doesn't exists
   Given Skipping Stones exists
   When I am on the page's page
-  Then I should see "Other Fandom" within ".fandoms"
-    And I should see "Harry Potter" before "Harry Potter/Unknown" within ".notes"
-
-Scenario: Other Fandom prevents fandom matching
-  Given Skipping Stones exists
-    And "Harry Potter" is a "Fandom"
-  When I am on the page's page
-    And I press "Rebuild Meta"
-  Then I should see "Other Fandom" within ".fandoms"
-    And I should see "Harry Potter" before "Harry Potter/Unknown" within ".notes"
-
-Scenario: toggling Other Fandom allows fandom matching
-  Given Skipping Stones exists
-    And "Harry Potter" is a "Fandom"
-  When I am on the page's page
-    And I press "Toggle Other Fandom"
-  Then I should see "Harry Potter" within ".fandoms"
-    And I should NOT see "Harry Potter" before "Harry Potter/Unknown" within ".notes"
+  Then I should see "Harry Potter" before "Harry Potter/Unknown" within ".notes"
+    And I should have 0 pages with and 1 without fandoms
 
 Scenario: some fandoms match
   Given "Harry Potter" is a "Fandom"
@@ -35,8 +19,8 @@ Scenario: some fandoms match
 Scenario: check before don't over-match
   Given Yer a Wizard exists
     And I am on the page's page
-  Then I should see "Other Fandom" within ".fandoms"
-    And I should see "Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
+  Then I should see "Forgotten Realms, Legend of Drizzt Series, Starlight and Shadows Series" within ".notes"
+    And I should have 0 pages with and 1 without fandoms
 
 Scenario: don't over-match "of" in fandoms
   Given "Person of Interest" is a "Fandom"

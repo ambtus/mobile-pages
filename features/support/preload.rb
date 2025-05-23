@@ -1,4 +1,3 @@
 Author
 Tag
 Page
-Hidden

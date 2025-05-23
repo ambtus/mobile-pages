@@ -40,8 +40,7 @@ Scenario: adding an unread chapter to a book
     And I should see today within "#position_1"
     And I should see "Hogwarts" within "#position_2"
     And I should see "unread" within "#position_2"
-    And I should NOT see "Other Fandom" within "#position_2"
-    But I should NOT see "by Sidra" within "#position_2"
+    And I should NOT see "by Sidra" within "#position_2"
 
 Scenario: grab a series with multiple authors
   Given "Good Omens" is a "Fandom"
@@ -61,14 +60,6 @@ Scenario: grab a series with multiple authors
     And I should see "entanglednow" within "#position_2"
     And I should NOT see "green_grin" within "#position_1"
     But I should see "green_grin" within "#position_2"
-
-Scenario: adding a work to a series with a fandom should not get Other Fandom
-  Given "harry potter" is a "Fandom"
-    And Counting Drabbles partially exists
-  When I am on the mini page
-    And I fill in "page_url" with "https://archiveofourown.org/series/46"
-    And I press "Refetch"
-  Then I should NOT see "Other Fandom"
 
 Scenario: time travel Book
   Given I am on the mini page

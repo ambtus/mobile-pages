@@ -6,13 +6,22 @@ class Tag < ActiveRecord::Base
   validates_uniqueness_of :name, :case_sensitive => false, scope: :type
 
   def self.types; ["Fandom", "Author", "Pro", "Con", "Hidden", "Reader", "Info", "Collection"]; end
+  def self.boolean_types; ["Fandom", "Author", "Pro", "Con", "Hidden", "Reader"]; end
   def self.some_types; self.types - ["Fandom", "Author"]; end
-  def self.boolean_types; self.some_types - ["Info", "Collection"]; end
+  def self.title_types; self.some_types - ["Info", "Collection"]; end
+
+  def self.recache_all
+    return unless self.boolean_types.include?(self.name)
+    Page.update_all(self.name.downcase => false)
+    self.all.each do |tag|
+      tag.pages.update_all(self.name.downcase => true)
+    end
+  end
 
   scope :by_name, -> { order('tags.name asc') }
   scope :by_type, -> { order('tags.type desc') }
 
-  scope :title_suffixes, -> {where(type: Tag.boolean_types)}
+  scope :title_suffixes, -> {where(type: Tag.title_types)}
 
   self.types.each do |type|
     scope type.downcase.pluralize.to_sym, -> { where(type: type)}
@@ -94,7 +103,7 @@ class Tag < ActiveRecord::Base
     self.destroy
     page_ids.each do |id|
       page = Page.find(id)
-      page.save!
+      page.save! # update_tag_cache && reset_boolean
     end
   end
 

@@ -16,14 +16,12 @@
       = submit_tag "Decrease Type" unless @page.type == "Chapter"
       = submit_tag "Increase Position" if @page.position
       = submit_tag "Decrease Position" if @page.position
-    .tags
-      = submit_tag "Toggle #{Page::OTHERF}"
-      = submit_tag "Toggle #{Page::OTHERA}"
+    .wip
       -if @page.wip
         =submit_tag 'Unset WIP'
       -else
         =submit_tag 'Set WIP'
-      %br
+    .toggle_end_notes
       -if @page.can_have_parts?
         =submit_tag 'Put all end notes before'
         =submit_tag 'Put all end notes after'

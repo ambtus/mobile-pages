@@ -27,19 +27,17 @@ Scenario: no tags exist during create
   Given I am on the mini page
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
-  Then I should see "Page created with Other Fandom"
-    And I should see "Other Fandom" within ".fandoms"
+  Then I should have 0 pages with and 1 without fandoms
 
 Scenario: no tags selected during create
   Given "first" is a "Fandom"
     And I am on the mini page
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
-  Then I should see "Page created with Other Fandom"
-    And I should see "Other Fandom" within ".fandoms"
+  Then I should have 0 pages with and 1 without fandoms
     And I should NOT see "first" within ".fandoms"
 
-Scenario: fandom and other tag selected during create
+Scenario: fandom and author tag selected during create
   Given "first" is a "Author"
     And "second" is a "Fandom"
     And I am on the create page
@@ -47,9 +45,9 @@ Scenario: fandom and other tag selected during create
     And I select "second"
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
-  Then I should NOT see "with Other Fandom"
-    And I should NOT see "with Other Author"
-    But I should see "Page created."
+  Then I should see "Page created."
+    And I should have 1 page with and 0 without fandoms
+    And I should have 1 page with and 0 without authors
     And I should see "first" within ".authors"
     And I should see "second" within ".fandoms"
 
@@ -60,8 +58,8 @@ Scenario: fandom only selected during create
     And I select "nonfiction"
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
-  Then I should NOT see "Page created with Other Fandom"
-    But I should see "Page created with Other Author"
+  Then I should have 1 pages with and 0 without fandoms
+    And I should have 0 pages with and 1 without authors
     And I should see "nonfiction" within ".fandoms"
 
 Scenario: add a fandom to a page when there are no fandoms
@@ -162,34 +160,24 @@ Scenario: show number of pages for fandom
   Given a page exists with fandoms: "Twilight"
   When I am on the edit tag page for "Twilight"
   Then I should see "1 page with that tag"
+    And I should have 1 page with and 0 without fandoms
 
-Scenario: deleted fandom creates Other Fandom (filter)
+Scenario: deleted fandom removes filter and adds boolean
   Given a page exists with fandoms: "Twilight"
   When I am on the edit tag page for "Twilight"
     And I follow "Destroy"
     And I press "Yes"
     And I am on the filter page
   Then I should NOT be able to select "Twilight" from "fandom"
-    But I should be able to select "Other Fandom" from "fandom"
+    And I should have 0 page with and 1 without fandoms
 
-Scenario: deleted fandom creates Other Fandom (index)
-  Given a page exists with fandoms: "Twilight"
-  When I am on the edit tag page for "Twilight"
-    And I follow "Destroy"
-    And I press "Yes"
-    And I am on the homepage
-    And I follow "Page 1"
-  Then I should see "Other Fandom" within ".fandoms"
-    And I should see "Twilight" within ".notes"
-
-Scenario: deleted fandom puts moves fandom to other fandom on page
+Scenario: deleted fandom moves fandom to notes on page
   Given a page exists with fandoms: "Twilight"
   When I am on the edit tag page for "Twilight"
     And I follow "Destroy"
     And I press "Yes"
     And I am on the page's page
-  Then I should see "Other Fandom" within ".fandoms"
-    And I should see "Twilight" within ".notes"
+  Then I should see "Twilight" within ".notes"
 
 Scenario: change fandom to pro tag part 1
   Given a page exists with fandoms: "not a fandom"

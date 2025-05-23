@@ -25,8 +25,7 @@ Scenario: deliberately fetch chapter 1 shows chapter summary and chapter notes
 Scenario: multiple fandoms and author on a Single
   Given Alan Rickman exists
   When I am on the page's page
-  Then I should see "Other Fandom" within ".fandoms"
-    And I should see "Harry Potter, Die Hard, Robin Hood" within ".notes"
+  Then I should see "Harry Potter, Die Hard, Robin Hood" within ".notes"
     And I should see "by manicmea" within ".notes"
     But I should NOT see "Rowling" within ".notes"
     And I should NOT see "Movies" within ".notes"

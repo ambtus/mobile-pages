@@ -115,7 +115,7 @@ module Download
   end
 
   def create_epub
-    return if File.exists?("#{self.download_basename}.epub")
+    return if File.exist?("#{self.download_basename}.epub")
     FileUtils.mkdir_p(download_dir) # make sure directory exists
     `#{epub_command} 2> /dev/null`
   end
