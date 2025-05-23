@@ -22,25 +22,18 @@ module ApplicationHelper
     url_for page.download_url(format)
   end
 
-  def link_to_basename(basename)
-    link_to basename, pages_path(:find => basename)
-  end
-
   def link_to_tag(tag, name)
-    link_to name, pages_path(:find => tag.base_name)
+    if tag.is_a? Author
+      link_to name, author_path(tag)
+    elsif tag.is_a? Fandom
+      link_to name, fandom_path(tag)
+    else
+      link_to_tag_pages(tag, name)
+    end
   end
 
-  def humanize_boolean(value)
-    case value
-    when true
-      "Yes"
-    when false
-      "No"
-    when nil
-      "Undefined"
-    else
-      "Invalid"
-    end
+  def link_to_tag_pages(tag, name)
+     link_to name, pages_path(find: tag.base_name)
   end
 
 end

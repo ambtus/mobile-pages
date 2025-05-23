@@ -1,5 +1,4 @@
--cached_tags = page.cached_tags
 -Tag.types.each do |type|
   .div{class: "#{type.downcase.pluralize}"}
-    -cached_tags.select{|t| t.type == type}.map(&:base_name).sort.each do |basename|
-      =link_to_basename basename
+    -page.cached_tags.select{|t| t.type == type}.sort_by{|t| t.base_name}.each do |tag|
+      =link_to_tag tag, tag.base_name

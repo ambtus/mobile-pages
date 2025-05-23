@@ -1,2 +1,2 @@
--page.tag_basenames.each do |basename|
-  =link_to_basename basename
+-page.cached_tags.each do |tag|
+  =link_to_tag tag, tag.base_name

@@ -4,37 +4,38 @@
   = link_to "edit", edit_tag_path(@tag)
   |
   -total = @tag.pages.count
-  =link_to_tag @tag, "#{total} #{'page'.pluralize(total)}"
+  =link_to_tag_pages @tag, "#{total} #{'page'.pluralize(total)}"
+
   %br
   %br
   -count = @tag.pages.read.count
-  #{count} read #{'page'.pluralize(count)} 
+  #{count} read #{'page'.pluralize(count)}
   %br
   -count = @tag.pages.unread.count
-  #{count} unread #{'page'.pluralize(count)} 
+  #{count} unread #{'page'.pluralize(count)}
   %br
   -count = @tag.pages.unread_parts.count
-  #{count} partially read #{'page'.pluralize(count)} 
+  #{count} partially read #{'page'.pluralize(count)}
   %br
   %br
   -count = @tag.pages.best.count
-  #{count} best #{'page'.pluralize(count)} 
+  #{count} best #{'page'.pluralize(count)}
   %br
   -count = @tag.pages.okay.count
-  #{count} okay #{'page'.pluralize(count)} 
+  #{count} okay #{'page'.pluralize(count)}
   %br
   -count = @tag.pages.bad.count
-  #{count} bad #{'page'.pluralize(count)} 
+  #{count} bad #{'page'.pluralize(count)}
   %br
   -count = @tag.pages.old_rating.count
-  #{count} old rating #{'page'.pluralize(count)} 
+  #{count} old rating #{'page'.pluralize(count)}
   %br
   -count = @tag.pages.unrated.count
-  #{count} unrated #{'page'.pluralize(count)} 
+  #{count} unrated #{'page'.pluralize(count)}
   %br
   %br
   -count = @tag.pages.favorite.count
-  #{count} favorite/loved #{'page'.pluralize(count)} 
+  #{count} favorite/loved #{'page'.pluralize(count)}
   %br
   -count = @tag.pages.wip.count
-  #{count} WIP #{'page'.pluralize(count)} 
+  #{count} WIP #{'page'.pluralize(count)}

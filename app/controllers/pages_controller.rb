@@ -255,7 +255,7 @@ class PagesController < ApplicationController
         @page.rebuild_meta
         flash[:notice] = "Rebuilt Meta"
       when "Update Tag Cache"
-        @page.full_tag_cache_update
+        @page.save!
         flash[:notice] = "Updaded Tag Cache"
       when "Set WIP"
         @page.update wip: true

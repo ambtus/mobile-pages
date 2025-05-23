@@ -12,6 +12,7 @@ Scenario: link to tag on show should find page on index
   Given a page exists with fandoms: "lmn123"
   When I am on the page's page
     And I follow "lmn123"
+    And I follow "1 page"
   Then I should see "Page 1" within "#position_1"
 
 Scenario: strip fandom whitespace and sort
@@ -21,7 +22,8 @@ Scenario: strip fandom whitespace and sort
     And I fill in "tags" with "  xyz &   789,  abc/123,lmn   & 345  "
     And I press "Add Fandom Tags"
   Then I should see "abc/123 lmn & 345 xyz & 789" within ".fandoms"
-    And "lmn & 345" should link to "/pages?find=lmn+%26+345"
+    And I follow "lmn & 345" 
+  Then "1 page" should link to "/pages?find=lmn+%26+345"
 
 Scenario: no tags exist during create
   Given I am on the mini page

@@ -80,4 +80,5 @@ Scenario: link from show bug
   Given a page exists with authors: "jane (june)"
   When I am on the page's page
     And I follow "jane"
+    And I follow "1 page"
   Then I should see "Page 1"

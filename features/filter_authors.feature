@@ -25,6 +25,7 @@ Scenario: find by clicking link on show page
   When I am on the homepage
     And I follow "Alice's Adventures In Wonderland"
     And I follow "lewis carroll"
+    And I follow "2 pages"
   Then I should see "Alice's Adventures In Wonderland" within "#position_1"
     And I should see "Through the Looking Glass"
     And the page should have title "Pages tagged with lewis carroll"

@@ -220,21 +220,7 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def tag_basenames; tag_cache.split_comma; end
-  def cached_tags; Tag.all.select{|t| tag_basenames.include?(t.base_name)}; end
-
-  def full_tag_cache_update
-    case type
-    when "Chapter", "Single"
-      save!
-    when "Book", "Series"
-      save!
-      parts.map(&:save!)
-    else # shouldn't get here, but...
-      Rails.logger.debug "page #{self.id} doesn't have a proper type"
-      ''
-    end
-  end
+  def cached_tags; Tag.all.select{|t| tag_cache.split_comma.include?(t.base_name)}; end
 
   def shared_tags; tags.authors + tags.fandoms; end
 

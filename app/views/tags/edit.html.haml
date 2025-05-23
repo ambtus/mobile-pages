@@ -1,6 +1,6 @@
 %h1=@title
 .pages
-  %p=link_to_tag @tag, "#{@tag.pages.count} #{'page'.pluralize(@tag.pages.count)} with that tag"
+  %p=link_to_tag_pages @tag, "#{@tag.pages.count} #{'page'.pluralize(@tag.pages.count)} with that tag"
 .destroy
   %p=link_to 'Destroy', tag_path(@tag, destroy: true)
 -if @tag.type == "Hidden"
