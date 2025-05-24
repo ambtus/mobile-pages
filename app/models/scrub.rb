@@ -104,6 +104,9 @@ module Scrub
     html.gsub!(/<u><\/u>/) {|s| $1}
     html.gsub!(/<i><\/i>/) {|s| $1}
     html.gsub!(/<b><\/b>/) {|s| $1}
+    # fix weird quotes being used for curly quotes
+    html.gsub!('`', '‘')
+    html.gsub!('´', '’')
 
     # extra breaks inside paragraphs
     html.gsub!(/<p><br ?\/?>/, "<p>")

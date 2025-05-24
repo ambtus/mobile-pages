@@ -36,12 +36,14 @@ Scenario: reading page after download hidden
     And I should have 1 reading page
 
 Scenario: reading next
-  Given six downloaded and six hidden soon pages exist
+  Given six pages and two hidden pages downloaded
   When I am on the reading page
-    And I press "Next"
-  Then I should see "reading" within ".pages"
-    And the page should contain css "#position_2"
-    And I should have 12 reading pages
+  Then I should NOT see "hidden"
+  When I press "Next"
+  Then I should NOT see "hidden"
+    And the page should NOT contain css "#position_2"
+    And I should have 6 reading pages
+    And I should have 2 hidden pages
 
 Scenario: reading last
   Given eleven downloaded pages exist

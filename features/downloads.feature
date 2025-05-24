@@ -22,6 +22,12 @@ Scenario: epub downloads
     And the download html file should exist
     And the download epub file should exist
 
+Scenario: weird formatting in end notes
+  Given a page exists with end_notes: "(⸝⸝´꒳`⸝⸝♡)"
+  When I download its epub
+  Then the download directory should exist
+    And the download epub file should exist
+
 Scenario: removing downloads
   Given a page exists
   When I download its epub

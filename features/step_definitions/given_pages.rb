@@ -125,12 +125,16 @@ Given("a partially read page exists") do
   book3.update_from_parts
 end
 
-Given("six downloaded and six hidden soon pages exist") do
+Given('six pages and two hidden pages downloaded') do
   6.times do |i|
-    Single.create(title: "reading #{i+1}", soon: 0)
+    Single.create(title: "reading #{i+1}")
   end
-  6.times do |i|
-    Single.create(title: "hidden #{i+1}", soon: 0, hidden: true)
+  2.times do |i|
+    Single.create(title: "hidden #{i+1}").add_tags_from_string("hide me", "Hidden")
+  end
+  Page.all.each do |page|
+    visit page_path(page)
+    within(".views") {click_link("ePub")}
   end
 end
 

@@ -40,3 +40,7 @@ Then('the tag_cache should NOT include {string}') do |string|
   assert_no_match string, tag_cache
 end
 
+Then('I should have {int} hidden pages') do |int|
+  assert_equal int, Page.where(hidden: true).count
+end
+

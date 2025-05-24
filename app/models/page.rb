@@ -639,9 +639,10 @@ class Page < ActiveRecord::Base
 
   # used in index view and in epub comments
   # RubyPants turns quotes into smart quotes which don't mess up the epub command
-  def short_notes; RubyPants.new(Scrub.sanitize_and_strip(notes).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
-  def short_my_notes; RubyPants.new(Scrub.sanitize_and_strip(my_notes).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
-  def short_end_notes; RubyPants.new(Scrub.sanitize_and_strip(end_notes).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
+  def fix_me(string); RubyPants.new(Scrub.sanitize_and_strip(string).truncate(SHORT_LENGTH, separator: /\s/)).to_html.html_safe; end
+  def short_notes; fix_me(notes) ; end
+  def short_my_notes; fix_me(my_notes); end
+  def short_end_notes; fix_me(end_notes); end
 
   def add_tags_from_string(string, type="Tag")
     return if string.blank?
