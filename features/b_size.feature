@@ -84,3 +84,8 @@ Scenario: image only chapter
   Given an image only chapter
   When I am on the page's page
   Then I should see "-1 words" within ".size"
+
+Scenario: another image only chapter
+  Given another image only chapter
+  When I am on the page's page
+  Then I should see "-1 words" within ".size"

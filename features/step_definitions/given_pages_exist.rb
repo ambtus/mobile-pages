@@ -63,3 +63,9 @@ Given('an image only chapter') do
   chapter.update!(url: "http://www.illuminations.nu/foxmonkey/fic/chasez/legal1.html")
   chapter.set_raw_from("img")
 end
+
+Given('another image only chapter') do
+  chapter = Chapter.create!(title: "4. Dear you,")
+  chapter.update!(url: "https://archiveofourown.org/works/845764/chapters/1775725")
+  chapter.set_raw_from("img2")
+end

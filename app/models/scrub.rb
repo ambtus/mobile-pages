@@ -157,6 +157,7 @@ module Scrub
       body = doc.xpath('//body').first
       nodeset = body.children
       while nodeset.size == 1 && nodeset.first.is_a?(Nokogiri::XML::Element)
+        break if nodeset.first.children.blank?
         nodeset = nodeset.first.children
         nodeset.each do |top_node|
           nodeset.delete(top_node) if (top_node.is_a?(Nokogiri::XML::Text) && top_node.blank?)
