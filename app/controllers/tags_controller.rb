@@ -130,8 +130,7 @@ class TagsController < ApplicationController
       consolidate_tag_ids
       @page.tag_ids = params[:page][:tag_ids]
       @page.save!
-      @page.parts.map(&:save!) if @page.can_have_parts?
-      @page.parent.save! if @page.parent
+      @page.parent.save! if @page.parent.is_a?(Series)
     elsif params[:commit].match /Add (.*) Tags/
       unless @page.add_tags_from_string(params[:tags], $1.squish)
         Rails.logger.debug "page errors: #{@page.errors.messages}"
@@ -139,7 +138,6 @@ class TagsController < ApplicationController
         redirect_to tag_path(@page.id) and return
       end
     end
-    @page.save!
     redirect_to page_path(@page)
   end
 
