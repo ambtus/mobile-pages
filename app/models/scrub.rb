@@ -3,7 +3,11 @@
 module Scrub
 
   def self.agent
-    @agent ||= Mechanize.new { |a| a.log = Logger.new("#{Rails.root}/log/mechanize.log") }
+    @agent ||= Mechanize.new { |a|
+      a.log = Logger.new("#{Rails.root}/log/mechanize.log")
+      a.open_timeout = 10
+      a.read_timeout = 10
+    }
   end
 
   # regularize imported html to fix garbled encodings
