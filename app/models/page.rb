@@ -805,13 +805,13 @@ class Page < ActiveRecord::Base
     self.parts.map(&:rebuild_meta)
     remove_outdated_tags
     set_meta
-    self.parts.map(&:save!)
     return self
   end
 
   def remove_outdated_tags
     return if self.can_have_tags?
     self.tags.delete(self.tags.where(type: ["Fandom", "Author"]))
+    self.save!
     return self
   end
 
