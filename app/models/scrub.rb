@@ -5,8 +5,8 @@ module Scrub
   def self.agent
     @agent ||= Mechanize.new { |a|
       a.log = Logger.new("#{Rails.root}/log/mechanize.log")
-#      a.open_timeout = 10
-#      a.read_timeout = 10
+      a.open_timeout = 10
+      a.read_timeout = 10
     }
   end
 
