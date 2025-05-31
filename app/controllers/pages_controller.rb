@@ -289,6 +289,9 @@ class PagesController < ApplicationController
         @page.parts.map(&:remove_outdated_downloads)
         @page.remove_outdated_downloads
         flash[:notice] = "Toggled All End Notes"
+      when "Make Me a Chapter"
+        @page.make_me_into_a_chapter
+        flash[:notice] = "Made a chapter"
       when "Make Single"
         @page.make_single
         flash[:notice] = "Made Single"

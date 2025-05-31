@@ -30,3 +30,22 @@ Scenario: paste actual html and get meta
   Then I should see "Hogwarts (Chapter)"
     And I should see "187 words"
     And I should see "giving up on nanowrimo"
+
+Scenario: make a single into a book 
+  Given Where am I existed and was read
+  When I am on the page's page
+    And I press "Make Me a Chapter"
+  Then I should have 2 pages
+    And I should see "Parent: Time Was, Time Is (Book)"
+    And I should see "temp (Chapter)"
+    And my page named "Time Was, Time Is" should not have a parent
+
+Scenario: adding a url after making a single into a book
+  Given Where am I existed and was read
+  When I am on the page's page
+    And I press "Make Me a Chapter"
+    And I follow "Refetch"
+    And I fill in "url" with "https://archiveofourown.org/works/692/chapters/804"
+    And I press "Refetch"
+    And I press "Rebuild Meta"
+  Then my page named "Where am I?" should have url: "https://archiveofourown.org/works/692/chapters/804"

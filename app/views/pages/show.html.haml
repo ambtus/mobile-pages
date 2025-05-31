@@ -10,6 +10,7 @@
       = submit_tag "Rebuild Meta"
       = submit_tag "Update Tag Cache"
     .type
+      = submit_tag "Make Me a Chapter" if @page.ao3? && @page.type == "Single"
       = submit_tag "Make Single" if @page.parent
       = submit_tag "Uncollect" if @page.can_have_parts?
       = submit_tag "Increase Type" unless @page.type == "Series"

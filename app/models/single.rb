@@ -54,4 +54,26 @@ class Single < Page
     end
   end
 
+  # if called from the command line, can pass the new chapter url
+  # if called from the web, the chapter has no url until refetched
+  def make_me_into_a_chapter(chapter_url = nil)
+    book = Book.create!(title: self.title)
+    if self.parent
+      book.parent_id = self.parent.id
+      book.position = self.position
+    end
+    self.parent_id = book.id
+    self.position = 1
+    book.url = self.url
+    self.url = chapter_url
+    self.type = "Chapter"
+    self.title = "temp"
+    self.save!
+    book.save!
+    move_tags_up
+    move_soon_up
+    book.rebuild_meta
+  end
+
+
 end
