@@ -136,6 +136,21 @@ class PagesController < ApplicationController
       end
       return
     end
+    if params[:Add]
+      url = params[:page][:url].normalize
+      parent = Page.find_parent_by_url(url)
+      if parent
+        parent.add_chapter(url)
+        @page = parent.parts.last
+        flash[:notice] = "Added #{@page.title} to #{parent.title}"
+        render 'htmls/edit' and return
+      else
+        flash[:alert] = "Parent not found."
+        @page = Page.new(params[:page].permit!)
+        render :create and return
+      end
+      return
+    end
     if params[:Find]
       normalized = params[:page][:url].normalize
       if normalized.blank? && params[:page][:url].present?

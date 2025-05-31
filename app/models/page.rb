@@ -52,6 +52,16 @@ class Page < ActiveRecord::Base
     self.url = normalized
   end
 
+  def self.find_parent_by_url(url)
+    if url.match("(.*)archiveofourown.org/works/(.*)/chapters/(.*)")
+      parent_url = $1 + "archiveofourown.org/works/" + $2
+      return Book.find_by(url: parent_url)
+    else
+      self.errors.add(:url, "not an ao3 chapter")
+      return false
+    end
+  end
+
   def ao3_type
     if self.url.match(/chapters/)
       self.parent ? Chapter : Single
@@ -688,7 +698,7 @@ class Page < ActiveRecord::Base
 
   def fetch_raw
     Rails.logger.debug "fetching raw html"
-    return false if ff?
+    return false if ff? || ao3?
     html = scrub_fetch(self.url)
     if html
       self.raw_html = html

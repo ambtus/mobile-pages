@@ -56,3 +56,6 @@ When("I check {string}") do |value|
   check(value)
 end
 
+When('I enter raw html for {string}') do |string|
+  fill_in("pasted", :with => File.read(Rails.root + "tmp/html/#{string}.html"))
+end
