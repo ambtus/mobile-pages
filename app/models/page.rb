@@ -856,7 +856,9 @@ private
         else
           page = self
         end
-        ao3? ? page.fetch_ao3 : fetch_raw && set_meta
+        page.save! if ao3?
+        #page.fetch_ao3 if ao3?
+        fetch_raw && set_meta if wp?
       elsif ff?
         set_type unless type and return
       else
