@@ -36,6 +36,7 @@ class String
     url = URI.extract(self, URI.scheme_list.keys.map(&:downcase)).first.to_s
     url = url.sub(/^http:/, 'https:') if url.match("^http://archiveofourown.org/")
     url = url.chop if url.match("^https://archiveofourown.org/") && url.match("/$")
+    url = url.sub(/#workskin$/, '')
     url
   end
 

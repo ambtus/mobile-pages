@@ -73,3 +73,10 @@ Scenario: add url after
     And I press "Refetch"
   Then I should see "test me (Single)"
     And the contents should include "Retrieved from the web"
+
+Scenario: remove #workskin
+  When I am on the mini page
+  When I fill in "page_url" with "https://archiveofourown.org/works/35366320/chapters/88150261#workskin"
+    And I press "Store"
+  Then I should have 1 page
+    And my page named "temp" should have url: "https://archiveofourown.org/works/35366320/chapters/88150261"
