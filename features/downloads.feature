@@ -77,3 +77,20 @@ Scenario: no hr between before rating (if no kudos)
   Given a page exists
   When I read it online
   Then I should NOT see a horizontal rule
+
+Scenario: notes include WIP
+  Given a page exists with wip: true
+  When I read it online
+  Then I should see "WIP"
+    But I should NOT see "WIP,"
+
+Scenario: notes include favorite
+  Given a page exists with favorite: true
+  When I read it online
+  Then I should see "Favorite"
+    But I should NOT see ", Favorite"
+
+Scenario: notes include favorite and wip
+  Given a page exists with favorite: true AND wip: true
+  When I read it online
+  Then I should see "WIP, Favorite"

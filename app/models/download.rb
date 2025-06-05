@@ -12,6 +12,9 @@ module Download
     "#{self.download_dir}#{self.id}"
   end
 
+  def wip_string; (wip? ? "WIP" : ""); end
+  def favorite_string; (favorite? ? "Favorite" : ""); end
+
   def download_unread_string
     return "" unless self.unread?
     if parent && parent.read_parts.any?
@@ -60,6 +63,8 @@ module Download
   ## if it's a part, add the parent's tags
   def download_tag_bns;
     [(unread? ? Page::UNREAD : ""),
+     wip_string,
+     favorite_string,
      *tags.not_fandom.not_info.not_author.map(&:base_name), *author_bns, *fandom_bns
      ]
   end
@@ -83,6 +88,8 @@ module Download
   end
   def download_comment_string
     [
+      wip_string,
+      favorite_string,
       pros_and_cons_string,
       size_string,
       short_my_notes,

@@ -28,7 +28,7 @@ module Meta
 
   def book_doc; type == "Book" ? Nokogiri::HTML(parts.first.raw_html) : doc; end
 
-  def wip?
+  def set_wip?
     return false unless %w{Book Single}.include?(type)
     return false if chapter_as_single?
     chapters = doc.css(".stats .chapters").children[1].text.split('/') rescue Array.new
@@ -347,7 +347,7 @@ module Meta
     Rails.logger.debug "end notes are #{my_en}"
     self.update!(end_notes: my_en) unless end_notes == my_en
     Rails.logger.debug "looking for possible new wip"
-    my_wip = self.wip?
+    my_wip = self.set_wip?
     Rails.logger.debug "wip is #{my_wip}"
     self.update!(wip: my_wip)
     Rails.logger.debug "looking for possible new inferred_tags"

@@ -6,6 +6,20 @@ Scenario: basic
   Then the download epub file should exist
     And the download epub command should include tags: "tag1"
 
+Scenario: wip?
+  Given wip exists
+  When I download its epub
+  Then the download epub file should exist
+    And the download epub command should include tags: "WIP"
+    And the download epub command should include comments: "WIP"
+
+Scenario: favorite tag
+  Given favorite exists
+  When I download its epub
+  Then the download epub file should exist
+    And the download epub command should include tags: "Favorite"
+    And the download epub command should include comments: "Favorite"
+
 Scenario: author and fandom and tag strings are all in tags (as well as author)
   Given a page exists with fandoms: "my fandom" AND authors: "my author" AND pros: 'my pro'
   Then the download epub command should include tags: "my fandom"

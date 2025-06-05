@@ -69,3 +69,7 @@ Given('another image only chapter') do
   chapter.update!(url: "https://archiveofourown.org/works/845764/chapters/1775725")
   chapter.set_raw_from("img2")
 end
+
+Given('favorite exists') do
+  Single.create!(title: "Mirror of Maybe", favorite: true)
+end
