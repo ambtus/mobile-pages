@@ -21,6 +21,12 @@ class Tag < ActiveRecord::Base
   scope :by_name, -> { order('tags.name asc') }
   scope :by_type, -> { order('tags.type desc') }
 
+  def self.with_pages_count
+    ary = []
+    all.collect{|t| ary << [t.pages.count, t]}
+    ary.sort.reverse
+  end
+
   scope :title_suffixes, -> {where(type: Tag.title_types)}
 
   self.types.each do |type|
