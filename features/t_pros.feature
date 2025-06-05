@@ -64,8 +64,8 @@ Scenario: add pros to a page which already has pros sorts alphabetically
 
 Scenario: pros are editable
   Given "abc123" is a "Pro"
-  When I am on the tags page
-    And I follow "abc123"
+  When I am on the pros page
+    And I follow "edit abc123"
   Then I should see "Edit tag: abc123"
 
 Scenario: edit the pro name

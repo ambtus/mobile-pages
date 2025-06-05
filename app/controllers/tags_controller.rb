@@ -48,13 +48,7 @@ class TagsController < ApplicationController
         render :edit and return
       end
       true_tag.add_aka(@tag)
-      if true_tag.is_a?(Author)
-        redirect_to author_path(true_tag)
-      elsif true_tag.is_a?(Fandom)
-        redirect_to fandom_path(true_tag)
-      else
-        redirect_to tags_path + "##{@tag.class}"
-      end
+      redirect_to true_tag.class
     elsif params[:commit] == "Change"
       old_type = @tag.class
       new_type = params[:change]

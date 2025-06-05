@@ -1,14 +1,3 @@
--Tag.some_types.each_with_index do |type, outer|
-  .bold{id: type, class: "#{type.downcase.pluralize}"}
-    -Tag.some_types.each_with_index do |type, inner|
-      ="|" unless inner == 0
-      -if type == Tag.some_types[outer]
-        =type
-      -else
-        =link_to type, anchor: type
-  -Tag.send(type.downcase.pluralize).by_name.each do |tag|
-    .indented{class: "#{type.downcase.pluralize}"}
-      = link_to "edit #{tag.name}", edit_tag_path(tag)
-      .indented
-        =surround "(", ")" do
-          = link_to_tag tag, "#{tag.base_name} pages"
+-Tag.types.each do |type|
+  -count = type.constantize.count
+  %p=link_to "#{count} #{type.pluralize(count)}", type.downcase.pluralize 

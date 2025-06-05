@@ -1,14 +1,8 @@
 -@tags.by_name.each do |tag|
-  .indented
-    =link_to_tag_pages tag, "#{tag.base_name} pages"
+  %p
+    -count = tag.pages.count
+    =link_to_tag_pages tag, "#{count} #{tag.base_name} #{'page'.pluralize(count)}"
     |
     = link_to "edit #{tag.name}", edit_tag_path(tag)
     |
-    =link_to "more info", tag.is_a?(Author) ? author_path(tag) : fandom_path(tag)
-    .indented
-      -count = tag.pages.count
-      #{count} #{'page'.pluralize(count)}
-      -count = tag.pages.unread.count
-      (#{count} unread &
-      -count = tag.pages.best.count
-      #{count} best)
+    =link_to "more info", tag

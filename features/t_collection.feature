@@ -64,8 +64,8 @@ Scenario: add collections to a page which already has collections sorts alphabet
 Scenario: collection tags are editable
   Given "abc123" is a "Collection"
   When I am on the tags page
-    And I follow "abc123"
-    Then I should see "Edit tag: abc123"
+    And I follow "1 Collection"
+    Then I should see "edit abc123"
 
 Scenario: edit the collection name
   Given "abc123" is a "Collection"

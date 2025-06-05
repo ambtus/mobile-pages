@@ -20,8 +20,9 @@ Rails.application.routes.draw do
   resources :refetches, :only => ['show', 'create']
   resources :scrubs, :only => ['show']
   resources :splits, :only => ['show', 'create']
-  resources :authors, :only => ['index', 'show']
-  resources :fandoms, :only => ['index', 'show']
+  Tag.types.each do |type|
+    resources type.pluralize.downcase.to_sym, only: ['index', 'show']
+  end
 
   get '/downloads/:id.:format' => 'downloads#show', :as => 'download'
 

@@ -71,8 +71,8 @@ Scenario: add hiddens to a page which already has hiddens sorts alphabetically
 
 Scenario: hiddens are editable
   Given "abc123" is a "Hidden"
-  When I am on the tags page
-    And I follow "abc123"
+  When I am on the hiddens page
+    And I follow "edit abc123"
   Then I should see "Edit tag: abc123"
 
 Scenario: edit the hidden name

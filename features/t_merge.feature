@@ -26,6 +26,17 @@ Scenario: merge two authors from aka point of view
     And I am on the page with title "Page 2"
   Then I should see "jane" within ".authors"
 
+Scenario: merge two authors from authors page pov
+  Given a page exists with authors: "jane" AND title: "Page 1"
+    And a page exists with authors: "aka" AND title: "Page 2"
+  When I am on the tags page
+    And I follow "2 Authors"
+    And I follow "edit jane"
+    And I select "aka" from "merge"
+    And I press "Merge"
+    And I am on the tags page
+  Then I should see "1 Author"
+
 Scenario: merge three author names
   Given a page exists with authors: "jane (june)" AND title: "Page 1"
     And a page exists with authors: "aka" AND title: "Page 2"

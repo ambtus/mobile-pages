@@ -56,10 +56,10 @@ Scenario: new parent for an existing page should NOT have the same reader
 Scenario: list and edit the readers
   Given "opalsong" is a "Reader"
     And "golb" is an "Reader"
-  When I am on the tags page
+  When I am on the readers page
   Then I should see "opalsong"
     And I should see "golb"
-  When I follow "opalsong"
+  When I follow "edit opalsong"
     Then I should see "Edit tag: opalsong"
 
 Scenario: edit the reader name

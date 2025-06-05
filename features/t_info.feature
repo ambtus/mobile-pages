@@ -63,9 +63,8 @@ Scenario: add infos to a page which already has infos sorts alphabetically
 
 Scenario: info tags are editable
   Given "abc123" is an "Info"
-  When I am on the tags page
-    And I follow "abc123"
-    Then I should see "Edit tag: abc123"
+  When I am on the infos page
+  Then I should see "edit abc123"
 
 Scenario: edit the info name
   Given "abc123" is an "Info"

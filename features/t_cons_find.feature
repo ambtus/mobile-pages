@@ -25,9 +25,12 @@ Scenario: link from edit page
 
 Scenario: link from tag index
   Given a page exists with cons: "abc123"
+    And a page exists with cons: "xyz987" AND title: "Something"
   When I am on the tags page
-    And I follow "abc123 pages"
+    And I follow "2 Cons"
+    And I follow "abc123 page"
   Then I should see "Page 1"
+    But I should NOT see "Something"
 
 Scenario: link from show
   Given a page exists with cons: "abc123"
