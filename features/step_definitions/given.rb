@@ -22,3 +22,8 @@ Given('the tag {string} is destroyed without caching') do |string|
   tag = Tag.find_by(name: string)
   tag.destroy
 end
+
+Given('the page has url: {string}') do |string|
+  page = Page.first
+  page.update!(url: string)
+end

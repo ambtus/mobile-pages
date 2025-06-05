@@ -60,7 +60,7 @@
       = link_to "Refetch", refetch_path(@page)
       = link_to "Add Part", edit_part_path(@page, add: "part") unless @page.has_content?
       = link_to "Add Parent", edit_part_path(@page, add: "parent") if @page.can_have_tags?
-      - if @page.parts.blank?
+      - if @page.parts.blank? || @page.is_a?(Series)
         = link_to "Edit Scrubbed HTML", edit_html_path(@page, format: "scrubbed")
         = link_to "Edit Raw HTML", edit_html_path(@page)
       = link_to "Scrub", scrub_path(@page)

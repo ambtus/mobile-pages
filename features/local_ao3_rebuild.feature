@@ -39,3 +39,14 @@ Scenario: rebuilding should change chapter titles if they're boring
     And I press "Rebuild Meta"
   Then I should see "2. Hogwarts" within "#position_2"
     But the part titles should be stored as "Where am I? & Hogwarts"
+
+Scenario: edit raw html and rebuild for series
+  Given Counting Drabbles exists without a URL
+    And the page has url: "https://archiveofourown.org/series/46"
+  When I am on the page with title "Counting Drabbles"
+    And I should NOT see "Implied snarry"
+    And I follow "Edit Raw HTML"
+    And I enter raw html for "drabbles"
+    And I press "Update Raw HTML"
+  Then I should see "Implied snarry, but left ambiguous on purpose."
+    And I should see "thanks to lauriegilbert!"
