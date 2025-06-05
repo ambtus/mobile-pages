@@ -303,6 +303,7 @@ class PagesController < ApplicationController
       when "Update Raw HTML"
         @page.raw_html = params[:pasted]
         @page.set_meta
+        @page.parent.update_from_parts.set_meta if @page.parent
         flash[:notice] = "Raw HTML updated."
       when "Edit HTML"
         @page.edited_html = params[:pasted]

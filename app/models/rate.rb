@@ -95,6 +95,7 @@ module Rate
     remove_outdated_downloads
     set_wordcount(false)
     parent.update_from_parts if parent
+    return self
   end
 
   def update_last_read

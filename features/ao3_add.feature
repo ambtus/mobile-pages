@@ -31,7 +31,7 @@ Scenario: paste actual html and get meta
     And I should see "187 words"
     And I should see "giving up on nanowrimo"
 
-Scenario: make a single into a book 
+Scenario: make a single into a book
   Given Where am I existed and was read
   When I am on the page's page
     And I press "Make Me a Chapter"
@@ -49,3 +49,19 @@ Scenario: adding a url after making a single into a book
     And I press "Refetch"
     And I press "Rebuild Meta"
   Then my page named "Where am I?" should have url: "https://archiveofourown.org/works/692/chapters/804"
+
+Scenario: paste html and update parent before
+  Given Time Was partially exists
+  When I am on the pages page
+  Then I should see "Time Was, Time Is"
+    And I should see "1,394 words (1 part)"
+
+Scenario: paste html and update parent after
+  Given Time Was partially exists
+  When I am on the mini page
+    And I fill in "page_url" with "https://archiveofourown.org/works/692/chapters/804"
+    And I press "Add Chapter"
+    And I enter raw html for "hogwarts"
+    And I press "Update Raw HTML"
+    And I am on the pages page
+  Then I should see "1,581 words (2 parts)"
