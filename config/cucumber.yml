@@ -6,7 +6,7 @@ std_opts = "--format #{ENV['CUCUMBER_FORMAT'] || 'summary'} --strict --tags 'not
 %>
 default: <%= std_opts %> LOGGER_BE_QUIET=true --fail-fast features
 wip: --tags @wip:3 --wip features
-rerun: <%= rerun_opts %> --format rerun --out rerun.txt --strict --tags 'not @wip'
+rerun: <%= rerun_opts %> --publish-quiet --format rerun --out rerun.txt --strict --tags 'not @wip'
 all: <%= std_opts %> features
 loud: <%= std_opts %> --fail-fast --format pretty features
 random: <%= std_opts %> LOGGER_BE_QUIET=true --fail-fast --format summary --order random features

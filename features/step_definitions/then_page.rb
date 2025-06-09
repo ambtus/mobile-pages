@@ -173,8 +173,7 @@ Then('I should have {int} reading page(s)') do |int|
 end
 
 Then('my page named {string} should not have a parent') do |string|
-  page = Page.find_by(title: string)
-  assert_equal nil, page.parent
+  assert_nil Page.find_by(title: string).parent
 end
 
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_05_23_115330) do
+ActiveRecord::Schema[7.2].define(version: 2025_06_09_182638) do
   create_table "pages", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "url"
     t.string "title"
@@ -55,5 +55,4 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_23_115330) do
     t.index ["name"], name: "tag_name"
     t.index ["type"], name: "tag_type"
   end
-
 end
