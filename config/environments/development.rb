@@ -62,9 +62,4 @@ Rails.application.configure do
   config.hosts << hostname + ".home"
   config.hosts << hostname + ".ambt.us"
 
-  # Set the logging destination(s)
-  config.log_to = %w[stdout file]
-
-  # Show the logging configuration on STDOUT
-  config.show_log_configuration = false
 end

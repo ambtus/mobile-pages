@@ -104,9 +104,4 @@ Rails.application.configure do
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
 
-  # Set the logging destination(s)
-  config.log_to = %w[file]
-
-  # Show the logging configuration on STDOUT
-  config.show_log_configuration = false
 end
