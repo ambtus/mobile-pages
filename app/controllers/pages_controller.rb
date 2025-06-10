@@ -139,6 +139,7 @@ class PagesController < ApplicationController
     if params[:Add]
       url = params[:page][:url].normalize
       parent = Page.find_parent_by_url(url)
+      Rails.logger.debug "normalized: #{url} parent: #{parent}"
       if parent
         parent.add_chapter(url)
         @page = parent.parts.last

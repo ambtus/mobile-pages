@@ -4,7 +4,7 @@ Given /^He Could Be A Zombie exists$/ do
 end
 
 Given /^stuck exists$/ do
-  page = Book.create!(base_url: "https://www.fanfiction.net/s/2652996/*", url_substitutions: "1")
+  page = Page.create!(base_url: "https://www.fanfiction.net/s/2652996/*", url_substitutions: "1")
   page.parts.first.copy_raw_from("stuck1")
   page.rebuild_meta.set_wordcount(false)
 end

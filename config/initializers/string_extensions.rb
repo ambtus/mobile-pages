@@ -34,9 +34,16 @@ class String
 
   def normalize
     url = URI.extract(self, URI.scheme_list.keys.map(&:downcase)).first.to_s
-    url = url.sub(/^http:/, 'https:') if url.match("^http://archiveofourown.org/")
-    url = url.chop if url.match("^https://archiveofourown.org/") && url.match("/$")
-    url = url.sub(/#workskin$/, '')
+    if url.match("fanfiction.net")
+      url = url.sub('m.fanfiction', 'www.fanfiction')
+      url = url.sub(Regexp.new('/s/(.*)/(.*)/.*'), '/s/\1/\2')
+      url = url.chop if url.match("/$")
+    end
+    if url.match("archiveofourown.org")
+      url = url.sub(/^http:/, 'https:')
+      url = url.chop if url.match("/$")
+      url = url.sub(/#workskin$/, '')
+    end
     url
   end
 

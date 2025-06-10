@@ -56,8 +56,11 @@ class Page < ActiveRecord::Base
     if url.match("(.*)archiveofourown.org/works/(.*)/chapters/(.*)")
       parent_url = $1 + "archiveofourown.org/works/" + $2
       return Book.find_by(url: parent_url)
+    elsif url.match("(.*)fanfiction.net/s/(.*)/(.*)")
+      parent_url = $1 + "fanfiction.net/s/" + $2
+      Rails.logger.debug "parent url: #{parent_url}"
+      return Book.find_by(url: parent_url)
     else
-      self.errors.add(:url, "not an ao3 chapter")
       return false
     end
   end
@@ -849,6 +852,7 @@ private
     FileUtils.mkdir_p(mydirectory) # make sure directory exists
 
     if self.url.present?
+      Rails.logger.debug "for url #{self.url}"
       if self.ao3? || self.wp?
         if type.nil?
           page = ao3? ? self.becomes!(initial_ao3_type) : self.becomes!(Single)
@@ -865,37 +869,44 @@ private
         fetch_raw or return
       end
     elsif !self.base_url.blank?
-      count = 1
+      Rails.logger.debug "for base_url #{self.base_url}"
+      self.type = "Book"
+      if base_url.match?(/fanfiction.net/)
+        Rails.logger.debug "setting url for book"
+        self.url = base_url.gsub(/\*/,'')
+      end
+      self.save!
+      parent = Page.find(self.id)
       match = url_substitutions.match("-")
       if match
         array = match.pre_match.to_i .. match.post_match.to_i
       else
         array = url_substitutions.split
       end
-      self.type = "Book"
-      self.save!
+      count = 1
       array.each do |sub|
         url = base_url.gsub(/\*/, sub.to_s)
         chapter = Page.find_by url: url
         if chapter
-          chapter.update!(:position => count, :parent_id => self.id)
+          chapter.update!(:position => count, :parent_id => parent.id)
           Rails.logger.debug "found #{chapter.inspect}"
         else
           title = "Part " + count.to_s
           Rails.logger.debug "creating new chapter with title: #{title}"
-          Chapter.create!(:title => title, :url => url, :position => count, :parent_id => self.id)
+          Chapter.create!(:title => title, :url => url, :position => count, :parent_id => parent.id)
         end
         count = count.next
       end
-      self.set_wordcount(false)
+      parent.set_wordcount(false)
     elsif !self.urls.blank?
+      Rails.logger.debug "for multiple urls #{self.urls}"
       self.parts_from_urls(self.urls)
     else
+      Rails.logger.debug "no url(s)"
       self.set_wordcount
     end
-    self.set_type unless type
-    Rails.logger.debug "created as #{position.ordinalize} of #{parent.title}" if parent && position
-    Rails.logger.debug "created with #{parts.size} parts" if parts.any?
+    self.set_type unless self.type
+    Rails.logger.debug "created: #{self.inspect}"
   end
 
 
