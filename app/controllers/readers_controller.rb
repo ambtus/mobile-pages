@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class ReadersController < ApplicationController
   def index
-    @title = "Readers"
+    @title = 'Readers'
     @tags = Reader.all
   end
 

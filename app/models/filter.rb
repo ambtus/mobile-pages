@@ -1,45 +1,46 @@
-class Filter
+# frozen_string_literal: true
 
+class Filter
   LIMIT = 5 # number of pages to show in index
 
   def self.tag(name, start)
-    Rails.logger.debug "Filter.tag(#{name}, #{start})"
-    tag = Tag.find_by_name(name)
-    tag = Tag.find_by_short_name(name) unless tag
-    tag.pages.order('read_after ASC').limit(start + LIMIT)[start..-1]
+    Rails.logger.debug { "Filter.tag(#{name}, #{start})" }
+    tag = Tag.find_by(name: name)
+    tag ||= Tag.with_short_name(name)
+    tag.pages.order('read_after ASC').limit(start + LIMIT)[start..]
   end
 
-  def self.new(params={})
-    Rails.logger.debug "Filter.new(#{params})"
+  def self.new(params = {})
+    Rails.logger.debug { "Filter.new(#{params})" }
     pages = Page.all
 
     # ignore parts unless filering by type
-    pages = pages.where(:parent_id => nil) unless (params[:type] || params[:child])
+    pages = pages.where(parent_id: nil) unless params[:type] || params[:child]
 
     case params[:favorite]
-    when "Yes"
+    when 'Yes'
       pages = pages.favorite
-    when "No"
+    when 'No'
       pages = pages.where(favorite: false)
     end
 
     case params[:wip]
-    when "Yes"
+    when 'Yes'
       pages = pages.wip
-    when "No"
+    when 'No'
       pages = pages.where(wip: false)
     end
 
     case params[:child]
-    when "Yes"
+    when 'Yes'
       pages = pages.has_parent
-    when "No"
+    when 'No'
       pages = pages.has_no_parent
     end
 
     case params[:soon]
-    when "Other"
-      pages = pages.where.not(soon: [0,1,2,3,4])
+    when 'Other'
+      pages = pages.where.not(soon: [0, 1, 2, 3, 4])
     when nil
     else
       index = Soon::LABELS.index(params[:soon])
@@ -47,10 +48,10 @@ class Filter
     end
 
     case params[:type]
-    when "none"
+    when 'none'
       pages = pages.where(type: nil)
     when nil
-    when "all"
+    when 'all'
     when 'taggable'
       pages = pages.with_tags
     else
@@ -58,94 +59,96 @@ class Filter
     end
 
     case params[:unread]
-    when "Unread"
+    when 'Unread'
       pages = pages.unread
-    when "Parts"
+    when 'Parts'
       pages = pages.unread_parts
-    when "Read"
+    when 'Read'
       pages = pages.read
     end
 
     case params[:stars]
-    when "other"
-      pages = pages.where.not(:stars => [10,5,4,3])
+    when 'other'
+      pages = pages.where.not(stars: [10, 5, 4, 3])
     when nil
     else
-      pages = pages.where(:stars => params[:stars])
+      pages = pages.where(stars: params[:stars])
     end
 
     case params[:size]
-    when "Shorter"
-      pages = pages.where(:size => ["short", "drabble"])
-    when "Longer"
-      pages = pages.where(:size => ["long", "epic"])
+    when 'Shorter'
+      pages = pages.where(size: %w[short drabble])
+    when 'Longer'
+      pages = pages.where(size: %w[long epic])
     when nil
     else
-      pages = pages.where(:size => params[:size])
+      pages = pages.where(size: params[:size])
     end
 
-    [:title, :notes, :my_notes].each do |attrib|
-      pages = pages.where("LOWER(pages.#{attrib.to_s}) LIKE ?", "%#{params[attrib].downcase}%") if params.has_key?(attrib)
+    %i[title notes my_notes].each do |attrib|
+      if params.key?(attrib)
+        pages = pages.where("LOWER(pages.#{attrib}) LIKE ?",
+"%#{params[attrib].downcase}%")
+      end
     end
 
-    pages = pages.where("pages.url LIKE ?", "%#{params[:url].normalize}%") if params.has_key?(:url)
+    pages = pages.where('pages.url LIKE ?', "%#{params[:url].normalize}%") if params.key?(:url)
 
-    case params[:sort_by]
-    when "last_read"
-      pages = pages.order('last_read DESC')
-    when "first_read"
-      pages = pages.where('pages.last_read is not null').order('last_read ASC')
-    when "random"
-      pages = pages.random
-    when "last_created"
-      pages = pages.order('created_at DESC')
-    when "first_created"
-      pages = pages.order('created_at ASC')
-    when "longest"
-      pages = pages.order('wordcount DESC')
-    when "shortest"
-      pages = pages.order('wordcount ASC')
-    else
-      pages = pages.order('read_after ASC')
-    end
+    pages = case params[:sort_by]
+            when 'last_read'
+              pages.order('last_read DESC')
+            when 'first_read'
+              pages.where.not(pages: { last_read: nil }).order('last_read ASC')
+            when 'random'
+              pages.random
+            when 'last_created'
+              pages.order('created_at DESC')
+            when 'first_created'
+              pages.order('created_at ASC')
+            when 'longest'
+              pages.order('wordcount DESC')
+            when 'shortest'
+              pages.order('wordcount ASC')
+            else
+              pages.order('read_after ASC')
+            end
 
     Tag.boolean_types.map(&:downcase).each do |tag_type|
-      if params["show_#{tag_type}s".to_sym] == "none"
-        Rails.logger.debug "no #{tag_type}s"
+      if params[:"show_#{tag_type}s"] == 'none'
+        Rails.logger.debug { "no #{tag_type}s" }
         pages = pages.where(tag_type.to_sym => false)
-      elsif params["show_#{tag_type}s".to_sym] == "all"
-        Rails.logger.debug "all #{tag_type}s"
+      elsif params[:"show_#{tag_type}s"] == 'all'
+        Rails.logger.debug { "all #{tag_type}s" }
         pages = pages.where(tag_type.to_sym => true)
       end
     end
 
-   Tag.types.each do |tag_type|
-      if params.has_key?(tag_type.downcase.to_s)
-        model = tag_type.constantize
-        tag = model.find_by_short_name(params[tag_type.downcase.to_s])
-        if params.has_key?("selected_#{tag_type.downcase}s".to_s)
-          if params["selected_#{tag_type.downcase}s".to_s]=="include"
-            Rails.logger.debug "include by choice #{model}s #{tag.base_name}"
-            pages = pages.where("pages.tag_cache LIKE ?", "%#{tag.base_name}%")
-          elsif params["selected_#{tag_type.downcase}s".to_s]=="exclude"
-            Rails.logger.debug "exclude by choide #{model}s #{tag.base_name}"
-            pages = pages.where.not("pages.tag_cache LIKE ?", "%#{tag.base_name}%")
-          end
-        else
-          Rails.logger.debug "include by default #{model}s #{tag.base_name}"
-          pages = pages.where("pages.tag_cache LIKE ?", "%#{tag.base_name}%")
+    Tag.types.each do |tag_type|
+      next unless params.key?(tag_type.downcase.to_s)
+
+      model = tag_type.constantize
+      tag = model.with_short_name(params[tag_type.downcase.to_s])
+      if params.key?("selected_#{tag_type.downcase}s")
+        if params["selected_#{tag_type.downcase}s"] == 'include'
+          Rails.logger.debug { "include by choice #{model}s #{tag.base_name}" }
+          pages = pages.where('pages.tag_cache LIKE ?', "%#{tag.base_name}%")
+        elsif params["selected_#{tag_type.downcase}s"] == 'exclude'
+          Rails.logger.debug { "exclude by choide #{model}s #{tag.base_name}" }
+          pages = pages.where.not('pages.tag_cache LIKE ?', "%#{tag.base_name}%")
         end
+      else
+        Rails.logger.debug { "include by default #{model}s #{tag.base_name}" }
+        pages = pages.where('pages.tag_cache LIKE ?', "%#{tag.base_name}%")
       end
     end
 
-    if params.has_key?("tag")
-      tag = Tag.find_by_short_name(params["tag"])
-      Rails.logger.debug "with Tag #{tag.base_name} (originally from find)"
-      pages = pages.where("pages.tag_cache LIKE ?", "%#{tag.base_name}%")
+    if params.key?('tag')
+      tag = Tag.with_short_name(params['tag'])
+      Rails.logger.debug { "with Tag #{tag.base_name} (originally from find)" }
+      pages = pages.where('pages.tag_cache LIKE ?', "%#{tag.base_name}%")
     end
 
     start = params[:count].to_i
-    pages.limit(start + LIMIT)[start..-1]
+    pages.limit(start + LIMIT)[start..]
   end
-
 end

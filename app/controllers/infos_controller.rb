@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class InfosController < ApplicationController
   def index
-    @title = "Infos"
+    @title = 'Infos'
     @tags = Info.all
   end
 

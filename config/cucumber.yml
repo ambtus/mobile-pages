@@ -1,9 +1,20 @@
 <%
 rerun = File.file?('rerun.txt') ? IO.read('rerun.txt') : ""
 rerun = rerun.strip.gsub /\s/, ' '
-rerun_opts = rerun.empty? ? "--format #{ENV['CUCUMBER_FORMAT'] || 'progress'} features" : "--format #{ENV['CUCUMBER_FORMAT'] || 'pretty'} LOUD=true #{rerun}"
-std_opts = "--publish-quiet --strict"
+rerun_opts = rerun.empty? ? "--format #{ENV['CUCUMBER_FORMAT'] || 'progress'} features" : "--format #{ENV['CUCUMBER_FORMAT'] || 'pretty'} --fail-fast #{rerun}"
+common = "--publish-quiet --strict"
 %>
-default: <%= std_opts %> --fail-fast --format summary features
-loud: LOUD=true <%= std_opts %> --fail-fast --format pretty features
-rerun: <%= std_opts %> <%= rerun_opts %> --order random --format rerun --out rerun.txt
+
+default: <%= common %> --format progress
+
+d: <%= common %> --fail-fast --format summary
+p: <%= common %> --fail-fast --format pretty
+l: LOUD=true <%= common %> --fail-fast --format pretty
+
+r: <%= common %> <%= rerun_opts %> --format rerun --out rerun.txt
+rl: LOUD=true <%= common %> <%= rerun_opts %> --format rerun --out rerun.txt
+s: <%= common %> --dry-run --format stepdefs
+
+h: <%= common %> --format html --out 'public/out.html'
+
+z: <%= common %> --format progress --publish

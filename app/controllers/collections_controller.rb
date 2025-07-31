@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class CollectionsController < ApplicationController
   def index
-    @title = "Collections"
+    @title = 'Collections'
     @tags = Collection.all
   end
 

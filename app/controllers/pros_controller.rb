@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class ProsController < ApplicationController
   def index
-    @title = "Pros"
+    @title = 'Pros'
     @tags = Pro.all
   end
 

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class ConsController < ApplicationController
   def index
-    @title = "Cons"
+    @title = 'Cons'
     @tags = Con.all
   end
 

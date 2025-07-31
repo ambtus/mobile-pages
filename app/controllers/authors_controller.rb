@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class AuthorsController < ApplicationController
   def index
-    @title = "Authors"
+    @title = 'Authors'
     @tags = Author.all
   end
 
@@ -8,5 +10,4 @@ class AuthorsController < ApplicationController
     @tag = Author.find(params[:id])
     @title = @tag.base_name
   end
-
 end

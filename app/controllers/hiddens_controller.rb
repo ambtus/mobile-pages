@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class HiddensController < ApplicationController
   def index
-    @title = "Hiddens"
+    @title = 'Hiddens'
     @tags = Hidden.all
   end
 

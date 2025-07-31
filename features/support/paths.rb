@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NavigationHelpers
   # Maps a name to a path. Used by the
   #
@@ -15,24 +17,27 @@ module NavigationHelpers
       '/pages'
 
     when /^the page's page/
-      page = Page.find_by_title("Page 1") || Page.first
-      raise "no pages" unless page
+      page = Page.find_by(title: 'Page 1') || Page.first
+      raise 'no pages' unless page
+
       page_path(page)
 
     when /^the page with title "(.*)"/
-      title = $1
-      page = Page.find_by_title(title)
+      title = ::Regexp.last_match(1)
+      page = Page.find_by(title: title)
       raise "no page with title: #{title}" unless page
+
       page_path(page)
 
     when /^the page with url "(.*)"/
-      url = $1
-      page = Page.find_by_url(url)
+      url = ::Regexp.last_match(1)
+      page = Page.find_by(url: url)
       raise "no page with url: #{url}" unless page
+
       page_path(page)
 
     when /^the edit tag page for "(.*)"$/
-      edit_tag_path(Tag.find_by_name($1))
+      edit_tag_path(Tag.find_by(name: ::Regexp.last_match(1)))
 
     when /^the create page$/
       new_page_path
@@ -46,11 +51,11 @@ module NavigationHelpers
     else
       begin
         page_name =~ /the (.*) page/
-        path_components = $1.split(/\s+/)
-        self.send(path_components.push('path').join('_').to_sym)
-      rescue Object => e
-        raise "Can't find mapping from \"#{page_name}\" to a path.\n" +
-          "Now, go and add a mapping in #{__FILE__}"
+        path_components = ::Regexp.last_match(1).split(/\s+/)
+        send(path_components.push('path').join('_').to_sym)
+      rescue Object
+        raise "Can't find mapping from \"#{page_name}\" to a path.\n" \
+              "Now, go and add a mapping in #{__FILE__}"
       end
     end
   end

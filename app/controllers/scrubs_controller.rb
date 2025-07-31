@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ScrubsController < ApplicationController
   def show
     @page = Page.find(params[:id])

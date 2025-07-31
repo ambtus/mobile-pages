@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 Then('the page should be hidden') do
   assert Page.first.hidden?
 end
 
 Then('{string} should be hidden') do |string|
-  assert Page.find_by_title(string).hidden?
+  assert Page.find_by(title: string).hidden?
 end
 
 Then('the page should NOT be hidden') do
@@ -15,7 +17,7 @@ Then('the page should be conned') do
 end
 
 Then('{string} should be conned') do |string|
-  assert Page.find_by_title(string).con?
+  assert Page.find_by(title: string).con?
 end
 
 Then('the page should NOT be conned') do
@@ -23,7 +25,7 @@ Then('the page should NOT be conned') do
 end
 
 Then('{string} should be proed') do |string|
-  assert Page.find_by_title(string).pro?
+  assert Page.find_by(title: string).pro?
 end
 
 Then('the page should NOT be proed') do
@@ -43,4 +45,3 @@ end
 Then('I should have {int} hidden pages') do |int|
   assert_equal int, Page.where(hidden: true).count
 end
-

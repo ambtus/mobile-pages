@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class FandomsController < ApplicationController
   def index
-    @title = "Fandoms"
+    @title = 'Fandoms'
     @tags = Fandom.all
   end
 

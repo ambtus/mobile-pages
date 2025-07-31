@@ -1,26 +1,29 @@
 Feature: downloads
 
-Scenario: text isn't a download
+Scenario: read text is a download
   Given a page exists
   When I am on the page's page
     And I follow "Read"
   Then the download directory should exist
-    And the download html file should exist
-    And the download epub file should NOT exist
+    And the download read file should exist
+    But the download epub file should NOT exist
+    And the download html file should NOT exist
 
 Scenario: html is a "download"
   Given a page exists
   When I read it online
   Then the download directory should exist
     And the download html file should exist
-    And the download epub file should NOT exist
+    But the download epub file should NOT exist
+    And the download read file should NOT exist
 
-Scenario: epub downloads
+Scenario: epub downloads (requires html first)
   Given a page exists
   When I download its epub
   Then the download directory should exist
-    And the download html file should exist
     And the download epub file should exist
+    And the download html file should exist
+    But the download read file should NOT exist
 
 Scenario: weird formatting in end notes
   Given a page exists with end_notes: "(⸝⸝´꒳`⸝⸝♡)"

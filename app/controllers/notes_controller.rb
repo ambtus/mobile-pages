@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 class NotesController < ApplicationController
-  def edit
+  def show
     @page = Page.find(params[:id])
   end
-  def show
+
+  def edit
     @page = Page.find(params[:id])
   end
 end

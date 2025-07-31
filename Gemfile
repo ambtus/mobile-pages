@@ -1,32 +1,29 @@
+# frozen_string_literal: true
+
 source 'http://rubygems.org'
 
-gem 'bundler'
+ruby file: '.ruby-version'
 
-gem 'rails'
-gem 'nokogiri'
-gem 'mysql2'
-
-gem 'puma' 
-
-group :development do
-  gem 'quiet_safari'
-end
-
-group :test do
-  gem 'capybara'
-  gem 'database_cleaner'
-  gem 'cucumber-rails', '~> 2.5.1', :require => false
-  gem 'cucumber'
-  gem 'launchy'    # So you can do Then show me the page
-  gem 'test-unit'
-  gem 'rubyzip'  # So you can inspect epub files
-end
-
-gem 'escape_utils'
 gem 'haml'
-
-gem 'rubypants'
-gem 'sanitize'
-gem 'mechanize', ">= 2.7.7"
+gem 'mysql2'
+gem 'puma'
+gem 'rails'
 
 gem 'charlock_holmes'
+gem 'mechanize'
+gem 'nokogiri'
+gem 'rubypants'
+gem 'sanitize'
+
+group :development, :test do
+  gem 'capybara'
+  gem 'cucumber'
+  gem 'cucumber-rails', require: false
+  gem 'database_cleaner'
+  gem 'launchy' # So you can do save_and_open_page
+  gem 'quiet_safari'
+  gem 'rspec-rails'
+  gem 'rubyzip' # So you can inspect epub files
+  gem 'simplecov', require: false
+  gem 'test-unit'
+end
