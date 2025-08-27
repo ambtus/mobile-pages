@@ -3,10 +3,6 @@
 ## Thens are for verifications and assertions
 
 ## I should see ##
-Then('show me the page') do
-  save_and_open_page
-end
-
 Then('I should see {string}') do |text|
   assert_text(text)
 end

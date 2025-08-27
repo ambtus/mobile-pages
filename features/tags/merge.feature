@@ -85,7 +85,7 @@ Scenario: merge two cons
   When I am on the edit tag page for "xyz987"
     And I select "abc123" from "merge"
     And I press "Merge"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "abc123" within ".cons"
 
 Scenario: merge two fandoms
@@ -103,7 +103,7 @@ Scenario: merge two fandoms
   When I am on the edit tag page for "xyz987"
     And I select "abc123" from "merge"
     And I press "Merge"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "abc123" within ".fandoms"
     And I should have 1 tag
 
@@ -121,7 +121,7 @@ Scenario: merge two hiddens
   When I am on the edit tag page for "xyz987"
     And I select "abc123" from "merge"
     And I press "Merge"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "abc123" within ".hiddens"
     And the page should be hidden
 
@@ -139,7 +139,7 @@ Scenario: merge two infos
   When I am on the edit tag page for "xyz987"
     And I select "abc123" from "merge"
     And I press "Merge"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "abc123" within ".infos"
 
 Scenario: merge two pros
@@ -148,7 +148,7 @@ Scenario: merge two pros
   When I am on the edit tag page for "xyz987"
     And I select "abc123" from "merge"
     And I press "Merge"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "abc123" within ".pros"
 
 Scenario: don’t allow merge if not the same type
@@ -188,7 +188,7 @@ Scenario: don’t allow merge if not the same type
 
 Scenario: select a merged tag
   Given a page exists with authors: "jane (june)" AND title: "Page 1"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
   Then I should see "Author: jane"
     But I should NOT see "june"
@@ -196,7 +196,7 @@ Scenario: select a merged tag
 Scenario: select a merged tag
   Given a page exists with authors: "jane (june)" AND title: "Page 1"
     And a page exists with authors: "judy (aka)" AND title: "Page 2"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I select "judy" from "page_author_ids_"
     And I press "Update Tags"
@@ -212,7 +212,7 @@ Scenario: merge into correct tag
   When I am on the edit tag page for "skimmed"
     And I select "unfinished" from "merge"
     And I press "Merge"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "unfinished" within ".cons"
     And I should NOT see "skimmed" within ".cons"
     And I should NOT see "abrupt" within ".cons"
@@ -224,7 +224,7 @@ Scenario: merge into correct tag
   When I am on the edit tag page for "skimmed"
     And I select "unfinished" from "merge"
     And I press "Merge"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "unfinished" within ".cons"
     And I should NOT see "skimmed" within ".cons"
     And I should NOT see "abrupt" within ".cons"
@@ -236,7 +236,7 @@ Scenario: merge into correct tag
   When I am on the edit tag page for "skimmed"
     And I select "feels unfinished" from "merge"
     And I press "Merge"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "feels unfinished" within ".cons"
     And I should NOT see "skimmed" within ".cons"
     And I should NOT see "abrupt" within ".cons"
@@ -248,7 +248,7 @@ Scenario: merge into correct tag
   When I am on the edit tag page for "abrupt ending"
     And I select "unfinished" from "merge"
     And I press "Merge"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "unfinished" within ".cons"
     And I should NOT see "abrupt" within ".cons"
     And I should NOT see "feels" within ".cons"

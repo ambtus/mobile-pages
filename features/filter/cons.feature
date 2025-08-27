@@ -43,7 +43,7 @@ Scenario: change con to pro tag (index)
   When I am on the edit tag page for "sad"
     And I select "Pro" from "change"
     And I press "Change"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "sad" within ".pros"
 
 Scenario: change pro to con tag (page)
@@ -51,7 +51,7 @@ Scenario: change pro to con tag (page)
   When I am on the edit tag page for "sad"
     And I select "Con" from "change"
     And I press "Change"
-    And I am on the page's page
+    And I am on the first page's page
     Then I should see "sad" within ".cons"
 
 Scenario: change pro to con tag (index)

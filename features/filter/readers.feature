@@ -18,7 +18,7 @@ Scenario: filtered in when selected
 
 Scenario: reader selected during create is filterable out
   Given "abc123" is a "Reader"
-  When I am on the create page
+  When I am on the create single page
     And I select "abc123"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
@@ -30,7 +30,7 @@ Scenario: reader selected during create is filterable out
 Scenario: reader selected during create is filterable in
   Given "abc123" is a "Reader"
     And a page exists with title: "Page 3"
-  When I am on the create page
+  When I am on the create single page
     And I select "abc123"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"

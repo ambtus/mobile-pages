@@ -4,7 +4,7 @@ Scenario: create a page from a single url with selected tags
   Given "my fandom" is a "Fandom"
     And "my author" is an "Author"
     And "my pro" is a "Pro"
-  When I am on the create page
+  When I am on the create single page
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I select "my fandom"
     And I select "my author"
@@ -17,7 +17,7 @@ Scenario: create a page from a single url with selected tags
     And I should see "temp" within ".title"
 
 Scenario: create a page from a single url with title and notes and my notes
-  Given I am on the create page
+  Given I am on the create single page
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I fill in "page_notes" with "some generic notes"
     And I fill in "page_my_notes" with "some personal notes"
@@ -30,7 +30,7 @@ Scenario: create a page from a single url with title and notes and my notes
 
 Scenario: check before create a page with a hidden tag
   Given "abc123" is a "Hidden"
-  When I am on the create page
+  When I am on the create single page
     And I fill in "page_title" with "Title"
     And I select "abc123"
     And I press "Store"
@@ -40,7 +40,7 @@ Scenario: check before create a page with a hidden tag
 
 Scenario: create a page with a hidden tag
   Given "abc123" is a "Hidden"
-  When I am on the create page
+  When I am on the create single page
     And I fill in "page_title" with "Title"
     And I select "abc123"
     And I press "Store"

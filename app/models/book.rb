@@ -2,16 +2,20 @@
 # frozen_string_literal: true
 
 class Book < Page
-  def add_chapter(url, count = parts.size + 1, title = 'temp')
+  def add_chapter(url, count = nil, title = nil)
     chapter = Page.find_by(url: url)
     if chapter
-      if chapter.position == count && chapter.parent_id == id && chapter.type == 'Chapter'
+      count ||= chapter.position
+      title ||= chapter.title
+      if chapter.position == count && chapter.parent_id == id && chapter.type == 'Chapter' && chapter.title == title
         Rails.logger.debug { "chapter already exists, skipping #{chapter.title}" }
       else
         Rails.logger.debug { "chapter already exists, updating #{chapter.title}" }
-        chapter.update(position: count, parent_id: id, type: Chapter)
+        chapter.update(position: count, parent_id: id, type: Chapter, title: title)
       end
     else
+      count ||= (parts.size + 1)
+      title ||= 'temp'
       Rails.logger.debug { "chapter does not exist, creating #{title} in position #{count}" }
       Chapter.create(title: title, url: url, position: count, parent_id: id)
     end
@@ -30,10 +34,14 @@ class Book < Page
     true
   end
 
-  def get_chapters_from_ao3
+  def get_chapters_from_ao3(refetch = false)
     Rails.logger.debug { "getting chapters from ao3 for #{id}" }
-    html = scrub_fetch("#{url}/navigate")
-    return false unless html
+    html = if refetch || raw_html.blank?
+             scrub_fetch("#{url}/navigate")
+           else
+             raw_html
+           end
+    return false if html.blank?
 
     doc = Nokogiri::HTML(html)
     chapter_list = doc.xpath('//ol//a')
@@ -44,9 +52,9 @@ class Book < Page
     else
       chapter_list.each_with_index do |element, index|
         count = index + 1
-        element.text.gsub(/^\d*\. /, '')
         url = "https://archiveofourown.org#{element['href']}"
-        add_chapter(url)
+        title = element.text.gsub(/^\d*\. /, '')
+        add_chapter(url, count, title)
         sleep 5 unless count == chapter_list.size
       end
     end

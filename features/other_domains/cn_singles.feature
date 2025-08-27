@@ -3,7 +3,7 @@ Feature: clairesnook single fics
 Scenario: The Resolute Urgency of Now (tab-pane)
   Given "Harry Potter" is a "Fandom"
     And Urgency exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "The Resolute Urgency of Now" within ".title"
     And I should see "by Claire Watson" within ".notes"
     And I should see "Harry Potter" within ".fandoms"
@@ -17,14 +17,14 @@ Scenario: The Resolute Urgency of Now (tab-pane)
 
 Scenario: The Resolute Urgency of Now (tab-pane) long notes
   Given Urgency exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "full notes"
   Then I should see "Which is a lot." within ".notes"
 
 Scenario: Time After Time (entry-content no summary)
   Given "Shadowhunters" is a "Fandom"
     And Time exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Time After Time" within ".title"
     And I should see "by Claire Watson" within ".notes"
     And I should see "Shadowhunters" within ".fandoms"
@@ -38,7 +38,7 @@ Scenario: I Wish (entry-content summary and authors note)
   Given "Teen Wolf" is a "Fandom"
     And "Claire Watson" is an "Author"
     And Wish exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "I Wish" within ".title"
     And I should see "Claire Watson" within ".authors"
     And I should see "Teen Wolf" within ".fandoms"

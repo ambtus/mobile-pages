@@ -3,7 +3,7 @@ Feature: third level hierarchy
 Scenario: create Series from Singles & Books
   Given I have Books with titles "First" and "Third"
     And I have a Single with title "Second" and url "http://test.sidrasue.com/parts/3.html"
-  When I am on the "Store Multiple" page
+  When I am on the create multiple page
   When I fill in "page_urls" with
     """
     ##First
@@ -39,7 +39,7 @@ Scenario: create by adding parents to a single and a book
 Scenario: create book by adding parts
   Given a page exists
     And three singles exist
-  When I am on the page's page
+  When I am on the first page's page
     And I press "Increase Type"
     And I refetch the following
       """
@@ -61,7 +61,7 @@ Scenario: create book by adding parts
 Scenario: create series by adding subparts to book
   Given a page exists
     And three singles exist
-  When I am on the page's page
+  When I am on the first page's page
     And I press "Increase Type"
     And I refetch the following
       """
@@ -76,7 +76,7 @@ Scenario: create series by adding subparts to book
       http://test.sidrasue.com/parts/3.html
       http://test.sidrasue.com/parts/4.html
       """
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "Page 1 (Series)" within ".title"
     And I should see "Parent1" within "#position_1"
     And I should NOT see "parts" within "#position_1"
@@ -87,5 +87,5 @@ Scenario: create series by adding subparts to book
 
 Scenario: cannot add a parent to a series
   Given a series exists
-  When I am on the page's page
+  When I am on the first page's page
     Then I should NOT see "Add Parent"

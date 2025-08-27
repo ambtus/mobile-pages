@@ -4,7 +4,7 @@ Feature: ao3 testing that can use local files
 
 Scenario: 2/40 is a WIP
   Given wip exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "WIP" within ".size"
 
 Scenario: 2/2 is not a WIP
@@ -24,6 +24,6 @@ Scenario: a Single is not a WIP if it's fetched as a chapter of a WIP
 
 Scenario: a Single is a WIP if it's fetched as a work
   Given Fuuinjutsu exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "WIP" within ".size"
 

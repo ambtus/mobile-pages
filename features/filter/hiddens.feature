@@ -77,7 +77,7 @@ Scenario: check before change (select)
 
 Scenario: check before change (show)
   Given a page exists with hiddens: "will be visible"
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "will be visible" within ".hiddens"
 
 Scenario: change hidden to con tag (index)
@@ -104,7 +104,7 @@ Scenario: change hidden to con tag (show)
   When I am on the edit tag page for "will be visible"
     And I select "Con" from "change"
     And I press "Change"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "will be visible" within ".cons"
 
 Scenario: check before change (index)
@@ -120,7 +120,7 @@ Scenario: check before change (filter)
 
 Scenario: check before change (show)
   Given a page exists with cons: "to be hidden"
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "to be hidden" within ".cons"
 
 Scenario: change con to hidden tag (index)
@@ -146,7 +146,7 @@ Scenario: change con to hidden tag (show)
   When I am on the edit tag page for "to be hidden"
     And I select "Hidden" from "change"
     And I press "Change"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "to be hidden" within ".hiddens"
 
 Scenario: check before find by url

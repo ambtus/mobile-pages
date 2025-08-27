@@ -48,7 +48,7 @@ Scenario: rating both updates parent as read
     And I follow "Rate"
     And I click on "5"
     And I press "Rate"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should NOT see "unread"
     And I should see "2009-01-01" within ".last_read"
     And I should see "2009-01-01" within "#position_1"

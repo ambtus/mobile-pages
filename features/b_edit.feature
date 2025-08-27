@@ -5,7 +5,7 @@ Feature: tools to enable onscreen content editing
 
 Scenario: should be able to edit html if it's a Single
   Given a page exists with url: "http://test.sidrasue.com/test.html"
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Page 1 (Single)"
     And I should see "Edit Raw HTML"
     And I should see "Edit Scrubbed HTML"
@@ -19,7 +19,7 @@ Scenario: should be able to edit html if it's a Chapter
 
 Scenario: should NOT be able to edit html if it's a Book
   Given a page exists with urls: "http://test.sidrasue.com/test.html"
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Page 1 (Book)" within ".title"
     And I should NOT see "Edit Raw HTML"
     And I should NOT see "Edit Scrubbed HTML"
@@ -71,7 +71,7 @@ Scenario: recover from editing too much of the first section
     And I fill in "edited" with "<p>New Content<p>"
     And I press "Preview Text"
     And I press "Confirm Text Edit"
-    And I am on the page's page
+    And I am on the first page's page
     And I press "Rebuild from Raw HTML"
   Then the contents should include "L0rem ipsum dolor sit amet"
     But the contents should NOT include "New Content"
@@ -120,7 +120,7 @@ Scenario: recover from editing too much of the mid section
     And I fill in "edited" with "<p>New Content<p>"
     And I press "Preview Text"
     And I press "Confirm Text Edit"
-    And I am on the page's page
+    And I am on the first page's page
     And I press "Rebuild from Raw HTML"
   Then the contents should include "L5rem ipsum dolor sit amet"
     But the contents should NOT include "New Content"
@@ -169,7 +169,7 @@ Scenario: recover from editing too much of the last section
     And I fill in "edited" with "<p>New Content<p>"
     And I press "Preview Text"
     And I press "Confirm Text Edit"
-    And I am on the page's page
+    And I am on the first page's page
     And I press "Rebuild from Raw HTML"
   Then the contents should include "L9rem ipsum dolor sit amet"
     But the contents should NOT include "New Content"

@@ -1,7 +1,7 @@
 Feature: removing parts from parents and parents from parts
 
 Scenario: uncollect should delete parent
-  Given I am on the "Store Multiple" page
+  Given I am on the create multiple page
     And I fill in "page_urls" with
       """
       http://test.sidrasue.com/parts/1.html##One
@@ -9,7 +9,7 @@ Scenario: uncollect should delete parent
       """
     And I fill in "page_title" with "Page 1"
     And I press "Store"
-    And I am on the page's page
+    And I am on the first page's page
     And I press "Uncollect"
   Then I should see "Uncollected" within "#flash_notice"
     And I should have 2 pages
@@ -26,14 +26,14 @@ Scenario: remove a part from an existing page with parts (content)
   Given a page exists with title: "Multi" AND base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-3"
   When I am on the page with title "Part 2"
     And I press "Make Single"
-    And I am on the page's page
+    And I am on the first page's page
   Then the contents should include "stuff for part 1"
     And the contents should include "stuff for part 3"
     But the contents should NOT include "stuff for part 2"
 
 Scenario: remove a part from an existing page with parts (content)
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-3"
-  When I am on the page's page
+  When I am on the first page's page
     And I refetch the following
       """
       http://test.sidrasue.com/parts/1.html
@@ -46,7 +46,7 @@ Scenario: remove a part from an existing page with parts (content)
 
 Scenario: remove a part from an existing page with parts (manage parts)
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-3"
-  When I am on the page's page
+  When I am on the first page's page
     And I refetch the following
       """
       http://test.sidrasue.com/parts/1.html

@@ -2,7 +2,7 @@ Feature: infos are a type of tag
 
 Scenario: strip whitespace and sort
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "  xyz &   789,  abc/123,lmn   & 345  "
     And I press "Add Info Tags"
@@ -11,7 +11,7 @@ Scenario: strip whitespace and sort
 
 Scenario: link to tag on show should find page on index
   Given a page exists with infos: "lmn123"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "lmn123"
   Then I should see "Page 1" within "#position_1"
 
@@ -36,7 +36,7 @@ Scenario: no tags selected during create
 
 Scenario: info selected during create
   Given "abc123" is an "Info"
-  When I am on the create page
+  When I am on the create single page
     And I select "abc123"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I fill in "page_title" with "New Title"
@@ -45,7 +45,7 @@ Scenario: info selected during create
 
 Scenario: comma separated infos (not & or /)
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "Sam & Dean, Harry/Snape"
     And I press "Add Info Tags"
@@ -55,7 +55,7 @@ Scenario: comma separated infos (not & or /)
 
 Scenario: add infos to a page which already has infos sorts alphabetically
   Given a page exists with infos: "lmn123"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "xyz123, abc123"
     And I press "Add Info Tags"
@@ -81,7 +81,7 @@ Scenario: delete a info tag
   When I am on the edit tag page for "nobody"
     And I follow "Destroy"
     And I press "Yes"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should NOT see "nobody"
 
 Scenario: change info to fandom
@@ -89,7 +89,7 @@ Scenario: change info to fandom
   When I am on the edit tag page for "Harry Potter"
     And I select "Fandom" from "change"
     And I press "Change"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "Harry Potter" within ".fandoms"
 
 Scenario: change fandom to info
@@ -97,12 +97,12 @@ Scenario: change fandom to info
   When I am on the edit tag page for "Harry Potter"
     And I select "Info" from "change"
     And I press "Change"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "Harry Potter" within ".infos"
 
  Scenario: do not allow info and fandom tags to have the same base name
   Given a page exists with fandoms: "Harry Potter"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "Harry Potter"
     And I press "Add Info Tags"
@@ -111,7 +111,7 @@ Scenario: change fandom to info
 
  Scenario: do not allow info and fandom tags to have the same short name
   Given a page exists with fandoms: "Harry Potter (Harry)"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "Harry"
     And I press "Add Info Tags"
@@ -120,7 +120,7 @@ Scenario: change fandom to info
 
  Scenario: allow info and fandom tags to have similar names
   Given a page exists with fandoms: "Harry Potter"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "Harry (Potter)"
     And I press "Add Info Tags"

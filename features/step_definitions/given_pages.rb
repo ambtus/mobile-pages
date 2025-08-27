@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+Given('a test page exists') do
+  page = Single.create(title: 'Test', url: "file:///#{Rails.root.join('tmp/html/short.html')}")
+  page.update url: 'http://test.sidrasue.com/short.html'
+end
+
 Given(/a page exists(?: with (.*))?/) do |fields|
   hash = fields.blank? ? {} : fields.create_hash
   hash[:title] = hash[:title] || 'Page 1'

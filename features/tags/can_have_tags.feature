@@ -33,7 +33,7 @@ Scenario: A Series inherits fandom and author tags from child
 
 Scenario: cannot move tags up from book to series
   Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND authors: "Sidra" AND fandoms: "Harry Potter" AND cons: "def987"
-  When I am on the page's page
+  When I am on the first page's page
     And I add a parent with title "Parent"
   Then the show tags for "Parent" should include fandom and author
     And the index tags for "Parent" should include fandom and author

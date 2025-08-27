@@ -24,7 +24,7 @@ Scenario: deliberately fetch chapter 1 shows chapter summary and chapter notes
 
 Scenario: multiple fandoms and author on a Single
   Given Alan Rickman exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Harry Potter, Die Hard, Robin Hood" within ".notes"
     And I should see "by manicmea" within ".notes"
     But I should NOT see "Rowling" within ".notes"
@@ -58,7 +58,7 @@ Scenario: one chapter from ao3 is a Single
 
 Scenario: series don't get note author and fandom
   Given Counting Drabbles exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should NOT see "by Sidra" within ".notes"
     And I should NOT see "Harry Potter" within ".notes"
     But I should see "Skipping Stones" within "#position_1"

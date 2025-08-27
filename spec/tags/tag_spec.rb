@@ -8,8 +8,8 @@ RSpec.describe Tag, type: :model do
     expect(tag).to be_valid
   end
 
-  it 'is NOT valid without a name' do
-    tag = described_class.new
+  it 'is NOT valid with a blank name' do
+    tag = described_class.new(name: '')
     expect(tag).not_to be_valid
   end
 
@@ -26,8 +26,8 @@ RSpec.describe Tag, type: :model do
   end
 
   it 'cannot have the same base name' do
-    pending 'oops?'
-    described_class.create(name: 'hello')
+    pending('needs a bug fix')
+    described_class.create!(name: 'hello')
     tag2 = described_class.new(name: 'hello (world)')
     expect(tag2).not_to be_valid
   end

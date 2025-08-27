@@ -2,7 +2,7 @@ Feature: authors are a type of tag; at least one author must exist per taggable 
 
 Scenario: add authors to a page
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "lewis carroll, charles dodgson"
     And I press "Add Author Tags"
@@ -11,7 +11,7 @@ Scenario: add authors to a page
 
 Scenario: create authors by adding them to a page
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "lewis carroll, charles dodgson"
     And I press "Add Author Tags"
@@ -22,7 +22,7 @@ Scenario: create authors by adding them to a page
 Scenario: add an existing author to a page
   Given a page exists
     And "lewis carroll" is an "Author"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I select "lewis carroll" from "page_author_ids_"
     And I press "Update Tags"
@@ -31,7 +31,7 @@ Scenario: add an existing author to a page
 
 Scenario: add another author to a page
   Given a page exists with authors: "lewis carroll"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "charles dodgson"
     And I press "Add Author Tags"
@@ -39,7 +39,7 @@ Scenario: add another author to a page
 
 Scenario: add another author to a page
   Given a page exists with authors: "lewis carroll"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "charles dodgson"
     And I press "Add Author Tags"
@@ -66,7 +66,7 @@ Scenario: edit the author name
   When I am on the edit tag page for "jane"
     And I fill in "tag_name" with "June"
     And I press "Update"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "June" within ".authors"
     But I should NOT see "jane" within ".authors"
 
@@ -81,7 +81,7 @@ Scenario: edit the author name
 
 Scenario: delete an author part 1
   Given a page exists with authors: "jane"
-  When I am on the page's page
+  When I am on the first page's page
   Then I should have 1 page with and 0 without authors
 
 Scenario: delete an author
@@ -89,7 +89,7 @@ Scenario: delete an author
   When I am on the edit tag page for "jane"
     And I follow "Destroy"
     And I press "Yes"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should NOT see "jane" within ".authors"
     But I should see "by jane" within ".notes"
     And I should have 0 pages with and 1 without authors
@@ -111,7 +111,7 @@ Scenario: no tags selected during create
 Scenario: author and other tag selected during create
   Given "first" is a "Pro"
     And "second" is a "Author"
-    And I am on the create page
+    And I am on the create single page
     And I select "first"
     And I select "second"
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
@@ -124,7 +124,7 @@ Scenario: author and other tag selected during create
 Scenario: author only selected during create
   Given "nonfiction" is a "Author"
     And "something" is a "Pro"
-    And I am on the create page
+    And I am on the create single page
     And I select "nonfiction"
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
@@ -146,5 +146,5 @@ Scenario: deleted author notes
   When I am on the edit tag page for "Twilight"
     And I follow "Destroy"
     And I press "Yes"
-    And I am on the page's page
+    And I am on the first page's page
     And I should see "by Twilight" within ".notes"

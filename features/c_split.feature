@@ -2,7 +2,7 @@ Feature: split a long work into chapters
 
 Scenario: split a single into a work with two chapters
   Given adapting exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Split"
     And I click on "Itachi &amp; Kisame"
     And I press "Children"
@@ -13,12 +13,12 @@ Scenario: split a single into a work with two chapters
 
 Scenario: check before split (5 chapters * 2 words = 10 words)
   Given fidelitas exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "10,681 words" within ".size"
 
 Scenario: split a single into a work with multiple chapters
   Given fidelitas exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Split"
     And I click on "Chapter 2"
     And I press "Children"
@@ -51,7 +51,7 @@ Scenario: split a single into a work with multiple chapters
 
 Scenario: split a chapter into multiple sub-chapters
   Given fire exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Chapter 1"
     And I follow "Split"
     And I click on "Prologue"
@@ -71,7 +71,7 @@ Scenario: split a chapter into multiple sub-chapters
 
 Scenario: split a chapter into multiple siblings
   Given fire exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Chapter 1"
     And I follow "Split"
     And I click on "Prologue"

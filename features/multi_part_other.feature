@@ -8,35 +8,35 @@ Scenario: download part
 
 Scenario: link to next part from part
   Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Part 1"
     And I follow "Part 2" within ".part"
   Then I should see "Part 2 (Chapter)" within ".title"
 
 Scenario: link to previous part from part
   Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Part 2"
     And I follow "Part 1" within ".part"
   Then I should see "Part 1 (Chapter)" within ".title"
 
 Scenario: next, not previous
   Given Counting Drabbles exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Skipping Stones"
   Then I should see "Next: The Flower"
     But I should NOT see 'Previous: The Flower'
 
 Scenario: previous, not next
   Given Counting Drabbles exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "The Flower"
   Then I should see "Previous: Skipping Stones"
     But I should NOT see 'Next: Skipping Stones'
 
 Scenario: reorder the parts on an existing page with parts
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
-  When I am on the page's page
+  When I am on the first page's page
     And I refetch the following
       """
       http://test.sidrasue.com/parts/2.html
@@ -69,7 +69,7 @@ Scenario: remove tag from child bug
 
 Scenario: parent shows parts by position, not created order
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
-  When I am on the page's page
+  When I am on the first page's page
     And I refetch the following
       """
       http://test.sidrasue.com/parts/2.html
@@ -79,7 +79,7 @@ Scenario: parent shows parts by position, not created order
 
 Scenario: update without url bug
   Given I have a series with read_after "2009-01-02"
-    And I am on the page's page
+    And I am on the first page's page
   When I refetch the following
     """
     ##Parent1
@@ -92,7 +92,7 @@ Scenario: refetch non-recursive
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
     And I change the raw html for "Part 1" to "<p>This is the new part 1</p>"
     And I change the raw html for "Part 2" to "<p>This is the new part 2</p>"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Refetch"
     And I press "Refetch"
   Then the contents should include "This is the new part 1"
@@ -103,7 +103,7 @@ Scenario: refetch recursive
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
     And I change the raw html for "Part 1" to "<p>This is the new part 1</p>"
     And I change the raw html for "Part 2" to "<p>This is the new part 2</p>"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Refetch"
     And I press "Refetch Recursive"
   Then the contents should include "stuff for part 1"

@@ -2,7 +2,7 @@ Feature: downloads
 
 Scenario: read text is a download
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Read"
   Then the download directory should exist
     And the download read file should exist
@@ -34,7 +34,7 @@ Scenario: weird formatting in end notes
 Scenario: removing downloads
   Given a page exists
   When I download its epub
-    And I am on the page's page
+    And I am on the first page's page
     And I press "Remove Downloads"
   Then the download html file should NOT exist
     And the download epub file should NOT exist
@@ -47,7 +47,7 @@ Scenario: notes go into html downloads
 
 Scenario: Update notes removes old html downloads
   Given a page exists with notes: "Lorem ipsum dolor"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Notes"
     And I fill in "page_notes" with "On Assignment for Dumbledore"
     And I press "Update"
@@ -63,7 +63,7 @@ Scenario: my notes do go in html
 
 Scenario: update my notes removes old html downloads
   Given a page exists with my_notes: "Lorem ipsum dolor"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "My Notes"
     And I fill in "page_my_notes" with "On Assignment for Dumbledore"
     And I press "Update"

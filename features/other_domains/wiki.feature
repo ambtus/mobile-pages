@@ -2,7 +2,7 @@ Feature: wikipedia descriptions of audiobooks
 
 Scenario: death on the nile
   Given Death on the Nile exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Death on the Nile (Single)"
 
 Scenario: death on the nile
@@ -15,7 +15,7 @@ Scenario: death on the nile
 
 Scenario: death in the clouds
   Given Death in the Clouds exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Death in the Clouds (Single)"
 
 Scenario: death in the clouds
@@ -28,7 +28,7 @@ Scenario: death in the clouds
 
 Scenario: dumb witness
   Given Dumb Witness exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Dumb Witness (Single)"
 
 Scenario: dumb witness
@@ -41,7 +41,7 @@ Scenario: dumb witness
 
 Scenario: mews
   Given Murder in the Mews exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Murder in the Mews (Single)"
 
 Scenario: mews
@@ -63,7 +63,7 @@ Scenario: early cases
 
 Scenario: announced
   Given Announced exists
-  When I am on the page's page
+  When I am on the first page's page
     And I press "Rebuild Meta"
   Then I should see "why am i a Page?"
 

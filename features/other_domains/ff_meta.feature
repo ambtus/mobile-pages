@@ -12,7 +12,7 @@ Scenario: fanfiction underline spans don't get cleaned
 
 Scenario: fanfiction older format
   Given stuck exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Stuck!" within ".title"
     And I should see "by kolyaaa" within ".notes"
     And I should see "Stargate" within ".notes"
@@ -24,7 +24,7 @@ Scenario: fanfiction older format
 
 Scenario: newer format
   Given ibiki exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Ibiki's Apprentice" within ".title"
     And I should see "by May Wren" within ".notes"
     And I should see "Naruto" within ".notes"
@@ -32,7 +32,7 @@ Scenario: newer format
 
 Scenario: unavoidable fanfiction first chapter doesn't get chapter_as_single
   Given skipping exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Counting (Single)" within ".title"
     And I should see "by ambtus" within ".notes"
     And I should see "Harry Potter" within ".notes"
@@ -40,7 +40,7 @@ Scenario: unavoidable fanfiction first chapter doesn't get chapter_as_single
 
 Scenario: fanfiction chapter as Single behavior
   Given the flower exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "The Flower (Single)" within ".title"
     And I should see "by ambtus" within ".notes"
     And I should see "Harry Potter" within ".notes"
@@ -48,7 +48,7 @@ Scenario: fanfiction chapter as Single behavior
 
 Scenario: fanfiction Chapter of Book meta
   Given counting exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Skipping Stones"
   Then I should see "Skipping Stones (Chapter)" within ".title"
     And I should NOT see "1. " within ".title"
@@ -58,7 +58,7 @@ Scenario: fanfiction Chapter of Book meta
 
 Scenario: fanfiction Book meta
   Given counting exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Counting (Book)" within ".title"
     And I should see "200 words (2 parts)" within ".size"
     And I should see "unread" within ".last_read"
@@ -75,13 +75,13 @@ Scenario: fanfiction Book meta
 Scenario: fanfiction match authors
   Given "Sidra (ambtus)" is an "Author"
     And counting exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Sidra" within ".authors"
     And I should NOT see "ambtus"
 
 Scenario: check before adding a parent
   Given He Could Be A Zombie exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "He Could Be A Zombie (Single)" within ".title"
     And I should see "by Sarah1281" within ".notes"
     And I should see "Naruto" within ".notes"
@@ -89,14 +89,14 @@ Scenario: check before adding a parent
 
 Scenario: fanfiction single to chapter by adding a parent
   Given He Could Be A Zombie exists
-    And I am on the page's page
+    And I am on the first page's page
   When I add a parent with title "good cause"
     And I follow "He Could Be A Zombie" within "#position_1"
   Then I should see "He Could Be A Zombie (Chapter)" within ".title"
 
 Scenario: fanfiction book from adding a parent
   Given He Could Be A Zombie exists
-    And I am on the page's page
+    And I am on the first page's page
   When I add a parent with title "good cause"
   Then I should see "It's For a Good Cause, I Swear! (Book)" within ".title"
     And I should see "by Sarah1281" within ".notes"
@@ -109,7 +109,7 @@ Scenario: fanfiction book from adding a parent
 
 Scenario: don't rename chapters that i've named or delete notes that i've added
   Given Child of Four exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Child of Four (Book)" within ".title"
     And I should see "by sarini" within ".notes"
     And I should see "Harry Potter" within ".notes"

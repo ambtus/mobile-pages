@@ -3,7 +3,7 @@
 require 'rails_helper'
 require Rails.root.join('features/support/note_helpers').to_s
 
-RSpec.describe 'notes' do
+RSpec.describe Notes, type: :module do
   it 'are saved as is' do
     page = Page.create(title: 'temp')
     page.update(notes: 'This is fun & cute <3')
@@ -24,26 +24,26 @@ RSpec.describe 'notes' do
 
   it 'short version scrubs html and replaces hr with ;' do
     page = Page.create(title: 'temp')
-    page.update(notes: "<p>This.</p><p>is not.</p><p>actually.<p>a very long.</p><p>note<hr />(once you take out the <a href='http://some.domain.com'>html</a>)<br /></p>")
+    page.update(notes: html_note)
     expect(page.short_notes.squish).to eq('This. is not. actually. a very long. note; (once you take out the html)')
   end
 
   it 'medium version retains links' do
     page = Page.create(title: 'temp')
-    page.update(notes: "<p>This.</p><p>is not.</p><p>actually.<p>a very long.</p><p>note<hr />(once you take out the <a href='http://some.domain.com'>html</a>)<br /></p>")
+    page.update(notes: html_note)
     expect(page.medium_notes).to match('<a href=')
   end
 
   it 'short version converts multiple ~ to hr' do
     page = Page.create(title: 'temp')
-    page.update(notes: '<p>Sorry it took so long, I suck at romantic stuff.<br />~~~~~~~~~~~~~~~~~~~~~~~</p><p>Cheers!</p>')
+    page.update(notes: tilde_note)
     expect(page.short_notes).to eq('Sorry it took so long, I suck at romantic stuff.; Cheers!')
   end
 
   it 'medium version converts multiple ~ to hr' do
     page = Page.create(title: 'temp')
-    page.update(notes: '<p>Sorry it took so long, I suck at romantic stuff.<br />~~~~~~~~~~~~~~~~~~~~~~~</p><p>Cheers!</p>')
-    expect(page.medium_notes).to eq('<p>Sorry it took so long, I suck at romantic stuff.<br /></p><hr width="80%" /><p>Cheers!</p>')
+    page.update(notes: tilde_note)
+    expect(page.medium_notes).to eq fixed_tilde_note
   end
 
   it 'short version is truncated' do

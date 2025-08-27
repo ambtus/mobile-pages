@@ -9,7 +9,7 @@ Scenario: audiobook sections
     And I should see "2"
 
 Scenario: part sections
-  Given I am on the "Store Multiple" page
+  Given I am on the create multiple page
     And I fill in "page_urls" with
       """
       http://test.sidrasue.com/parts/1.html
@@ -22,7 +22,7 @@ Scenario: part sections
 
 Scenario: check before audiobook created
   Given a page exists with last_read: "2014-01-01"
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "2014" within ".last_read"
     And I should NOT see "audio"
 
@@ -30,7 +30,7 @@ Scenario: audiobook created updates last read and adds audio and reader tags
   Given a page exists with last_read: "2014-01-01"
     And I view the text for reading aloud
     And I press "Audiobook created"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "Sidra" within ".readers"
     And last read should be today
     And I should NOT see "2014" within ".last_read"

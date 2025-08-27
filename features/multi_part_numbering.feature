@@ -10,7 +10,7 @@ Scenario: both numbers
     And the part titles should be stored as "Part 1 & Part 2"
 
 Scenario: neither numbers
-  Given I am on the "Store Multiple" page
+  Given I am on the create multiple page
     And I fill in "page_urls" with
       """
       http://test.sidrasue.com/parts/1.html##One
@@ -24,7 +24,7 @@ Scenario: neither numbers
     And the part titles should be stored as "One & Two"
 
 Scenario: some numbers
-  Given I am on the "Store Multiple" page
+  Given I am on the create multiple page
     And I fill in "page_urls" with
       """
       http://test.sidrasue.com/parts/1.html##Section 1

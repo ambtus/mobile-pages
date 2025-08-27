@@ -13,7 +13,7 @@ Scenario: link to parts in downloaded html
     And "Part 2" should link to itself
 
 Scenario: two and three levels (h3 & h4)
-  Given I am on the "Store Multiple" page
+  Given I am on the create multiple page
     And I fill in "page_urls" with
       """
       ##Child 1
@@ -45,7 +45,7 @@ Scenario: download part titles
   Given "rating tag" is a "Pro"
     And "info tag" is an "Info"
     And a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Part 1"
     And I follow "Rate"
     And I click on "5"
@@ -101,7 +101,7 @@ Scenario: part epubs should have title "X. PartTitle of GrandparentTitle"
 
 Scenario: a single which used to be a part shouldn't have a title prefix
   Given a series exists
-  When I am on the page's page
+  When I am on the first page's page
     And I press "Uncollect"
   Then the download epub title for "Prologue" should be "1. Prologue of Book1"
     And the download epub title for "Another Book" should be "Another Book"

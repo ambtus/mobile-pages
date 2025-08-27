@@ -18,7 +18,7 @@ Scenario: works with split tags get both
     And I fill in "first_tag_name" with "Harry"
     And I fill in "second_tag_name" with "Severus"
     And I press "Split"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should NOT see "harry/snape"
     But I should see "Harry Severus" within ".fandoms"
   When I follow "Harry"

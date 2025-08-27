@@ -2,14 +2,14 @@ Feature: show only 5 parts at a time
 
 Scenario: show parent only shows 5 parts
   Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-21"
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Part 1"
     And I should see "Part 5"
     But I should NOT see "Part 6"
 
 Scenario: first next
   Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-21"
-  When I am on the page's page
+  When I am on the first page's page
     And I press "Next Parts"
   Then I should see "Part 6"
     And I should see "Part 10"
@@ -18,7 +18,7 @@ Scenario: first next
 
 Scenario: second next
   Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-21"
-  When I am on the page's page
+  When I am on the first page's page
     And I press "Next Parts"
     And I press "Next Parts"
   Then I should see "Part 11"
@@ -28,7 +28,7 @@ Scenario: second next
 
 Scenario: last
   Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-21"
-  When I am on the page's page
+  When I am on the first page's page
     And I press "Last Parts"
   Then I should see "Part 21"
     And I should see "Part 17"
@@ -36,7 +36,7 @@ Scenario: last
 
 Scenario: previous
   Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-21"
-  When I am on the page's page
+  When I am on the first page's page
     And I press "Last Parts"
     And I press "Previous Parts"
   Then I should see "Part 16"
@@ -46,7 +46,7 @@ Scenario: previous
 
 Scenario: previous
   Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-21"
-  When I am on the page's page
+  When I am on the first page's page
     And I press "Middle Parts"
   Then I should see "Part 11"
     And I should see "Part 15"
@@ -55,7 +55,7 @@ Scenario: previous
 
 Scenario: previous
   Given a long partially read page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I press "Next Unread Part"
   Then I should see "Part 11"
     And I should see "Part 15"
@@ -64,7 +64,7 @@ Scenario: previous
 
 Scenario: refetch shows last
   Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-21"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Refetch"
     And I press "Refetch"
   Then I should see "Part 21"
@@ -73,7 +73,7 @@ Scenario: refetch shows last
 
 Scenario: first
   Given a page exists with base_url: "https://www.fanfiction.net/s/7347955/*/Dreaming-of-Sunshine" AND url_substitutions: "1-21"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Refetch"
     And I press "Refetch"
     And I press "First Parts"

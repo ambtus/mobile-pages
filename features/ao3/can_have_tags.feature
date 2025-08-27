@@ -26,7 +26,7 @@ Scenario: A Series inherits fandom and author tags from child
 
 Scenario: A Book can have fandom and author in notes but a Chapter does not have it’s own fandom and author in notes
   Given Time Was exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "by Sidra" within ".notes"
     And I should see "Harry Potter" before "Using time-travel" within ".notes"
     But I should NOT see "Sidra" within "#position_1"
@@ -40,7 +40,7 @@ Scenario: A Chapter without fandom and author tags when alone
 
 Scenario: A Series without fandom and author tags from child
   Given Counting Drabbles exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should NOT see "Sidra" within ".notes"
     And I should NOT see "Harry Potter" within ".notes"
     But I should see "by Sidra; Harry Potter; Harry Potter/Unknown" within "#position_1"
@@ -50,6 +50,6 @@ Scenario: remove old fandom and author tags from series when rebuild meta
   Given tags exist
     And Counting Drabbles exists
     And Counting Drabbles had tags
-  When I am on the page's page
+  When I am on the first page's page
     And I press "Rebuild Meta"
   Then the tags for "Counting Drabbles" should NOT include fandom and author

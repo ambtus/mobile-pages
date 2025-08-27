@@ -6,7 +6,7 @@ RSpec.configure do |config|
   config.file_fixture_path = 'spec/html_files'
 end
 
-RSpec.describe 'raw HTML' do
+RSpec.describe Raw, type: :module do
   it 'starts blank' do
     page = Page.create(title: 'temp')
     expect(page.raw_html).to eq('')
@@ -46,20 +46,40 @@ RSpec.describe 'raw HTML' do
     expect(page.raw_html).to match('xyzzy')
   end
 
-  it 'converts winlatin1 encodings' do
+  it 'converts winlatin1 elipse' do
     page = Page.create(title: 'temp')
     page.raw_html = file_fixture('winlatin1.html').read
     expect(page.raw_html).to match('“Hello…”')
-    expect(page.raw_html).to match('Don’t—')
+  end
+
+  it 'converts winlatin1 euro' do
+    page = Page.create(title: 'temp')
+    page.raw_html = file_fixture('winlatin1.html').read
     expect(page.raw_html).to match('€')
   end
 
-  it 'fixes entities' do
+  it 'converts winlatin1 emdash and quote' do
+    page = Page.create(title: 'temp')
+    page.raw_html = file_fixture('winlatin1.html').read
+    expect(page.raw_html).to match('Don’t—')
+  end
+
+  it 'fixes emdash entities' do
     page = Page.create(title: 'temp')
     page.raw_html = file_fixture('entities.html').read
     expect(page.raw_html).to match('antsy—boggart')
+  end
+
+  it 'fixes quote entities' do
+    page = Page.create(title: 'temp')
+    page.raw_html = file_fixture('entities.html').read
     expect(page.raw_html).to match('world’s')
-    expect(page.raw_html).to match(' ')
+  end
+
+  it 'removes nbsp entities' do
+    page = Page.create(title: 'temp')
+    page.raw_html = file_fixture('entities.html').read
+    expect(page.raw_html).not_to match('nbsp')
   end
 
   it 'removes javascript' do
@@ -72,6 +92,11 @@ RSpec.describe 'raw HTML' do
     page = Page.create(title: 'temp')
     page.raw_html = '<head><title>Title</title></head><body><p>xyzzy</p></body>'
     expect(page.raw_html).not_to match('Title')
+  end
+
+  it 'does save the body' do
+    page = Page.create(title: 'temp')
+    page.raw_html = '<head><title>Title</title></head><body><p>xyzzy</p></body>'
     expect(page.raw_html).to match('xyzzy')
   end
 end

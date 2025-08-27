@@ -2,13 +2,13 @@ Feature: ratings
 
 Scenario: new rating page
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Rate"
   Then I should see "Stars"
 
 Scenario: error if don't select stars before rating
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Rate"
     And I press "Rate"
   Then I should see "You must select stars"
@@ -22,7 +22,7 @@ Scenario: rate a book 5 stars (good)
 Scenario: stars propagate
   Given a page exists
   When I rate it 5 stars
-    And I am on the page's page
+    And I am on the first page's page
     And I follow "Rate"
   Then "stars_5" should be checked
 
@@ -41,7 +41,7 @@ Scenario: rate a book 3 stars (bad)
 
 Scenario: rate a book without changing the date
   Given a page exists with stars: 2 AND last_read: "2009-01-01"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Rate"
     And I click on "3"
   And I click on "today_No"
@@ -51,7 +51,7 @@ Scenario: rate a book without changing the date
 
 Scenario: rate a book without changing the date when it didn’t have a last_read
   Given a page exists with stars: 9 AND updated_at: "2009-01-01"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Rate"
     And I click on "3"
   And I click on "today_No"

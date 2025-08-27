@@ -2,7 +2,7 @@ Feature: ao3 & ff.net note scrubbing
 
 Scenario: check before ao3
   Given I Drive Myself Crazy exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Scrub Notes"
     And I click on "Popslash" within ".top"
     And I click on "Make the Yuletide Gay" within ".bottom"
@@ -15,7 +15,7 @@ Scenario: check before ao3
 
 Scenario: rebuild from raw should recover scrubbed notes
   Given I Drive Myself Crazy exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Scrub Notes"
     And I click on "Popslash" within ".top"
     And I click on "Make the Yuletide Gay" within ".bottom"
@@ -27,7 +27,7 @@ Scenario: rebuild from raw should recover scrubbed notes
 
 Scenario: rebuild meta should NOT recover scrubbed notes
   Given I Drive Myself Crazy exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Scrub Notes"
     And I click on "Popslash" within ".top"
     And I click on "Make the Yuletide Gay" within ".bottom"
@@ -41,7 +41,7 @@ Scenario: rebuild meta should NOT recover scrubbed notes
 
 Scenario: check before ff.net
   Given ibiki exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Scrub Notes"
     And I click on "Naruto" within ".bottom"
     And I press "Scrub Notes" within ".bottom"
@@ -51,7 +51,7 @@ Scenario: check before ff.net
 
 Scenario: rebuild from raw should recover scrubbed notes
   Given ibiki exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Scrub Notes"
     And I click on "Naruto" within ".bottom"
     And I press "Scrub Notes" within ".bottom"
@@ -62,7 +62,7 @@ Scenario: rebuild from raw should recover scrubbed notes
 
 Scenario: rebuild meta should NOT recover scrubbed notes
   Given ibiki exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Scrub Notes"
     And I click on "Naruto" within ".bottom"
     And I press "Scrub Notes" within ".bottom"

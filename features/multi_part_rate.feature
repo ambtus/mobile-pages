@@ -47,13 +47,13 @@ Scenario: rating a single unread child sets parent AND grandparent to read
 
 Scenario: rating all unrated
   Given a series exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Rate"
   Then "Unrated" should be checked
 
 Scenario: rating all unrated
   Given a series exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Rate"
     And I click on "3"
     And I press "Rate"
@@ -66,7 +66,7 @@ Scenario: rate all up to now
     And I click on "3"
     And I click on "previous_Unrated"
     And I press "Rate"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "3 unread parts"
     And I should see "unread" within "#position_4"
     And I should see "unread" within "#position_5"
@@ -81,7 +81,7 @@ Scenario: rate all unrated up to now
     And I click on "3"
     And I click on "previous_Unrated"
     And I press "Rate"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "2 unread parts"
     And I should NOT see "unread" within "#position_1"
     But I should see "2009" within "#position_1"
@@ -98,7 +98,7 @@ Scenario: re-rate all up to now
     And I click on "3"
     And I click on "previous_All"
     And I press "Rate"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "2 unread parts"
     And I should NOT see "unread" within "#position_1"
     And I should NOT see "2009" within "#position_1"

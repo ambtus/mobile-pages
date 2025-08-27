@@ -57,7 +57,7 @@ Scenario: any pros
 Scenario: pro selected during create is filterable
   Given "abc123" is a "Pro"
     And a page exists with title: "Page 3"
-  When I am on the create page
+  When I am on the create single page
     And I select "abc123"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"

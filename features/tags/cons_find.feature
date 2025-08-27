@@ -34,13 +34,13 @@ Scenario: link from tag index
 
 Scenario: link from show
   Given a page exists with cons: "abc123"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "abc123"
   Then I should see "Page 1"
 
 Scenario: if there are no more pages
   Given 5 pages with cons: "abc123" exist
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "abc123"
     And I press "Next"
   Then I should see "No pages found"

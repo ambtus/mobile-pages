@@ -2,7 +2,7 @@ Feature: add parts to parents and parents to parts
 
 Scenario: create a new parent for an existing page
   Given a page exists with url: "http://test.sidrasue.com/test.html"
-  When I am on the page's page
+  When I am on the first page's page
     And I add a parent with title "Parent"
   Then I should see "Parent (Book)" within ".title"
     And I should see "(1 part)" within ".size"
@@ -67,7 +67,7 @@ Scenario: can only choose between pages without content
 
 Scenario: can't add yourself to your parts
   Given a page exists with url: "http://test.sidrasue.com/test.html"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Refetch"
   Then the page should NOT contain css "#url_list"
     But the page should contain css "#url"
@@ -86,13 +86,13 @@ Scenario: add an existing page to an existing page with parts
 
 Scenario: add a part shows last part's url for easy editing
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-2"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Add Part"
   Then the "add_url" field should contain "http://test.sidrasue.com/parts/2.html"
 
 Scenario: add a single part to an existing parent
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-2"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Add Part"
     And I fill in "add_url" with "http://test.sidrasue.com/parts/3.html"
     And I press "Add"
@@ -104,7 +104,7 @@ Scenario: add a single part to an existing parent
 
 Scenario: add two new parts via manage parts
   Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
-  When I am on the page's page
+  When I am on the first page's page
     And I refetch the following
       """
       http://test.sidrasue.com/parts/1.html
@@ -118,7 +118,7 @@ Scenario: add two new parts via manage parts
 
 Scenario: add two new parts via refetch
   Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
-  When I am on the page's page
+  When I am on the first page's page
     And I refetch the following
       """
       http://test.sidrasue.com/parts/1.html

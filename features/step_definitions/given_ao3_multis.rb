@@ -39,13 +39,7 @@ Given(/^Time Was exists$/) do
 end
 
 Given(/^Time Was partially exists$/) do
-  page = Book.create!(title: 'temp')
-  page.update!(url: 'https://archiveofourown.org/works/692')
-  chapter1 = Chapter.create!(title: 'temp', parent_id: page.id, position: 1)
-  chapter1.update!(url: 'https://archiveofourown.org/works/692/chapters/803')
-  chapter1.set_raw_from('where').rate_today('3')
-  page.rebuild_meta
-  page.update_from_parts
+  partial_book
 end
 
 Given(/^I add the second chapter manually$/) do

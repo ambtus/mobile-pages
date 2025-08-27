@@ -2,7 +2,7 @@ Feature: page size
 
 Scenario: long
   Given a page exists with url: "http://test.sidrasue.com/40000.html"
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "40,020 words" within ".size"
 
 Scenario: find and change size from long to medium
@@ -41,7 +41,7 @@ Scenario: find and change size from short to long
 
 Scenario: sizes of parts
   Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1-2"
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "20,002 words" within ".size"
 
 Scenario: find by size of parent and change size of part
@@ -58,7 +58,7 @@ Scenario: find by size of parent and change size of part
 
 Scenario: new size of parent
   Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1-2"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Part 1"
     And I follow "Refetch"
     And I fill in "url" with "http://test.sidrasue.com/8000.html"
@@ -68,7 +68,7 @@ Scenario: new size of parent
 
 Scenario: new size of part
   Given a page exists with base_url: "http://test.sidrasue.com/epic*.html" AND url_substitutions: "1-2"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Part 1"
     And I follow "Refetch"
     And I fill in "url" with "http://test.sidrasue.com/8000.html"
@@ -82,10 +82,10 @@ Scenario: new size of part
 
 Scenario: image only chapter
   Given an image only chapter
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "-1 words" within ".size"
 
 Scenario: another image only chapter
   Given another image only chapter
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "-1 words" within ".size"

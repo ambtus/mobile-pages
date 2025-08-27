@@ -2,7 +2,7 @@ Feature: trim cruft off pages
 
 Scenario: remove bottom when one automatically removed surrounding div
   Given a page exists with url: "http://test.sidrasue.com/divs.html"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Scrub"
     And I click on "3rd" within ".bottom"
     And I press "Scrub" within ".top"
@@ -12,7 +12,7 @@ Scenario: remove bottom when one automatically removed surrounding div
 
 Scenario: remove top when one automatically removed surrounding blockquote
   Given a page exists with url: "http://test.sidrasue.com/blockquote.html"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Scrub"
     And I click on "1st" within ".top"
     And I press "Scrub" within ".bottom"
@@ -22,7 +22,7 @@ Scenario: remove top when one automatically removed surrounding blockquote
 
 Scenario Outline: strip beginning and end
   Given a page exists with url: "<url>"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Scrub"
     And I click on "<unwanted1>" within ".top"
     And I click on "<unwanted2>" within ".bottom"
@@ -44,7 +44,7 @@ Examples:
 
 Scenario: trim when many headers and short fic
   Given a page exists with url: "http://test.sidrasue.com/headers.html"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Scrub"
     And I click on "third header" within ".top"
     And I press "Scrub" within ".bottom"
@@ -53,7 +53,7 @@ Scenario: trim when many headers and short fic
 
 Scenario: recover from trimming too much
   Given a page exists with url: "http://test.sidrasue.com/headers.html"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Scrub"
     And I click on "third header" within ".top"
     And I press "Scrub" within ".bottom"
@@ -68,7 +68,7 @@ Scenario: check before trimming parent
 
 Scenario: trim a child removes parent's (composite) html
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
-  When I am on the page's page
+  When I am on the first page's page
   And I follow "Scrub"
     And I follow "Scrub Part 1"
     And I click on "top cruft" within ".top"
@@ -78,7 +78,7 @@ Scenario: trim a child removes parent's (composite) html
 
 Scenario: trim a child removes parent's (composite) html
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
-  When I am on the page's page
+  When I am on the first page's page
   And I follow "Scrub"
     And I follow "Scrub Part 1"
     And I click on "top cruft" within ".top"
@@ -89,7 +89,7 @@ Scenario: trim a child removes parent's (composite) html
 
 Scenario: rebuild all children from raw
   Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Scrub"
     And I follow "Scrub Part 1"
     And I click on "top cruft" within ".top"
@@ -101,14 +101,14 @@ Scenario: rebuild all children from raw
 
 Scenario: check before trim a sub-part
   Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
-  When I am on the page's page
+  When I am on the first page's page
     And I add a parent with title "Parent"
   Then the contents should include "cruft"
     And the download directory should exist
 
 Scenario: scrubbing grandchild remove's grandparent's (composite) html
   Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
-  When I am on the page's page
+  When I am on the first page's page
     And I add a parent with title "Parent"
     And I am on the page with title "Part 1"
     And I follow "Scrub"
@@ -133,13 +133,13 @@ Scenario: scrubbing grandchild shows scrubbed content in grandparent
 
 Scenario: show number of nodes
   Given a page exists with url: "http://test.sidrasue.com/div.html"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Scrub"
   Then I should see "4 nodes"
 
 Scenario: show number of nodes
   Given a page exists with url: "http://test.sidrasue.com/div.html"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Scrub"
     And I click on "last div" within ".bottom"
     And I press "Scrub" within ".bottom"

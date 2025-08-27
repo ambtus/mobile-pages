@@ -2,7 +2,7 @@ Feature: collections are a type of tag
 
 Scenario: strip whitespace and sort
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "  xyz &   789,  abc/123,lmn   & 345  "
     And I press "Add Collection Tags"
@@ -11,7 +11,7 @@ Scenario: strip whitespace and sort
 
 Scenario: link to tag on show should find page on index
   Given a page exists with collections: "lmn123"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "lmn123"
   Then I should see "Page 1" within "#position_1"
 
@@ -36,7 +36,7 @@ Scenario: no tags selected during create
 
 Scenario: collection selected during create
   Given "abc123" is a "Collection"
-  When I am on the create page
+  When I am on the create single page
     And I select "abc123"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I fill in "page_title" with "New Title"
@@ -45,7 +45,7 @@ Scenario: collection selected during create
 
 Scenario: comma separated collections (not & or /)
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "Sam & Dean, Harry/Snape"
     And I press "Add Collection Tags"
@@ -55,7 +55,7 @@ Scenario: comma separated collections (not & or /)
 
 Scenario: add collections to a page which already has collections sorts alphabetically
   Given a page exists with collections: "lmn123"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "xyz123, abc123"
     And I press "Add Collection Tags"
@@ -82,7 +82,7 @@ Scenario: delete a collection tag
   When I am on the edit tag page for "nobody"
     And I follow "Destroy"
     And I press "Yes"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should NOT see "nobody"
 
 Scenario: change collection to fandom
@@ -90,7 +90,7 @@ Scenario: change collection to fandom
   When I am on the edit tag page for "Harry Potter"
     And I select "Fandom" from "change"
     And I press "Change"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "Harry Potter" within ".fandoms"
 
 Scenario: change fandom to collection
@@ -98,12 +98,12 @@ Scenario: change fandom to collection
   When I am on the edit tag page for "Harry Potter"
     And I select "Collection" from "change"
     And I press "Change"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "Harry Potter" within ".collections"
 
  Scenario: do not allow collection and fandom tags to have the same base name
   Given a page exists with fandoms: "Harry Potter"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "harry potter"
     And I press "Add Collection Tags"
@@ -112,7 +112,7 @@ Scenario: change fandom to collection
 
  Scenario: allow collection and fandom tags to have similar names
   Given a page exists with fandoms: "Harry Potter"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "Harry"
     And I press "Add Collection Tags"
@@ -121,7 +121,7 @@ Scenario: change fandom to collection
 
  Scenario: allow collection and fandom tags to have similar names
   Given a page exists with fandoms: "Harry (Potter)"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "Harry Potter"
     And I press "Add Collection Tags"

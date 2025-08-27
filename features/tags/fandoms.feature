@@ -10,19 +10,19 @@ Scenario: fandom tag not in other tag dropdown
 
 Scenario: link to tag on show should find page on index
   Given a page exists with fandoms: "lmn123"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "lmn123"
     And I follow "1 page"
   Then I should see "Page 1" within "#position_1"
 
 Scenario: strip fandom whitespace and sort
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "  xyz &   789,  abc/123,lmn   & 345  "
     And I press "Add Fandom Tags"
   Then I should see "abc/123 lmn & 345 xyz & 789" within ".fandoms"
-    And I follow "lmn & 345" 
+    And I follow "lmn & 345"
   Then "1 page" should link to "/pages?find=lmn+%26+345"
 
 Scenario: no tags exist during create
@@ -42,7 +42,7 @@ Scenario: no tags selected during create
 Scenario: fandom and author tag selected during create
   Given "first" is a "Author"
     And "second" is a "Fandom"
-    And I am on the create page
+    And I am on the create single page
     And I select "first"
     And I select "second"
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
@@ -56,7 +56,7 @@ Scenario: fandom and author tag selected during create
 Scenario: fandom only selected during create
   Given "nonfiction" is a "Fandom"
     And "something" is a "Pro"
-    And I am on the create page
+    And I am on the create single page
     And I select "nonfiction"
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I press "Store"
@@ -66,7 +66,7 @@ Scenario: fandom only selected during create
 
 Scenario: add a fandom to a page when there are no fandoms
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "Star Wars, Harry Potter"
     And I press "Add Fandom Tags"
@@ -74,7 +74,7 @@ Scenario: add a fandom to a page when there are no fandoms
 
 Scenario: add a fandom to a page makes the fandom selectable
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "Star Wars, Harry Potter"
     And I press "Add Fandom Tags"
@@ -85,7 +85,7 @@ Scenario: add a fandom to a page makes the fandom selectable
 Scenario: select a fandom for a page when there are fandoms
   Given "SGA" is a "Fandom"
     And a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I select "SGA" from "page_fandom_ids_"
     And I press "Update Tags"
@@ -93,12 +93,12 @@ Scenario: select a fandom for a page when there are fandoms
 
 Scenario: page which already has fandoms should display them
   Given a page exists with fandoms: "nonfiction"
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "nonfiction" within ".fandoms"
 
 Scenario: add another fandom to a page
   Given a page exists with fandoms: "nonfiction"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "meta, reviews"
     And I press "Add Fandom Tags"
@@ -106,7 +106,7 @@ Scenario: add another fandom to a page
 
 Scenario: add another fandom to a page makes the fandom selectable
   Given a page exists with fandoms: "nonfiction"
-    And I am on the page's page
+    And I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "meta, reviews"
     And I press "Add Fandom Tags"
@@ -116,7 +116,7 @@ Scenario: add another fandom to a page makes the fandom selectable
 
 Scenario: new parent for an existing page should have the same fandom
   Given a page exists with fandoms: "nonfiction"
-  When I am on the page's page
+  When I am on the first page's page
     And I add a parent with title "New Parent"
     And I am on the page with title "New Parent"
   Then I should see "nonfiction" within ".fandoms"
@@ -178,12 +178,12 @@ Scenario: deleted fandom moves fandom to notes on page
   When I am on the edit tag page for "Twilight"
     And I follow "Destroy"
     And I press "Yes"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "Twilight" within ".notes"
 
 Scenario: change fandom to pro tag part 1
   Given a page exists with fandoms: "not a fandom"
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "not a fandom" within ".fandoms"
     But I should NOT see "not a fandom" within ".pros"
 
@@ -197,7 +197,7 @@ Scenario: change fandom to pro tag part 3
   When I am on the edit tag page for "not a fandom"
     And I select "Pro" from "change"
     And I press "Change"
-    And I am on the page's page
+    And I am on the first page's page
  Then I should see "not a fandom" within ".pros"
 
 Scenario: change fandom to pro tag part 4
@@ -211,7 +211,7 @@ Scenario: change fandom to pro tag part 4
 
 Scenario: change pro to fandom tag part 1
   Given a page exists with pros: "will be fandom"
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "will be fandom" within ".pros"
     But I should NOT see "will be a fandom" within ".fandoms"
 
@@ -225,7 +225,7 @@ Scenario: change pro to fandom tag part 3
   When I am on the edit tag page for "will be fandom"
     And I select "Fandom" from "change"
     And I press "Change"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "will be fandom" within ".fandoms"
     But I should NOT see "will be a fandom" within ".pros"
 
@@ -248,7 +248,7 @@ Scenario: change hidden to fandom tag part 1
 
 Scenario: change hidden to fandom tag part 2
   Given a page exists with hiddens: "will be visible"
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "will be visible" within ".hiddens"
     But I should NOT see "will be visible" within ".fandoms"
 
@@ -262,7 +262,7 @@ Scenario: change hidden to fandom tag part 4
   When I am on the edit tag page for "will be visible"
     And I select "Fandom" from "change"
     And I press "Change"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "will be visible" within ".fandoms"
 
 Scenario: change hidden to fandom tag part 5
@@ -276,7 +276,7 @@ Scenario: change hidden to fandom tag part 5
 
 Scenario: change fandom to hidden tag part 1
   Given a page exists with fandoms: "will be hidden"
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "will be hidden" within ".fandoms"
 
 Scenario: change fandom to hidden tag part 2
@@ -289,7 +289,7 @@ Scenario: change fandom to hidden tag part 3
   When I am on the edit tag page for "will be hidden"
     And I select "Hidden" from "change"
     And I press "Change"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "will be hidden" within ".hiddens"
     But I should NOT see "will be hidden" within ".fandoms"
 

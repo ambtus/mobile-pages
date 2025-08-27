@@ -2,7 +2,7 @@ Feature: pros are a type of tag
 
 Scenario: strip whitespace and sort
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "  xyz &   789,  abc/123,lmn   & 345  "
     And I press "Add Pro Tags"
@@ -11,7 +11,7 @@ Scenario: strip whitespace and sort
 
 Scenario: link to tag on show should find page on index
   Given a page exists with pros: "lmn123"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "lmn123"
   Then I should see "Page 1" within "#position_1"
 
@@ -36,7 +36,7 @@ Scenario: no tags selected during create
 
 Scenario: pro selected during create
   Given "abc123" is a "Pro"
-  When I am on the create page
+  When I am on the create single page
     And I select "abc123"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I fill in "page_title" with "New Title"
@@ -45,7 +45,7 @@ Scenario: pro selected during create
 
 Scenario: comma separated pros (not & or /)
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "abc & 123, xyz/987"
     And I press "Add Pro Tags"
@@ -56,7 +56,7 @@ Scenario: comma separated pros (not & or /)
 
 Scenario: add pros to a page which already has pros sorts alphabetically
   Given a page exists with pros: "lmn123"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "xyz123, abc123"
     And I press "Add Pro Tags"
@@ -92,7 +92,7 @@ Scenario: change pro to con tag
   When I am on the edit tag page for "abc123"
     And I select "Con" from "change"
     And I press "Change"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "abc123" within ".cons"
 
 Scenario: change con to pro tag
@@ -100,5 +100,5 @@ Scenario: change con to pro tag
   When I am on the edit tag page for "abc123"
     And I select "Pro" from "change"
     And I press "Change"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "abc" within ".pros"

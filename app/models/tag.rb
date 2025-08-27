@@ -7,6 +7,9 @@ class Tag < ApplicationRecord
   validates :name, presence: true
   validates :name, uniqueness: { case_sensitive: false, scope: :type }
 
+  before_validation :fixme
+  def fixme = name.gsub(NEW_PLACEHOLDER, '').squish!
+
   def self.types = %w[Fandom Author Pro Con Hidden Reader Info Collection]
   def self.boolean_types = %w[Fandom Author Pro Con Hidden Reader]
   def self.some_types = types - %w[Fandom Author]
@@ -42,21 +45,7 @@ class Tag < ApplicationRecord
   # NOTE: this must go at the end, because it returns an array, not a scope
   scope :joined, -> { map(&:base_name).join_comma }
 
-  before_validation :remove_placeholder
-
-  def remove_placeholder
-    self.name = nil if name == NEW_PLACEHOLDER
-  end
-
-  before_save :strip_whitespace
-
-  def strip_whitespace
-    name.squish!
-  end
-
-  def type_name
-    type.presence || 'Tag'
-  end
+  def type_name = type.presence || 'Tag'
 
   def self.scope_name
     name == 'Tag' ? 'by_type' : name.downcase.pluralize

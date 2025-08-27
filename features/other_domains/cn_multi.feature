@@ -4,7 +4,7 @@ Scenario: series of singles
   Given "Teen Wolf" is a "Fandom"
     And "Claire Watson" is an "Author"
     And The Prepared Mind exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "The Prepared Mind (Series)"
     And I should see "Teen Wolf" within ".fandoms"
     And I should see "Claire Watson" within ".authors"
@@ -17,7 +17,7 @@ Scenario: book of chapters
   Given "Teen Wolf" is a "Fandom"
     And "Claire Watson" is an "Author"
     And Earthbound Misfit exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Earthbound Misfit (Book)"
     And I should see "Teen Wolf" within ".fandoms"
     And I should see "Claire Watson" within ".authors"
@@ -31,7 +31,7 @@ Scenario: book of chapters
 Scenario: book of chapters with long notes
   Given "Shadowhunters" is a "Fandom"
     And Almost Paradise exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Almost Paradise (Book)"
     And I should see "by Claire Watson"
     And I should see "Shadowhunters" within ".fandoms"
@@ -43,7 +43,7 @@ Scenario: book of chapters with long notes
 
 Scenario: book of chapters with long notes
   Given Almost Paradise exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "full notes"
   Then I should see "Clary Fray may have been stripped"
     And I should see "memories back."
@@ -54,7 +54,7 @@ Scenario: book of chapters with long notes
 
 Scenario: manipulating chapter/single to get the title you want without losing notes
   Given Shadowwings exists
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "Shadowwings"
     And I press "Decrease Type"
     And I press "Rebuild Meta"
@@ -64,12 +64,12 @@ Scenario: manipulating chapter/single to get the title you want without losing n
 
 Scenario: check before update from parts
   Given Shadowwings exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "151 words"
 
 Scenario: check before update from parts
   Given Shadowwings exists
-  When I am on the page's page
+  When I am on the first page's page
     And I press "Update from Parts"
   Then I should see "29,655 words"
 

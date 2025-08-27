@@ -73,40 +73,9 @@ url_substitutions: '1-5')
 end
 
 Given('pages with all possible unreads exist') do
-  Single.create(title: 'not read single')
-  Single.create(title: 'yes read single').rate_today(5)
-
-  book1 = Book.create(title: 'not read book')
-  Chapter.create(title: 'not read chapter', parent_id: book1.id)
-  book1.update_from_parts
-
-  book2 = Book.create(title: 'yes read book')
-  Chapter.create(title: 'yes read chapter', parent_id: book2.id).rate_today(5)
-  book2.update_from_parts
-
-  book3 = Book.create(title: 'partially read book')
-  Chapter.create(title: 'not read chapter', parent_id: book3.id)
-  Chapter.create(title: 'yes read chapter', parent_id: book3.id).rate_today(5)
-  book3.update_from_parts
-
-  series1 = Series.create(title: 'not read series')
-  book4 = Book.create(title: 'another not read book', parent_id: series1.id)
-  Chapter.create(title: 'another not read chapter', parent_id: book4.id)
-  book4.update_from_parts
-  series1.update_from_parts
-
-  series2 = Series.create(title: 'partially read series')
-  book5 = Book.create(title: 'another partially read book', parent_id: series2.id)
-  Chapter.create(title: 'yet another not read chapter', parent_id: book5.id)
-  Chapter.create(title: 'another read chapter', parent_id: book5.id).rate_today(5)
-  book5.update_from_parts
-  series2.update_from_parts
-
-  series3 = Series.create(title: 'yes read series')
-  book6 = Book.create(title: 'another read book', parent_id: series3.id)
-  Chapter.create(title: 'another read chapter', parent_id: book6.id).rate_today(5)
-  book6.update_from_parts
-  series3.update_from_parts
+  singles
+  books
+  series
 end
 
 Given('pages with all combinations of pros and cons exist') do

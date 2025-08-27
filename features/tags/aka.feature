@@ -19,7 +19,7 @@ Scenario: adding an AKA to an author
 
 Scenario: creating the name from the page's edit author page
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "lewis carroll (charles dodgson)"
     And I press "Add Author Tags"
@@ -28,7 +28,7 @@ Scenario: creating the name from the page's edit author page
 
 Scenario: creating the name from the page's edit author page
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "lewis carroll (charles dodgson)"
     And I press "Add Author Tags"
@@ -78,7 +78,7 @@ Scenario: link from tag index bug
 
 Scenario: link from show bug
   Given a page exists with authors: "jane (june)"
-  When I am on the page's page
+  When I am on the first page's page
     And I follow "jane"
     And I follow "1 page"
   Then I should see "Page 1"

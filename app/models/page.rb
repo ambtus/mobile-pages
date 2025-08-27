@@ -10,6 +10,9 @@ class Page < ApplicationRecord
   include Nodes
   include Soon
   include Split
+  include Notes
+  include Raw
+  include Scrubbed
 
   scope :reading, -> { where(soon: 0) }
   scope :soonest, -> { where(soon: 1) }
@@ -134,9 +137,6 @@ class Page < ApplicationRecord
       mypath
     end
   end
-
-  SHORT_LENGTH = 160 # truncate at this many characters
-  MEDIUM_LENGTH = 480
 
   SIZES = %w[drabble short medium long epic].freeze
 
@@ -657,31 +657,6 @@ class Page < ApplicationRecord
     end
   end
 
-  def formatted_my_notes = Scrub.sanitize_html(my_notes)
-  def formatted_notes = Scrub.sanitize_html(notes)
-  def formatted_end_notes = Scrub.sanitize_html(end_notes)
-
-  def truncate(string, length = SHORT_LENGTH)
-    return '' if string.blank?
-
-    Scrub.sanitize_html(string.truncate(length, separator: /\s+/, omission: '…'))
-  end
-
-  # used in show view, scrubbbed but not stripped, and longer
-  def medium_notes = truncate(notes, MEDIUM_LENGTH)
-
-  def scrub_and_truncate(string)
-    stripped_truncated_and_scrubbed = truncate Scrub.sanitize_and_strip(string)
-    # RubyPants turns quotes into smart quotes
-    # so they don't mess up the epub command
-    RubyPants.new(stripped_truncated_and_scrubbed).to_html.html_safe
-  end
-
-  # used in index view and in epub comments
-  def short_notes = scrub_and_truncate(notes)
-  def short_my_notes = scrub_and_truncate(my_notes)
-  def short_end_notes = scrub_and_truncate(end_notes)
-
   def add_tags_from_string(string, type = 'Tag')
     return if string.blank?
 
@@ -708,107 +683,7 @@ class Page < ApplicationRecord
 
   def unread_string = unread? ? UNREAD : ''
 
-  ## Raw html includes everything from the web
 
-  def scrub_fetch(url)
-    Rails.logger.debug { "fetching raw html from #{url}" }
-    Scrub.fetch_html(url)
-  rescue SocketError
-    Rails.logger.debug 'host unavailable'
-    errors.add(:base, "couldn't resolve host name")
-    false
-  rescue StandardError
-    Rails.logger.debug 'content unavailable'
-    errors.add(:base, 'error retrieving content')
-    false
-  end
-
-  def fetch_raw
-    Rails.logger.debug 'fetching raw html'
-    return false if ff? || ao3?
-
-    html = scrub_fetch(url)
-    return false unless html
-
-    self.raw_html = html
-    remove_outdated_downloads
-    self
-  end
-
-  def raw_html_file_name
-    FileUtils.mkdir_p(mydirectory) # make sure directory exists
-    "#{mydirectory}raw.html"
-  end
-
-  def build_clean_from_raw
-    html = Websites.getnode(raw_html, url)
-    if html
-      Rails.logger.debug 'updating scrubbed html from raw'
-      first_pass = Scrub.sanitize_html(html)
-      self.scrubbed_html = Scrub.sanitize_html(first_pass)
-    else
-      Rails.logger.debug 'no scrubbed html available from raw'
-      self.scrubbed_html = ''
-    end
-    set_wordcount
-  end
-
-  def raw_html=(content)
-    remove_outdated_downloads
-    body = Scrub.regularize_body(content)
-    File.open(raw_html_file_name, 'w:utf-8') { |f| f.write(body) }
-    build_clean_from_raw
-  end
-
-  def raw_html
-    File.open(raw_html_file_name, 'r:utf-8', &:read)
-  rescue Errno::ENOENT
-    ''
-  end
-
-  def rebuild_clean_from_raw
-    remove_outdated_downloads
-    if parts.size.positive?
-      parts.each(&:rebuild_clean_from_raw)
-      set_wordcount(false)
-    else
-      build_clean_from_raw
-    end
-    self
-  end
-
-  ## Clean html includes all the original text
-
-  def scrubbed_html_file_name
-    "#{mydirectory}scrubbed.html"
-  end
-
-  def scrubbed_html=(content)
-    remove_outdated_downloads
-    remove_outdated_edits
-    content = Scrub.remove_surrounding(content) if nodes(content).size == 1
-    File.open(scrubbed_html_file_name, 'w:utf-8') { |f| f.write(content) }
-  end
-
-  def scrubbed_html
-    return if parts.present?
-
-    begin
-      File.open(scrubbed_html_file_name, 'r:utf-8', &:read)
-    rescue Errno::ENOENT
-      ''
-    end
-  end
-
-  def rebuild_edited_from_clean
-    remove_outdated_downloads
-    if parts.size.positive?
-      parts.each(&:rebuild_edited_from_clean)
-    else
-      FileUtils.rm_f(edited_html_file_name)
-    end
-    self
-  end
 
   ### epub html is what I use for conversion
   ### ebook-convert silently drops all http images, so might as well try https

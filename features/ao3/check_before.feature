@@ -104,7 +104,7 @@ Scenario: check before adding an unread chapter to a book
 
 Scenario: check before getting book by adding parent and then refetching
   Given Where am I exists
-  When I am on the page's page
+  When I am on the first page's page
     And I add a parent with title "Parent"
     And I follow "Refetch"
   Then the "url" field should contain "https://archiveofourown.org/works/692"
@@ -123,7 +123,7 @@ Scenario: check before rebuild meta on deleted series
 
 Scenario: check before chapter numbering bug
   Given that was partially exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Chapter 1" within "#position_1"
     But I should NOT see "1. Chapter 1"
     And the part titles should be stored as "Chapter 1"
@@ -132,7 +132,7 @@ Scenario: check before chapter numbering bug
   Given "Harry Potter" is a "Fandom"
     And "Sidra" is an "Author"
     And Counting Drabbles exists
-  When I am on the page's page
+  When I am on the first page's page
   Then I should see "Counting Drabbles (Series)" within ".title"
     And I should see "200 words" within ".size"
     And I should see "Implied snarry" within ".notes"

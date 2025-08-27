@@ -33,7 +33,7 @@ Scenario: paste actual html and get ao3 meta
 
 Scenario: make an ao3 single into a book
   Given Where am I existed and was read
-  When I am on the page's page
+  When I am on the first page's page
     And I press "Make Me a Chapter"
   Then I should have 2 pages
     And I should see "Parent: Time Was, Time Is (Book)"
@@ -42,7 +42,7 @@ Scenario: make an ao3 single into a book
 
 Scenario: adding it;s chapter url after making a single into a book
   Given Where am I existed and was read
-  When I am on the page's page
+  When I am on the first page's page
     And I press "Make Me a Chapter"
     And I follow "Refetch"
     And I fill in "url" with "https://archiveofourown.org/works/692/chapters/804"

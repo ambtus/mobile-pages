@@ -2,7 +2,7 @@ Feature: reader stuff
 
 Scenario: add reader to a page
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "opalsong, golb"
     And I press "Add Reader Tags"
@@ -11,7 +11,7 @@ Scenario: add reader to a page
 
 Scenario: create readers by adding them to a page
   Given a page exists
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "opalsong, golb"
     And I press "Add Reader Tags"
@@ -22,7 +22,7 @@ Scenario: create readers by adding them to a page
 Scenario: add an existing reader to a page
   Given a page exists
     And "opalsong" is a "Reader"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I select "opalsong" from "page_reader_ids_"
     And I press "Update Tags"
@@ -30,7 +30,7 @@ Scenario: add an existing reader to a page
 
 Scenario: add another reader to a page
   Given a page exists with readers: "opalson"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "golb"
     And I press "Add Reader Tags"
@@ -38,7 +38,7 @@ Scenario: add another reader to a page
 
 Scenario: add another reader to a page
   Given a page exists with readers: "opalson"
-  When I am on the page's page
+  When I am on the first page's page
     And I edit its tags
     And I fill in "tags" with "golb"
     And I press "Add Reader Tags"
@@ -47,7 +47,7 @@ Scenario: add another reader to a page
 
 Scenario: new parent for an existing page should NOT have the same reader
   Given a page exists with readers: "sidra"
-  When I am on the page's page
+  When I am on the first page's page
     And I add a parent with title "New Parent"
   Then I should NOT see "sidra" within ".readers"
     And I should see "Page 1" within ".parts"
@@ -67,7 +67,7 @@ Scenario: edit the reader name
   When I am on the edit tag page for "opalsong"
     And I fill in "tag_name" with "Ekele"
     And I press "Update"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should see "Ekele" within ".readers"
     But I should NOT see "opalsong" within ".readers"
 
@@ -92,6 +92,6 @@ Scenario: delete a reader
   When I am on the edit tag page for "opalsong"
     And I follow "Destroy"
     And I press "Yes"
-    And I am on the page's page
+    And I am on the first page's page
   Then I should NOT see "opalsong" within ".readers"
     But I should see "read by opalsong" within ".my_notes"

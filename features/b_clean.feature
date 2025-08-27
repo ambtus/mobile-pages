@@ -2,7 +2,7 @@ Feature: clean up html from web
 
 Scenario: CDATA
   Given a page exists with url: "http://test.sidrasue.com/112b.html"
-  When I am on the page's page
+  When I am on the first page's page
   Then the contents should include "A Single Love"
     But the contents should NOT include "email Vera"
 

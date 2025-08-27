@@ -2,7 +2,7 @@ Feature: ff.net specific stuff
          local because I never figured out how to fetch from ff.net
 
 Scenario: fanfiction.net can't be fetched
-  Given I am on the create page
+  Given I am on the create single page
     And I fill in "page_title" with "Counting"
     And I fill in "page_url" with "https://www.fanfiction.net/s/5853866/1/Counting"
     And I press "Store"
@@ -27,12 +27,12 @@ Scenario: fanfiction mobile url for chapter
 
 Scenario: check 1 before fanfiction.net can't be refetched
   Given skipping exists
-  When I am on the page's page
+  When I am on the first page's page
   Then the contents should include "Skip. Skip."
 
 Scenario: check 2 before fanfiction.net can't be refetched
   Given skipping exists
-  When I am on the page's page
+  When I am on the first page's page
   Then "Original" should link to "https://www.fanfiction.net/s/5853866/1"
 
 Scenario: check 3 before fanfiction.net can't be refetched
