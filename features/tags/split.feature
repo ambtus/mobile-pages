@@ -57,8 +57,7 @@ Scenario: splitting tags shows in epub
   Then the download epub command should include tags: "Harry, john/rodney, Severus"
 
 Scenario: can put the name of another tag in as first name
-  Given 2 pages exist
-    And a page exists with fandoms: "harry" AND title: "first"
+  Given a page exists with fandoms: "harry" AND title: "first"
     And a page exists with fandoms: "harry/snape" AND title: "both"
   When I am on the edit tag page for "harry/snape"
     And I fill in "first_tag_name" with "Harry"

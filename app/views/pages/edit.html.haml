@@ -1,6 +1,6 @@
 %h1=@title
 .content
-  = form_for @page.becomes(Page) do |f|
+  = form_for @page do |f|
     = f.submit "Preview Text"
     = hidden_field_tag(:section, @section_number)
     = text_area_tag :edited, @section, :rows => 30, :cols => 33

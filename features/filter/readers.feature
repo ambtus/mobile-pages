@@ -2,7 +2,7 @@ Feature: allow find any
 
 Scenario: shown by default
   Given a page exists with readers: "good"
-  When I am on the homepage
+  When I am on the pages page
   Then I should NOT see "No pages found"
     And I should see "Page 1"
     And I should see "good" within "#position_1"
@@ -21,7 +21,7 @@ Scenario: reader selected during create is filterable out
   When I am on the create single page
     And I select "abc123"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I press "Store"
+    And I store the page
     And I am on the filter page
     And I click on "show_readers_none"
     And I press "Find"
@@ -33,7 +33,7 @@ Scenario: reader selected during create is filterable in
   When I am on the create single page
     And I select "abc123"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I press "Store"
+    And I store the page
     And I am on the filter page
     And I click on "show_readers_all"
     And I press "Find"

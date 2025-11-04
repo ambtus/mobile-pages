@@ -15,6 +15,8 @@ class Tag < ApplicationRecord
   def self.some_types = types - %w[Fandom Author]
   def self.title_types = some_types - %w[Info Collection]
 
+  def type_path = "/#{self.class.name.pluralize.downcase}"
+
   def self.recache_all
     return unless boolean_types.include?(name)
 
@@ -52,7 +54,7 @@ class Tag < ApplicationRecord
   end
 
   def short_names
-    if name =~ /([^\(]*) \((.*)\)/
+    if name =~ /([^(]*) \((.*)\)/
       true_name = ::Regexp.last_match(1)
       aka_string = ::Regexp.last_match(2)
       akas = aka_string.split(', ')
@@ -85,9 +87,14 @@ class Tag < ApplicationRecord
     new_name = "#{base_name} (#{akas})"
     Rails.logger.debug { "merge #{aka_tag.name} into #{name} as #{new_name}" }
     update_attribute(:name, new_name)
-    aka_tag.pages.map(&:id)
+    modified_pages = aka_tag.pages
+    Rails.logger.debug { "modifying pages with old tag: #{modified_pages.map(&:id)}" }
     # TODO: this should be able to be done in fewer DB operations
-    aka_tag.pages.each { |p| (p.tags << self) && p.save! unless p.tags.include?(self) }
+    modified_pages.each do |p|
+      p.tags << self unless p.tags.include?(self)
+      p.tags.delete(aka_tag)
+      p.update_tag_caches
+    end
     aka_tag.destroy
     self
   end
@@ -103,7 +110,7 @@ class Tag < ApplicationRecord
     destroy
     page_ids.each do |id|
       page = Page.find(id)
-      page.save! # update_tag_cache && reset_boolean
+      page.update_tag_caches
     end
   end
 end

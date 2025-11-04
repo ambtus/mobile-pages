@@ -13,14 +13,6 @@ onfocus: "if (this.value == '#{hint}') {this.value='';this.style.color = 'black'
     text_field_tag name, value, options
   end
 
-  def hinted_text_area_tag(name, value = nil, hint = 'Click and enter text', options = {})
-    value = hint if value.nil?
-    color = value == hint ? 'gray-input' : 'black-input'
-    options = { class: color.to_s, onblur: "if(this.value == '') { this.value='#{hint}';this.style.color = '';}",
-onfocus: "if (this.value == '#{hint}') {this.value='';this.style.color = 'black';}" }.merge(options.stringify_keys)
-    text_area_tag name, value, options
-  end
-
   def download_url_for_page(page, format)
     url_for page.download_url(format)
   end

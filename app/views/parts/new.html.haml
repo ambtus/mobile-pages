@@ -1,5 +1,5 @@
 .form
-  = form_with model: @page.becomes(Page), local: true do |form|
+  = form_with model: @page, local: true do |form|
     = render "multiple_urls"
     .soon= render "pages/page_soon"
     = render "pages/page_fields"

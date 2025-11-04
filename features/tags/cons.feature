@@ -19,7 +19,7 @@ Scenario: link to tag on show should find page
 Scenario: no tags exist during create
   Given I am on the mini page
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I press "Store"
+    And I store the page
     And I edit its tags
     And I fill in "tags" with "abc123"
     And I press "Add Con Tags"
@@ -29,7 +29,7 @@ Scenario: no tags selected during create
   Given "abc123" is a "Con"
   When I am on the mini page
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I press "Store"
+    And I store the page
     And I edit its tags
     And I select "abc123" from "page_con_ids_"
     And I press "Update Tags"
@@ -40,7 +40,7 @@ Scenario: con selected during create
   When I am on the create single page
     And I select "abc123"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I press "Store"
+    And I store the page
   Then I should see "abc123" within ".cons"
 
 Scenario: comma separated cons (not & or /)
@@ -84,7 +84,7 @@ Scenario: delete a con
   When I am on the edit tag page for "abc123"
     And I follow "Destroy"
     And I press "Yes"
-    And I am on the homepage
+    And I am on the pages page
   Then I should NOT see "abc123"
     But I should see "Page 1"
 

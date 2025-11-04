@@ -1,10 +1,68 @@
 # frozen_string_literal: true
 
-## thens which call the Page model ##
+# TODO: move these tests to rspec
+Then('I should have {int} nodes') do |int|
+  Rails.logger.debug { "comparing #{Page.first.nodes.count} with #{int}" }
+  assert_equal int, Page.first.nodes.count
+end
+Then('raw should include {string}') do |string|
+  assert_match Regexp.new(string), Page.first.raw_html
+end
+
+Then('raw should NOT include {string}') do |string|
+  assert_no_match Regexp.new(string), Page.first.raw_html
+end
+
+Then('edited should include {string}') do |string|
+  assert_match Regexp.new(string), Page.first.edited_html
+end
+
+Then('edited should NOT include {string}') do |string|
+  assert_no_match Regexp.new(string), Page.first.edited_html
+end
+
+Then('the contents should include {string}') do |string|
+  visit page_path(Page.first)
+  click_link 'HTML'
+  assert_match Regexp.new(string), Page.first.rendered_html
+end
+
+Then('the contents should NOT include {string}') do |string|
+  visit page_path(Page.first)
+  click_link 'HTML'
+  assert_no_match Regexp.new(string), Page.first.rendered_html
+end
 
 Then('I should have {int} page(s)') do |int|
   Rails.logger.debug { "currently have #{Page.count} pages" }
   assert_equal int, Page.count
+end
+
+Then('my page with title: {string} should have url: {string}') do |title, url|
+  page = Page.find_by(title: title)
+  raise "couldn't find #{title}" unless page
+
+  Rails.logger.debug { "comparing #{page.url} with #{url}" }
+  assert_equal page.url, url
+end
+
+Then('my page with url: {string} should have title: {string}') do |url, title|
+  page = Page.find_by(url: url)
+  Rails.logger.debug { "comparing #{page.title} with #{title}" }
+  assert_equal page.title, title
+end
+
+Then('Rate {string} should link to its rate page') do |string|
+  href = page.find(".rate_#{string.sum}").find_link(string)['href']
+  Rails.logger.debug { "link: #{href}" }
+  itself = Page.find_by(title: string)
+  assert_match "/rates/#{itself.id}", href
+end
+
+Then('{string} should be a {string}') do |string, string2|
+  page = Page.find_by(title: string)
+  Rails.logger.debug { "comparing #{page.type} with #{string2}" }
+  assert_equal string2, page.type
 end
 
 Then('{string} should link to itself') do |string|
@@ -14,25 +72,16 @@ Then('{string} should link to itself') do |string|
   assert_match "/pages/#{itself.id}", href
 end
 
-Then('Leave Kudos or Comments on {string} should link to its comments') do |string|
-  href = page.find('.kudos').find_link(string)['href']
-  Rails.logger.debug { "link: #{href}" }
-  itself = Page.find_by(title: string)
-  assert_equal "#{itself.url}#comments", href
+Then('{string} should have {int} horizontal rules') do |string, int|
+  page = Page.find_by(title: string)
+  assert_equal int, page.scrubbed_html.scan('<hr').count
 end
 
-Then('Leave Kudos or Comments on {string} should link to the last chapter comments') do |string|
-  href = page.find('.kudos').find_link(string)['href']
-  Rails.logger.debug { "link: #{href}" }
-  last_page = Page.find_by(title: string).parts.last
-  assert_equal "#{last_page.url}#comments", href
+Then('the contents should start with {string}') do |string|
+  assert_match Regexp.new("^<p>#{string}"), Page.first.scrubbed_html
 end
-
-Then('Rate {string} should link to its rate page') do |string|
-  href = page.find(".rate_#{string.sum}").find_link(string)['href']
-  Rails.logger.debug { "link: #{href}" }
-  itself = Page.find_by(title: string)
-  assert_match "/rates/#{itself.id}", href
+Then('the contents should end with {string}') do |string|
+  assert_match Regexp.new("#{string}</p>$"), Page.first.scrubbed_html
 end
 
 Then('Next should link to the content for {string}') do |string|
@@ -44,136 +93,36 @@ Then('Next should link to the content for {string}') do |string|
   assert_match page_contents_url, href
 end
 
-Then('the contents should include {string}') do |string|
-  assert_match Regexp.new(string), Page.first.all_html
+Then('{string} should be {string} soon') do |string, string2|
+  page = Page.find_by(title: string)
+  Rails.logger.debug { "comparing #{page.soon} with #{string2}" }
+  assert_equal page.soon_label, string2
 end
 
-Then('the contents should NOT include {string}') do |string|
-  assert_no_match Regexp.new(string), Page.first.all_html
-end
-
-Then('my page named {string} should have {int} parts') do |string, int|
-  assert_equal int, Page.find_by(title: string).parts.size
-end
-
-Then('last read should be today') do
-  Rails.logger.debug { "comparing #{Page.first.last_read.to_date} with #{Date.current}" }
-  assert_equal Date.current, Page.first.last_read.to_date
-end
-
-Then('last read should be {string}') do |date|
-  Rails.logger.debug { "comparing #{Page.first.last_read.to_date} with #{date.to_date}" }
-  assert_equal date.to_date, Page.first.last_read.to_date
+Then('all pages should be rated {int}') do |int|
+  assert_equal Page.all.map(&:stars).uniq, [int]
 end
 
 Then('the part titles should be stored as {string}') do |title_string|
-  assert_equal title_string, Page.first.parts.map(&:title).join(' & ')
+  assert_equal Page.with_parts.first.parts.map(&:title).join(' & '), title_string
 end
 
-Then('the read after date should be {int} year(s) from now') do |int|
-  diff = Page.first.read_after.year - Time.zone.today.year
-  Rails.logger.debug { "comparing #{Page.first.read_after.year} with #{Time.zone.today.year} (#{diff})" }
-  assert_equal int, diff
+Then('my page with title: {string} should not have a parent') do |string|
+  assert_nil Page.find_by(title: string).parent
 end
 
-Then('the read after date should be {string}') do |string|
-  Rails.logger.debug { "comparing #{Page.first.read_after} with #{string}" }
-  assert_equal string, Page.first.read_after.to_date.to_s
-end
-
-Then('the read after date for {string} should be {string}') do |title, date|
-  page = Page.find_by(title: title)
-  Rails.logger.debug { "comparing #{page.read_after.to_date} with #{date}" }
-  assert_equal date, page.read_after.to_date.to_s
+Then('my page with title: {string} should have {int} parts') do |string, int|
+  assert_equal Page.find_by(title: string).parts.size, int
 end
 
 Then('the read after date for {string} should be today') do |title|
   page = Page.find_by(title: title)
   Rails.logger.debug { "comparing #{page.read_after.to_date} with #{Date.current}" }
-  assert_equal Date.current, page.read_after.to_date
+  assert_equal page.read_after.to_date, Date.current
 end
 
-Then('my page named {string} should have url: {string}') do |title, url|
+Then('the read after date for {string} should be {string}') do |title, date|
   page = Page.find_by(title: title)
-  Rails.logger.debug { "comparing #{page.url} with #{url}" }
-  assert_equal url, page.url
-end
-
-Then('the notes should NOT include {string}') do |string|
-  assert_no_match Regexp.new(string), Page.first.notes
-end
-
-Then('the notes should include {string}') do |string|
-  assert_match Regexp.new(string), Page.first.notes
-end
-
-Then('the notes should be empty') do
-  assert Page.first.notes.blank?
-end
-
-Then('the end notes should be empty') do
-  assert Page.first.end_notes.blank?
-end
-
-Then('the end notes should start with {string}') do |string|
-  assert_match Regexp.new("^#{string}"), Page.first.end_notes
-end
-
-Then('the end notes should end with {string}') do |string|
-  assert_match Regexp.new("#{string}$"), Page.first.end_notes
-end
-
-Then('the contents should start with {string}') do |string|
-  assert_match Regexp.new("^<p>#{string}"), Page.first.scrubbed_html
-end
-
-Then('the contents should end with {string}') do |string|
-  assert_match Regexp.new("#{string}</p>$"), Page.first.scrubbed_html
-end
-
-Then('{string} should be {string} soon') do |string, string2|
-  page = Page.find_by(title: string)
-  Rails.logger.debug { "comparing #{page.soon} with #{string2}" }
-  assert_equal string2, page.soon_label
-end
-
-Then('{string} should be a {string}') do |string, string2|
-  page = Page.find_by(title: string)
-  Rails.logger.debug { "comparing #{page.type} with #{string2}" }
-  assert_equal string2, page.type
-end
-
-Then('I should have {int} nodes') do |int|
-  Rails.logger.debug { "comparing #{Page.first.nodes.count} with #{int}" }
-  assert_equal int, Page.first.nodes.count
-end
-
-Then('{string} should have {int} horizontal rules') do |string, int|
-  page = Page.find_by(title: string)
-  assert_equal int, page.scrubbed_html.scan('<hr').count
-end
-
-Then('I should see exactly {int} {string}') do |int, string|
-  assert_equal int, page.html.scan(string).count
-end
-
-Then('all pages should be rated {int}') do |int|
-  assert_equal [int], Page.all.map(&:stars).uniq
-end
-
-Then('all wordcounts should be {int}') do |int|
-  assert_equal [int], Page.all.map(&:wordcount).uniq
-end
-
-Then('I should have {int} works') do |int|
-  assert_equal int, Page.count
-end
-
-Then('I should have {int} reading page(s)') do |int|
-  Rails.logger.debug { "comparing #{Page.reading.count} with #{int}" }
-  assert_equal int, Page.reading.count
-end
-
-Then('my page named {string} should not have a parent') do |string|
-  assert_nil Page.find_by(title: string).parent
+  Rails.logger.debug { "comparing #{page.read_after.to_date} with #{date}" }
+  assert_equal page.read_after.to_date.to_s, date
 end

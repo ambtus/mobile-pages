@@ -28,14 +28,14 @@ Scenario: strip fandom whitespace and sort
 Scenario: no tags exist during create
   Given I am on the mini page
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I press "Store"
+    And I store the page
   Then I should have 0 pages with and 1 without fandoms
 
 Scenario: no tags selected during create
   Given "first" is a "Fandom"
     And I am on the mini page
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I press "Store"
+    And I store the page
   Then I should have 0 pages with and 1 without fandoms
     And I should NOT see "first" within ".fandoms"
 
@@ -46,7 +46,7 @@ Scenario: fandom and author tag selected during create
     And I select "first"
     And I select "second"
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I press "Store"
+    And I store the page
   Then I should see "Page created."
     And I should have 1 page with and 0 without fandoms
     And I should have 1 page with and 0 without authors
@@ -59,7 +59,7 @@ Scenario: fandom only selected during create
     And I am on the create single page
     And I select "nonfiction"
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I press "Store"
+    And I store the page
   Then I should have 1 pages with and 0 without fandoms
     And I should have 0 pages with and 1 without authors
     And I should see "nonfiction" within ".fandoms"
@@ -145,7 +145,7 @@ Scenario: change the fandom name and change base_name
     And the tag_cache should NOT include "fantasy"
     And the tag_cache should NOT include "historical"
 
-Scenario: change the fandom name and do not change base_name should not call update_tag_cache
+Scenario: change the fandom name and do not change base_name should not call update_tag_caches
   Given a page exists with fandoms: "fantasy" AND infos: "historical"
     And the tag "historical" is destroyed without caching
   When I am on the edit tag page for "fantasy"
@@ -270,7 +270,7 @@ Scenario: change hidden to fandom tag part 5
   When I am on the edit tag page for "will be visible"
     And I select "Fandom" from "change"
     And I press "Change"
-    And I am on the homepage
+    And I am on the pages page
   Then I should NOT see "No pages found"
     And I should see "will be visible" within "#position_1"
 

@@ -4,7 +4,7 @@ Feature: pages with con tags are filtered in by default.
 
 Scenario: shown by default
   Given a page exists with cons: "sad"
-  When I am on the homepage
+  When I am on the pages page
   Then I should NOT see "No pages found"
     And I should see "Page 1"
     And I should see "sad" within "#position_1"

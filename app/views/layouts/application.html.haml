@@ -9,8 +9,10 @@
     = render "/layouts/favicon"
   %body
     -if Rails.env.development?
-      params: #{params}
-      .red.bold.indented DEVELOPMENT
+      params: #{params.except(:pasted, :authenticity_token)}
+      .indented
+        .red.bold DEVELOPMENT
+        =link_to 'All Pages', pages_path
     =render "layouts/links"
     - flash.each do |name, msg|
       = content_tag :div, msg, :id => "flash_#{name}"

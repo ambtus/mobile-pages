@@ -20,7 +20,8 @@ Scenario: two and three levels (h3 & h4)
       http://test.sidrasue.com/parts/3.html##Child 2
       """
     And I fill in "page_title" with "Parent"
-    And I press "Store"
+    And I store the page
+  When I am on the first page's page
     And I follow "Child 1"
     And I press "Increase Type"
     And I press "Increase Type"

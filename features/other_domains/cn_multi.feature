@@ -12,7 +12,6 @@ Scenario: series of singles
     And I should see "1. Dice in the Mirror Rate"
     And I should see "2. Crazy Little Thing Rate"
 
-
 Scenario: book of chapters
   Given "Teen Wolf" is a "Fandom"
     And "Claire Watson" is an "Author"
@@ -55,7 +54,7 @@ Scenario: book of chapters with long notes
 Scenario: manipulating chapter/single to get the title you want without losing notes
   Given Shadowwings exists
   When I am on the first page's page
-    And I follow "Shadowwings"
+    And I follow 'Shadowwings' within "#position_1"
     And I press "Decrease Type"
     And I press "Rebuild Meta"
   Then I should see "Genesis (Chapter)"
@@ -65,11 +64,5 @@ Scenario: manipulating chapter/single to get the title you want without losing n
 Scenario: check before update from parts
   Given Shadowwings exists
   When I am on the first page's page
-  Then I should see "151 words"
-
-Scenario: check before update from parts
-  Given Shadowwings exists
-  When I am on the first page's page
-    And I press "Update from Parts"
   Then I should see "29,655 words"
 

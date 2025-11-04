@@ -11,3 +11,5 @@ Capybara.configure do |config|
 end
 
 require 'zip'
+Rails.root.glob('test_helpers/helper_files/*.rb').each { |f| require f }
+PageDownload

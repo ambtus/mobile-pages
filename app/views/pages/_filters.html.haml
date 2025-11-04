@@ -31,6 +31,6 @@
     = radio_button_tag :child, choice, @child == choice
     = label_tag "child_#{choice}", choice
 .soon
-  - Soon::LABELS.each do |choice|
+  - PageSoon::LABELS.each do |choice|
     = radio_button_tag :soon, choice, @soon == choice
     = label_tag "soon_#{choice}", choice

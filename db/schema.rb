@@ -10,38 +10,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_06_09_182638) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_23_142153) do
   create_table "pages", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
-    t.string "url"
-    t.string "title"
+    t.boolean "at_end", default: false
+    t.boolean "author", default: false
+    t.boolean "con", default: false
+    t.datetime "created_at", precision: nil
+    t.text "end_notes", size: :medium
+    t.boolean "fandom", default: false
+    t.boolean "favorite", default: false
+    t.boolean "hidden", default: false
+    t.datetime "last_read", precision: nil
+    t.text "my_notes", size: :medium
     t.text "notes", size: :medium
     t.integer "parent_id"
     t.integer "position"
-    t.datetime "last_read", precision: nil
-    t.datetime "read_after", precision: nil
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.integer "wordcount"
-    t.string "size"
-    t.integer "stars", limit: 2, default: 10
-    t.text "my_notes", size: :medium
-    t.string "type"
-    t.boolean "hidden", default: false
-    t.text "end_notes", size: :medium
-    t.boolean "at_end", default: false
-    t.boolean "con", default: false
-    t.boolean "scrubbed_notes", default: false
-    t.integer "soon", limit: 2, default: 3
     t.boolean "pro", default: false
-    t.string "tag_cache", default: "", null: false
-    t.boolean "wip", default: false
-    t.boolean "favorite", default: false
+    t.datetime "read_after", precision: nil
     t.boolean "reader", default: false
-    t.boolean "author", default: false
-    t.boolean "fandom", default: false
+    t.boolean "scrubbed_notes", default: false
+    t.string "size"
+    t.integer "soon", limit: 2, default: 3
+    t.integer "stars", limit: 2, default: 10
+    t.string "tag_cache", default: "", null: false
+    t.string "title"
+    t.string "type"
+    t.datetime "updated_at", precision: nil
+    t.string "url"
+    t.boolean "wip", default: false
+    t.integer "wordcount"
     t.index ["parent_id"], name: "index_pages_on_parent_id"
     t.index ["size"], name: "index_pages_on_size"
     t.index ["stars"], name: "index_pages_on_stars"
+    t.index ["url"], name: "index_pages_on_url", unique: true
   end
 
   create_table "pages_tags", id: false, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|

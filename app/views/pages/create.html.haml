@@ -1,6 +1,6 @@
 = button_to "Find", filter_path, method: :get, params: {url: @page.url}, form_class: "form left"
 .form
-  = form_with model: @page.becomes(Page), local: true do |form|
+  = form_with model: @page, local: true do |form|
     .url
       = render "page_url"
       = form.submit "Store", :name => "Store"
@@ -8,3 +8,4 @@
     = render "tags/select"
     = render "page_fields"
     = form.submit "Store", :name => "Store"
+    = form.submit "Store w/o Fetching", :name => "NoFetch"

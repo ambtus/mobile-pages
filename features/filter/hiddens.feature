@@ -5,7 +5,7 @@ Scenario: not hidden by default (no not-hiddens)
     | title                            | fandoms                 | hiddens       |
     | The Mysterious Affair at Styles  | mystery                 | hide          |
     | Alice in Wonderland              | children                | hide, go away |
-  When I am on the homepage
+  When I am on the pages page
   Then I should NOT see "No pages found"
     And I should see "The Mysterious Affair at Styles"
     And I should see "Alice in Wonderland"
@@ -16,7 +16,7 @@ Scenario: not hidden by default (show not-hiddens)
     | The Mysterious Affair at Styles  | mystery                 | hide          |
     | Alice in Wonderland              | children                | hide, go away |
     | The Boxcar Children              | mystery, children       |               |
-  When I am on the homepage
+  When I am on the pages page
   Then I should NOT see "No pages found"
     And I should see "The Boxcar Children"
     And I should see "The Mysterious Affair at Styles"
@@ -85,7 +85,7 @@ Scenario: change hidden to con tag (index)
   When I am on the edit tag page for "will be visible"
     And I select "Con" from "change"
     And I press "Change"
-    And I am on the homepage
+    And I am on the pages page
   Then the page should be conned
     But the page should NOT be hidden
     And I should NOT see "No pages found"
@@ -109,7 +109,7 @@ Scenario: change hidden to con tag (show)
 
 Scenario: check before change (index)
   Given a page exists with cons: "to be hidden"
-  When I am on the homepage
+  When I am on the pages page
   Then I should NOT see "No pages found"
     And I should see "Page 1"
 
@@ -128,7 +128,7 @@ Scenario: change con to hidden tag (index)
   When I am on the edit tag page for "to be hidden"
     And I select "Hidden" from "change"
     And I press "Change"
-    And I am on the homepage
+    And I am on the pages page
   Then the page should be hidden
     But the page should NOT be conned
     And I should have 1 page

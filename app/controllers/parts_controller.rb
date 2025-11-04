@@ -35,10 +35,18 @@ class PartsController < ApplicationController
       @page.update_attribute(:title, params[:title])
     elsif params[:add_url]
       url = params[:add_url] unless params[:add_url] == URL_PLACEHOLDER
-      @page.add_part(url)
-      flash[:notice] = 'Part added'
-      flash[:alert] = 'Now Edit Raw HTML' if @page.first_part_ff?
-      @count = @page.parts.size > Page::LIMIT ? @page.parts.size - Page::LIMIT : 0
+      @page.add_part(url) if url.present?
+      flash[:notice] = 'Part added' if url.present?
+      part = Page.find_by(url: url)
+      if part && part.raw_html.blank?
+        flash[:alert] = 'paste raw html manually'
+        redirect_to edit_html_path(part) and return
+      elsif part
+        redirect_to page_path(part) and return
+      else
+        flash[:alert] = 'cant add without url'
+      end
+
     elsif params[:add_parent]
       @parent = @page.add_parent(params[:add_parent])
       # Rails.logger.debug "added #{@parent.inspect}"

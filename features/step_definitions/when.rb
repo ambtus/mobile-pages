@@ -1,13 +1,7 @@
 # frozen_string_literal: true
 
-## Whens are the web actions: click, enter, press, follow
-
-When('I wait {int} second') do |time|
-  Kernel.sleep time
-end
-
-When('I submit the form') do
-  click_button
+When('I follow {string}') do |link|
+  click_link(link)
 end
 
 When('I press {string}') do |button|
@@ -18,12 +12,8 @@ When('I press {string} within {string}') do |button, parent|
   within(parent) { click_button(button) }
 end
 
-When('I follow {string}') do |link|
-  click_link(link)
-end
-
-When('I follow {string} within {string}') do |link, parent|
-  within(parent) { click_link(link) }
+When('I fill in {string} with {string}') do |field, value|
+  fill_in(field, with: value)
 end
 
 When('I click on {string}') do |field|
@@ -46,18 +36,17 @@ When('I select {string} from {string}') do |value, field|
   select(value, from: field)
 end
 
-When('I fill in {string} with {string}') do |field, value|
-  fill_in(field, with: value)
+When('I follow {string} within {string}') do |link, parent|
+  within(parent) { click_link(link) }
 end
 
 When('I fill in {string} with') do |field, value|
   fill_in(field, with: value)
 end
-
-When('I check {string}') do |value|
-  check(value)
+When('I submit the form') do
+  click_button
 end
 
-When('I enter raw html for {string}') do |string|
-  fill_in('pasted', with: File.read(Rails.root + "tmp/html/#{string}.html"))
+When('I wait {int} second(s)') do |time|
+  Kernel.sleep time
 end

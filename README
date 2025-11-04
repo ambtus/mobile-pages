@@ -20,7 +20,9 @@ Search & Filter: find a specific page to read
 
 === system requirements
 
-calibre command line tools (http://calibre-ebook.com/download)
+calibre command line tools (ebook-convert)
+  http://calibre-ebook.com/download
+  https://manual.calibre-ebook.com/generated/en/cli-index.html
 
 === required configuration
 

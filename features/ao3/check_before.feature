@@ -57,14 +57,14 @@ Scenario: check before refetch Single (verify url to be refetched)
 
 Scenario: check before getting book by adding parent and then refetching
   Given Where am I exists
-  When I am on the homepage
+  When I am on the pages page
     And I follow "Where am I"
   Then I should see "Where am I? (Single)" within ".title"
     And I should NOT see "WIP" within ".size"
 
 Scenario: 2nd check before getting book by adding parent and then refetching
   Given Where am I exists
-  When I am on the homepage
+  When I am on the pages page
     And I follow "Where am I"
     And I add a parent with title "Parent"
     And I follow "Refetch"
@@ -81,10 +81,10 @@ Scenario: check before fetching a series from before series had urls
 
 Scenario: check before creating a series when I already have its books
   Given Misfits existed
-  When I am on the homepage
+  When I am on the pages page
     And I follow "Misfit Series"
     And I press "Uncollect"
-    And I am on the homepage
+    And I am on the pages page
   Then I should have 6 pages
     And I should see "Three Misfits in New York" within "#position_1"
     And I should see "A Misfit Working Holiday In New York" within "#position_2"
@@ -92,7 +92,7 @@ Scenario: check before creating a series when I already have its books
 
 Scenario: check before adding an unread chapter to a book
   Given Time Was partially exists
-  When I am on the homepage
+  When I am on the pages page
     And I follow "Time Was, Time Is"
   Then I should see today within ".last_read"
     But I should NOT see "unread parts" within ".last_read"
@@ -132,7 +132,7 @@ Scenario: check before chapter numbering bug
   Given "Harry Potter" is a "Fandom"
     And "Sidra" is an "Author"
     And Counting Drabbles exists
-  When I am on the first page's page
+  When I am on the last page's page
   Then I should see "Counting Drabbles (Series)" within ".title"
     And I should see "200 words" within ".size"
     And I should see "Implied snarry" within ".notes"
@@ -144,9 +144,9 @@ Scenario: check before chapter numbering bug
     And the show tags for "Counting Drabbles" should include fandom and author
     And I should see "Harry Potter/Unknown; Drabble; thanks to lauriegilbert for" within "#position_1"
     And I should see "Harry Potter/Unknown; Drabble; Thank you lauriegilbert for" within "#position_2"
-    And my page named "Counting Drabbles" should have url: "https://archiveofourown.org/series/46"
-    And my page named "Skipping Stones" should have url: "https://archiveofourown.org/works/688"
-    And my page named "The Flower [sequel to Skipping Stones]" should have url: "https://archiveofourown.org/works/689"
+    And my page with title: "Counting Drabbles" should have url: "https://archiveofourown.org/series/46"
+    And my page with title: "Skipping Stones" should have url: "https://archiveofourown.org/works/688"
+    And my page with title: "The Flower [sequel to Skipping Stones]" should have url: "https://archiveofourown.org/works/689"
     And the tags for "Skipping Stones" should include fandom and author
     And the tags for "The Flower [sequel to Skipping Stones]" should include fandom and author
     But the tags for "Counting Drabbles" should NOT include fandom and author

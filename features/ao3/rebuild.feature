@@ -12,7 +12,7 @@ Scenario: rebuild meta shouldn't refetch
 Scenario: rebuild from raw should also rebuild meta
   Given I Drive Myself Crazy exists
     And "Sidra" is an "Author"
-  When I am on the homepage
+  When I am on the pages page
     And I follow "I Drive Myself Crazy"
     And I follow "Notes"
     And I fill in "page_notes" with "testing notes"
@@ -37,16 +37,18 @@ Scenario: rebuilding should change chapter titles if they're boring
     And I change the title to "2. Chapter 2"
     And I follow "Time Was, Time Is"
     And I press "Rebuild Meta"
-  Then I should see "2. Hogwarts" within "#position_2"
-    But the part titles should be stored as "Where am I? & Hogwarts"
+  Then the part titles should be stored as "Where am I? & Hogwarts"
+    And I should see "2. Hogwarts" within "#position_2"
 
-Scenario: edit raw html and rebuild for series
-  Given Counting Drabbles exists without a URL
-    And the page has url: "https://archiveofourown.org/series/46"
+Scenario: edit raw html and rebuild for series before
+  Given Counting Drabbles existed
   When I am on the page with title "Counting Drabbles"
-    And I should NOT see "Implied snarry"
-    And I follow "Edit Raw HTML"
-    And I enter raw html for "drabbles"
-    And I press "Update Raw HTML"
+  Then I should NOT see "Implied snarry"
+
+ Scenario: edit raw html and rebuild for series after
+   Given Counting Drabbles existed
+   When I am on the page with title "Counting Drabbles"
+    And I edit the raw html with "drabbles"
   Then I should see "Implied snarry, but left ambiguous on purpose."
     And I should see "thanks to lauriegilbert!"
+

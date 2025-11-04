@@ -121,7 +121,8 @@ Scenario: don't rename chapters that i've named or delete notes that i've added
 Scenario: rebuild meta after updating raw html
   Given I am on the mini page
     And I fill in "page_url" with "https://www.fanfiction.net/s/5853866/2/Counting"
-    And I press "Store"
+    And I store the page without refetching
+    And I am on the first page's page
   When I edit the raw html with "counting2"
   Then I should see "The Flower" within ".title"
     And I should see "100 words"

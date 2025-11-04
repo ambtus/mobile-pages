@@ -1,5 +1,5 @@
 .form
-  = form_for @page.becomes(Page) do
+  = form_for @page do
     .soon
       =render "pages/page_soon"
       =submit_tag "Change"
@@ -99,7 +99,7 @@
           %span.notes=part.short_notes
           %span.end_notes=part.short_end_notes
   .form
-    = form_for @page.becomes(Page) do
+    = form_for @page do
       = hidden_field_tag :count, @count
       = submit_tag "First Parts" if @count > 0
       = submit_tag "Next Parts" if @page.parts.size > last

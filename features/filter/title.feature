@@ -30,7 +30,7 @@ Scenario: Find page by title (whole)
 
 Scenario: check before No matching title
   Given a page exists
-  When I am on the homepage
+  When I am on the pages page
   Then I should see "Page 1"
 
 Scenario: No matching title
@@ -44,7 +44,7 @@ Scenario: No matching title
 Scenario: check before case insensitive title search
   Given 5 pages exist
     And a page exists with title: "The Blue Book" AND url: "http://test.sidrasue.com/test.html"
-  When I am on the homepage
+  When I am on the pages page
     Then I should NOT see "The Blue Book"
 
 Scenario: case insensitive title search

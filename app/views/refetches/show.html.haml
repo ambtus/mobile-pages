@@ -6,4 +6,5 @@
     - if @page.could_have_parts?
       .parts= text_area_tag :url_list, @page.url_list, :rows => @page.parts.size + 2, :cols => @page.url_list_length
     = submit_tag "Refetch"
+    = submit_tag "Store w/o Fetching", :name => "NoFetch"
     = submit_tag "Refetch Recursive" if @page.can_have_parts?

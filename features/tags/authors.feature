@@ -97,14 +97,14 @@ Scenario: delete an author
 Scenario: no tags exist during create
   Given I am on the mini page
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I press "Store"
+    And I store the page
   Then I should have 0 pages with and 1 without authors
 
 Scenario: no tags selected during create
   Given "first" is a "Author"
     And I am on the mini page
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I press "Store"
+    And I store the page
   Then I should have 0 pages with and 1 without authors
     And I should NOT see "first" within ".authors"
 
@@ -112,10 +112,10 @@ Scenario: author and other tag selected during create
   Given "first" is a "Pro"
     And "second" is a "Author"
     And I am on the create single page
-    And I select "first"
+  When I select "first"
     And I select "second"
-  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I press "Store"
+    And I fill in "page_url" with "http://test.sidrasue.com/test.html"
+    And I store the page
   Then I should see "first" within ".pros"
     And I should see "second" within ".authors"
     And I should have 1 page with and 0 without authors
@@ -127,7 +127,7 @@ Scenario: author only selected during create
     And I am on the create single page
     And I select "nonfiction"
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I press "Store"
+    And I store the page
   Then I should see "nonfiction" within ".authors"
     And I should have 1 page with and 0 without authors
     And I should have 0 pages with and 1 without fandoms

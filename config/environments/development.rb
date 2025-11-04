@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'active_support/core_ext/integer/time'
-
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -13,9 +11,6 @@ Rails.application.configure do
 
   # Show full error reports.
   config.consider_all_requests_local = true
-
-  # Enable server timing.
-  config.server_timing = true
 
   # Enable/disable Action Controller caching. By default Action Controller caching is disabled.
   # Run rails dev:cache to toggle Action Controller caching.
@@ -68,4 +63,5 @@ Rails.application.configure do
 
   config.hosts << 'imac.local:3000'
   config.hosts << 'imac.ambt.us:3000'
+  config.hosts << 'air15.local:3000'
 end

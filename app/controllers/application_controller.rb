@@ -19,8 +19,8 @@ class ApplicationController < ActionController::Base
   end
 
   def create_pages_from_search(url)
-    raw_html = Scrub.fetch_html(url)
+    raw_html = Fetch.fetch_html(url)
     work_list = raw_html.scan(/work-(\d+)/).flatten.uniq
-    Scrub.get_ao3_works_from_list(work_list)
+    Series.new.get_ao3_works_from_list(work_list)
   end
 end

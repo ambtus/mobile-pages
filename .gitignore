@@ -26,3 +26,6 @@ nohup.out
 
 # Ignore spec status
 spec/status.txt
+
+# Ignore html test files, as some are private
+test_helpers/html_files

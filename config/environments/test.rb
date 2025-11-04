@@ -53,10 +53,5 @@ Rails.application.configure do
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
 
-  # Log to STDOUT if asked
-  if ENV['LOUD'].present?
-    config.logger = ActiveSupport::Logger.new($stdout)
-                                         .tap  { |logger| logger.formatter = Logger::Formatter.new }
-                                         .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
-  end
+  config.active_record.query_log_tags_enabled = true
 end

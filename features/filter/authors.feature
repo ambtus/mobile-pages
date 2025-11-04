@@ -22,7 +22,7 @@ Scenario: find by clicking link on show page
     | Grimm's Fairy Tales              | grimm             |
     | Alice's Adventures In Wonderland | lewis carroll, charles dodgson |
     | Through the Looking Glass        | lewis carroll |
-  When I am on the homepage
+  When I am on the pages page
     And I follow "Alice's Adventures In Wonderland"
     And I follow "lewis carroll"
     And I follow "2 pages"

@@ -7,13 +7,13 @@ Scenario: link to page in downloaded html
 
 Scenario: links to images should be https
   Given The Picture exists
-  When I am on the homepage
+  When I am on the pages page
     And I follow "ePub" within "#position_1"
   Then the epub html contents for "The Picture" should contain "Ki1qR8E.png"
 
 Scenario: second links to images should be https
   Given Prologue exists
-  When I am on the homepage
+  When I am on the pages page
     And I follow "ePub" within "#position_1"
   Then the epub html contents for "Prologue: After the World Burns" should contain "coverhigh.jpg"
 
@@ -23,10 +23,6 @@ Scenario: regular hrefs should still be http
     And I read it online
   Then "test" should link to "http://test.sidrasue.com/parts/1.html"
 
-Scenario: end notes link to rating
-  Given a page exists
-  When I read it online
-  Then Rate "Page 1" should link to its rate page
 
 Scenario: end notes link to next chapter of same book
   Given a series exists
@@ -58,8 +54,3 @@ Scenario: no end notes link to Next if there is no next part (all at once)
   When I read "Series" online
   Then I should NOT see "Next"
 
-Scenario: no kudos link if not ao3
-  Given a series exists
-  When I read "Series" online
-  Then I should NOT see "Leave Kudos or Comments on: Book1"
-    And I should NOT see "Leave Kudos or Comments on: Another Book"

@@ -3,11 +3,11 @@ Feature: MHT fics
 Scenario: Early versions with nbsp;
   Given part 504 exists
   When I read "Part 504" online
-  Then "Part 504" should have 14 horizontal rules
-    And I should NOT see "503"
+  Then I should NOT see "503"
     But I should see "The door had been left"
     And I should NOT see "505"
     But I should see "“Congratulations.”"
+    And "Part 504" should have 14 horizontal rules
 
 Scenario: Later versions with nbsp; and mso garbage
   Given part 604 exists
@@ -41,13 +41,12 @@ Scenario: early version with an authors note
 Scenario: mid versions with an authors note
   Given part 606 exists
   When I read "Part 606" online
-  Then "Part 606" should have 8 horizontal rules
-    And I should NOT see "605"
+  Then I should NOT see "605"
     But I should see "From ITL 78: Before Remin’s eyes"
     But I should see "The back of Xio Voe’s neck prickled."
     And I should NOT see "607"
     But I should see "pulse around the edges of the doors."
-
+    And "Part 606" should have 8 horizontal rules
 
 Scenario: last version with an authors note
   Given part 831 exists

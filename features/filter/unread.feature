@@ -7,12 +7,12 @@ Scenario: check before filter (default)
   Then I should see "not read single"
     And I should see "not read book"
     And I should see "not read series"
+    And I should see "yes read single"
+    And I should see "yes read book"
+    And I press "Next"
+  Then I should see "yes read series"
     And I should see "partially read book"
     And I should see "partially read series"
-    And I press "Next"
-  Then I should see "yes read single"
-    And I should see "yes read book"
-    And I should see "yes read series"
 
 Scenario: read (only fully-read)
   Given pages with all possible unreads exist

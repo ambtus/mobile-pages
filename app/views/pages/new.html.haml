@@ -1,5 +1,5 @@
 .form
-  = form_with model: @page.becomes(Page), local: true do |form|
+  = form_with model: @page, local: true do |form|
     .url
       = render "page_url"
       = form.submit "Store", :name => "Store"
@@ -7,3 +7,4 @@
     = render "page_fields"
     = render "tags/update"
     = form.submit "Store", :name => "Store"
+    = form.submit "Store w/o Fetching", :name => "NoFetch"

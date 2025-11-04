@@ -1,5 +1,5 @@
 .content
-  = form_for @page.becomes(Page) do |f|
+  = form_for @page do |f|
     = f.submit "Confirm Text Edit"
     = hidden_field_tag(:section, @section_number)
     = hidden_field_tag(:new, @new)

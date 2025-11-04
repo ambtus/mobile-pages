@@ -24,9 +24,15 @@ class TagsController < ApplicationController
         flash.now[:alert] = "can't recache non-hiddens"
       end
     else
-      Rails.logger.debug 'selecting tags'
-      @page = Page.find(params[:id])
-      render :select
+      # FIXME: this is weird and wrong
+      begin
+        @page = Page.find(params[:id])
+        Rails.logger.debug { "selecting tags for page #{@page.inspect}" }
+        render :select
+      rescue StandardError
+        @tag = Tag.find(params[:id])
+        Rails.logger.debug { "more info for tag #{@tag.inspect}" }
+      end
     end
   end
 
@@ -41,8 +47,7 @@ class TagsController < ApplicationController
     if params[:commit] == 'Update Tags'
       consolidate_tag_ids
       @page.tag_ids = params[:page][:tag_ids]
-      @page.save!
-      @page.parent.save! if @page.parent.is_a?(Series)
+      @page.update_tag_caches
     elsif params[:commit] =~ /Add (.*) Tags/
       unless @page.add_tags_from_string(params[:tags], ::Regexp.last_match(1).squish)
         Rails.logger.debug { "page errors: #{@page.errors.messages}" }
@@ -70,7 +75,8 @@ class TagsController < ApplicationController
         render :edit and return
       end
       true_tag.add_aka(@tag)
-      redirect_to true_tag.class
+      redirect_to true_tag.type_path and return
+
     when 'Change'
       old_type = @tag.class
       new_type = params[:change]
@@ -78,13 +84,8 @@ class TagsController < ApplicationController
       old_type.recache_all
       new_type.constantize.recache_all
       @tag.pages.map(&:remove_outdated_downloads)
-      if new_type == 'Author'
-        redirect_to author_path(@tag)
-      elsif new_type == 'Fandom'
-        redirect_to fandom_path(@tag)
-      else
-        redirect_to tags_path + "##{new_type}"
-      end
+      redirect_to @tag.type_path and return
+
     when 'Split'
       if params[:first_tag_name] == params[:second_tag_name]
         flash.now[:alert] = "can't split: names must be different"
@@ -92,11 +93,12 @@ class TagsController < ApplicationController
       end
       both_new = Tag.find_by(name: params[:first_tag_name]).nil? && Tag.find_by(name: params[:second_tag_name]).nil?
       if both_new
+        Rails.logger.debug { 'both names new' }
         @tag.update!(name: params[:first_tag_name])
         new_tag = Tag.create!(name: params[:second_tag_name], type: @tag.type)
         @tag.pages.each { |p| p.tags << new_tag unless p.tags.include?(new_tag) }
-        @tag.pages.map(&:save!)
-        redirect_to tags_path + "##{@tag.class}" and return
+        @tag.pages.map(&:update_tag_caches)
+        redirect_to @tag.type_path and return
       end
       first = Tag.find_by(name: params[:first_tag_name]) || (@tag.update(name: params[:first_tag_name]) && @tag)
       second = Tag.find_by(name: params[:second_tag_name]) || (@tag.update(name: params[:second_tag_name]) && @tag)
@@ -105,7 +107,7 @@ class TagsController < ApplicationController
         page.tags << first unless page.tags.include?(first)
         Rails.logger.debug { "adding #{second.name} to #{page.title}" }
         page.tags << second unless page.tags.include?(second)
-        page.save!
+        page.update_tag_caches
       end
       neither_new = @tag != first && @tag != second
       if neither_new
@@ -113,28 +115,17 @@ class TagsController < ApplicationController
         # don't need to destroy_me, because replacements have already been added to the affected pages
         @tag.destroy
       end
-      if first.is_a?(Author)
-        redirect_to authors_path
-      elsif first.is_a?(Fandom)
-        redirect_to fandoms_path
-      else
-        redirect_to tags_path + "##{@tag.class}" and return
-      end
+      redirect_to first.type_path and return
+
     when 'Update'
       old_basename = @tag.base_name
       @tag.update_attribute(:name, params[:tag][:name])
       @tag.pages.map(&:remove_outdated_downloads)
       if @tag.base_name != old_basename
         Rails.logger.debug { "changed base name requires rechache from #{old_basename} to #{@tag.base_name}" }
-        @tag.pages.map(&:save!)
+        @tag.pages.map(&:update_tag_caches)
       end
-      if @tag.is_a?(Author)
-        redirect_to author_path(@tag)
-      elsif @tag.is_a?(Fandom)
-        redirect_to fandom_path(@tag)
-      else
-        redirect_to tags_path + "##{@tag.class}" and return
-      end
+      redirect_to @tag.type_path and return
     else
       render :edit
     end

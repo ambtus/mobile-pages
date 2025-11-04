@@ -1,79 +1,53 @@
 # frozen_string_literal: true
 
 Given('Urgency exists') do
-  page = Single.create!(title: 'temp')
-  page.update!(url: 'http://clairesnook.com/fiction/the-resolute-urgency-of-now-time-travel-trope-bingo-2020-2021/')
-  page.set_raw_from('urgency')
+  create_local_page 'urgency', 'http://clairesnook.com/fiction/the-resolute-urgency-of-now-time-travel-trope-bingo-2020-2021/'
 end
 
 Given('Time exists') do
-  page = Single.create!(title: 'temp')
-  page.update!(url: 'http://clairesnook.com/fiction/time-after-time/')
-  page.set_raw_from('time')
+  create_local_page 'time', 'http://clairesnook.com/fiction/time-after-time/'
 end
 
 Given('Wish exists') do
-  page = Single.create!(title: 'temp')
-  page.update!(url: 'http://clairesnook.com/fiction/bingo/i-wish-amnesia-trope-bingo-2020-2021/')
-  page.set_raw_from('wish')
+  create_local_page 'wish', 'http://clairesnook.com/fiction/bingo/i-wish-amnesia-trope-bingo-2020-2021/'
 end
 
 Given('Secret exists') do
-  page = Single.create!(title: 'temp')
-  page.update!(url: 'http://clairesnook.com/fiction/the-secret-to-survivin/')
-  page.set_raw_from('secret')
+  create_local_page 'secret', 'http://clairesnook.com/fiction/the-secret-to-survivin/'
 end
 
 Given('Crazy exists') do
-  page = Single.create!(title: 'temp')
-  page.update!(url: 'http://clairesnook.com/fiction/crazy-little-thing/')
-  page.set_raw_from('crazy')
+  create_local_page 'crazy', 'http://clairesnook.com/fiction/crazy-little-thing/'
 end
 
 Given('Something exists') do
-  page = Single.create!(title: 'temp')
-  page.update!(url: 'http://clairesnook.com/fiction/something-in-my-liberty/')
-  page.set_raw_from('something')
+  create_local_page 'something', 'http://clairesnook.com/fiction/something-in-my-liberty/'
 end
 
 Given('Art exists') do
-  page = Single.create!(title: 'temp')
-  page.update!(url: 'http://clairesnook.com/fiction/almost-paradise-art-by-fashi0n/')
-  page.set_raw_from('art')
+  create_local_page 'art', 'http://clairesnook.com/fiction/almost-paradise-art-by-fashi0n/'
 end
 
 Given('Black exists') do
-  page = Single.create!(title: 'temp')
-  page.update!(url: 'http://clairesnook.com/fiction/black-moon-rising/')
-  page.set_raw_from('black')
+  create_local_page 'black', 'http://clairesnook.com/fiction/black-moon-rising/'
 end
 
 Given('Arm exists') do
-  page = Single.create!(title: 'temp')
-  page.update!(url: 'http://clairesnook.com/fiction/arm-candy/')
-  page.set_raw_from('arm')
+  create_local_page 'arm', 'http://clairesnook.com/fiction/arm-candy/'
 end
 
 Given('Serendipity exists') do
-  page = Single.create!(title: 'temp')
-  page.update!(url: 'http://clairesnook.com/evil-author-day/serendipity-ead-2022/')
-  page.set_raw_from('ead')
+  create_local_page 'ead', 'http://clairesnook.com/evil-author-day/serendipity-ead-2022/'
 end
 
 Given('Teen exists') do
-  page = Single.create!(title: 'temp')
-  page.update!(url: 'http://clairesnook.com/evil-author-day/teen-wolf-meets-the-changeover-ead-2018/')
-  page.set_raw_from('teen')
+  create_local_page 'teen', 'http://clairesnook.com/evil-author-day/teen-wolf-meets-the-changeover-ead-2018/'
 end
 
 Given('Specious exists') do
-  page = Single.create!(title: 'temp')
-  page.update!(url: 'http://clairesnook.com/fiction/bingo/specious-marriage-of-convenience-trope-bingo-2020-2021/')
-  page.set_raw_from('specious')
+  create_local_page 'specious', 'http://clairesnook.com/fiction/bingo/specious-marriage-of-convenience-trope-bingo-2020-2021/'
 end
 
 Given('Unreality exists') do
-  page = Single.create!(title: 'temp')
-  page.update!(url: 'http://clairesnook.com/evil-author-day/unreality-ead-2021/')
-  page.set_raw_from('unreality')
+  create_local_page 'unreality', 'http://clairesnook.com/evil-author-day/unreality-ead-2021/'
 end

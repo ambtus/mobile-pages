@@ -3,20 +3,20 @@ Feature: downloads metadata
 Scenario: basic
   Given a page exists with pros: "tag1"
   When I download its epub
-  Then the download epub file should exist
+  Then the temporary epub file should exist
     And the download epub command should include tags: "tag1"
 
 Scenario: wip?
   Given wip exists
   When I download its epub
-  Then the download epub file should exist
+  Then the temporary epub file should exist
     And the download epub command should include tags: "WIP"
     And the download epub command should include comments: "WIP"
 
 Scenario: favorite tag
   Given favorite exists
   When I download its epub
-  Then the download epub file should exist
+  Then the temporary epub file should exist
     And the download epub command should include tags: "Favorite"
     And the download epub command should include comments: "Favorite"
 
@@ -81,7 +81,7 @@ Scenario: tag name changes => remove outdated downloads
     And I am on the edit tag page for "tag1"
     And I fill in "tag_name" with "fandom1"
     And I press "Update"
-  Then the download epub file should NOT exist
+  Then the temporary epub file should NOT exist
 
 Scenario: tag name changes => new epub has new name
   Given a page exists with pros: "tag1"
@@ -90,7 +90,7 @@ Scenario: tag name changes => new epub has new name
     And I fill in "tag_name" with "fandom1"
     And I press "Update"
     And I download its epub
-  Then the download epub file should exist
+  Then the temporary epub file should exist
     And the download epub command should include tags: "fandom1"
     And the download epub command should NOT include tags: "tag1"
     And the download epub command should NOT include authors: "fandom1"
@@ -101,7 +101,7 @@ Scenario: tag type changes => remove outdated downloads
     And I am on the edit tag page for "fandom1"
     And I select "Fandom" from "change"
     And I press "Change"
-  Then the download epub file should NOT exist
+  Then the temporary epub file should NOT exist
 
 Scenario: tag type changes => new epub reflects change
   Given a page exists with pros: "fandom1"
@@ -110,7 +110,7 @@ Scenario: tag type changes => new epub reflects change
     And I select "Fandom" from "change"
     And I press "Change"
     And I download its epub
-  Then the download epub file should exist
+  Then the temporary epub file should exist
     And the download epub command should include authors: "fandom1"
     And the download epub command should include tags: "fandom1"
 

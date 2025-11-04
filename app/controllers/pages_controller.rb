@@ -126,8 +126,15 @@ class PagesController < ApplicationController
       @page = Page.find_by(url: params[:page][:url].normalize)
       if @page
         @page = @page.refetch(@page.url)
-        @count = @page.parts.size > Page::LIMIT ? @page.parts.size - Page::LIMIT : 0
-        flash[:notice] = 'Refetched'
+        if @page.errors.blank?
+          @count = @page.parts.size > Page::LIMIT ? @page.parts.size - Page::LIMIT : 0
+          flash.now[:notice] = 'Refetched'
+        else
+          Rails.logger.debug { "page errors: #{@page.errors.messages}" }
+          flash.now[:alert] = @page.errors.collect do |error|
+            "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"
+          end.join(' and  ')
+        end
         render :show and return
       else
         flash[:alert] = 'Page not found. Find or Store instead.'
@@ -136,15 +143,27 @@ class PagesController < ApplicationController
       end
       return
     end
-    if params[:Add]
+    if params[:Add] || params[:AddNoFetch]
       url = params[:page][:url].normalize
       parent = Page.find_parent_by_url(url)
-      Rails.logger.debug { "normalized: #{url} parent: #{parent}" }
+      Rails.logger.debug { "normalized: #{url} parent: #{parent} refetch: #{params[:AddNoFetch].present?}" }
       if parent
-        parent.add_chapter(url)
-        @page = parent.parts.last
-        flash[:notice] = "Added #{@page.title} to #{parent.title}"
-        render 'htmls/edit' and return
+        @page = parent.add_chapter(url)
+        if params[:AddNoFetch]
+          flash[:notice] = "Added #{@page.title} to #{@page.parent.title}"
+          render 'htmls/edit' and return
+        else
+          @page.refetch(url)
+          if @page.errors.blank?
+            flash.now[:notice] = "Added #{@page.title} to #{@page.parent.title}"
+          else
+            Rails.logger.debug { "page errors: #{@page.errors.messages}" }
+            flash.now[:alert] = @page.errors.collect do |error|
+              "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"
+            end.join(' and  ')
+          end
+          render :show and return
+        end
       else
         flash[:alert] = 'Parent not found.'
         @page = Page.new(params[:page].permit!)
@@ -189,7 +208,6 @@ class PagesController < ApplicationController
         render :create and return
       end
     end
-    consolidate_tag_ids
     normalized = params[:page][:url].try(&:normalize) || ''
     if normalized.include?('?') && normalized.match('archiveofourown')
       pages = create_pages_from_search(normalized)
@@ -197,28 +215,41 @@ class PagesController < ApplicationController
       @page = Page.new
       render :minimal and return
     end
-    @page = Page.new(params[:page].permit!)
-    if @page.save
-      Rails.logger.debug { "page saved: #{@page.inspect}" }
-      if @page.errors[:base].blank?
-        flash[:notice] = 'Page created.'
-        flash[:alert] = 'edit raw html manually' if @page.ff?
-        redirect_to page_path(@page) and return
+    if params[:Store] || params[:NoFetch]
+      # actual beginning of creating a normal page on Store
+      consolidate_tag_ids
+      @page = Page.new(params[:page].permit!)
+      if @page.save
+        Rails.logger.debug { "page saved: #{@page.inspect}" }
+        @page.initial_fetch if params[:Store]
+        if @page.errors[:base].blank?
+          @page.update_tag_caches
+          flash[:notice] = 'Page created.'
+          if @page.could_have_content? && @page.raw_html.blank?
+            flash[:alert] = 'paste raw html manually'
+            redirect_to edit_html_path(@page) and return
+          else
+            redirect_to page_path(@page) and return
+          end
+        else
+          # TODO: don't destroy... do add a destroy button
+          @errors = @page.errors
+          Rails.logger.debug 'page destroyed because of errors'
+          @page.destroy
+          @page = Page.new(params[:page])
+        end
       else
         @errors = @page.errors
-        Rails.logger.debug 'page destroyed because of errors'
-        @page.destroy
-        @page = Page.new(params[:page])
       end
-    else
-      @errors = @page.errors
-    end
-    return if @errors.blank?
+      return if @errors.blank?
 
-    Rails.logger.debug { "page errors: #{@errors.messages}" }
-    flash.now[:alert] = @errors.collect do |error|
-      "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"
-    end.join(' and  ')
+      Rails.logger.debug { "page errors: #{@errors.messages}" }
+      flash.now[:alert] = @errors.collect do |error|
+        "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"
+      end.join(' and  ')
+      return
+    end
+    raise 'not given a command'
   end
 
   ## FIXME huge ugliness ;)
@@ -264,7 +295,7 @@ class PagesController < ApplicationController
       flash.now[:notice] = 'updated'
     when 'Rebuild from Raw HTML'
       @page.update scrubbed_notes: false
-      @page.rebuild_clean_from_raw.rebuild_edited_from_clean.rebuild_meta
+      @page.rebuild_clean_from_raw.remove_edited.rebuild_meta
       flash.now[:notice] = 'Rebuilt from Raw HTML'
     when 'Remove Downloads'
       @page.remove_outdated_downloads
@@ -274,7 +305,7 @@ class PagesController < ApplicationController
       flash.now[:notice] = 'Rebuilt Meta'
     when 'Update Tag Cache'
       @page.save!
-      flash.now[:notice] = 'Updaded Tag Cache'
+      flash.now[:notice] = 'Updated Tag Cache'
     when 'Set WIP'
       @page.update wip: true
     when 'Unset WIP'
@@ -302,11 +333,15 @@ class PagesController < ApplicationController
       @page.parts.map(&:make_single)
       @page.destroy
       flash[:notice] = 'Uncollected'
+      # TODO: save parts and redirect to found pages
       redirect_to root_path and return
     when 'Update Raw HTML'
-      @page.raw_html = params[:pasted]
-      @page.set_meta
-      @page.parent&.update_from_parts&.set_meta
+      if @page.can_have_parts?
+        @page.navigate_html = params[:pasted]
+      else
+        @page.raw_html = params[:pasted]
+      end
+      @page.rebuild_meta
       flash.now[:notice] = 'Raw HTML updated.'
     when 'Edit HTML'
       @page.edited_html = params[:pasted]

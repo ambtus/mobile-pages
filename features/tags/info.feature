@@ -18,7 +18,7 @@ Scenario: link to tag on show should find page on index
 Scenario: no tags exist during create
   Given I am on the mini page
   When I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I press "Store"
+    And I store the page
     And I edit its tags
     And I fill in "tags" with "abc123"
     And I press "Add Info Tags"
@@ -28,7 +28,7 @@ Scenario: no tags selected during create
   Given "abc123" is an "Info"
   When I am on the mini page
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
-    And I press "Store"
+    And I store the page
     And I edit its tags
     And I select "abc123" from "page_info_ids_"
     And I press "Update Tags"
@@ -40,7 +40,7 @@ Scenario: info selected during create
     And I select "abc123"
     And I fill in "page_url" with "http://test.sidrasue.com/test.html"
     And I fill in "page_title" with "New Title"
-    And I press "Store"
+    And I store the page
   Then I should see "abc123" within ".infos"
 
 Scenario: comma separated infos (not & or /)

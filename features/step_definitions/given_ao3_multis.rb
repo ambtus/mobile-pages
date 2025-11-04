@@ -1,130 +1,85 @@
 # frozen_string_literal: true
 
 Given(/^Open the Door exists$/) do
-  page = Book.create!(title: 'temp')
-  page.update!(url: 'https://archiveofourown.org/works/310586')
-  chapter1 = Chapter.create!(title: 'temp', parent_id: page.id, position: 1)
-  chapter1.update!(url: 'https://archiveofourown.org/works/310586/chapters/497361')
-  chapter1.set_raw_from('open1')
-  chapter2 = Chapter.create!(title: 'temp', parent_id: page.id, position: 2)
-  chapter2.update!(url: 'https://archiveofourown.org/works/310586/chapters/757306')
-  chapter2.set_raw_from('open2')
-  page.rebuild_meta
-end
-
-Given(/^Time Was existed$/) do
-  page = Book.create!(title: 'temp')
-  page.update!(url: 'https://archiveofourown.org/works/692')
-  chapter1 = Chapter.create!(title: 'temp', parent_id: page.id, position: 1)
-  chapter1.update!(url: 'https://archiveofourown.org/works/692/chapters/803')
-  chapter1.set_raw_from('where')
-  chapter2 = Chapter.create!(title: 'temp', parent_id: page.id, position: 2)
-  chapter2.update!(url: 'https://archiveofourown.org/works/692/chapters/804')
-  chapter2.set_raw_from('hogwarts')
-  page.rebuild_meta
-  page.update_from_parts
-end
-
-Given(/^Time Was exists$/) do
-  page = Book.create!(title: 'temp')
-  page.update!(url: 'https://archiveofourown.org/works/692')
-  chapter1 = Chapter.create!(title: 'temp', parent_id: page.id, position: 1)
-  chapter1.update!(url: 'https://archiveofourown.org/works/692/chapters/803')
-  chapter1.set_raw_from('where_new')
-  chapter2 = Chapter.create!(title: 'temp', parent_id: page.id, position: 2)
-  chapter2.update!(url: 'https://archiveofourown.org/works/692/chapters/804')
-  chapter2.set_raw_from('hogwarts_new')
-  page.rebuild_meta
-  page.update_from_parts
+  chapter1 = create_local_page 'open1', 'https://archiveofourown.org/works/310586/chapters/497361'
+  chapter2 = create_local_page 'open2', 'https://archiveofourown.org/works/310586/chapters/757306'
+  book = local_page 'https://archiveofourown.org/works/310586'
+  book.add_chapter chapter1.url
+  book.add_chapter chapter2.url
+  book.rebuild_meta
 end
 
 Given(/^Time Was partially exists$/) do
-  partial_book
+  chapter = create_first_chapter
+  book = local_page 'https://archiveofourown.org/works/692'
+  book.add_chapter chapter.url
+  book.rebuild_meta
+  book.rate_today(5)
+end
+
+Given(/^Time Was existed$/) do
+  create_book_with_old_html
+end
+
+Given(/^Time Was exists$/) do
+  create_book
 end
 
 Given(/^I add the second chapter manually$/) do
-  chapter2 = Single.create!(title: 'temp')
-  chapter2.update!(url: 'https://archiveofourown.org/works/692/chapters/804')
-  chapter2.set_raw_from('hogwarts_new')
+  create_second_chapter
 end
 
 Given(/^Counting Drabbles exists$/) do
-  series = Series.create!(title: 'Counting Drabbles')
-  series.update!(url: 'https://archiveofourown.org/series/46')
-  series.set_raw_from('drabbles')
-
-  work1 = Single.create!(title: 'temp', parent_id: series.id, position: 1)
-  work1.update!(url: 'https://archiveofourown.org/works/688')
-  work1.set_raw_from('skipping')
-
-  work2 = Single.create!(title: 'temp', parent_id: series.id, position: 2)
-  work2.update!(url: 'https://archiveofourown.org/works/689')
-  work2.set_raw_from('flower')
-  series.update_from_parts
-  series.rebuild_meta
+  create_series
 end
 
-Given(/^Counting Drabbles exists without a URL$/) do
+Given(/^Counting Drabbles had tags$/) do
+  page = Series.first
+  page.tags << [fandom, author]
+end
+
+Given(/^Counting Drabbles existed$/) do
+  s1 = create_first_single
+  s2 = create_second_single
   series = Series.create!(title: 'Counting Drabbles')
-
-  work1 = Single.create!(title: 'temp', parent_id: series.id, position: 1)
-  work1.update!(url: 'https://archiveofourown.org/works/688')
-  work1.set_raw_from('skipping')
-
-  work2 = Single.create!(title: 'temp', parent_id: series.id, position: 2)
-  work2.update!(url: 'https://archiveofourown.org/works/689')
-  work2.set_raw_from('flower')
-
-  series.rebuild_meta
+  series.add_part s1.url
+  series.add_part s2.url
 end
 
 Given(/^Counting Drabbles partially exists$/) do
-  series = Series.create!(title: 'Counting Drabbles')
-  series.update!(url: 'https://archiveofourown.org/series/46')
-  series.set_raw_from('partial')
-
-  work1 = Single.create!(title: 'temp', parent_id: series.id, position: 1)
-  work1.update!(url: 'https://archiveofourown.org/works/688')
-  work1.set_raw_from('skipping').rate_today(5)
-
-  series.set_meta.set_wordcount(false).update_read_after
+  work1 = create_first_single
+  work1.rate_today(5)
+  series = create_local_parent 'partial', 'https://archiveofourown.org/series/46'
+  series.rebuild_meta
+  series.update_from_parts
 end
 
 Given(/^broken Drabbles exists$/) do
-  series = Series.create!(title: 'Counting Drabbles')
-  series.update!(url: 'https://archiveofourown.org/series/46')
-  series.set_raw_from('partial')
-
-  work1 = Chapter.create!(title: 'temp', parent_id: series.id, position: 1)
-  work1.update!(url: 'https://archiveofourown.org/works/688')
-  work1.set_raw_from('skipping')
+  work = create_local_page 'skipping', 'https://archiveofourown.org/works/688'
+  create_local_parent 'partial', 'https://archiveofourown.org/series/46'
+  work.update(type: Chapter)
 end
 
+# before series had urls
 Given(/^Misfits existed$/) do
-  series = Series.create!(title: 'Misfit Series')
-
-  work1 = Book.create!(title: 'temp', parent_id: series.id, position: 1)
-  work1.update!(url: 'https://archiveofourown.org/works/4945936')
-  chapter1 = Chapter.create!(title: 'temp', parent_id: work1.id, position: 1)
-  chapter1.update!(url: 'https://archiveofourown.org/works/4945936/chapters/11353174')
-  chapter1.set_raw_from('misfits1')
-  chapter2 = Chapter.create!(title: 'temp', parent_id: work1.id, position: 2)
-  chapter2.update!(url: 'https://archiveofourown.org/works/4945936/chapters/11369638')
-  chapter2.set_raw_from('misfits2')
+  create_local_page 'misfits1', 'https://archiveofourown.org/works/4945936/chapters/11353174'
+  create_local_page 'misfits2', 'https://archiveofourown.org/works/4945936/chapters/11369638'
+  work1 = local_page 'https://archiveofourown.org/works/4945936'
+  work1.add_part(Page.first.url)
+  work1.add_part(Page.second.url)
   work1.rebuild_meta
 
-  work2 = Book.create!(title: 'temp', parent_id: series.id, position: 2)
-  work2.update!(url: 'https://archiveofourown.org/works/13765827')
-  chapter3 = Chapter.create!(title: 'temp', parent_id: work2.id, position: 1)
-  chapter3.update!(url: 'https://archiveofourown.org/works/13765827/chapters/31637625')
-  chapter3.set_raw_from('misfits3')
-  chapter4 = Chapter.create!(title: 'temp', parent_id: work2.id, position: 2)
-  chapter4.update!(url: 'https://archiveofourown.org/works/13765827/chapters/33586779')
-  chapter4.set_raw_from('misfits4')
+  create_local_page 'misfits3', 'https://archiveofourown.org/works/13765827/chapters/31637625'
+  create_local_page 'misfits4', 'https://archiveofourown.org/works/13765827/chapters/33586779'
+
+  work2 = local_page 'https://archiveofourown.org/works/13765827'
+  work2.add_part(Page.fourth.url)
+  work1.add_part(Page.fifth.url)
   work2.rebuild_meta
 
-  series.rebuild_meta
-  series.update_from_parts
+  series = Series.create!(title: 'Misfit Series')
+  series.add_part(work1.url)
+  series.add_part(work2.url)
 end
 
 Given('Misfits has a URL') do
@@ -133,78 +88,64 @@ Given('Misfits has a URL') do
 end
 
 Given('wip exists') do
-  page = Book.create!(title: 'temp')
-  page.update!(url: 'https://archiveofourown.org/works/38044144')
-  chapter2 = Chapter.create!(title: 'temp', parent_id: page.id, position: 2)
-  chapter2.update!(url: 'https://archiveofourown.org/works/38044144/chapters/95026165')
-  chapter2.set_raw_from('wip')
-  page.rebuild_meta
+  book = local_page 'https://archiveofourown.org/works/38044144'
+  ch2 = create_local_page 'wip', 'https://archiveofourown.org/works/38044144/chapters/95026165'
+  book.add_chapter ch2.url
+  book.rebuild_meta
 end
 
 Given('Brave New World exists') do
-  book = Book.create!(title: 'temp')
-  book.update!(url: 'https://archiveofourown.org/works/23295031')
-  chapter1 = Chapter.create!(title: 'temp', parent_id: book.id, position: 1)
-  chapter1.update!(url: 'https://archiveofourown.org/works/23295031/chapters/55791421')
-  chapter1.set_raw_from('brave1')
-  chapter2 = Chapter.create!(title: 'temp', parent_id: book.id, position: 2)
-  chapter2.update!(url: 'https://archiveofourown.org/works/23295031/chapters/56053450')
-  chapter2.set_raw_from('brave2')
+  book = local_page 'https://archiveofourown.org/works/23295031'
+  chapter1 = create_local_page 'brave1', 'https://archiveofourown.org/works/23295031/chapters/55791421'
+  book.add_chapter chapter1.url
+  chapter2 = create_local_page 'brave2', 'https://archiveofourown.org/works/23295031/chapters/56053450'
+  book.add_chapter chapter2.url
   book.rebuild_meta
 end
 
 Given('Iterum Rex exists') do
-  series = Series.create!(title: 'Iterum Rex')
-  series.update!(url: 'http://archiveofourown.org/series/1005861')
+  series = local_page 'http://archiveofourown.org/series/1005861'
+  series.update(title: 'Iterum Rex')
   step 'Brave New World exists'
   book = Book.find_by(title: 'Brave New World')
   book.update!(parent_id: series.id, position: 2)
-  series.update_from_parts # don't rebuild meta, it will force an ao3 call
+  series.rebuild_meta
 end
 
 Given('Cold Water exists') do
-  book = Book.create!(title: 'temp')
-  book.update!(url: 'https://archiveofourown.org/works/37716514')
-  chapter1 = Chapter.create!(title: 'temp', parent_id: book.id, position: 1)
-  chapter1.update!(url: 'https://archiveofourown.org/works/37716514/chapters/94161631')
-  chapter1.set_raw_from('one')
-  chapter2 = Chapter.create!(title: 'temp', parent_id: book.id, position: 2)
-  chapter2.update!(url: 'https://archiveofourown.org/works/37716514/chapters/94181914')
-  chapter2.set_raw_from('three')
-  chapter3 = Chapter.create!(title: 'temp', parent_id: book.id, position: 3)
-  chapter3.update!(url: 'https://archiveofourown.org/works/37716514/chapters/94266751')
-  chapter3.set_raw_from('five')
+  book = local_page 'https://archiveofourown.org/works/37716514'
+  chapter1 = create_local_page('one', 'https://archiveofourown.org/works/37716514/chapters/94161631')
+  book.add_chapter chapter1.url
+  chapter2 = create_local_page 'three', 'https://archiveofourown.org/works/37716514/chapters/94181914'
+  book.add_chapter chapter2.url
+  chapter3 = create_local_page 'five', 'https://archiveofourown.org/works/37716514/chapters/94266751'
+  book.add_chapter chapter3.url
   book.rebuild_meta
 end
 
 Given('that was partially exists') do
-  page = Book.create!(title: 'temp')
-  page.update!(url: 'https://archiveofourown.org/works/38244064')
-  chapter1 = Chapter.create!(title: 'temp', parent_id: page.id, position: 1)
-  chapter1.update!(url: 'https://archiveofourown.org/works/38244064/chapters/95553088')
-  chapter1.set_raw_from('that')
-  page.set_meta
+  book = local_page 'https://archiveofourown.org/works/38244064'
+  chapter1 = create_local_page 'that', 'https://archiveofourown.org/works/38244064/chapters/95553088'
+  book.add_chapter chapter1.url
+  book.rebuild_meta
 end
 
 Given('New Day Dawning exists') do
-  page = Book.create!(title: 'temp')
-  page.update!(url: 'https://archiveofourown.org/works/38952696')
-  chapter1 = Chapter.create!(title: 'temp', parent_id: page.id, position: 1)
-  chapter1.update!(url: 'https://archiveofourown.org/works/38952696/chapters/97419789')
-  chapter1.set_raw_from('end_notes')
-  page.set_meta
+  book = local_page 'https://archiveofourown.org/works/38952696'
+  chapter1 = create_local_page 'end_notes', 'https://archiveofourown.org/works/38952696/chapters/97419789'
+  book.add_chapter chapter1.url
+  book.rebuild_meta
 end
 
 Given('fire exists') do
-  book = Book.create!(title: 'temp')
-  book.update!(url: 'https://archiveofourown.org/works/26249209')
-  chapter1 = Chapter.create!(title: 'temp', parent_id: book.id, position: 1)
-  chapter1.update!(url: 'https://archiveofourown.org/works/26249209/chapters/63892810')
-  chapter1.set_raw_from('fire1')
-  chapter2 = Chapter.create!(title: 'temp', parent_id: book.id, position: 2)
-  chapter2.update!(url: 'https://archiveofourown.org/works/26249209/chapters/63897259')
-  chapter2.set_raw_from('fire2')
-  book.set_meta
+  book = Book.create!(title: 'temp', url: 'https://archiveofourown.org/works/26249209')
+  chapter1 = create_local_page 'fire1', 'https://archiveofourown.org/works/26249209/chapters/63892810'
+  book.add_chapter chapter1.url
+  chapter1.reload && chapter1.set_meta
+  chapter2 = create_local_page 'fire2', 'https://archiveofourown.org/works/26249209/chapters/63897259'
+  book.add_chapter chapter2.url
+  chapter2.reload && chapter2.set_meta
+  book.set_meta && book.update_from_parts
 end
 
 Given(/^Misfits first chapter of second work exists$/) do
@@ -215,33 +156,27 @@ Given(/^Misfits first chapter of second work exists$/) do
   work1.update!(url: 'https://archiveofourown.org/works/4945936')
   chapter1 = Chapter.create!(title: 'temp', parent_id: work1.id, position: 1)
   chapter1.update!(url: 'https://archiveofourown.org/works/4945936/chapters/11353174')
-  chapter1.set_raw_from('misfits1')
+  chapter1.raw_html = test_raw_html_from('misfits1')
   chapter2 = Chapter.create!(title: 'temp', parent_id: work1.id, position: 2)
   chapter2.update!(url: 'https://archiveofourown.org/works/4945936/chapters/11369638')
-  chapter2.set_raw_from('misfits2')
+  chapter2.raw_html = test_raw_html_from('misfits2')
   work1.rebuild_meta
 
   work2 = Single.create!(title: 'temp', parent_id: series.id, position: 2)
   work2.update!(url: 'https://archiveofourown.org/works/13765827')
-  work2.set_raw_from('misfits3')
+  work2.raw_html = test_raw_html_from('misfits3')
   work2.rebuild_meta
 end
 
 Given(/^Mandalorian Zuko exists$/) do
-  series = Series.create!(title: 'Mandalorian Zuko')
-  series.update!(url: 'https://archiveofourown.org/series/1820452')
+  series = Series.create!(title: 'Mandalorian Zuko', url: 'https://archiveofourown.org/series/1820452')
 
-  book1 = Book.create!(title: 'temp', parent_id: series.id, position: 1)
-  book1.update!(url: 'https://archiveofourown.org/works/25131619')
-  chapter1 = Chapter.create!(title: 'temp', parent_id: book1.id, position: 1)
-  chapter1.update!(url: 'https://archiveofourown.org/works/25131619/chapters/60890896')
-  chapter1.set_raw_from('meeting')
-  book1.rebuild_meta
-  book1.update_from_parts
+  book1 = Book.create!(parent_id: series.id, position: 1, url: 'https://archiveofourown.org/works/25131619')
+  chapter1 = create_local_page 'meeting', 'https://archiveofourown.org/works/25131619/chapters/60890896'
+  book1.add_chapter chapter1.url
 
-  single = Single.create!(title: 'temp', parent_id: series.id, position: 2)
-  single.update!(url: 'https://archiveofourown.org/works/25534093')
-  single.set_raw_from('mandalorian')
+  single = create_local_page 'mandalorian', 'https://archiveofourown.org/works/25534093'
+  series.add_part single.url
 
-  series.update_from_parts
+  series.rebuild_meta
 end

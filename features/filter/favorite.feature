@@ -13,8 +13,7 @@ Scenario: check before filter (default)
   Then I should see "good parent of bad child"
     And the page should NOT contain css "#position_2"
 
-Scenario: favorite
-  Given pages with all possible favorites exist
+  # favorite
   When I am on the filter page
     And I click on "favorite_Yes"
     And I press "Find"
@@ -23,8 +22,7 @@ Scenario: favorite
     And I should see "good parent of good child"
     And the page should NOT contain css "#position_4"
 
-Scenario: favorite (only chapters)
-  Given pages with all possible favorites exist
+  # favorite (only chapters)
   When I am on the filter page
     And I click on "favorite_Yes"
     And I click on "type_Chapter"
@@ -33,8 +31,7 @@ Scenario: favorite (only chapters)
     And I should see "good child of good parent"
     And the page should NOT contain css "#position_3"
 
-Scenario: not favorite
-  Given pages with all possible favorites exist
+  # not favorite
   When I am on the filter page
     And I click on "favorite_No"
     And I press "Find"
