@@ -3,7 +3,7 @@
 module Fetch
   class << self
     def where
-      if ENV['LOUD'].present?
+      if ENV['LOUDM'].present?
         $stdout
       elsif Rails.env.test?
         '/tmp/mp_test_mechanize.log'
