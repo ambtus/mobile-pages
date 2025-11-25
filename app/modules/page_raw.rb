@@ -83,6 +83,7 @@ module PageRaw
       if ao3?
         fetch_ao3
         errors.messages.each { |e| errors.add(e.first, e.second.join_comma) }
+        self
       else
         fetch_raw
         set_meta && parent&.set_wordcount(false) if errors.blank?
