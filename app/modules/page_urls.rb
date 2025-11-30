@@ -98,10 +98,6 @@ module PageUrls
         chapter.fetch_raw if refetch
         chapter.set_meta if chapter.updated_at > 1.minute.ago
         Rails.logger.debug { "I am now: #{chapter.inspect}" }
-        if index.odd? && count < chapter_list.size
-          Rails.logger.debug { "sleeping between every other chapter; current count: #{count.ordinalize}" }
-          sleep 5
-        end
       end
       update_from_parts
       set_meta

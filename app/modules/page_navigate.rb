@@ -25,7 +25,14 @@ module PageNavigate
   end
 
   def fetch_navigate
-    navigate_url = "#{url}/navigate"
+    navigate_url = case type
+                   when 'Book'
+                     "#{url}/navigate"
+                   when 'Series'
+                     url
+                   else
+                     raise 'cannot find navigate url'
+                   end
     Rails.logger.debug { "fetching navigate for #{id}: #{navigate_url}" }
     result = navigate_fetch(navigate_url)
     return if errors.present?

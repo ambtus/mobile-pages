@@ -21,6 +21,10 @@ module PageParents
       count ||= (parts.size + 1)
       Rails.logger.debug { "chapter does not exist, creating #{title}" }
       chapter = Chapter.create!(title: title, url: url, position: count, parent_id: id)
+      if (count % 3).zero?
+        Rails.logger.debug { "sleeping after every third created chapter; current count: #{count.ordinalize}" }
+        sleep 5
+      end
     end
     set_type(reset: true)
     chapter
