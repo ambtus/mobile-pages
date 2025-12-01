@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_23_142153) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_01_153200) do
   create_table "pages", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.boolean "at_end", default: false
     t.boolean "author", default: false
@@ -53,6 +53,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_23_142153) do
   create_table "tags", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.string "type", default: "", null: false
+    t.index ["name", "type"], name: "index_tags_on_name_and_type", unique: true
     t.index ["name"], name: "tag_name"
     t.index ["type"], name: "tag_type"
   end
