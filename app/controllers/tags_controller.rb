@@ -44,20 +44,22 @@ class TagsController < ApplicationController
 
   def create
     @page = Page.find(params[:page_id])
-    if params[:commit] == 'Update Tags'
-      consolidate_tag_ids
-      @page.tag_ids = params[:page][:tag_ids]
-      @page.update_tag_caches
-    elsif params[:commit] =~ /Add (.*) Tags/
-      unless @page.add_tags_from_string(params[:tags], ::Regexp.last_match(1).squish)
-        Rails.logger.debug { "page errors: #{@page.errors.messages}" }
-        flash[:alert] = @page.errors.collect do |error|
-          "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"
-        end.join(' and  ')
-        redirect_to tag_path(@page.id) and return
-      end
+    result = if params[:commit] == 'Update Tags'
+               consolidate_tag_ids
+               @page.set_tags_from_ids params[:page][:tag_ids]
+             elsif params[:commit] =~ /Add (.*) Tags/
+               @page.add_tags_from_string(params[:tags], ::Regexp.last_match(1).squish)
+             end
+    Rails.logger.debug { "result: #{result}" }
+    if result == @page
+      redirect_to page_path(@page)
+    else
+      Rails.logger.debug { "page errors: #{@page.errors.messages}" }
+      flash[:alert] = @page.errors.collect do |error|
+        "#{error.attribute.to_s.humanize unless error.attribute == :base} #{error.message}"
+      end.join(' and  ')
+      redirect_to tag_path(@page.id) and return
     end
-    redirect_to page_path(@page)
   end
 
   def update

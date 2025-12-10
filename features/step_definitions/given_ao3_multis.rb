@@ -3,7 +3,7 @@
 Given(/^Open the Door exists$/) do
   chapter1 = create_local_page 'open1', 'https://archiveofourown.org/works/310586/chapters/497361'
   chapter2 = create_local_page 'open2', 'https://archiveofourown.org/works/310586/chapters/757306'
-  book = local_page 'https://archiveofourown.org/works/310586'
+  book = local_page url: 'https://archiveofourown.org/works/310586'
   book.add_chapter chapter1.url
   book.add_chapter chapter2.url
   book.rebuild_meta
@@ -11,7 +11,7 @@ end
 
 Given(/^Time Was partially exists$/) do
   chapter = create_first_chapter
-  book = local_page 'https://archiveofourown.org/works/692'
+  book = local_page url: 'https://archiveofourown.org/works/692'
   book.add_chapter chapter.url
   book.rebuild_meta
   book.rate_today(5)
@@ -64,7 +64,7 @@ end
 Given(/^Misfits existed$/) do
   create_local_page 'misfits1', 'https://archiveofourown.org/works/4945936/chapters/11353174'
   create_local_page 'misfits2', 'https://archiveofourown.org/works/4945936/chapters/11369638'
-  work1 = local_page 'https://archiveofourown.org/works/4945936'
+  work1 = local_page url: 'https://archiveofourown.org/works/4945936'
   work1.add_part(Page.first.url)
   work1.add_part(Page.second.url)
   work1.rebuild_meta
@@ -72,7 +72,7 @@ Given(/^Misfits existed$/) do
   create_local_page 'misfits3', 'https://archiveofourown.org/works/13765827/chapters/31637625'
   create_local_page 'misfits4', 'https://archiveofourown.org/works/13765827/chapters/33586779'
 
-  work2 = local_page 'https://archiveofourown.org/works/13765827'
+  work2 = local_page  url: 'https://archiveofourown.org/works/13765827'
   work2.add_part(Page.fourth.url)
   work1.add_part(Page.fifth.url)
   work2.rebuild_meta
@@ -88,14 +88,14 @@ Given('Misfits has a URL') do
 end
 
 Given('wip exists') do
-  book = local_page 'https://archiveofourown.org/works/38044144'
+  book = local_page  url: 'https://archiveofourown.org/works/38044144'
   ch2 = create_local_page 'wip', 'https://archiveofourown.org/works/38044144/chapters/95026165'
   book.add_chapter ch2.url
   book.rebuild_meta
 end
 
 Given('Brave New World exists') do
-  book = local_page 'https://archiveofourown.org/works/23295031'
+  book = local_page url: 'https://archiveofourown.org/works/23295031'
   chapter1 = create_local_page 'brave1', 'https://archiveofourown.org/works/23295031/chapters/55791421'
   book.add_chapter chapter1.url
   chapter2 = create_local_page 'brave2', 'https://archiveofourown.org/works/23295031/chapters/56053450'
@@ -104,7 +104,7 @@ Given('Brave New World exists') do
 end
 
 Given('Iterum Rex exists') do
-  series = local_page 'http://archiveofourown.org/series/1005861'
+  series = local_page url: 'http://archiveofourown.org/series/1005861'
   series.update(title: 'Iterum Rex')
   step 'Brave New World exists'
   book = Book.find_by(title: 'Brave New World')
@@ -113,7 +113,7 @@ Given('Iterum Rex exists') do
 end
 
 Given('Cold Water exists') do
-  book = local_page 'https://archiveofourown.org/works/37716514'
+  book = local_page url: 'https://archiveofourown.org/works/37716514'
   chapter1 = create_local_page('one', 'https://archiveofourown.org/works/37716514/chapters/94161631')
   book.add_chapter chapter1.url
   chapter2 = create_local_page 'three', 'https://archiveofourown.org/works/37716514/chapters/94181914'
@@ -124,14 +124,14 @@ Given('Cold Water exists') do
 end
 
 Given('that was partially exists') do
-  book = local_page 'https://archiveofourown.org/works/38244064'
+  book = local_page url: 'https://archiveofourown.org/works/38244064'
   chapter1 = create_local_page 'that', 'https://archiveofourown.org/works/38244064/chapters/95553088'
   book.add_chapter chapter1.url
   book.rebuild_meta
 end
 
 Given('New Day Dawning exists') do
-  book = local_page 'https://archiveofourown.org/works/38952696'
+  book = local_page url: 'https://archiveofourown.org/works/38952696'
   chapter1 = create_local_page 'end_notes', 'https://archiveofourown.org/works/38952696/chapters/97419789'
   book.add_chapter chapter1.url
   book.rebuild_meta

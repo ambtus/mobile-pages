@@ -7,8 +7,8 @@ end
 
 def test_file(filename) = Rails.root + "test_helpers/html_files/#{filename}.html"
 
-def local_page(url = nil)
-  url ? Page.create!(url: url) : Page.create!(title: 'Page 1')
+def local_page(url: nil, type: Page)
+  url ? type.create!(url: url) : type.create!(title: 'Page 1')
 end
 
 def get_raw_from(filename) = File.read(test_file(filename))

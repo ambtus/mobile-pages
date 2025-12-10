@@ -43,7 +43,20 @@ module PageTags
       tags.send(type.downcase.pluralize).sort_by(&:base_name)
     end
   end
+  def set_tags_from_ids(ary)
+    ids = ary.reject { |x| x.blank? }.map(&:to_i)
+    Rails.logger.debug { "trying tag ids #{ids}" }
+    new_tags = ids.collect { |x| Tag.find(x) }
+    new_tags = new_tags.select { |t| Tag.some_types.include?(t.type) } unless can_have_tags?
+    Rails.logger.debug { "setting tags to #{new_tags}" }
+    self.tag_ids = new_tags.map(&:id)
+    update_tag_caches
+    Rails.logger.debug { "tags now #{tag_cache}" }
+    self
+  end
+
   def add_tags_from_string(string, type = 'Tag')
+    return if !can_have_tags? && %w[Fandom Author].include?(type)
     return if string.blank?
 
     Rails.logger.debug { "adding #{type} #{string}" }
@@ -65,5 +78,6 @@ module PageTags
     end
     update_tag_caches
     Rails.logger.debug { "tags now #{tags.joined}" }
+    self
   end
 end

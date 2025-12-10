@@ -30,7 +30,7 @@ Given(/^Quoted Notes exists$/) do
 end
 
 Given(/^Multi Authors exists$/) do
-  create_local_page 'multi', 'https://archiveofourown.org/works/29253276/chapters/71833074'
+  create_multi_authors
 end
 
 Given(/^Skipping Stones exists$/) do

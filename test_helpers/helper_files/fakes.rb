@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
 def create_local_page(raw_name, url = nil)
-  page = local_page(url)
+  page = local_page(url: url)
   page.raw_html = get_raw_from(raw_name)
   fake_initial_fetch(page)
   page
 end
 
 def create_local_parent(raw_nav_name, url = nil)
-  page = local_page(url)
+  page = local_page(url: url)
   page.navigate_html = get_raw_from(raw_nav_name)
   fake_initial_fetch(page)
   page
 end
 
 def recreate_local_page(raw_name, url)
-  page = local_page(url)
+  page = local_page(url: url)
   copy_raw_from raw_name, page
   fake_initial_fetch(page)
   page

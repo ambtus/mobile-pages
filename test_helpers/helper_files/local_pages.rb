@@ -37,3 +37,7 @@ def create_series
   create_second_single
   create_local_parent 'drabbles', 'https://archiveofourown.org/series/46'
 end
+
+def create_multi_authors
+  create_local_page 'multi', 'https://archiveofourown.org/works/29253276/chapters/71833074'
+end
