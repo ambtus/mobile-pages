@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Tag, type: :model do
   describe 'fandom and author in notes' do
     it 'books can have both' do
-      create_book
+      create_time_book
 
       expect(Book.first.short_notes).to match 'by Sidra; Harry Potter'
     end
@@ -16,7 +16,7 @@ RSpec.describe Tag, type: :model do
     end
 
     it 'chapters can have neither' do
-      create_book
+      create_time_book
 
       expect(Chapter.first.short_notes).not_to match 'by Sidra; Harry Potter'
     end
@@ -86,7 +86,7 @@ RSpec.describe Tag, type: :model do
   end
 
   it 'chapter inherits tags when downloaded' do
-    create_book
+    create_time_book
     Book.first.add_tags_from_string('Harry Potter', 'Fandom')
 
     expect(Chapter.first.download_tag_string).to match 'Harry Potter'

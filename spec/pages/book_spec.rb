@@ -5,14 +5,14 @@ require 'rails_helper'
 RSpec.describe Book, type: :model do
   describe 'add_chapter' do
     it 'doesnt change the original chapter position' do
-      create_book
+      create_time_book
       described_class.first.add_part(Chapter.second.url)
 
       expect(Chapter.second.position).to be 2
     end
 
     it 'can find parts from navigation html' do
-      create_book
+      create_time_book
 
       expect(described_class.first.parts.count).to be 2
     end
@@ -35,31 +35,31 @@ RSpec.describe Book, type: :model do
 
   describe 'fetch_ao3' do
     it 'has navigate file' do
-      create_book
+      create_time_book
 
       expect(File.exist?(described_class.first.navigate_html_file_name)).to be true
     end
 
     it 'but not a raw file' do
-      create_book
+      create_time_book
 
       expect(File.exist?(described_class.first.raw_html_file_name)).to be false
     end
 
     it 'sets meta' do
-      create_book
+      create_time_book
 
       expect(described_class.first.notes).to match 'by Sidra'
     end
 
     it 'updates from parts' do
-      create_book
+      create_time_book
 
       expect(described_class.first.wordcount).to be 1581
     end
 
     it 'makes me a chapter' do
-      create_book
+      create_time_book
 
       expect(described_class.first.parts.first.class).to be Chapter
     end

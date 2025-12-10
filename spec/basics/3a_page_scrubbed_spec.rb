@@ -24,13 +24,13 @@ RSpec.describe PageScrubbed, type: :module do
   end
 
   it 'doesnt exist for books' do
-    create_book
+    create_time_book
 
     expect(Book.first.scrubbed_html).to be_nil
   end
 
   it 'is blank if directory is gone' do
-    create_book
+    create_time_book
 
     Chapter.first.remove_directory
     expect(Chapter.first.scrubbed_html).to eq ''

@@ -18,11 +18,11 @@ Given(/^Time Was partially exists$/) do
 end
 
 Given(/^Time Was existed$/) do
-  create_book_with_old_html
+  create_time_book_with_old_html
 end
 
 Given(/^Time Was exists$/) do
-  create_book
+  create_time_book
 end
 
 Given(/^I add the second chapter manually$/) do

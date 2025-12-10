@@ -9,7 +9,7 @@ def update_partial_book
   create_local_parent 'navigate_time', 'https://archiveofourown.org/works/692'
 end
 
-def create_book
+def create_time_book
   create_first_chapter
   create_second_chapter
   create_local_parent 'navigate_time', 'https://archiveofourown.org/works/692'
@@ -18,7 +18,7 @@ end
 def recreate_first_chapter = recreate_local_page 'where', 'https://archiveofourown.org/works/692/chapters/803'
 def recreate_second_chapter = recreate_local_page 'hogwarts', 'https://archiveofourown.org/works/692/chapters/804'
 
-def create_book_with_old_html
+def create_time_book_with_old_html
   recreate_first_chapter
   recreate_second_chapter
   create_local_parent 'navigate_time', 'https://archiveofourown.org/works/692'
@@ -40,4 +40,16 @@ end
 
 def create_multi_authors
   create_local_page 'multi', 'https://archiveofourown.org/works/29253276/chapters/71833074'
+end
+
+def create_multi_fandoms
+  create_local_page 'alan', 'https://archiveofourown.org/works/5720104'
+end
+
+def create_yer_a_wizard
+  create_local_page 'yer', 'https://archiveofourown.org/works/35386909'
+end
+
+def create_fuuinjutsu
+  create_local_page 'Fuuinjutsu', 'https://archiveofourown.org/works/36425557'
 end

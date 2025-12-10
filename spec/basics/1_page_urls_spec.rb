@@ -17,7 +17,7 @@ RSpec.describe PageUrls, type: :module do
     end
 
     it 'is a Book with a work url' do
-      create_book
+      create_time_book
 
       expect(Page.last.class).to be Book
     end
