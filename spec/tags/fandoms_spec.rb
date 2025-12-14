@@ -23,6 +23,24 @@ RSpec.describe Fandom, type: :class do
       expect(Page.first.notes).to match '<p>Die Hard, Robin Hood</p>'
     end
 
+    it 'drops the part after dash' do
+      create_multi_fandoms
+
+      expect(Page.first.notes).not_to match 'Rowling'
+    end
+
+    it 'drops the part in parenthesise' do
+      create_multi_fandoms
+
+      expect(Page.first.notes).not_to match 'Movies'
+    end
+
+    it 'drops the part after colon' do
+      create_multi_fandoms
+
+      expect(Page.first.notes).not_to match 'Prince of Thieves (1991)'
+    end
+
     describe 'and one in the tags' do
       it 'find by fandom' do
         a = described_class.create!(name: 'Harry Potter')

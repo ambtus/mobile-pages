@@ -78,16 +78,6 @@ module PageDownload
 
   def download_suffix = short_meta_strings.empty? ? '' : " (#{short_meta_strings.join_comma})"
 
-  def title_prefix
-    if parent
-      title.match(position.to_s) ? '' : "#{position}. "
-    else
-      ''
-    end
-  end
-
-  def parent_title_prefix = parent&.parent ? "#{parent.position}." : ''
-  def gparent_title_prefix = parent&.parent&.parent ? "#{parent.parent.position}." : ''
   def download_prefixes = gparent_title_prefix + parent_title_prefix + title_prefix
 
   def title_w_position = "#{download_prefixes} #{title}".squish

@@ -2,13 +2,7 @@ Feature: ao3 testing that can use local files
          so I don't have to constantly be fetching from
          (would need to be updated if ao3 changes it's format)
 
-Scenario: ao3 with and without chapter titles
-  Given Open the Door exists
-  When I am on the page with title "Open the Door"
-  Then I should see "Chapter 1" within "#position_1"
-    And I should see "2. Ours" within "#position_2"
-    But I should NOT see "1. Chapter 1"
-    And the part titles should be stored as "Chapter 1 & Ours"
+
 
 Scenario: deliberately fetch chapter 1 shows chapter summary and chapter notes
           and author and fandom
@@ -21,16 +15,6 @@ Scenario: deliberately fetch chapter 1 shows chapter summary and chapter notes
     And I should see "Harry Potter" within ".notes"
     But I should NOT see "Using time-travel"
     And I should NOT see "written for"
-
-Scenario: multiple fandoms and author on a Single
-  Given Alan Rickman exists
-  When I am on the last page's page
-  Then I should see "Harry Potter, Die Hard, Robin Hood" within ".notes"
-    And I should see "by manicmea" within ".notes"
-    But I should NOT see "Rowling" within ".notes"
-    And I should NOT see "Movies" within ".notes"
-    And I should NOT see "Prince" within ".notes"
-    And I should NOT see "1991" within ".notes"
 
 Scenario: meta on second chapter of book
   Given "harry potter" is a "Fandom"

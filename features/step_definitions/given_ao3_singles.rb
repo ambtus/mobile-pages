@@ -37,12 +37,8 @@ Given(/^Skipping Stones exists$/) do
   create_first_single
 end
 
-Given(/^Alan Rickman exists$/) do
-  create_local_page 'alan', 'https://archiveofourown.org/works/5720104'
-end
-
 Given(/^Yer a Wizard exists$/) do
-  create_local_page 'yer', 'https://archiveofourown.org/works/35386909'
+  create_yer_a_wizard
 end
 
 Given(/^The Picture exists$/) do

@@ -53,3 +53,12 @@ end
 def create_fuuinjutsu
   create_local_page 'Fuuinjutsu', 'https://archiveofourown.org/works/36425557'
 end
+
+def create_open_book
+  chapter1 = create_local_page 'open1', 'https://archiveofourown.org/works/310586/chapters/497361'
+  chapter2 = create_local_page 'open2', 'https://archiveofourown.org/works/310586/chapters/757306'
+  book = local_page url: 'https://archiveofourown.org/works/310586'
+  book.add_chapter chapter1.url
+  book.add_chapter chapter2.url
+  book.rebuild_meta
+end

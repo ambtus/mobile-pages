@@ -3,6 +3,17 @@
 module PageTitles
   TEMP_TITLE = 'xyzzy'
 
+  def title_prefix
+    if parent
+      title.match(position.to_s) ? '' : "#{position}. "
+    else
+      ''
+    end
+  end
+
+  def parent_title_prefix = parent&.parent ? "#{parent.position}." : ''
+  def gparent_title_prefix = parent&.parent&.parent ? "#{parent.parent.position}." : ''
+
   def add_parent(string)
     normalized = string.normalize
     parent = nil
