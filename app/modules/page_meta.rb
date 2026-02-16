@@ -35,7 +35,10 @@ module PageMeta
   def doc
     if type == 'Book' && !wp?
       Rails.logger.debug 'getting doc from last part'
-      raise "why does my #{type} have no parts?" if parts.last.blank?
+      if parts.last.blank?
+        Rails.logger.info { "#{type} #{id} has no parts; something is seriously wrong" }
+        return ''
+      end
 
       Nokogiri::HTML(parts.last.raw_html)
     elsif type == 'Series' && (ao3? || first_part_ao3?)
@@ -315,6 +318,7 @@ module PageMeta
   def work_notes
     if wp? && type == 'Series'
       content = doc.at('.entry-content')
+      return '' if content.blank?
       content.children.each do |node|
         node.remove if node.name == 'div'
       end
