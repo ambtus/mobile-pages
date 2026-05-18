@@ -59,7 +59,7 @@ Scenario: pro selected during create is filterable
     And a page exists with title: "Page 3"
   When I am on the create single page
     And I select "abc123"
-    And I fill in "page_url" with "http://test.sidrasue.com/test.html"
+    And I fill in "page_url" with "http://localhost:8080/tests/test.html"
     And I store the page
     And I am on the filter page
     And I click on "show_pros_all"

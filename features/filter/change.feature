@@ -111,9 +111,9 @@ Scenario: change title and pro filter
 Scenario: change url and title
   Given the following pages
     | title                                  | url                                |
-    | A Christmas Carol by Charles Dickens   | http://test.sidrasue.com/cc.html   |
-    | The Call of the Wild by Jack London    | http://test.sidrasue.com/cotw.html |
-    | The Mysterious Affair at Styles        | http://test.sidrasue.com/maas.html |
+    | A Christmas Carol by Charles Dickens   | http://localhost:8080/tests/cc.html   |
+    | The Call of the Wild by Jack London    | http://localhost:8080/tests/cotw.html |
+    | The Mysterious Affair at Styles        | http://localhost:8080/tests/maas.html |
   When I am on the filter page
     And I fill in "page_url" with "test.sidrasue.com"
     And I fill in "page_title" with "by"

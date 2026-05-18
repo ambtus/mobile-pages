@@ -13,7 +13,7 @@ Scenario: epub download hidden page => stars tag strings are empty, but authors 
     And the download epub command should NOT include rating: "10"
 
 Scenario: epub parent of hidden part hides hidden part
-  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3" AND pros: "show me" AND authors: "my author" AND fandoms: "my fandom"
+  Given a page exists with base_url: "http://localhost:8080/tests/parts/*.html" AND url_substitutions: "1 2 3" AND pros: "show me" AND authors: "my author" AND fandoms: "my fandom"
   When I am on the page with title "Part 2"
     And I edit its tags
     And I fill in "tags" with "hide me"
@@ -26,7 +26,7 @@ Scenario: epub parent of hidden part hides hidden part
     And the download epub command should NOT include tags: "hide me"
 
 Scenario: epub download hidden part as standalone => other tag strings are empty, but author and fandom aren't
-  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3" AND pros: "show me" AND authors: "my author" AND fandoms: "my fandom"
+  Given a page exists with base_url: "http://localhost:8080/tests/parts/*.html" AND url_substitutions: "1 2 3" AND pros: "show me" AND authors: "my author" AND fandoms: "my fandom"
   When I am on the page with title "Part 2"
     And I edit its tags
     And I fill in "tags" with "hide me"

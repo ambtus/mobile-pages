@@ -109,7 +109,7 @@ RSpec.describe PageRaw, type: :module do
   end
 
   it 'removes javascript when fetched' do
-    page = Page.create(url: 'http://test.sidrasue.com/112b.html')
+    page = Page.create(url: 'http://localhost:8080/tests/112b.html')
     page.initial_fetch
 
     expect(Page.first.raw_html).not_to match 'email Vera'

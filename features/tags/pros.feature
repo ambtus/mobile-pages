@@ -17,7 +17,7 @@ Scenario: link to tag on show should find page on index
 
 Scenario: no tags exist during create
   Given I am on the mini page
-  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+  When I fill in "page_url" with "http://localhost:8080/tests/test.html"
     And I store the page
     And I edit its tags
     And I fill in "tags" with "abc123"
@@ -27,7 +27,7 @@ Scenario: no tags exist during create
 Scenario: no tags selected during create
   Given "abc123" is a "Pro"
   When I am on the mini page
-    And I fill in "page_url" with "http://test.sidrasue.com/test.html"
+    And I fill in "page_url" with "http://localhost:8080/tests/test.html"
     And I store the page
     And I edit its tags
     And I select "abc123" from "page_pro_ids_"
@@ -38,7 +38,7 @@ Scenario: pro selected during create
   Given "abc123" is a "Pro"
   When I am on the create single page
     And I select "abc123"
-    And I fill in "page_url" with "http://test.sidrasue.com/test.html"
+    And I fill in "page_url" with "http://localhost:8080/tests/test.html"
     And I fill in "page_title" with "New Title"
     And I store the page
   Then I should see "abc123" within ".pros"

@@ -18,19 +18,19 @@ Scenario: hr between all three
   Then I should see three horizontal rules
 
 Scenario: end notes go before by default
-  Given a page exists with end_notes: "Lorem ipsum dolor" AND url: "http://test.sidrasue.com/test.html"
+  Given a page exists with end_notes: "Lorem ipsum dolor" AND url: "http://localhost:8080/tests/test.html"
   When I read it online
   Then I should see "Lorem ipsum dolor" before "Retrieved from the web"
     And I should see a horizontal rule
 
 Scenario: end notes go after by choice
-  Given a page exists with end_notes: "Lorem ipsum dolor" AND url: "http://test.sidrasue.com/test.html" AND at_end: true
+  Given a page exists with end_notes: "Lorem ipsum dolor" AND url: "http://localhost:8080/tests/test.html" AND at_end: true
   When I read it online
   Then I should see "Retrieved from the web" before "Lorem ipsum dolor"
     And I should NOT see a horizontal rule
 
 Scenario: if they were before, and i toggle it, they should be after
-  Given a page exists with end_notes: "Lorem ipsum dolor" AND url: "http://test.sidrasue.com/test.html"
+  Given a page exists with end_notes: "Lorem ipsum dolor" AND url: "http://localhost:8080/tests/test.html"
   When I am on the first page's page
     And I press "Put end notes after"
     And I read it online
@@ -38,7 +38,7 @@ Scenario: if they were before, and i toggle it, they should be after
     And I should NOT see a horizontal rule
 
 Scenario: if they were after, and i toggle it, they should be before
-  Given a page exists with end_notes: "Lorem ipsum dolor" AND url: "http://test.sidrasue.com/test.html" AND at_end: true
+  Given a page exists with end_notes: "Lorem ipsum dolor" AND url: "http://localhost:8080/tests/test.html" AND at_end: true
   When I am on the first page's page
     And I press "Put end notes before"
     And I read it online

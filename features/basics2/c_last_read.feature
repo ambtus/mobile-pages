@@ -61,7 +61,7 @@ Scenario: add read part to earlier read parent (no other parts) changes last rea
     And I should see "2009-01-01" within "#position_1"
 
 Scenario: rating a part updates the part
-  Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND last_read: "2009-01-01" AND stars: "5"
+  Given a page exists with urls: "http://localhost:8080/tests/parts/1.html,http://localhost:8080/tests/parts/2.html" AND last_read: "2009-01-01" AND stars: "5"
   When I am on the first page's page
     And I follow "Part 1" within "#position_1"
     And I follow "Rate"
@@ -71,7 +71,7 @@ Scenario: rating a part updates the part
     And I should see "3 stars" within ".stars"
 
 Scenario: rating a part updates the parent and the part but not the sibling
-  Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND last_read: "2009-01-01" AND stars: "5"
+  Given a page exists with urls: "http://localhost:8080/tests/parts/1.html,http://localhost:8080/tests/parts/2.html" AND last_read: "2009-01-01" AND stars: "5"
   When I am on the first page's page
     And I follow "Part 1" within "#position_1"
     And I follow "Rate"
@@ -84,7 +84,7 @@ Scenario: rating a part updates the parent and the part but not the sibling
     And I should see "4 stars" within ".stars"
 
 Scenario: rating a part does not update the sibling
-  Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND last_read: "2009-01-01" AND stars: "5"
+  Given a page exists with urls: "http://localhost:8080/tests/parts/1.html,http://localhost:8080/tests/parts/2.html" AND last_read: "2009-01-01" AND stars: "5"
   When I am on the first page's page
     And I follow "Part 1" within "#position_1"
     And I follow "Rate"

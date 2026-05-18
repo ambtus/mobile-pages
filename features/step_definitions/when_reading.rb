@@ -53,3 +53,10 @@ Then('Leave Kudos or Comments on {string} should link to the last chapter commen
   last_page = Page.find_by(title: string).parts.last
   assert_equal "#{last_page.url}#comments", href
 end
+
+Then('Leave Kudos or Comments on {string} should link to the kudo url') do |string|
+  href = page.find('.kudos').find_link(string)['href']
+  Rails.logger.debug { "link: #{href}" }
+  last_page = Page.find_by(title: string)
+  assert_equal last_page.kudo_url, href
+end

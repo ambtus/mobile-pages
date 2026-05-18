@@ -45,7 +45,7 @@ Scenario: edit notes on a page with a note part 2
     But I should NOT see "some basic notes" within ".my_notes"
 
 Scenario: notes on multi-page view (self)
-  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
+  Given a page exists with base_url: "http://localhost:8080/tests/parts/*.html" AND url_substitutions: "1 2"
   When I am on the first page's page
     And I follow "Part 1"
     And I follow "My Notes"
@@ -55,7 +55,7 @@ Scenario: notes on multi-page view (self)
     And I should see "Part 1" within ".title"
 
 Scenario: notes on multi-page view (parent)
-  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
+  Given a page exists with base_url: "http://localhost:8080/tests/parts/*.html" AND url_substitutions: "1 2"
   When I am on the first page's page
     And I follow "Part 1"
     And I follow "My Notes"

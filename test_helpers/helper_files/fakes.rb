@@ -28,7 +28,7 @@ def fake_initial_fetch(page)
     Rails.logger.debug { "  for url #{page.url}" }
     if page.ao3?
       page.fetch_ao3(refetch: false)
-    elsif page.url.match?('sidrasue.com')
+    elsif page.url.match?('localhost')
       page.initial_fetch
     else
       page.set_meta

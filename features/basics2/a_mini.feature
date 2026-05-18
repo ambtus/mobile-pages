@@ -2,9 +2,9 @@ Feature: most basic actions from new (mini) page: Store, Refetch & Find
 
 Scenario: create a page from a single url
   Given I am on the mini page
-  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+  When I fill in "page_url" with "http://localhost:8080/tests/test.html"
     And I store the page
-  Then "Original" should link to "http://test.sidrasue.com/test.html"
+  Then "Original" should link to "http://localhost:8080/tests/test.html"
 
 Scenario: must at least have a url or title
   Given I am on the mini page
@@ -14,7 +14,7 @@ Scenario: must at least have a url or title
 
 Scenario: create a page from a single url content
   Given I am on the mini page
-    And I fill in "page_url" with "http://test.sidrasue.com/test.html"
+    And I fill in "page_url" with "http://localhost:8080/tests/test.html"
     And I store the page
   Then the contents should include "Retrieved from the web"
 
@@ -31,7 +31,7 @@ Scenario: refetch original html from homepage
 
 Scenario: refetch fails
   Given I am on the mini page
-  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+  When I fill in "page_url" with "http://localhost:8080/tests/test.html"
     And I press "Refetch"
   Then I should NOT see "Refetched"
     But I should see "Page not found. Find or Store instead." within "#flash_alert"
@@ -39,14 +39,14 @@ Scenario: refetch fails
 
 Scenario: if refetch fails, can press store
   Given I am on the mini page
-  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+  When I fill in "page_url" with "http://localhost:8080/tests/test.html"
     And I press "Refetch"
     And I store the page
   Then I should have 1 page
 
 Scenario: if refetch fails, can press find
   Given I am on the mini page
-  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+  When I fill in "page_url" with "http://localhost:8080/tests/test.html"
     And I press "Refetch"
     And I press "Find"
   Then I should see "Page not found"
@@ -62,7 +62,7 @@ Scenario: find page by title
 Scenario: find page by url
   Given a test page exists
   When I am on the mini page
-    And I fill in "page_url" with "http://test.sidrasue.com/short.html"
+    And I fill in "page_url" with "http://localhost:8080/tests/short.html"
     And I press "Find"
   Then I should see "Page found"
     And I should see "Test (Single)"

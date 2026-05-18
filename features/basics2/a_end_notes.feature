@@ -16,14 +16,14 @@ Scenario: a shorter end note won’t be truncated
   Then I should see "On Assignment for Dumbledore, Harry sees his lover from a new perspective." within ".end_notes"
 
 Scenario: end notes on multi-page view (self)
-  Given a page exists with url: "http://test.sidrasue.com/parts/1.html" AND end_notes: "This is a note"
-    And a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
+  Given a page exists with url: "http://localhost:8080/tests/parts/1.html" AND end_notes: "This is a note"
+    And a page exists with base_url: "http://localhost:8080/tests/parts/*.html" AND url_substitutions: "1 2"
   When I am on the first page's page
   Then I should see "This is a note" within ".end_notes"
 
 Scenario: notes on multi-page view (parent)
-  Given a page exists with url: "http://test.sidrasue.com/parts/1.html" AND end_notes: "This is an end note"
-    And a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2" AND title: "Parent"
+  Given a page exists with url: "http://localhost:8080/tests/parts/1.html" AND end_notes: "This is an end note"
+    And a page exists with base_url: "http://localhost:8080/tests/parts/*.html" AND url_substitutions: "1 2" AND title: "Parent"
   When I am on the first page's page
     And I follow "Parent"
   Then I should see "This is an end note" within "#position_1"

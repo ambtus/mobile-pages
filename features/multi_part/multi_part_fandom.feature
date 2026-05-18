@@ -4,8 +4,8 @@ Scenario: add parts with different fandoms
   Given the following pages
     | title  | url                                 | fandoms | type | authors |
     | Parent |                                     |     | Series | |
-    | Child1 | http://test.sidrasue.com/long1.html | one | Single | First |
-    | Child2 | http://test.sidrasue.com/long2.html | two | Single | Second |
+    | Child1 | http://localhost:8080/tests/long1.html | one | Single | First |
+    | Child2 | http://localhost:8080/tests/long2.html | two | Single | Second |
   When I am on the page with title "Child1"
     And I add a parent with title "Parent"
     And I am on the page with title "Child2"
@@ -28,8 +28,8 @@ Scenario: find a part by fandom or authors
   Given the following pages
     | title  | url                                 | fandoms | type | authors |
     | Parent |                                     |     | Series | |
-    | Child1 | http://test.sidrasue.com/long1.html | one | Single | First |
-    | Child2 | http://test.sidrasue.com/long2.html | two | Single | Second |
+    | Child1 | http://localhost:8080/tests/long1.html | one | Single | First |
+    | Child2 | http://localhost:8080/tests/long2.html | two | Single | Second |
     And I am on the page with title "Child1"
     And I add a parent with title "Parent"
     And I am on the page with title "Child2"

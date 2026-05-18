@@ -26,11 +26,11 @@ Given(/^the following pages?$/) do |table|
 end
 
 Given('a test page exists') do
-  Single.create(title: 'Test', url: 'http://test.sidrasue.com/short.html')
+  Single.create(title: 'Test', url: 'http://localhost:8080/tests/short.html')
 end
 
 Given('system down exists') do
-  page = Page.create!(url: 'http://test.sidrasue.com/test.html', title: 'Test')
+  page = Page.create!(url: 'http://localhost:8080/tests/test.html', title: 'Test')
   page.raw_html = 'system down'
 end
 
@@ -77,12 +77,12 @@ end
 Given('a series exists') do
   series = Series.create!(title: 'Series')
   book1 = Book.create!(title: 'Book1', parent_id: series.id, position: 1)
-  Chapter.create!(title: 'Prologue', parent_id: book1.id, position: 1, url: 'http://test.sidrasue.com/parts/1.html')
-  Chapter.create!(title: 'Cliffhanger', parent_id: book1.id, position: 2, url: 'http://test.sidrasue.com/parts/2.html')
+  Chapter.create!(title: 'Prologue', parent_id: book1.id, position: 1, url: 'http://localhost:8080/tests/parts/1.html')
+  Chapter.create!(title: 'Cliffhanger', parent_id: book1.id, position: 2, url: 'http://localhost:8080/tests/parts/2.html')
   book2 = Book.create!(title: 'Another Book', parent_id: series.id, position: 2)
-  Chapter.create!(title: 'Season2', parent_id: book2.id, position: 1, url: 'http://test.sidrasue.com/parts/3.html')
-  Chapter.create!(title: 'Epilogue', parent_id: book2.id, position: 2, url: 'http://test.sidrasue.com/parts/4.html')
-  Single.create!(title: 'Extras', parent_id: series.id, position: 3, url: 'http://test.sidrasue.com/parts/5.html')
+  Chapter.create!(title: 'Season2', parent_id: book2.id, position: 1, url: 'http://localhost:8080/tests/parts/3.html')
+  Chapter.create!(title: 'Epilogue', parent_id: book2.id, position: 2, url: 'http://localhost:8080/tests/parts/4.html')
+  Single.create!(title: 'Extras', parent_id: series.id, position: 3, url: 'http://localhost:8080/tests/parts/5.html')
 end
 
 Given('I have a series with read_after {string}') do |string|
@@ -124,7 +124,7 @@ Given('a work exists with chapter end_notes') do
   book = Book.create(title: 'Book')
   ch1 = Chapter.create(title: 'ch1', parent_id: book.id, position: 1, end_notes: 'chapter 1 end notes')
   ch1.raw_html = '<head><title>Test</title></head><body><p>Retrieved from the web 1</p></body>'
-  ch2 = Chapter.create(title: 'ch2', parent_id: book.id, position: 2, end_notes: 'chapter 2 end notes', url: 'http://test.sidrasue.com/test2.html')
+  ch2 = Chapter.create(title: 'ch2', parent_id: book.id, position: 2, end_notes: 'chapter 2 end notes', url: 'http://localhost:8080/tests/test2.html')
   ch2.raw_html = '<head><title>Test</title></head><body><p>Retrieved from the web 2</p></body>'
   book.update_from_parts
 end
@@ -146,7 +146,7 @@ Given('a work exists with chapter and work notes') do
   ch1 = Chapter.create(title: 'ch1', parent_id: book.id, position: 1, notes: 'ch1 notes')
   ch1.raw_html = '<head><title>Test</title></head><body><p>Retrieved from the web 1</p></body>'
 
-  ch2 = Chapter.create(title: 'ch2', parent_id: book.id, position: 2, notes: 'ch2 notes', url: 'http://test.sidrasue.com/test2.html')
+  ch2 = Chapter.create(title: 'ch2', parent_id: book.id, position: 2, notes: 'ch2 notes', url: 'http://localhost:8080/tests/test2.html')
   ch2.raw_html = '<head><title>Test</title></head><body><p>Retrieved from the web 2</p></body>'
 
   book.update_from_parts
@@ -167,8 +167,8 @@ Given('three singles exist') do
 end
 
 Given('I have Books with titles {string} and {string}') do |title1, title2|
-  create_from_hash(title: title1, base_url: 'http://test.sidrasue.com/parts/*.html', url_substitutions: '1-2')
-  create_from_hash(title: title2, base_url: 'http://test.sidrasue.com/parts/*.html', url_substitutions: '4-6')
+  create_from_hash(title: title1, base_url: 'http://localhost:8080/tests/parts/*.html', url_substitutions: '1-2')
+  create_from_hash(title: title2, base_url: 'http://localhost:8080/tests/parts/*.html', url_substitutions: '4-6')
 end
 
 Given('a partially read book exists') do
@@ -370,12 +370,12 @@ Given('three re-entry works exist') do
 end
 
 Given('pages with all possible types exist') do
-  Single.create(title: 'One-shot', url: 'http://test.sidrasue.com/short.html')
-  create_from_hash(title: 'Novel', base_url: 'http://test.sidrasue.com/long*.html', url_substitutions: '1-2')
+  Single.create(title: 'One-shot', url: 'http://localhost:8080/tests/short.html')
+  create_from_hash(title: 'Novel', base_url: 'http://localhost:8080/tests/long*.html', url_substitutions: '1-2')
   series = Series.create!(title: 'Trilogy')
-  book1 = create_from_hash(title: 'Alpha', parent_id: series.id, position: 1, urls: 'http://test.sidrasue.com/parts/1.html')
+  book1 = create_from_hash(title: 'Alpha', parent_id: series.id, position: 1, urls: 'http://localhost:8080/tests/parts/1.html')
   book1.parts.first.update(title: 'Prologue')
-  book2 = create_from_hash(title: 'Beta', parent_id: series.id, position: 2, urls: 'http://test.sidrasue.com/parts/5.html')
+  book2 = create_from_hash(title: 'Beta', parent_id: series.id, position: 2, urls: 'http://localhost:8080/tests/parts/5.html')
   book2.parts.last.update(title: 'Epilogue')
 
   # it's a bug, but it's happened before

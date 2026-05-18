@@ -27,14 +27,14 @@ Scenario: strip fandom whitespace and sort
 
 Scenario: no tags exist during create
   Given I am on the mini page
-  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+  When I fill in "page_url" with "http://localhost:8080/tests/test.html"
     And I store the page
   Then I should have 0 pages with and 1 without fandoms
 
 Scenario: no tags selected during create
   Given "first" is a "Fandom"
     And I am on the mini page
-  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+  When I fill in "page_url" with "http://localhost:8080/tests/test.html"
     And I store the page
   Then I should have 0 pages with and 1 without fandoms
     And I should NOT see "first" within ".fandoms"
@@ -45,7 +45,7 @@ Scenario: fandom and author tag selected during create
     And I am on the create single page
     And I select "first"
     And I select "second"
-  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+  When I fill in "page_url" with "http://localhost:8080/tests/test.html"
     And I store the page
   Then I should see "Page created."
     And I should have 1 page with and 0 without fandoms
@@ -58,7 +58,7 @@ Scenario: fandom only selected during create
     And "something" is a "Pro"
     And I am on the create single page
     And I select "nonfiction"
-  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+  When I fill in "page_url" with "http://localhost:8080/tests/test.html"
     And I store the page
   Then I should have 1 pages with and 0 without fandoms
     And I should have 0 pages with and 1 without authors

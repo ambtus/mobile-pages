@@ -8,7 +8,7 @@ Scenario: title error notice
     And I should see "Url is invalid" within "#flash_alert"
 
 Scenario: change title works
-  Given a page exists with url: "http://test.sidrasue.com/test.html"
+  Given a page exists with url: "http://localhost:8080/tests/test.html"
   When I am on the first page's page
     And I follow "Title"
     And I fill in "title" with "New Title"

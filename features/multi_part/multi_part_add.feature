@@ -1,7 +1,7 @@
 Feature: add parts to parents and parents to parts
 
 Scenario: create a new parent for an existing page
-  Given a page exists with url: "http://test.sidrasue.com/test.html"
+  Given a page exists with url: "http://localhost:8080/tests/test.html"
   When I am on the first page's page
     And I add a parent with title "Parent"
   Then I should see "Parent (Book)" within ".title"
@@ -39,7 +39,7 @@ Scenario: can choose ambiguous parent
     And I should see "Single" within "#position_1"
 
 Scenario: can't add a part to a page with content
-  Given a page exists with title: "Styled" AND url: "http://test.sidrasue.com/styled.html"
+  Given a page exists with title: "Styled" AND url: "http://localhost:8080/tests/styled.html"
     And a page exists with title: "Single"
   When I am on the page with title "Single"
     And I add a parent with title "Styled"
@@ -47,7 +47,7 @@ Scenario: can't add a part to a page with content
     And I should NOT see "Styled" within ".title"
 
 Scenario: can only add to pages without content
-  Given a page exists with title: "Styled1" AND url: "http://test.sidrasue.com/styled.html"
+  Given a page exists with title: "Styled1" AND url: "http://localhost:8080/tests/styled.html"
     And a page exists with title: "Styled2" AND type: 'Series'
     And a page exists with title: "Single"
     And I am on the page with title "Single"
@@ -55,7 +55,7 @@ Scenario: can only add to pages without content
   Then I should see "Styled2 (Series)" within ".title"
 
 Scenario: can only choose between pages without content
-  Given a page exists with title: "Styled1" AND url: "http://test.sidrasue.com/styled.html"
+  Given a page exists with title: "Styled1" AND url: "http://localhost:8080/tests/styled.html"
     And a page exists with title: "Styled2" AND type: 'Book'
     And a page exists with title: "Styled3" AND type: 'Series'
     And a page exists with title: "Single"
@@ -66,15 +66,15 @@ Scenario: can only choose between pages without content
     But I should NOT see "Styled1"
 
 Scenario: can't add yourself to your parts
-  Given a page exists with url: "http://test.sidrasue.com/test.html"
+  Given a page exists with url: "http://localhost:8080/tests/test.html"
   When I am on the first page's page
     And I follow "Refetch"
   Then the page should NOT contain css "#url_list"
     But the page should contain css "#url"
 
 Scenario: add an existing page to an existing page with parts
-  Given a page exists with title: "Single" AND url: "http://test.sidrasue.com/parts/3.html"
-    And a page exists with title: "Multi" AND base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
+  Given a page exists with title: "Single" AND url: "http://localhost:8080/tests/parts/3.html"
+    And a page exists with title: "Multi" AND base_url: "http://localhost:8080/tests/parts/*.html" AND url_substitutions: "1 2"
   When I am on the pages page
     And I follow "Single"
     And I add a parent with title "Multi"
@@ -85,13 +85,13 @@ Scenario: add an existing page to an existing page with parts
     And I should see "3. Single" within "#position_3"
 
 Scenario: add a part shows a guess for part's url
-  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-2"
+  Given a page exists with base_url: "http://localhost:8080/tests/parts/*.html" AND url_substitutions: "1-2"
   When I am on the first page's page
     And I follow "Add Part"
-  Then the "add_url" field should contain "http://test.sidrasue.com/parts/3.html"
+  Then the "add_url" field should contain "http://localhost:8080/tests/parts/3.html"
 
 Scenario: add a single part to an existing parent
-  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-2"
+  Given a page exists with base_url: "http://localhost:8080/tests/parts/*.html" AND url_substitutions: "1-2"
   When I am on the first page's page
     And I follow "Add Part"
     And I press "Add"
@@ -103,13 +103,13 @@ Scenario: add a single part to an existing parent
     And the contents should include "stuff for part 3"
 
 Scenario: add two new parts via manage parts
-  Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
+  Given a page exists with urls: "http://localhost:8080/tests/parts/1.html"
   When I am on the first page's page
     And I refetch the following
       """
-      http://test.sidrasue.com/parts/1.html
-      http://test.sidrasue.com/parts/2.html
-      http://test.sidrasue.com/parts/3.html
+      http://localhost:8080/tests/parts/1.html
+      http://localhost:8080/tests/parts/2.html
+      http://localhost:8080/tests/parts/3.html
       """
   Then I should see "Page 1 (Book)"
     And I should see "(3 parts)" within ".size"
@@ -117,21 +117,21 @@ Scenario: add two new parts via manage parts
     And I should see "Part 3" within "#position_3"
 
 Scenario: add two new parts via refetch
-  Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
+  Given a page exists with urls: "http://localhost:8080/tests/parts/1.html"
   When I am on the first page's page
     And I refetch the following
       """
-      http://test.sidrasue.com/parts/1.html
-      http://test.sidrasue.com/parts/2.html
-      http://test.sidrasue.com/parts/3.html
+      http://localhost:8080/tests/parts/1.html
+      http://localhost:8080/tests/parts/2.html
+      http://localhost:8080/tests/parts/3.html
       """
   Then I should see "Refetched" within "#flash_notice"
     And the contents should include "stuff for part 2"
     And the contents should include "stuff for part 3"
 
 Scenario: add a parent doesn't match the parent's read_after
-  Given a page exists with title: "Page 1" AND url: "http://test.sidrasue.com/parts/1.html" AND read_after: "2050-01-01"
-    And a page exists with title: "Page 2" AND url: "http://test.sidrasue.com/parts/2.html" AND read_after: "2050-01-02"
+  Given a page exists with title: "Page 1" AND url: "http://localhost:8080/tests/parts/1.html" AND read_after: "2050-01-01"
+    And a page exists with title: "Page 2" AND url: "http://localhost:8080/tests/parts/2.html" AND read_after: "2050-01-02"
   When I am on the page with title "Page 2"
     And I add a parent with title "New Parent"
   Then the read after date for "Page 1" should be "2050-01-01"
@@ -139,12 +139,12 @@ Scenario: add a parent doesn't match the parent's read_after
     But the read after date for "New Parent" should be today
 
 Scenario: add a part doesn't match the parent's read_after
-  Given a page exists with urls: "http://test.sidrasue.com/parts/1.html" AND read_after: "2050-01-01"
+  Given a page exists with urls: "http://localhost:8080/tests/parts/1.html" AND read_after: "2050-01-01"
   When I am on the page with title "Page 1"
     And I refetch the following
       """
-      http://test.sidrasue.com/parts/1.html
-      http://test.sidrasue.com/parts/2.html
+      http://localhost:8080/tests/parts/1.html
+      http://localhost:8080/tests/parts/2.html
       """
   Then the read after date for "Page 1" should be today
     And the read after date for "Part 1" should be "2050-01-01"

@@ -13,19 +13,28 @@ Scenario: no tags
 
 Scenario: fandom tags
   Given a page exists with fandoms: "bad"
-    And a page exists with fandoms: "good"
     And a page exists with fandoms: "great"
+    And a page exists with fandoms: "good"
     And a page exists with fandoms: "good"
     And a page exists with fandoms: "great"
     And a page exists with fandoms: "great"
   When I am on the tags page
-    And I follow "3 Fandoms"
+    And I follow "fandom by popularity"
   Then I should see "great" before "good"
     And I should see "good" before "bad"
   When I follow "more info about great"
     Then I should see "3 pages"
     And I should see "3 unread pages"
     And I should see "0 favorite"
+  When I am on the tags page
+    And I follow "3 Fandoms"
+  Then I should see "bad" before "good"
+    And I should see "good" before "great"
+  When I am on the tags page
+    And I follow "fandom by creation"
+  Then I should see "bad" before "great"
+    And I should see "great" before "good"
+
 
 Scenario: info tags
   Given a page exists with infos: "bad"
@@ -35,10 +44,11 @@ Scenario: info tags
     And a page exists with infos: "great"
     And a page exists with infos: "great"
   When I am on the tags page
-    And I follow "3 Infos"
+    And I follow "info by popularity"
   Then I should see "great" before "good"
     And I should see "good" before "bad"
   When I follow "more info about great"
     Then I should see "3 pages"
     And I should see "3 unread pages"
     And I should see "0 favorite"
+

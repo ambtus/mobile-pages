@@ -1,11 +1,11 @@
 Feature: rating parts of a parent
 
 Scenario: check before rate part
-  Given a page exists with title: "Parent" AND base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-2"
+  Given a page exists with title: "Parent" AND base_url: "http://localhost:8080/tests/parts/*.html" AND url_substitutions: "1-2"
   Then the read after date should be 0 years from now
 
 Scenario: rate one part leaves parent read after unchanged
-  Given a page exists with title: "Parent" AND base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-2"
+  Given a page exists with title: "Parent" AND base_url: "http://localhost:8080/tests/parts/*.html" AND url_substitutions: "1-2"
   When I am on the pages page
     And I follow "Parent"
     And I follow "Part 1"
@@ -15,7 +15,7 @@ Scenario: rate one part leaves parent read after unchanged
   Then the read after date should be 0 years from now
 
 Scenario: rate both parts changes parent read after date based on average stars
-  Given a page exists with title: "Parent" AND base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1-2"
+  Given a page exists with title: "Parent" AND base_url: "http://localhost:8080/tests/parts/*.html" AND url_substitutions: "1-2"
   When I am on the pages page
     And I follow "Parent"
     And I follow "Part 1"
@@ -30,12 +30,12 @@ Scenario: rate both parts changes parent read after date based on average stars
   Then the read after date should be 2 years from now
 
 Scenario: rating a single unread child sets parent AND grandparent to read
-  Given a page exists with title: "Parent" AND urls: "http://test.sidrasue.com/parts/1.html" AND last_read: "2009-01-01"
+  Given a page exists with title: "Parent" AND urls: "http://localhost:8080/tests/parts/1.html" AND last_read: "2009-01-01"
   When I am on the page with title "Parent"
     And I add a parent with title "Grandparent"
     And I am on the page with title "Parent"
     And I follow "Add Part"
-    And I fill in "add_url" with "http://test.sidrasue.com/parts/2.html"
+    And I fill in "add_url" with "http://localhost:8080/tests/parts/2.html"
     And I press "Add"
     And I am on the page with title "Part 2"
     And I follow "Rate"

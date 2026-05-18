@@ -1,7 +1,7 @@
 Feature: multi-part pages
 
 Scenario: children should NOT show up on front page by themselves
-  Given a page exists with title: "Parent" AND urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html"
+  Given a page exists with title: "Parent" AND urls: "http://localhost:8080/tests/parts/1.html,http://localhost:8080/tests/parts/2.html"
   When I am on the pages page
   Then I should see "Parent" within "#position_1"
     But I should NOT see "Part 1"
@@ -17,8 +17,8 @@ Scenario: create from a list of urls
   When I am on the create multiple page
     And I fill in "page_urls" with
       """
-      http://test.sidrasue.com/parts/1.html
-      http://test.sidrasue.com/parts/2.html
+      http://localhost:8080/tests/parts/1.html
+      http://localhost:8080/tests/parts/2.html
       """
    And I fill in "page_title" with "Multiple pages from urls"
    And I store the page
@@ -34,8 +34,8 @@ Scenario: create a page from a list of urls with author and tags and notes
   When I am on the create multiple page
     And I fill in "page_urls" with
       """
-      http://test.sidrasue.com/parts/1.html
-      http://test.sidrasue.com/parts/2.html
+      http://localhost:8080/tests/parts/1.html
+      http://localhost:8080/tests/parts/2.html
       """
     And I fill in "page_title" with "Multiple pages from urls"
     And I fill in "page_notes" with "some notes"
@@ -54,9 +54,9 @@ Scenario: create from a list of urls some of which have titles
   Given I am on the create multiple page
   When I fill in "page_urls" with
       """
-      http://test.sidrasue.com/parts/1.html
+      http://localhost:8080/tests/parts/1.html
 
-      http://test.sidrasue.com/parts/2.html##part title
+      http://localhost:8080/tests/parts/2.html##part title
       """
     And I fill in "page_title" with "my title"
     And I store the page
@@ -67,7 +67,7 @@ Scenario: create from a list of urls some of which have titles
 
 Scenario: create from base url plus range
   Given I am on the create multiple page
-    And I fill in "page_base_url" with "http://test.sidrasue.com/parts/*.html"
+    And I fill in "page_base_url" with "http://localhost:8080/tests/parts/*.html"
     And I fill in "page_url_substitutions" with "1-3"
     And I fill in "page_title" with "Multiple pages from base"
     And I store the page
@@ -81,7 +81,7 @@ Scenario: create from base url plus range
 
 Scenario: create from base url plus substitutions
   Given I am on the create multiple page
-    And I fill in "page_base_url" with "http://test.sidrasue.com/parts/*.html"
+    And I fill in "page_base_url" with "http://localhost:8080/tests/parts/*.html"
     And I fill in "page_url_substitutions" with "1 3"
     And I fill in "page_title" with "Multiple pages from base"
     And I store the page
@@ -100,7 +100,7 @@ Scenario: ignore empty lines in list or urls during create
 
       ##Child 1
 
-      http://test.sidrasue.com/parts/3.html##Child 2
+      http://localhost:8080/tests/parts/3.html##Child 2
 
       """
    And I fill in "page_title" with "Parent"

@@ -43,13 +43,13 @@ Scenario: No matching title
 
 Scenario: check before case insensitive title search
   Given 5 pages exist
-    And a page exists with title: "The Blue Book" AND url: "http://test.sidrasue.com/test.html"
+    And a page exists with title: "The Blue Book" AND url: "http://localhost:8080/tests/test.html"
   When I am on the pages page
     Then I should NOT see "The Blue Book"
 
 Scenario: case insensitive title search
   Given 5 pages exist
-    And a page exists with title: "The Blue Book" AND url: "http://test.sidrasue.com/test.html"
+    And a page exists with title: "The Blue Book" AND url: "http://localhost:8080/tests/test.html"
   When I am on the filter page
     And I fill in "page_title" with "blue book"
     And I press "Find"

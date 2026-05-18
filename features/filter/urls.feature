@@ -3,9 +3,9 @@ Feature: filter/find by url
 Scenario: multiple urls match
   Given the following pages
     | title                                  | url                                |
-    | A Christmas Carol by Charles Dickens   | http://test.sidrasue.com/cc.html   |
-    | The Call of the Wild by Jack London    | http://test.sidrasue.com/cotw.html |
-    | The Mysterious Affair at Styles        | http://test.sidrasue.com/maas.html |
+    | A Christmas Carol by Charles Dickens   | http://localhost:8080/tests/cc.html   |
+    | The Call of the Wild by Jack London    | http://localhost:8080/tests/cotw.html |
+    | The Mysterious Affair at Styles        | http://localhost:8080/tests/maas.html |
   When I am on the filter page
     And I fill in "page_url" with "test.sidrasue.com"
     And I press "Find"
@@ -14,15 +14,15 @@ Scenario: multiple urls match
     And I should see "The Mysterious Affair at Styles" within "#position_3"
 
 Scenario: one page found
-  Given a page exists with title: "The Mysterious Affair at Styles" AND url: "http://test.sidrasue.com/maas.html"
+  Given a page exists with title: "The Mysterious Affair at Styles" AND url: "http://localhost:8080/tests/maas.html"
   When I am on the filter page
-    And I fill in "page_url" with "http://test.sidrasue.com/maas.html"
+    And I fill in "page_url" with "http://localhost:8080/tests/maas.html"
     And I press "Find"
   Then I should see "Page found" within "#flash_notice"
     And I should see "The Mysterious Affair at Styles (Single)" within ".title"
 
 Scenario: fill in url with title
-  Given a page exists with title: "The Mysterious Affair at Styles" AND url: "http://test.sidrasue.com/maas.html"
+  Given a page exists with title: "The Mysterious Affair at Styles" AND url: "http://localhost:8080/tests/maas.html"
   When I am on the filter page
     And I fill in "page_url" with "Affair"
     And I press "Find"
@@ -30,7 +30,7 @@ Scenario: fill in url with title
     And I should see "The Mysterious Affair at Styles (Single)" within ".title"
 
 Scenario: fill in url with lowercase title
-  Given a page exists with title: "The Mysterious Affair at Styles" AND url: "http://test.sidrasue.com/maas.html"
+  Given a page exists with title: "The Mysterious Affair at Styles" AND url: "http://localhost:8080/tests/maas.html"
   When I am on the filter page
     And I fill in "page_url" with "affair"
     And I press "Find"
@@ -38,9 +38,9 @@ Scenario: fill in url with lowercase title
     And I should see "The Mysterious Affair at Styles (Single)" within ".title"
 
 Scenario: one part found
-  Given a page exists with base_url: "http://test.sidrasue.com/*.html" AND url_substitutions: "cc cotw maas"
+  Given a page exists with base_url: "http://localhost:8080/tests/*.html" AND url_substitutions: "cc cotw maas"
   When I am on the filter page
-    And I fill in "page_url" with "http://test.sidrasue.com/maas.html"
+    And I fill in "page_url" with "http://localhost:8080/tests/maas.html"
     And I press "Find"
   Then I should see "Page found" within "#flash_notice"
     And I should see "Part 3 (Chapter)" within ".title"

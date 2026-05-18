@@ -1,7 +1,7 @@
 Feature: audiobook
 
 Scenario: audiobook sections
-  Given a page exists with url: "http://test.sidrasue.com/long.html"
+  Given a page exists with url: "http://localhost:8080/tests/long.html"
   When I view the text for reading aloud
   Then I should see "Lorem ipsum dolor"
     And I should see "SLOW DOWN"
@@ -12,8 +12,8 @@ Scenario: part sections
   Given I am on the create multiple page
     And I fill in "page_urls" with
       """
-      http://test.sidrasue.com/parts/1.html
-      http://test.sidrasue.com/parts/2.html
+      http://localhost:8080/tests/parts/1.html
+      http://localhost:8080/tests/parts/2.html
       """
     And I fill in "page_title" with "Multiple pages from urls"
     And I store the page

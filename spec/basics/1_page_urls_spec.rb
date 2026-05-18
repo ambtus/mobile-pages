@@ -31,9 +31,9 @@ RSpec.describe PageUrls, type: :module do
 
   describe 'it normalizes the url' do
     it 'removes whitespace' do
-      Page.create!(url: ' http://test.sidrasue.com/test.html ')
+      Page.create!(url: ' http://localhost:8080/tests/test.html ')
 
-      expect(Page.first.url).to eq 'http://test.sidrasue.com/test.html'
+      expect(Page.first.url).to eq 'http://localhost:8080/tests/test.html'
     end
 
     it 'removes #workskin' do

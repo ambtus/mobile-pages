@@ -62,7 +62,7 @@ Scenario: drabble and has a tag
     But the download epub command should NOT include comments: "unread"
 
 Scenario: medium and has been read
-  Given a page exists with last_read: "2014-01-01" AND url: "http://test.sidrasue.com/long.html" AND stars: "5"
+  Given a page exists with last_read: "2014-01-01" AND url: "http://localhost:8080/tests/long.html" AND stars: "5"
   Then the download epub command should include tags: "medium"
     But the download epub command should NOT include tags: "unread"
     And the download epub command should NOT include tags: "2014"
@@ -71,7 +71,7 @@ Scenario: medium and has been read
     And the download epub command should include rating: "10"
 
 Scenario: long
-  Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3"
+  Given a page exists with base_url: "http://localhost:8080/tests/long*.html" AND url_substitutions: "1 2 3"
   Then the download epub command should include tags: "long"
     And the download epub command should include comments: "30,003 words"
 

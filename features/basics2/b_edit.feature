@@ -4,21 +4,21 @@ Feature: tools to enable onscreen content editing
          but major editing should be done by editing the scrubbed html in an editor
 
 Scenario: should be able to edit html if it's a Single
-  Given a page exists with url: "http://test.sidrasue.com/test.html"
+  Given a page exists with url: "http://localhost:8080/tests/test.html"
   When I am on the first page's page
   Then I should see "Page 1 (Single)"
     And I should see "Edit Raw HTML"
     And I should see "Edit Scrubbed HTML"
 
 Scenario: should be able to edit html if it's a Chapter
-  Given a page exists with urls: "http://test.sidrasue.com/test.html"
+  Given a page exists with urls: "http://localhost:8080/tests/test.html"
   When I am on the page with title "Part 1"
   Then I should see "Page 1 (Book)" within ".parent"
     And I should see "Edit Raw HTML"
     And I should see "Edit Scrubbed HTML"
 
 Scenario: should NOT be able to edit html if it's a Book
-  Given a page exists with urls: "http://test.sidrasue.com/test.html"
+  Given a page exists with urls: "http://localhost:8080/tests/test.html"
   When I am on the first page's page
   Then I should see "Page 1 (Book)" within ".title"
     And I should NOT see "Edit Raw HTML"

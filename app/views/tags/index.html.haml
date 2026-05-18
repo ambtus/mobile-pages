@@ -3,4 +3,6 @@
   %p
     =link_to "#{count} #{type.pluralize(count)}", type.downcase.pluralize
     %br
-    =link_to "by popularity", type.downcase.pluralize+"?sort=by_popularity"
+    =link_to "#{type.downcase} by popularity", type.downcase.pluralize+"?sort=by_popularity"
+    %br
+    =link_to "#{type.downcase} by creation", type.downcase.pluralize+"?sort=by_creation"

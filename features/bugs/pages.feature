@@ -1,7 +1,7 @@
 Feature: page bugs
 
 Scenario: test before parent shows tags
-  Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND authors: "Sidra" AND fandoms: "Harry Potter" AND cons: "def987"
+  Given a page exists with urls: "http://localhost:8080/tests/parts/1.html,http://localhost:8080/tests/parts/2.html" AND authors: "Sidra" AND fandoms: "Harry Potter" AND cons: "def987"
   When I am on the first page's page
   Then I should see "Sidra"
     And I should see "Harry Potter"
@@ -9,7 +9,7 @@ Scenario: test before parent shows tags
     And I should see "2 parts"
 
 Scenario: parent shows tags
-  Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND authors: "Sidra" AND fandoms: "Harry Potter" AND cons: "def987"
+  Given a page exists with urls: "http://localhost:8080/tests/parts/1.html,http://localhost:8080/tests/parts/2.html" AND authors: "Sidra" AND fandoms: "Harry Potter" AND cons: "def987"
   When I am on the first page's page
     And I add a parent with title "New Parent"
     And I am on the page with title "New Parent"
@@ -19,7 +19,7 @@ Scenario: parent shows tags
     And I should see "1 part"
 
 Scenario: parent doesn't own tags
-  Given a page exists with urls: "http://test.sidrasue.com/parts/1.html,http://test.sidrasue.com/parts/2.html" AND authors: "Sidra" AND fandoms: "Harry Potter" AND cons: "def987"
+  Given a page exists with urls: "http://localhost:8080/tests/parts/1.html,http://localhost:8080/tests/parts/2.html" AND authors: "Sidra" AND fandoms: "Harry Potter" AND cons: "def987"
   When I am on the first page's page
     And I add a parent with title "New Parent"
     And I am on the page with title "New Parent"
@@ -29,7 +29,7 @@ Scenario: parent doesn't own tags
   But the tags for "New Parent" should NOT include fandom and author
 
 Scenario: missing raw html directory
-  Given a page exists with url: "http://test.sidrasue.com/test.html"
+  Given a page exists with url: "http://localhost:8080/tests/test.html"
     And the page's directory is missing
   When I am on the first page's page
   Then I should NOT get a 404

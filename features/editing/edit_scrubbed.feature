@@ -1,7 +1,7 @@
 Feature: trim cruft off pages
 
 Scenario: remove bottom when one automatically removed surrounding div
-  Given a page exists with url: "http://test.sidrasue.com/divs.html"
+  Given a page exists with url: "http://localhost:8080/tests/divs.html"
   When I am on the first page's page
     And I follow "Scrub"
     And I click on "3rd" within ".bottom"
@@ -11,7 +11,7 @@ Scenario: remove bottom when one automatically removed surrounding div
     But the contents should NOT include "3rd"
 
 Scenario: remove top when one automatically removed surrounding blockquote
-  Given a page exists with url: "http://test.sidrasue.com/blockquote.html"
+  Given a page exists with url: "http://localhost:8080/tests/blockquote.html"
   When I am on the first page's page
     And I follow "Scrub"
     And I click on "1st" within ".top"
@@ -33,17 +33,17 @@ Scenario Outline: strip beginning and end
 
 Examples:
 | url                                        | wanted       | unwanted1       | unwanted2   |
-| http://test.sidrasue.com/p.html            | content      | top para        | bottom para |
-| http://test.sidrasue.com/table.html        | content      | top para        | Row_1_Cell_1|
-| http://test.sidrasue.com/br.html           | all on       | top line        | bottom line |
-| http://test.sidrasue.com/entities.html     | As the stags | Content Removed | All fiction |
-| http://test.sidrasue.com/img.html          | content      | top para        | bottom par  |
-| http://test.sidrasue.com/tablecontent.html | I remembered | Jump            | Content removed    |
-| http://test.sidrasue.com/href.html         | content      | top link        | bottom link |
-| http://test.sidrasue.com/styled.html       | horizontal   | sentence        | end         |
+| http://localhost:8080/tests/p.html            | content      | top para        | bottom para |
+| http://localhost:8080/tests/table.html        | content      | top para        | Row_1_Cell_1|
+| http://localhost:8080/tests/br.html           | all on       | top line        | bottom line |
+| http://localhost:8080/tests/entities.html     | As the stags | Content Removed | All fiction |
+| http://localhost:8080/tests/img.html          | content      | top para        | bottom par  |
+| http://localhost:8080/tests/tablecontent.html | I remembered | Jump            | Content removed    |
+| http://localhost:8080/tests/href.html         | content      | top link        | bottom link |
+| http://localhost:8080/tests/styled.html       | horizontal   | sentence        | end         |
 
 Scenario: trim when many headers and short fic
-  Given a page exists with url: "http://test.sidrasue.com/headers.html"
+  Given a page exists with url: "http://localhost:8080/tests/headers.html"
   When I am on the first page's page
     And I follow "Scrub"
     And I click on "third header" within ".top"
@@ -52,7 +52,7 @@ Scenario: trim when many headers and short fic
     And the contents should NOT include "header"
 
 Scenario: recover from trimming too much
-  Given a page exists with url: "http://test.sidrasue.com/headers.html"
+  Given a page exists with url: "http://localhost:8080/tests/headers.html"
   When I am on the first page's page
     And I follow "Scrub"
     And I click on "third header" within ".top"
@@ -62,11 +62,11 @@ Scenario: recover from trimming too much
     And the contents should include "actual content"
 
 Scenario: check before trimming parent
-  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
+  Given a page exists with base_url: "http://localhost:8080/tests/parts/*.html" AND url_substitutions: "1 2"
   Then the contents should include "cruft"
 
 Scenario: trim a child removes parent's (composite) html
-  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
+  Given a page exists with base_url: "http://localhost:8080/tests/parts/*.html" AND url_substitutions: "1 2"
   When I am on the first page's page
   And I follow "Scrub"
     And I follow "Scrub Part 1"
@@ -76,7 +76,7 @@ Scenario: trim a child removes parent's (composite) html
   Then the temporary html file should NOT exist
 
 Scenario: trim a child removes parent's (composite) html
-  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
+  Given a page exists with base_url: "http://localhost:8080/tests/parts/*.html" AND url_substitutions: "1 2"
   When I am on the first page's page
   And I follow "Scrub"
     And I follow "Scrub Part 1"
@@ -87,7 +87,7 @@ Scenario: trim a child removes parent's (composite) html
     But the contents should include "stuff for part 1"
 
 Scenario: rebuild all children from raw
-  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2"
+  Given a page exists with base_url: "http://localhost:8080/tests/parts/*.html" AND url_substitutions: "1 2"
   When I am on the first page's page
     And I follow "Scrub"
     And I follow "Scrub Part 1"
@@ -98,13 +98,13 @@ Scenario: rebuild all children from raw
   Then the contents should include "cruft"
 
 Scenario: check before trim a sub-part
-  Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
+  Given a page exists with urls: "http://localhost:8080/tests/parts/1.html"
   When I am on the first page's page
     And I add a parent with title "Parent"
   Then the contents should include "cruft"
 
 Scenario: scrubbing grandchild remove's grandparent's (composite) html
-  Given a page exists with urls: "http://test.sidrasue.com/parts/1.html"
+  Given a page exists with urls: "http://localhost:8080/tests/parts/1.html"
   When I am on the first page's page
     And I add a parent with title "Parent"
     And I am on the page with title "Part 1"
@@ -116,7 +116,7 @@ Scenario: scrubbing grandchild remove's grandparent's (composite) html
 
 Scenario: scrubbing grandchild shows scrubbed content in grandparent
   Given a page exists with title: "GrandParent" AND type: 'Series'
-  Given a page exists with urls: "http://test.sidrasue.com/parts/1.html" AND title: "Parent"
+  Given a page exists with urls: "http://localhost:8080/tests/parts/1.html" AND title: "Parent"
   When I am on the page with title "Parent"
     And I add a parent with title "Grandparent"
     And I am on the page with title "Part 1"
@@ -129,13 +129,13 @@ Scenario: scrubbing grandchild shows scrubbed content in grandparent
     And the contents should NOT include "bottom cruft"
 
 Scenario: show number of nodes
-  Given a page exists with url: "http://test.sidrasue.com/div.html"
+  Given a page exists with url: "http://localhost:8080/tests/div.html"
   When I am on the first page's page
     And I follow "Scrub"
   Then I should see "4 nodes"
 
 Scenario: show number of nodes
-  Given a page exists with url: "http://test.sidrasue.com/div.html"
+  Given a page exists with url: "http://localhost:8080/tests/div.html"
   When I am on the first page's page
     And I follow "Scrub"
     And I click on "last div" within ".bottom"

@@ -42,7 +42,7 @@ Scenario: last created new part
     And I press "Increase Type"
     And I refetch the following
     """"
-    http://test.sidrasue.com/test1.html
+    http://localhost:8080/tests/test1.html
     """"
   When I am on the filter page
     And I click on "sort_by_last_created"

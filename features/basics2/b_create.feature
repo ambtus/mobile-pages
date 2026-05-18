@@ -5,7 +5,7 @@ Scenario: create a page from a single url with selected tags
     And "my author" is an "Author"
     And "my pro" is a "Pro"
   When I am on the create single page
-    And I fill in "page_url" with "http://test.sidrasue.com/test.html"
+    And I fill in "page_url" with "http://localhost:8080/tests/test.html"
     And I select "my fandom"
     And I select "my author"
     And I select "my pro"
@@ -18,7 +18,7 @@ Scenario: create a page from a single url with selected tags
 
 Scenario: create a page from a single url with title and notes and my notes
   Given I am on the create single page
-  When I fill in "page_url" with "http://test.sidrasue.com/test.html"
+  When I fill in "page_url" with "http://localhost:8080/tests/test.html"
     And I fill in "page_notes" with "some generic notes"
     And I fill in "page_my_notes" with "some personal notes"
     And I fill in "page_title" with "some weird title"

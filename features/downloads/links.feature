@@ -19,9 +19,9 @@ Scenario: second links to images should be https
 
 Scenario: regular hrefs should still be http
   Given a page exists
-  When I change its raw html to 'This is a <a href="http://test.sidrasue.com/parts/1.html">test</a>!'
+  When I change its raw html to 'This is a <a href="http://localhost:8080/tests/parts/1.html">test</a>!'
     And I read it online
-  Then "test" should link to "http://test.sidrasue.com/parts/1.html"
+  Then "test" should link to "http://localhost:8080/tests/parts/1.html"
 
 
 Scenario: end notes link to next chapter of same book

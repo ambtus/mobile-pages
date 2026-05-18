@@ -9,7 +9,7 @@ Scenario: no url or title should display error
 Scenario: switch title for url by mistake should display error
   Given I am on the create single page
   When I fill in "page_url" with "Title of the Fic"
-    And I fill in "page_title" with "http://test.sidrasue.com/test.html"
+    And I fill in "page_title" with "http://localhost:8080/tests/test.html"
     And I store the page
   Then I should have 0 pages
     And I should see "Url is invalid" within "#flash_alert"
@@ -23,19 +23,19 @@ Scenario: url can't be resolved should display error
     And I should see "couldn't resolve host name" within "#flash_alert"
 
 Scenario: duplicate url should display error
-  Given a page exists with url: "http://test.sidrasue.com/test.html"
+  Given a page exists with url: "http://localhost:8080/tests/test.html"
   When I am on the create single page
     And I fill in "page_title" with "duplicate"
-    And I fill in "page_url" with "http://test.sidrasue.com/test.html"
+    And I fill in "page_url" with "http://localhost:8080/tests/test.html"
     And I store the page
   Then I should have 1 page
     And I should see "Url has already been taken" within "#flash_alert"
-    And my page with url: 'http://test.sidrasue.com/test.html' should have title: 'Page 1'
+    And my page with url: 'http://localhost:8080/tests/test.html' should have title: 'Page 1'
 
 Scenario: 404 not found should display error
   Given I am on the create single page
   When I fill in "page_title" with "bad url"
-    And I fill in "page_url" with "http://test.sidrasue.com/style.html"
+    And I fill in "page_url" with "http://localhost:8080/tests/style.html"
     And I store the page
   Then I should have 0 pages
     And I should see "error retrieving content" within "#flash_alert"

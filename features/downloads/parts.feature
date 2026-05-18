@@ -1,12 +1,12 @@
 Feature: downloads parts metadata
 
 Scenario: download part titles should not have unread if all parts unread
-  Given a page exists with base_url: "http://test.sidrasue.com/test*.html" AND url_substitutions: "1 2 3"
+  Given a page exists with base_url: "http://localhost:8080/tests/test*.html" AND url_substitutions: "1 2 3"
   When I read it online
   Then I should NOT see "unread"
 
 Scenario: link to parts in downloaded html
-  Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1-2"
+  Given a page exists with base_url: "http://localhost:8080/tests/long*.html" AND url_substitutions: "1-2"
   When I read it online
   Then "Page 1" should link to itself
     And "Part 1" should link to itself
@@ -17,7 +17,7 @@ Scenario: two and three levels (h3 & h4)
     And I fill in "page_urls" with
       """
       ##Child 1
-      http://test.sidrasue.com/parts/3.html##Child 2
+      http://localhost:8080/tests/parts/3.html##Child 2
       """
     And I fill in "page_title" with "Parent"
     And I store the page
@@ -27,7 +27,7 @@ Scenario: two and three levels (h3 & h4)
     And I press "Increase Type"
     And I refetch the following
       """
-      http://test.sidrasue.com/parts/1.html##Boo
+      http://localhost:8080/tests/parts/1.html##Boo
       ##Grandchild
       """
     And I follow "Grandchild"
@@ -35,7 +35,7 @@ Scenario: two and three levels (h3 & h4)
     And I press "Increase Type"
     And I refetch the following
       """
-      http://test.sidrasue.com/parts/2.html##Hiss
+      http://localhost:8080/tests/parts/2.html##Hiss
       """
     And I read "Parent" online
   Then I should see "Child 1" within "h2"
@@ -45,7 +45,7 @@ Scenario: two and three levels (h3 & h4)
 Scenario: download part titles
   Given "rating tag" is a "Pro"
     And "info tag" is an "Info"
-    And a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3"
+    And a page exists with base_url: "http://localhost:8080/tests/long*.html" AND url_substitutions: "1 2 3"
   When I am on the first page's page
     And I follow "Part 1"
     And I follow "Rate"
@@ -68,7 +68,7 @@ Scenario: download part titles
     And I should NOT see "10,001 words"
 
 Scenario: part epubs should have all metadata from parent except size (which is different) and info (which is never put on epubs)
-  Given a page exists with base_url: "http://test.sidrasue.com/long*.html" AND url_substitutions: "1 2 3" AND fandoms: "harry potter" AND infos: "informational" AND pros: "AU" AND authors: "my author" AND stars: "4"
+  Given a page exists with base_url: "http://localhost:8080/tests/long*.html" AND url_substitutions: "1 2 3" AND fandoms: "harry potter" AND infos: "informational" AND pros: "AU" AND authors: "my author" AND stars: "4"
   Then the download epub command for "Page 1" should include authors: "my author&harry potter"
     And the download epub command for "Part 2" should include authors: "my author&harry potter"
 

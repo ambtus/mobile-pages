@@ -4,9 +4,9 @@ module MyWebsites
 
   def self.getpwd(url)
     case url
-    when "http://test.sidrasue.com/basic/test.html"
+    when "http://localhost:8080/tests/basic/test.html"
       { :username => "alice", :password => "nothingtosee" }
-    when "http://test.sidrasue.com/digest/test.html"
+    when "http://localhost:8080/tests/digest/test.html"
       { :username => "alice", :password => "nothinghere" }
     end
   end

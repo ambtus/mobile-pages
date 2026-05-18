@@ -152,8 +152,8 @@ Scenario: change con to hidden tag (show)
 Scenario: check before find by url
   Given the following pages
     | title                  | url                                | hiddens |
-    | A Christmas Carol      | http://test.sidrasue.com/cc.html   | hide me |
-    | The Call of the Wild   | http://test.sidrasue.com/cotw.html |         |
+    | A Christmas Carol      | http://localhost:8080/tests/cc.html   | hide me |
+    | The Call of the Wild   | http://localhost:8080/tests/cotw.html |         |
   When I am on the filter page
     And I click on "show_hiddens_none"
     And I press "Find"
@@ -163,18 +163,18 @@ Scenario: check before find by url
 Scenario: find by url should find hidden
   Given the following pages
     | title                  | url                                | hiddens |
-    | A Christmas Carol      | http://test.sidrasue.com/cc.html   | hide me |
-    | The Call of the Wild   | http://test.sidrasue.com/cotw.html |         |
+    | A Christmas Carol      | http://localhost:8080/tests/cc.html   | hide me |
+    | The Call of the Wild   | http://localhost:8080/tests/cotw.html |         |
   When I am on the filter page
-    And I fill in "page_url" with "http://test.sidrasue.com/cc.html"
+    And I fill in "page_url" with "http://localhost:8080/tests/cc.html"
     And I press "Find"
   Then I should see "A Christmas Carol" within ".title"
 
 Scenario: find by url should NOT find hidden if it's part of the filter
   Given the following pages
     | title                  | url                                | hiddens |
-    | A Christmas Carol      | http://test.sidrasue.com/cc.html   | hide me |
-    | The Call of the Wild   | http://test.sidrasue.com/cotw.html |         |
+    | A Christmas Carol      | http://localhost:8080/tests/cc.html   | hide me |
+    | The Call of the Wild   | http://localhost:8080/tests/cotw.html |         |
   When I am on the filter page
     And I fill in "page_url" with "test.sidrasue.com"
     And I click on "show_hiddens_none"
@@ -183,13 +183,13 @@ Scenario: find by url should NOT find hidden if it's part of the filter
     But I should NOT see "A Christmas Carol"
 
 Scenario: change part to hidden
-  Given a page exists with base_url: "http://test.sidrasue.com/parts/*.html" AND url_substitutions: "1 2 3" AND pros: "show me" AND authors: "my author"
+  Given a page exists with base_url: "http://localhost:8080/tests/parts/*.html" AND url_substitutions: "1 2 3" AND pros: "show me" AND authors: "my author"
   When I am on the page with title "Part 2"
     And I edit its tags
     And I fill in "tags" with "hide me"
     And I press "Add Hidden Tags"
     And I am on the filter page
-    And I fill in "page_url" with "http://test.sidrasue.com/parts"
+    And I fill in "page_url" with "http://localhost:8080/tests/parts"
     And I click on "show_hiddens_none"
     And I click on "type_all"
     And I press "Find"

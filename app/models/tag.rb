@@ -36,6 +36,8 @@ class Tag < ApplicationRecord
       all.collect { |t| ary << [t.base_name, t, t.pages.count] }
       if sort=="by_popularity"
         ary.sort_by { |ary| ary.third }.reverse
+      elsif sort=="by_creation"
+        ary.sort_by { |ary| ary.second.id }
       else
         ary.sort_by { |ary| ary.first.downcase }
       end
