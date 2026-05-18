@@ -1,9 +1,10 @@
--@tags.with_pages_count.each do |pair|
+-@tags.with_pages_count(params[:sort]).each do |pair|
   %p
-    -count = pair.first
+    -base_name = pair.first
     -tag = pair.second
-    =link_to_tag_pages tag, "#{count} #{tag.base_name} #{'page'.pluralize(count)}"
+    -count = pair.third
+    =link_to_tag_pages tag, "#{count} #{base_name} #{'page'.pluralize(count)}"
     |
-    = link_to "edit #{tag.name}", edit_tag_path(tag)
+    = link_to "edit #{base_name}", edit_tag_path(tag)
     |
     =link_to "more info about #{tag.name}", tag

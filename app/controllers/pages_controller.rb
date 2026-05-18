@@ -338,6 +338,7 @@ class PagesController < ApplicationController
     when 'Update Raw HTML'
       if @page.can_have_parts?
         @page.navigate_html = params[:pasted]
+        @page.fetch_ao3 if @page.ao3?
       else
         @page.raw_html = params[:pasted]
       end

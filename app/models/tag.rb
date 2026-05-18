@@ -31,10 +31,14 @@ class Tag < ApplicationRecord
       end
     end
 
-    def with_pages_count
+    def with_pages_count(sort=nil)
       ary = []
-      all.collect { |t| ary << [t.pages.count, t] }
-      ary.sort.reverse
+      all.collect { |t| ary << [t.base_name, t, t.pages.count] }
+      if sort=="by_popularity"
+        ary.sort_by { |ary| ary.third }.reverse
+      else
+        ary.sort_by { |ary| ary.first.downcase }
+      end
     end
 
     def scope_name

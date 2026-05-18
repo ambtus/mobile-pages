@@ -84,7 +84,7 @@ module PageDownload
 
   def download_part_title = title_w_position + download_suffix
 
-  def header_id = title.clean
+  def header_id = title_w_position.clean
 
   ## --authors
   ## use the short names of the authors and the fandoms

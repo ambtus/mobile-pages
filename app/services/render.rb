@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Render
-  URL = 'http://mp.ambt.us'
+  URL = 'http://air.local'
 
   class << self
     def render_html(page, rerender: false)

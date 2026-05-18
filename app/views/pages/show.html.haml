@@ -54,6 +54,8 @@
   .title
     =h @page.title
     (#{@page.type})
+    -if @page.parent
+      ="##{@page.position} of #{@page.parent.parts.count}"
   .views
     = render 'pages/links', page: @page
     .content

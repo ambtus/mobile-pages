@@ -37,6 +37,16 @@ module PageUrls
   def ao3_work? = ao3? && url.include?('work') && url.exclude?('chapter')
   def not_ao3_series? = ao3? && url.exclude?('series')
 
+  def kudo_url
+    return nil unless ao3?
+    if ao3_chapter?
+      chapter_id = url.split('/').last
+      "https://archiveofourown.org/comments/show_comments?chapter_id=#{chapter_id}"
+    elsif ao3_work?
+      url + "?show_comments=true#comments"
+    end
+  end
+
   def ff? = url&.match(/fanfiction.net/)
   def ff_chapter? = ff? && ff_chapter_number != '1'
   def ff_chapter_number = url.split('/s/').second.split('/').second
@@ -90,18 +100,22 @@ module PageUrls
       set_meta
       Rails.logger.debug { "I am now a #{type}: #{inspect}" }
     else
-      chapter_list.each_with_index do |element, index|
-        count = index + 1
-        url = "https://archiveofourown.org#{element['href']}"
-        title = element.text.gsub(/^\d*\. /, '')
-        chapter = add_chapter(url, count, title)
-        chapter.fetch_raw if refetch
-        chapter.set_meta if chapter.updated_at > 1.minute.ago
-        Rails.logger.debug { "I am now: #{chapter.inspect}" }
-      end
-      update_from_parts
-      set_meta
+      get_chapters_from_nav(chapter_list)
     end
+  end
+
+  def get_chapters_from_nav(chapter_list)
+    chapter_list.each_with_index do |element, index|
+      count = index + 1
+      url = "https://archiveofourown.org#{element['href']}"
+      title = element.text.gsub(/^\d*\. /, '')
+      chapter = add_chapter(url, count, title)
+      chapter.fetch_raw if chapter.raw_html.blank?
+      chapter.set_meta if chapter.updated_at > 1.minute.ago
+      Rails.logger.debug { "I am now: #{chapter.inspect}" }
+    end
+    update_from_parts
+    set_meta
   end
 
   def get_works_from_ao3(refetch: false)
@@ -124,24 +138,25 @@ module PageUrls
       if work.nil?
         # do its chapters exist?
         possibles = Page.where('url LIKE ?', "#{url}/chapters/%")
-      end
-      possibles&.each do |p|
-        if p.parent && p.parent == self
-          Rails.logger.debug { "selecting from my first level possibles #{p.title}" }
-          work = p
-          break
-        elsif p.parent && p.parent.parent.nil?
-          Rails.logger.debug { "selecting from unclaimed first level possibles #{p.parent.title}" }
-          work = p.parent
-          break
-        elsif p.parent && p.parent.parent == self
-          Rails.logger.debug { "selecting from my second level possibles #{p.parent.title}" }
-          work = p.parent
-          break
-        elsif p.parent&.parent && p.parent.parent.parent.nil?
-          Rails.logger.debug { "selecting from unclaimed second level possibles #{p.parent.parent.title}" }
-          work = p.parent.parent
-          break
+
+        possibles&.each do |p|
+          if p.parent && p.parent == self
+            Rails.logger.debug { "selecting from my first level possibles #{p.title}" }
+            work = p
+            break
+          elsif p.parent && p.parent.parent.nil?
+            Rails.logger.debug { "selecting from unclaimed first level possibles #{p.parent.title}" }
+            work = p.parent
+            break
+          elsif p.parent && p.parent.parent == self
+            Rails.logger.debug { "selecting from my second level possibles #{p.parent.title}" }
+            work = p.parent
+            break
+          elsif p.parent&.parent && p.parent.parent.parent.nil?
+            Rails.logger.debug { "selecting from unclaimed second level possibles #{p.parent.parent.title}" }
+            work = p.parent.parent
+            break
+          end
         end
       end
       if work

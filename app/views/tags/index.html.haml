@@ -1,3 +1,6 @@
 -Tag.types.each do |type|
   -count = type.constantize.count
-  %p=link_to "#{count} #{type.pluralize(count)}", type.downcase.pluralize 
+  %p
+    =link_to "#{count} #{type.pluralize(count)}", type.downcase.pluralize
+    %br
+    =link_to "by popularity", type.downcase.pluralize+"?sort=by_popularity"

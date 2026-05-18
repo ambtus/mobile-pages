@@ -8,13 +8,11 @@
     #{page.type}:
     =link_to page.title, @url + rate_path(page)
 
-  -if (defined?(last) && page.ao3? && page.not_ao3_series?) || page.ao3_work?
+  -if (page.ao3? && page.not_ao3_series?) || page.ao3_work?
     %p.kudos
       Leave Kudos or Comments on:
-      -if page.can_have_parts? && page.parts.last.url
-        =link_to page.title, page.parts.last.url + "#comments"
-      -else
-        =link_to page.title, page.url + "#comments"
+      =link_to page.title, page.kudo_url
+
 
   -if defined?(last) && page.next_part
     %p.next
