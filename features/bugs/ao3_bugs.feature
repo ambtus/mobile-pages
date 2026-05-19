@@ -95,7 +95,7 @@ Scenario: kudos link on split parts
     And I click on "Itachi &amp; Kisame"
     And I press "Children"
     And I read it online
-  Then Leave Kudos or Comments on "Continually Adapting (to Stay Alive)" should link to its comments
+  Then Leave Kudos or Comments on "Continually Adapting (to Stay Alive)" should link to the kudo url
 
 Scenario: check before single chapter 1 made into book retains title
   Given that was single exists

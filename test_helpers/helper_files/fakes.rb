@@ -82,7 +82,7 @@ def create_from_hash(hash)
   Tag.types.each { |tt| tag_types[tt] = hash.delete(tt.downcase.pluralize.to_sym) }
   inferred_fandoms = hash.delete(:inferred_fandoms)
   page = Page.create!(hash)
-  if page.url&.match('sidrasue.com')
+  if page.url&.match('localhost') || page.base_url&.match('localhost')
     page.initial_fetch
   else
     fake_initial_fetch(page)
