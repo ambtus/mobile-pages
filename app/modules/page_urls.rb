@@ -44,6 +44,8 @@ module PageUrls
       "https://archiveofourown.org/comments/show_comments?chapter_id=#{chapter_id}"
     elsif ao3_work?
       url + "?show_comments=true#comments"
+    else # ao3 comment
+      url
     end
   end
 
